@@ -1,0 +1,42 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["plugin:flowtype/recommended", "prettier", "prettier/flowtype", "prettier/standard"],
+  "plugins": ["flowtype", "prettier"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {}
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "globals": {
+    "$tw": true
+  },
+  "rules": {
+    "linebreak-style": 0,
+    "comma-dangle": 1,
+    "arrow-parens": ["off"],
+    "consistent-return": "off",
+    "no-use-before-define": "off",
+    "class-methods-use-this": "off",
+    "global-require": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-expressions": "off",
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1,
+    "generator-star-spacing": "off",
+    "import/no-unresolved": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-console": "off",
+    "promise/no-native": "off",
+    "no-loop-func": "off",
+    "guard-for-in": "off",
+    "react/no-multi-comp": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "no-undef": ["error", { "typeof": false }],
+    "max-len": "off"
+  }
+}

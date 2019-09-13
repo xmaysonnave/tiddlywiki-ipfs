@@ -1,0 +1,33 @@
+{
+	"plugins": [
+		"tiddlywiki/browser-sniff",	
+		"tiddlywiki/codemirror",
+		"tiddlywiki/codemirror-closebrackets",
+		"tiddlywiki/codemirror-closetag",		
+		"tiddlywiki/codemirror-fullscreen-editing",
+		"tiddlywiki/codemirror-keymap-sublime-text",
+		"tiddlywiki/codemirror-mode-css",
+		"tiddlywiki/codemirror-mode-htmlembedded",
+		"tiddlywiki/codemirror-mode-htmlmixed",		
+		"tiddlywiki/codemirror-mode-javascript",		
+		"tiddlywiki/codemirror-mode-markdown",
+		"tiddlywiki/codemirror-mode-x-tiddlywiki",
+		"tiddlywiki/codemirror-mode-xml",
+		"tiddlywiki/codemirror-search-replace",																
+		"tiddlywiki/comments",
+		"tiddlywiki/help",
+		"tiddlywiki/markdown",
+		"tiddlywiki/highlight",		
+		"tiddlywiki/mobiledragdrop"
+	],
+	"themes": [
+		"tiddlywiki/vanilla",
+		"tiddlywiki/snowwhite"
+	],
+	"build": {
+		"index": [
+			"--rendertiddler","$:/core/save/all","index.html","text/plain"],
+		"favicon": [
+			"--savetiddler","$:/favicon.ico","favicon.ico"]			
+	}
+}

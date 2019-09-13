@@ -1,0 +1,4 @@
+title: Attachment
+tags: TableOfContents
+
+<<locator-view baseTitle:"$:/isAttachment" tagFilter:"+[sort[color]]">>

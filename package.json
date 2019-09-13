@@ -1,0 +1,54 @@
+{
+  "name": "tiddlywiki-ipfs",
+  "version": "0.1.0",
+  "description": "Ipfs for TiddlyWiki",
+  "main": "ipfs-saver.js",
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "scripts": {
+    "prepare": "./scripts/prepare.sh",
+    "browserify": "browserify src/ipfs-saver.js -s ipfsSaver -o ipfs/plugins/ipfs/ipfs-saver.js",
+    "tiddlywiki": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --build --verbose",
+    "all": "./scripts/all.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xmaysonnave/tiddlywiki-ipfs.git"
+  },
+  "keywords": [
+    "ipfs",
+    "tiddlywiki"
+  ],
+  "author": "Xavier Maysonnave",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/xmaysonnave/tiddlywiki-ipfs/issues"
+  },
+  "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
+  "dependencies": {
+    "ipfs-http-client": "^36.0.0",
+    "ipfs-provider": "^0.2.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/runtime": "^7.6.0",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.6.0",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "source-map-loader": "^0.2.4",
+    "prettier": "^1.18.2",
+    "eslint": "^6.3.0",
+    "eslint-plugin-flowtype": "^4.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "tiddlywiki": "^5.1.21",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
+    "eslint-config-prettier": "^6.3.0"
+  }
+}
