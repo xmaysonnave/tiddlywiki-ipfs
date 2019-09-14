@@ -1496,7 +1496,7 @@ ipfsSaver.prototype.getIpnsKey = function() {
 Default Ipns Key
 */
 ipfsSaver.prototype.getDefaultIpnsKey = function() {
-	return "12D3KooWPgEc1YjSoGmEuzUZTt6wAo9wBYgmoScKPoCzBiebSsSX";
+	return "12D3KooWP39adMbdCWTjTj5WYuwWQY4HuUHZburZyf6inQ3ghjDn";
 }
 
 /*
