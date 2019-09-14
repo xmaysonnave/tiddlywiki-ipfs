@@ -177,7 +177,7 @@ ipfsSaver.prototype.parseDocumentUrl = function() {
 		const hostname = UrlHostname;
 		const pathname = UrlPathname;
 		var port =  UrlPort;
-		if (port == undefined || port == null || port == "") {
+		if (port == undefined || port == null || port.trim() == "") {
 			port = "";
 		} else {
 			port = ":" + port;
@@ -191,7 +191,7 @@ ipfsSaver.prototype.parseGatewayUrl = function() {
 	const protocol = UrlProtocol;
 	const hostname = UrlHostname;
 	var port =  UrlPort;
-	if (port == undefined || port == null || port == "") {
+	if (port == undefined || port == null || port.trim() == "") {
 		port = "";
 	} else {
 		port = ":" + port;
@@ -202,7 +202,7 @@ ipfsSaver.prototype.parseGatewayUrl = function() {
 ipfsSaver.prototype.parseApiUrl = function() { 
 	const apiUrl = this.getApiUrl();
 	// Check
-	if (apiUrl == undefined || apiUrl == null || apiUrl == "" || apiUrl.trim() == "") {
+	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url.");
 	}		
 	// Process	
@@ -210,11 +210,11 @@ ipfsSaver.prototype.parseApiUrl = function() {
 	const protocol = UrlProtocol.substring(0, UrlProtocol.length - 1);
 	const hostname = UrlHostname;
 	var port = UrlPort;
-	if ((port == undefined || port == null || port == "" || port.trim() == "") && protocol == "https") {
+	if ((port == undefined || port == null || port.trim() == "") && protocol == "https") {
 		port = "443";
-	} else if ((port == undefined || port == null || port == "" || port.trim() == "") && protocol == "http") {
+	} else if ((port == undefined || port == null || port.trim() == "") && protocol == "http") {
 		port = "80";
-	} else if (port == undefined || port == null || port == "" || port.trim() == "") {
+	} else if (port == undefined || port == null || port.trim() == "") {
 		port = "80";
 	}
 	return { protocol, hostname, port };	
@@ -226,7 +226,7 @@ ipfsSaver.prototype.getDefaultIpfs = async function() {
 	const getIpfs = require("ipfs-provider");	
 	const apiUrl = this.getApiUrl();
 	// Check
-	if (apiUrl == undefined || apiUrl == null || apiUrl == "" || apiUrl.trim() == "") {
+	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url");
 	}	
 	const toMultiaddr = require("uri-to-multiaddr");	
@@ -341,7 +341,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 
 		// Check
 		var gatewayUrl = this.getGatewayUrl();
-		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl == "" || gatewayUrl.trim() == "")) {
+		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
 			console.log("Undefined Ipfs gateway url");
 			callback("Undefined Ipfs gateway url");
 			return false;
@@ -396,8 +396,8 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		if (ipfsProtocol == "ipns" || this.getProtocol() == "ipns") {
 
 			// Getting default ipns key
-			ipnsKey = this.getIpnsKey() != null ? ((this.getIpnsKey() == "" || this.getIpnsKey().trim() == "") ? null : this.getIpnsKey().trim()) : null;
-			ipnsName = this.getIpnsName() != null ? ((this.getIpnsName() == "" || this.getIpnsName().trim() == "") ? null : this.getIpnsName().trim()) : null;
+			ipnsKey = this.getIpnsKey() != null ? this.getIpnsKey().trim() == "" ? null : this.getIpnsKey().trim() : null;
+			ipnsName = this.getIpnsName() != null ? this.getIpnsName().trim() == "" ? null : this.getIpnsName().trim() : null;
 			// Check
 			if (ipnsName == null || ipnsKey == null) {
 				console.log("Unknown Ipns name and key");
@@ -708,27 +708,20 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 							$tw.crypto.setPassword(data.password);
 						}	
 						// Decrypt
-						var encryptedText = self.Utf8ArrayToStr(content);
-						var decryptedText = $tw.crypto.decrypt(encryptedText, password);
-						content = btoa(decryptedText);
-						// Update tiddler	
-						self.updateSaveTiddler(self, tiddler, content);														
+						var base64 = this.decryptStringToBase64(content, password);
+						self.updateSaveTiddler(self, tiddler, base64);														
 						// Exit and remove the password prompt
 						return true;
 					}
 				});
 			} else {
 				// Decrypt
-				var encryptedText = self.Utf8ArrayToStr(content);
-				var decryptedText = $tw.crypto.decrypt(encryptedText, password);
-				content = btoa(decryptedText);
-				// Update tiddler	
-				self.updateSaveTiddler(self, tiddler, content);				
+				var base64 = this.decryptStringToBase64(content, null);
+				self.updateSaveTiddler(self, tiddler, base64);
 			}
 		} else {
-			content = self.Uint8ArrayToBase64(content);
-			// Update tiddler	
-			self.updateSaveTiddler(self, tiddler, content);			
+			var base64 = self.Uint8ArrayToBase64(content);
+			self.updateSaveTiddler(self, tiddler, base64);			
 		}
 		
 		// Return
@@ -736,6 +729,13 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 	}
 
+}
+
+ipfsSaver.prototype.decryptStringToBase64 = function(content, password) {
+		var encryptedText = self.Utf8ArrayToStr(content);
+		var decryptedText = $tw.crypto.decrypt(encryptedText, password);
+		var base64 = btoa(decryptedText);
+		return base64;
 }
 
 ipfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
