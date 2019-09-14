@@ -405,7 +405,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				return false;				
 			}
 			
-			if (this.verbose) console.log("Default Ipns name: " + ipnsName + ", Ipns key: /ipns/" + ipnsKey);
+			if (this.verbose) console.log("Ipns name: " + ipnsName + ", Ipns key: /ipns/" + ipnsKey);
 
 			// Check default ipns key and default ipns name
 			try {	
@@ -423,8 +423,8 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 					}
 				}
 				if (!foundKeyName) {
-					console.log("Unknown default Ipns name and key");
-					callback("Unknown default Ipns name and key");
+					console.log("Unknown Ipns name and key");
+					callback("Unknown Ipns name and key");
 					return false;						
 				}
 			} catch (error) {
@@ -438,17 +438,17 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			try {	
 				var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
 				if (resolved == undefined) {
-					console.log("Failed to resolve default Ipns key: /ipns/" + ipnsKey);
-					callback("Failed to resolve default Ipns key: /ipns/" + ipnsKey);
+					console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
+					callback("Failed to resolve Ipns key: /ipns/" + ipnsKey);
 					return false;
 				}
 				// Process previous cid	
 				unpin = resolved.substring(6);				
-				if (this.verbose) console.log("Successfully resolved default Ipns key: /ipfs/" + unpin);
+				if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
 			} catch (error) {
-				console.log("Failed to resolve default Ipns key: /ipns/" + ipnsKey);
+				console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
 				console.log(error);
-				callback(error, "Failed to resolve default Ipns key: /ipns/" + ipnsKey);
+				callback(error, "Failed to resolve Ipns key: /ipns/" + ipnsKey);
 				return false;
 			};
 
@@ -456,8 +456,8 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (ipfsProtocol == "ipns") {
 				// Check current ipns key and default ipnskey
 				if (hash != ipnsKey) {
-					console.log("Current Ipns key: " + hash + " do not match the default Ipns key: /ipns/" + ipnsKey);
-					callback("Current Ipns key: " + hash + " do not match the default Ipns key: /ipns/" + ipnsKey);
+					console.log("Current Ipns key: " + hash + " do not match the Ipns key: /ipns/" + ipnsKey);
+					callback("Current Ipns key: " + hash + " do not match the Ipns key: /ipns/" + ipnsKey);
 					return false;
 				}
 
@@ -1366,7 +1366,7 @@ ipfsSaver.prototype.getPriority = function() {
 	if (priority != undefined) {
 	 	priority = priority.getFieldString("text");
 	}	
-	if (priority == undefined || priority == null || priority == "" || priority.trim().length == 0) {
+	if (priority == undefined || priority == null || priority.trim() == "") {
 		priority = this.getDefaultPriority();
 	} else {
 		try {
@@ -1394,7 +1394,7 @@ ipfsSaver.prototype.getProtocol = function() {
 	if (this.wiki.getTiddler("$:/ipfs/saver/protocol") != undefined) {
 		protocol = this.wiki.getTiddler("$:/ipfs/saver/protocol").getFieldString("text");
 	}
-	if (protocol == undefined || protocol == null || protocol == "" || protocol.trim().length == 0) {
+	if (protocol == undefined || protocol == null || protocol.trim() == "") {
 		protocol = this.getDefaultProtocol();
 	}
 	return protocol;
@@ -1419,7 +1419,7 @@ ipfsSaver.prototype.getApiUrl = function() {
 	if (api != undefined) {
 	 	api = api.getFieldString("text");
 	}	
-	if (api == undefined || api == "" || api.trim().length == 0) {
+	if (api == undefined || api == null || api.trim() == "") {
 		api = this.getDefaultApiUrl();
 	}
 	return api;
@@ -1444,7 +1444,7 @@ ipfsSaver.prototype.getGatewayUrl = function() {
 	if (gateway != undefined) {
 	 	gateway = gateway.getFieldString("text");
 	}	
-	if (gateway == undefined || gateway == null || gateway == "" || gateway.trim().length == 0) {
+	if (gateway == undefined || gateway == null || gateway.trim() == "") {
 		gateway = this.getDefaultGatewayUrl();
 	}
 	return gateway;
@@ -1465,7 +1465,7 @@ ipfsSaver.prototype.getIpnsName = function() {
 	if (this.wiki.getTiddler("$:/ipfs/saver/name") != undefined) {
 		ipnsName = this.wiki.getTiddler("$:/ipfs/saver/name").getFieldString("text");
 	}
-	if (ipnsName == undefined || ipnsName == null || ipnsName == "" || ipnsName.trim().length == 0) {
+	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() == "") {
 		ipnsName = this.getDefaultIpnsName();
 	}
 	return ipnsName;
@@ -1486,7 +1486,7 @@ ipfsSaver.prototype.getIpnsKey = function() {
 	if (this.wiki.getTiddler("$:/ipfs/saver/key") != undefined) {
 		ipnsKey = this.wiki.getTiddler("$:/ipfs/saver/key").getFieldString("text");
 	}
-	if (ipnsKey == undefined || ipnsKey == null || ipnsKey == "" || ipnsKey.trim().length == 0) {
+	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() == "") {
 		ipnsKey = this.getDefaultIpnsKey();
 	}
 	return ipnsKey;
@@ -1496,7 +1496,7 @@ ipfsSaver.prototype.getIpnsKey = function() {
 Default Ipns Key
 */
 ipfsSaver.prototype.getDefaultIpnsKey = function() {
-	return "12D3KooWP39adMbdCWTjTj5WYuwWQY4HuUHZburZyf6inQ3ghjDn";
+	return "12D3KooWLtBsY7jd5HbBHuADecRSDpnaAWmG811B7kntUt4QWJNe";
 }
 
 /*
@@ -1507,7 +1507,7 @@ ipfsSaver.prototype.getVerbose = function() {
 	if (this.wiki.getTiddler("$:/ipfs/saver/verbose") != undefined) {
 		verbose = this.wiki.getTiddler("$:/ipfs/saver/verbose").getFieldString("text");
 	}
-	if (verbose == undefined || verbose == null || verbose == "" || verbose.trim().length == 0) {
+	if (verbose == undefined || verbose == null || verbose.trim() == "") {
 		verbose = true;
 	} else {
 		verbose = ( verbose == this.getDefaultVerbose() );
@@ -1530,7 +1530,7 @@ ipfsSaver.prototype.getPolicy = function() {
 	if (this.wiki.getTiddler("$:/ipfs/saver/policy") != undefined) {
 		policy = this.wiki.getTiddler("$:/ipfs/saver/policy").getFieldString("text");
 	}
-	if (policy == undefined || policy == null || policy == "" || policy.trim().length == 0) {
+	if (policy == undefined || policy == null || policy.trim() == "") {
 		policy = this.getDefaultPolicy();
 	}
 	return policy;
