@@ -440,7 +440,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 					var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
 					if (resolved == undefined) {
 						// Store previous cid	
-						unpin = resolved.substring(6);				
+						unpin = resolved.substring(6);
 						if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
 					} else {
 						console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
@@ -715,7 +715,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 							$tw.crypto.setPassword(data.password);
 						}	
 						// Decrypt
-						var base64 = this.decryptStringToBase64(content, password);
+						var base64 = self.decryptStringToBase64(self, content, password);
 						self.updateSaveTiddler(self, tiddler, base64);														
 						// Exit and remove the password prompt
 						return true;
@@ -723,7 +723,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 				});
 			} else {
 				// Decrypt
-				var base64 = this.decryptStringToBase64(content, null);
+				var base64 = self.decryptStringToBase64(self, content, null);
 				self.updateSaveTiddler(self, tiddler, base64);
 			}
 		} else {
@@ -738,7 +738,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 }
 
-ipfsSaver.prototype.decryptStringToBase64 = function(content, password) {
+ipfsSaver.prototype.decryptStringToBase64 = function(self, content, password) {
 		var encryptedText = self.Utf8ArrayToStr(content);
 		var decryptedText = $tw.crypto.decrypt(encryptedText, password);
 		var base64 = btoa(decryptedText);
