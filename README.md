@@ -72,14 +72,18 @@ https://www.npmjs.com/
 <a name="developer-nodejs-install"></a>
 
 
-On Debian buster we setup a new source list who contains the node 11.x repository addresses:
+On Debian buster we setup a new source list who contains the node 11.x repository addresses.
+edit:
 ```
 /etc/apt/source.list.d/nodesource.list
+```
+input:
+```
 deb https://deb.nodesource.com/node_11.x buster main
 deb-src https://deb.nodesource.com/node_11.x buster main
 ```
 
-Once our node repository is known, we update and install the latest nodejs.
+Once our node repository is known, we update and install the latest nodejs 11.x.
 ```
 sudo apt update
 sudo apt install nodejs
