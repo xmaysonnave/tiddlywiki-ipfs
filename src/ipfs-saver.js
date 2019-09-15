@@ -395,72 +395,69 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Check Ipns Key and Ipns Name
 		if (ipfsProtocol == "ipns" || this.getProtocol() == "ipns") {
 
-			// Getting default ipns key
+			// Getting default ipns key and ipns name
 			ipnsKey = this.getIpnsKey() != null ? this.getIpnsKey().trim() == "" ? null : this.getIpnsKey().trim() : null;
 			ipnsName = this.getIpnsName() != null ? this.getIpnsName().trim() == "" ? null : this.getIpnsName().trim() : null;
-			// Check
-			if (ipnsName == null || ipnsKey == null) {
-				console.log("Unknown Ipns name and key");
-				callback("Unknown Ipns name and key");
-				return false;				
-			}
-			
-			if (this.verbose) console.log("Ipns name: " + ipnsName + ", Ipns key: /ipns/" + ipnsKey);
-
-			// Check default ipns key and default ipns name
-			try {	
-				var keys = await this.keys(this, ipfs);
-				if (keys == undefined) {
-					console.log("Failed to analyze Ipns keys");
-					callback("Failed to analyze Ipns keys");
-					return false;
-				}
-				var foundKeyName = false;;
-				for (var index = 0; index < keys.length; index++) { 
-					if (keys[index].id == ipnsKey && keys[index].name == ipnsName) {
-						foundKeyName = true;
-						break;
+			// Check if available
+			if (ipnsName != null && ipnsKey != null) {
+				if (this.verbose) console.log("Ipns name: " + ipnsName + ", Ipns key: /ipns/" + ipnsKey);
+				// Check default ipns key and default ipns name
+				// If the check is failing we log and continue
+				try {	
+					var keys = await this.keys(this, ipfs);
+					if (keys != undefined) {
+						var foundKeyName = false;;
+						for (var index = 0; index < keys.length; index++) { 
+							if (keys[index].id == ipnsKey && keys[index].name == ipnsName) {
+								foundKeyName = true;
+								break;
+							}
+						}
+						if (!foundKeyName) {
+							console.log("Unknown Ipns name and key");
+						}
+					} else {
+						console.log("Failed to analyze Ipns keys");
 					}
-				}
-				if (!foundKeyName) {
+				} catch (error) {
+					console.log("Failed to retrieve Ipns keys");
+					console.log(error);
+				};		
+			} else {
+				// if ipns is requested while in ipfs, Ipns name and key must be known
+				if (ipfsProtocol == "ipfs") {
 					console.log("Unknown Ipns name and key");
 					callback("Unknown Ipns name and key");
-					return false;						
-				}
-			} catch (error) {
-				console.log("Failed to retrieve Ipns keys");
-				console.log(error);
-				callback(error, "Failed to retrieve Ipns keys");
-				return false;
-			};		
-
-			// Resolve ipnsKey
-			try {	
-				var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
-				if (resolved == undefined) {
-					console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
-					callback("Failed to resolve Ipns key: /ipns/" + ipnsKey);
 					return false;
 				}
-				// Process previous cid	
-				unpin = resolved.substring(6);				
-				if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
-			} catch (error) {
-				console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
-				console.log(error);
-				callback(error, "Failed to resolve Ipns key: /ipns/" + ipnsKey);
-				return false;
-			};
+			}			
+
+			// Check if available
+			// If the process is failing we log and continue
+			if (ipnsKey != null) {			
+				// Resolve ipnsKey
+				try {	
+					var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
+					if (resolved == undefined) {
+						// Store previous cid	
+						unpin = resolved.substring(6);				
+						if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
+					} else {
+						console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
+					}
+				} catch (error) {
+					console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
+					console.log(error);
+				};
+			}
 
 			// Current ipns
 			if (ipfsProtocol == "ipns") {
 				// Check current ipns key and default ipnskey
+				// If the check is failing we log and continue
 				if (hash != ipnsKey) {
 					console.log("Current Ipns key: " + hash + " do not match the Ipns key: /ipns/" + ipnsKey);
-					callback("Current Ipns key: " + hash + " do not match the Ipns key: /ipns/" + ipnsKey);
-					return false;
 				}
-
 			} 	
 
 		}
@@ -487,25 +484,30 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}	
 		if (this.verbose) console.log(message);		
 
-		// Publish IPNS
+		// Publish to Ipns if ipnsKey match the current hash
+		// Publish to Ipns if current protocol is ipfs and ipns is requested
+		// If the process is failing we log and continue
 		if (unpin != added[0].hash && (this.getProtocol() == "ipns" || ipfsProtocol == "ipns")) {
-			// Getting default ipns name
-			var ipnsName = this.getIpnsName();
-			if (this.verbose) console.log("Publishing Ipns name: " + ipnsName);
-			try {				
-				var published = await this.publish(this, ipfs, ipnsName, "/ipfs/" + added[0].hash);
-				if (published == undefined) {
-					console.log("Failed to publish Ipns name: " + ipnsName);
-				} else if (this.verbose) {
-					console.log("Successfully published Ipns name: " + ipnsName);
-				}
-			} catch (error) {
-					console.log("Failed to publish Ipns name: " + ipnsName);
-					console.log(error);
-			};	
+			if (hash == ipnsKey || ipfsProtocol == "ipfs") {
+				// Getting default ipns name
+				var ipnsName = this.getIpnsName();
+				if (this.verbose) console.log("Publishing Ipns name: " + ipnsName);
+				try {				
+					var published = await this.publish(this, ipfs, ipnsName, "/ipfs/" + added[0].hash);
+					if (published == undefined) {
+						console.log("Failed to publish Ipns name: " + ipnsName);
+					} else if (this.verbose) {
+						console.log("Successfully published Ipns name: " + ipnsName);
+					}
+				} catch (error) {
+						console.log("Failed to publish Ipns name: " + ipnsName);
+						console.log(error);
+				};	
+			}
 		}
 
 		// Unpin Previous
+		// If the process is failing we log and continue
 		if (unpin != null && unpin != added[0].hash) {
 			var { error, message, unpined } = await this.unpinFromIpfs(this, ipfs, unpin);
 			if (error != null)  {
@@ -517,6 +519,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Unpin
+		// If the process is failing we log and continue
 		if (this.needTobeUnpinned != null) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
 				var { error, message, unpined } = await this.unpinFromIpfs(this, ipfs, this.needTobeUnpinned[i]);
@@ -536,7 +539,11 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Next location
 		var cid;
 		if (this.getProtocol() == "ipns") {
-			cid = "/ipns/" + ipnsKey;
+			if (ipfsProtocol == "ipfs") {
+				cid = "/ipns/" + ipnsKey;
+			} else {
+				cid = "/ipns/" + hash;
+			}
 		} else {
 			cid = "/ipfs/" + added[0].path;
 		}
@@ -688,7 +695,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		// Decrypt
 		var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
 		if (index != -1) {			
-			// Request for password
+			// Request for password if unknown
 			var password = null;
 			if ($tw.crypto.hasPassword() == false) {
 				// Prompt
@@ -1496,7 +1503,7 @@ ipfsSaver.prototype.getIpnsKey = function() {
 Default Ipns Key
 */
 ipfsSaver.prototype.getDefaultIpnsKey = function() {
-	return "12D3KooWLtBsY7jd5HbBHuADecRSDpnaAWmG811B7kntUt4QWJNe";
+	return "QmV8ZQH9s4hHxPUeFJH17xt7GjmjGj8tEg7uQLz8HNSvFJ";
 }
 
 /*

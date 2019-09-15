@@ -14,7 +14,7 @@ Saving/IpfsService/Protocol: Protocol:
 Saving/IpfsService/Protocol/Ipfs/Description: Ipfs
 Saving/IpfsService/Protocol/Ipns/Description: Ipns
 Saving/IpfsService/Policy: Policy:
-Saving/IpfsService/Policy/Default/Description: Ipfs Provider
+Saving/IpfsService/Policy/Default/Description: Default Ipfs Provider
 Saving/IpfsService/Policy/Webext/Description: Web Extension
 Saving/IpfsService/Policy/Window/Description: Ipfs Companion
 Saving/IpfsService/Policy/HTTP/Description: HTTP Client
