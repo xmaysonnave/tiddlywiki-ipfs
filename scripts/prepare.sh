@@ -14,5 +14,5 @@ cp -R ./tw5-kin-filter/plugins/kin-filter ./ipfs/plugins/kin-filter > /dev/null 
 git clone https://github.com/bimlas/tw5-locator --depth 1
 cp -R ./tw5-locator/plugins/locator ./ipfs/plugins/locator > /dev/null 2>&1
 # cardo
-mkdir tw5-cardo
-wget -P ./tw5-cardo http://cardo.wiki/Cardo-1.0.4.json
+#mkdir tw5-cardo
+#wget -P ./tw5-cardo http://cardo.wiki/Cardo-1.0.4.json
