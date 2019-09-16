@@ -404,8 +404,8 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 		if (this.verbose) console.log(message);	
 
-		// Fetch the default empty directory to check if the connection is alive
-		var { error, message } = await this.fetchEmptyDirectory(this, ipfs);
+		// Retrieve the default empty directory to check if the connection is alive
+		var { error, message } = await this.getEmptyDirectory(this, ipfs);
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -633,7 +633,8 @@ ipfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	if (uri == undefined || uri == null || uri.trim() == "") {
 		return tiddler;
 	}
-	var cid = uri.substring(6);
+	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(uri);
+	var cid = UrlPathname.substring(6);
 	// Store cid as it needs to be unpined when the wiki is saved			
 	if (self.needTobeUnpinned == null) {
 		self.needTobeUnpinned = [ cid ];
@@ -667,6 +668,9 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		return tiddler;
 	}
 
+	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(oldUri);
+	var cid = UrlPathname.substring(6);
+
 	// Getting an Ipfs client
 	var { error, message, ipfs, provider } = await self.getIpfsClient(self);
 	if (error != null)  {
@@ -678,8 +682,8 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	}
 	if (self.verbose) console.log(message);
 
-	// Fetch the default empty directory to check if the connection is alive
-	var { error, message } = await self.fetchEmptyDirectory(self, ipfs);
+	// Retrieve the default empty directory to check if the connection is alive
+	var { error, message } = await self.getEmptyDirectory(self, ipfs);
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -692,8 +696,8 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	// Download
 	if (newUri == undefined || newUri == null || newUri.trim() == "") {
 
-		// Fetch the old uri
-		var { error, message, fetched } = await self.fetch(self, ipfs, oldUri);
+		// Fetch the old cid
+		var { error, message, fetched } = await self.fetch(self, ipfs, "/ipfs" + cid);
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -701,10 +705,9 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 			return tiddler;
 		}
-		var cid = oldUri.substring(6);
 		if (self.verbose) console.log(message);
 		
-		// Store cid as it needs to be unpined when the wiki is saved			
+		// Store old cid as it needs to be unpined when the wiki is saved			
 		if (self.needTobeUnpinned == null) {
 			self.needTobeUnpinned = [ cid ];
 		} else if (self.needTobeUnpinned.indexOf(cid) == -1) {
@@ -863,8 +866,8 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 	if (self.verbose) console.log(message);
 
-	// Fetch the default empty directory to check if the connection is alive
-	var { error, message } = await self.fetchEmptyDirectory(self, ipfs);
+	// Retrieve the default empty directory to check if the connection is alive
+	var { error, message } = await self.getEmptyDirectory(self, ipfs);
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -1044,26 +1047,26 @@ ipfsSaver.prototype.fetch = async function(self, ipfs, uri) {
 	}
 }
 
-ipfsSaver.prototype.fetchEmptyDirectory = async function(self, ipfs) {
+ipfsSaver.prototype.getEmptyDirectory = async function(self, ipfs) {
 		// Fetch the default empty directory to check if the connection is alive
 		try {
 			var empty = await self.get(self, ipfs, "/ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
 			if (empty == undefined)  {
 				return { 
-					error: new Error("Unable to fetch the default Ipfs empty directory"), 
+					error: new Error("Unable to get the default Ipfs empty directory"), 
 					message: "", 
 					empty: null 
 				};
 			}
 			return { 
 				error: null, 
-				message: "Successfully fetched the default Ipfs empty directory", 
+				message: "Successfully got the default Ipfs empty directory", 
 				empty: empty 
 			};
 		} catch (error) {
 			return { 
 				error: error, 
-				message: "Unable to fetch the default Ipfs empty directory", 
+				message: "Unable to get the default Ipfs empty directory", 
 				empty: null 
 			};
 		}
@@ -1150,7 +1153,7 @@ ipfsSaver.prototype.add = async function(self, client, content) {
 		// Process
     reader.onloadend = async function () {
 			if (self.verbose) console.log("Processing buffer result...");
-			const buffer = await Buffer.from(reader.result);
+			const buffer = Buffer.from(reader.result);
 			// Window Ipfs policy
 			if (client.enable) {
 				try {
