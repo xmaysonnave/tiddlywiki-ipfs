@@ -1,20 +1,19 @@
-# Ipfs for TiddyWiki
+# Ipfs with TiddyWiki
 <a name="tiddlywiki-ipfs"></a>
 
-```Ipfs for TiddyWiki``` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
+```Ipfs with TiddyWiki``` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
 
 ### Getting Started
 <a name="getting-started"></a>
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
+These instructions will get you a copy of the project up and running on your local machine.
 
-See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 <a name="pre-requisites"></a>
 
 * [Users](#users)
-* * [Getting running `Ipfs for TiddlyWiki` in your browser](#running-browser)
+* * [Getting running `Ipfs with TiddlyWiki` in your browser](#running-browser)
 * * [Running a local Ipfs node with Ipfs Desktop](#ipfs-desktop)
 * * [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 * [Developer](#developer)
@@ -29,7 +28,7 @@ See deployment for notes on how to deploy the project on a live system.
 <a name="users"></a>
 
 
-#### Getting running `Ipfs for TiddlyWiki` in your browser
+#### Getting running `Ipfs with TiddlyWiki` in your browser
 <a name="running-browser"></a>
 
 
@@ -56,8 +55,10 @@ We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs 
 * [Go Ipfs](https://github.com/ipfs/go-ipfs)
 * [Nginx](http://nginx.org/)
 
+
 #### Node.js
 <a name="developer-nodejs"></a>
+
 
 ##### Resource
 <a name="developer-nodejs-resource"></a>
@@ -67,6 +68,7 @@ https://nodejs.org/en/docs/
 
 Official npm repository
 https://www.npmjs.com/
+
 
 ##### Install
 <a name="developer-nodejs-install"></a>
@@ -88,6 +90,7 @@ Once our node repository is known, we update and install the latest nodejs 11.x.
 sudo apt update
 sudo apt install nodejs
 ```
+
 
 ##### Setup
 <a name="developer-nodejs-setup"></a>
@@ -127,8 +130,10 @@ npm -v
 6.11.3
 ```
 
+
 #### Building
 <a name="developer-building"></a>
+
 
 ## Contributing
 <a name="contributing"></a>
@@ -141,10 +146,12 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 See also the list of [contributors](https://github.com/xmaysonnave/tiddlywiki-ipfs/contributors) who participated in this project.
 
+
 ## License
 <a name="license"></a>
 
 This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details
+
 
 ## Acknowledgments
 <a name="acknowledgment"></a>

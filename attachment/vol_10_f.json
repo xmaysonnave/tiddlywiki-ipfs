@@ -2,10 +2,11 @@
     {
         "text": "",
         "type": "application/pdf",
-        "title": "Volume 10 – Pensées et Aphorismes de Sri Aurobindo: traduction et commentaires) / Deuxième édition – Sri Aurobindo Ashram: Pondichéry, 2009– 436 p",
-        "tags": "$:/isAttachment $:/isIpfs",
+        "title": "Sri Aurobindo – Pensées et Aphorismes",
+        "tags": "$:/isAttachment $:/isIpfs $:/isEncrypted",
         "modified": "20190916045103320",
         "created": "20190916045040153",
-        "_canonical_uri": "/ipfs/QmRXajmfiiVXuVzCeav6NFBejrxcztJqWiug3jPtQtDRK2"
+        "_canonical_uri": "/ipfs/QmdH3cCFCexweH8RQkh15B7cRE3TjyNKrXtrR3r3j8cRcN",
+        "password": "blue"
     }
 ]

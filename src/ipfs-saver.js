@@ -460,7 +460,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				// Resolve ipnsKey
 				try {	
 					var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
-					if (resolved == undefined) {
+					if (resolved != undefined) {
 						// Store previous cid	
 						unpin = resolved.substring(6);
 						if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
