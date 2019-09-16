@@ -697,7 +697,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	if (newUri == undefined || newUri == null || newUri.trim() == "") {
 
 		// Fetch the old cid
-		var { error, message, fetched } = await self.fetch(self, ipfs, "/ipfs" + cid);
+		var { error, message, fetched } = await self.fetch(self, ipfs, "/ipfs/" + cid);
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -888,6 +888,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 			var decodedBase64 = atob(content);
 			var encryptedText = $tw.crypto.encrypt(decodedBase64, null);
 			content = self.StringToUint8Array(encryptedText);
+			type = "application/octet-stream";
 		} else {
 			content = self.base64ToUint8Array(content);
 		}
