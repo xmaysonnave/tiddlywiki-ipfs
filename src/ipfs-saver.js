@@ -1114,7 +1114,7 @@ ipfsSaver.prototype.unpinFromIpfs = async function(self, ipfs, unpin) {
 ipfsSaver.prototype.add = async function(self, client, content) {
   return new Promise((resolve, reject) => {
 		const reader = new FileReader();
-		const { Buffer } = require('ipfs-provider');
+		const Buffer = require('buffer').Buffer;
 		// Process
     reader.onloadend = async function () {
 			if (self.verbose) console.log("Processing buffer result...");
