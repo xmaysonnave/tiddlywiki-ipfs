@@ -222,7 +222,7 @@ ipfsSaver.prototype.parseApiUrl = function() {
 
 // Default
 ipfsSaver.prototype.getDefaultIpfs = async function() {
-	// IPFS Provider
+	// Ipfs Provider
 	const getIpfs = require("ipfs-provider");	
 	const apiUrl = this.getApiUrl();
 	// Check
@@ -254,7 +254,7 @@ ipfsSaver.prototype.getDefaultIpfs = async function() {
 		return { ipfs, provider };	
 	} catch (error) {
 		console.log(error);
-		throw new Error("Default Ipfs is unavailable: " + error.message);
+		throw new Error("Ipfs client is unavailable: " + error.message);
 	}
 }
 
@@ -277,7 +277,7 @@ ipfsSaver.prototype.getWebextIpfs = async function() {
 		return { ipfs, provider };	
 	} catch (error) {
 		console.log(error);
-		throw new Error("Webext Ipfs is unavailable: " + error.message);
+		throw new Error("Ipfs Webextension is unavailable: " + error.message);
 	}
 }
 
@@ -300,23 +300,45 @@ ipfsSaver.prototype.getWindowIpfs = async function() {
 		return { ipfs, provider };	
 	} catch (error) {
 		console.log(error);
-		throw new Error("Window Ipfs is unavailable: " + error.message);
+		throw new Error("Ipfs Companion is unavailable: " + error.message);
 	}
 }
 
 // ipfs-http-client
 ipfsSaver.prototype.getHttpIpfs = async function() {
-	// Ipfs Http Client
-	var ipfsClient = require('ipfs-http-client')
-	// Getting
+	// Ipfs Provider
+	const getIpfs = require("ipfs-provider");	
+	const apiUrl = this.getApiUrl();
+	// Check
+	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
+		throw new Error("Undefined Ipfs api url");
+	}	
+	const toMultiaddr = require("uri-to-multiaddr");	
+	var apiMultiAddr;
 	try {
-		const { protocol, hostname, port } = this.parseApiUrl();
-		const ipfs = ipfsClient({ host: hostname, port: port, protocol: protocol });
-		const provider = "IPFS_HTTP_API, " + protocol + "://" + hostname + ":" + port;
-		return { ipfs, provider };
+		 apiMultiAddr = toMultiaddr(apiUrl);
 	} catch (error) {
 		console.log(error);
-		throw new Error("Http Ipfs client is unavailable: " + error.message);
+		throw new Error("Invalid Ipfs api url: " + apiUrl);
+	}
+	// Getting
+	try {
+		var { ipfs, provider } = await getIpfs({
+			// These is the defaults
+			tryWebExt: false,    					// set false to bypass WebExtension verification
+			tryWindow: false,    					// set false to bypass window.ipfs verification
+			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
+			apiAddress: apiMultiAddr,			// set this to use an api in that address if tryApi is true
+			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
+			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
+			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
+		});
+		// Enhance provider message
+		provider = provider + ", " + apiMultiAddr;
+		return { ipfs, provider };	
+	} catch (error) {
+		console.log(error);
+		throw new Error("Ipfs Http client is unavailable: " + error.message);
 	}
 }
 
@@ -1092,7 +1114,7 @@ ipfsSaver.prototype.unpinFromIpfs = async function(self, ipfs, unpin) {
 ipfsSaver.prototype.add = async function(self, client, content) {
   return new Promise((resolve, reject) => {
 		const reader = new FileReader();
-		const { Buffer } = require('ipfs-http-client');
+		const { Buffer } = require('ipfs-provider');
 		// Process
     reader.onloadend = async function () {
 			if (self.verbose) console.log("Processing buffer result...");
