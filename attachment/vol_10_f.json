@@ -6,7 +6,7 @@
         "tags": "$:/isAttachment $:/isIpfs $:/isEncrypted",
         "modified": "20190916045103320",
         "created": "20190916045040153",
-        "_canonical_uri": "/ipfs/QmdH3cCFCexweH8RQkh15B7cRE3TjyNKrXtrR3r3j8cRcN",
+        "_canonical_uri": "https://ipfs.infura.io/ipfs/QmdH3cCFCexweH8RQkh15B7cRE3TjyNKrXtrR3r3j8cRcN",
         "password": "blue"
     }
 ]

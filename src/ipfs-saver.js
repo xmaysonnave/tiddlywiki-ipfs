@@ -832,6 +832,27 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		return false;
 	}
 
+		// Process document URL
+		var { protocol, hostname, pathname, port } = self.parseDocumentUrl();
+		var currentUrlProtocol = protocol;
+		var currentUrlHostname = hostname;
+		var currentUrlPathname = pathname;
+		var currentUrlPort = port;
+
+		// Check
+		var gatewayUrl = this.getGatewayUrl();
+		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
+			console.log("Undefined Ipfs gateway url");
+			self.errorDialog("Undefined Ipfs gateway url");
+			return false;
+		}		
+		
+		// Process Gateway URL
+		var { protocol, hostname, port } = self.parseGatewayUrl();
+		var gatewayUrlProtocol = protocol;
+		var gatewayUrlHostname = hostname;
+		var gatewayUrlPort = port;	
+
 	// Getting an Ipfs client
 	var { error, message, ipfs, provider } = await self.getIpfsClient(self);
 	if (error != null)  {
@@ -907,8 +928,20 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
 	if (index != -1) {
 		addition.tags = self.arrayRemove(addition.tags, "$:/isEmbedded");
+	}
+	// Process _canonical_uri
+	var url;	
+	if (currentUrlProtocol == "file:") {
+		url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + "/ipfs/" + cid;
+	} else {
+		if (currentUrlHostname == gatewayUrlHostname) {
+			url = currentUrlProtocol + "//" + currentUrlHostname + currentUrlPort + "/ipfs/" + cid;
+		} else {
+			url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + "/ipfs/" + cid;
+		}			
 	}	
-	addition["_canonical_uri"] = "/ipfs/" + cid;
+	addition["_canonical_uri"] = url;
+	// Reset text
 	addition["text"] = undefined;
 	$tw.wiki.addTiddler(new $tw.Tiddler(tiddler, addition));
 	
