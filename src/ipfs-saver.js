@@ -1523,8 +1523,8 @@ Retrieve ipfs saver ipns name with default value if applicable
 */
 ipfsSaver.prototype.getIpnsName = function() {
 	var ipnsName;
-	if (this.wiki.getTiddler("$:/ipfs/saver/name") != undefined) {
-		ipnsName = this.wiki.getTiddler("$:/ipfs/saver/name").getFieldString("text");
+	if (this.wiki.getTiddler("$:/ipfs/saver/ipns/name") != undefined) {
+		ipnsName = this.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
 	}
 	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() == "") {
 		ipnsName = this.getDefaultIpnsName();
@@ -1544,8 +1544,8 @@ Retrieve ipfs saver ipns key with default value if applicable
 */
 ipfsSaver.prototype.getIpnsKey = function() {
 	var ipnsKey;
-	if (this.wiki.getTiddler("$:/ipfs/saver/key") != undefined) {
-		ipnsKey = this.wiki.getTiddler("$:/ipfs/saver/key").getFieldString("text");
+	if (this.wiki.getTiddler("$:/ipfs/saver/ipns/key") != undefined) {
+		ipnsKey = this.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
 	}
 	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() == "") {
 		ipnsKey = this.getDefaultIpnsKey();
