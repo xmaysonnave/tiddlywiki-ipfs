@@ -1,9 +1,11 @@
 # Ipfs with TiddyWiki
 <a name="tiddlywiki-ipfs"/>
-`Ipfs with TiddyWiki` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
+
+```Ipfs with TiddyWiki``` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
 
 ### Getting Started
 <a name="getting-started"/>
+
 These instructions will get you a copy of the project up and running on your local machine.
 
 
@@ -26,7 +28,7 @@ These instructions will get you a copy of the project up and running on your loc
 <a name="users"/>
 
 
-#### Getting running `Ipfs with TiddlyWiki` in your browser
+#### Getting running ```Ipfs with TiddlyWiki``` in your browser
 <a name="running-browser"/>
 
 
@@ -36,10 +38,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Developer
 <a name="developer"/>
+
 We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs with TiddlyWiki`.
 
 ### Environment
 <a name="developer-environment"/>
+
 * [Node.js](#nodejs) - Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 * [Babelify](https://www.npmjs.com/package/babelify) - Babel browserify is a tool for compiling node-flavored commonjs modules for the browser.
 * [TiddyWiki](https://www.npmjs.com/package/tiddlywiki) -  TiddlyWiki, a non-linear personal web self-contained notebook.
@@ -68,6 +72,7 @@ https://www.npmjs.com/
 
 ##### Install
 <a name="developer-nodejs-install"/>
+
 On Debian buster we setup a new source list who contains the node 11.x repository addresses.
 edit:
 ```
@@ -78,7 +83,6 @@ input:
 deb https://deb.nodesource.com/node_11.x buster main
 deb-src https://deb.nodesource.com/node_11.x buster main
 ```
-
 Once our node repository is known, we update and install the latest nodejs 11.x.
 ```
 sudo apt update
@@ -88,6 +92,7 @@ sudo apt install nodejs
 
 ##### Setup
 <a name="developer-nodejs-setup"/>
+
 We configure our home environment to host the npm global packages.
 
 Configure npm global directory
@@ -126,6 +131,7 @@ npm -v
 
 #### Repository install
 <a name="developer-repository-install"/>
+
 Clone this repository in a local folder:
 ```
 git clone https://github.com/xmaysonnave/tiddlywiki-ipfs --depth 1
@@ -143,6 +149,7 @@ We now have a populated node_modules directory.
 
 #### Building TiddlyWiki
 <a name="developer-building-tiddlywiki"/>
+
 The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`.
 The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
 * prepare
@@ -157,6 +164,7 @@ The `ipfs/output` directory should be populated with two directories:
 
 #### Running TiddlyWiki
 <a name="developer-running"/>
+
 The directory `ipfs/output/base` contains two files:
 * favicon.ico
 * index.html
