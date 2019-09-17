@@ -157,6 +157,7 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 * tiddlywiki-ipfs
 * tiddlywiki-ipfs-cardo
 * all
+
 Use the `all` script to build TiddlyWiki instances.
 The `ipfs/output` directory should be populated with two directories:
 * base
@@ -168,6 +169,7 @@ The `ipfs/output` directory should be populated with two directories:
 The directory `ipfs/output/base` contains two files:
 * favicon.ico
 * index.html
+
 Open the index.html in your favorite browser.
 The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
 
@@ -176,7 +178,8 @@ The `favicon.ico` is available as a convenience as its content is embedded in th
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-<a name="authors"/>## Authors
+## Authors
+<a name="authors"/>
 
 * **Xavier Maysonnave** - *Initial work* - [tiddlywiki-ipfs](https://github.com/xmaysonnave/tiddlywiki-ipfs)
 
