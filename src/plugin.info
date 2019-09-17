@@ -1,6 +1,6 @@
 {
   "title": "$:/plugins/ipfs",
-  "description": "Ipfs for TiddlyWiki",
+  "description": "Ipfs with TiddlyWiki",
   "author": "Xavier Maysonnave",
   "version": "0.1.0",
   "license": "GPLv3",

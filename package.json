@@ -11,8 +11,8 @@
   "scripts": {
     "prepare": "./scripts/prepare.sh",
     "browserify": "browserify src/ipfs-saver.js -s ipfsSaver -o ipfs/plugins/ipfs/ipfs-saver.js",
-    "tiddlywiki-ipfs": "tiddlywiki ipfs --import attachment/vol_10_e.json application/json --import attachment/vol_10_f.json application/json --output ipfs/output/base --build --verbose",
-    "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import attachment/vol_10_e.json application/json --import attachment/vol_10_f.json application/json --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
+    "tiddlywiki-ipfs": "tiddlywiki ipfs --import attachment/the_little_prince_embedded.json application/json --import attachment/the_little_prince_ipfs_encrypted.json application/json --import attachment/the_little_prince_ipfs.json application/json --output ipfs/output/base --build --verbose",
+    "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import attachment/the_little_prince_embedded.json application/json --import attachment/the_little_prince_ipfs_encrypted.json application/json --import attachment/the_little_prince_ipfs.json application/json --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
     "all": "./scripts/all.sh"
   },
   "repository": {

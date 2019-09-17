@@ -387,11 +387,9 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (ipfsProtocol == "ipfs") {
 				unpin = hash;
 			} else if (ipfsProtocol != "ipns") {
-				console.log("Ipfs protocol not supported: " + ipfsProtocol);
-				callback("Ipfs protocol not supported: " + ipfsProtocol);
-				return false;
+				ipfsProtocol = this.getProtocol();
+				hash = null;
 			}
-			if (this.verbose) console.log("Current: /" + ipfsProtocol + "/" + hash);
 		}
 		
 		// Getting an Ipfs client
