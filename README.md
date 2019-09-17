@@ -1,16 +1,14 @@
 # Ipfs with TiddyWiki
-<a name="tiddlywiki-ipfs"></a>
-
-```Ipfs with TiddyWiki``` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
+<a name="tiddlywiki-ipfs"/>
+`Ipfs with TiddyWiki` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
 
 ### Getting Started
-<a name="getting-started"></a>
-
+<a name="getting-started"/>
 These instructions will get you a copy of the project up and running on your local machine.
 
 
 ### Prerequisites
-<a name="pre-requisites"></a>
+<a name="pre-requisites"/>
 
 * [Users](#users)
 * * [Getting running `Ipfs with TiddlyWiki` in your browser](#running-browser)
@@ -25,25 +23,23 @@ These instructions will get you a copy of the project up and running on your loc
 * [License](#license)
 
 ### Users
-<a name="users"></a>
+<a name="users"/>
 
 
 #### Getting running `Ipfs with TiddlyWiki` in your browser
-<a name="running-browser"></a>
+<a name="running-browser"/>
 
 
 #### Running a local Ipfs node with Ipfs Desktop
-<a name="ipfs-desktop"></a>
+<a name="ipfs-desktop"/>
 
 
 ## Developer
-<a name="developer"></a>
-
-We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs for TiddlyWiki`.
+<a name="developer"/>
+We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs with TiddlyWiki`.
 
 ### Environment
-<a name="developer-environment"></a>
-
+<a name="developer-environment"/>
 * [Node.js](#nodejs) - Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 * [Babelify](https://www.npmjs.com/package/babelify) - Babel browserify is a tool for compiling node-flavored commonjs modules for the browser.
 * [TiddyWiki](https://www.npmjs.com/package/tiddlywiki) -  TiddlyWiki, a non-linear personal web self-contained notebook.
@@ -57,11 +53,11 @@ We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs 
 
 
 #### Node.js
-<a name="developer-nodejs"></a>
+<a name="developer-nodejs"/>
 
 
 ##### Resource
-<a name="developer-nodejs-resource"></a>
+<a name="developer-nodejs-resource"/>
 
 Official Node documentation:
 https://nodejs.org/en/docs/
@@ -71,9 +67,7 @@ https://www.npmjs.com/
 
 
 ##### Install
-<a name="developer-nodejs-install"></a>
-
-
+<a name="developer-nodejs-install"/>
 On Debian buster we setup a new source list who contains the node 11.x repository addresses.
 edit:
 ```
@@ -93,8 +87,7 @@ sudo apt install nodejs
 
 
 ##### Setup
-<a name="developer-nodejs-setup"></a>
-
+<a name="developer-nodejs-setup"/>
 We configure our home environment to host the npm global packages.
 
 Configure npm global directory
@@ -131,16 +124,51 @@ npm -v
 ```
 
 
-#### Building
-<a name="developer-building"></a>
+#### Repository install
+<a name="developer-repository-install"/>
+Clone this repository in a local folder:
+```
+git clone https://github.com/xmaysonnave/tiddlywiki-ipfs --depth 1
+```
+Change directory:
+```
+cd tiddlywiki-ipfs
+```
+Install dependencies, [Node.js](#nodejs) should be installed and setup:
+```
+npm install
+```
+We now have a populated node_modules directory.
 
+
+#### Building TiddlyWiki
+<a name="developer-building-tiddlywiki"/>
+The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`.
+The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
+* prepare
+* browserify
+* tiddlywiki-ipfs
+* tiddlywiki-ipfs-cardo
+* all
+Use the `all` script to build TiddlyWiki instances.
+The `ipfs/output` directory should be populated with two directories:
+* base
+* cardo
+
+#### Running TiddlyWiki
+<a name="developer-running"/>
+The directory `ipfs/output/base` contains two files:
+* favicon.ico
+* index.html
+Open the index.html in your favorite browser.
+The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
 
 ## Contributing
-<a name="contributing"></a>
+<a name="contributing"/>
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-<a name="authors"></a>## Authors
+<a name="authors"/>## Authors
 
 * **Xavier Maysonnave** - *Initial work* - [tiddlywiki-ipfs](https://github.com/xmaysonnave/tiddlywiki-ipfs)
 
@@ -148,13 +176,13 @@ See also the list of [contributors](https://github.com/xmaysonnave/tiddlywiki-ip
 
 
 ## License
-<a name="license"></a>
+<a name="license"/>
 
 This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details
 
 
 ## Acknowledgments
-<a name="acknowledgment"></a>
+<a name="acknowledgment"/>
 
 * Hat tip to anyone who support this project
 * Inspiration
