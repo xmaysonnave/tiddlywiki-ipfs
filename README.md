@@ -74,6 +74,7 @@ https://www.npmjs.com/
 <a name="developer-nodejs-install"/>
 
 On Debian buster we setup a new source list who contains the node 11.x repository addresses.
+
 edit:
 ```
 /etc/apt/source.list.d/nodesource.list
@@ -83,7 +84,7 @@ input:
 deb https://deb.nodesource.com/node_11.x buster main
 deb-src https://deb.nodesource.com/node_11.x buster main
 ```
-Once our node repository is known, we update and install the latest nodejs 11.x.
+Once our node repository is known, we update and install the latest nodejs 11.x:
 ```
 sudo apt update
 sudo apt install nodejs
@@ -150,16 +151,14 @@ We now have a populated node_modules directory.
 #### Building TiddlyWiki
 <a name="developer-building-tiddlywiki"/>
 
-The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`.
-The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
+The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`. The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
 * prepare
 * browserify
 * tiddlywiki-ipfs
 * tiddlywiki-ipfs-cardo
 * all
 
-Use the `all` script to build TiddlyWiki instances.
-The `ipfs/output` directory should be populated with two directories:
+Use the `all` script to build TiddlyWiki instances. The `ipfs/output` directory should be populated with two directories:
 * base
 * cardo
 
@@ -170,8 +169,7 @@ The directory `ipfs/output/base` contains two files:
 * favicon.ico
 * index.html
 
-Open the index.html in your favorite browser.
-The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
+Open the index.html in your favorite browser. The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
 
 ## Contributing
 <a name="contributing"/>
