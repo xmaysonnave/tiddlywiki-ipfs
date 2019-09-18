@@ -3,6 +3,10 @@
 
 ```Ipfs with TiddyWiki``` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
 
+According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki), `TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.`
+
+TiddlyWiki with Ipfs is a decentralized computer application (DApp, dApp, Dapp, or dapp) that runs on a distributed computing system.
+
 ### Getting Started
 <a name="getting-started"/>
 
@@ -15,25 +19,42 @@ These instructions will get you a copy of the project up and running on your loc
 * [Users](#users)
 * * [Getting running `Ipfs with TiddlyWiki` in your browser](#running-browser)
 * * [Running a local Ipfs node with Ipfs Desktop](#ipfs-desktop)
+* * [Use a browser extension with Ipfs Companion](#ipfs-companion)
 * * [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 * [Developer](#developer)
 * * [Environment](#developer-environment)
 * * [Node.js](#developer-nodejs)
 * * [Building](#developer-building)
-* * Running a local Ipfs server go-ipfs
-* * Running a Https Nginx frontend
 * [License](#license)
 
 ### Users
 <a name="users"/>
 
 
-#### Getting running ```Ipfs with TiddlyWiki``` in your browser
+#### Getting running `Ipfs with TiddlyWiki` in your browser
 <a name="running-browser"/>
+
+Follow the developer instructions [Running TiddlyWiki](#developer-running)
 
 
 #### Running a local Ipfs node with Ipfs Desktop
 <a name="ipfs-desktop"/>
+
+* [Ipfs Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
+
+According to the `ipfs-desktop` [README.md](https://github.com/ipfs-shipyard/ipfs-desktop/blob/master/README.md), `IPFS Desktop allows you to run your IPFS Node on your machine without having to bother with command line tools`.
+
+Running a local IPFS node server greatly enhance the performance.
+
+#### Use a browser extension with Ipfs Companion
+<a name="ipfs-companion"/>
+
+* [Ipfs Companion for Chrome](https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch)
+* [Ipfs Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
+
+According to the `ipfs-companion` [README.md](https://github.com/ipfs-shipyard/ipfs-companion/blob/master/README.md), `This add-on enables everyone to access IPFS resources the way they were meant: from locally running IPFS node :-)`.
+
+Running a local IPFS node server greatly enhance the performance.
 
 
 ## Developer
@@ -49,11 +70,6 @@ We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs 
 * [TiddyWiki](https://www.npmjs.com/package/tiddlywiki) -  TiddlyWiki, a non-linear personal web self-contained notebook.
 * [Ipfs Provider](https://github.com/ipfs-shipyard/ipfs-provider)
 * [Ipfs Http Client](https://github.com/ipfs/js-ipfs-http-client)
-* [Ipfs Companion for Chrome](https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch)
-* [Ipfs Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
-* [Go](https://golang.org/) - go version 1.12.X recommended
-* [Go Ipfs](https://github.com/ipfs/go-ipfs)
-* [Nginx](http://nginx.org/)
 
 
 #### Node.js
@@ -161,6 +177,7 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 Use the `all` script to build TiddlyWiki instances. The `ipfs/output` directory should be populated with two directories:
 * base
 * cardo
+
 
 #### Running TiddlyWiki
 <a name="developer-running"/>
