@@ -165,16 +165,18 @@ Use the `all` script to build TiddlyWiki instances. The `ipfs/output` directory 
 #### Running TiddlyWiki
 <a name="developer-running"/>
 
-The directory `ipfs/output/base` contains two files:
+The directories [ipfs/output/base](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/ipfs/output/base) and [ipfs/output/cardo](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/ipfs/output/cardo) contains two files:
 * favicon.ico
 * index.html
 
-Open the index.html in your favorite browser. The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
+Open an index.html in your favorite browser. The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
+
 
 ## Contributing
 <a name="contributing"/>
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
 
 ## Authors
 <a name="authors"/>

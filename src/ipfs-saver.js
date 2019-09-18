@@ -398,16 +398,10 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 						this.needTobeUnpinned.push(hash);
 					}
 				} else if (ipfsProtocol == "ipns") {
-					// Check if hash is valid
-					const toMultiaddr = require("uri-to-multiaddr");
-					var addr;
-					try {
-						addr = toMultiaddr(hash);
-					} catch (error) {
-						addr = undefined;
-					}
+					const CID  = require('cids');
 					// Fallback to default protocol
-					if (addr == undefined) {
+					var cid = new CID(hash);
+					if (CID.isCID(cid) == false) {
 						ipfsProtocol = this.getProtocol();
 						hash = null;				
 					}

@@ -30,7 +30,8 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "ipfs-provider": "^0.2.2"
+    "ipfs-provider": "^0.2.2",
+    "cids": "^0.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
