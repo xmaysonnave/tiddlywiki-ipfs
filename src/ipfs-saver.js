@@ -370,11 +370,11 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				hash = currentUrlPathname.substring(6);
 				ipfsProtocol = currentUrlPathname.substring(1, 5);
 			} catch (error) {
-				hash = undefined;
+				hash = null;
 				ipfsProtocol = $tw.utils.getIpfsProtocol();
 			}
 			// Process if any
-			if (hash != undefined) {
+			if (hash != null) {
 				if (ipfsProtocol == "ipfs") {
 					if (this.needTobeUnpinned.indexOf(hash) == -1) {
 						unpin = hash;
@@ -418,7 +418,6 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 
 		// Check Ipns Key and Ipns Name
 		if (ipfsProtocol == "ipns" || $tw.utils.getIpfsProtocol() == "ipns") {
-
 			// Getting default ipns key and ipns name
 			ipnsKey = $tw.utils.getIpfsIpnsKey() != null ? $tw.utils.getIpfsIpnsKey().trim() == "" ? null : $tw.utils.getIpfsIpnsKey().trim() : null;
 			ipnsName = $tw.utils.getIpfsIpnsName() != null ? $tw.utils.getIpfsIpnsName().trim() == "" ? null : $tw.utils.getIpfsIpnsName().trim() : null;
@@ -463,7 +462,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				try {	
 					var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
 					if (resolved != undefined) {
-						// Store to unpin previous cid	
+						// Store to unpin previous	
 						unpin = resolved.substring(6);
 						if (this.needTobeUnpinned.indexOf(unpin) == -1) {
 							this.needTobeUnpinned.push(unpin);
@@ -482,7 +481,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (ipfsProtocol == "ipns") {
 				// Check current ipns key and default ipnskey
 				// If the check is failing we log and continue
-				if (hash != ipnsKey) {
+				if (hash != null && ipnsKey != hash) {
 					console.log("Current Ipns key: " + hash + " do not match the Ipns key: /ipns/" + ipnsKey);
 				}
 			} 	
@@ -1143,6 +1142,7 @@ ipfsSaver.prototype.add = async function(self, client, content) {
 		// Process
     reader.onloadend = async function () {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer result...");
+			const Buffer = require('buffer/').Buffer
 			const buffer = Buffer.from(reader.result);
 			// Window Ipfs policy
 			if (client.enable) {
