@@ -19,7 +19,6 @@ Select the appropriate saver module and set it up
 var ipfsSaver = function(wiki) {
 	var self = this;
 	this.wiki = wiki;
-	this.verbose = true;
 	this.apiUrl = null;
 	this.ipfsProvider = null;
 	this.needTobeUnpinned = [];
@@ -48,7 +47,7 @@ ipfsSaver.prototype.errorDialog = function(error) {
 }
 
 ipfsSaver.prototype.uploadProgress = function(len) {
-  console.log("Ipfs upload progress:", len);  	
+  if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);  	
 }
 
 ipfsSaver.prototype.base64ToUint8Array = function(base64) {
@@ -127,26 +126,6 @@ ipfsSaver.prototype.Utf8ArrayToStr = function(array) {
 	return out;
 }
 
-ipfsSaver.prototype.updatePriority = function() {
-	this.info.priority = this.getPriority();
-	// Sort the savers into priority order
-	$tw.saverHandler.savers.sort(function(a, b) {
-		if (a.info.priority < b.info.priority) {
-			return -1;
-		} else {
-			if (a.info.priority > b.info.priority) {
-				return +1;
-			} else {
-				return 0;
-			}
-		}
-	});
-}
-
-ipfsSaver.prototype.updateVerbose = function() {
-	this.verbose = this.getVerbose();
-}
-
 ipfsSaver.prototype.parseUrl = function(url) {
 	var parser = document.createElement('a');
 	var searchObject = {};
@@ -186,7 +165,11 @@ ipfsSaver.prototype.parseDocumentUrl = function() {
 }
 
 ipfsSaver.prototype.parseGatewayUrl = function() { 
-	const gatewayUrl = this.getGatewayUrl();
+	const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
+	// Check
+	if (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "") {
+		throw new Error("Undefined Ipfs gateway url.");
+	}			
 	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(gatewayUrl);
 	const protocol = UrlProtocol;
 	const hostname = UrlHostname;
@@ -200,7 +183,7 @@ ipfsSaver.prototype.parseGatewayUrl = function() {
 }
 
 ipfsSaver.prototype.parseApiUrl = function() { 
-	const apiUrl = this.getApiUrl();
+	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url.");
@@ -224,7 +207,7 @@ ipfsSaver.prototype.parseApiUrl = function() {
 ipfsSaver.prototype.getDefaultIpfs = async function() {
 	// Ipfs Provider
 	const getIpfs = require("ipfs-provider");	
-	const apiUrl = this.getApiUrl();
+	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url");
@@ -277,7 +260,7 @@ ipfsSaver.prototype.getWebextIpfs = async function() {
 		return { ipfs, provider };	
 	} catch (error) {
 		console.log(error);
-		throw new Error("Ipfs Webextension is unavailable: " + error.message);
+		throw new Error("Ipfs WebExtension is unavailable: " + error.message);
 	}
 }
 
@@ -308,7 +291,7 @@ ipfsSaver.prototype.getWindowIpfs = async function() {
 ipfsSaver.prototype.getHttpIpfs = async function() {
 	// Ipfs Provider
 	const getIpfs = require("ipfs-provider");	
-	const apiUrl = this.getApiUrl();
+	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url");
@@ -362,7 +345,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		var currentUrlPort = port;
 
 		// Check
-		var gatewayUrl = this.getGatewayUrl();
+		var gatewayUrl = $tw.utils.getIpfsGatewayUrl();
 		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
 			console.log("Undefined Ipfs gateway url");
 			callback("Undefined Ipfs gateway url");
@@ -388,7 +371,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				ipfsProtocol = currentUrlPathname.substring(1, 5);
 			} catch (error) {
 				hash = undefined;
-				ipfsProtocol = this.getProtocol();
+				ipfsProtocol = $tw.utils.getIpfsProtocol();
 			}
 			// Process if any
 			if (hash != undefined) {
@@ -402,12 +385,12 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 					// Fallback to default protocol
 					var cid = new CID(hash);
 					if (CID.isCID(cid) == false) {
-						ipfsProtocol = this.getProtocol();
+						ipfsProtocol = $tw.utils.getIpfsProtocol();
 						hash = null;				
 					}
 				// Fallback to default protocol					
 				} else if (ipfsProtocol != "ipns") {
-					ipfsProtocol = this.getProtocol();
+					ipfsProtocol = $tw.utils.getIpfsProtocol();
 					hash = null;
 				}
 			}
@@ -421,7 +404,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			callback(error);
 			return false;
 		}
-		if (this.verbose) console.log(message);	
+		if ($tw.utils.getIpfsVerbose()) console.log(message);	
 
 		// Retrieve the default empty directory to check if the connection is alive
 		var { error, message } = await this.getEmptyDirectory(this, ipfs);
@@ -431,17 +414,17 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			callback(error);
 			return false;
 		}
-		if (this.verbose) console.log(message);		
+		if ($tw.utils.getIpfsVerbose()) console.log(message);		
 
 		// Check Ipns Key and Ipns Name
-		if (ipfsProtocol == "ipns" || this.getProtocol() == "ipns") {
+		if (ipfsProtocol == "ipns" || $tw.utils.getIpfsProtocol() == "ipns") {
 
 			// Getting default ipns key and ipns name
-			ipnsKey = this.getIpnsKey() != null ? this.getIpnsKey().trim() == "" ? null : this.getIpnsKey().trim() : null;
-			ipnsName = this.getIpnsName() != null ? this.getIpnsName().trim() == "" ? null : this.getIpnsName().trim() : null;
+			ipnsKey = $tw.utils.getIpfsIpnsKey() != null ? $tw.utils.getIpfsIpnsKey().trim() == "" ? null : $tw.utils.getIpfsIpnsKey().trim() : null;
+			ipnsName = $tw.utils.getIpfsIpnsName() != null ? $tw.utils.getIpfsIpnsName().trim() == "" ? null : $tw.utils.getIpfsIpnsName().trim() : null;
 			// Check if available
 			if (ipnsName != null && ipnsKey != null) {
-				if (this.verbose) console.log("Ipns name: " + ipnsName + ", Ipns key: /ipns/" + ipnsKey);
+				if ($tw.utils.getIpfsVerbose()) console.log("Ipns name: " + ipnsName + ", Ipns key: /ipns/" + ipnsKey);
 				// Check default ipns key and default ipns name
 				// If the check is failing we log and continue
 				try {	
@@ -485,7 +468,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 						if (this.needTobeUnpinned.indexOf(unpin) == -1) {
 							this.needTobeUnpinned.push(unpin);
 						}											
-						if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
+						if ($tw.utils.getIpfsVerbose()) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
 					} else {
 						console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
 					}
@@ -507,7 +490,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Upload	current document
-		if (this.verbose) console.log("Uploading current document...");	
+		if ($tw.utils.getIpfsVerbose()) console.log("Uploading current document...");	
 		// Transform the document text into a Blob
 		var blob = null;
 		try {
@@ -526,21 +509,21 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			callback(error);
 			return false;
 		}	
-		if (this.verbose) console.log(message);		
+		if ($tw.utils.getIpfsVerbose()) console.log(message);		
 
 		// Publish to Ipns if current protocol is ipfs or ipns is requested
 		// If the process is failing we log and continue
-		if (unpin != added[0].hash && (this.getProtocol() == "ipns" || ipfsProtocol == "ipns")) {
+		if (unpin != added[0].hash && ($tw.utils.getIpfsProtocol() == "ipns" || ipfsProtocol == "ipns")) {
 			// Publish to Ipns if ipnsKey match the current hash			
 			if (hash == ipnsKey || ipfsProtocol == "ipfs") {
 				// Getting default ipns name
-				var ipnsName = this.getIpnsName();
-				if (this.verbose) console.log("Publishing Ipns name: " + ipnsName);
+				var ipnsName = $tw.utils.getIpfsIpnsName();
+				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
 				try {				
 					var published = await this.publish(this, ipfs, ipnsName, "/ipfs/" + added[0].hash);
 					if (published == undefined) {
 						console.log("Failed to publish Ipns name: " + ipnsName);
-					} else if (this.verbose) {
+					} else if ($tw.utils.getIpfsVerbose()) {
 						console.log("Successfully published Ipns name: " + ipnsName);
 					}
 				} catch (error) {
@@ -558,7 +541,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				if (error != null)  {
 					if (message != undefined && message.trim() != "") console.log(message);
 					console.log(error);
-				} else if (this.verbose) {
+				} else if ($tw.utils.getIpfsVerbose()) {
 					console.log(message);
 				}
 			}
@@ -570,7 +553,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 
 		// Next location
 		var cid;
-		if (this.getProtocol() == "ipns") {
+		if ($tw.utils.getIpfsProtocol() == "ipns") {
 			if (ipfsProtocol == "ipfs") {
 				cid = "/ipns/" + ipnsKey;
 			} else {
@@ -583,9 +566,9 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			var url;
 			url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + cid;
 			// Assign
-			if (this.verbose) console.log("Assigning new location: " + url);
+			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
 			window.location.assign(url);
-		} else if (this.getProtocol() == "ipns" && ipfsProtocol != "ipns") {
+		} else if ($tw.utils.getIpfsProtocol() == "ipns" && ipfsProtocol != "ipns") {
 			var url;
 			if (currentUrlHostname == gatewayUrlHostname) {
 				url = currentUrlProtocol + "//" + currentUrlHostname + currentUrlPort + cid;
@@ -593,9 +576,9 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + cid;
 			}
 			// Assign			
-			if (this.verbose) console.log("Assigning new location: " + url);
+			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
 			window.location.assign(url);						
-		} else if ((this.getProtocol() == "ipfs" || ipfsProtocol == "ipfs") && cid != added[0].hash) {
+		} else if (($tw.utils.getIpfsProtocol() == "ipfs" || ipfsProtocol == "ipfs") && cid != added[0].hash) {
 			var url;
 			if (currentUrlHostname == gatewayUrlHostname) {
 				url = currentUrlProtocol + "//" + currentUrlHostname + currentUrlPort + cid;
@@ -603,7 +586,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + cid;
 			}			
 			// Assign
-			if (this.verbose) console.log("Assigning new location: " + url);
+			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
 			window.location.assign(url);
 		}
 
@@ -688,7 +671,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 		return tiddler;
 	}
-	if (self.verbose) console.log(message);
+	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Retrieve the default empty directory to check if the connection is alive
 	var { error, message } = await self.getEmptyDirectory(self, ipfs);
@@ -699,7 +682,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 		return tiddler;
 	}
-	if (self.verbose) console.log(message);
+	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Download
 	if (newUri == undefined || newUri == null || newUri.trim() == "") {
@@ -713,7 +696,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 			return tiddler;
 		}
-		if (self.verbose) console.log(message);
+		if ($tw.utils.getIpfsVerbose()) console.log(message);
 		
 		// Store old cid as it needs to be unpined when the wiki is saved			
 		if (self.needTobeUnpinned.indexOf(cid) == -1) {
@@ -849,7 +832,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		var currentUrlPort = port;
 
 		// Check
-		var gatewayUrl = this.getGatewayUrl();
+		var gatewayUrl = $tw.utils.getIpfsGatewayUrl();
 		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
 			console.log("Undefined Ipfs gateway url");
 			self.errorDialog("Undefined Ipfs gateway url");
@@ -870,7 +853,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		self.errorDialog(error);
 		return false;
 	}
-	if (self.verbose) console.log(message);
+	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Retrieve the default empty directory to check if the connection is alive
 	var { error, message } = await self.getEmptyDirectory(self, ipfs);
@@ -880,10 +863,10 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		self.errorDialog(error);
 		return false;
 	}
-	if (self.verbose) console.log(message);
+	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Upload	current attachment
-	if (self.verbose) console.log("Uploading attachment");
+	if ($tw.utils.getIpfsVerbose()) console.log("Uploading attachment");
 	// Transform the base64 encoded file into a Blob
 	var blob = null;
 	try {
@@ -914,7 +897,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		return false;
 	}	
 	var cid = added[0].hash;
-	if (self.verbose) console.log(message);
+	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Update current tiddler
 	var addition = $tw.wiki.getModificationFields();
@@ -970,14 +953,14 @@ ipfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	// process priority
 	var priority = changes["$:/ipfs/saver/priority/default"];
 	if (priority != undefined) {
-		self.updatePriority();
-		if (self.verbose) console.log("Ipfs Saver priority: " + self.getPriority());
+		// Load priority property
+		var priority = $tw.utils.updateIpfsPriority()
+		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
 	}
 	// process verbose		
 	var verbose = changes["$:/ipfs/saver/verbose"];
 	if (verbose != undefined) {
-		self.updateVerbose();
-		if (self.verbose) console.log("Ipfs Saver is verbose");
+		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
 	}
 }
 
@@ -986,7 +969,7 @@ ipfsSaver.prototype.getIpfsClient = async function(self) {
 	try {
 		var tmpIpfs;
 		var tmpProvider;
-		const policy = self.getPolicy();
+		const policy = $tw.utils.getIpfsPolicy();
 		if (policy == "webext") {
 			var { ipfs, provider } = await self.getWebextIpfs();
 			tmpIpfs = ipfs;
@@ -1159,7 +1142,7 @@ ipfsSaver.prototype.add = async function(self, client, content) {
 		const reader = new FileReader();
 		// Process
     reader.onloadend = async function () {
-			if (self.verbose) console.log("Processing buffer result...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer result...");
 			const buffer = Buffer.from(reader.result);
 			// Window Ipfs policy
 			if (client.enable) {
@@ -1173,7 +1156,7 @@ ipfsSaver.prototype.add = async function(self, client, content) {
 			if (client != undefined && client.add != undefined) {
 				client.add(buffer, { progress: self.uploadProgress })
 					.then (result => {
-						if (self.verbose) console.log("Processing add result...");
+						if ($tw.utils.getIpfsVerbose()) console.log("Processing add result...");
 						resolve(result);
 					})
 					.catch (error => {
@@ -1186,7 +1169,7 @@ ipfsSaver.prototype.add = async function(self, client, content) {
 		};
 		try {
 			// Read						
-			if (self.verbose) console.log("Processing add content...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing add content...");
 			reader.readAsArrayBuffer(content);
 		} catch (error) {
 			console.log(error);
@@ -1209,7 +1192,7 @@ ipfsSaver.prototype.get = async function(self, client, cid) {
 		if (client != undefined && client.get != undefined) {		
 			client.get(cid)
 			.then (result => {
-				if (self.verbose) console.log("Processing get result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing get result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1236,7 +1219,7 @@ ipfsSaver.prototype.cat = async function(self, client, cid) {
 		if (client != undefined && client.cat != undefined) {		
 			client.cat(cid)
 			.then (result => {
-				if (self.verbose) console.log("Processing cat result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing cat result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1263,7 +1246,7 @@ ipfsSaver.prototype.pin = async function(self, client, cid) {
 		if (client != undefined && client.pin != undefined && client.pin.add != undefined) {
 			client.pin.add(cid)
 			.then (result => {
-				if (self.verbose) console.log("Processing pin result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing pin result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1290,7 +1273,7 @@ ipfsSaver.prototype.unpin = async function(self, client, cid) {
 		if (client != undefined && client.pin != undefined && client.pin.rm != undefined) {
 			client.pin.rm(cid)
 			.then (result => {
-				if (self.verbose) console.log("Processing unpin result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing unpin result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1317,7 +1300,7 @@ ipfsSaver.prototype.publish = async function(self, client, name, cid) {
 		if (client != undefined && client.name != undefined && client.name.publish != undefined) {
 			client.name.publish(cid, { key: name })
 			.then (result => {
-				if (self.verbose) console.log("Processing publish result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing publish result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1344,7 +1327,7 @@ ipfsSaver.prototype.resolve = async function(self, client, hash) {
 		if (client != undefined && client.name != undefined && client.name.resolve != undefined) {
 			client.name.resolve(hash)
 			.then (result => {
-				if (self.verbose) console.log("Processing resolve result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1371,7 +1354,7 @@ ipfsSaver.prototype.id = async function(self, client) {
 		if (client != undefined && client.id != undefined) {
 			client.id()
 			.then (result => {
-				if (self.verbose) console.log("Processing id result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing id result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1398,7 +1381,7 @@ ipfsSaver.prototype.keys = async function(self, client) {
 		if (client != undefined && client.key != undefined && client.key.list != undefined) {
 			client.key.list()
 			.then (result => {
-				if (self.verbose) console.log("Processing key result...");
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing key result...");
 				resolve(result);
 			})
 			.catch (error => {
@@ -1424,195 +1407,6 @@ ipfsSaver.prototype.info = {
 	priority: 3000,
 	capabilities: ["save", "autosave"]
 };
-
-/*
-Retrieve ipfs saver priority with default value if applicable
-*/
-ipfsSaver.prototype.getPriority = function() {
-	var priority = this.wiki.getTiddler("$:/ipfs/saver/priority/default");
-	if (priority != undefined) {
-		priority = priority.getFieldString("text");
-	}
-	priority = this.wiki.getTiddler(priority);
-	if (priority != undefined) {
-	 	priority = priority.getFieldString("text");
-	}	
-	if (priority == undefined || priority == null || priority.trim() == "") {
-		priority = this.getDefaultPriority();
-	} else {
-		try {
-			priority = parseInt(priority);
-		} catch (error) {
-			console.log(error);
-			priority = -1;
-		}
-	}
-	return priority;	
-}
-
-/*
-Default Priority
-*/
-ipfsSaver.prototype.getDefaultPriority = function() {
-	return 3000;
-}
-
-/*
-Retrieve ipfs saver protocol with default value if applicable
-*/
-ipfsSaver.prototype.getProtocol = function() {
-	var protocol;
-	if (this.wiki.getTiddler("$:/ipfs/saver/protocol") != undefined) {
-		protocol = this.wiki.getTiddler("$:/ipfs/saver/protocol").getFieldString("text");
-	}
-	if (protocol == undefined || protocol == null || protocol.trim() == "") {
-		protocol = this.getDefaultProtocol();
-	}
-	return protocol;
-}
-
-/*
-Default Protocol
-*/
-ipfsSaver.prototype.getDefaultProtocol = function() {
-	return "ipfs";
-}
-
-/*
-Retrieve ipfs saver api url with default value if applicable
-*/
-ipfsSaver.prototype.getApiUrl = function() {
-	var api = this.wiki.getTiddler("$:/ipfs/saver/api/default");
-	if (api != undefined) {
-		api = api.getFieldString("text");
-	}
-	api = this.wiki.getTiddler(api);
-	if (api != undefined) {
-	 	api = api.getFieldString("text");
-	}	
-	if (api == undefined || api == null || api.trim() == "") {
-		api = this.getDefaultApiUrl();
-	}
-	return api;
-}
-
-/*
-Default Api Url
-*/
-ipfsSaver.prototype.getDefaultApiUrl = function() {
-	return "https://ipfs.infura.io:5001";
-}
-
-/*
-Retrieve ipfs saver gateway url with default value if applicable
-*/
-ipfsSaver.prototype.getGatewayUrl = function() {
-	var gateway = this.wiki.getTiddler("$:/ipfs/saver/gateway/default");
-	if (gateway != undefined) {
-		gateway = gateway.getFieldString("text");
-	}
-	gateway = this.wiki.getTiddler(gateway);
-	if (gateway != undefined) {
-	 	gateway = gateway.getFieldString("text");
-	}	
-	if (gateway == undefined || gateway == null || gateway.trim() == "") {
-		gateway = this.getDefaultGatewayUrl();
-	}
-	return gateway;
-}
-
-/*
-Default Gateway Url
-*/
-ipfsSaver.prototype.getDefaultGatewayUrl = function() {
-	return "https://ipfs.infura.io";
-}
-
-/*
-Retrieve ipfs saver ipns name with default value if applicable
-*/
-ipfsSaver.prototype.getIpnsName = function() {
-	var ipnsName;
-	if (this.wiki.getTiddler("$:/ipfs/saver/ipns/name") != undefined) {
-		ipnsName = this.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
-	}
-	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() == "") {
-		ipnsName = this.getDefaultIpnsName();
-	}
-	return ipnsName;
-}
-
-/*
-Default Ipns Name
-*/
-ipfsSaver.prototype.getDefaultIpnsName = function() {
-	return "tiddly";
-}
-
-/*
-Retrieve ipfs saver ipns key with default value if applicable
-*/
-ipfsSaver.prototype.getIpnsKey = function() {
-	var ipnsKey;
-	if (this.wiki.getTiddler("$:/ipfs/saver/ipns/key") != undefined) {
-		ipnsKey = this.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
-	}
-	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() == "") {
-		ipnsKey = this.getDefaultIpnsKey();
-	}
-	return ipnsKey;
-}
-
-/*
-Default Ipns Key
-*/
-ipfsSaver.prototype.getDefaultIpnsKey = function() {
-	return "QmV8ZQH9s4hHxPUeFJH17xt7GjmjGj8tEg7uQLz8HNSvFJ";
-}
-
-/*
-Retrieve ipfs saver verbose with default value if applicable
-*/
-ipfsSaver.prototype.getVerbose = function() {
-	var verbose;
-	if (this.wiki.getTiddler("$:/ipfs/saver/verbose") != undefined) {
-		verbose = this.wiki.getTiddler("$:/ipfs/saver/verbose").getFieldString("text");
-	}
-	if (verbose == undefined || verbose == null || verbose.trim() == "") {
-		verbose = true;
-	} else {
-		verbose = ( verbose == this.getDefaultVerbose() );
-	}
-	return verbose;
-}
-
-/*
-Default Verbose
-*/
-ipfsSaver.prototype.getDefaultVerbose = function() {
-	return "yes";
-}
-
-/*
-Retrieve ipfs saver policy with default value if applicable
-*/
-ipfsSaver.prototype.getPolicy = function() {
-	var policy;
-	if (this.wiki.getTiddler("$:/ipfs/saver/policy") != undefined) {
-		policy = this.wiki.getTiddler("$:/ipfs/saver/policy").getFieldString("text");
-	}
-	if (policy == undefined || policy == null || policy.trim() == "") {
-		policy = this.getDefaultPolicy();
-	}
-	return policy;
-}
-
-/*
-Default Policy
-*/
-ipfsSaver.prototype.getDefaultPolicy = function() {
-		return "default";
-}
 
 /*
 Static method that returns true if this saver is capable of working

@@ -6,6 +6,7 @@ rm -f -R ./tw5-cardo > /dev/null 2>&1
 # ipfs directories and ipfs plugin
 mkdir -p ./ipfs/plugins/ipfs > /dev/null 2>&1
 cp ./src/ipfs-startup.js ./ipfs/plugins/ipfs > /dev/null 2>&1
+cp ./src/ipfs-utils.js ./ipfs/plugins/ipfs > /dev/null 2>&1
 cp ./src/ipfs-version.js ./ipfs/plugins/ipfs > /dev/null 2>&1
 cp ./src/plugin.info ./ipfs/plugins/ipfs > /dev/null 2>&1
 # tw5-kin-filter plugin

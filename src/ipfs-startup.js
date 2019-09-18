@@ -19,26 +19,11 @@ exports.after = ["startup"];
 exports.synchronous = false;
 
 exports.startup = function(continueStartupCallback) {
-	// Locate Ipfs saver
-	var saver;
-	for (var i = 0; i < $tw.saverHandler.savers.length; i++) {
-		var saver = $tw.saverHandler.savers[i];
-		if (saver.info.name == "ipfs") {
-			saver = $tw.saverHandler.savers[i];
-			break;
-		}
-	}
-	// Process ipfs saver verbose property
-	if (saver == undefined) {
-		// Continue
-		return continueStartupCallback();
-	}
 	// Load verbose property
-	saver.updateVerbose();
-	if (saver.verbose) console.log("Ipfs Saver is verbose");
+	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
 	// Load priority property
-	saver.updatePriority();
-	if (saver.verbose) console.log("Ipfs Saver priority: " + saver.info.priority);		
+	var priority = $tw.utils.updateIpfsPriority()
+	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);		
   // Continue
 	return continueStartupCallback();
 };
