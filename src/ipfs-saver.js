@@ -371,7 +371,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				ipfsProtocol = currentUrlPathname.substring(1, 5);
 			} catch (error) {
 				hash = null;
-				ipfsProtocol = $tw.utils.getIpfsProtocol();
+				ipfsProtocol = "ipfs";
 			}
 			// Process if any
 			if (hash != null) {
@@ -385,13 +385,13 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 					// Fallback to default protocol
 					var cid = new CID(hash);
 					if (CID.isCID(cid) == false) {
-						ipfsProtocol = $tw.utils.getIpfsProtocol();
-						hash = null;				
+						hash = null;
+						ipfsProtocol = "ipfs";
 					}
 				// Fallback to default protocol					
 				} else if (ipfsProtocol != "ipns") {
-					ipfsProtocol = $tw.utils.getIpfsProtocol();
 					hash = null;
+					ipfsProtocol = "ipfs";
 				}
 			}
 		}
@@ -510,10 +510,10 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}	
 		if ($tw.utils.getIpfsVerbose()) console.log(message);		
 
-		// Publish to Ipns if current protocol is ipfs or ipns is requested
+		// Publish to Ipns if current protocol is ipns or ipns is requested
 		// If the process is failing we log and continue
 		if (unpin != added[0].hash && ($tw.utils.getIpfsProtocol() == "ipns" || ipfsProtocol == "ipns")) {
-			// Publish to Ipns if ipnsKey match the current hash			
+			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs	
 			if (hash == ipnsKey || ipfsProtocol == "ipfs") {
 				// Getting default ipns name
 				var ipnsName = $tw.utils.getIpfsIpnsName();
@@ -553,7 +553,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Next location
 		var cid;
 		if ($tw.utils.getIpfsProtocol() == "ipns") {
-			if (ipfsProtocol == "ipfs") {
+			if (ipfsProtocol == "ipfs" || hash == null) {
 				cid = "/ipns/" + ipnsKey;
 			} else {
 				cid = "/ipns/" + hash;
