@@ -22,7 +22,7 @@ var ipfsSaver = function(wiki) {
 	this.verbose = true;
 	this.apiUrl = null;
 	this.ipfsProvider = null;
-	this.needTobeUnpinned = null;
+	this.needTobeUnpinned = [];
 	// Event management
 	$tw.wiki.addEventListener("change", function(changes) { 
 		return self.handleChangeEvent(self, changes);
@@ -382,13 +382,40 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 
 		// Extract and check URL Ipfs protocol and hash
 		if (currentUrlProtocol != "file:") {
-			hash = currentUrlPathname.substring(6);
-			ipfsProtocol = currentUrlPathname.substring(1, 5);
-			if (ipfsProtocol == "ipfs") {
-				unpin = hash;
-			} else if (ipfsProtocol != "ipns") {
+			// Prevent any disruption
+			try  {
+				hash = currentUrlPathname.substring(6);
+				ipfsProtocol = currentUrlPathname.substring(1, 5);
+			} catch (error) {
+				hash = undefined;
 				ipfsProtocol = this.getProtocol();
-				hash = null;
+			}
+			// Process if any
+			if (hash != undefined) {
+				if (ipfsProtocol == "ipfs") {
+					if (this.needTobeUnpinned.indexOf(hash) == -1) {
+						unpin = hash;
+						this.needTobeUnpinned.push(hash);
+					}
+				} else if (ipfsProtocol == "ipns") {
+					// Check if hash is valid
+					const toMultiaddr = require("uri-to-multiaddr");
+					var addr;
+					try {
+						addr = toMultiaddr(hash);
+					} catch (error) {
+						addr = undefined;
+					}
+					// Fallback to default protocol
+					if (addr == undefined) {
+						ipfsProtocol = this.getProtocol();
+						hash = null;				
+					}
+				// Fallback to default protocol					
+				} else if (ipfsProtocol != "ipns") {
+					ipfsProtocol = this.getProtocol();
+					hash = null;
+				}
 			}
 		}
 		
@@ -459,8 +486,11 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				try {	
 					var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
 					if (resolved != undefined) {
-						// Store previous cid	
+						// Store to unpin previous cid	
 						unpin = resolved.substring(6);
+						if (this.needTobeUnpinned.indexOf(unpin) == -1) {
+							this.needTobeUnpinned.push(unpin);
+						}											
 						if (this.verbose) console.log("Successfully resolved Ipns key: /ipfs/" + unpin);
 					} else {
 						console.log("Failed to resolve Ipns key: /ipns/" + ipnsKey);
@@ -504,10 +534,10 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}	
 		if (this.verbose) console.log(message);		
 
-		// Publish to Ipns if ipnsKey match the current hash
-		// Publish to Ipns if current protocol is ipfs and ipns is requested
+		// Publish to Ipns if current protocol is ipfs or ipns is requested
 		// If the process is failing we log and continue
 		if (unpin != added[0].hash && (this.getProtocol() == "ipns" || ipfsProtocol == "ipns")) {
+			// Publish to Ipns if ipnsKey match the current hash			
 			if (hash == ipnsKey || ipfsProtocol == "ipfs") {
 				// Getting default ipns name
 				var ipnsName = this.getIpnsName();
@@ -526,21 +556,9 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			}
 		}
 
-		// Unpin Previous
-		// If the process is failing we log and continue
-		if (unpin != null && unpin != added[0].hash) {
-			var { error, message, unpined } = await this.unpinFromIpfs(this, ipfs, unpin);
-			if (error != null)  {
-				if (message != undefined && message.trim() != "") console.log(message);
-				console.log(error);
-			} else if (this.verbose) {
-				console.log(message);
-			}
-		}
-
 		// Unpin
 		// If the process is failing we log and continue
-		if (this.needTobeUnpinned != null) {
+		if (this.needTobeUnpinned.length > 0) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
 				var { error, message, unpined } = await this.unpinFromIpfs(this, ipfs, this.needTobeUnpinned[i]);
 				if (error != null)  {
@@ -550,7 +568,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 					console.log(message);
 				}
 			}
-			this.needTobeUnpinned = null;
+			this.needTobeUnpinned = [];
 		}
 	
 		// Done
@@ -634,9 +652,7 @@ ipfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(uri);
 	var cid = UrlPathname.substring(6);
 	// Store cid as it needs to be unpined when the wiki is saved			
-	if (self.needTobeUnpinned == null) {
-		self.needTobeUnpinned = [ cid ];
-	} else if (self.needTobeUnpinned.indexOf(cid) == -1) {
+ 	if (self.needTobeUnpinned.indexOf(cid) == -1) {
 		self.needTobeUnpinned.push(cid);
 	}
 	return tiddler;
@@ -706,9 +722,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		if (self.verbose) console.log(message);
 		
 		// Store old cid as it needs to be unpined when the wiki is saved			
-		if (self.needTobeUnpinned == null) {
-			self.needTobeUnpinned = [ cid ];
-		} else if (self.needTobeUnpinned.indexOf(cid) == -1) {
+		if (self.needTobeUnpinned.indexOf(cid) == -1) {
 			self.needTobeUnpinned.push(cid);
 		}
 
