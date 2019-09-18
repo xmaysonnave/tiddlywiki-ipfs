@@ -1143,7 +1143,7 @@ ipfsSaver.prototype.add = async function(self, client, content) {
     reader.onloadend = async function () {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer result...");
 			const Buffer = require('buffer/').Buffer
-			const buffer = Buffer.from(reader.result);
+			const buffer = await Buffer.from(reader.result);
 			if ($tw.utils.getIpfsVerbose()) console.log("Buffer result has been processed...");
 			// Window Ipfs policy
 			if (client.enable) {
