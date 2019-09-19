@@ -13,6 +13,131 @@ Ipfs Saver
 /*global $tw: false */
 "use strict";
 
+exports.parseUrlFull = function(url) {
+	var parser = document.createElement('a');
+	var searchObject = {};
+	var queries, split, i;
+	// Let the browser do the work
+	parser.href = url;
+	// Convert query string to object
+	queries = parser.search.replace(/^\?/, '').split('&');
+	for( i = 0; i < queries.length; i++ ) {
+			split = queries[i].split('=');
+			searchObject[split[0]] = split[1];
+	}
+	return {
+			UrlProtocol: parser.protocol,
+			UrlHost: parser.host,
+			UrlHostname: parser.hostname,
+			UrlPort: parser.port,
+			UrlPathname: parser.pathname,
+			UrlSearch: parser.search,
+			UrlSearchObject: searchObject,
+			UrlHash: parser.hash
+	};
+}
+
+exports.parseUrlShort = function(url) {
+	// Check
+	if (url == undefined || url == null || url.trim() == "") {
+		throw new Error("Undefined Url.");
+	}				
+	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrlFull(url);
+	const protocol = UrlProtocol;
+	const hostname = UrlHostname;
+	const pathname = UrlPathname;
+	var port =  UrlPort;
+	if (port == undefined || port == null || port.trim() == "") {
+		port = "";
+	} else {
+		port = ":" + port;
+	}
+	return { protocol, hostname, pathname, port };
+}
+
+exports.Base64ToUint8Array = function(base64) {
+	var raw = atob(base64);
+	var uint8Array = new Uint8Array(raw.length);
+	for (var i = 0; i < raw.length; i++) {
+		uint8Array[i] = raw.charCodeAt(i);
+	}
+	return uint8Array;
+}
+
+exports.Uint8ArrayToBase64 = function(uint8) {
+  var CHUNK_SIZE = 0x8000; //arbitrary number
+  var index = 0;
+  var length = uint8.length;
+  var base64 = '';
+  var slice;
+  while (index < length) {
+    slice = uint8.subarray(index, Math.min(index + CHUNK_SIZE, length)); 
+    base64 += String.fromCharCode.apply(null, slice);
+    index += CHUNK_SIZE;
+  }
+  return btoa(base64);
+}
+
+// String to uint array
+exports.StringToUint8Array = function(string) {
+	var escstr = encodeURIComponent(string);
+	var binstr = escstr.replace(/%([0-9A-F]{2})/g, function(match, p1) {
+			return String.fromCharCode('0x' + p1);
+	});
+	var ua = new Uint8Array(binstr.length);
+	Array.prototype.forEach.call(binstr, function (ch, i) {
+			ua[i] = ch.charCodeAt(0);
+	});
+	return ua;
+}
+
+// http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+
+/* utf.js - UTF-8 <=> UTF-16 convertion
+ *
+ * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+ * Version: 1.0
+ * LastModified: Dec 25 1999
+ * This library is free.  You can redistribute it and/or modify it.
+ */
+
+exports.Utf8ArrayToStr = function(array) {
+	var c, char2, char3;
+	var out = "";
+	var len = array.length;
+	var i = 0;
+	while(i < len) {
+		c = array[i++];
+		switch(c >> 4) { 
+		case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+			// 0xxxxxxx
+			out += String.fromCharCode(c);
+			break;
+		case 12: case 13:
+			// 110x xxxx   10xx xxxx
+			char2 = array[i++];
+			out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+			break;
+		case 14:
+			// 1110 xxxx  10xx xxxx  10xx xxxx
+			char2 = array[i++];
+			char3 = array[i++];
+			out += String.fromCharCode(((c & 0x0F) << 12) 
+				| ((char2 & 0x3F) << 6) 
+				| ((char3 & 0x3F) << 0));
+			break;
+		}
+	}
+	return out;
+}
+
+exports.DecryptStringToBase64 = function(content, password) {
+	var encryptedText = this.Utf8ArrayToStr(content);
+	var decryptedText = $tw.crypto.decrypt(encryptedText, password);
+	var base64 = btoa(decryptedText);
+	return base64;
+}
+
 exports.updateIpfsPriority = function() {
 	// Locate Ipfs saver
 	var saver;

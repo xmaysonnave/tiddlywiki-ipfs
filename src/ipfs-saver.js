@@ -13,15 +13,18 @@ Ipfs Saver
 /*global $tw: false */
 "use strict";
 
+var IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
+
 /*
 Select the appropriate saver module and set it up
 */
-var ipfsSaver = function(wiki) {
+var IpfsSaver = function(wiki) {
 	var self = this;
 	this.wiki = wiki;
 	this.apiUrl = null;
 	this.ipfsProvider = null;
 	this.needTobeUnpinned = [];
+	this.ipfsWrapper = new IpfsWrapper();	
 	// Event management
 	$tw.wiki.addEventListener("change", function(changes) { 
 		return self.handleChangeEvent(self, changes);
@@ -40,292 +43,31 @@ var ipfsSaver = function(wiki) {
 	});	
 }
 
-ipfsSaver.prototype.errorDialog = function(error) {
+IpfsSaver.prototype.errorDialog = function(error) {
 	if (error) {
 		alert($tw.language.getString("Error/WhileSaving") + ":\n\n" + error);
 	}
 }
 
-ipfsSaver.prototype.uploadProgress = function(len) {
-  if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);  	
-}
-
-ipfsSaver.prototype.base64ToUint8Array = function(base64) {
-	var raw = atob(base64);
-	var uint8Array = new Uint8Array(raw.length);
-	for (var i = 0; i < raw.length; i++) {
-		uint8Array[i] = raw.charCodeAt(i);
-	}
-	return uint8Array;
-}
-
-ipfsSaver.prototype.Uint8ArrayToBase64 = function(uint8) {
-  var CHUNK_SIZE = 0x8000; //arbitrary number
-  var index = 0;
-  var length = uint8.length;
-  var base64 = '';
-  var slice;
-  while (index < length) {
-    slice = uint8.subarray(index, Math.min(index + CHUNK_SIZE, length)); 
-    base64 += String.fromCharCode.apply(null, slice);
-    index += CHUNK_SIZE;
-  }
-  return btoa(base64);
-}
-
-// String to uint array
-ipfsSaver.prototype.StringToUint8Array = function(string) {
-	var escstr = encodeURIComponent(string);
-	var binstr = escstr.replace(/%([0-9A-F]{2})/g, function(match, p1) {
-			return String.fromCharCode('0x' + p1);
-	});
-	var ua = new Uint8Array(binstr.length);
-	Array.prototype.forEach.call(binstr, function (ch, i) {
-			ua[i] = ch.charCodeAt(0);
-	});
-	return ua;
-}
-
-// http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
-
-/* utf.js - UTF-8 <=> UTF-16 convertion
- *
- * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
- * Version: 1.0
- * LastModified: Dec 25 1999
- * This library is free.  You can redistribute it and/or modify it.
- */
-
-ipfsSaver.prototype.Utf8ArrayToStr = function(array) {
-	var c, char2, char3;
-	var out = "";
-	var len = array.length;
-	var i = 0;
-	while(i < len) {
-		c = array[i++];
-		switch(c >> 4) { 
-		case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-			// 0xxxxxxx
-			out += String.fromCharCode(c);
-			break;
-		case 12: case 13:
-			// 110x xxxx   10xx xxxx
-			char2 = array[i++];
-			out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-			break;
-		case 14:
-			// 1110 xxxx  10xx xxxx  10xx xxxx
-			char2 = array[i++];
-			char3 = array[i++];
-			out += String.fromCharCode(((c & 0x0F) << 12) 
-				| ((char2 & 0x3F) << 6) 
-				| ((char3 & 0x3F) << 0));
-			break;
-		}
-	}
-	return out;
-}
-
-ipfsSaver.prototype.parseUrl = function(url) {
-	var parser = document.createElement('a');
-	var searchObject = {};
-	var queries, split, i;
-	// Let the browser do the work
-	parser.href = url;
-	// Convert query string to object
-	queries = parser.search.replace(/^\?/, '').split('&');
-	for( i = 0; i < queries.length; i++ ) {
-			split = queries[i].split('=');
-			searchObject[split[0]] = split[1];
-	}
-	return {
-			UrlProtocol: parser.protocol,
-			UrlHost: parser.host,
-			UrlHostname: parser.hostname,
-			UrlPort: parser.port,
-			UrlPathname: parser.pathname,
-			UrlSearch: parser.search,
-			UrlSearchObject: searchObject,
-			UrlHash: parser.hash
-	};
-}
-
-ipfsSaver.prototype.parseDocumentUrl = function() { 
-		const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(document.URL);
-		const protocol = UrlProtocol;
-		const hostname = UrlHostname;
-		const pathname = UrlPathname;
-		var port =  UrlPort;
-		if (port == undefined || port == null || port.trim() == "") {
-			port = "";
-		} else {
-			port = ":" + port;
-		}
-		return { protocol, hostname, pathname, port };
-}
-
-ipfsSaver.prototype.parseGatewayUrl = function() { 
-	const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
-	// Check
-	if (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "") {
-		throw new Error("Undefined Ipfs gateway url.");
-	}			
-	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(gatewayUrl);
-	const protocol = UrlProtocol;
-	const hostname = UrlHostname;
-	var port =  UrlPort;
-	if (port == undefined || port == null || port.trim() == "") {
-		port = "";
-	} else {
-		port = ":" + port;
-	}
-	return { protocol, hostname, port };	
-}
-
-ipfsSaver.prototype.parseApiUrl = function() { 
-	const apiUrl = $tw.utils.getIpfsApiUrl();
-	// Check
-	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
-		throw new Error("Undefined Ipfs api url.");
-	}		
+IpfsSaver.prototype.parseApiUrl = function() { 
 	// Process	
-	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(apiUrl);
-	const protocol = UrlProtocol.substring(0, UrlProtocol.length - 1);
-	const hostname = UrlHostname;
-	var port = UrlPort;
-	if ((port == undefined || port == null || port.trim() == "") && protocol == "https") {
-		port = "443";
-	} else if ((port == undefined || port == null || port.trim() == "") && protocol == "http") {
-		port = "80";
-	} else if (port == undefined || port == null || port.trim() == "") {
-		port = "80";
+	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort($tw.utils.getIpfsApiUrl());
+	const tmpProtocol = protocol.substring(0, protocol.length - 1);
+	const tmpHostname = hostname;
+	var tmpPort = port;
+	if (tmpPort == undefined || tmpPort == null || tmpPort.trim() == "") {
+		if (tmpProtocol == "https") {
+			tmpPort = "443";
+		} else if (tmpProtocol == "http") {
+			tmpPort = "80";
+		} else {
+			tmpPort = "80";
+		}
 	}
-	return { protocol, hostname, port };	
+	return { tmpProtocol, tmpHostname, tmpPort };	
 }
 
-// Default
-ipfsSaver.prototype.getDefaultIpfs = async function() {
-	// Ipfs Provider
-	const getIpfs = require("ipfs-provider");	
-	const apiUrl = $tw.utils.getIpfsApiUrl();
-	// Check
-	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
-		throw new Error("Undefined Ipfs api url");
-	}	
-	const toMultiaddr = require("uri-to-multiaddr");	
-	var apiMultiAddr;
-	try {
-		 apiMultiAddr = toMultiaddr(apiUrl);
-	} catch (error) {
-		console.log(error);
-		throw new Error("Invalid Ipfs api url: " + apiUrl);
-	}
-	// Getting
-	try {
-		var { ipfs, provider } = await getIpfs({
-			// These is the defaults
-			tryWebExt: true,    					// set false to bypass WebExtension verification
-			tryWindow: true,    					// set false to bypass window.ipfs verification
-			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
-			apiAddress: apiMultiAddr,			// set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
-			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
-		});
-		// Enhance provider message
-		provider = provider + ", " + apiMultiAddr;
-		return { ipfs, provider };	
-	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs client is unavailable: " + error.message);
-	}
-}
-
-// Webext
-ipfsSaver.prototype.getWebextIpfs = async function() {
-	// Ipfs Provider
-	const getIpfs = require('ipfs-provider');
-	// Getting
-	try {
-		const { ipfs, provider } = await getIpfs({
-			// These is webext only
-			tryWebExt: true,    			// set false to bypass WebExtension verification
-			tryWindow: false,    			// set false to bypass window.ipfs verification
-			tryApi: false,       			// set false to bypass js-ipfs-http-client verification
-			apiAddress: null, 				// set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   			// set true to attempt js-ipfs initialisation
-			getJsIpfs: null,    			// must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      			// set the js-ipfs options you want if tryJsIpfs is true
-		});
-		return { ipfs, provider };	
-	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs WebExtension is unavailable: " + error.message);
-	}
-}
-
-// window.enable
-ipfsSaver.prototype.getWindowIpfs = async function() {
-	// IPFS Provider
-	const getIpfs = require('ipfs-provider');	
-	// Getting
-	try {
-		const { ipfs, provider } = await getIpfs({
-			// These is window only
-			tryWebExt: false,   // set false to bypass WebExtension verification
-			tryWindow: true,    // set false to bypass window.ipfs verification
-			tryApi: false,      // set false to bypass js-ipfs-http-client verification
-			apiAddress: null,   // set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   // set true to attempt js-ipfs initialisation
-			getJsIpfs: null,    // must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      // set the js-ipfs options you want if tryJsIpfs is true
-		});
-		return { ipfs, provider };	
-	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs Companion is unavailable: " + error.message);
-	}
-}
-
-// ipfs-http-client
-ipfsSaver.prototype.getHttpIpfs = async function() {
-	// Ipfs Provider
-	const getIpfs = require("ipfs-provider");	
-	const apiUrl = $tw.utils.getIpfsApiUrl();
-	// Check
-	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
-		throw new Error("Undefined Ipfs api url");
-	}	
-	const toMultiaddr = require("uri-to-multiaddr");	
-	var apiMultiAddr;
-	try {
-		 apiMultiAddr = toMultiaddr(apiUrl);
-	} catch (error) {
-		console.log(error);
-		throw new Error("Invalid Ipfs api url: " + apiUrl);
-	}
-	// Getting
-	try {
-		var { ipfs, provider } = await getIpfs({
-			// These is the defaults
-			tryWebExt: false,    					// set false to bypass WebExtension verification
-			tryWindow: false,    					// set false to bypass window.ipfs verification
-			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
-			apiAddress: apiMultiAddr,			// set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
-			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
-		});
-		// Enhance provider message
-		provider = provider + ", " + apiMultiAddr;
-		return { ipfs, provider };	
-	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs Http client is unavailable: " + error.message);
-	}
-}
-
-ipfsSaver.prototype.save = async function(text, method, callback, options) {
+IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 	try {
 
@@ -338,22 +80,22 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		options = options || {};
 	
 		// Process document URL
-		var { protocol, hostname, pathname, port } = this.parseDocumentUrl();
+		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
 		var currentUrlProtocol = protocol;
 		var currentUrlHostname = hostname;
 		var currentUrlPathname = pathname;
 		var currentUrlPort = port;
 
 		// Check
-		var gatewayUrl = $tw.utils.getIpfsGatewayUrl();
+		const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
 		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
-			console.log("Undefined Ipfs gateway url");
-			callback("Undefined Ipfs gateway url");
+			console.log("Undefined Ipfs Gateway url");
+			callback("Undefined Ipfs Gateway url");
 			return false;
 		}		
 		
 		// Process Gateway URL
-		var { protocol, hostname, port } = this.parseGatewayUrl();
+		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
 		var gatewayUrlProtocol = protocol;
 		var gatewayUrlHostname = hostname;
 		var gatewayUrlPort = port;		
@@ -381,10 +123,8 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 						this.needTobeUnpinned.push(hash);
 					}
 				} else if (ipfsProtocol == "ipns") {
-					const CID  = require('cids');
-					// Fallback to default protocol
-					var cid = new CID(hash);
-					if (CID.isCID(cid) == false) {
+					// Fallback to default protocol										
+					if (this.ipfsWrapper.isCID(hash) == false) {
 						hash = null;
 						ipfsProtocol = "ipfs";
 					}
@@ -397,7 +137,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 		
 		// Getting an Ipfs client
-		var { error, message, ipfs, provider } = await this.getIpfsClient(this);
+		var { error, message, ipfs, provider } = await this.ipfsWrapper.getIpfsClient();
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -407,7 +147,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		if ($tw.utils.getIpfsVerbose()) console.log(message);	
 
 		// Retrieve the default empty directory to check if the connection is alive
-		var { error, message } = await this.getEmptyDirectory(this, ipfs);
+		var { error, message, empty } = await this.ipfsWrapper.getEmptyDirectory(ipfs);
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -427,7 +167,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				// Check default ipns key and default ipns name
 				// If the check is failing we log and continue
 				try {	
-					var keys = await this.keys(this, ipfs);
+					var { error, message, keys } = await this.ipfsWrapper.getKeys(ipfs);
 					if (keys != undefined) {
 						var foundKeyName = false;;
 						for (var index = 0; index < keys.length; index++) { 
@@ -460,7 +200,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (ipnsKey != null) {			
 				// Resolve ipnsKey
 				try {	
-					var resolved = await this.resolve(this, ipfs, "/ipns/" + ipnsKey);
+					var { error, message, resolved } = await this.ipfsWrapper.resolveFromIpfs(ipfs, ipnsKey);
 					if (resolved != undefined) {
 						// Store to unpin previous	
 						unpin = resolved.substring(6);
@@ -501,7 +241,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 			return false;
 		};
 		// Upload		
-		var { error, message, added } = await this.addToIpfs(this, ipfs, blob);
+		var { error, message, added } = await this.ipfsWrapper.addToIpfs(ipfs, blob);
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -519,7 +259,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 				var ipnsName = $tw.utils.getIpfsIpnsName();
 				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
 				try {				
-					var published = await this.publish(this, ipfs, ipnsName, "/ipfs/" + added[0].hash);
+					var { error, message, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
 					if (published == undefined) {
 						console.log("Failed to publish Ipns name: " + ipnsName);
 					} else if ($tw.utils.getIpfsVerbose()) {
@@ -536,7 +276,7 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 		// If the process is failing we log and continue
 		if (this.needTobeUnpinned.length > 0) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
-				var { error, message, unpined } = await this.unpinFromIpfs(this, ipfs, this.needTobeUnpinned[i]);
+				var { error, message, unpined } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
 				if (error != null)  {
 					if (message != undefined && message.trim() != "") console.log(message);
 					console.log(error);
@@ -600,9 +340,9 @@ ipfsSaver.prototype.save = async function(text, method, callback, options) {
 
 };
 
-ipfsSaver.prototype.handleFileImport = function(self, tiddler) {
+IpfsSaver.prototype.handleFileImport = function(self, tiddler) {
 	// Update tiddler	
-	var addition = self.wiki.getModificationFields();
+	const addition = self.wiki.getModificationFields();
 	addition.title = tiddler.fields.title;
 	addition.tags = (tiddler.fields.tags || []).slice(0);			
 	// Add isAttachment tag
@@ -611,7 +351,7 @@ ipfsSaver.prototype.handleFileImport = function(self, tiddler) {
 		$tw.utils.pushTop(addition.tags, "$:/isAttachment");	
 	}	
 	// Add isEmbedded tag
-	var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
+	index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
 	if (index == -1) {
 		$tw.utils.pushTop(addition.tags, "$:/isEmbedded");	
 	}
@@ -619,14 +359,14 @@ ipfsSaver.prototype.handleFileImport = function(self, tiddler) {
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
-ipfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
+IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	// Process if _canonical_uri is set
-	var uri = tiddler.getFieldString("_canonical_uri");
+	const uri = tiddler.getFieldString("_canonical_uri");
 	if (uri == undefined || uri == null || uri.trim() == "") {
 		return tiddler;
 	}
-	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(uri);
-	var cid = UrlPathname.substring(6);
+	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(uri);
+	const cid = pathname.substring(6);
 	// Store cid as it needs to be unpined when the wiki is saved			
  	if (self.needTobeUnpinned.indexOf(cid) == -1) {
 		self.needTobeUnpinned.push(cid);
@@ -635,7 +375,7 @@ ipfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
-ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
+IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 	// oldTiddler
 	var oldTiddler = self.wiki.getTiddler(tiddler.fields.title);
@@ -658,11 +398,11 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		return tiddler;
 	}
 
-	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrl(oldUri);
-	var cid = UrlPathname.substring(6);
+	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(oldUri);
+	var cid = pathname.substring(6);
 
 	// Getting an Ipfs client
-	var { error, message, ipfs, provider } = await self.getIpfsClient(self);
+	var { error, message, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -673,7 +413,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error, message } = await self.getEmptyDirectory(self, ipfs);
+	var { error, message, empty } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -687,7 +427,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	if (newUri == undefined || newUri == null || newUri.trim() == "") {
 
 		// Fetch the old cid
-		var { error, message, fetched } = await self.fetch(self, ipfs, "/ipfs/" + cid);
+		var { error, message, fetched } = await self.ipfsWrapper.fetch(ipfs, cid);
 		if (error != null)  {
 			if (message != undefined && message.trim() != "") console.log(message);
 			console.log(error);
@@ -728,7 +468,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 							$tw.crypto.setPassword(data.password);
 						}	
 						// Decrypt
-						var base64 = self.decryptStringToBase64(self, content, password);
+						var base64 = $tw.utils.DecryptStringToBase64(content, password);
 						self.updateSaveTiddler(self, tiddler, base64);														
 						// Exit and remove the password prompt
 						return true;
@@ -736,11 +476,11 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 				});
 			} else {
 				// Decrypt
-				var base64 = self.decryptStringToBase64(self, content, null);
+				var base64 = $tw.utils.DecryptStringToBase64(content, null);
 				self.updateSaveTiddler(self, tiddler, base64);
 			}
 		} else {
-			var base64 = self.Uint8ArrayToBase64(content);
+			var base64 = $tw.utils.Uint8ArrayToBase64(content);
 			self.updateSaveTiddler(self, tiddler, base64);			
 		}
 		
@@ -751,14 +491,7 @@ ipfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 }
 
-ipfsSaver.prototype.decryptStringToBase64 = function(self, content, password) {
-		var encryptedText = self.Utf8ArrayToStr(content);
-		var decryptedText = $tw.crypto.decrypt(encryptedText, password);
-		var base64 = btoa(decryptedText);
-		return base64;
-}
-
-ipfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
+IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
 		// Update tiddler	
 		var addition = $tw.wiki.getModificationFields();
 		addition.title = tiddler.fields.title;
@@ -791,7 +524,7 @@ ipfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
-ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
+IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 
 	// Check
 	if (event.tiddlerTitle == undefined) {
@@ -824,7 +557,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 		// Process document URL
-		var { protocol, hostname, pathname, port } = self.parseDocumentUrl();
+		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
 		var currentUrlProtocol = protocol;
 		var currentUrlHostname = hostname;
 		var currentUrlPathname = pathname;
@@ -839,13 +572,13 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		}		
 		
 		// Process Gateway URL
-		var { protocol, hostname, port } = self.parseGatewayUrl();
+		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
 		var gatewayUrlProtocol = protocol;
 		var gatewayUrlHostname = hostname;
 		var gatewayUrlPort = port;	
 
 	// Getting an Ipfs client
-	var { error, message, ipfs, provider } = await self.getIpfsClient(self);
+	var { error, message, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -855,7 +588,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	if ($tw.utils.getIpfsVerbose()) console.log(message);
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error, message } = await self.getEmptyDirectory(self, ipfs);
+	var { error, message, empty } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -875,10 +608,10 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		if ($tw.crypto.hasPassword()) {
 			var decodedBase64 = atob(content);
 			var encryptedText = $tw.crypto.encrypt(decodedBase64, null);
-			content = self.StringToUint8Array(encryptedText);
+			content = $tw.utils.StringToUint8Array(encryptedText);
 			type = "application/octet-stream";
 		} else {
-			content = self.base64ToUint8Array(content);
+			content = $tw.utils.Base64ToUint8Array(content);
 		}
 		blob = new Blob([content], { type: type });	
 	} catch (error) {
@@ -888,7 +621,7 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		return false;
 	};
 	// Add
-	var { error, message, added } = await self.addToIpfs(self, ipfs, blob);
+	var { error, message, added } = await self.ipfsWrapper.addToIpfs(ipfs, blob);
 	if (error != null)  {
 		if (message != undefined && message.trim() != "") console.log(message);
 		console.log(error);
@@ -941,14 +674,14 @@ ipfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 
 }
 
-ipfsSaver.prototype.arrayRemove = function(array, value) {
+IpfsSaver.prototype.arrayRemove = function(array, value) {
 	return array.filter(function(element){
 			return element != value;
 	});
 }
 
 /* Beware you are in a widget, not in the saver */
-ipfsSaver.prototype.handleChangeEvent = function(self, changes) {
+IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	// process priority
 	var priority = changes["$:/ipfs/saver/priority/default"];
 	if (priority != undefined) {
@@ -963,439 +696,7 @@ ipfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	}
 }
 
-ipfsSaver.prototype.getIpfsClient = async function(self) {
-	// Getting an Ipfs client
-	try {
-		var tmpIpfs;
-		var tmpProvider;
-		const policy = $tw.utils.getIpfsPolicy();
-		if (policy == "webext") {
-			var { ipfs, provider } = await self.getWebextIpfs();
-			tmpIpfs = ipfs;
-			tmpProvider = provider;
-		} else if (policy == "window") {
-			var { ipfs, provider } = await self.getWindowIpfs();
-			tmpIpfs = ipfs;
-			tmpProvider = provider;			
-		} else if (policy == "http") {
-			var { ipfs, provider } = await self.getHttpIpfs();
-			tmpIpfs = ipfs;
-			tmpProvider = provider;			
-		} else  {
-		 var { ipfs, provider }  = await self.getDefaultIpfs();		
-		 tmpIpfs = ipfs;
-		 tmpProvider = provider;		 
-		}
-		// Return if undefined
-		if (tmpIpfs == undefined)  {
-			return { 
-				error: new Error("Ipfs is unavailable"), 
-				message: "", 
-				ipfs: null, 
-				provider: null 
-			};
-		}			
-		return { 
-			error: null, 
-			message: "Ipfs provider: " + provider, 
-			ipfs: tmpIpfs, 
-			provider: tmpProvider 
-		};
-	} catch (error) {
-		return { 
-			error: error, 
-			message: "Unable to get an Ipfs client", 
-			ipfs: null, 
-			provider: null 
-		};
-	}
-}
-
-ipfsSaver.prototype.fetch = async function(self, ipfs, uri) {
-	try {
-		var fetched = await self.cat(self, ipfs, uri);
-		if (fetched == undefined)  {
-			return { 
-				error: new Error("Unable to Ipfs fetch: " + uri), 
-				message: "", 
-				fetched: null 
-			};
-		}
-		return { 
-			error: null, 
-			message: "Successfully Ipfs fetched: " + uri, 
-			fetched: fetched 
-		};
-	} catch (error) {
-		return { 
-			error: error, 
-			message: "Unable to Ipfs fetch: " + uri, 
-			fetched: 
-			null 
-		};
-	}
-}
-
-ipfsSaver.prototype.getEmptyDirectory = async function(self, ipfs) {
-		// Fetch the default empty directory to check if the connection is alive
-		try {
-			var empty = await self.get(self, ipfs, "/ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
-			if (empty == undefined)  {
-				return { 
-					error: new Error("Unable to get the default Ipfs empty directory"), 
-					message: "", 
-					empty: null 
-				};
-			}
-			return { 
-				error: null, 
-				message: "Successfully got the default Ipfs empty directory", 
-				empty: empty 
-			};
-		} catch (error) {
-			return { 
-				error: error, 
-				message: "Unable to get the default Ipfs empty directory", 
-				empty: null 
-			};
-		}
-}
-
-ipfsSaver.prototype.addToIpfs = async function(self, ipfs, blob) {
-	// Add	
-	try {
-		var added = await self.add(self, ipfs, blob);
-		if (added == undefined || added[0] == undefined || added[0].hash == undefined) {
-			return { 
-				error: new Error("Failed to Ipfs add"), 
-				message: "", 
-				added: null 
-			};
-		}
-		return { 
-			error: null, 
-			message: "Successfully Ipfs added: /ipfs/" + added[0].hash, 
-			added: added 
-		};
-	} catch (error) {
-		return { 
-			error: error, 
-			message: "Failed to Ipfs add", 
-			added: null 
-		};
-	};
-}
-
-ipfsSaver.prototype.pinFromIpfs = async function(self, ipfs, pin) {
-	// Unpin
-	try {	
-		var pined = await self.pin(self, ipfs, "/ipfs/" + pin);
-		if (pined == undefined) {
-			return { 
-				error: new Error("Failed to Ipfs pin: /ipfs/" + pin), 
-				message: "", 
-				unpined: null 
-			};
-		}
-		return { 
-			error: null, 
-			message: "Successfully Ipfs pined: /ipfs/" + pin, 
-			unpined: pined 
-		};
-	} catch (error) {
-		return { 
-			error: new Error("Failed to Ipfs pin: /ipfs/" + pin), 
-			message: "", 
-			unpined: null 
-		};
-	};	
-}
-
-ipfsSaver.prototype.unpinFromIpfs = async function(self, ipfs, unpin) {
-	// Unpin
-	try {	
-		var unpined = await self.unpin(self, ipfs, "/ipfs/" + unpin);
-		if (unpined == undefined) {
-			return { 
-				error: new Error("Failed to Ipfs unpin: /ipfs/" + unpin), 
-				message: "", 
-				unpined: null 
-			};
-		}
-		return { 
-			error: null, 
-			message: "Successfully Ipfs unpined: /ipfs/" + unpin, 
-			unpined: unpined 
-		};
-	} catch (error) {
-		return { 
-			error: new Error("Failed to Ipfs unpin: /ipfs/" + unpin), 
-			message: "", 
-			unpined: null 
-		};
-	};	
-}
-
-ipfsSaver.prototype.add = async function(self, client, content) {
-  return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		// Process
-    reader.onloadend = async function () {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer result...");
-			const Buffer = require('buffer/').Buffer
-			const buffer = await Buffer.from(reader.result);
-			if ($tw.utils.getIpfsVerbose()) console.log("Buffer result has been processed...");
-			// Window Ipfs policy
-			if (client.enable) {
-				try {
-					client = await client.enable({commands: ['add']});
-				} catch (error) {
-					console.log(error);
-					reject(error.message);
-				}
-			}
-			if (client != undefined && client.add != undefined) {
-				client.add(buffer, { progress: self.uploadProgress })
-					.then (result => {
-						if ($tw.utils.getIpfsVerbose()) console.log("Processing add result...");
-						resolve(result);
-					})
-					.catch (error => {
-						console.log(error);
-						reject(error.message);
-					});
-			} else {
-				reject("Undefined Ipfs client or client add");
-			}
-		};
-		try {
-			// Read						
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing add content...");
-			reader.readAsArrayBuffer(content);
-		} catch (error) {
-			console.log(error);
-			reject(error.message);
-		}
-  });
-}
-
-ipfsSaver.prototype.get = async function(self, client, cid) {
-	return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {
-				client = await client.enable({commands: ['get']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);				
-			}
-		}
-		if (client != undefined && client.get != undefined) {		
-			client.get(cid)
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing get result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});
-		} else {
-			reject("Undefined Ipfs client or client get");
-		}
-	});
-}
-
-ipfsSaver.prototype.cat = async function(self, client, cid) {
-	return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {
-				client = await client.enable({commands: ['cat']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);				
-			}
-		}
-		if (client != undefined && client.cat != undefined) {		
-			client.cat(cid)
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing cat result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});
-		} else {
-			reject("Undefined Ipfs client or client cat");
-		}
-	});
-}
-
-ipfsSaver.prototype.pin = async function(self, client, cid) {
-  return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {
-				client = await client.enable({commands: ['pin']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);
-			}
-		}
-		if (client != undefined && client.pin != undefined && client.pin.add != undefined) {
-			client.pin.add(cid)
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing pin result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});			
-		} else {
-			reject("Undefined Ipfs client or client pin or client pin add");
-		}
-  });
-}
-
-ipfsSaver.prototype.unpin = async function(self, client, cid) {
-  return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {
-				client = await client.enable({commands: ['pin']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);
-			}
-		}
-		if (client != undefined && client.pin != undefined && client.pin.rm != undefined) {
-			client.pin.rm(cid)
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing unpin result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});			
-		} else {
-			reject("Undefined Ipfs client or client pin or client pin rm");
-		}
-  });
-}
-
-ipfsSaver.prototype.publish = async function(self, client, name, cid) {
-  return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {		
-			try {
-				client = await client.enable({commands: ['name']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);
-			}								
-		}
-		if (client != undefined && client.name != undefined && client.name.publish != undefined) {
-			client.name.publish(cid, { key: name })
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing publish result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});
-		} else {
-			reject("Undefined Ipfs client or client name or client name publish");
-		}
-  });
-}
-
-ipfsSaver.prototype.resolve = async function(self, client, hash) {
-  return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {
-				client = await client.enable({commands: ['name']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);
-			}				
-		}
-		if (client != undefined && client.name != undefined && client.name.resolve != undefined) {
-			client.name.resolve(hash)
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});			
-		} else {
-			reject("Undefined Ipfs client or client name or client name resolve");
-		}
-  });
-}
-
-ipfsSaver.prototype.id = async function(self, client) {
-  return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {		
-				client = await client.enable({commands: ['id']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);
-			}
-		}
-		if (client != undefined && client.id != undefined) {
-			client.id()
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing id result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});						
-		} else {
-			reject("Undefined Ipfs client or client id");
-		}
-  });
-}
-
-ipfsSaver.prototype.keys = async function(self, client) {
-  return new Promise(async (resolve, reject) => {
-		// Window Ipfs policy
-		if (client.enable) {
-			try {		
-				client = await client.enable({commands: ['key']});
-			} catch (error) {
-				console.log(error);
-				reject(error.message);
-			}
-		}
-		if (client != undefined && client.key != undefined && client.key.list != undefined) {
-			client.key.list()
-			.then (result => {
-				if ($tw.utils.getIpfsVerbose()) console.log("Processing key result...");
-				resolve(result);
-			})
-			.catch (error => {
-				console.log(error);
-				reject(error.message);
-			});						
-		} else {
-			reject("Undefined Ipfs client or client key or client key list");
-		}
-  });
-}
-
-ipfsSaver.prototype.sleep = function(seconds) {
+IpfsSaver.prototype.sleep = function(seconds) {
 	var waitUntil = new Date().getTime() + seconds*1000;
 	while(new Date().getTime() < waitUntil) true;
 }
@@ -1403,7 +704,7 @@ ipfsSaver.prototype.sleep = function(seconds) {
 /*
 Information about this saver
 */
-ipfsSaver.prototype.info = {
+IpfsSaver.prototype.info = {
 	name: "ipfs",
 	priority: 3000,
 	capabilities: ["save", "autosave"]
@@ -1420,7 +721,7 @@ exports.canSave = function(wiki) {
 Create an instance of this saver
 */
 exports.create = function(wiki) {
-	return new ipfsSaver(wiki);
+	return new IpfsSaver(wiki);
 };
 
 })();

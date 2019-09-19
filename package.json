@@ -2,7 +2,7 @@
   "name": "tiddlywiki-ipfs",
   "version": "0.1.0",
   "description": "Ipfs for TiddlyWiki",
-  "main": "ipfs-saver.js",
+  "main": "ipfs-library.js",
   "browserify": {
     "transform": [
       "babelify"
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "prepare": "./scripts/prepare.sh",
-    "browserify": "browserify src/ipfs-saver.js -s ipfsSaver -o ipfs/plugins/ipfs/ipfs-saver.js",
+    "browserify": "browserify src/ipfs-library.js -s IpfsLibrary -o ipfs/plugins/ipfs/ipfs-library.js",
     "tiddlywiki-ipfs": "tiddlywiki ipfs --import attachment/the_little_prince_embedded.json application/json --import attachment/the_little_prince_ipfs_encrypted.json application/json --import attachment/the_little_prince_ipfs.json application/json --output ipfs/output/base --build --verbose",
     "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import attachment/the_little_prince_embedded.json application/json --import attachment/the_little_prince_ipfs_encrypted.json application/json --import attachment/the_little_prince_ipfs.json application/json --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
     "all": "./scripts/all.sh"
@@ -30,9 +30,8 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "ipfs-provider": "^0.2.2",
-    "cids": "^0.7.1",
-    "buffer": "^5.4.3"
+    "ipfs-http-client": "^37.0.1",
+    "ipfs-provider": "^0.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
