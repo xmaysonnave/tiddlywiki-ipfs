@@ -46,12 +46,7 @@ exports.parseUrlShort = function(url) {
 	const protocol = UrlProtocol;
 	const hostname = UrlHostname;
 	const pathname = UrlPathname;
-	var port =  UrlPort;
-	if (port == undefined || port == null || port.trim() == "") {
-		port = "";
-	} else {
-		port = ":" + port;
-	}
+	const port =  UrlPort;
 	return { protocol, hostname, pathname, port };
 }
 

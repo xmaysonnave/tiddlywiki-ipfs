@@ -49,24 +49,6 @@ IpfsSaver.prototype.errorDialog = function(error) {
 	}
 }
 
-IpfsSaver.prototype.parseApiUrl = function() { 
-	// Process	
-	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort($tw.utils.getIpfsApiUrl());
-	const tmpProtocol = protocol.substring(0, protocol.length - 1);
-	const tmpHostname = hostname;
-	var tmpPort = port;
-	if (tmpPort == undefined || tmpPort == null || tmpPort.trim() == "") {
-		if (tmpProtocol == "https") {
-			tmpPort = "443";
-		} else if (tmpProtocol == "http") {
-			tmpPort = "80";
-		} else {
-			tmpPort = "80";
-		}
-	}
-	return { tmpProtocol, tmpHostname, tmpPort };	
-}
-
 IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 	try {

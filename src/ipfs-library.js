@@ -7,6 +7,11 @@ Ipfs Library
 
 \*/
 
+var Buffer = require('buffer/').Buffer
+const CID = require('cids');
+const toMultiaddr = require("uri-to-multiaddr");
+const getIpfs = require("ipfs-provider");
+
 ( function() {
 
 /*jslint node: true, browser: true */
@@ -19,15 +24,13 @@ Ipfs Library
 var IpfsLibrary = function() {}
 
 // Default
-IpfsLibrary.prototype.getDefaultIpfs = async function() {
-	// Ipfs Provider
-	const getIpfs = require("ipfs-provider");	
+IpfsLibrary.prototype.getDefaultIpfs = async function() {	
+	// Multiaddr
 	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url");
 	}	
-	const toMultiaddr = require("uri-to-multiaddr");
 	var multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
@@ -52,14 +55,12 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 		return { ipfs, provider };	
 	} catch (error) {
 		console.log(error);
-		throw new Error("Ipfs client is unavailable: " + error.message);
+		throw new Error("Ipfs default client is unavailable: " + error.message);
 	}
 }
 
 // WebExtension
 IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
-	// Ipfs Provider
-	const getIpfs = require('ipfs-provider');
 	// Getting
 	try {
 		const { ipfs, provider } = await getIpfs({
@@ -81,8 +82,6 @@ IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
 
 // window.enable
 IpfsLibrary.prototype.getWindowIpfs = async function() {
-	// IPFS Provider
-	const getIpfs = require('ipfs-provider');	
 	// Getting
 	try {
 		const { ipfs, provider } = await getIpfs({
@@ -104,14 +103,12 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 
 // ipfs-http-client
 IpfsLibrary.prototype.getHttpIpfs = async function() {
-	// Ipfs Http Client
-	var ipfsClient = require('ipfs-http-client');
+	// Multiaddr
 	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs api url");
 	}	
-	const toMultiaddr = require("uri-to-multiaddr");
 	var multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
@@ -121,17 +118,26 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	}
 	// Getting
 	try {
-		const ipfs = ipfsClient(multi);
-		const provider = "IPFS_HTTP_API, " + multi;
+		var { ipfs, provider } = await getIpfs({
+			// These is the defaults
+			tryWebExt: false,    					// set false to bypass WebExtension verification
+			tryWindow: false,    					// set false to bypass window.ipfs verification
+			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
+			apiAddress: multi,			// set this to use an api in that address if tryApi is true
+			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
+			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
+			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
+		});
+		// Enhance provider message
+		provider = provider + ", " + multi;
 		return { ipfs, provider };	
 	} catch (error) {
 		console.log(error);
-		throw new Error("Ipfs Http client is unavailable: " + error.message);
+		throw new Error("Ipfs HTTP client is unavailable: " + error.message);
 	}
 }
 
 IpfsLibrary.prototype.isCID = function(hash) {
-	const { CID } = require('ipfs-http-client');
 	const cid = new CID(hash);
 	return CID.isCID(cid);
 }
@@ -142,7 +148,6 @@ IpfsLibrary.prototype.add = async function(client, content) {
 		// Process
     reader.onloadend = async function () {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer result...");
-			const { Buffer } = require('ipfs-http-client');
 			const buffer = await Buffer.from(reader.result);
 			if ($tw.utils.getIpfsVerbose()) console.log("Buffer result has been processed...");
 			// Window Ipfs policy
