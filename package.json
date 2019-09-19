@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Ipfs for TiddlyWiki",
   "main": "ipfs-library.js",
   "browserify": {
