@@ -22,6 +22,31 @@ var IpfsWrapper = function() {
 	this.ipfsLibrary = new IpfsLibrary();
 }
 
+IpfsWrapper.prototype.resolveEnsDomain = async function(domain) {
+	var message = "Failed to resolve Ens Domain: " + domain;
+	try {
+		var address = await this.ipfsLibrary.resolveEnsDomain(domain);
+		if (address == undefined)  {
+			return { 
+				error: new Error(message), 
+				message: message, 
+				address: null 
+			};
+		}
+		return { 
+			error: null, 
+			message: "Successfully resolved Ens Domain: " + domain, 
+			address: address 
+		};
+	} catch (error) {
+		return { 
+			error: error, 
+			message: message, 
+			address: null 
+		};
+	}
+}
+
 IpfsWrapper.prototype.isCID = function(hash) {
 	return this.ipfsLibrary.isCID(hash);
 }
@@ -49,11 +74,12 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 		 tmpIpfs = ipfs;
 		 tmpProvider = provider;		 
 		}
+		var message = "Failed to get an Ipfs client";
 		// Return if undefined
 		if (tmpIpfs == undefined)  {
 			return { 
-				error: new Error("Ipfs is unavailable"), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				ipfs: null, 
 				provider: null 
 			};
@@ -67,7 +93,7 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 	} catch (error) {
 		return { 
 			error: error, 
-			message: "Failed to get an Ipfs client", 
+			message: message, 
 			ipfs: null, 
 			provider: null 
 		};
@@ -75,12 +101,13 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 }
 
 IpfsWrapper.prototype.getKeys = async function(ipfs) {
+	var message = "Failed to get keys from Ipfs";
 	try {
 		var keys = await this.ipfsLibrary.keys(ipfs);
 		if (keys == undefined)  {
 			return { 
-				error: new Error("Failed to get keys from Ipfs"), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				keys: null 
 			};
 		}
@@ -92,19 +119,20 @@ IpfsWrapper.prototype.getKeys = async function(ipfs) {
 	} catch (error) {
 		return { 
 			error: error, 
-			message: "Failed to get keys from Ipfs", 
+			message: message, 
 			keys: null 
 		};
 	}
 }
 
 IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
+	var message = "Failed to fetch Ipfs: /ipfs/" + cid;
 	try {
 		var fetched = await this.ipfsLibrary.cat(ipfs, "/ipfs/" + cid);
 		if (fetched == undefined)  {
 			return { 
-				error: new Error("Failed to fetch Ipfs: /ipfs/" + cid), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				fetched: null 
 			};
 		}
@@ -116,7 +144,7 @@ IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
 	} catch (error) {
 		return { 
 			error: error, 
-			message: "Failed to fetch Ipfs: /ipfs/" + cid, 
+			message: message, 
 			fetched: 
 			null 
 		};
@@ -125,12 +153,13 @@ IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
 
 IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 		// Fetch the default empty directory to check if the connection is alive
+		var message = "Failed to get the default Ipfs empty directory";
 		try {
 			var empty = await this.ipfsLibrary.get(ipfs, "/ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
 			if (empty == undefined)  {
 				return { 
-					error: new Error("Failed to get the default Ipfs empty directory"), 
-					message: "", 
+					error: new Error(message), 
+					message: message, 
 					empty: null 
 				};
 			}
@@ -142,7 +171,7 @@ IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 		} catch (error) {
 			return { 
 				error: error, 
-				message: "Failed to get the default Ipfs empty directory", 
+				message: message, 
 				empty: null 
 			};
 		}
@@ -150,12 +179,13 @@ IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 
 IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
 	// Add	
+	var message = "Failed to add blob to Ipfs";
 	try {
 		var added = await this.ipfsLibrary.add(ipfs, blob);
 		if (added == undefined || added[0] == undefined || added[0].hash == undefined) {
 			return { 
-				error: new Error("Failed to add blob to Ipfs"), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				added: null 
 			};
 		}
@@ -167,7 +197,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
 	} catch (error) {
 		return { 
 			error: error, 
-			message: "Failed to add blob to Ipfs", 
+			message: message, 
 			added: null 
 		};
 	};
@@ -175,12 +205,13 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
 
 IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 	// Resolve
+	var message = "Failed to resolve from Ipfs: /ipns/" + cid;
 	try {	
 		var resolved = await this.ipfsLibrary.resolve(ipfs, "/ipns/" + cid);
 		if (resolved == undefined) {
 			return { 
-				error: new Error("Failed to resolve from Ipfs: /ipns/" + cid), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				resolved: null 
 			};
 		}
@@ -191,8 +222,8 @@ IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 		};
 	} catch (error) {
 		return { 
-			error: new Error("Failed to resolve from Ipfs: /ipns/" + cid), 
-			message: "", 
+			error: error, 
+			message: message, 
 			resolved: null 
 		};
 	};	
@@ -200,12 +231,13 @@ IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 
 IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 	// Publish
+	var message = "Failed to publish to Ipfs: /ipfs/" + cid;
 	try {	
 		var published = await this.ipfsLibrary.publish(ipfs, name, "/ipfs/" + cid);
 		if (published == undefined) {
 			return { 
-				error: new Error("Failed to publish to Ipfs: /ipfs/" + cid), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				published: null 
 			};
 		}
@@ -216,8 +248,8 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 		};
 	} catch (error) {
 		return { 
-			error: new Error("Failed to publish to Ipfs: /ipfs/" + cid), 
-			message: "", 
+			error: error, 
+			message: message, 
 			published: null 
 		};
 	};	
@@ -225,12 +257,13 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 
 IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 	// Unpin
+	var message = "Failed to pin to Ipfs: /ipfs/" + cid;
 	try {	
 		var pined = await this.ipfsLibrary.pin(ipfs, "/ipfs/" + cid);
 		if (pined == undefined) {
 			return { 
-				error: new Error("Failed to pin to Ipfs: /ipfs/" + cid), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				unpined: null 
 			};
 		}
@@ -241,8 +274,8 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 		};
 	} catch (error) {
 		return { 
-			error: new Error("Failed to pin to Ipfs: /ipfs/" + cid), 
-			message: "", 
+			error: error, 
+			message: message, 
 			unpined: null 
 		};
 	};	
@@ -250,12 +283,13 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 
 IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
 	// Unpin
+	var message = "Failed to unpin from Ipfs: /ipfs/" + cid;
 	try {	
 		var unpined = await this.ipfsLibrary.unpin(ipfs, "/ipfs/" + cid);
 		if (unpined == undefined) {
 			return { 
-				error: new Error("Failed to unpin from Ipfs: /ipfs/" + cid), 
-				message: "", 
+				error: new Error(message), 
+				message: message, 
 				unpined: null 
 			};
 		}
@@ -266,8 +300,8 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
 		};
 	} catch (error) {
 		return { 
-			error: new Error("Failed to unpin from Ipfs: /ipfs/" + cid), 
-			message: "", 
+			error: error, 
+			message: message, 
 			unpined: null 
 		};
 	};	

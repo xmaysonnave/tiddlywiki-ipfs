@@ -7,10 +7,11 @@ Ipfs Library
 
 \*/
 
-var Buffer = require('buffer/').Buffer
-const CID = require('cids');
+const Buffer = require("buffer/").Buffer
+const CID = require("cids");
 const toMultiaddr = require("uri-to-multiaddr");
 const getIpfs = require("ipfs-provider");
+const Web3 = require("web3");
 
 ( function() {
 
@@ -22,6 +23,46 @@ const getIpfs = require("ipfs-provider");
 Ipfs Library
 */
 var IpfsLibrary = function() {}
+
+IpfsLibrary.prototype.resolveEnsDomain = async function(domain) {
+	return new Promise(async (resolve, reject) => {
+		// Check if Metamask is available
+		// Modern dapp browsers...
+		if (window.ethereum) {
+			window.web3 = new Web3(ethereum);
+		}
+		// Legacy dapp browsers...
+		else if (window.web3) {
+			window.web3 = new Web3(window.web3.currentProvider);
+		}
+		// Non-dapp browsers...
+		else {
+			reject("Non-ENS browser detected. You should consider trying MetaMask!");
+		}
+		// Resolve
+		try {
+			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.on(eventname%2C-callback
+			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
+			ethereum.autoRefreshOnNetworkChange = false;
+			await window.web3.eth.ens.resolver(domain)
+			.then (result => {
+				if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ens Domain...");
+				if (result._address != undefined && /^0x0+$/.test(result._address) == false) {
+					resolve(result._address);
+				} else {
+					reject("Unknown Ens Domain: " + domain);
+				}
+			})
+			.catch (error => {
+				console.log(error);
+				reject(error.message);
+			});
+		} catch (error) {
+			console.log(error);
+			reject(error.message);
+		}
+	});
+}
 
 // Default
 IpfsLibrary.prototype.getDefaultIpfs = async function() {	

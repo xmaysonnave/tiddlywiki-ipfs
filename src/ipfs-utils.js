@@ -268,6 +268,27 @@ exports.getIpfsDefaultGatewayUrl = function() {
 }
 
 /*
+Retrieve ipfs saver ens domain with default value if applicable
+*/
+exports.getIpfsEnsDomain = function() {
+	var ensDomain;
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") != undefined) {
+		ensDomain = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain").getFieldString("text");
+	}
+	if (ensDomain == undefined || ensDomain == null || ensDomain.trim() == "") {
+		ensDomain = $tw.getIpfsDefaultEnsDomain();
+	}
+	return ensDomain;
+}
+
+/*
+Default Ens Domain
+*/
+exports.getIpfsDefaultEnsDomain = function() {
+	return "tiddly.bluelightav.eth";
+}
+
+/*
 Retrieve ipfs saver ipns name with default value if applicable
 */
 exports.getIpfsIpnsName = function() {
