@@ -543,33 +543,33 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 	var info = $tw.config.contentTypeInfo[type];
 	if (info == undefined || info.encoding != "base64") {
-		const message = "Upload to Ipfs not supported: " + type;
+		const message = "Upload to Ipfs is only supported for attached files";
 		console.log(message);
 		self.errorDialog(message);
 		return false;
 	}
 
-		// Process document URL
-		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
-		var currentUrlProtocol = protocol;
-		var currentUrlHostname = hostname;
-		var currentUrlPathname = pathname;
-		var currentUrlPort = port;
+	// Process document URL
+	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
+	var currentUrlProtocol = protocol;
+	var currentUrlHostname = hostname;
+	var currentUrlPathname = pathname;
+	var currentUrlPort = port;
 
-		// Check
-		var gatewayUrl = $tw.utils.getIpfsGatewayUrl();
-		if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
-			const msg = "Undefined Ipfs gateway url";
-			console.log(msg);
-			self.errorDialog(msg);
-			return false;
-		}		
-		
-		// Process Gateway URL
-		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
-		var gatewayUrlProtocol = protocol;
-		var gatewayUrlHostname = hostname;
-		var gatewayUrlPort = port;	
+	// Check
+	var gatewayUrl = $tw.utils.getIpfsGatewayUrl();
+	if (currentUrlProtocol == "file:" && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() == "")) {
+		const msg = "Undefined Ipfs gateway url";
+		console.log(msg);
+		self.errorDialog(msg);
+		return false;
+	}		
+	
+	// Process Gateway URL
+	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
+	var gatewayUrlProtocol = protocol;
+	var gatewayUrlHostname = hostname;
+	var gatewayUrlPort = port;	
 
 	// Getting an Ipfs client
 	var { error, message, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();

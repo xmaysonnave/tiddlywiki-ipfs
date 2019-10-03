@@ -11,7 +11,7 @@ const Buffer = require("buffer/").Buffer
 const CID = require("cids");
 const toMultiaddr = require("uri-to-multiaddr");
 const getIpfs = require("ipfs-provider");
-const Web3 = require("web3");
+var Web3 = require('web3');
 
 ( function() {
 
@@ -30,6 +30,9 @@ IpfsLibrary.prototype.resolveEnsDomain = async function(domain) {
 		// Modern dapp browsers...
 		if (window.ethereum) {
 			window.web3 = new Web3(ethereum);
+			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.on(eventname%2C-callback
+			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
+			ethereum.autoRefreshOnNetworkChange = false;			
 		}
 		// Legacy dapp browsers...
 		else if (window.web3) {
@@ -41,9 +44,6 @@ IpfsLibrary.prototype.resolveEnsDomain = async function(domain) {
 		}
 		// Resolve
 		try {
-			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.on(eventname%2C-callback
-			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
-			ethereum.autoRefreshOnNetworkChange = false;
 			await window.web3.eth.ens.resolver(domain)
 			.then (result => {
 				if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ens Domain...");

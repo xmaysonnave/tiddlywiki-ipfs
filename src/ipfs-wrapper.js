@@ -35,7 +35,7 @@ IpfsWrapper.prototype.resolveEnsDomain = async function(domain) {
 		}
 		return { 
 			error: null, 
-			message: "Successfully resolved Ens Domain: " + domain, 
+			message: "Successfully resolved Ens Domain: " + domain + ", Resolver: " + address, 
 			address: address 
 		};
 	} catch (error) {
