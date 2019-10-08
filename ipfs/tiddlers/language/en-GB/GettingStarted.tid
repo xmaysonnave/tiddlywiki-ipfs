@@ -2,9 +2,14 @@ title: GettingStarted
 tags: TableOfContents
 
 \define lingo-base() $:/language/ControlPanel/Basics/
-Welcome to ~TiddlyWiki and the ~TiddlyWiki community
+Welcome to Ipfs with ~TiddlyWiki and the [[TiddlyWiki|https://tiddlywiki.com/]] [[community|https://tiddlywiki.com/#Community]]
 
-Before you start storing important information in ~TiddlyWiki it is vital to make sure that you can reliably save changes. See https://tiddlywiki.com/#GettingStarted for details
+Before you start storing important information in ~TiddlyWiki it is vital to make sure that you can reliably save changes with Ipfs:
+<br/> 
+<br/>
+See [[Ipfs with TiddlyWiki]] for more details about this plugin.
+<br/>
+See the ~TiddlyWiki [[Getting Started|https://tiddlywiki.com/#GettingStarted]] for more details about ~TiddlyWiki.
 
 !! Set up this ~TiddlyWiki
 
