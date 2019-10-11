@@ -1,7 +1,0 @@
-title: Ipfs with TiddlyWiki
-tags: [[Working with Ipfs]] TableOfContents
-
-This [ext[TiddlyWiki|https://tiddlywiki.com/]] plugin uses [ext[Ipfs with TiddlyWiki hosted @ GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]
-<br/><br/>
-Feel free to drag and drop the following link ([[$:/plugins/ipfs]]) to your ~TiddlyWiki instance to let it run.
-

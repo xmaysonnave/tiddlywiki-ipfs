@@ -371,7 +371,7 @@ exports.getIpfsPolicy = function() {
 Default Policy
 */
 exports.getIpfsDefaultPolicy = function() {
-		return "default";
+		return "http";
 }
 
 })();

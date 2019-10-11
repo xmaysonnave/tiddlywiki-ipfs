@@ -1,0 +1,9 @@
+title: Settings
+tags: Reference
+type: text/vnd.tiddlywiki
+
+The [[Ipfs Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
+<br/><br/>
+[img[$:/ipfs/saver/image/settings]]
+<br/><br/>
+<<list-links "[tag[Settings]sort[title]]">>
