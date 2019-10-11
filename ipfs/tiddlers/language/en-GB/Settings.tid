@@ -6,4 +6,6 @@ The [[Ipfs Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control
 <br/><br/>
 [img[$:/ipfs/saver/image/settings]]
 <br/><br/>
-<<list-links "[tag[Settings]sort[title]]">>
+<div class="tc-table-of-contents">
+<<toc-selective-expandable "Settings" "sort[title]">>
+</div>

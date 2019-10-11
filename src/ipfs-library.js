@@ -86,7 +86,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 			tryWebExt: true,    					// set false to bypass WebExtension verification
 			tryWindow: true,    					// set false to bypass window.ipfs verification
 			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
-			apiAddress: multi,			// set this to use an api in that address if tryApi is true
+			apiAddress: multi,						// set this to use an api in that address if tryApi is true
 			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
 			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
 			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
@@ -164,7 +164,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 			tryWebExt: false,    					// set false to bypass WebExtension verification
 			tryWindow: false,    					// set false to bypass window.ipfs verification
 			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
-			apiAddress: multi,			// set this to use an api in that address if tryApi is true
+			apiAddress: multi,						// set this to use an api in that address if tryApi is true
 			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
 			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
 			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
