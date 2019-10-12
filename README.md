@@ -208,7 +208,7 @@ See also the list of [contributors](https://github.com/xmaysonnave/tiddlywiki-ip
 ## License
 <a name="license"/>
 
-This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GPL-3.0-or-later License - see the [LICENSE](LICENSE.html) file for details
 
 
 ## Acknowledgments

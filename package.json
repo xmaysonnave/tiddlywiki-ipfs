@@ -12,7 +12,7 @@
     "prepare": "./scripts/prepare.sh",
     "browserify": "browserify src/ipfs-library.js -s IpfsLibrary -o ipfs/plugins/ipfs/ipfs-library.js",
     "tiddlywiki-ipfs": "tiddlywiki ipfs --output ipfs/output/base --build --verbose",
-    "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",    
+    "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
     "all": "./scripts/all.sh"
   },
   "repository": {
@@ -24,7 +24,7 @@
     "tiddlywiki"
   ],
   "author": "Xavier Maysonnave",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/xmaysonnave/tiddlywiki-ipfs/issues"
   },
@@ -36,15 +36,15 @@
     "buffer": "^5.4.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/runtime": "^7.6.2",
+    "@babel/core": "^7.6.4",
+    "@babel/runtime": "^7.6.3",
     "@babel/polyfill": "^7.6.0",
-    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-decorators": "^7.6.0",
     "@babel/plugin-proposal-do-expressions": "^7.6.0",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
-    "@babel/plugin-transform-flow-strip-types": "^7.4.4",
+    "@babel/plugin-transform-flow-strip-types": "^7.6.3",
     "@babel/plugin-transform-runtime": "^7.6.2",
     "babel-plugin-macros": "^2.6.1",
     "babel-eslint": "^10.0.3",
@@ -54,7 +54,7 @@
     "source-map-loader": "^0.2.4",
     "prettier": "^1.18.2",
     "eslint": "^6.5.1",
-    "eslint-config-prettier": "^6.3.0",
+    "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-flowtype": "^4.3.0",
     "tiddlywiki": "^5.1.21",
