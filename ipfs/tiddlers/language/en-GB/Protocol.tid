@@ -4,16 +4,10 @@ type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/settings/protocol]]
 <p>
-The plugin is meant to display common errors through dialog boxes when such events are happening however the <b>Verbose</b> property gives more insight through the browsers Developer Tools Console.
-</p>
-<p>
-If you run a local Ipfs node, performance will be greatly enhanced however if you rely on a public node like Infura the console will give more informations when logical events are happening as the process of saving could be very slow. 
-</p>
-<p>
-In its current state the plugin is unable to provide Progress Monitor or an estimated size of files to be uploaded.
+The plugin integrates a few convenient protocols to help users working with Ipfs. 
 </p>
 <ul>
-  <li>[[Chrome Console|https://developers.google.com/web/tools/chrome-devtools/console]]</li>
-  <li>[[Firefox Console|https://developer.mozilla.org/en-US/docs/Tools/Web_Console]]</li>
+  <li>The Ipfs protocol is meant to persist ~TiddlyWiki and file attachments over Ipfs. An [[Api and Gateway URL|IPFS]] should be setup.</li>
+  <li>The Ipns protocol enhance the Ipfs protocol and links an Ipns Name and Key with a new Ipfs identifier (Typically generated when your document is saved). An [[Ipns Name and Ipns Key|IPNS]] should be setup.</li>
+  <li>The [ext[Ens|https://ens.domains/]] protocol enhance the Ipfs protocol and links an [ext[Ens domain or Ens subdomain|https://app.ens.domains/]] with a new Ipfs identifier (Typically generated when your document is saved). An [[Ens Domain or Ens Subdomain|ENS]] should be setup.</li>
 </ul>
-[img[$:/ipfs/saver/image/console]]

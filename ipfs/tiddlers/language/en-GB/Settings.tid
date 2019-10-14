@@ -5,7 +5,14 @@ type: text/vnd.tiddlywiki
 The [[Ipfs Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
 <br/><br/>
 [img[$:/ipfs/saver/image/settings]]
-<br/><br/>
 <div class="tc-table-of-contents">
 <<toc-selective-expandable "Settings" "sort[title]">>
 </div>
+[img[$:/ipfs/saver/image/autosave]]
+<p>
+The Autosave property is deactivated has saving is not a blocking action. 
+<br/>
+It means that saving multiple times will run a save action multiple times.
+<br/>
+This is not recommended as unpredictable beaviours will occurs.
+</p>

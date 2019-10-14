@@ -36,7 +36,18 @@ These instructions will get you a copy of the project up and running on your loc
 #### Getting running `Ipfs with TiddlyWiki` in your browser
 <a name="running-browser"/>
 
-Follow the developer instructions [Running TiddlyWiki](#developer-running)
+* Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
+* Starting with the latest online version @ https://tiddly.bluelightav.eth
+* * [Metamask for Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
+* * [Metamask for Firefox](https://addons.mozilla.org/fr/firefox/addon/ether-metamask/)
+* Starting with the latest online version @ https://tiddly.bluelightav.eth.link
+* * [Ipfs Companion for Chrome](https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch)
+* * [Ipfs Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
+
+<b>Remarks:</b>
+<br/>
+* The https://tiddly.bluelightav.eth.link Url requires Ipfs Companion to be fully resolved as an Ipns indentifier otherwise [EthDNS and EthLink](https://eth.link/) is taking care of your Url. EthLink do not resolve well the https://domain.eth.link Url as browsers complain about the Https certificate. This Let'sEncrypt valid certificate is a wildcard certificate but too widely opened and considered insecured by major browsers (Tested with Chrome and Firefox). The http://tiddly.bluelightav.eth.link is also available and browsers do not complain however MITM are possible.
+* The http://tiddly.bluelightav.eth Url requires Metamask to be fully resolved as an Ipns identifier.
 
 
 #### Running a local Ipfs node with Ipfs Desktop
@@ -55,8 +66,6 @@ Running a local IPFS node server greatly enhance the performance.
 * [Ipfs Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
 
 According to the `ipfs-companion` [README.md](https://github.com/ipfs-shipyard/ipfs-companion/blob/master/README.md), `This add-on enables everyone to access IPFS resources the way they were meant: from locally running IPFS node :-)`.
-
-Running a local IPFS node server greatly enhance the performance.
 
 
 ## Developer
