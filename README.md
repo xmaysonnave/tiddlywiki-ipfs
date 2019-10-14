@@ -47,7 +47,7 @@ These instructions will get you a copy of the project up and running on your loc
 <b>Remarks:</b>
 <br/>
 * The https://tiddly.bluelightav.eth.link Url requires Ipfs Companion to be fully resolved as an Ipns indentifier otherwise [EthDNS and EthLink](https://eth.link/) is taking care of your Url. EthLink do not resolve well the https://domain.eth.link Url as browsers complain about the Https certificate. This Let'sEncrypt valid certificate is a wildcard certificate but too widely opened and considered insecured by major browsers (Tested with Chrome and Firefox). The http://tiddly.bluelightav.eth.link is also available and browsers do not complain however MITM are possible.
-* The http://tiddly.bluelightav.eth Url requires Metamask to be fully resolved as an Ipns identifier.
+* The http://tiddly.bluelightav.eth Url requires Metamask to be fully resolved as an Ipfs identifier.
 
 
 #### Running a local Ipfs node with Ipfs Desktop

@@ -12,7 +12,7 @@ The [[Ipfs Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control
 <p>
 The Autosave property is deactivated has saving is not a blocking action. 
 <br/>
-It means that saving multiple times will run a save action multiple times.
+It means that each time you modify your wiki, ~TiddlyWiki will attempt to save your wiki even a previous save action is not finished.
 <br/>
-This is not recommended as unpredictable beaviours will occurs.
+The Autosave feature is not recommended as unpredictable beaviours will occur.
 </p>

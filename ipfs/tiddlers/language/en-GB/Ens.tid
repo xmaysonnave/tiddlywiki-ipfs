@@ -1,0 +1,15 @@
+title: Ens
+tags: Settings
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/settings/ens]]
+<p>
+In order to use the Ens feature, you need to setup your browser with the [ext[Metamask|https://github.com/MetaMask/metamask-extension]] extension.
+See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
+</p>
+<p>
+The Ens Domain will be tested and updated accordindgly as long as you are the owner of this domain and have some [ext[Eth|https://www.ethereum.org/]].
+</p>
+<ul>
+  <li>To modify the default Ens domain, edit and modify [[$:/ipfs/saver/ens/domain]].</li>
+</ul>
