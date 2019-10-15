@@ -1,0 +1,23 @@
+title: How to Export Attachment to Ipfs
+tags: Faq
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/embedded]]
+<p>
+Uploading an attachment could be a slow process. It really depends the attachment size and/or which server your are using.
+</p>
+<p>
+Try to experiment with infura.io Api Url and its Gateway Url.
+</p>
+<p>
+Be sure to setup the [[Verbose]] property and watch the console displayed events.
+</p>
+[img[$:/ipfs/saver/image/console]]
+<p>
+Another good experiment is to use the infura.io Api Url and the gateway.ipfs.io Gateway Url. 
+That way you upload your attachment on infura and retrieve it with another server. 
+It helps to spread your attachment on different servers increasing its resilience.
+</p>
+<p>
+Each attachments, including the current <b>~TiddlyWiki</b> instance is carefully pined to avoid any garbage collection from Ipfs nodes.
+</p>

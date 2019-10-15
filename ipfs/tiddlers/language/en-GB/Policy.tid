@@ -4,7 +4,7 @@ type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/settings/policy]]
 <p>
-  Ipfs with ~TiddlyWiki relies on a specialized library [ext[ipfs-provider|https://github.com/ipfs-shipyard/ipfs-provider]] who connects to Ipfs via an available provider.
+  <b>Ipfs with ~TiddlyWiki</b> relies on a specialized library [ext[ipfs-provider|https://github.com/ipfs-shipyard/ipfs-provider]] who connects to Ipfs via an available provider.
 </p>
 <h3>Available Providers</h3>
 <ul>
@@ -16,17 +16,17 @@ The <b>Default Ipfs Provider</b> option request the plugin the following behavio
 </p>
 <ol>
   <li>Try to use a [ext[Web Extension|https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/extension]] provider if available otherwise fallback</li>
-  <li>Try to use the Ipfs Companion proxy provider if available otherwise fallback</li>
+  <li>Try to use the <b>Ipfs Companion</b> proxy provider if available otherwise fallback</li>
   <li>Use the HTTP Client provider</li>
 </ol>
 <p>
-  In the current implementation only Ipfs Companion exposes the Ipfs API through a Web Extension.
+  In the current implementation only <b>Ipfs Companion</b> exposes the Ipfs API through a Web Extension.
 </p>
 <p>
   The <b>Web Extension</b> option request the plugin to use only the Web Extension provider. 
 </p>
 <p>
-  The <b>Ipfs Companion</b> option request the plugin to use only the Ipfs Companion proxy provider.
+  The <b>Ipfs Companion</b> option request the plugin to use only the <b>Ipfs Companion</b> proxy provider.
 </p>
 <p>
   The <b>HTTP Client</b> option request the plugin to use only the HTTP Client provider.
