@@ -1,14 +1,15 @@
-title: How to Export Attachment to Ipfs
+title: How to Export Attachment
 tags: Faq
 type: text/vnd.tiddlywiki
 
-[img[$:/ipfs/saver/image/embedded]]
+[img[$:/ipfs/saver/image/export/embedded]]
 <p>
 Uploading an attachment could be a slow process. It really depends the attachment size and/or which server your are using.
 </p>
 <p>
-Try to experiment with infura.io Api Url and its Gateway Url.
+Try to experiment with infura.io Api Url and its Gateway Url and the following Tiddler:
 </p>
+[[The Embedded Little Prince]]
 <p>
 Be sure to setup the [[Verbose]] property and watch the console displayed events.
 </p>
@@ -20,4 +21,7 @@ It helps to spread your attachment on different servers increasing its resilienc
 </p>
 <p>
 Each attachments, including the current <b>~TiddlyWiki</b> instance is carefully pined to avoid any garbage collection from Ipfs nodes.
+</p>
+<p>
+Tags <<tag "$:/isAttachment">><<tag "$:/isIpfs">><<tag "$:/isEmbedded">><<tag "$:/isEncrypted">> always shows the current attachment status.
 </p>

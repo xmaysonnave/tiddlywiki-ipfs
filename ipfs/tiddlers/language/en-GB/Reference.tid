@@ -3,9 +3,15 @@ title: Reference
 tags: TableOfContents
 type: text/vnd.tiddlywiki
 
-This [ext[TiddlyWiki|https://tiddlywiki.com/]] plugin uses [ext[Ipfs with TiddlyWiki hosted @ GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]
-<br/><br/>
+<p>
+This [ext[TiddlyWiki|https://tiddlywiki.com/]] plugin uses [ext[Ipfs with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/]] hosted @ [ext[GitHub|https://github.com/]].
+</p>
+<p>
 Feel free to drag and drop the following plugin link ([[$:/plugins/ipfs]]) to your <b>~TiddlyWiki</b> instance.
+</p>
+<p>
+Read also the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] hosted @ [ext[GitHub|https://github.com/]] as it contains additional informations.
+</p>
 <div class="tc-table-of-contents">
 <<toc-selective-expandable "Reference" "sort[title]">>
 </div>
