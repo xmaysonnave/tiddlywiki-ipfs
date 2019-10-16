@@ -48,3 +48,6 @@ The plugin eases the selection through drop-down lists.
   <li>Clone an existing Gateway Url Tiddler (see above).</li>
   <li>Update the cloned Tiddler's name and the [[Default Gateway Url Tiddler|$:/ipfs/saver/gateway/default]] if applicable.</li>
 </ul>
+<p>
+As a convenience here is a way to know the fastest available [ext[gateway|https://ipfs.github.io/public-gateway-checker/]].
+</p>

@@ -4,8 +4,9 @@ type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/encrypt]]
 <p>
-If the locker is opened, the document is not encrypted. 
-<br/>
+If the locker is opened, your <b>~TiddlyWiki</b> instance is not encrypted. 
+</p>
+<p>
 Follow the official [ext[Encryption|https://tiddlywiki.com/#Encryption]] tutorial from <b>~TiddlyWiki</b> for more informations.
 </p>
 <p>
@@ -18,6 +19,13 @@ Once you've locked your <b>~TiddlyWiki</b> instance every attachment you are goi
 Beware that even you've locked your document and didn't save it immediately all your attachments will be deployed encrypted. Check the [[How to Decrypt Attachment]] to workaround this behaviour.
 </p>
 <p>
-Encryption and attachment's upload is a lengthy process. Follow the [[Verbose]] reference tutorial to be familiar with your particular environment.
+Be sure to setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
+</p>
+[img[$:/ipfs/saver/image/embedded/console]]
+<p>
+Here is the output when your attachment has been encrypted.
 </p>
 [img[$:/ipfs/saver/image/encrypted/attachment]]
+<p>
+Tags <<tag "$:/isAttachment">><<tag "$:/isIpfs">><<tag "$:/isEmbedded">><<tag "$:/isEncrypted">> always shows the current attachment status.
+</p>

@@ -3,14 +3,15 @@ tags: Reference
 type: text/vnd.tiddlywiki
 
 <p>
-  Here is the default exhaustive array of supported attachment over Ipfs. Technically only [ext[base64|https://en.wikipedia.org/wiki/Base64]] encoded attachments are supported.
+  Here is the default list of supported attachment [ext[Media Types|http://www.iana.org/assignments/media-types/media-types.xhtml]] by ~TiddlyWiki. 
+  Technically only [ext[base64|https://en.wikipedia.org/wiki/Base64]] encoded attachments are supported.
 </p>
 <p>
-  <b>~TiddlyWiki</b> plugins are able to dynamically enhance this list.
+  <b>~TiddlyWiki</b> plugins are able to add new Media Types and as such this list could be more extensive.
 </p>
 <p>
 <table>
-<tr><th>Mime.types</th><th>File extension</th></tr>
+<tr><th>Media Types</th><th>Extension</th></tr>
 <tr><td>application/pdf</td><td>pdf</td></tr>
 <tr><td>application/zip</td><td>zip</td></tr>
 <tr><td>image/jpeg</td><td>jpg or jpeg</td></tr>

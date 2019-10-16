@@ -25,7 +25,7 @@ The attachment should be embedded in your document.
 When you will save your document <b>Ipfs with ~TiddlyWiki</b> will unpin the previous Ipfs attachment.
 </p>
 <p>
-Be sure to setup the [[Verbose]] property and watch the console displayed events.
+Be sure to setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
 [img[$:/ipfs/saver/image/embedded/console]]
 <p>
