@@ -285,7 +285,7 @@ exports.getIpfsEnsDomain = function() {
 Default Ens Domain
 */
 exports.getIpfsDefaultEnsDomain = function() {
-	return "tiddly.bluelightav.eth";
+	return "bluelightav.eth";
 }
 
 /*
