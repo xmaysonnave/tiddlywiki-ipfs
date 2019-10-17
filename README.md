@@ -222,7 +222,7 @@ See also the list of [contributors](https://github.com/xmaysonnave/tiddlywiki-ip
 ## License
 <a name="license"/>
 
-This project is licensed under the [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html) from [SPDX](https://spdx.org/) License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html) from [SPDX](https://spdx.org/) - see the [LICENSE](LICENSE) file for details.
 
 
 ## Acknowledgments
