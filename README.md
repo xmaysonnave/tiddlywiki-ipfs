@@ -27,7 +27,10 @@ These instructions will get you a copy of the project up and running on your loc
 * * [Environment](#developer-environment)
 * * [Node.js](#developer-nodejs)
 * * [Building](#developer-building)
+* [Contributing](#contributing)
+* [Authors](#authors)
 * [License](#license)
+* [Acknowledgment](#acknowledgment)
 
 ### Users
 <a name="users"/>
