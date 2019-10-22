@@ -106,8 +106,7 @@ https://www.npmjs.com/
 <a name="developer-nodejs-install"/>
 
 On Debian buster we don't use the default Debian repositories or the Nodesource repositories.
-<br/>
-We favor [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
+We recommend [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
 
 
 ##### Setup
@@ -115,9 +114,7 @@ We favor [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
 
 Follow the [nvm installation tutorial](https://github.com/nvm-sh/nvm#installation-and-update).
 
-We are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH).
-
-Here is an excerpt of our .zshrc
+As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
 ```
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -148,6 +145,16 @@ load-nvmrc
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 ```
+v10.16.3
+```
+
+Install the recommended version.
+```
+nvm install v10.16.3
+```
+
+Check:
+```
 node -v
 v10.16.3
 ```
@@ -157,6 +164,13 @@ We update npm to use the latest:
 npm install -g npm@latest
 npm -v
 6.12.0
+```
+
+At this stage your global environment should look like this:
+```
+npm -g ls --depth=0
+/home/user/.nvm/versions/node/v10.16.3/lib
+└── npm@6.12.0
 ```
 
 
