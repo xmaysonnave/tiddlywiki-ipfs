@@ -105,7 +105,7 @@ https://www.npmjs.com/
 ##### Install
 <a name="developer-nodejs-install"/>
 
-On Debian buster we don't use either de the default Debian repositories or the Nodesource repositories.
+On Debian buster we don't use the default Debian repositories or the Nodesource repositories.
 <br/>
 We favor [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
 
@@ -113,9 +113,9 @@ We favor [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
 ##### Setup
 <a name="developer-nodejs-setup"/>
 
-Follow the [nvm installation tutorial](https://github.com/nvm-sh/nvm#installation-and-update)
+Follow the [nvm installation tutorial](https://github.com/nvm-sh/nvm#installation-and-update).
 
-We are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
+We are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH).
 
 Here is an excerpt of our .zshrc
 ```
@@ -146,7 +146,7 @@ add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 ```
 
-This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who specifies the node version to use.
+This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 ```
 node -v
 v10.16.3
