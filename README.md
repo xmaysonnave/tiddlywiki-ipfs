@@ -105,60 +105,27 @@ https://www.npmjs.com/
 ##### Install
 <a name="developer-nodejs-install"/>
 
-On Debian buster we setup a new source list who contains the node 11.x repository addresses.
-
-edit:
-```
-/etc/apt/source.list.d/nodesource.list
-```
-input:
-```
-deb https://deb.nodesource.com/node_11.x buster main
-deb-src https://deb.nodesource.com/node_11.x buster main
-```
-Once our node repository is known, we update and install the latest nodejs 11.x:
-```
-sudo apt update
-sudo apt install nodejs
-```
+On Debian buster we don't use either de the default Debian repositories or the Nodesource repositories.
+<br/>
+We favor [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
 
 
 ##### Setup
 <a name="developer-nodejs-setup"/>
 
-We configure our home environment to host the npm global packages.
+Follow the [nvm installation tutorial](https://github.com/nvm-sh/nvm#installation-and-update)
 
-Configure npm global directory
-```
-// directory where npm will install packages
-mkdir ~/.npm-global
-// configure npm
-npm config set prefix '~/.npm-global'
-
-// following the previous command ~/.npmrc should contain:
-prefix=/home/yourHome/.npm-global
-
-// update .profile or .zshrc with
-export PATH=~/.npm-global/bin:$PATH
-
-// update your system variables
-source ~/.profile or source ~/.zshrc
-```
-
-At this stage we can test our node environment:
+This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who specifies the node version to use.
 ```
 node -v
-v11.15.0
+v10.16.3
 ```
 
 We update npm to use the latest:
 ```
 npm install -g npm@latest
-```
-Then we test our npm environment:
-```
 npm -v
-6.11.3
+6.12.0
 ```
 
 
