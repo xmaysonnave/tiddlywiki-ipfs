@@ -201,6 +201,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				}
 			} 	
 
+		// Check Ens domain
 		} else if ($tw.utils.getIpfsProtocol() == "ens") {
 
 			// Getting default ens domain
@@ -214,8 +215,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			}
 			if ($tw.utils.getIpfsVerbose()) console.log("Ens Domain: " + ensDomain);
 			
-			// Check default ens domain
-			var { error, message, address } = await this.ipfsWrapper.resolveEnsDomain(ensDomain);
+			// Fetch Ens domain Resolver
+			var { error, message, resolver } = await this.ipfsWrapper.fetchEnsDomainResolver(ensDomain);
 			if (error != null)  {
 				console.log(message);
 				console.log(error);

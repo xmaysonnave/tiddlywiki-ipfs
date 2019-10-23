@@ -22,27 +22,27 @@ var IpfsWrapper = function() {
 	this.ipfsLibrary = new IpfsLibrary();
 }
 
-IpfsWrapper.prototype.resolveEnsDomain = async function(domain) {
-	var message = "Failed to resolve Ens Domain: " + domain;
+IpfsWrapper.prototype.fetchEnsDomainResolver = async function(domain) {
+	var message = "Failed to fetch Ens Domain Resolver: " + domain;
 	try {
-		var address = await this.ipfsLibrary.resolveEnsDomain(domain);
-		if (address == undefined)  {
+		var resolver = await this.ipfsLibrary.fetchEnsDomainResolver(domain);
+		if (resolver == undefined)  {
 			return { 
 				error: new Error(message), 
 				message: message, 
-				address: null 
+				resolver: null
 			};
 		}
 		return { 
 			error: null, 
-			message: "Successfully resolved Ens Domain: " + domain + ", Resolver: " + address, 
-			address: address 
+			message: "Successfully fetched Ens Domain Resolver from: " + domain + ", " + resolver,
+			resolver: resolver
 		};
 	} catch (error) {
 		return { 
 			error: error, 
 			message: message, 
-			address: null 
+			resolver: null
 		};
 	}
 }
