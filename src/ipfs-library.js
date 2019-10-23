@@ -24,35 +24,71 @@ Ipfs Library
 */
 var IpfsLibrary = function() {}
 
-IpfsLibrary.prototype.fetchEnsDomainResolver = async function(domain) {
+IpfsLibrary.prototype.getWeb3 = async function() {
 	// Check if Metamask is available
 	if (typeof window.ethereum == undefined) {
-		throw new Error("Non-ENS browser detected. You should consider installing MetaMask!");			
+		throw new Error("Non-ENS browser detected. You should consider installing MetaMask...");			
 	}
-	// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.on(eventname%2C-callback
 	// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange		
 	window.ethereum.autoRefreshOnNetworkChange = false;
 	// Web3
-	const web3 = new Web3(window.ethereum);
+	var web3;
+	try {
+		web3 = new Web3(window.ethereum);
+	} catch (error) {
+		console.log(error.message);
+		throw new Error("Unable to instantiate Web3...");
+	}						
 	// Enable
+	var accounts;
 	try {
-		const accounts = await window.ethereum.enable();
+		accounts = await window.ethereum.enable();
 	} catch (error) {
-		console.log(error);
-		throw new Error(error.message);
+		console.log(error.message);
+		throw new Error("Unable to enable MetaMask...");
+	}				
+	// Mainnet
+	if (window.ethereum.networkVersion !== "1") {
+		throw new Error("The network should be Ethereum Main...");
+	}	
+	// Return a web3 instance and the current owner
+	return { 
+		web3: web3, 
+		owner: accounts[0]
+	};
+}
+
+IpfsLibrary.prototype.fetchEnsDomainResolver = async function(domain) {
+	// Retrieve a web3 instance and Metamask owner
+	const { web3, owner } = await this.getWeb3();
+	// Fetch Resolver	
+	var result;
+	try {
+		result = await web3.eth.ens.resolver(domain);
+	} catch (error) {
+		console.log(error.message);
+		throw new Error("Unable to get Ens domain resolver...");
 	}		
-	// Fetch Resolver
-	try {
-		const result = await web3.eth.ens.resolver(domain);
-		if ($tw.utils.getIpfsVerbose()) console.log("Fetch Ens Domain Resolver...");
-		if (result._address != undefined && /^0x0+$/.test(result._address) == false) {
-			return (result._address);
-		}
-		throw new Error("Unknown Ens Domain: " + domain);
-	} catch (error) {
-		console.log(error);
-		throw new Error(error.message);
+	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver...");
+	// Exist
+	if (result._address == undefined || /^0x0+$/.test(result._address) == true) {
+		throw new Error("Unknown Ens domain...");
 	}
+	// Ownership
+	var address;
+	try {
+		address = await web3.eth.ens.getAddress(domain);
+	} catch (error) {
+		console.log(error.message);
+		throw new Error("Unable to get Ens domain address...");
+	}		
+	if (address == undefined) {
+		throw new Error("Undefined Ethereum Ens domain address...");			
+	}				
+	if (web3.utils.toChecksumAddress(address) != web3.utils.toChecksumAddress(owner)) {
+		throw new Error("Ens Domain non-ownership...");
+	}		
+	return (result._address);	
 }
 
 // Default
@@ -61,14 +97,14 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
-		throw new Error("Undefined Ipfs api url");
+		throw new Error("Undefined Ipfs Api Url...");
 	}	
 	var multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
-		console.log(error);
-		throw new Error("Invalid Ipfs api url: " + apiUrl);
+		console.log(error.message);
+		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
 	// Getting
 	try {
@@ -86,8 +122,8 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 		provider = provider + ", " + multi;
 		return { ipfs, provider };	
 	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs default client is unavailable: " + error.message);
+		console.log(error.message);
+		throw new Error("Ipfs default is unavailable...");
 	}
 }
 
@@ -107,8 +143,8 @@ IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
 		});
 		return { ipfs, provider };	
 	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs WebExtension is unavailable: " + error.message);
+		console.log(error.message);
+		throw new Error("Ipfs WebExtension is unavailable...");
 	}
 }
 
@@ -128,8 +164,8 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 		});
 		return { ipfs, provider };	
 	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs Companion is unavailable: " + error.message);
+		console.log(error.message);
+		throw new Error("Ipfs Companion is unavailable...");
 	}
 }
 
@@ -139,14 +175,14 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
-		throw new Error("Undefined Ipfs api url");
+		throw new Error("Undefined Ipfs Api Url...");
 	}	
 	var multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
-		console.log(error);
-		throw new Error("Invalid Ipfs api url: " + apiUrl);
+		console.log(error.message);
+		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
 	// Getting
 	try {
@@ -164,8 +200,8 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 		provider = provider + ", " + multi;
 		return { ipfs, provider };	
 	} catch (error) {
-		console.log(error);
-		throw new Error("Ipfs HTTP client is unavailable: " + error.message);
+		console.log(error.message);
+		throw new Error("Ipfs Http is unavailable...");
 	}
 }
 
@@ -184,8 +220,8 @@ IpfsLibrary.prototype.add = async function(client, content) {
 				try {
 					client = await client.enable({commands: ["add"]});
 				} catch (error) {
-					console.log(error);
-					reject(error.message);
+					console.log(error.message);
+					reject("Unable to enable Ipfs add...");
 				}
 			}
 			if (client != undefined && client.add != undefined) {
@@ -200,11 +236,11 @@ IpfsLibrary.prototype.add = async function(client, content) {
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
 					resolve(result);
 				} catch (error) {
-					console.log(error);
-					reject(error.message);
+					console.log(error.message);
+					reject("Unable to Ipfs add...");
 				}							
 			} else {
-				reject("Undefined Ipfs client or client add");
+				reject("Undefined Ipfs add...");
 			}
 		};
 		try {
@@ -212,8 +248,8 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing content...");
 			reader.readAsArrayBuffer(content);
 		} catch (error) {
-			console.log(error);
-			reject(error.message);
+			console.log(error.message);
+			reject("Unable to read content...");
 		}
   });
 }
@@ -224,8 +260,8 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["get"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);				
+			console.log(error.message);
+			throw new Error("Unable to enable Ipfs get...");
 		}
 	}
 	// Process
@@ -235,11 +271,11 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs get...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to Ipfs get...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client get");
+	throw new Error("Undefined Ipfs get...");
 }
 
 IpfsLibrary.prototype.cat = async function(client, cid) {
@@ -248,8 +284,8 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["cat"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);				
+			console.log(error.message);
+			throw new Error("Unable to enable Ipfs cat...");
 		}
 	}
 	// Process
@@ -259,11 +295,11 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs cat...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to Ipfs cat...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client cat");
+	throw new Error("Undefined Ipfs cat...");
 }
 
 IpfsLibrary.prototype.pin = async function(client, cid) {
@@ -272,22 +308,22 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["pin"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to enable Ipfs pin...");
 		}
 	}
 	// Process
 	if (client != undefined && client.pin != undefined && client.pin.add != undefined) {
 		try {
 			const result = await client.pin.add(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin add...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to Ipfs pin...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client pin or client pin add");
+	throw new Error("Undefined Ipfs pin...");
 }
 
 IpfsLibrary.prototype.unpin = async function(client, cid) {
@@ -296,22 +332,22 @@ IpfsLibrary.prototype.unpin = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["pin"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to enable Ipfs pin...");
 		}
 	}
 	// Process
 	if (client != undefined && client.pin != undefined && client.pin.rm != undefined) {
 		try {
 			const result = await client.pin.rm(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin rm...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs unpin...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to Ipfs unpin...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client pin or client pin rm");
+	throw new Error("Undefined Ipfs unpin");
 }
 
 IpfsLibrary.prototype.publish = async function(client, name, cid) {
@@ -320,21 +356,21 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
 		try {
 			client = await client.enable({commands: ["name"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to enable Ipns name...");
 		}								
 	}
 	if (client != undefined && client.name != undefined && client.name.publish != undefined) {
 		try {
 			const result = await client.name.publish(cid, { key: name });
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs name publish...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing publish Ipns name...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to publish Ipns name...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client name or client name publish");
+	throw new Error("Undefined Ipns publish name...");
 }
 
 IpfsLibrary.prototype.resolve = async function(client, cid) {
@@ -343,21 +379,21 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["name"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to enable Ipns name...");
 		}				
 	}
 	if (client != undefined && client.name != undefined && client.name.resolve != undefined) {
 		try {
 			const result = await client.name.resolve(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs name resolve...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ipns name...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to resolve Ipns name...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client name or client name resolve");
+	throw new Error("Undefined Ipns name resolve...");
 }
 
 IpfsLibrary.prototype.id = async function(client) {
@@ -366,8 +402,8 @@ IpfsLibrary.prototype.id = async function(client) {
 		try {		
 			client = await client.enable({commands: ["id"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to enable Ipfs id...");
 		}
 	}
 	if (client != undefined && client.id != undefined) {
@@ -376,11 +412,11 @@ IpfsLibrary.prototype.id = async function(client) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs id...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to Ipfs id...");
 		}						
 	}
-	throw new Error("Undefined Ipfs client or client id");
+	throw new Error("Undefined Ipfs id...");
 }
 
 IpfsLibrary.prototype.keys = async function(client) {
@@ -389,8 +425,8 @@ IpfsLibrary.prototype.keys = async function(client) {
 		try {		
 			client = await client.enable({commands: ["key"]});
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to enable Ipfs key...");
 		}
 	}
 	if (client != undefined && client.key != undefined && client.key.list != undefined) {
@@ -399,11 +435,11 @@ IpfsLibrary.prototype.keys = async function(client) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs key list...");
 			return result;
 		} catch (error) {
-			console.log(error);
-			throw new Error(error.message);
+			console.log(error.message);
+			throw new Error("Unable to Ipfs key list...");
 		}
 	}
-	throw new Error("Undefined Ipfs client or client key or client key list");
+	throw new Error("Undefined Ipfs key list...");
 }
 
 exports.IpfsLibrary = IpfsLibrary;
