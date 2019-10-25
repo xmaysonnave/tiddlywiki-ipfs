@@ -284,7 +284,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 				try {
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer...");
 					const buffer = await Buffer.from(reader.result);
-					if ($tw.utils.getIpfsVerbose()) console.log("Buffer has been processed...");					
+					if ($tw.utils.getIpfsVerbose()) console.log("Processed buffer...");					
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");					
 					const result = await client.add(buffer, { progress: function(len) {
 							if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);  	
@@ -324,6 +324,7 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 	// Process
 	if (client != undefined && client.get != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs get...");			
 			const result = await client.get(cid);
 			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs get...");
 			return result;
@@ -348,6 +349,7 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 	// Process
 	if (client != undefined && client.cat != undefined) {		
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs cat...");			
 		const result = await client.cat(cid);
 		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs cat...");
 			return result;
@@ -372,7 +374,7 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
 	// Process
 	if (client != undefined && client.pin != undefined && client.pin.add != undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");			
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");
 			const result = await client.pin.add(cid);
 			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs pin...");
 			return result;
@@ -445,6 +447,7 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
 	}
 	if (client != undefined && client.name != undefined && client.name.resolve != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ipns name...");			
 			const result = await client.name.resolve(cid);
 			if ($tw.utils.getIpfsVerbose()) console.log("Processed resolve Ipns name...");
 			return result;
@@ -468,8 +471,9 @@ IpfsLibrary.prototype.id = async function(client) {
 	}
 	if (client != undefined && client.id != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing id...");			
 			const result = await client.id();
-			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs id...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed id...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -491,8 +495,9 @@ IpfsLibrary.prototype.keys = async function(client) {
 	}
 	if (client != undefined && client.key != undefined && client.key.list != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing keys...");			
 			const result = await client.key.list();
-			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs keys...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed keys...");
 			return result;
 		} catch (error) {
 			throw new Error("Unable to process Ipfs keys...");

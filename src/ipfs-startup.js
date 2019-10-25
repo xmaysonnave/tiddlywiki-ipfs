@@ -6,7 +6,7 @@ module-type: startup
 Startup initialisation
 
 \*/
-( function(){
+( function() {
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
