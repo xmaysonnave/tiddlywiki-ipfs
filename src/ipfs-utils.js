@@ -3,7 +3,7 @@ title: $:/plugins/ipfs/ipfs-utils.js
 type: application/javascript
 module-type: utils
 
-Ipfs Saver
+utils
 
 \*/
 

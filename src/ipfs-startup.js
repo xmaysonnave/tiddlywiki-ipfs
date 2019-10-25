@@ -6,7 +6,7 @@ module-type: startup
 Startup initialisation
 
 \*/
-(function(){
+( function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -23,7 +23,12 @@ exports.startup = function(continueStartupCallback) {
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
 	// Load priority property
 	var priority = $tw.utils.updateIpfsPriority()
-	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);		
+	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
+	// Check if Metamask is available
+	if (typeof window.ethereum != undefined) {
+		// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
+		window.ethereum.autoRefreshOnNetworkChange = false;
+	}
   // Continue
 	return continueStartupCallback();
 };

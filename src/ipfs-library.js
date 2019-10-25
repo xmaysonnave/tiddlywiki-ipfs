@@ -3,15 +3,20 @@ title: $:/plugins/ipfs/ipfs-library.js
 type: application/javascript
 module-type: library
 
-Ipfs Library
+IpfsLibrary
 
 \*/
 
-const Buffer = require("buffer/").Buffer
+const Buffer = require("buffer/").Buffer;
 const CID = require("cids");
 const toMultiaddr = require("uri-to-multiaddr");
 const getIpfs = require("ipfs-provider");
-var Web3 = require('web3');
+const supportedCodecs = ["ipfs-ns", "swarm-ns", "onion", "onion3"];
+
+import contentHash from "content-hash";
+import { ethers, Contract, utils } from "ethers";
+import { abi as ensAbi, bytecode as ensBytecode }  from "@ensdomains/resolver/build/contracts/ENS.json";
+import { abi as publicResolverAbi, bytecode as publicResolverBytecode } from "@ensdomains/resolver/build/contracts/PublicResolver.json";
 
 ( function() {
 
@@ -24,71 +29,122 @@ Ipfs Library
 */
 var IpfsLibrary = function() {}
 
-IpfsLibrary.prototype.getWeb3 = async function() {
-	// Check if Metamask is available
-	if (typeof window.ethereum == undefined) {
-		throw new Error("Non-ENS browser detected. You should consider installing MetaMask...");			
+// https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
+
+
+IpfsLibrary.prototype.decodeContenthash = function(encoded) {
+	let decoded;
+  if (encoded.error != undefined) {
+		throw new Error(encoded.error);
+  }
+  if (encoded != undefined) {
+		decoded = contentHash.decode(encoded);
+		const codec = contentHash.getCodec(encoded);
+		if (codec !== "ipfs-ns") {
+			throw new Error("Unsupported Ens domain protocol: " + codec);
+		}
+  }
+  return decoded; 
+}
+
+IpfsLibrary.prototype.validateContent = function(encoded){
+  return contentHash.isHashOfType(encoded, contentHash.Types.ipfs) || contentHash.isHashOfType(encoded, contentHash.Types.swarm)
+}
+
+IpfsLibrary.prototype.isValidContenthash = function(encoded) {
+	const codec = contentHash.getCodec(encoded)
+	return utils.isHexString(encoded) && supportedCodecs.includes(codec)
+}
+
+IpfsLibrary.prototype.encodeContenthash = function(text) {
+  let content, contentType;
+  let encoded = false;
+  if (!!text) {
+    let matched = text.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || text.match(/\/(ipfs)\/(.*)/);
+    if (matched) {
+      contentType = matched[1];
+      content = matched[2];
+    }
+		if (contentType === "ipfs") {
+			if (content.length >= 4) {
+				encoded = "0x" + contentHash.fromIpfs(content);
+			}
+		} else {
+			throw new Error("Unsupported Ens domain protocol: " + contentType);
+		}
+  }
+  return encoded; 
+}
+
+IpfsLibrary.prototype.enableMetamask = async function() {
+	// Check if Metamask is available	
+	if (window.ethereum == undefined) {
+		throw new Error("Non-ENS browser detected. You should consider installing MetaMask...");
 	}
-	// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange		
-	window.ethereum.autoRefreshOnNetworkChange = false;
-	// Web3
-	var web3;
-	try {
-		web3 = new Web3(window.ethereum);
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to instantiate Web3...");
-	}						
-	// Enable
-	var accounts;
+	// Enable Metamask
+	let accounts;
 	try {
 		accounts = await window.ethereum.enable();
 	} catch (error) {
 		console.log(error.message);
-		throw new Error("Unable to enable MetaMask...");
-	}				
+		throw new Error("Unable to enable Metamask...");
+	}
 	// Mainnet
 	if (window.ethereum.networkVersion !== "1") {
 		throw new Error("The network should be Ethereum Main...");
-	}	
-	// Return a web3 instance and the current owner
-	return { 
-		web3: web3, 
-		owner: accounts[0]
-	};
+	}
+	// Instantiate web3
+	if (this.web3 == undefined) {
+		this.web3 = new ethers.providers.Web3Provider(window.ethereum);
+	}				
+	if ($tw.utils.getIpfsVerbose()) console.log("Current Ethereum account: " + accounts[0]);
+	// Return current owner
+	return accounts[0];
 }
 
-IpfsLibrary.prototype.fetchEnsDomainResolver = async function(domain) {
-	// Retrieve a web3 instance and Metamask owner
-	const { web3, owner } = await this.getWeb3();
-	// Fetch Resolver	
-	var result;
+IpfsLibrary.prototype.getContentHash = async function(domain) {
+	// Enable Metmask
+	await this.enableMetamask();
+	// Retrieve Signer
+	const signer = this.web3.getSigner();	
+	// Load Ens
+	let ens;
 	try {
-		result = await web3.eth.ens.resolver(domain);
+		// https://github.com/ensdomains/ui/blob/master/src/ens.js
+		// Mainnet ENS Registry
+		ens = new Contract("0x314159265dd8dbb310642f98f50c066173c1259b", ensAbi, signer);
+	} catch (error) {
+		console.log(error.message);
+		throw new Error("Unable to fetch Ens registry...");		
+	}
+	// Fetch Resolver
+	let resolver;
+	try {
+		resolver = await ens.resolver(utils.namehash(domain));
 	} catch (error) {
 		console.log(error.message);
 		throw new Error("Unable to get Ens domain resolver...");
 	}		
-	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver...");
 	// Exist
-	if (result._address == undefined || /^0x0+$/.test(result._address) == true) {
+	if (resolver == undefined || /^0x0+$/.test(resolver) == true) {
 		throw new Error("Unknown Ens domain...");
 	}
-	// Ownership
-	var address;
+	// Only Mainnet PublicResolver is supported
+	if (utils.getAddress("0xd3ddccdd3b25a8a7423b5bee360a42146eb4baf3") != utils.getAddress(resolver)) {
+		throw new Error("Unsupported Ens resolver: " + resolver);
+	}	
+	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);	
+	// Load Content
+	let content;
 	try {
-		address = await web3.eth.ens.getAddress(domain);
+		// Mainnet PublicResolver address
+		const publicResolver = new Contract("0xd3ddccdd3b25a8a7423b5bee360a42146eb4baf3", publicResolverAbi, signer);
+		content = await publicResolver.contenthash(utils.namehash(domain));
 	} catch (error) {
 		console.log(error.message);
-		throw new Error("Unable to get Ens domain address...");
-	}		
-	if (address == undefined) {
-		throw new Error("Undefined Ethereum Ens domain address...");			
-	}				
-	if (web3.utils.toChecksumAddress(address) != web3.utils.toChecksumAddress(owner)) {
-		throw new Error("Ens Domain non-ownership...");
-	}		
-	return (result._address);	
+		throw new Error("Unable to fetch Ens domain content...");		
+	}
+	return this.decodeContenthash(content);	
 }
 
 // Default
@@ -99,7 +155,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs Api Url...");
 	}	
-	var multi;
+	let multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
@@ -108,7 +164,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	}
 	// Getting
 	try {
-		var { ipfs, provider } = await getIpfs({
+		let { ipfs, provider } = await getIpfs({
 			// These is the defaults
 			tryWebExt: true,    					// set false to bypass WebExtension verification
 			tryWindow: true,    					// set false to bypass window.ipfs verification
@@ -177,7 +233,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs Api Url...");
 	}	
-	var multi;
+	let multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
@@ -229,11 +285,12 @@ IpfsLibrary.prototype.add = async function(client, content) {
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer...");
 					const buffer = await Buffer.from(reader.result);
 					if ($tw.utils.getIpfsVerbose()) console.log("Buffer has been processed...");					
+					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");					
 					const result = await client.add(buffer, { progress: function(len) {
 							if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);  	
 						}
 					});
-					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
+					if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs add...");
 					resolve(result);
 				} catch (error) {
 					console.log(error.message);
@@ -249,7 +306,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			reader.readAsArrayBuffer(content);
 		} catch (error) {
 			console.log(error.message);
-			reject("Unable to read content...");
+			reject("Unable to process content...");
 		}
   });
 }
@@ -268,7 +325,7 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 	if (client != undefined && client.get != undefined) {
 		try {
 			const result = await client.get(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs get...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs get...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -292,7 +349,7 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 	if (client != undefined && client.cat != undefined) {		
 		try {
 		const result = await client.cat(cid);
-		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs cat...");
+		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs cat...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -315,8 +372,9 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
 	// Process
 	if (client != undefined && client.pin != undefined && client.pin.add != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");			
 			const result = await client.pin.add(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs pin...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -339,8 +397,9 @@ IpfsLibrary.prototype.unpin = async function(client, cid) {
 	// Process
 	if (client != undefined && client.pin != undefined && client.pin.rm != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs unpin...");						
 			const result = await client.pin.rm(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs unpin...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs unpin...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -362,8 +421,9 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
 	}
 	if (client != undefined && client.name != undefined && client.name.publish != undefined) {
 		try {
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing publish Ipns name: " + name);			
 			const result = await client.name.publish(cid, { key: name });
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing publish Ipns name...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed publish Ipns name...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -386,7 +446,7 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
 	if (client != undefined && client.name != undefined && client.name.resolve != undefined) {
 		try {
 			const result = await client.name.resolve(cid);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ipns name...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed resolve Ipns name...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -409,7 +469,7 @@ IpfsLibrary.prototype.id = async function(client) {
 	if (client != undefined && client.id != undefined) {
 		try {
 			const result = await client.id();
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs id...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs id...");
 			return result;
 		} catch (error) {
 			console.log(error.message);
@@ -432,14 +492,13 @@ IpfsLibrary.prototype.keys = async function(client) {
 	if (client != undefined && client.key != undefined && client.key.list != undefined) {
 		try {
 			const result = await client.key.list();
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs key list...");
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs keys...");
 			return result;
 		} catch (error) {
-			console.log(error.message);
-			throw new Error("Unable to Ipfs key list...");
+			throw new Error("Unable to process Ipfs keys...");
 		}
 	}
-	throw new Error("Undefined Ipfs key list...");
+	throw new Error("Undefined Ipfs keys...");
 }
 
 exports.IpfsLibrary = IpfsLibrary;

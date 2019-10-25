@@ -13,7 +13,8 @@
     "browserify": "browserify src/ipfs-library.js -s IpfsLibrary -o ipfs/plugins/ipfs/ipfs-library.js",
     "tiddlywiki-ipfs": "tiddlywiki ipfs --output ipfs/output/base --build --verbose",
     "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
-    "all": "./scripts/all.sh"
+    "all": "./scripts/all.sh",
+    "all-dev": "./scripts/all-dev.sh"
   },
   "repository": {
     "type": "git",
@@ -30,13 +31,15 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "web3": "^1.2.1",
-    "ipfs-provider": "^0.2.2",
-    "cids": "^0.7.1",
-    "buffer": "^5.4.3",
     "@babel/runtime": "^7.6.3",
     "browserify-derequire": "^1.0.1",
-    "browserify-unibabel": "^3.0.0"
+    "browserify-unibabel": "^3.0.0",
+    "buffer": "^5.4.3",
+    "cids": "^0.7.1",
+    "content-hash": "^2.4.4",
+    "@ensdomains/resolver": "^0.1.11",
+    "ethers": "^4.0.38",
+    "ipfs-provider": "^0.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -49,13 +52,13 @@
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
     "browserify-transform-tools": "^1.7.0",
-    "source-map": "^0.7.3",
-    "source-map-explorer": "^2.1.0",
-    "prettier": "^1.18.2",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-flowtype": "^4.3.0",
+    "prettier": "^1.18.2",
+    "source-map": "^0.7.3",
+    "source-map-explorer": "^2.1.0",
     "tiddlywiki": "^5.1.21"
   }
 }

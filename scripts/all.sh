@@ -1,7 +1,10 @@
 #!/bin/bash
 ./scripts/prepare.sh
 # browserify -s _ ipfs-library.js -o ipfs/plugins/ipfs/ipfs-library.js || exit 1
-npx browserify src/ipfs-library.js -s IpfsLibrary -o ipfs/plugins/ipfs/ipfs-library.js || exit 1
+npx browserify \
+  src/ipfs-library.js \
+  -s IpfsLibrary \
+  -o ipfs/plugins/ipfs/ipfs-library.js || exit 1
 npx tiddlywiki ipfs \
   --output ipfs/output/base \
   --build \
