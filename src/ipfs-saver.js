@@ -105,6 +105,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 					if (this.needTobeUnpinned.indexOf(hash) == -1) {
 						unpin = hash;
 						this.needTobeUnpinned.push(hash);
+						if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + hash);
 					}
 				} else if (ipfsProtocol == "ipns") {
 					// Fallback to default protocol										
@@ -179,6 +180,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 					unpin = resolved.substring(6);
 					if (this.needTobeUnpinned.indexOf(unpin) == -1) {
 						this.needTobeUnpinned.push(unpin);
+						if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
 					}
 				} else {
 					console.log(error);
@@ -346,6 +348,7 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	// Store cid as it needs to be unpined when the wiki is saved			
  	if (self.needTobeUnpinned.indexOf(cid) == -1) {
 		self.needTobeUnpinned.push(cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + cid);
 	}
 	return tiddler;
 }
@@ -410,6 +413,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		// Store old cid as it needs to be unpined when the wiki is saved			
 		if (self.needTobeUnpinned.indexOf(cid) == -1) {
 			self.needTobeUnpinned.push(cid);
+			if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + cid);
 		}
 
 		// Content
