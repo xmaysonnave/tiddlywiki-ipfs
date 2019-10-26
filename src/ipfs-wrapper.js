@@ -23,9 +23,9 @@ var IpfsWrapper = function() {
 	this.ipfsLibrary = new IpfsLibrary();
 }
 
-IpfsWrapper.prototype.getContentHash = async function(domain) {
+IpfsWrapper.prototype.getContenthash = async function(domain) {
 	try {
-		const { decoded, protocol } = await this.ipfsLibrary.getContentHash(domain);
+		const { decoded, protocol } = await this.ipfsLibrary.getContenthash(domain);
 		if (decoded == undefined)  {
 			return { 
 				error: new Error("Failed to fetch Ens domain content: " + domain),
@@ -44,6 +44,20 @@ IpfsWrapper.prototype.getContentHash = async function(domain) {
 			error: error,
 			protocol: null,
 			content: null
+		};
+	}
+}
+
+IpfsWrapper.prototype.setContenthash = async function(domain, cid) {
+	try {
+		await this.ipfsLibrary.setContenthash(domain, cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully set Ens domain content: " + cid);	
+		return { 
+			error: null
+		};
+	} catch (error) {
+		return { 
+			error: error
 		};
 	}
 }

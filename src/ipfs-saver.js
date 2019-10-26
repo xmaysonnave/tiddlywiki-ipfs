@@ -58,7 +58,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 	try {
 
 		// Init
-		var hash = null;
+		var urlHash = null;
 		var unpin = null;
 		var ipfsProtocol = ipfsKeyword;
 		var ensDomain = null;		
@@ -97,31 +97,33 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		if (currentUrlProtocol !== fileProtocol) {
 			// Prevent any disruption
 			try  {
-				hash = currentUrlPathname.substring(6);
+				urlHash = currentUrlPathname.substring(6);
 				ipfsProtocol = currentUrlPathname.substring(1, 5);
 			} catch (error) {
-				hash = null;
+				urlHash = null;
 				ipfsProtocol = ipfsKeyword;
 			}
 			// Process if any
-			if (hash != null) {
+			if (urlHash != null) {
 				if (ipfsProtocol === ipfsKeyword) {
-					if (this.needTobeUnpinned.indexOf(hash) == -1) {
-						unpin = hash;
-						this.needTobeUnpinned.push(hash);
-						if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + hash);
+					if (this.needTobeUnpinned.indexOf(urlHash) == -1) {
+						unpin = urlHash;
+						this.needTobeUnpinned.push(urlHash);
+						if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + urlHash);
 					}
 				} else if (ipfsProtocol === ipnsKeyword) {
 					// Fallback to default protocol										
-					if (this.ipfsWrapper.isCID(hash) == false) {
-						hash = null;
+					if (this.ipfsWrapper.isCID(urlHash) == false) {
+						urlHash = null;
 						ipfsProtocol = ipfsKeyword;
 					}
 				// Fallback to default protocol					
-				} else if (ipfsProtocol !== ipnsKeyword) {
-					hash = null;
+				} else {
+					urlHash = null;
 					ipfsProtocol = ipfsKeyword;
 				}
+			} else {
+				ipfsProtocol = ipfsKeyword;				
 			}
 		}
 		
@@ -158,9 +160,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 			// Check default ipns key and default ipns name
 			// If the check failed we log and continue
-			var { error, keys } = await this.ipfsWrapper.getKeys(ipfs);
+			const { error, keys } = await this.ipfsWrapper.getKeys(ipfs);
 			if (error == null) {
-				var foundKeyName = false;;
+				var foundKeyName = false;
 				for (var index = 0; index < keys.length; index++) { 
 					if (keys[index].id === ipnsKey && keys[index].name === ipnsName) {
 						foundKeyName = true;
@@ -178,7 +180,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			// If the process failed we log and continue
 			if (ipnsKey != null) {			
 				// Resolve ipnsKey
-				var { error, resolved } = await this.ipfsWrapper.resolveFromIpfs(ipfs, ipnsKey);
+				const { error, resolved } = await this.ipfsWrapper.resolveFromIpfs(ipfs, ipnsKey);
 				if (error == null) {
 					// Store to unpin previous	
 					unpin = resolved.substring(6);
@@ -195,8 +197,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (ipfsProtocol === ipnsKeyword) {
 				// Check current ipns key and default ipnskey
 				// If the check is failing we log and continue
-				if (hash != null && ipnsKey != hash) {
-					console.log("Current Ipns key: " + hash + " do not match the Ipns key: " + ipnsKey);
+				if (urlHash != null && ipnsKey != urlHash) {
+					console.log("Current Ipns key: " + urlHash + " do not match the Ipns key: " + ipnsKey);
 				}
 			} 	
 
@@ -215,15 +217,21 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Ens Domain: " + ensDomain);
 			
 			// Fetch Ens domain content
-			var { error, protocol, content } = await this.ipfsWrapper.getContentHash(ensDomain);
+			const { error, protocol, content } = await this.ipfsWrapper.getContenthash(ensDomain);
 			if (error != null)  {
 				console.log(error);
 				callback(error.message);
 				return false;
 			}
-			// TODO: unpin
-			if (protocol === ipfsKey) {
 
+			// Check is content protocol is ipfs
+			if (protocol === ipfsKeyword) {
+					// Store to unpin previous	
+					unpin = content;
+					if (this.needTobeUnpinned.indexOf(unpin) == -1) {
+						this.needTobeUnpinned.push(unpin);
+						if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
+					}
 			}
 			
 		}
@@ -254,25 +262,24 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			// If the process failed we log and continue			
 			if ($tw.utils.getIpfsProtocol() === ipnsKeyword || ipfsProtocol === ipnsKeyword) {
 				// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs	
-				if (hash === ipnsKey || ipfsProtocol === ipfsKeyword) {
+				if (urlHash === ipnsKey || ipfsProtocol === ipfsKeyword) {
 					// Getting default ipns name
 					var ipnsName = $tw.utils.getIpfsIpnsName();
 					if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
 					var { error, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
-					if (error == null) {
+					if (error != null) {
 						console.log(error);
 					}
 				}
 			// Publish to Ens if ens is requested
-			// If the process failed we log and continue							
 			} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-				// Getting default ipns name
-				var ipnsName = $tw.utils.getIpfsIpnsName();
-				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
-				var { error, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
-				if (error == null) {
+				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
+				var { error } = await this.ipfsWrapper.setContenthash(ensDomain, added[0].hash);				
+				if (error != null)  {
 					console.log(error);
-				}
+					callback(error.message);
+					return false;
+				}						
 			}
 		}
 
@@ -294,18 +301,17 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Next location
 		var cid;
 		if ($tw.utils.getIpfsProtocol() === ipnsKeyword) {
-			if (ipfsProtocol == ipfsKeyword || hash == null) {
+			if (ipfsProtocol == ipfsKeyword || urlHash == null) {
 				cid = "/" + ipnsKeyword + "/" + ipnsKey;
 			} else {
-				cid = "/" + ipnsKeyword + "/" + hash;
+				cid = "/" + ipnsKeyword + "/" + urlHash;
 			}
 		} else {
-			cid = "/" + ipfsKeyword + "/" + added[0].path;
+			cid = "/" + ipfsKeyword + "/" + added[0].hash;
 		}
 		if (currentUrlProtocol === fileProtocol) {
 			var url;
 			url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + cid;
-			// Assign
 			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
 			window.location.assign(url);
 		} else if ($tw.utils.getIpfsProtocol() === ipnsKeyword && ipfsProtocol !== ipnsKeyword) {
@@ -315,17 +321,19 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			} else {
 				url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + cid;
 			}
-			// Assign			
 			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
-			window.location.assign(url);						
+			window.location.assign(url);
+		} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
+			const url = "https://" + ensDomain;
+			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
+			window.location.assign(url);									
 		} else if (($tw.utils.getIpfsProtocol() === ipfsKeyword || ipfsProtocol === ipfsKeyword) && cid != added[0].hash) {
 			var url;
 			if (currentUrlHostname == gatewayUrlHostname) {
 				url = currentUrlProtocol + "//" + currentUrlHostname + currentUrlPort + cid;
 			} else {
 				url = gatewayUrlProtocol + "//" + gatewayUrlHostname + gatewayUrlPort + cid;
-			}			
-			// Assign
+			}
 			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
 			window.location.assign(url);
 		}
