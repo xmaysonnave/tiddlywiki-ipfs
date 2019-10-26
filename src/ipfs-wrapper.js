@@ -13,8 +13,9 @@ IpfsWrapper
 /*global $tw: false */
 "use strict";
 
-var IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
-
+const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
+const ipfsKeyword = "/ipfs/";
+const ipnsKeyword = "/ipns/";
 /*
 Ipfs Wrapper
 */
@@ -24,21 +25,24 @@ var IpfsWrapper = function() {
 
 IpfsWrapper.prototype.getContentHash = async function(domain) {
 	try {
-		var content = await this.ipfsLibrary.getContentHash(domain);
-		if (content == undefined)  {
+		const { decoded, protocol } = await this.ipfsLibrary.getContentHash(domain);
+		if (decoded == undefined)  {
 			return { 
-				error: new Error("Failed to fetch Ens domain Ipfs Url: " + domain),
+				error: new Error("Failed to fetch Ens domain content: " + domain),
+				protocol: null,
 				content: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched Ens domain Ipfs Url: " + content);	
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched Ens domain content, protocol: " + protocol + ", " + decoded);	
 		return { 
 			error: null, 
-			content: content
+			protocol: protocol,
+			content: decoded
 		};
 	} catch (error) {
 		return { 
-			error: error, 
+			error: error,
+			protocol: null,
 			content: null
 		};
 	}
@@ -54,20 +58,20 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 		var tmpIpfs;
 		var tmpProvider;
 		const policy = $tw.utils.getIpfsPolicy();
-		if (policy == "webext") {
-			var { ipfs, provider } = await this.ipfsLibrary.getWebExtensionIpfs();
+		if (policy === "webext") {
+			const { ipfs, provider } = await this.ipfsLibrary.getWebExtensionIpfs();
 			tmpIpfs = ipfs;
 			tmpProvider = provider;
-		} else if (policy == "window") {
-			var { ipfs, provider } = await this.ipfsLibrary.getWindowIpfs();
+		} else if (policy === "window") {
+			const { ipfs, provider } = await this.ipfsLibrary.getWindowIpfs();
 			tmpIpfs = ipfs;
 			tmpProvider = provider;			
-		} else if (policy == "http") {
-			var { ipfs, provider } = await this.ipfsLibrary.getHttpIpfs();
+		} else if (policy === "http") {
+			const { ipfs, provider } = await this.ipfsLibrary.getHttpIpfs();
 			tmpIpfs = ipfs;
 			tmpProvider = provider;			
 		} else  {
-		 var { ipfs, provider }  = await this.ipfsLibrary.getDefaultIpfs();		
+		 const { ipfs, provider }  = await this.ipfsLibrary.getDefaultIpfs();		
 		 tmpIpfs = ipfs;
 		 tmpProvider = provider;		 
 		}
@@ -79,7 +83,7 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 				provider: null 
 			};
 		}		
-		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs provider: " + provider);		
+		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs provider: " + tmpProvider);		
 		return { 
 			error: null, 
 			ipfs: tmpIpfs, 
@@ -96,7 +100,7 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 
 IpfsWrapper.prototype.getKeys = async function(ipfs) {
 	try {
-		var keys = await this.ipfsLibrary.keys(ipfs);
+		const keys = await this.ipfsLibrary.keys(ipfs);
 		if (keys == undefined)  {
 			return { 
 				error: new Error("Failed to fetch Ipfs keys..."), 
@@ -118,14 +122,14 @@ IpfsWrapper.prototype.getKeys = async function(ipfs) {
 
 IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
 	try {
-		var fetched = await this.ipfsLibrary.cat(ipfs, "/ipfs/" + cid);
+		const fetched = await this.ipfsLibrary.cat(ipfs, ipfsKeyword + cid);
 		if (fetched == undefined)  {			
 			return { 
-				error: new Error("Failed to fetch: /ipfs/" + cid), 
+				error: new Error("Failed to fetch: " + ipfsKeyword + cid), 
 				fetched: null 
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched: /ipfs/" + cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched: " + ipfsKeyword + cid);
 		return { 
 			error: null, 
 			fetched: fetched 
@@ -141,7 +145,7 @@ IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
 IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 		// Fetch the default empty directory to check if the connection is alive
 		try {
-			var empty = await this.ipfsLibrary.get(ipfs, "/ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
+			const empty = await this.ipfsLibrary.get(ipfs, ipfsKeyword + "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
 			if (empty == undefined)  {
 				return { 
 					error: new Error("Failed to fetch the Ipfs empty directory..."), 
@@ -164,14 +168,14 @@ IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
 	// Add	
 	try {
-		var added = await this.ipfsLibrary.add(ipfs, blob);
+		const added = await this.ipfsLibrary.add(ipfs, blob);
 		if (added == undefined || added[0] == undefined || added[0].hash == undefined) {
 			return { 
 				error: new Error("Failed to add content..."), 
 				added: null 
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully added content: /ipfs/" + added[0].hash);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully added content: " + ipfsKeyword + added[0].hash);
 		return { 
 			error: null, 
 			added: added 
@@ -187,14 +191,14 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
 IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 	// Resolve
 	try {	
-		var resolved = await this.ipfsLibrary.resolve(ipfs, "/ipns/" + cid);
+		const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + cid);
 		if (resolved == undefined) {
 			return { 
-				error: new Error("Failed to resolve: /ipns/" + cid), 
+				error: new Error("Failed to resolve: " + ipnsKeyword + cid), 
 				resolved: null 
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully resolved: /ipns/" + cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully resolved: " + ipnsKeyword + cid);
 		return { 
 			error: null,
 			resolved: resolved 
@@ -210,14 +214,14 @@ IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 	// Publish
 	try {	
-		var published = await this.ipfsLibrary.publish(ipfs, name, "/ipfs/" + cid);
+		const published = await this.ipfsLibrary.publish(ipfs, name, ipfsKeyword + cid);
 		if (published == undefined) {
 			return { 
-				error: new Error("Failed to publish: /ipfs/" + cid), 
+				error: new Error("Failed to publish: " + ipfsKeyword + cid), 
 				published: null 
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully published: /ipfs/" + cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully published: " + ipfsKeyword + cid);
 		return { 
 			error: null, 
 			published: published 
@@ -233,14 +237,14 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 	// Unpin
 	try {	
-		var pined = await this.ipfsLibrary.pin(ipfs, "/ipfs/" + cid);
+		const pined = await this.ipfsLibrary.pin(ipfs, ipfsKeyword + cid);
 		if (pined == undefined) {
 			return { 
-				error: new Error( "Failed to pin: /ipfs/" + cid), 
+				error: new Error( "Failed to pin: " + ipfsKeyword + cid), 
 				unpined: null 
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully pined: /ipfs/" + cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully pined: " + ipfsKeyword + cid);
 		return { 
 			error: null, 
 			unpined: pined 
@@ -256,14 +260,14 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
 	// Unpin
 	try {	
-		var unpined = await this.ipfsLibrary.unpin(ipfs, "/ipfs/" + cid);
+		const unpined = await this.ipfsLibrary.unpin(ipfs, ipfsKeyword + cid);
 		if (unpined == undefined) {
 			return { 
-				error: new Error("Failed to unpin: /ipfs/" + cid), 
+				error: new Error("Failed to unpin: " + ipfsKeyword + cid), 
 				unpined: null 
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully unpined: /ipfs/" + cid);
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully unpined: " + ipfsKeyword + cid);
 		return { 
 			error: null, 
 			unpined: unpined 

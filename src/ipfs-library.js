@@ -33,18 +33,27 @@ var IpfsLibrary = function() {}
 
 
 IpfsLibrary.prototype.decodeContenthash = function(encoded) {
-	let decoded;
-  if (encoded.error != undefined) {
+	let decoded, protocol;
+  if (encoded.error) {
 		throw new Error(encoded.error);
   }
-  if (encoded != undefined) {
+  if (encoded) {
 		decoded = contentHash.decode(encoded);
 		const codec = contentHash.getCodec(encoded);
-		if (codec !== "ipfs-ns") {
-			throw new Error("Unsupported Ens domain protocol: " + codec);
+		if (codec === "ipfs-ns") {
+			protocol = "ipfs";
+		} else if (codec === "swarm-ns") {
+			protocol = "bzz";
+		} else if (codec === "onion") {
+			protocol = "onion";
+		} else if (codec === "onion3") {
+			protocol = "onion3";		
 		}
   }
-  return decoded; 
+  return {
+		decoded: decoded,
+		protocol: protocol
+	}; 
 }
 
 IpfsLibrary.prototype.validateContent = function(encoded){

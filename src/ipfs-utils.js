@@ -39,7 +39,7 @@ exports.parseUrlFull = function(url) {
 
 exports.parseUrlShort = function(url) {
 	// Check
-	if (url == undefined || url == null || url.trim() == "") {
+	if (url == undefined || url == null || url.trim() === "") {
 		throw new Error("Undefined Url.");
 	}				
 	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrlFull(url);
@@ -176,7 +176,7 @@ exports.getIpfsPriority = function() {
 	if (priority != undefined) {
 	 	priority = priority.getFieldString("text");
 	}	
-	if (priority == undefined || priority == null || priority.trim() == "") {
+	if (priority == undefined || priority == null || priority.trim() === "") {
 		priority = $tw.utils.getIpfsDefaultPriority();
 	} else {
 		try {
@@ -204,7 +204,7 @@ exports.getIpfsProtocol = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/protocol") != undefined) {
 		protocol = $tw.wiki.getTiddler("$:/ipfs/saver/protocol").getFieldString("text");
 	}
-	if (protocol == undefined || protocol == null || protocol.trim() == "") {
+	if (protocol == undefined || protocol == null || protocol.trim() === "") {
 		protocol = $tw.utils.getIpfsDefaultProtocol();
 	}
 	return protocol;
@@ -229,7 +229,7 @@ exports.getIpfsApiUrl = function() {
 	if (api != undefined) {
 	 	api = api.getFieldString("text");
 	}	
-	if (api == undefined || api == null || api.trim() == "") {
+	if (api == undefined || api == null || api.trim() === "") {
 		api = $tw.utils.getIpfsDefaultApiUrl();
 	}
 	return api;
@@ -254,7 +254,7 @@ exports.getIpfsGatewayUrl = function() {
 	if (gateway != undefined) {
 	 	gateway = gateway.getFieldString("text");
 	}	
-	if (gateway == undefined || gateway == null || gateway.trim() == "") {
+	if (gateway == undefined || gateway == null || gateway.trim() === "") {
 		gateway = $tw.utils.getIpfsDefaultGatewayUrl();
 	}
 	return gateway;
@@ -275,7 +275,7 @@ exports.getIpfsEnsDomain = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") != undefined) {
 		ensDomain = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain").getFieldString("text");
 	}
-	if (ensDomain == undefined || ensDomain == null || ensDomain.trim() == "") {
+	if (ensDomain == undefined || ensDomain == null || ensDomain.trim() === "") {
 		ensDomain = $tw.getIpfsDefaultEnsDomain();
 	}
 	return ensDomain;
@@ -296,7 +296,7 @@ exports.getIpfsIpnsName = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") != undefined) {
 		ipnsName = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
 	}
-	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() == "") {
+	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
 		ipnsName = $tw.getIpfsDefaultIpnsName();
 	}
 	return ipnsName;
@@ -317,7 +317,7 @@ exports.getIpfsIpnsKey = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") != undefined) {
 		ipnsKey = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
 	}
-	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() == "") {
+	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
 		ipnsKey = $tw.utils.getIpfsDefaultIpnsKey();
 	}
 	return ipnsKey;
@@ -338,7 +338,7 @@ exports.getIpfsVerbose = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/verbose") != undefined) {
 		verbose = $tw.wiki.getTiddler("$:/ipfs/saver/verbose").getFieldString("text");
 	}
-	if (verbose == undefined || verbose == null || verbose.trim() == "") {
+	if (verbose == undefined || verbose == null || verbose.trim() === "") {
 		verbose = true;
 	} else {
 		verbose = ( verbose == $tw.utils.getIpfsDefaultVerbose() );
@@ -361,7 +361,7 @@ exports.getIpfsPolicy = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/policy") != undefined) {
 		policy = $tw.wiki.getTiddler("$:/ipfs/saver/policy").getFieldString("text");
 	}
-	if (policy == undefined || policy == null || policy.trim() == "") {
+	if (policy == undefined || policy == null || policy.trim() === "") {
 		policy = $tw.utils.getIpfsDefaultPolicy();
 	}
 	return policy;
