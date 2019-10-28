@@ -16,6 +16,7 @@ IpfsWrapper
 const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
 const ipfsKeyword = "/ipfs/";
 const ipnsKeyword = "/ipns/";
+
 /*
 Ipfs Wrapper
 */

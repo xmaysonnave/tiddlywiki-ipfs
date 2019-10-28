@@ -14,8 +14,6 @@ const getIpfs = require("ipfs-provider");
 
 import contentHash from "content-hash";
 import { ethers, Contract, utils } from "ethers";
-import { abi as ensAbi, bytecode as ensBytecode }  from "@ensdomains/resolver/build/contracts/ENS.json";
-import { abi as resolverAbi, bytecode as resolverBytecode } from "@ensdomains/resolver/build/contracts/Resolver.json";
 
 ( function() {
 
@@ -127,18 +125,20 @@ IpfsLibrary.prototype.getEns = async function() {
 	const networkId = network.chainId;
 	const signer = web3.getSigner();
 	// Ethereum Ens Registry
-	var registry;
+	var ensNetwork;
 	try {
-		registry = this.contracts[networkId].registry;
+		ensNetwork = this.contracts[networkId];
 	} catch (error) {
 		console.log(error.message);		
 		throw new Error("Unsupported Ethereum network...");		
 	}
+	if ($tw.utils.getIpfsVerbose()) console.log(ensNetwork.name);
 	// Load Ens contract
 	if (this.ens == undefined) {
 		try {
 			// https://github.com/ensdomains/ui/blob/master/src/ens.js
-			this.ens = new Contract(registry, ensAbi, signer);
+			const ens = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/ens").fields.text);
+			this.ens = new Contract(ensNetwork.registry, ens.abi, signer);
 		} catch (error) {
 			console.log(error.message);
 			throw new Error("Unable to fetch Ens registry...");		
@@ -158,7 +158,8 @@ IpfsLibrary.prototype.getResolver = async function(resolverAddress) {
 	if (this.resolver == undefined) {
 		try {
 			// Mainnet Resolver address
-			this.resolver = new Contract(resolverAddress, resolverAbi, signer);
+			const resolver = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);			
+			this.resolver = new Contract(resolverAddress, resolver.abi, signer);
 		} catch (error) {
 			console.log(error.message);
 			throw new Error("Unable to fetch Ens resolver...");
@@ -222,7 +223,7 @@ IpfsLibrary.prototype.setContenthash = async function(domain, cid) {
 	if (resolver == undefined || /^0x0+$/.test(resolver) == true) {
 		throw new Error("Undefined Ens domain resolver...");
 	}
-	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);	
+	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);
 	// Set Contenthash
 	try {
 		resolver = await this.getResolver(resolver);
