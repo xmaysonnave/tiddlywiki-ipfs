@@ -13,41 +13,96 @@ utils
 /*global $tw: false */
 "use strict";
 
+const CID = require("cids");
+
+exports.isCid = function(cid) {
+	try {
+		return CID.isCID(new CID(cid));
+	} catch (error) {
+		return false;
+	}
+}
+
 exports.parseUrlFull = function(url) {
-	var parser = document.createElement('a');
-	var searchObject = {};
-	var queries, split, i;
+	// Check
+	if (url == undefined || url == null || url.trim() === "") {
+		throw new Error("Undefined Url...");
+	}	
+	const parser = document.createElement("a");
+	const searchObject = {};
 	// Let the browser do the work
 	parser.href = url;
 	// Convert query string to object
-	queries = parser.search.replace(/^\?/, '').split('&');
-	for( i = 0; i < queries.length; i++ ) {
-			split = queries[i].split('=');
+	var split;	
+	const queries = parser.search.replace(/^\?/, "").split("&");
+	for (var i = 0; i < queries.length; i++ ) {
+			split = queries[i].split("=");
 			searchObject[split[0]] = split[1];
 	}
 	return {
-			UrlProtocol: parser.protocol,
-			UrlHost: parser.host,
-			UrlHostname: parser.hostname,
-			UrlPort: parser.port,
-			UrlPathname: parser.pathname,
-			UrlSearch: parser.search,
-			UrlSearchObject: searchObject,
-			UrlHash: parser.hash
+			protocol: parser.protocol,
+			host: parser.host,
+			hostname: parser.hostname,
+			port: parser.port,
+			pathname: parser.pathname,
+			search: parser.search,
+			searchObject: searchObject,
+			hash: parser.hash
 	};
 }
 
 exports.parseUrlShort = function(url) {
 	// Check
 	if (url == undefined || url == null || url.trim() === "") {
-		throw new Error("Undefined Url.");
-	}				
-	const { UrlProtocol, UrlHost, UrlHostname, UrlPort, UrlPathname, UrlSearch, UrlSearchObject, UrlHash } = this.parseUrlFull(url);
-	const protocol = UrlProtocol;
-	const hostname = UrlHostname;
-	const pathname = UrlPathname;
-	const port =  UrlPort;
-	return { protocol, hostname, pathname, port };
+		throw new Error("Undefined Url...");
+	}
+	const { protocol, host, hostname, port, pathname, search, searchObject, hash } = this.parseUrlFull(url);
+	return { 
+		protocol: protocol, 
+		hostname: hostname, 
+		pathname: pathname, 
+		port: port 
+	};
+}
+
+exports.decodePathname = function(pathname) {
+	// Check
+	if (pathname == undefined || pathname == null || pathname.trim() === "") {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}		
+	// Check
+	if (pathname.startWith("/ipfs/") == false && pathname.startWith("/ipns/")) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	// Extract
+	var cid = null;
+	var protocol = null;
+	try  {
+		protocol = pathname.substring(1, 5);	
+		cid = pathname.substring(6);
+	} catch (error) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	// Check
+	if (this.isCid(cid) == false) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	return {
+		protocol: protocol,
+		cid: cid
+	}
 }
 
 exports.Base64ToUint8Array = function(base64) {

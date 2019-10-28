@@ -8,7 +8,6 @@ IpfsLibrary
 \*/
 
 const Buffer = require("buffer/").Buffer;
-const CID = require("cids");
 const toMultiaddr = require("uri-to-multiaddr");
 const getIpfs = require("ipfs-provider");
 
@@ -350,11 +349,6 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 		console.log(error.message);
 		throw new Error("Ipfs Http is unavailable...");
 	}
-}
-
-IpfsLibrary.prototype.isCID = function(hash) {
-	const cid = new CID(hash);
-	return CID.isCID(cid);
 }
 
 IpfsLibrary.prototype.add = async function(client, content) {

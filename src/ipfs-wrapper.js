@@ -63,10 +63,6 @@ IpfsWrapper.prototype.setContenthash = async function(domain, cid) {
 	}
 }
 
-IpfsWrapper.prototype.isCID = function(hash) {
-	return this.ipfsLibrary.isCID(hash);
-}
-
 IpfsWrapper.prototype.getIpfsClient = async function() {
 	// Getting an Ipfs client
 	try {
