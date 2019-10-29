@@ -24,4 +24,5 @@ core/ui/Buttons/storyview: hide
 core/ui/Buttons/timestamp: hide
 core/ui/Buttons/theme: hide
 core/ui/Buttons/unfold-all: hide
+core/ui/Buttons/publish-to-ens: hide
 plugins/tiddlywiki/markdown/new-markdown-button: hide

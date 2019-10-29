@@ -8,9 +8,10 @@ IpfsLibrary
 \*/
 
 const Buffer = require("buffer/").Buffer;
-const toMultiaddr = require("uri-to-multiaddr");
-const getIpfs = require("ipfs-provider");
 
+import toMultiaddr from "uri-to-multiaddr";
+import getIpfs from"ipfs-provider";
+import CID from "cids";
 import contentHash from "content-hash";
 import { ethers, Contract, utils } from "ethers";
 
@@ -44,6 +45,55 @@ var IpfsLibrary = function() {
 		}
 	};
 };
+
+IpfsLibrary.prototype.decodePathname = function(pathname) {
+	// Check
+	if (pathname == undefined || pathname == null || pathname.trim() === "") {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}		
+	// Check
+	if (pathname.startsWith("/ipfs/") == false && pathname.startsWith("/ipns/")) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	// Extract
+	var cid = null;
+	var protocol = null;
+	try  {
+		protocol = pathname.substring(1, 5);	
+		cid = pathname.substring(6);
+	} catch (error) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	// Check
+	if (this.isCid(cid) == false) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	// All good
+	return {
+		protocol: protocol,
+		cid: cid
+	}
+}
+
+IpfsLibrary.prototype.isCid = function(cid) {
+	try {
+		return CID.isCID(new CID(cid));
+	} catch (error) {
+		return false;
+	}
+}
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
 IpfsLibrary.prototype.decodeContenthash = function(encoded) {

@@ -13,16 +13,6 @@ utils
 /*global $tw: false */
 "use strict";
 
-const CID = require("cids");
-
-exports.isCid = function(cid) {
-	try {
-		return CID.isCID(new CID(cid));
-	} catch (error) {
-		return false;
-	}
-}
-
 exports.parseUrlFull = function(url) {
 	// Check
 	if (url == undefined || url == null || url.trim() === "") {
@@ -63,46 +53,6 @@ exports.parseUrlShort = function(url) {
 		pathname: pathname, 
 		port: port 
 	};
-}
-
-exports.decodePathname = function(pathname) {
-	// Check
-	if (pathname == undefined || pathname == null || pathname.trim() === "") {
-		return {
-			protocol: null,
-			cid: null
-		};
-	}		
-	// Check
-	if (pathname.startWith("/ipfs/") == false && pathname.startWith("/ipns/")) {
-		return {
-			protocol: null,
-			cid: null
-		};
-	}
-	// Extract
-	var cid = null;
-	var protocol = null;
-	try  {
-		protocol = pathname.substring(1, 5);	
-		cid = pathname.substring(6);
-	} catch (error) {
-		return {
-			protocol: null,
-			cid: null
-		};
-	}
-	// Check
-	if (this.isCid(cid) == false) {
-		return {
-			protocol: null,
-			cid: null
-		};
-	}
-	return {
-		protocol: protocol,
-		cid: cid
-	}
 }
 
 exports.Base64ToUint8Array = function(base64) {
