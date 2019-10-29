@@ -24,10 +24,12 @@ exports.startup = function(continueStartupCallback) {
 	// Load priority property
 	var priority = $tw.utils.updateIpfsPriority()
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
-	// Check if Metamask is available
-	if (typeof window.ethereum != undefined) {
-		// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
-		window.ethereum.autoRefreshOnNetworkChange = false;
+	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
+	if (protocol !== "file:") {
+		if (typeof window != undefined && typeof window.ethereum != undefined) {
+			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
+			window.ethereum.autoRefreshOnNetworkChange = false;
+		}
 	}
   // Continue
 	return continueStartupCallback();

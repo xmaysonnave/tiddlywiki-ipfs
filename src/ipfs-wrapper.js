@@ -205,7 +205,7 @@ IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 		const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + cid);
 		if (resolved == undefined) {
 			return { 
-				error: new Error("Failed to resolve: " + ipnsKeyword + cid), 
+				error: null, 
 				resolved: null 
 			};
 		}

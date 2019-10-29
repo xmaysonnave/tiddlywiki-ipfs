@@ -25,4 +25,5 @@ core/ui/Buttons/timestamp: hide
 core/ui/Buttons/theme: hide
 core/ui/Buttons/unfold-all: hide
 core/ui/Buttons/publish-to-ens: hide
+core/ui/Buttons/publish-to-ipns: hide
 plugins/tiddlywiki/markdown/new-markdown-button: hide
