@@ -112,7 +112,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				if (ipfsProtocol === ipfsKeyword) {
 					if (this.needTobeUnpinned.indexOf(ipfsCid) == -1) {
 						unpin = ipfsCid;
-						this.needTobeUnpinned.push(ipfsCid);
+						this.needTobeUnpinned.push(unpin);
 						if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
 					}
 				}
@@ -178,8 +178,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			}
 			// Store to unpin previous if any
 			if (resolved != null) {
-				unpin = resolved.substring(6);
-				if (this.needTobeUnpinned.indexOf(unpin) == -1) {
+				if (this.needTobeUnpinned.indexOf(resolved.substring(6)) == -1) {
+					unpin = resolved.substring(6);					
 					this.needTobeUnpinned.push(unpin);
 					if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
 				}
@@ -240,34 +240,34 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			return false;
 		}		
 
-		if (unpin !== added[0].hash) {
-			// Publish to Ipns if current protocol is ipns or ipns is requested	
-			if ($tw.utils.getIpfsProtocol() === ipnsKeyword || ipfsProtocol === ipnsKeyword) {
-				// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs	
-				if (ipfsCid === ipnsKey || ipfsProtocol === ipfsKeyword) {
-					if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
-					var { error, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
-					console.log(error);
-					callback(error.message);
-					return false;
-				}
-			// Publish to Ens if ens is requested
-			} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
-				var { error } = await this.ipfsWrapper.setContenthash(ensDomain, added[0].hash);				
+		// Publish to Ipns if current protocol is ipns or ipns is requested	
+		if ($tw.utils.getIpfsProtocol() === ipnsKeyword || ipfsProtocol === ipnsKeyword) {
+			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs	
+			if (ipfsCid === ipnsKey || ipfsProtocol === ipfsKeyword) {
+				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
+				var { error, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
 				if (error != null)  {
 					console.log(error);
 					callback(error.message);
 					return false;
-				}						
+				}
 			}
+		// Publish to Ens if ens is requested
+		} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
+			if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
+			var { error } = await this.ipfsWrapper.setContenthash(ensDomain, added[0].hash);				
+			if (error != null)  {
+				console.log(error);
+				callback(error.message);
+				return false;
+			}						
 		}
 
 		// Unpin
-		// If the process failed we log and continue
 		if (this.needTobeUnpinned.length > 0) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
 				var { error, unpined } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
+				// Log and continue		
 				if (error != null)  {
 					console.log(error);
 				}
@@ -750,7 +750,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		return false;
 	}
 
-	self.errorDialog("Successfully set Ens domain content:\n" + cid);	
+	self.errorDialog("Successfully set Ens domain content:\n\n" + cid);	
 
 	return false;
 
@@ -805,8 +805,9 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 
 	// Check
 	if (protocol === ipnsKeyword && cid === ipnsKey) {
-		console.log(error);
-		self.errorDialog("Nothing to publish. Ipns keys are matching....");
+		const msg = "Nothing to publish. Ipns keys are matching....";
+		console.log(msg);
+		self.errorDialog(msg);
 		return false;		
 	}	
 
@@ -862,14 +863,12 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
 	}
 
-	// Unpin previous
-	if (unpin != null) {
-		var { error, unpined } = await self.ipfsWrapper.unpinFromIpfs(ipfs, unpin);
-		if (error != null)  {
-			console.log(error);
-			self.errorDialog(error.message);						
-			return false;			
-		}	
+	// Check
+	if (unpin === cid) {
+		const msg = "Nothing to publish. Ipfs identifiers are matching....";
+		console.log(msg);
+		self.errorDialog(msg);
+		return false;		
 	}
 
 	if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
@@ -880,7 +879,16 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		return false;
 	}	
 
-	self.errorDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);
+	self.errorDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);	
+
+	// Unpin previous
+	if (unpin != null) {
+		var { error, unpined } = await self.ipfsWrapper.unpinFromIpfs(ipfs, unpin);
+		// Log and continue
+		if (error != null)  {
+			console.log(error);				
+		}	
+	}	
 
 	return false;
 

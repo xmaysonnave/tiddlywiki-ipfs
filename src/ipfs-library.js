@@ -55,7 +55,7 @@ IpfsLibrary.prototype.decodePathname = function(pathname) {
 		};
 	}		
 	// Check
-	if (pathname.startsWith("/ipfs/") == false && pathname.startsWith("/ipns/")) {
+	if (pathname.startsWith("/ipfs/") == false && pathname.startsWith("/ipns/") == false) {
 		return {
 			protocol: null,
 			cid: null
