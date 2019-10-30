@@ -61,6 +61,12 @@ IpfsSaver.prototype.errorDialog = function(error) {
 	}
 }
 
+IpfsSaver.prototype.messageDialog = function(message) {
+	if (message) {
+		alert(message);
+	}
+}
+
 IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 	//Is there anything to do
@@ -750,7 +756,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		return false;
 	}
 
-	self.errorDialog("Successfully set Ens domain content:\n\n" + cid);	
+	self.messageDialog("Successfully set Ens domain content:\n\n" + cid);	
 
 	return false;
 
@@ -879,7 +885,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		return false;
 	}	
 
-	self.errorDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);	
+	self.messageDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);	
 
 	// Unpin previous
 	if (unpin != null) {
