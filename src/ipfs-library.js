@@ -207,7 +207,7 @@ IpfsLibrary.prototype.getResolver = async function(resolverAddress) {
 	if (this.resolver == undefined) {
 		try {
 			// Mainnet Resolver address
-			const resolver = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);			
+			const resolver = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);
 			this.resolver = new Contract(resolverAddress, resolver.abi, signer);
 		} catch (error) {
 			console.log(error.message);
@@ -277,7 +277,10 @@ IpfsLibrary.prototype.setContenthash = async function(domain, cid) {
 	try {
 		resolver = await this.getResolver(resolver);
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content hash...");
-		await resolver.setContenthash(namehash, encoded);
+		var tx = await resolver.setContenthash(namehash, encoded);
+		if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
+		// Wait for transaction completion
+		await tx.wait();
 		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");		
 	} catch (error) {
 		console.log(error.message);
