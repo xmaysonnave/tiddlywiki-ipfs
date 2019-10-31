@@ -7,8 +7,6 @@ IpfsLibrary
 
 \*/
 
-const Buffer = require("buffer/").Buffer;
-
 import toMultiaddr from "uri-to-multiaddr";
 import getIpfs from"ipfs-provider";
 import CID from "cids";

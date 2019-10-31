@@ -7,6 +7,13 @@ type: text/vnd.tiddlywiki
 In order to work with Ipfs, you need to setup an [ext[Http Api|https://docs.ipfs.io/reference/api/http/]] and an [ext[Http Gateway|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] Url. 
 </p>
 <p>
+When saving while the Ipfs setting is selected, the plugin will:
+</p>
+<ul>
+  <li>Save the wiki over Ipfs</li>
+  <li>Redirect the current page to the new Ipfs identifier according to your default gateway</li>
+</ul>
+<p>
 The plugin eases the selection through drop-down lists.
 </p>
 <p>

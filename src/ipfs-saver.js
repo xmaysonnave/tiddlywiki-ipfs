@@ -115,7 +115,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (protocol != null && cid != null) {
 				ipfsProtocol = protocol;
 				ipfsCid = cid;
-				if (ipfsProtocol === ipfsKeyword) {
+				if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
 					if (this.needTobeUnpinned.indexOf(ipfsCid) == -1) {
 						unpin = ipfsCid;
 						this.needTobeUnpinned.push(unpin);
@@ -183,7 +183,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				return false;							
 			}
 			// Store to unpin previous if any
-			if (resolved != null) {
+			if ($tw.utils.getIpfsUnpin() && resolved != null) {
 				if (this.needTobeUnpinned.indexOf(resolved.substring(6)) == -1) {
 					unpin = resolved.substring(6);					
 					this.needTobeUnpinned.push(unpin);
@@ -213,8 +213,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				return false;
 			}
 
-			// Check is content protocol is ipfs
-			if (protocol === ipfsKeyword) {
+			// Check is content protocol is ipfs to unpin previous
+			if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
 				// Store to unpin previous	
 				unpin = content;
 				if (this.needTobeUnpinned.indexOf(unpin) == -1) {
@@ -269,8 +269,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			}						
 		}
 
-		// Unpin
-		if (this.needTobeUnpinned.length > 0) {
+		// Unpin if applicable
+		if ($tw.utils.getIpfsUnpin() && this.needTobeUnpinned.length > 0) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
 				var { error, unpined } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
 				// Log and continue		
@@ -361,8 +361,8 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	}
 	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(uri);
 	const cid = pathname.substring(6);
-	// Store cid as it needs to be unpined when the wiki is saved			
- 	if (self.needTobeUnpinned.indexOf(cid) == -1) {
+	// Store cid as it needs to be unpined when the wiki is saved if applicable
+ 	if ($tw.utils.getIpfsUnpin() && self.needTobeUnpinned.indexOf(cid) == -1) {
 		self.needTobeUnpinned.push(cid);
 		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + cid);
 	}
@@ -426,8 +426,8 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			return tiddler;
 		}
 		
-		// Store old cid as it needs to be unpined when the wiki is saved			
-		if (self.needTobeUnpinned.indexOf(cid) == -1) {
+		// Store old cid as it needs to be unpined when the wiki is saved if applicable
+		if ($tw.utils.getIpfsUnpin() && self.needTobeUnpinned.indexOf(cid) == -1) {
 			self.needTobeUnpinned.push(cid);
 			if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + cid);
 		}
@@ -862,15 +862,13 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		self.errorDialog(error.message);
 		return false;		
 	}
-	// Store to unpin previous if any
-	var unpin;
+	// Extract resolved cid
 	if (resolved != null) {
-		unpin = resolved.substring(6);
-		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
+		resolved = resolved.substring(6);
 	}
 
 	// Check
-	if (unpin === cid) {
+	if (resolved === cid) {
 		const msg = "Nothing to publish. Ipfs identifiers are matching....";
 		console.log(msg);
 		self.errorDialog(msg);
@@ -888,11 +886,14 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	self.messageDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);	
 
 	// Unpin previous
-	if (unpin != null) {
-		var { error, unpined } = await self.ipfsWrapper.unpinFromIpfs(ipfs, unpin);
+	if ($tw.utils.getIpfsUnpin() && resolved != null) {
+		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + resolved);
+		var { error, unpined } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
 		// Log and continue
 		if (error != null)  {
-			console.log(error);				
+			console.log(error);
+			self.errorDialog(error.message);
+			return false;			
 		}	
 	}	
 

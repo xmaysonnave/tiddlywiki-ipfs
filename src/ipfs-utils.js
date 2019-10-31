@@ -359,6 +359,29 @@ exports.getIpfsDefaultVerbose = function() {
 }
 
 /*
+Retrieve ipfs saver unpin with default value if applicable
+*/
+exports.getIpfsUnpin = function() {
+	var unpin;
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/unpin") != undefined) {
+		unpin = $tw.wiki.getTiddler("$:/ipfs/saver/unpin").getFieldString("text");
+	}
+	if (unpin == undefined || unpin == null || unpin.trim() === "") {
+		unpin = true;
+	} else {
+		unpin = ( unpin == $tw.utils.getIpfsDefaultUnpin() );
+	}
+	return unpin;
+}
+
+/*
+Default Unpin
+*/
+exports.getIpfsDefaultUnpin = function() {
+	return "yes";
+}
+
+/*
 Retrieve ipfs saver policy with default value if applicable
 */
 exports.getIpfsPolicy = function() {

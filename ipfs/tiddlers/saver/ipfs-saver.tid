@@ -8,6 +8,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <<lingo Description>>
 
 |<<lingo Verbose/Description>>|<$checkbox tiddler="$:/ipfs/saver/verbose" field="text" checked="yes" unchecked="no" default="yes"></$checkbox>|
+|<<lingo Unpin/Description>>|<$checkbox tiddler="$:/ipfs/saver/unpin" field="text" checked="yes" unchecked="no" default="yes"></$checkbox>|
 
 <<lingo Policy>>
 <$radio tiddler="$:/ipfs/saver/policy" value="default"> <<lingo Policy/Default/Description>> </$radio>

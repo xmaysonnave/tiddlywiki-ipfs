@@ -8,8 +8,17 @@ In order to use the Ens feature, you need to setup your browser with the [ext[Me
 See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
 </p>
 <p>
+When saving while the Ens setting is selected, the plugin will:
+</p>
+<ul>
+  <li>Save the wiki over Ipfs</li>
+  <li>Update the Ens domain manager with the new Ipfs identifier</li>
+  <li>Redirect the current page to your Ens domain</li>
+</ul>
+<p>
 The Ens Domain will be tested and updated accordindgly as long as you are the owner of this domain and have some [ext[Eth|https://www.ethereum.org/]].
 </p>
 <ul>
   <li>To modify the default Ens domain, edit and modify [[$:/ipfs/saver/ens/domain]].</li>
+  <li><[ext[Ethreum Gas Station|https://ethgasstation.info/]]/li>
 </ul>

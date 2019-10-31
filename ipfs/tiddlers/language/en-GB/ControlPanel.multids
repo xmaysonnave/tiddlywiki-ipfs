@@ -1,7 +1,7 @@
 title: $:/language/ControlPanel/
 
 Saving/IpfsService/Caption: Ipfs Saver
-Saving/IpfsService/Description: These settings are only used when saving to Ipfs
+Saving/IpfsService/Description: These settings are only used when saving to Ipfs.
 Saving/IpfsService/Priority: Saver Priority
 Saving/IpfsService/Verbose: Saver Verbose
 Saving/IpfsService/ApiUrl: Api Url
@@ -10,6 +10,7 @@ Saving/IpfsService/EnsDomain: Ens Domain
 Saving/IpfsService/IpnsName: Ipns Name
 Saving/IpfsService/IpnsKey: Ipns Key
 Saving/IpfsService/Verbose/Description: Verbose
+Saving/IpfsService/Unpin/Description: Unpin
 Saving/IpfsService/Wait/Description: Wait
 Saving/IpfsService/Protocol: Protocol:
 Saving/IpfsService/Protocol/Ens/Description: Ens
