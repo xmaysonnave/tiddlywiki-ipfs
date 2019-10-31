@@ -809,7 +809,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 	if ($tw.utils.getIpfsVerbose()) console.log("Default Ipns name: " + ipnsName + ", Ipns key: " + ipnsKey);
 
-	// Check
+	// Check default
 	if (protocol === ipnsKeyword && cid === ipnsKey) {
 		const msg = "Nothing to publish. Ipns keys are matching....";
 		console.log(msg);
@@ -833,6 +833,24 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		return false;
 	}	
 
+	// Resolve current ipnsKey if applicable
+	if (protocol === ipnsKeyword) {
+		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
+		if (error != null) {
+			console.log(error);
+			self.errorDialog(error.message);
+			return false;		
+		}
+		if (resolved == null) {
+			const msg = "Nothing to publish. Unable to resolve the current Ipns key....";
+			console.log(msg);
+			self.errorDialog(msg);
+			return false;		
+		}
+		// Extract resolved cid
+		cid = resolved.substring(6);	
+	}
+
 	// Check default ipns key and default ipns name
 	var { error, keys } = await self.ipfsWrapper.getKeys(ipfs);
 	if (error != null)  {
@@ -854,15 +872,14 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		return false;		
 	}
 
-	// Check if available
-	// Resolve ipnsKey
+	// Resolve default ipnsKey
 	var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, ipnsKey);
 	if (error != null) {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;		
 	}
-	// Extract resolved cid
+	// Extract resolved cid if available
 	if (resolved != null) {
 		resolved = resolved.substring(6);
 	}

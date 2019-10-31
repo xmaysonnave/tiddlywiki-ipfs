@@ -4,9 +4,13 @@ type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/settings/unpin]]
 <p>
-  Each time you save your wiki and the unpin checkbox is selected, the plugin will unpin your previous version. As Ipfs documents are immutable, unpining is the mechanism to help Ipfs servers to remove old documents.
+  The <b>Unpin</b> checkbox when selected try to unpin previous versions.
+  <br/>
+  Each time you save your wiki or update an Ipns key the previous content will be unpined.
+  This mechanism works with attachments when an Ipfs attachment is embedded in the wiki instance.
 </p>
 <p>
-  Unpining is not allowed with infura.io and in some situations an unwanted mechanism. 
-  For instance if you save an ipns key to a new ipns key unpining the previous document will break the former ipns key.
+  Unpining is not allowed with infura.io and in some situations this is an unwanted mechanism.
+  <br/>
+  If you [[Publish to Ipns|How to Publish to Ipns]] an existing Ipns key to a new Ipns key, unpining the previous document could break the former Ipns key.
 </p>

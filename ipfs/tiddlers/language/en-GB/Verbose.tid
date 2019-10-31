@@ -4,7 +4,8 @@ type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/settings/verbose]]
 <p>
-  The plugin is meant to display common errors through dialog boxes when such events are happening however the <b>Verbose</b> property gives more insight through the browsers Developer Tools Console.
+  The plugin is meant to display common errors through dialog boxes. 
+  The <b>Verbose</b> checkbox when selected gives more insight through the browsers Developer Tools Console.
 </p>
 <p>
   If you run a local Ipfs node, performance will be greatly enhanced however if you rely on a public node like Infura the console will give more informations when logical events are happening as the process of saving could be very slow. 
