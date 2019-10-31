@@ -15,9 +15,10 @@ While saving the plugin will:
 </p>
 <ul>
   <li>Save the wiki over Ipfs</li>
-  <li<Verify if the Ens domain is valid</li>  
-  <li<Verify and load the associated Ens domain resolver</li>
+  <li>Verify if the Ens domain is valid</li>  
+  <li>Verify and load the associated Ens domain resolver</li>
   <li>Update the associated Ens domain resolver with the new Ipfs identifier</li>
+  <li>[[Unpin]] the previous version if applicable</li>
   <li>Redirect the current page to the Ens domain when the transaction will be completed</li>
 </ul>
 <p>

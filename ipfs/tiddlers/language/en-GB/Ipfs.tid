@@ -14,6 +14,7 @@ While saving the plugin will:
 </p>
 <ul>
   <li>Save the wiki over Ipfs</li>
+  <li>[[Unpin]] the previous version if applicable</li>
   <li>Redirect the current page to the new Ipfs identifier according to your default gateway</li>
 </ul>
 <p>
