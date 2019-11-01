@@ -15,7 +15,7 @@
     "prepare": "./scripts/prepare.sh",
     "test": "./scripts/test.sh",    
     "tiddlywiki-ipfs": "tiddlywiki ipfs --output ipfs/output/base --build --verbose",
-    "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
+    "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose"
   },
   "repository": {
     "type": "git",
