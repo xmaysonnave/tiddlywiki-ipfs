@@ -14,6 +14,7 @@ IpfsSaver
 "use strict";
 
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
+const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
 const fileProtocol = "file:";
 const ensKeyword = "ens";
@@ -30,6 +31,7 @@ var IpfsSaver = function(wiki) {
 	this.ipfsProvider = null;
 	this.needTobeUnpinned = [];
 	this.ipfsWrapper = new IpfsWrapper();	
+	this.ensWrapper = new EnsWrapper();	
 	this.ipfsLibrary = new IpfsLibrary();		
 	// Event management
 	$tw.wiki.addEventListener("change", function(changes) { 
@@ -110,7 +112,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Extract and check URL Ipfs protocol and cid
 		if (currentProtocol !== fileProtocol) {
 			// Decode pathname
-			var { protocol, cid } = this.ipfsLibrary.decodePathname(currentPathname);
+			var { protocol, cid } = await this.ipfsLibrary.decodePathname(currentPathname);
 			// Check
 			if (protocol != null && cid != null) {
 				ipfsProtocol = protocol;
@@ -206,7 +208,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Ens Domain: " + ensDomain);
 			
 			// Fetch Ens domain content
-			const { error, protocol, content } = await this.ipfsWrapper.getContenthash(ensDomain);
+			const { error, protocol, content } = await this.ensWrapper.getContenthash(ensDomain);
 			if (error != null)  {
 				console.log(error);
 				callback(error.message);
@@ -261,7 +263,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Publish to Ens if ens is requested
 		} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
-			var { error } = await this.ipfsWrapper.setContenthash(ensDomain, added[0].hash);				
+			var { error } = await this.ensWrapper.setContenthash(ensDomain, added[0].hash);				
 			if (error != null)  {
 				console.log(error);
 				callback(error.message);
@@ -684,7 +686,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	}
 	
 	// Extract and check URL Ipfs protocol and cid
-	var { protocol, cid } = self.ipfsLibrary.decodePathname(currentPathname);
+	var { protocol, cid } = await self.ipfsLibrary.decodePathname(currentPathname);
 	// Check
 	if (protocol == null && cid == null) {
 		const msg = "Unable to publish. Unknown Ipfs identifier...";
@@ -705,7 +707,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if ($tw.utils.getIpfsVerbose()) console.log("Ens Domain: " + ensDomain);
 	
 	// Fetch Ens domain content
-	var { error, protocol, content } = await self.ipfsWrapper.getContenthash(ensDomain);
+	var { error, protocol, content } = await self.ensWrapper.getContenthash(ensDomain);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -749,7 +751,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	}
 
 	if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
-	var { error } = await self.ipfsWrapper.setContenthash(ensDomain, cid);	
+	var { error } = await self.ensWrapper.setContenthash(ensDomain, cid);	
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -787,7 +789,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 	
 	// Extract and check URL Ipfs protocol and cid
-	var { protocol, cid } = self.ipfsLibrary.decodePathname(currentPathname);
+	var { protocol, cid } = await self.ipfsLibrary.decodePathname(currentPathname);
 	// Check
 	if (protocol == null || cid == null) {
 		const msg = "Unable to publish. Unknown Ipfs identifier...";

@@ -378,7 +378,7 @@ exports.getIpfsUnpin = function() {
 Default Unpin
 */
 exports.getIpfsDefaultUnpin = function() {
-	return "yes";
+	return "no";
 }
 
 /*
@@ -394,6 +394,27 @@ exports.getIpfsPolicy = function() {
 	}
 	return policy;
 }
+
+exports.loadScript = async function(scriptId, url) {
+  return new Promise((resolve, reject) => {
+		try {
+			if (document.getElementById(scriptId) == null) {
+				const script = document.createElement("script");
+				script.src = url;
+				script.id = scriptId;
+				document.head.appendChild(script);
+				script.onload = () => {
+					if ($tw.utils.getIpfsVerbose()) console.log("Loaded Library: " + url);
+					resolve(true);
+				};
+			} else {
+				return resolve(true);
+			}
+		} catch (error) {
+			reject("Unable to load: " + url);
+		}
+	});
+};
 
 /*
 Default Policy
