@@ -9,12 +9,13 @@
     ]
   },
   "scripts": {
+    "all": "./scripts/all.sh",
+    "all-dev": "./scripts/all-dev.sh",
+    "browserify": "browserify src/ipfs-library.js -s IpfsLibrary -o ipfs/plugins/ipfs/ipfs-library.js",        
     "prepare": "./scripts/prepare.sh",
-    "browserify": "browserify src/ipfs-library.js -s IpfsLibrary -o ipfs/plugins/ipfs/ipfs-library.js",
+    "test": "./scripts/test.sh",    
     "tiddlywiki-ipfs": "tiddlywiki ipfs --output ipfs/output/base --build --verbose",
     "tiddlywiki-ipfs-cardo": "tiddlywiki ipfs --import tw5-cardo/Cardo-1.0.4.json application/json --output ipfs/output/cardo --build --verbose",
-    "all": "./scripts/all.sh",
-    "all-dev": "./scripts/all-dev.sh"
   },
   "repository": {
     "type": "git",
