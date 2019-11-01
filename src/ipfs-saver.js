@@ -908,7 +908,6 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if ($tw.utils.getIpfsUnpin() && resolved != null) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + resolved);
 		var { error, unpined } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
-		// Log and continue
 		if (error != null)  {
 			console.log(error);
 			self.errorDialog(error.message);

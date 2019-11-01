@@ -346,16 +346,9 @@ exports.getIpfsVerbose = function() {
 	if (verbose == undefined || verbose == null || verbose.trim() === "") {
 		verbose = true;
 	} else {
-		verbose = ( verbose == $tw.utils.getIpfsDefaultVerbose() );
+		verbose = ( verbose === "yes" );
 	}
 	return verbose;
-}
-
-/*
-Default Verbose
-*/
-exports.getIpfsDefaultVerbose = function() {
-	return "yes";
 }
 
 /*
@@ -369,16 +362,9 @@ exports.getIpfsUnpin = function() {
 	if (unpin == undefined || unpin == null || unpin.trim() === "") {
 		unpin = true;
 	} else {
-		unpin = ( unpin == $tw.utils.getIpfsDefaultUnpin() );
+		unpin = ( unpin === "yes" );
 	}
 	return unpin;
-}
-
-/*
-Default Unpin
-*/
-exports.getIpfsDefaultUnpin = function() {
-	return "no";
 }
 
 /*
