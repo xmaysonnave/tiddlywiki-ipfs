@@ -17,13 +17,13 @@ exports.parseUrlFull = function(url) {
 	// Check
 	if (url == undefined || url == null || url.trim() === "") {
 		throw new Error("Undefined Url...");
-	}	
+	}
 	const parser = document.createElement("a");
 	const searchObject = {};
 	// Let the browser do the work
 	parser.href = url;
 	// Convert query string to object
-	var split;	
+	var split;
 	const queries = parser.search.replace(/^\?/, "").split("&");
 	for (var i = 0; i < queries.length; i++ ) {
 			split = queries[i].split("=");
@@ -47,11 +47,11 @@ exports.parseUrlShort = function(url) {
 		throw new Error("Undefined Url...");
 	}
 	const { protocol, host, hostname, port, pathname, search, searchObject, hash } = this.parseUrlFull(url);
-	return { 
-		protocol: protocol, 
-		hostname: hostname, 
-		pathname: pathname, 
-		port: port 
+	return {
+		protocol: protocol,
+		hostname: hostname,
+		pathname: pathname,
+		port: port
 	};
 }
 
@@ -71,7 +71,7 @@ exports.Uint8ArrayToBase64 = function(uint8) {
   var base64 = '';
   var slice;
   while (index < length) {
-    slice = uint8.subarray(index, Math.min(index + CHUNK_SIZE, length)); 
+    slice = uint8.subarray(index, Math.min(index + CHUNK_SIZE, length));
     base64 += String.fromCharCode.apply(null, slice);
     index += CHUNK_SIZE;
   }
@@ -108,7 +108,7 @@ exports.Utf8ArrayToStr = function(array) {
 	var i = 0;
 	while(i < len) {
 		c = array[i++];
-		switch(c >> 4) { 
+		switch(c >> 4) {
 		case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
 			// 0xxxxxxx
 			out += String.fromCharCode(c);
@@ -122,8 +122,8 @@ exports.Utf8ArrayToStr = function(array) {
 			// 1110 xxxx  10xx xxxx  10xx xxxx
 			char2 = array[i++];
 			char3 = array[i++];
-			out += String.fromCharCode(((c & 0x0F) << 12) 
-				| ((char2 & 0x3F) << 6) 
+			out += String.fromCharCode(((c & 0x0F) << 12)
+				| ((char2 & 0x3F) << 6)
 				| ((char3 & 0x3F) << 0));
 			break;
 		}
@@ -151,7 +151,7 @@ exports.updateIpfsPriority = function() {
 	// Process ipfs saver verbose property
 	if (saver == undefined) {
 		return;
-	}	
+	}
 	// Load priority property
 	saver.info.priority = $tw.utils.getIpfsPriority();
 	// Sort the savers into priority order
@@ -180,7 +180,7 @@ exports.getIpfsPriority = function() {
 	priority = $tw.wiki.getTiddler(priority);
 	if (priority != undefined) {
 	 	priority = priority.getFieldString("text");
-	}	
+	}
 	if (priority == undefined || priority == null || priority.trim() === "") {
 		priority = $tw.utils.getIpfsDefaultPriority();
 	} else {
@@ -233,7 +233,7 @@ exports.getIpfsApiUrl = function() {
 	api = $tw.wiki.getTiddler(api);
 	if (api != undefined) {
 	 	api = api.getFieldString("text");
-	}	
+	}
 	if (api == undefined || api == null || api.trim() === "") {
 		api = $tw.utils.getIpfsDefaultApiUrl();
 	}
@@ -258,7 +258,7 @@ exports.getIpfsGatewayUrl = function() {
 	gateway = $tw.wiki.getTiddler(gateway);
 	if (gateway != undefined) {
 	 	gateway = gateway.getFieldString("text");
-	}	
+	}
 	if (gateway == undefined || gateway == null || gateway.trim() === "") {
 		gateway = $tw.utils.getIpfsDefaultGatewayUrl();
 	}
@@ -381,13 +381,16 @@ exports.getIpfsPolicy = function() {
 	return policy;
 }
 
-exports.loadScript = async function(scriptId, url) {
+exports.loadLibrary = async function(id, url) {
   return new Promise((resolve, reject) => {
 		try {
-			if (document.getElementById(scriptId) == null) {
+			if (document.getElementById(id) == null) {
 				const script = document.createElement("script");
-				script.src = url;
-				script.id = scriptId;
+        script.type = "text/javascript";
+        script.id = id;
+        script.async = false;
+        script.defer = false;
+        script.src = url;
 				document.head.appendChild(script);
 				script.onload = () => {
 					if ($tw.utils.getIpfsVerbose()) console.log("Loaded Library: " + url);

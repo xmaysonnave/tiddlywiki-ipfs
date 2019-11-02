@@ -33,19 +33,19 @@ var EnsLibrary = function() {
 		},
 		5: {
 			registry: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
-			name: "Goerli : Ethereum test network (PoA)"		
+			name: "Goerli : Ethereum test network (PoA)"
 		}
 	};
 };
 
 EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
-	return await $tw.utils.loadScript("EtherJsLibrary", "https://cdn.ethers.io/scripts/ethers-v4.min.js");
+	return await $tw.utils.loadLibrary("EtherJsLibrary", "https://cdn.ethers.io/scripts/ethers-v4.min.js");
 }
 
 EnsLibrary.prototype.loadContentHashLibrary = async function() {
 	// https://github.com/pldespaigne/content-hash
-	return await $tw.utils.loadScript("ContentHashLibrary", "https://unpkg.com/content-hash/dist/index.js");
+	return await $tw.utils.loadLibrary("ContentHashLibrary", "https://unpkg.com/content-hash/dist/index.js");
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
@@ -55,9 +55,11 @@ EnsLibrary.prototype.decodeContenthash = async function(encoded) {
 		throw new Error(encoded.error);
   }
   if (encoded) {
-		await this.loadContentHashLibrary();
-		decoded = contentHash.decode(encoded);
-		const codec = contentHash.getCodec(encoded);
+		if (window.contentHash == undefined) {
+			await this.loadContentHashLibrary();
+		}
+		decoded = window.contentHash.decode(encoded);
+		const codec = window.contentHash.getCodec(encoded);
 		if (codec === "ipfs-ns") {
 			protocol = "ipfs";
 		} else if (codec === "swarm-ns") {
@@ -65,13 +67,13 @@ EnsLibrary.prototype.decodeContenthash = async function(encoded) {
 		} else if (codec === "onion") {
 			protocol = "onion";
 		} else if (codec === "onion3") {
-			protocol = "onion3";		
+			protocol = "onion3";
 		}
   }
   return {
 		decoded: decoded,
 		protocol: protocol
-	}; 
+	};
 }
 
 EnsLibrary.prototype.encodeContenthash = async function(text) {
@@ -85,18 +87,20 @@ EnsLibrary.prototype.encodeContenthash = async function(text) {
     }
 		if (contentType === "ipfs") {
 			if (content.length >= 4) {
-				await this.loadContentHashLibrary();
-				encoded = "0x" + contentHash.fromIpfs(content);
+				if (window.contentHash == undefined) {
+					await this.loadContentHashLibrary();
+				}
+				encoded = "0x" + window.contentHash.fromIpfs(content);
 			}
 		} else {
 			throw new Error("Unsupported Ens domain protocol: " + contentType);
 		}
   }
-  return encoded; 
+  return encoded;
 }
 
 EnsLibrary.prototype.enableMetamask = async function() {
-	// Check if Metamask is available	
+	// Check if Metamask is available
 	if (window.ethereum == undefined) {
 		throw new Error("Non-ENS browser detected. You should consider installing MetaMask...");
 	}
@@ -117,16 +121,18 @@ EnsLibrary.prototype.getWeb3 = async function() {
 	await this.enableMetamask();
 	// web3
 	if (this.web3 == undefined) {
-		await this.loadEtherJsLibrary();
-		this.web3 = new ethers.providers.Web3Provider(window.ethereum);
-	}			
+		if (window.ethers == undefined) {
+			await this.loadEtherJsLibrary();
+		}
+		this.web3 = new window.ethers.providers.Web3Provider(window.ethereum);
+	}
 	return this.web3;
 }
 
 EnsLibrary.prototype.getEns = async function() {
 	// Retrieve Signer
 	const web3 = await this.getWeb3();
-	const network = await web3.getNetwork();	
+	const network = await web3.getNetwork();
 	const networkId = network.chainId;
 	const signer = web3.getSigner();
 	// Ethereum Ens Registry
@@ -134,8 +140,8 @@ EnsLibrary.prototype.getEns = async function() {
 	try {
 		ensNetwork = this.contracts[networkId];
 	} catch (error) {
-		console.log(error.message);		
-		throw new Error("Unsupported Ethereum network...");		
+		console.log(error.message);
+		throw new Error("Unsupported Ethereum network...");
 	}
 	if ($tw.utils.getIpfsVerbose()) console.log(ensNetwork.name);
 	// Load Ens contract
@@ -146,7 +152,7 @@ EnsLibrary.prototype.getEns = async function() {
 			this.ens = new ethers.Contract(ensNetwork.registry, ens.abi, signer);
 		} catch (error) {
 			console.log(error.message);
-			throw new Error("Unable to fetch Ens registry...");		
+			throw new Error("Unable to fetch Ens registry...");
 		}
 	}
 	return this.ens;
@@ -157,7 +163,7 @@ EnsLibrary.prototype.getResolver = async function(resolverAddress) {
 		throw new Error("Undefined Ens domain resolver...");
 	}
 	// Retrieve Signer
-	const web3 = await this.getWeb3();			
+	const web3 = await this.getWeb3();
 	const signer = web3.getSigner();
 	// Load Resolver contract
 	if (this.resolver == undefined) {
@@ -168,7 +174,7 @@ EnsLibrary.prototype.getResolver = async function(resolverAddress) {
 		} catch (error) {
 			console.log(error.message);
 			throw new Error("Unable to fetch Ens resolver...");
-		}		
+		}
 	}
 	return this.resolver;
 }
@@ -178,8 +184,10 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 		throw new Error("Undefined Ens domain...");
 	}
 	// Fetch Resolver
-	await this.loadEtherJsLibrary();
-	const namehash = ethers.utils.namehash(domain);
+	if (window.ethers == undefined) {
+		await this.loadEtherJsLibrary();
+	}
+	const namehash = window.ethers.utils.namehash(domain);
 	let resolver;
 	try {
 		const ens = await this.getEns();
@@ -187,12 +195,12 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 	} catch (error) {
 		console.log(error.message);
 		throw new Error("Unable to get Ens domain resolver...");
-	}		
+	}
 	// Check
 	if (resolver == undefined || /^0x0+$/.test(resolver) == true) {
 		throw new Error("Undefined Ens domain resolver...");
 	}
-	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);	
+	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);
 	// Load Contenthash
 	let content;
 	try {
@@ -202,10 +210,10 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens get content hash...");
 	} catch (error) {
 		console.log(error.message);
-		throw new Error("Unable to fetch Ens domain content hash...");		
+		throw new Error("Unable to fetch Ens domain content hash...");
 	}
 	const decoded = await this.decodeContenthash(content);
-	return decoded;	
+	return decoded;
 }
 
 EnsLibrary.prototype.setContenthash = async function(domain, cid) {
@@ -214,10 +222,12 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	}
 	if (cid == undefined || cid == null || cid.trim() === "") {
 		throw new Error("Undefined Ipfs identifier...");
-	}			
+	}
 	// Fetch Resolver
-	await this.loadEtherJsLibrary();
-	const namehash = ethers.utils.namehash(domain);
+	if (window.ethers == undefined) {
+		await this.loadEtherJsLibrary();
+	}
+	const namehash = window.ethers.utils.namehash(domain);
 	const encoded = await this.encodeContenthash("ipfs://" + cid);
 	let resolver;
 	try {
@@ -226,7 +236,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	} catch (error) {
 		console.log(error.message);
 		throw new Error("Unable to get Ens domain resolver...");
-	}		
+	}
 	// Exist
 	if (resolver == undefined || /^0x0+$/.test(resolver) == true) {
 		throw new Error("Undefined Ens domain resolver...");
@@ -240,12 +250,12 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
 		// Wait for transaction completion
 		await tx.wait();
-		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");		
+		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");
 	} catch (error) {
 		console.log(error.message);
-		throw new Error("Unable to set Ens domain content hash...");		
+		throw new Error("Unable to set Ens domain content hash...");
 	}
-	return;	
+	return;
 }
 
 exports.EnsLibrary = EnsLibrary;

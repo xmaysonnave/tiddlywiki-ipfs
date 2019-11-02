@@ -13,6 +13,7 @@
     "all-dev": "./scripts/all-dev.sh",
     "browserify": "./scripts/browserify.sh",
     "prepare": "./scripts/prepare.sh",
+    "prepare-dev": "./scripts/prepare-dev.sh",
     "test": "./scripts/test.sh",
     "tiddlywiki-ipfs": "./scripts/tiddlywiki-ipfs.sh",
     "tiddlywiki-ipfs-cardo": "./scripts/tiddlywiki-ipfs-cardo.sh"
@@ -35,7 +36,10 @@
     "@babel/runtime": "^7.6.3",
     "browserify-derequire": "^1.0.1",
     "browserify-unibabel": "^3.0.0",
-    "ipfs-provider": "^0.2.2"
+    "ipfs-provider": "git+https@github.com:xmaysonnave/ipfs-provider.git#v0.2.4",
+    "multiaddr": "^7.2.0",
+    "uri-to-multiaddr": "^3.0.1",
+    "window-or-global": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
