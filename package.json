@@ -36,10 +36,9 @@
     "@babel/runtime": "^7.6.3",
     "browserify-derequire": "^1.0.1",
     "browserify-unibabel": "^3.0.0",
-    "ipfs-provider": "git+https@github.com:xmaysonnave/ipfs-provider.git#v0.2.4",
+    "ipfs-provider": "https://github.com/xmaysonnave/ipfs-provider.git#v0.2.4",
     "multiaddr": "^7.2.0",
-    "uri-to-multiaddr": "^3.0.1",
-    "window-or-global": "^1.0.1"
+    "uri-to-multiaddr": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

@@ -30,11 +30,11 @@ var IpfsSaver = function(wiki) {
 	this.apiUrl = null;
 	this.ipfsProvider = null;
 	this.needTobeUnpinned = [];
-	this.ipfsWrapper = new IpfsWrapper();	
-	this.ensWrapper = new EnsWrapper();	
-	this.ipfsLibrary = new IpfsLibrary();		
+	this.ipfsWrapper = new IpfsWrapper();
+	this.ensWrapper = new EnsWrapper();
+	this.ipfsLibrary = new IpfsLibrary();
 	// Event management
-	$tw.wiki.addEventListener("change", function(changes) { 
+	$tw.wiki.addEventListener("change", function(changes) {
 		return self.handleChangeEvent(self, changes);
 	});
 	$tw.rootWidget.addEventListener("tm-ipfs-tiddler", function(event) {
@@ -48,13 +48,13 @@ var IpfsSaver = function(wiki) {
 	});
 	$tw.hooks.addHook("th-deleting-tiddler", function(tiddler) {
 		return self.handleDeleteTiddler(self, tiddler);
-	});	
+	});
 	$tw.hooks.addHook("th-saving-tiddler", function(tiddler) {
 		return self.handleSaveTiddler(self, tiddler);
 	});
 	$tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
 		return self.handleFileImport(self, tiddler);
-	});	
+	});
 }
 
 IpfsSaver.prototype.errorDialog = function(error) {
@@ -80,13 +80,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 		// Init
 		var unpin = null;
-		var ipfsCid = null;		
+		var ipfsCid = null;
 		var ipfsProtocol = ipfsKeyword;
-		var ensDomain = null;		
+		var ensDomain = null;
 		const ipnsKey = $tw.utils.getIpfsIpnsKey() != null ? $tw.utils.getIpfsIpnsKey().trim() === "" ? null : $tw.utils.getIpfsIpnsKey().trim() : null;
 		const ipnsName = $tw.utils.getIpfsIpnsName() != null ? $tw.utils.getIpfsIpnsName().trim() === "" ? null : $tw.utils.getIpfsIpnsName().trim() : null;
 		options = options || {};
-	
+
 		// Process document URL
 		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
 		const currentProtocol = protocol;
@@ -101,13 +101,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			console.log(msg);
 			callback(msg);
 			return false;
-		}		
-		
+		}
+
 		// Process Gateway URL
 		var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
 		const gatewayProtocol = protocol;
 		const gatewayHostname = hostname;
-		const gatewayPort = port;		
+		const gatewayPort = port;
 
 		// Extract and check URL Ipfs protocol and cid
 		if (currentProtocol !== fileProtocol) {
@@ -126,7 +126,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				}
 			}
 		}
-		
+
 		// Getting an Ipfs client
 		var { error, ipfs, provider } = await this.ipfsWrapper.getIpfsClient();
 		if (error != null)  {
@@ -145,13 +145,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 		// Check Ipns Key and Ipns Name
 		if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
-			
+
 			// Check if available
 			if (ipnsName == null || ipnsKey == null) {
 				const msg = "Undefined default Ipns name or key...";
 				console.log(msg);
 				callback(msg);
-				return false;				
+				return false;
 			}
 			if ($tw.utils.getIpfsVerbose()) console.log("Default Ipns name: " + ipnsName + ", Ipns key: " + ipnsKey);
 
@@ -161,20 +161,20 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				console.log(error);
 				callback(error.message);
 				return false;
-			}			
+			}
 			var found = false;
-			for (var index = 0; index < keys.length; index++) { 
+			for (var index = 0; index < keys.length; index++) {
 				if (keys[index].id === ipnsKey && keys[index].name === ipnsName) {
 					found = true;
 					break;
 				}
 			}
 			if (found == false) {
-				const msg = "Unknown default Ipns name and key..."; 
+				const msg = "Unknown default Ipns name and key...";
 				console.log(msg);
 				callback(msg);
-				return false;		
-			}			
+				return false;
+			}
 
 			// Check
 			// Resolve ipnsKey
@@ -182,12 +182,12 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (error != null) {
 				console.log(error);
 				callback(error.message);
-				return false;							
+				return false;
 			}
 			// Store to unpin previous if any
 			if ($tw.utils.getIpfsUnpin() && resolved != null) {
 				if (this.needTobeUnpinned.indexOf(resolved.substring(6)) == -1) {
-					unpin = resolved.substring(6);					
+					unpin = resolved.substring(6);
 					this.needTobeUnpinned.push(unpin);
 					if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
 				}
@@ -203,10 +203,10 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				const msg  ="Undefined Ens Domain...";
 				console.log(msg);
 				callback(msg);
-				return false;				
+				return false;
 			}
 			if ($tw.utils.getIpfsVerbose()) console.log("Ens Domain: " + ensDomain);
-			
+
 			// Fetch Ens domain content
 			const { error, protocol, content } = await this.ensWrapper.getContenthash(ensDomain);
 			if (error != null)  {
@@ -217,14 +217,14 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 			// Check is content protocol is ipfs to unpin previous
 			if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
-				// Store to unpin previous	
+				// Store to unpin previous
 				unpin = content;
 				if (this.needTobeUnpinned.indexOf(unpin) == -1) {
 					this.needTobeUnpinned.push(unpin);
 					if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + unpin);
 				}
 			}
-			
+
 		}
 
 		// Upload	current document
@@ -239,18 +239,18 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			callback(error.message);
 			return false;
 		};
-		
-		// Upload		
+
+		// Upload
 		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, blob);
 		if (error != null)  {
 			console.log(error);
 			callback(error.message);
 			return false;
-		}		
+		}
 
-		// Publish to Ipns if current protocol is ipns or ipns is requested	
+		// Publish to Ipns if current protocol is ipns or ipns is requested
 		if ($tw.utils.getIpfsProtocol() === ipnsKeyword || ipfsProtocol === ipnsKeyword) {
-			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs	
+			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs
 			if (ipfsCid === ipnsKey || ipfsProtocol === ipfsKeyword) {
 				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
 				var { error, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
@@ -263,26 +263,26 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Publish to Ens if ens is requested
 		} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
-			var { error } = await this.ensWrapper.setContenthash(ensDomain, added[0].hash);				
+			var { error } = await this.ensWrapper.setContenthash(ensDomain, added[0].hash);
 			if (error != null)  {
 				console.log(error);
 				callback(error.message);
 				return false;
-			}						
+			}
 		}
 
 		// Unpin if applicable
 		if ($tw.utils.getIpfsUnpin() && this.needTobeUnpinned.length > 0) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
 				var { error, unpined } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
-				// Log and continue		
+				// Log and continue
 				if (error != null)  {
 					console.log(error);
 				}
 			}
 			this.needTobeUnpinned = [];
 		}
-	
+
 		// Done
 		callback(null);
 
@@ -314,7 +314,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
 			const url = "https://" + ensDomain;
 			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
-			window.location.assign(url);									
+			window.location.assign(url);
 		} else if (($tw.utils.getIpfsProtocol() === ipfsKeyword || ipfsProtocol === ipfsKeyword) && cid != added[0].hash) {
 			var url;
 			if (currentHostname == gatewayHostname) {
@@ -337,19 +337,19 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 };
 
 IpfsSaver.prototype.handleFileImport = function(self, tiddler) {
-	// Update tiddler	
+	// Update tiddler
 	const addition = self.wiki.getModificationFields();
 	addition.title = tiddler.fields.title;
-	addition.tags = (tiddler.fields.tags || []).slice(0);			
+	addition.tags = (tiddler.fields.tags || []).slice(0);
 	// Add isAttachment tag
-	var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
+	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
 	if (index == -1) {
-		$tw.utils.pushTop(addition.tags, "$:/isAttachment");	
-	}	
+		$tw.utils.pushTop(addition.tags, "$:/isAttachment");
+	}
 	// Add isEmbedded tag
-	index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
+	index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
 	if (index == -1) {
-		$tw.utils.pushTop(addition.tags, "$:/isEmbedded");	
+		$tw.utils.pushTop(addition.tags, "$:/isEmbedded");
 	}
 	return new $tw.Tiddler(tiddler, addition);
 }
@@ -427,7 +427,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 			return tiddler;
 		}
-		
+
 		// Store old cid as it needs to be unpined when the wiki is saved if applicable
 		if ($tw.utils.getIpfsUnpin() && self.needTobeUnpinned.indexOf(cid) == -1) {
 			self.needTobeUnpinned.push(cid);
@@ -436,10 +436,10 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 		// Content
 		var content = fetched;
-		
+
 		// Decrypt
-		var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
-		if (index != -1) {			
+		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
+		if (index != -1) {
 			// Request for password if unknown
 			var password = null;
 			if ($tw.crypto.hasPassword() == false) {
@@ -453,15 +453,15 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 						// Exit if the user cancelled
 						if (!data) {
 							return false;
-						}		
+						}
 						// Store
 						password = data.password;
 						if($tw.config.usePasswordVault) {
 							$tw.crypto.setPassword(data.password);
-						}	
+						}
 						// Decrypt
 						const base64 = $tw.utils.DecryptStringToBase64(content, password);
-						self.updateSaveTiddler(self, tiddler, base64);														
+						self.updateSaveTiddler(self, tiddler, base64);
 						// Exit and remove the password prompt
 						return true;
 					}
@@ -473,9 +473,9 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			}
 		} else {
 			const base64 = $tw.utils.Uint8ArrayToBase64(content);
-			self.updateSaveTiddler(self, tiddler, base64);			
+			self.updateSaveTiddler(self, tiddler, base64);
 		}
-		
+
 		// Return
 		return tiddler;
 
@@ -484,35 +484,35 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 }
 
 IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
-		// Update tiddler	
+		// Update tiddler
 		var addition = $tw.wiki.getModificationFields();
 		addition.title = tiddler.fields.title;
-		addition.tags = (tiddler.fields.tags || []).slice(0);					
+		addition.tags = (tiddler.fields.tags || []).slice(0);
 		// Add isAttachment tag
-		var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
+		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
 		if (index == -1) {
 			$tw.utils.pushTop(addition.tags, "$:/isAttachment");
-		}		
+		}
 		// Add isEmbedded tag
-		var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
+		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
 		if (index == -1) {
 			$tw.utils.pushTop(addition.tags, "$:/isEmbedded");
 		}
 		// Remove isIpfs tag
-		var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
+		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
 		if (index != -1) {
 			addition.tags = self.arrayRemove(addition.tags, "$:/isIpfs");
-		}	
+		}
 		// Remove isEncrypted tag
-		var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
+		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
 		if (index != -1) {
 			addition.tags = self.arrayRemove(addition.tags, "$:/isEncrypted");
-		}			
+		}
 		// Remaining attributes
 		addition["_canonical_uri"] = undefined;
 		addition["text"] = content;
 		// Update tiddler
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler, addition));	
+		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler, addition));
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
@@ -526,19 +526,19 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	// Current tiddler
 	const tiddler = self.wiki.getTiddler(event.tiddlerTitle);
 	if (tiddler == undefined || tiddler == null) {
-		return false;			
+		return false;
 	}
 
 	// Do not process if _canonical_uri is set
 	const uri = tiddler.getFieldString("_canonical_uri");
-	if (uri != undefined && uri != null && uri.trim() !== "") {
+	if (uri !== undefined && uri !== null && uri.trim() !== "") {
 		return false;
 	}
 
 	// Check content type, only base64 is suppported yet
 	const type = tiddler.getFieldString("type");
 	// default
-	if (type == undefined || type.trim() === "") {
+	if (type == undefined || type == null || type.trim() === "") {
 		type = "text/html";
 	}
 	const info = $tw.config.contentTypeInfo[type];
@@ -562,13 +562,13 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		console.log(msg);
 		self.errorDialog(msg);
 		return false;
-	}		
-	
+	}
+
 	// Process Gateway URL
 	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
 	const gatewayProtocol = protocol;
 	const gatewayHostname = hostname;
-	const gatewayPort = port;	
+	const gatewayPort = port;
 
 	// Getting an Ipfs client
 	var { error, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
@@ -602,7 +602,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		} else {
 			content = $tw.utils.Base64ToUint8Array(content);
 		}
-		blob = new Blob([content], { type: type });	
+		blob = new Blob([content], { type: type });
 	} catch (error) {
 		console.log(error);
 		self.errorDialog("Failed to transform attachment...");
@@ -614,7 +614,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;
-	}	
+	}
 	const cid = added[0].hash;
 
 	// Update current tiddler
@@ -622,12 +622,12 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	addition.title = tiddler.fields.title;
 	addition.tags = (tiddler.fields.tags || []).slice(0);
 	// Add isAttachment tag
-	var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
+	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
 	if (index == -1) {
 		$tw.utils.pushTop(addition.tags, "$:/isAttachment");
-	}	
+	}
 	// Add isIpfs tag
-	var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
+	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
 	if (index == -1) {
 		$tw.utils.pushTop(addition.tags, "$:/isIpfs");
 	}
@@ -636,12 +636,12 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		$tw.utils.pushTop(addition.tags, "$:/isEncrypted");
 	}
 	// Remove Embedded tag
-	var index = tiddler.fields.tags != undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
+	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
 	if (index != -1) {
 		addition.tags = self.arrayRemove(addition.tags, "$:/isEmbedded");
 	}
 	// Process _canonical_uri
-	var url;	
+	var url;
 	if (currentProtocol === fileProtocol) {
 		url = gatewayProtocol + "//" + gatewayHostname + gatewayPort + "/" + ipfsKeyword + "/" + cid;
 	} else {
@@ -649,13 +649,13 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 			url = currentProtocol + "//" + currentHostname + currentPort + "/" + ipfsKeyword + "/" + cid;
 		} else {
 			url = gatewayProtocol + "//" + gatewayHostname + gatewayPort + "/" + ipfsKeyword + "/" + cid;
-		}			
-	}	
+		}
+	}
 	addition["_canonical_uri"] = url;
 	// Reset text
 	addition["text"] = undefined;
 	$tw.wiki.addTiddler(new $tw.Tiddler(tiddler, addition));
-	
+
 	return false;
 
 }
@@ -663,7 +663,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 /* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
-	
+
 	//Is there anything to do
 	if ($tw.saverHandler.isDirty() == true) {
 		const msg = "Unable to publish an unsaved wiki...";
@@ -671,7 +671,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		self.errorDialog(msg);
 		return false;
 	}
-	
+
 	// Process document URL
 	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
 	const currentProtocol = protocol;
@@ -684,7 +684,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		self.errorDialog(msg);
 		return false;
 	}
-	
+
 	// Extract and check URL Ipfs protocol and cid
 	var { protocol, cid } = await self.ipfsLibrary.decodePathname(currentPathname);
 	// Check
@@ -692,7 +692,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		const msg = "Unable to publish. Unknown Ipfs identifier...";
 		console.log(msg);
 		self.errorDialog(msg);
-		return false;		
+		return false;
 	}
 
 	// Getting default ens domain
@@ -702,10 +702,10 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		const msg  ="Undefined Ens Domain...";
 		console.log(msg);
 		self.errorDialog(msg);
-		return false;				
+		return false;
 	}
 	if ($tw.utils.getIpfsVerbose()) console.log("Ens Domain: " + ensDomain);
-	
+
 	// Fetch Ens domain content
 	var { error, protocol, content } = await self.ensWrapper.getContenthash(ensDomain);
 	if (error != null)  {
@@ -742,7 +742,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		} else if (resolved == null) {
 			console.log(error);
 			self.errorDialog("Nothing to publish. Unresolved current Ipns key...");
-			return false;		
+			return false;
 		}
 
 		// Store Ipfs cid
@@ -751,14 +751,14 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	}
 
 	if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
-	var { error } = await self.ensWrapper.setContenthash(ensDomain, cid);	
+	var { error } = await self.ensWrapper.setContenthash(ensDomain, cid);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;
 	}
 
-	self.messageDialog("Successfully set Ens domain content:\n\n" + cid);	
+	self.messageDialog("Successfully set Ens domain content:\n\n" + cid);
 
 	return false;
 
@@ -787,7 +787,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		self.errorDialog(msg);
 		return false;
 	}
-	
+
 	// Extract and check URL Ipfs protocol and cid
 	var { protocol, cid } = await self.ipfsLibrary.decodePathname(currentPathname);
 	// Check
@@ -795,19 +795,19 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		const msg = "Unable to publish. Unknown Ipfs identifier...";
 		console.log(msg);
 		self.errorDialog(msg);
-		return false;		
+		return false;
 	}
 
 	// Getting default ipns key and ipns name
 	const ipnsKey = $tw.utils.getIpfsIpnsKey() != null ? $tw.utils.getIpfsIpnsKey().trim() === "" ? null : $tw.utils.getIpfsIpnsKey().trim() : null;
-	const ipnsName = $tw.utils.getIpfsIpnsName() != null ? $tw.utils.getIpfsIpnsName().trim() === "" ? null : $tw.utils.getIpfsIpnsName().trim() : null;	
+	const ipnsName = $tw.utils.getIpfsIpnsName() != null ? $tw.utils.getIpfsIpnsName().trim() === "" ? null : $tw.utils.getIpfsIpnsName().trim() : null;
 
 	// Check
 	if (ipnsName == null || ipnsKey == null) {
 		const msg = "Undefined default Ipns name or key...";
 		console.log(msg);
 		self.errorDialog(msg);
-		return false;				
+		return false;
 	}
 	if ($tw.utils.getIpfsVerbose()) console.log("Default Ipns name: " + ipnsName + ", Ipns key: " + ipnsKey);
 
@@ -816,8 +816,8 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		const msg = "Nothing to publish. Ipns keys are matching....";
 		console.log(msg);
 		self.errorDialog(msg);
-		return false;		
-	}	
+		return false;
+	}
 
 	// Getting an Ipfs client
 	var { error, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
@@ -833,7 +833,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;
-	}	
+	}
 
 	// Resolve current ipnsKey if applicable
 	if (protocol === ipnsKeyword) {
@@ -841,16 +841,16 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		if (error != null) {
 			console.log(error);
 			self.errorDialog(error.message);
-			return false;		
+			return false;
 		}
 		if (resolved == null) {
 			const msg = "Nothing to publish. Unable to resolve the current Ipns key....";
 			console.log(msg);
 			self.errorDialog(msg);
-			return false;		
+			return false;
 		}
 		// Extract resolved cid
-		cid = resolved.substring(6);	
+		cid = resolved.substring(6);
 	}
 
 	// Check default ipns key and default ipns name
@@ -861,17 +861,17 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		return false;
 	}
 	var found = false;
-	for (var index = 0; index < keys.length; index++) { 
+	for (var index = 0; index < keys.length; index++) {
 		if (keys[index].id === ipnsKey && keys[index].name === ipnsName) {
 			found = true;
 			break;
 		}
 	}
 	if (found == false) {
-		const msg = "Unknown default Ipns name and key..."; 
+		const msg = "Unknown default Ipns name and key...";
 		console.log(msg);
 		self.errorDialog(error.message);
-		return false;		
+		return false;
 	}
 
 	// Resolve default ipnsKey
@@ -879,7 +879,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (error != null) {
 		console.log(error);
 		self.errorDialog(error.message);
-		return false;		
+		return false;
 	}
 	// Extract resolved cid if available
 	if (resolved != null) {
@@ -891,7 +891,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		const msg = "Nothing to publish. Ipfs identifiers are matching....";
 		console.log(msg);
 		self.errorDialog(msg);
-		return false;		
+		return false;
 	}
 
 	if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
@@ -900,9 +900,9 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;
-	}	
+	}
 
-	self.messageDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);	
+	self.messageDialog("Successfully published Ipns name: " + ipnsName + "\n" + cid);
 
 	// Unpin previous
 	if ($tw.utils.getIpfsUnpin() && resolved != null) {
@@ -911,9 +911,9 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		if (error != null)  {
 			console.log(error);
 			self.errorDialog(error.message);
-			return false;			
-		}	
-	}	
+			return false;
+		}
+	}
 
 	return false;
 
@@ -929,15 +929,20 @@ IpfsSaver.prototype.arrayRemove = function(array, value) {
 IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	// process priority
 	var priority = changes["$:/ipfs/saver/priority/default"];
-	if (priority != undefined) {
+	if (priority !== undefined) {
 		// Load priority property
 		var priority = $tw.utils.updateIpfsPriority()
 		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
 	}
-	// process verbose		
+	// process verbose
 	var verbose = changes["$:/ipfs/saver/verbose"];
-	if (verbose != undefined) {
+	if (verbose !== undefined) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose...");
+	}
+	// process unpin
+	var unpin = changes["$:/ipfs/saver/unpin"];
+	if (unpin !== undefined) {
+		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver will unpin previous content...");
 	}
 }
 

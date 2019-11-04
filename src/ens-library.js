@@ -80,7 +80,7 @@ EnsLibrary.prototype.encodeContenthash = async function(text) {
   let content, contentType;
   let encoded = false;
   if (!!text) {
-    let matched = text.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || text.match(/\/(ipfs)\/(.*)/);
+    const matched = text.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || text.match(/\/(ipfs)\/(.*)/);
     if (matched) {
       contentType = matched[1];
       content = matched[2];
@@ -149,7 +149,7 @@ EnsLibrary.prototype.getEns = async function() {
 		try {
 			// https://github.com/ensdomains/ui/blob/master/src/ens.js
 			const ens = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/ens").fields.text);
-			this.ens = new ethers.Contract(ensNetwork.registry, ens.abi, signer);
+			this.ens = new window.ethers.Contract(ensNetwork.registry, ens.abi, signer);
 		} catch (error) {
 			console.log(error.message);
 			throw new Error("Unable to fetch Ens registry...");
@@ -170,7 +170,7 @@ EnsLibrary.prototype.getResolver = async function(resolverAddress) {
 		try {
 			// Mainnet Resolver address
 			const resolver = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);
-			this.resolver = new ethers.Contract(resolverAddress, resolver.abi, signer);
+			this.resolver = new window.ethers.Contract(resolverAddress, resolver.abi, signer);
 		} catch (error) {
 			console.log(error.message);
 			throw new Error("Unable to fetch Ens resolver...");
@@ -188,7 +188,7 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 		await this.loadEtherJsLibrary();
 	}
 	const namehash = window.ethers.utils.namehash(domain);
-	let resolver;
+	var resolver;
 	try {
 		const ens = await this.getEns();
 		resolver = await ens.resolver(namehash);
@@ -202,7 +202,7 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 	}
 	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);
 	// Load Contenthash
-	let content;
+	var content;
 	try {
 		resolver = await this.getResolver(resolver);
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens get content hash...");
@@ -229,7 +229,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	}
 	const namehash = window.ethers.utils.namehash(domain);
 	const encoded = await this.encodeContenthash("ipfs://" + cid);
-	let resolver;
+	var resolver;
 	try {
 		const ens = await this.getEns();
 		resolver = await ens.resolver(namehash);

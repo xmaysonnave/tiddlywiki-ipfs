@@ -174,11 +174,11 @@ Retrieve ipfs saver priority with default value if applicable
 */
 exports.getIpfsPriority = function() {
 	var priority = $tw.wiki.getTiddler("$:/ipfs/saver/priority/default");
-	if (priority != undefined) {
+	if (priority !== undefined) {
 		priority = priority.getFieldString("text");
 	}
 	priority = $tw.wiki.getTiddler(priority);
-	if (priority != undefined) {
+	if (priority !== undefined) {
 	 	priority = priority.getFieldString("text");
 	}
 	if (priority == undefined || priority == null || priority.trim() === "") {
@@ -252,14 +252,14 @@ Retrieve ipfs saver gateway url with default value if applicable
 */
 exports.getIpfsGatewayUrl = function() {
 	var gateway = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default");
-	if (gateway != undefined) {
+	if (gateway !== undefined) {
 		gateway = gateway.getFieldString("text");
 	}
 	gateway = $tw.wiki.getTiddler(gateway);
-	if (gateway != undefined) {
+	if (gateway !== undefined) {
 	 	gateway = gateway.getFieldString("text");
 	}
-	if (gateway == undefined || gateway == null || gateway.trim() === "") {
+	if (gateway === undefined || gateway == null || gateway.trim() === "") {
 		gateway = $tw.utils.getIpfsDefaultGatewayUrl();
 	}
 	return gateway;
@@ -277,7 +277,7 @@ Retrieve ipfs saver ens domain with default value if applicable
 */
 exports.getIpfsEnsDomain = function() {
 	var ensDomain;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") != undefined) {
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") !== undefined) {
 		ensDomain = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain").getFieldString("text");
 	}
 	if (ensDomain == undefined || ensDomain == null || ensDomain.trim() === "") {
@@ -298,7 +298,7 @@ Retrieve ipfs saver ipns name with default value if applicable
 */
 exports.getIpfsIpnsName = function() {
 	var ipnsName;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") != undefined) {
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") !== undefined) {
 		ipnsName = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
 	}
 	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
@@ -319,7 +319,7 @@ Retrieve ipfs saver ipns key with default value if applicable
 */
 exports.getIpfsIpnsKey = function() {
 	var ipnsKey;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") != undefined) {
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") !== undefined) {
 		ipnsKey = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
 	}
 	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
@@ -340,11 +340,11 @@ Retrieve ipfs saver verbose with default value if applicable
 */
 exports.getIpfsVerbose = function() {
 	var verbose;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/verbose") != undefined) {
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/verbose") !== undefined) {
 		verbose = $tw.wiki.getTiddler("$:/ipfs/saver/verbose").getFieldString("text");
 	}
 	if (verbose == undefined || verbose == null || verbose.trim() === "") {
-		verbose = true;
+		verbose = true; // default, see ipfs-saver.tid
 	} else {
 		verbose = ( verbose === "yes" );
 	}
@@ -356,11 +356,11 @@ Retrieve ipfs saver unpin with default value if applicable
 */
 exports.getIpfsUnpin = function() {
 	var unpin;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/unpin") != undefined) {
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/unpin") !== undefined) {
 		unpin = $tw.wiki.getTiddler("$:/ipfs/saver/unpin").getFieldString("text");
 	}
 	if (unpin == undefined || unpin == null || unpin.trim() === "") {
-		unpin = true;
+		unpin = false; // default, see ipfs-saver.tid
 	} else {
 		unpin = ( unpin === "yes" );
 	}
@@ -372,7 +372,7 @@ Retrieve ipfs saver policy with default value if applicable
 */
 exports.getIpfsPolicy = function() {
 	var policy;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/policy") != undefined) {
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/policy") !== undefined) {
 		policy = $tw.wiki.getTiddler("$:/ipfs/saver/policy").getFieldString("text");
 	}
 	if (policy == undefined || policy == null || policy.trim() === "") {

@@ -72,7 +72,7 @@ IpfsLibrary.prototype.isCid = async function(cid) {
 		if (window.Cid == undefined) {
 			await this.loadCidLibrary();
 		}
-		return window.Cids.isCID(new Cids(cid));
+		return window.Cids.isCID(new window.Cids(cid));
 	} catch (error) {
 		return false;
 	}
@@ -83,7 +83,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	// Multiaddr
 	const apiUrl = $tw.utils.getIpfsApiUrl();
 	// Check
-	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
+	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
 		throw new Error("Undefined Ipfs Api Url...");
 	}
 	let multi;
@@ -212,7 +212,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 					reject("Unable to enable Ipfs add...");
 				}
 			}
-			if (client != undefined && client.add != undefined) {
+			if (client !== undefined && client.add !== undefined) {
 				try {
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing buffer...");
 					const buffer = await Buffer.from(reader.result);
@@ -260,7 +260,7 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 		}
 	}
 	// Process
-	if (client != undefined && client.get != undefined) {
+	if (client !== undefined && client.get !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs get...");
 			const result = await client.get(cid);
@@ -291,7 +291,7 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 		}
 	}
 	// Process
-	if (client != undefined && client.cat != undefined) {
+	if (client !== undefined && client.cat !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs cat...");
 		const result = await client.cat(cid);
@@ -322,7 +322,7 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
 		}
 	}
 	// Process
-	if (client != undefined && client.pin != undefined && client.pin.add != undefined) {
+	if (client !== undefined && client.pin !== undefined && client.pin.add !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");
 			const result = await client.pin.add(cid);
@@ -353,7 +353,7 @@ IpfsLibrary.prototype.unpin = async function(client, cid) {
 		}
 	}
 	// Process
-	if (client != undefined && client.pin != undefined && client.pin.rm != undefined) {
+	if (client !== undefined && client.pin !== undefined && client.pin.rm !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs unpin...");
 			const result = await client.pin.rm(cid);
@@ -386,7 +386,7 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
 			throw new Error("Unable to enable Ipns name...");
 		}
 	}
-	if (client != undefined && client.name != undefined && client.name.publish != undefined) {
+	if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing publish Ipns name...");
 			const result = await client.name.publish(cid, { key: name });
@@ -416,7 +416,7 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
 			throw new Error("Unable to enable Ipns name...");
 		}
 	}
-	if (client != undefined && client.name != undefined && client.name.resolve != undefined) {
+	if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ipns name...");
 			const result = await client.name.resolve(cid);
@@ -443,7 +443,7 @@ IpfsLibrary.prototype.id = async function(client) {
 			throw new Error("Unable to enable Ipfs id...");
 		}
 	}
-	if (client != undefined && client.id != undefined) {
+	if (client !== undefined && client.id !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing id...");
 			const result = await client.id();
@@ -470,7 +470,7 @@ IpfsLibrary.prototype.keys = async function(client) {
 			throw new Error("Unable to enable Ipfs key...");
 		}
 	}
-	if (client != undefined && client.key != undefined && client.key.list != undefined) {
+	if (client !== undefined && client.key !== undefined && client.key.list !== undefined) {
 		try {
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing keys...");
 			const result = await client.key.list();

@@ -84,7 +84,7 @@ We setup a nodejs environment to build a tiddlywiki instance bundled with `Ipfs 
 * [Node.js](#nodejs) - Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 * [Babelify](https://www.npmjs.com/package/babelify) - Babel browserify is a tool for compiling node-flavored commonjs modules for the browser.
 * [TiddyWiki](https://www.npmjs.com/package/tiddlywiki) -  TiddlyWiki, a non-linear personal web self-contained notebook.
-* [Ipfs Provider](https://github.com/ipfs-shipyard/ipfs-provider)
+* [Ipfs Provider](https://github.com/xmaysonnave/ipfs-provider)
 * [Ipfs Http Client](https://github.com/ipfs/js-ipfs-http-client)
 
 

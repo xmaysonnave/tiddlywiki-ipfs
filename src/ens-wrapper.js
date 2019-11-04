@@ -25,7 +25,7 @@ var EnsWrapper = function() {
 EnsWrapper.prototype.getContenthash = async function(domain) {
 	try {
 		const { decoded, protocol } = await this.ensLibrary.getContenthash(domain);
-		if (decoded == undefined)  {
+		if (decoded == undefined || decoded == null)  {
 			return { 
 				error: new Error("Failed to fetch Ens domain content: " + domain),
 				protocol: null,
