@@ -1,8 +1,0 @@
-title: $:/language/Buttons/
-
-Ipfs/Caption: export to Ipfs
-Ipfs/Hint: Export current Tiddler to Ipfs
-PublishToEns/Caption: publish to Ens
-PublishToEns/Hint: Publish this wiki to Ens
-PublishToIpns/Caption: publish to Ipns
-PublishToIpns/Hint: Publish this wiki to Ipns

@@ -1,0 +1,13 @@
+title: Protocol
+tags: Settings
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/settings/protocol]]
+<p>
+The plugin integrates a few convenient protocols to help users working with Ipfs. 
+</p>
+<ul>
+  <li>The Ipfs protocol is meant to persist <b>~TiddlyWiki</b> and file attachments over Ipfs. An [[Api and Gateway URL|Ipfs]] should be setup.</li>
+  <li>The Ipns protocol enhance the Ipfs protocol and links an Ipns Name and Key with a new Ipfs identifier (Typically generated when your document is saved). An [[Ipns Name and Ipns Key|Ipns]] should be setup.</li>
+  <li>The [ext[Ens|https://ens.domains/]] protocol enhance the Ipfs protocol and links an [ext[Ens domain or Ens subdomain|https://app.ens.domains/]] with a new Ipfs identifier (Typically generated when your document is saved). An [[Ens Domain or Ens Subdomain|Ens]] should be setup.</li>
+</ul>

@@ -1,8 +1,0 @@
-title: Version
-tags: Reference
-type: text/vnd.tiddlywiki
-
-[img[$:/ipfs/saver/image/version]]
-<p>
-You can get the current <b>~TidlyWiki</b> and <b>Ipfs with ~TiddlyWiki</b> version within the Tools tab.
-</p>

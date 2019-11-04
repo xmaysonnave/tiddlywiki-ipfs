@@ -1,5 +1,5 @@
 #!/bin/bash
 npx tiddlywiki ipfs \
-  --output ipfs/output/base \
+  --output build/base \
   --build \
   --verbose || exit 1

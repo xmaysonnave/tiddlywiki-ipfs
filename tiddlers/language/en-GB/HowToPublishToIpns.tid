@@ -1,0 +1,22 @@
+title: How to Publish to Ipns
+tags: Reference
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/publish/ipfs]]
+<p>
+Instead of saving with the [[Ipns]] feature, the publish Ipns action will update your Ipns key with the current Ipfs identifier.
+<br/>
+You can publish to Ipns the Ipfs identifier of another Ipns key. Read [[Unpin]] for more informations.
+</p>
+<p>
+While publishing to Ipns the plugin will:
+</p>
+<ul>
+  <li>If applicable, verify if the current Ipns key is valid</li>
+  <li>Verify if the default Ipns Name and Key are valid</li>
+  <li>Update the default Ipfs key with the new Ipfs identifier</li>
+</ul>
+<p>
+When you use this feature, once the update has been completed you will not be redirected to your Ipns key.
+</p>
+

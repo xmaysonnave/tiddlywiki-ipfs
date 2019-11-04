@@ -1,0 +1,30 @@
+title: Ipns
+tags: Settings
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/settings/ipns]]
+<p>
+The plugin is able to update your Ipns Name and Key everytime you save your <b>~TiddlyWiki</b> instance.
+</p>
+<p>
+To use this feature, the [[Ipns|Protocol]] protocol should be selected.
+</p>
+<p>
+While saving the plugin will:
+</p>
+<ul>
+  <li>Save the wiki over Ipfs</li>
+  <li>Verify if the Ipns Name and Key are valid</li>
+  <li>Update the default Ipfs key with the new Ipfs identifier</li>
+  <li>[[Unpin]] the previous version if applicable</li>  
+  <li>Redirect the current page to your Ipfs key according to your default gateway</li>
+</ul>
+<p>
+This feature do not work with Ipfs Companion or the https://ipfs.infura.io:5001 Api Url.
+<br/>
+Ipns Key needs to be generated and assoiated with an Ipns Name with a full Ipfs server with a [ext[Cli command|https://docs.ipfs.io/reference/api/cli/#ipfs-key-gen]].
+</p>
+<ul>
+  <li>To modify the default Ipns Name, edit and modify [[$:/ipfs/saver/ipns/name]]</li>
+  <li>To modify the default Ipns key, edit and modify [[$:/ipfs/saver/ipns/key]]</li>
+</ul>

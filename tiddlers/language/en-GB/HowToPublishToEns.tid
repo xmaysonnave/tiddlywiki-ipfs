@@ -1,0 +1,35 @@
+title: How to Publish to Ens
+tags: Reference
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/publish/ens]]
+<p>
+Instead of saving with the [[Ens]] feature, the publish Ens action will update your Ens domain resolver with the current Ipfs identifier.
+</p>
+<p>
+While publishing to Ens the plugin will:
+</p>
+<ul>
+  <li>Verify if the Ens domain valid</li>  
+  <li>Verify and load the associated Ens domain resolver</li>    
+  <li>Update the associated Ens domain resolver with the new Ipfs identifier</li>
+</ul>
+<p>
+When you use this feature you will not be redirected to your Ens domain when the transaction will be completed.
+</p>
+<p>
+Metamask will request your authorization as your Ethereum account will be involved.
+</p>
+[img[$:/ipfs/saver/image/metamask/allow]]
+<p>
+In the next step you need to fund your transaction.
+</p>
+[img[$:/ipfs/saver/image/metamask/gas]]
+<p>
+The minimum required gas is, 0.000000001 ether or 1 gwei (around 1 cents).
+<br/>
+For faster transaction 5 gwei could be a maximum.
+</p>
+<p>
+Check [ext[Ethereum Gas Station|https://ethgasstation.info/]] for further details about the current gas price in dollars.
+</p>

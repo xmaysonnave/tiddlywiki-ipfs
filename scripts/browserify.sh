@@ -6,5 +6,5 @@ npx browserify \
 npx browserify \
   src/ens-library.js \
   -s EnsLibrary \
-  -o ipfs/plugins/ipfs/ens-library.js || exit 1  
+  -o ipfs/plugins/ipfs/ens-library.js || exit 1
 

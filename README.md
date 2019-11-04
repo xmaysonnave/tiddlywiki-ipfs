@@ -31,7 +31,7 @@ These instructions will get you a copy of the project up and running on your loc
 * [Developer](#developer)
 * * [Environment](#developer-environment)
 * * [Node.js](#developer-nodejs)
-* * [Building](#developer-building)
+* * [Building](#developer-building-tiddlywiki)
 
 ### Users
 <a name="users"/>
@@ -202,7 +202,7 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 * tiddlywiki-ipfs-cardo
 * all
 
-Use the `all` script to build TiddlyWiki instances. The `ipfs/output` directory should be populated with two directories:
+Use the `all` script to build TiddlyWiki instances. The `build` directory should be populated with two directories:
 * base
 * cardo
 
@@ -210,7 +210,7 @@ Use the `all` script to build TiddlyWiki instances. The `ipfs/output` directory 
 #### Running TiddlyWiki
 <a name="developer-running"/>
 
-The directories [ipfs/output/base](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/ipfs/output/base) and [ipfs/output/cardo](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/ipfs/output/cardo) contains two files:
+The directories [build/base](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/build/base) and [build/cardo](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/build/cardo) contains two files:
 * favicon.ico
 * index.html
 
