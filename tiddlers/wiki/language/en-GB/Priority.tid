@@ -1,0 +1,31 @@
+title: Priority
+tags: Settings
+type: text/vnd.tiddlywiki
+
+[img[$:/ipfs/saver/image/settings/priority]]
+<p>
+This plugin modifies the default behaviour of <b>~TiddlyWiki</b> and exposes saver's priority.
+<br/>
+The default value is 3000 and let your use the Ipfs Saver. If you're unable to reach any Ipfs servers and want to save locally your <b>~TiddlyWiki</b> instance you can select the -1 value and as such will have a chance to save it with the default local filesystem saver. 
+<br/>
+In case you install a saver who supersedes the Ipfs saver you could need to select the value to 6000 if you want to use the Ipfs saver.
+</p>
+<p>
+The plugin eases the selection through a drop-down list.
+</p>
+<p>
+<table>
+<tr><th>Priority</th><th>Tiddler</th></tr>
+<tr><td>Default</td><td>[[$:/ipfs/saver/priority/default]]</td></tr>
+<tr><td>-1</td><td>[[$:/ipfs/saver/priority/low]]</td></tr>
+<tr><td>3000</td><td>[[$:/ipfs/saver/priority/medium]]</td></tr>
+<tr><td>6000</td><td>[[$:/ipfs/saver/priority/high]]</td></tr>
+</table>
+</p>
+<p>
+  To enhance the Priority drop-down list:
+</p>
+<ul>
+  <li>Clone an existing Priority Tiddler (see above).</li>
+  <li>Update the cloned Tiddler's name and the [[Default Priority Tiddler|$:/ipfs/saver/priority/default]] if applicable.</li>
+</ul>

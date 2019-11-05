@@ -15,8 +15,7 @@
     "prepare": "./scripts/prepare.sh",
     "prepare-dev": "./scripts/prepare-dev.sh",
     "test": "./scripts/test.sh",
-    "tiddlywiki-ipfs": "./scripts/tiddlywiki-ipfs.sh",
-    "tiddlywiki-ipfs-cardo": "./scripts/tiddlywiki-ipfs-cardo.sh"
+    "tiddlywiki-ipfs": "./scripts/tiddlywiki-ipfs.sh"
   },
   "repository": {
     "type": "git",

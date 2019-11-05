@@ -1,0 +1,5 @@
+title: $:/config/PageControlButtons/Visibility/$:/
+tags: [[Hidden Settings]]
+
+core/ui/Buttons/home: show
+core/ui/Buttons/more-page-actions: show
