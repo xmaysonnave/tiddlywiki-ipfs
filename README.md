@@ -5,9 +5,9 @@
 
 According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki), `TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.`
 
-TiddlyWiki with Ipfs is a decentralized computer application (DApp, dApp, Dapp, or dapp) that runs on a distributed computing system.
+Ipfs with TiddlyWiki is a decentralized computer application (DApp, dApp, Dapp, or dapp) that runs on a distributed computing system.
 
-Drag and drop the current [TiddlyWiki with Ipfs plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs) in your current TiddlyWiki instance.
+Drag and drop the current [Ipfs with TiddlyWiki plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs) in your current TiddlyWiki instance.
 
 * [Contributing](#contributing)
 * [Authors](#authors)
@@ -196,25 +196,22 @@ We now have a populated node_modules directory.
 <a name="developer-building-tiddlywiki"/>
 
 The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`. The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
-* prepare
-* browserify
-* tiddlywiki-ipfs
-* tiddlywiki-ipfs-cardo
 * all
+* all-dev
+* browserify
+* prepare
+* prepare-dev
+* tiddlywiki-ipfs
 
-Use the `all` script to build TiddlyWiki instances. The `build` directory should be populated with two directories:
-* base
-* cardo
+Use the `all` script to build an Ipfs with TiddlyWiki instances. The `wiki` directory will be populated:
+* favicon.ico
+* index.html
 
 
 #### Running TiddlyWiki
 <a name="developer-running"/>
 
-The directories [build/base](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/build/base) and [build/cardo](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/master/build/cardo) contains two files:
-* favicon.ico
-* index.html
-
-Open an index.html in your favorite browser. The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
+Open `wiki/index.html` file in your favorite browser. The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
 
 
 ## Contributing
