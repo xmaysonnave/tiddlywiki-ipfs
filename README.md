@@ -202,14 +202,16 @@ We now have a populated node_modules directory.
 <a name="developer-building-tiddlywiki"/>
 
 The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`. The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
-* all
-* all-dev
-* browserify
-* prepare
-* prepare-dev
-* tiddlywiki-ipfs
 
-Use the `all` script to build an Ipfs with TiddlyWiki instances. The `wiki` directory will be populated:
+* build-all-dev
+* build-all
+* build-tiddlywiki-ipfs
+* run-browserify
+* run-prepare-dev
+* run-prepare
+* test
+
+Use the `build-all` script to build an Ipfs with TiddlyWiki instances. The `wiki` directory will be populated:
 * favicon.ico
 * index.html
 
