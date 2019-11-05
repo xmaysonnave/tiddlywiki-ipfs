@@ -361,29 +361,24 @@ exports.getIpfsDefaultPolicy = function() {
 exports.loadLibrary = async function(id, url) {
   return new Promise((resolve, reject) => {
 		try {
-			if (document.getElementById(id) == null) {
+			if (window.document.getElementById(id) == null) {
 				const script = document.createElement("script");
         script.type = "text/javascript";
         script.id = id;
         script.async = false;
         script.defer = false;
-        script.src = url;
-				document.head.appendChild(script);
-				try {
-					script.onload = () => {
-						if ($tw.utils.getIpfsVerbose()) console.log("Loaded Library: " + url);
-						resolve(true);
-					};
-				} catch (error) {
-					// if onload crash, give a chance to retry
-					document.head.removeChild(script)
-					reject(error)
-				}
+				script.src = url;
+				script.crossorigin = "anonymous";
+				window.document.head.appendChild(script);
+				script.onload = () => {
+					if ($tw.utils.getIpfsVerbose()) console.log("Library loaded: " + url);
+					resolve(true);
+				};
 			} else {
 				return resolve(true);
 			}
 		} catch (error) {
-			reject("Unable to load: " + url);
+			reject("Unable to load library: " + url);
 		}
 	});
 };
