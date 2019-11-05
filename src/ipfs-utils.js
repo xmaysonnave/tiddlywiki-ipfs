@@ -280,17 +280,7 @@ exports.getIpfsEnsDomain = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") !== undefined) {
 		ensDomain = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain").getFieldString("text");
 	}
-	if (ensDomain == undefined || ensDomain == null || ensDomain.trim() === "") {
-		ensDomain = $tw.getIpfsDefaultEnsDomain();
-	}
 	return ensDomain;
-}
-
-/*
-Default Ens Domain
-*/
-exports.getIpfsDefaultEnsDomain = function() {
-	return "bluelightav.eth";
 }
 
 /*
@@ -301,17 +291,7 @@ exports.getIpfsIpnsName = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") !== undefined) {
 		ipnsName = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
 	}
-	if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
-		ipnsName = $tw.getIpfsDefaultIpnsName();
-	}
 	return ipnsName;
-}
-
-/*
-Default Ipns Name
-*/
-exports.getIpfsDefaultIpnsName = function() {
-	return "tiddly";
 }
 
 /*
@@ -322,17 +302,7 @@ exports.getIpfsIpnsKey = function() {
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") !== undefined) {
 		ipnsKey = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
 	}
-	if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
-		ipnsKey = $tw.utils.getIpfsDefaultIpnsKey();
-	}
 	return ipnsKey;
-}
-
-/*
-Default Ipns Key
-*/
-exports.getIpfsDefaultIpnsKey = function() {
-	return "QmV8ZQH9s4hHxPUeFJH17xt7GjmjGj8tEg7uQLz8HNSvFJ";
 }
 
 /*
@@ -381,6 +351,13 @@ exports.getIpfsPolicy = function() {
 	return policy;
 }
 
+/*
+Default Policy
+*/
+exports.getIpfsDefaultPolicy = function() {
+	return "http";
+}
+
 exports.loadLibrary = async function(id, url) {
   return new Promise((resolve, reject) => {
 		try {
@@ -392,10 +369,16 @@ exports.loadLibrary = async function(id, url) {
         script.defer = false;
         script.src = url;
 				document.head.appendChild(script);
-				script.onload = () => {
-					if ($tw.utils.getIpfsVerbose()) console.log("Loaded Library: " + url);
-					resolve(true);
-				};
+				try {
+					script.onload = () => {
+						if ($tw.utils.getIpfsVerbose()) console.log("Loaded Library: " + url);
+						resolve(true);
+					};
+				} catch (error) {
+					// if onload crash, give a chance to retry
+					document.head.removeChild(script)
+					reject(error)
+				}
 			} else {
 				return resolve(true);
 			}
@@ -404,12 +387,5 @@ exports.loadLibrary = async function(id, url) {
 		}
 	});
 };
-
-/*
-Default Policy
-*/
-exports.getIpfsDefaultPolicy = function() {
-		return "http";
-}
 
 })();
