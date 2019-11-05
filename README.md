@@ -3,6 +3,12 @@
 
 ```Ipfs with TiddyWiki``` is a TiddlyWiki plugin who aims to help developers, editors or users to save their wikis and attachments over Ipfs.
 
+This plugin provides the following feature:
+
+* Persist over Ipfs saved `TiddlyWiki's` and file attachments
+* Update Ipns identifier when `TiddlyWiki's` are saved
+* Update [Ens domain](https://ens.domains/) over [Ethereum](https://www.ethereum.org/)
+
 According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki), `TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.`
 
 Ipfs with TiddlyWiki is a decentralized computer application (DApp, dApp, Dapp, or dapp) that runs on a distributed computing system.

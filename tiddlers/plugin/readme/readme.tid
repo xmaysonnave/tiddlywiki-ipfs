@@ -1,0 +1,25 @@
+tags:
+title: $:/plugins/ipfs/readme
+type: text/vnd.tiddlywiki
+
+! Ipfs with TiddlyWiki
+
+This plugin provides the following feature:
+<ul>
+  <li>Persist over Ipfs saved <b>~TiddlyWiki's</b> and file attachments</li>
+  <li>Update Ipns identifier when <b>~TiddlyWiki's</b> are saved</li>
+  <li>Update [ext[Ens domain|https://ens.domains/]] over [ext[Ethereum|https://www.ethereum.org/]]</li>
+</ul>
+
+* https://github.com/xmaysonnave/tiddlywiki-ipfs
+* https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md
+
+! Documentation
+
+ENS Enabled browsers
+
+* https://bluelightav.eth
+
+Non ENS Enable browsers
+
+* https://bluelightav.eth.link

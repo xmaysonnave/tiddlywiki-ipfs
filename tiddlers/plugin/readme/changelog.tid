@@ -1,0 +1,15 @@
+tags:
+title: $:/plugins/ipfs/changelog
+type: text/vnd.tiddlywiki
+
+!! v0.2.4
+
+[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.3...v0.2.4]]
+
+!! v0.2.3
+
+[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/0.2.2...v0.2.3]]
+
+!! 0.2.2
+
+* First public release

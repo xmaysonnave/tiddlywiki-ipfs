@@ -2,6 +2,11 @@ title: Ens
 tags: Settings
 type: text/vnd.tiddlywiki
 
+<ul>
+  <li>More informations about [ext[Ens|https://ens.domains/]]</li>
+  <li>More informations about [ext[Ens domain or Ens subdomain|https://app.ens.domains/]]</li>
+  <li>More informations about [ext[Ethereum|https://www.ethereum.org/]]</li>
+</ul>
 [img[$:/ipfs/saver/image/settings/ens]]
 <p>
 To use the Ens feature, you need to setup your browser with the [ext[Metamask|https://github.com/MetaMask/metamask-extension]] extension.
@@ -15,7 +20,7 @@ While saving the plugin will:
 </p>
 <ul>
   <li>Save the wiki over Ipfs</li>
-  <li>Verify if the Ens domain is valid</li>  
+  <li>Verify if the Ens domain is valid</li>
   <li>Verify and load the associated Ens domain resolver</li>
   <li>Update the associated Ens domain resolver with the new Ipfs identifier</li>
   <li>[[Unpin]] the previous version if applicable</li>
