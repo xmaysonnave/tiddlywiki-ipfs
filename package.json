@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "@babel/runtime": "^7.7.0",
+    "@babel/runtime": "^7.7.1",
     "browserify-derequire": "^1.0.1",
     "browserify-unibabel": "^3.0.0",
     "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git#v0.2.5",
@@ -44,7 +44,7 @@
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
     "@babel/register": "^7.7.0",
     "acorn": "^7.1.0",
     "babel-eslint": "^10.0.3",
