@@ -11,7 +11,7 @@ This plugin provides the following feature:
 
 According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki), `TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.`
 
-Ipfs with TiddlyWiki is a decentralized computer application (DApp, dApp, Dapp, or dapp) that runs on a distributed computing system.
+Ipfs with TiddlyWiki is a decentralized application (DApp) that runs on a distributed computing system.
 
 Drag and drop the current [Ipfs with TiddlyWiki plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs) in your current TiddlyWiki instance.
 
