@@ -937,12 +937,18 @@ IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	// process verbose
 	var verbose = changes["$:/ipfs/saver/verbose"];
 	if (verbose !== undefined) {
-		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose...");
+		if ($tw.utils.getIpfsVerbose()) {
+			console.log("Ipfs Saver is verbose...");
+		}
 	}
 	// process unpin
 	var unpin = changes["$:/ipfs/saver/unpin"];
 	if (unpin !== undefined) {
-		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver will unpin previous content...");
+		if ($tw.utils.getIpfsUnpin()) {
+			if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver will unpin previous content...");
+		} else {
+			if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver will not unpin previous content...");
+		}
 	}
 }
 
