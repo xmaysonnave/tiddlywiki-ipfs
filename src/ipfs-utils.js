@@ -173,21 +173,20 @@ exports.updateIpfsPriority = function() {
 Retrieve ipfs saver priority with default value if applicable
 */
 exports.getIpfsPriority = function() {
-	var priority = $tw.wiki.getTiddler("$:/ipfs/saver/priority/default");
-	if (priority !== undefined) {
-		priority = priority.getFieldString("text");
+	var priority = null;
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/priority/default") !== undefined) {
+		priority = $tw.wiki.getTiddler("$:/ipfs/saver/priority/default").getFieldString("text");
 	}
-	priority = $tw.wiki.getTiddler(priority);
-	if (priority !== undefined) {
-	 	priority = priority.getFieldString("text");
+	if (priority !== null && $tw.wiki.getTiddler(priority) !== undefined) {
+	 	priority = $tw.wiki.getTiddler(priority).getFieldString("text");
 	}
-	if (priority == undefined || priority == null || priority.trim() === "") {
+	if (priority === null || priority.trim() === "") {
 		priority = $tw.utils.getIpfsDefaultPriority();
 	} else {
 		try {
 			priority = parseInt(priority);
 		} catch (error) {
-			console.log(error);
+			console.log(error.message);
 			priority = -1;
 		}
 	}
@@ -205,11 +204,11 @@ exports.getIpfsDefaultPriority = function() {
 Retrieve ipfs saver protocol with default value if applicable
 */
 exports.getIpfsProtocol = function() {
-	var protocol;
-	if ($tw.wiki.getTiddler("$:/ipfs/saver/protocol") != undefined) {
+	var protocol = null;
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/protocol") !== undefined) {
 		protocol = $tw.wiki.getTiddler("$:/ipfs/saver/protocol").getFieldString("text");
 	}
-	if (protocol == undefined || protocol == null || protocol.trim() === "") {
+	if (protocol === null || protocol.trim() === "") {
 		protocol = $tw.utils.getIpfsDefaultProtocol();
 	}
 	return protocol;
@@ -226,15 +225,14 @@ exports.getIpfsDefaultProtocol = function() {
 Retrieve ipfs saver api url with default value if applicable
 */
 exports.getIpfsApiUrl = function() {
-	var api = $tw.wiki.getTiddler("$:/ipfs/saver/api/default");
-	if (api != undefined) {
-		api = api.getFieldString("text");
+	var api = null;
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/api/default") !== undefined) {
+		api = $tw.wiki.getTiddler("$:/ipfs/saver/api/default").getFieldString("text");
 	}
-	api = $tw.wiki.getTiddler(api);
-	if (api != undefined) {
-	 	api = api.getFieldString("text");
+	if (api !== null && $tw.wiki.getTiddler(api) !== undefined) {
+		api = $tw.wiki.getTiddler(api).getFieldString("text");
 	}
-	if (api == undefined || api == null || api.trim() === "") {
+	if (api === null || api.trim() === "") {
 		api = $tw.utils.getIpfsDefaultApiUrl();
 	}
 	return api;
@@ -251,15 +249,14 @@ exports.getIpfsDefaultApiUrl = function() {
 Retrieve ipfs saver gateway url with default value if applicable
 */
 exports.getIpfsGatewayUrl = function() {
-	var gateway = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default");
-	if (gateway !== undefined) {
-		gateway = gateway.getFieldString("text");
+	var gateway = null;
+	if ($tw.wiki.getTiddler("$:/ipfs/saver/gateway/default") !== undefined) {
+		gateway = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default").getFieldString("text");
 	}
-	gateway = $tw.wiki.getTiddler(gateway);
-	if (gateway !== undefined) {
-	 	gateway = gateway.getFieldString("text");
+	if (gateway !== null && $tw.wiki.getTiddler(gateway) !== undefined) {
+		gateway = $tw.wiki.getTiddler(gateway).getFieldString("text");
 	}
-	if (gateway === undefined || gateway == null || gateway.trim() === "") {
+	if (gateway === null || gateway.trim() === "") {
 		gateway = $tw.utils.getIpfsDefaultGatewayUrl();
 	}
 	return gateway;
@@ -309,11 +306,11 @@ exports.getIpfsIpnsKey = function() {
 Retrieve ipfs saver verbose with default value if applicable
 */
 exports.getIpfsVerbose = function() {
-	var verbose;
+	var verbose = null;
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/verbose") !== undefined) {
 		verbose = $tw.wiki.getTiddler("$:/ipfs/saver/verbose").getFieldString("text");
 	}
-	if (verbose == undefined || verbose == null || verbose.trim() === "") {
+	if (verbose === null || verbose.trim() === "") {
 		verbose = true; // default, see ipfs-saver.tid
 	} else {
 		verbose = ( verbose === "yes" );
@@ -325,11 +322,11 @@ exports.getIpfsVerbose = function() {
 Retrieve ipfs saver unpin with default value if applicable
 */
 exports.getIpfsUnpin = function() {
-	var unpin;
+	var unpin = null;
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/unpin") !== undefined) {
 		unpin = $tw.wiki.getTiddler("$:/ipfs/saver/unpin").getFieldString("text");
 	}
-	if (unpin == undefined || unpin == null || unpin.trim() === "") {
+	if (unpin === null || unpin.trim() === "") {
 		unpin = false; // default, see ipfs-saver.tid
 	} else {
 		unpin = ( unpin === "yes" );
@@ -341,11 +338,11 @@ exports.getIpfsUnpin = function() {
 Retrieve ipfs saver policy with default value if applicable
 */
 exports.getIpfsPolicy = function() {
-	var policy;
+	var policy = null;
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/policy") !== undefined) {
 		policy = $tw.wiki.getTiddler("$:/ipfs/saver/policy").getFieldString("text");
 	}
-	if (policy == undefined || policy == null || policy.trim() === "") {
+	if (policy === null || policy.trim() === "") {
 		policy = $tw.utils.getIpfsDefaultPolicy();
 	}
 	return policy;

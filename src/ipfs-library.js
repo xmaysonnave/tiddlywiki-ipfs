@@ -214,9 +214,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			}
 			if (client !== undefined && client.add !== undefined) {
 				try {
-					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs buffer...");
-					const content = await client.Buffer.from(reader.result);
-					if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs buffer...");
+					const content = Buffer.from(reader.result);
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
 					const result = await client.add(content, { progress: function(len) {
 							if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
