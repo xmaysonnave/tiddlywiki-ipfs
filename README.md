@@ -13,7 +13,7 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki), `
 
 Ipfs with TiddlyWiki is a decentralized application (DApp) that runs on a distributed computing system.
 
-Drag and drop the current [Ipfs with TiddlyWiki plugin](https://gateway.ipfs.io/ipfs/QmUfJDgJ91qK23cpYiXAbxp3xeGGhGxpVDU91fH5hQa9Ym/#%24%3A%2Fplugins%2Fipfs) with and ENS compatible browser in your current TiddlyWiki instance.
+Drag and drop the current [Ipfs with TiddlyWiki plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs) with and ENS compatible browser in your current TiddlyWiki instance.
 
 * [Contributing](#contributing)
 * [Authors](#authors)
