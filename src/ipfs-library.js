@@ -220,6 +220,9 @@ IpfsLibrary.prototype.add = async function(client, content) {
 							if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
 						}
 					});
+					if (result == undefined || Array.isArray(result) == false || result.length == false) {
+						reject(new Error("Unable to Ipfs add..."));
+					}
 					if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs add...");
 					resolve(result);
 				} catch (error) {
