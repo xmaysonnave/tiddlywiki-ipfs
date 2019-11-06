@@ -276,7 +276,7 @@ exports.getIpfsDefaultGatewayUrl = function() {
 Retrieve ipfs saver ens domain with default value if applicable
 */
 exports.getIpfsEnsDomain = function() {
-	var ensDomain;
+	var ensDomain = null;
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") !== undefined) {
 		ensDomain = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain").getFieldString("text");
 	}
@@ -287,7 +287,7 @@ exports.getIpfsEnsDomain = function() {
 Retrieve ipfs saver ipns name with default value if applicable
 */
 exports.getIpfsIpnsName = function() {
-	var ipnsName;
+	var ipnsName = null;
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") !== undefined) {
 		ipnsName = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
 	}
@@ -298,7 +298,7 @@ exports.getIpfsIpnsName = function() {
 Retrieve ipfs saver ipns key with default value if applicable
 */
 exports.getIpfsIpnsKey = function() {
-	var ipnsKey;
+	var ipnsKey = null;
 	if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") !== undefined) {
 		ipnsKey = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
 	}
@@ -378,7 +378,7 @@ exports.loadLibrary = async function(id, url) {
 				return resolve(true);
 			}
 		} catch (error) {
-			reject("Unable to load library: " + url);
+			reject(new Error("Unable to load library: " + url));
 		}
 	});
 };

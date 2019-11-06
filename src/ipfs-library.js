@@ -209,12 +209,14 @@ IpfsLibrary.prototype.add = async function(client, content) {
 					client = await client.enable({commands: ["add"]});
 				} catch (error) {
 					console.log(error.message);
-					reject("Unable to enable Ipfs add...");
+					reject(new Error("Unable to enable Ipfs add..."));
 				}
 			}
 			if (client !== undefined && client.add !== undefined) {
 				try {
-					const content = client.Buffer.from(reader.result);
+					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs buffer...");
+					const content = await client.Buffer.from(reader.result);
+					if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs buffer...");
 					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
 					const result = await client.add(content, { progress: function(len) {
 							if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
@@ -224,10 +226,10 @@ IpfsLibrary.prototype.add = async function(client, content) {
 					resolve(result);
 				} catch (error) {
 					console.log(error.message);
-					reject("Unable to Ipfs add...");
+					reject(new Error("Unable to Ipfs add..."));
 				}
 			} else {
-				reject("Undefined Ipfs add...");
+				reject(new Error("Undefined Ipfs add..."));
 			}
 		};
 		try {
@@ -236,7 +238,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			reader.readAsArrayBuffer(content);
 		} catch (error) {
 			console.log(error.message);
-			reject("Unable to process content...");
+			reject(new Error("Unable to process content..."));
 		}
   });
 }
