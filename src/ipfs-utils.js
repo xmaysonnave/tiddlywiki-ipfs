@@ -355,6 +355,7 @@ exports.getIpfsDefaultPolicy = function() {
 	return "http";
 }
 
+// https://www.srihash.org/
 exports.loadLibrary = async function(id, url, sri) {
   return new Promise((resolve, reject) => {
 		try {

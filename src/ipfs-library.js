@@ -23,7 +23,11 @@ var IpfsLibrary = function() {};
 
 IpfsLibrary.prototype.loadCidLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
-	return await $tw.utils.loadLibrary("cidLibrary", "https://unpkg.com/cids/dist/index.min.js");
+	return await $tw.utils.loadLibrary(
+		"cidLibrary",
+		"https://unpkg.com/cids@0.7.1/dist/index.js",
+		"sha384-6zHMN4Q2uxHD82AcjgyeRcV/3fOsnPzjGTVlX7QWhqu7e2nWPyFdPiC5BiTIg/AX"
+	);
 }
 
 IpfsLibrary.prototype.decodePathname = async function(pathname) {
