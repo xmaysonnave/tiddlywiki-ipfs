@@ -355,7 +355,7 @@ exports.getIpfsDefaultPolicy = function() {
 	return "http";
 }
 
-exports.loadLibrary = async function(id, url) {
+exports.loadLibrary = async function(id, url, sri) {
   return new Promise((resolve, reject) => {
 		try {
 			if (window.document.getElementById(id) == null) {
@@ -365,6 +365,9 @@ exports.loadLibrary = async function(id, url) {
         script.async = false;
         script.defer = false;
 				script.src = url;
+				if (sri) {
+					script.integrity = sri
+				}
 				script.crossorigin = "anonymous";
 				window.document.head.appendChild(script);
 				script.onload = () => {
