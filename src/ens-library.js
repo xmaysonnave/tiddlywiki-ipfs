@@ -40,7 +40,11 @@ var EnsLibrary = function() {
 
 EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
-	return await $tw.utils.loadLibrary("EtherJsLibrary", "https://cdn.ethers.io/scripts/ethers-v4.min.js");
+	return await $tw.utils.loadLibrary(
+		"EtherJsLibrary",
+		"https://unpkg.com/ethers@4.0.39/dist/ethers.js",
+		"sha384-8OdAmOJEwe+QixxnkPcSZxfA4cONi9uVFkkOYDWlA4cUaAWCP0RocfXcltWlo9gl"
+	);
 }
 
 EnsLibrary.prototype.loadContentHashLibrary = async function() {
