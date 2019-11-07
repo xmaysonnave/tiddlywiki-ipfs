@@ -356,6 +356,7 @@ exports.getIpfsDefaultPolicy = function() {
 }
 
 exports.loadLibrary = async function(id, url, sri) {
+	const err = "Unable to load: " + url;
   return new Promise((resolve, reject) => {
 		try {
 			if (window.document.getElementById(id) == null) {
@@ -366,19 +367,23 @@ exports.loadLibrary = async function(id, url, sri) {
         script.defer = false;
 				script.src = url;
 				if (sri) {
-					script.integrity = sri
+					script.integrity = sri;
 				}
 				script.crossOrigin = "anonymous";
 				window.document.head.appendChild(script);
 				script.onload = () => {
-					if ($tw.utils.getIpfsVerbose()) console.log("Library loaded: " + url);
+					console.log("Loaded: " + url);
 					resolve(true);
-				};
+				}
+				script.onerror = () => {
+					document.head.removeChild(script);
+					reject(new Error(err));
+				}
 			} else {
 				return resolve(true);
 			}
 		} catch (error) {
-			reject(new Error("Unable to load library: " + url));
+			reject(new Error(err));
 		}
 	});
 };

@@ -20,8 +20,7 @@ import getIpfs from"ipfs-provider";
 Ipfs Library
 */
 var IpfsLibrary = function() {
-	this.defaultApiUrl = "https://unpkg.com/ipfs-http-client@39.0.2/dist/index.js";
-	this.defaultApiSri = "sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e";
+	this.defaultApiUrl = "https://unpkg.com/ipfs-http-client/dist/index.min.js";
 };
 
 // https://www.srihash.org/
@@ -29,8 +28,8 @@ IpfsLibrary.prototype.loadCidLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
 	return await $tw.utils.loadLibrary(
 		"cidLibrary",
-		"https://unpkg.com/cids@0.7.1/dist/index.js",
-		"sha384-6zHMN4Q2uxHD82AcjgyeRcV/3fOsnPzjGTVlX7QWhqu7e2nWPyFdPiC5BiTIg/AX"
+		"https://unpkg.com/cids@0.7.1/dist/index.min.js",
+		"sha384-8LsVfNUZxsFjV94X1D6UnPYTWvMtbvFhechCMbfvFg/PMUcqmIIUKjIBZOOxcaIT"
 	);
 }
 
@@ -108,9 +107,10 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 			tryWebExt: true,
 			tryWindow: true,
 			tryApi: true,
-			apiUrl: this.defaultApiUrl,
-			apiSri: this.defaultApiSri,
-			apiAddress: multi,
+			apiIpfsOpts: {
+				apiUrl: this.defaultApiUrl,
+				apiAddress: multi
+			},
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
@@ -133,9 +133,7 @@ IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
 			tryWebExt: true,
 			tryWindow: false,
 			tryApi: false,
-			apiUrl: null,
-			apiSri: null,
-			apiAddress: null,
+			apiIpfsOpts: {},
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
@@ -156,9 +154,7 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 			tryWebExt: false,
 			tryWindow: true,
 			tryApi: false,
-			apiUrl: null,
-			apiSri: null,
-			apiAddress: null,
+			apiIpfsOpts: {},
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
@@ -192,9 +188,10 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 			tryWebExt: false,
 			tryWindow: false,
 			tryApi: true,
-			apiUrl: this.defaultApiUrl,
-			apiSri: this.defaultApiUrl,
-			apiAddress: multi,
+			apiIpfsOpts: {
+				apiUrl: this.defaultApiUrl,
+				apiAddress: multi
+			},
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
