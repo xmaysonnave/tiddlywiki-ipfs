@@ -368,7 +368,7 @@ exports.loadLibrary = async function(id, url, sri) {
 				if (sri) {
 					script.integrity = sri
 				}
-				script.crossorigin = "anonymous";
+				script.crossOrigin = "anonymous";
 				window.document.head.appendChild(script);
 				script.onload = () => {
 					if ($tw.utils.getIpfsVerbose()) console.log("Library loaded: " + url);
