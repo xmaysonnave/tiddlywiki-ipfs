@@ -47,18 +47,20 @@ These instructions will get you a copy of the project up and running on your loc
 <a name="running-browser"/>
 
 * Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
-* Starting with the latest online version @ https://bluelightav.eth
+* To resolve https://bluelightav.eth, and use the ENS feature, install:
 * * [Metamask for Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
 * * [Metamask for Firefox](https://addons.mozilla.org/fr/firefox/addon/ether-metamask/)
-* Starting with the latest online version @ https://bluelightav.eth.link
+* To resolve @ https://bluelightav.eth.link, install:
 * * [Ipfs Companion for Chrome](https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch)
 * * [Ipfs Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
 
 <b>Remarks:</b>
-<br/>
-* The https://tiddly.bluelightav.eth.link Url requires Ipfs Companion to be fully resolved as an Ipns indentifier otherwise [EthDNS and EthLink](https://eth.link/) is taking care of your Url. EthLink do not resolve well the https://tiddly.bluelightav.eth.link Url as browsers complain about the Https certificate. This Let's Encrypt valid certificate is a wildcard certificate but too widely opened and considered insecure by major browsers (Tested with Chrome and Firefox). The http://tiddly.bluelightav.eth.link is also available however MITM are possible.
-* The https://bluelightav.eth.link Url requires requires Ipfs Companion to be fully resolved as an Ipns identifier otherwise [EthDNS and EthLink](https://eth.link/) is taking care of your Url. In that situation browsers do not complain. The http://bluelightav.eth.link is also available however MITM are possible.
-* The https://bluelightav.eth Url requires Metamask to be fully resolved as an Ipfs identifier.
+<p>
+The https://bluelightav.eth.link Url requires Ipfs Companion to be fully resolved as an Ipns identifier. [EthDNS and EthLink](https://eth.link/) is taking care of your Url. The http://bluelightav.eth.link is also available however MITM is possible.
+</p>
+<p>
+The https://bluelightav.eth Url requires an ENS enabled browser (The Metamask browser extension provides such feature) to be fully resolved as an Ipfs identifier.
+</p>
 
 
 #### Running a local Ipfs node with Ipfs Desktop
