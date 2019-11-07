@@ -19,8 +19,12 @@ import getIpfs from"ipfs-provider";
 /*
 Ipfs Library
 */
-var IpfsLibrary = function() {};
+var IpfsLibrary = function() {
+	this.defaultApiUrl = "https://unpkg.com/ipfs-http-client@39.0.2/dist/index.js";
+	this.defaultApiSri = "sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e";
+};
 
+// https://www.srihash.org/
 IpfsLibrary.prototype.loadCidLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
 	return await $tw.utils.loadLibrary(
@@ -101,13 +105,15 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	try {
 		let { ipfs, provider } = await getIpfs({
 			// These is the defaults
-			tryWebExt: true,    					// set false to bypass WebExtension verification
-			tryWindow: true,    					// set false to bypass window.ipfs verification
-			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
-			apiAddress: multi,						// set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
-			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
+			tryWebExt: true,
+			tryWindow: true,
+			tryApi: true,
+			apiUrl: this.defaultApiUrl,
+			apiSri: this.defaultApiSri,
+			apiAddress: multi,
+			tryJsIpfs: false,
+			getJsIpfs: null,
+			jsIpfsOpts: {}
 		});
 		// Enhance provider message
 		provider = provider + ", " + multi;
@@ -124,13 +130,15 @@ IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
 	try {
 		const { ipfs, provider } = await getIpfs({
 			// These is webext only
-			tryWebExt: true,    			// set false to bypass WebExtension verification
-			tryWindow: false,    			// set false to bypass window.ipfs verification
-			tryApi: false,       			// set false to bypass js-ipfs-http-client verification
-			apiAddress: null, 				// set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   			// set true to attempt js-ipfs initialisation
-			getJsIpfs: null,    			// must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      			// set the js-ipfs options you want if tryJsIpfs is true
+			tryWebExt: true,
+			tryWindow: false,
+			tryApi: false,
+			apiUrl: null,
+			apiSri: null,
+			apiAddress: null,
+			tryJsIpfs: false,
+			getJsIpfs: null,
+			jsIpfsOpts: {}
 		});
 		return { ipfs, provider };
 	} catch (error) {
@@ -145,13 +153,15 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 	try {
 		const { ipfs, provider } = await getIpfs({
 			// These is window only
-			tryWebExt: false,   // set false to bypass WebExtension verification
-			tryWindow: true,    // set false to bypass window.ipfs verification
-			tryApi: false,      // set false to bypass js-ipfs-http-client verification
-			apiAddress: null,   // set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   // set true to attempt js-ipfs initialisation
-			getJsIpfs: null,    // must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      // set the js-ipfs options you want if tryJsIpfs is true
+			tryWebExt: false,
+			tryWindow: true,
+			tryApi: false,
+			apiUrl: null,
+			apiSri: null,
+			apiAddress: null,
+			tryJsIpfs: false,
+			getJsIpfs: null,
+			jsIpfsOpts: {}
 		});
 		return { ipfs, provider };
 	} catch (error) {
@@ -179,13 +189,15 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	try {
 		var { ipfs, provider } = await getIpfs({
 			// These is the defaults
-			tryWebExt: false,    					// set false to bypass WebExtension verification
-			tryWindow: false,    					// set false to bypass window.ipfs verification
-			tryApi: true,       					// set false to bypass js-ipfs-http-client verification
-			apiAddress: multi,						// set this to use an api in that address if tryApi is true
-			tryJsIpfs: false,   					// set true to attempt js-ipfs initialisation
-			getJsIpfs: null, 							// must be set to a js-ipfs instance if tryJsIpfs is true
-			jsIpfsOpts: {}      					// set the js-ipfs options you want if tryJsIpfs is true
+			tryWebExt: false,
+			tryWindow: false,
+			tryApi: true,
+			apiUrl: this.defaultApiUrl,
+			apiSri: this.defaultApiUrl,
+			apiAddress: multi,
+			tryJsIpfs: false,
+			getJsIpfs: null,
+			jsIpfsOpts: {}
 		});
 		// Enhance provider message
 		provider = provider + ", " + multi;

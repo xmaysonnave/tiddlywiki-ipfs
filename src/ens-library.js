@@ -38,6 +38,7 @@ var EnsLibrary = function() {
 	};
 };
 
+// https://www.srihash.org/
 EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
 	return await $tw.utils.loadLibrary(

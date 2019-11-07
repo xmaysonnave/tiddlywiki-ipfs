@@ -36,7 +36,7 @@
     "browserify-derequire": "^1.0.1",
     "browserify-unibabel": "^3.0.0",
     "buffer": "^5.4.3",
-    "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git#v0.2.6",
+    "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git",
     "multiaddr": "^7.2.0",
     "uri-to-multiaddr": "^3.0.1"
   },
