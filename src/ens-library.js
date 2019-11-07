@@ -45,7 +45,11 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 
 EnsLibrary.prototype.loadContentHashLibrary = async function() {
 	// https://github.com/pldespaigne/content-hash
-	return await $tw.utils.loadLibrary("ContentHashLibrary", "https://unpkg.com/content-hash/dist/index.js");
+	return await $tw.utils.loadLibrary(
+		"ContentHashLibrary",
+		"https://unpkg.com/content-hash@2.5.0/dist/index.js",
+		"sha384-ry6YE1osNdQt4fwhMkw+T7EtQhumW90Cc5MWXbZSya+R48qcTar8TzU2JBGXkypD"
+	);
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
