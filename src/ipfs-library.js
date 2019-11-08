@@ -196,56 +196,45 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	}
 }
 
-IpfsLibrary.prototype.add = async function(client, content) {
+IpfsLibrary.prototype.add = async function(client, blob) {
 	if (client == undefined) {
 		throw new Error("Undefined Ipfs provider...");
 	}
-	if (content == undefined) {
-		throw new Error("Undefined Ipfs content...");
+	if (blob == undefined) {
+		throw new Error("Undefined Ipfs blob...");
 	}
-  return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		// Process
-    reader.onloadend = async function () {
-			// Window Ipfs policy
-			if (client.enable) {
-				try {
-					client = await client.enable({commands: ["add"]});
-				} catch (error) {
-					console.log(error.message);
-					reject(new Error("Unable to enable Ipfs add..."));
-				}
-			}
-			if (client !== undefined && client.add !== undefined) {
-				try {
-					const content = Buffer.from(reader.result);
-					if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
-					const result = await client.add(content, { progress: function(len) {
-							if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
-						}
-					});
-					if (result == undefined || Array.isArray(result) == false || result.length == false) {
-						reject(new Error("Unable to add, retrieved an empty result..."));
-					}
-					if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs add...");
-					resolve(result);
-				} catch (error) {
-					console.log(error.message);
-					reject(new Error("Unable to Ipfs add..."));
-				}
-			} else {
-				reject(new Error("Undefined Ipfs add..."));
-			}
-		};
+	// Process blob
+	if ($tw.utils.getIpfsVerbose()) console.log("Processing blob...");
+	const arrayBuffer = await blob.arrayBuffer();
+	if ($tw.utils.getIpfsVerbose()) console.log("Processed blob...");
+	// Window Ipfs policy
+	if (client.enable) {
 		try {
-			// Read
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing content...");
-			reader.readAsArrayBuffer(content);
+			client = await client.enable({commands: ["add"]});
 		} catch (error) {
 			console.log(error.message);
-			reject(new Error("Unable to process content..."));
+			throw new Error("Unable to enable Ipfs add...");
 		}
-  });
+	}
+	// Process
+	if (client !== undefined && client.add !== undefined) {
+		try {
+			const content = Buffer.from(arrayBuffer);
+			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
+			const result = await client.add(content, { progress: function(len) {
+					if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
+				}
+			});
+			if (result == undefined || Array.isArray(result) == false || result.length == false) {
+				throw new Error("Unable to Ipfs add, received an empty result...");
+			}
+			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs add...");
+			return result;
+		} catch (error) {
+			console.log(error.message);
+			throw new Error("Unable to Ipfs add...");
+		}
+	}
 }
 
 IpfsLibrary.prototype.get = async function(client, cid) {
