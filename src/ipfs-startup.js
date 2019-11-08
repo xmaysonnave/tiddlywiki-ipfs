@@ -21,8 +21,8 @@ exports.synchronous = false;
 exports.startup = function(continueStartupCallback) {
 	// Load verbose property
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
-	// Load priority property
-	var priority = $tw.utils.updateIpfsPriority()
+	// Load priority
+	var priority = $tw.utils.getIpfsPriority()
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
 	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
 	if (protocol !== "file:") {
