@@ -228,7 +228,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Upload	current document
-		if ($tw.utils.getIpfsVerbose()) console.log("Uploading current document...");
+		if ($tw.utils.getIpfsVerbose()) console.log("Uploading current...");
 
 		// Transform the document text into a Blob
 		var blob = null;
