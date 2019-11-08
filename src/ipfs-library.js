@@ -9,6 +9,7 @@ IpfsLibrary
 
 import toMultiaddr from "uri-to-multiaddr";
 import getIpfs from"ipfs-provider";
+import CID  from "cids";
 
 ( function() {
 
@@ -20,18 +21,11 @@ import getIpfs from"ipfs-provider";
 Ipfs Library
 */
 var IpfsLibrary = function() {
-	this.defaultApiUrl = "https://unpkg.com/ipfs-http-client/dist/index.min.js";
+	// https://www.srihash.org/
+	// https://github.com/ipfs/js-ipfs-http-client
+	this.defaultApiUrl = "https://unpkg.com/ipfs-http-client@39.0.2/dist/index.js";
+	this.defaultApiSri = "sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e";
 };
-
-// https://www.srihash.org/
-IpfsLibrary.prototype.loadCidLibrary = async function() {
-	// https://github.com/ethers-io/ethers.js/
-	return await $tw.utils.loadLibrary(
-		"cidLibrary",
-		"https://unpkg.com/cids@0.7.1/dist/index.min.js",
-		"sha384-8LsVfNUZxsFjV94X1D6UnPYTWvMtbvFhechCMbfvFg/PMUcqmIIUKjIBZOOxcaIT"
-	);
-}
 
 IpfsLibrary.prototype.decodePathname = async function(pathname) {
 	// Check
@@ -76,10 +70,7 @@ IpfsLibrary.prototype.decodePathname = async function(pathname) {
 
 IpfsLibrary.prototype.isCid = async function(cid) {
 	try {
-		if (window.Cid == undefined) {
-			await this.loadCidLibrary();
-		}
-		return window.Cids.isCID(new window.Cids(cid));
+		return CID.isCID(new CID(cid));
 	} catch (error) {
 		return false;
 	}

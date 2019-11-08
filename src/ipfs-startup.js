@@ -26,7 +26,7 @@ exports.startup = function(continueStartupCallback) {
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
 	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
 	if (protocol !== "file:") {
-		if (window != undefined && window.ethereum != undefined) {
+		if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
 			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
 			window.ethereum.autoRefreshOnNetworkChange = false;
 		}

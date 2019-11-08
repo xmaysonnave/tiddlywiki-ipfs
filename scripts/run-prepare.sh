@@ -3,7 +3,6 @@
 rm -f -R ./build > /dev/null 2>&1
 rm -f -R ./tw5-kin-filter > /dev/null 2>&1
 rm -f -R ./tw5-locator > /dev/null 2>&1
-rm -f -R ./tw5-cardo > /dev/null 2>&1
 # plugin directory
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 # wiki directory
@@ -36,6 +35,3 @@ cd tw5-locator
 git checkout tags/v1.4.0 > /dev/null 2>&1
 cd ..
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
-# cardo plugin
-mkdir tw5-cardo > /dev/null 2>&1
-wget -P ./tw5-cardo http://cardo.wiki/Cardo-1.0.4.json

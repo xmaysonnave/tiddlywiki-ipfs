@@ -7,6 +7,8 @@ EnsLibrary
 
 \*/
 
+import contentHash  from "content-hash";
+
 ( function() {
 
 /*jslint node: true, browser: true */
@@ -44,16 +46,17 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 	return await $tw.utils.loadLibrary(
 		"EtherJsLibrary",
 		"https://unpkg.com/ethers@4.0.39/dist/ethers.js",
-		"sha384-8OdAmOJEwe+QixxnkPcSZxfA4cONi9uVFkkOYDWlA4cUaAWCP0RocfXcltWlo9gl"
+		"sha384-8OdAmOJEwe+QixxnkPcSZxfA4cONi9uVFkkOYDWlA4cUaAWCP0RocfXcltWlo9gl",
+		true
 	);
 }
 
-EnsLibrary.prototype.loadContentHashLibrary = async function() {
-	// https://github.com/pldespaigne/content-hash
+EnsLibrary.prototype.loadWeb3Library = async function() {
+	// https://github.com/ethers-io/ethers.js/
 	return await $tw.utils.loadLibrary(
-		"ContentHashLibrary",
-		"https://unpkg.com/content-hash@2.5.0/dist/index.js",
-		"sha384-ry6YE1osNdQt4fwhMkw+T7EtQhumW90Cc5MWXbZSya+R48qcTar8TzU2JBGXkypD"
+		"Web3Library",
+		"https://unpkg.com/web3@1.2.2/dist/web3.js",
+		"sha384-0MdOndRhW+SsaO8Ki2fauck7Zg1hULyO2e8ioobeVOW69F/1rmpaIvQLPz7KMR8w"
 	);
 }
 
@@ -64,11 +67,8 @@ EnsLibrary.prototype.decodeContenthash = async function(encoded) {
 		throw new Error(encoded.error);
   }
   if (encoded) {
-		if (window.contentHash == undefined) {
-			await this.loadContentHashLibrary();
-		}
-		decoded = window.contentHash.decode(encoded);
-		const codec = window.contentHash.getCodec(encoded);
+		decoded = contentHash.decode(encoded);
+		const codec = contentHash.getCodec(encoded);
 		if (codec === "ipfs-ns") {
 			protocol = "ipfs";
 		} else if (codec === "swarm-ns") {
@@ -96,10 +96,7 @@ EnsLibrary.prototype.encodeContenthash = async function(text) {
     }
 		if (contentType === "ipfs") {
 			if (content.length >= 4) {
-				if (window.contentHash == undefined) {
-					await this.loadContentHashLibrary();
-				}
-				encoded = "0x" + window.contentHash.fromIpfs(content);
+				encoded = "0x" + contentHash.fromIpfs(content);
 			}
 		} else {
 			throw new Error("Unsupported Ens domain protocol: " + contentType);

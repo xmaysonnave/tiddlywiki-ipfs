@@ -355,13 +355,17 @@ exports.getIpfsDefaultPolicy = function() {
 	return "http";
 }
 
-exports.loadLibrary = async function(id, url, sri) {
+exports.loadLibrary = async function(id, url, sri, module) {
 	const err = "Unable to load: " + url;
   return new Promise((resolve, reject) => {
 		try {
 			if (window.document.getElementById(id) == null) {
 				const script = document.createElement("script");
-        script.type = "text/javascript";
+				if (module == undefined) {
+					script.type = "text/javascript";
+				} else {
+					script.type = "module";
+				}
         script.id = id;
         script.async = false;
         script.defer = false;
