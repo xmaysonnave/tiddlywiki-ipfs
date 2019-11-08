@@ -930,9 +930,9 @@ IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	// process priority
 	var priority = changes["$:/ipfs/saver/priority/default"];
 	if (priority !== undefined) {
-		// Load priority property
-		var priority = $tw.utils.updateIpfsPriority()
-		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
+		// Update Ipfs saver
+		$tw.utils.updateSaver("ipfs", $tw.utils.getIpfsPriority());
+		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + $tw.utils.getIpfsPriority());
 	}
 	// process verbose
 	var verbose = changes["$:/ipfs/saver/verbose"];

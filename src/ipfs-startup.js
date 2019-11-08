@@ -22,8 +22,9 @@ exports.startup = function(continueStartupCallback) {
 	// Load verbose property
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
 	// Load priority
-	var priority = $tw.utils.getIpfsPriority()
+	var priority = $tw.utils.getIpfsPriority();
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
+	// Prevent Metamask to reload the current page when network changes
 	var { protocol } = $tw.utils.parseUrlShort(document.URL);
 	if (protocol !== "file:") {
 		if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {

@@ -138,22 +138,33 @@ exports.DecryptStringToBase64 = function(content, password) {
 	return base64;
 }
 
-exports.updateIpfsPriority = function() {
-	// Locate Ipfs saver
-	var saver;
-	for (var i = 0; i < $tw.saverHandler.savers.length; i++) {
-		var saver = $tw.saverHandler.savers[i];
-		if (saver.info.name == "ipfs") {
-			saver = $tw.saverHandler.savers[i];
-			break;
+/*
+Update a saver priority
+*/
+exports.updateSaver = function(name, priority) {
+	if (priority !== undefined && name !== undefined) {
+		// Locate saver
+		var saver = null;
+		for (var i = 0; i < $tw.saverHandler.savers.length; i++) {
+			var saver = $tw.saverHandler.savers[i];
+			if (saver.info.name === name) {
+				saver = $tw.saverHandler.savers[i];
+				break;
+			}
+		}
+		if (saver != null) {
+			// Update saver priority info
+			saver.info.priority = priority;
+			// Sort savers
+			$tw.utils.sortSavers();
 		}
 	}
-	// Process ipfs saver verbose property
-	if (saver == undefined) {
-		return;
-	}
-	// Load priority property
-	saver.info.priority = $tw.utils.getIpfsPriority();
+};
+
+/*
+Sort the savers into priority order
+*/
+exports.sortSavers = function() {
 	// Sort the savers into priority order
 	$tw.saverHandler.savers.sort(function(a, b) {
 		if (a.info.priority < b.info.priority) {
@@ -166,7 +177,7 @@ exports.updateIpfsPriority = function() {
 			}
 		}
 	});
-	return saver.info.priority;
+	return;
 }
 
 /*
