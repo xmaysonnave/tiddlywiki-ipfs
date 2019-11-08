@@ -24,7 +24,7 @@ exports.startup = function(continueStartupCallback) {
 	// Load priority
 	var priority = $tw.utils.getIpfsPriority()
 	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
-	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
+	var { protocol } = $tw.utils.parseUrlShort(document.URL);
 	if (protocol !== "file:") {
 		if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
 			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
