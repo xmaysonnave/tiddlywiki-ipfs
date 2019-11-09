@@ -226,7 +226,7 @@ IpfsLibrary.prototype.add = async function(client, blob) {
 				}
 			});
 			if (result == undefined || Array.isArray(result) == false || result.length == false) {
-				throw new Error("Unable to Ipfs add, received an empty result...");
+				throw new Error("Unable to process Ipfs add, received an empty result...");
 			}
 			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs add...");
 			return result;
