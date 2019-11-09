@@ -128,7 +128,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Getting an Ipfs client
-		var { error, ipfs, provider } = await this.ipfsWrapper.getIpfsClient();
+		var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
 		if (error != null)  {
 			console.log(error);
 			callback(error.message);
@@ -136,7 +136,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Retrieve the default empty directory to check if the connection is alive
-		var { error, empty } = await this.ipfsWrapper.getEmptyDirectory(ipfs);
+		var { error } = await this.ipfsWrapper.getEmptyDirectory(ipfs);
 		if (error != null)  {
 			console.log(error);
 			callback(error.message);
@@ -274,7 +274,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Unpin if applicable
 		if ($tw.utils.getIpfsUnpin() && this.needTobeUnpinned.length > 0) {
 			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
-				var { error, unpined } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
+				var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
 				// Log and continue
 				if (error != null)  {
 					console.log(error);
@@ -361,7 +361,7 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	if (uri == undefined || uri == null || uri.trim() === "") {
 		return tiddler;
 	}
-	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(uri);
+	const { pathname } = $tw.utils.parseUrlShort(uri);
 	const cid = pathname.substring(6);
 	// Store cid as it needs to be unpined when the wiki is saved if applicable
  	if ($tw.utils.getIpfsUnpin() && self.needTobeUnpinned.indexOf(cid) == -1) {
@@ -395,11 +395,11 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		return tiddler;
 	}
 
-	const { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(oldUri);
+	const { pathname } = $tw.utils.parseUrlShort(oldUri);
 	const cid = pathname.substring(6);
 
 	// Getting an Ipfs client
-	var { error, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
+	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -408,7 +408,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	}
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error, empty } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -485,7 +485,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
 		// Update tiddler
-		var addition = $tw.wiki.getModificationFields();
+		const addition = $tw.wiki.getModificationFields();
 		addition.title = tiddler.fields.title;
 		addition.tags = (tiddler.fields.tags || []).slice(0);
 		// Add isAttachment tag
@@ -494,17 +494,17 @@ IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
 			$tw.utils.pushTop(addition.tags, "$:/isAttachment");
 		}
 		// Add isEmbedded tag
-		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
+		index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
 		if (index == -1) {
 			$tw.utils.pushTop(addition.tags, "$:/isEmbedded");
 		}
 		// Remove isIpfs tag
-		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
+		index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
 		if (index != -1) {
 			addition.tags = self.arrayRemove(addition.tags, "$:/isIpfs");
 		}
 		// Remove isEncrypted tag
-		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
+		index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
 		if (index != -1) {
 			addition.tags = self.arrayRemove(addition.tags, "$:/isEncrypted");
 		}
@@ -536,7 +536,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 	// Check content type, only base64 is suppported yet
-	const type = tiddler.getFieldString("type");
+	var type = tiddler.getFieldString("type");
 	// default
 	if (type == undefined || type == null || type.trim() === "") {
 		type = "text/html";
@@ -550,7 +550,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 	// Process document URL
-	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
+	var { protocol, hostname, port } = $tw.utils.parseUrlShort(document.URL);
 	const currentProtocol = protocol;
 	const currentHostname = hostname;
 	const currentPort = port;
@@ -565,13 +565,13 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 	// Process Gateway URL
-	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(gatewayUrl);
+	var { protocol, hostname, port } = $tw.utils.parseUrlShort(gatewayUrl);
 	const gatewayProtocol = protocol;
 	const gatewayHostname = hostname;
 	const gatewayPort = port;
 
 	// Getting an Ipfs client
-	var { error, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
+	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -579,7 +579,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error, empty } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -673,7 +673,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	}
 
 	// Process document URL
-	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
+	var { protocol, pathname } = $tw.utils.parseUrlShort(document.URL);
 	const currentProtocol = protocol;
 	const currentPathname = pathname;
 
@@ -718,7 +718,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if (protocol === ipnsKeyword) {
 
 		// Getting an Ipfs client
-		var { error, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
+		var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 		if (error != null)  {
 			console.log(error);
 			self.errorDialog(error.message);
@@ -726,7 +726,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		}
 
 		// Retrieve the default empty directory to check if the connection is alive
-		var { error, empty } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+		var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
 		if (error != null)  {
 			console.log(error);
 			self.errorDialog(error.message);
@@ -748,6 +748,13 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		// Store Ipfs cid
 		cid = resolved.substring(6);
 
+	}
+
+	// Nothing to publish
+	if (content !== null && content === cid) {
+		console.log(error);
+		self.errorDialog("Nothing to publish. cid are up to date...");
+		return false;
 	}
 
 	if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
@@ -776,7 +783,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	// Process document URL
-	var { protocol, hostname, pathname, port } = $tw.utils.parseUrlShort(document.URL);
+	var { protocol, pathname } = $tw.utils.parseUrlShort(document.URL);
 	const currentProtocol = protocol;
 	const currentPathname = pathname;
 
@@ -820,7 +827,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	// Getting an Ipfs client
-	var { error, ipfs, provider } = await self.ipfsWrapper.getIpfsClient();
+	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -828,7 +835,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error, empty } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
@@ -907,7 +914,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	// Unpin previous
 	if ($tw.utils.getIpfsUnpin() && resolved != null) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Request to unpin: " + resolved);
-		var { error, unpined } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
+		var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
 		if (error != null)  {
 			console.log(error);
 			self.errorDialog(error.message);
