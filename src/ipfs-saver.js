@@ -752,7 +752,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
 	// Nothing to publish
 	if (content !== null && content === cid) {
-		const msg = "Nothing to publish. Ipfs identifier are up to date...";
+		const msg = "Nothing to publish. Ens content is up to date...";
 		console.log(msg);
 		self.errorDialog(msg);
 		return false;
