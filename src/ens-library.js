@@ -105,32 +105,37 @@ EnsLibrary.prototype.encodeContenthash = async function(text) {
   return encoded;
 }
 
-EnsLibrary.prototype.enableMetamask = async function() {
-	// Check if Metamask is available
-	if (window.ethereum == undefined) {
-		throw new Error("Non-ENS browser detected. You should consider installing MetaMask...");
+EnsLibrary.prototype.enableProvider = async function() {
+	// Check if an Ethereum provider is available
+	if (typeof window.ethereum === "undefined") {
+		throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
 	}
-	// Enable Metamask
+	// Enable Provider
 	let accounts;
 	try {
-		accounts = await window.ethereum.enable();
+		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
+		accounts = await window.ethereum.send("eth_requestAccounts");
 	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to enable Metamask...");
+		try {
+			// Legacy
+			accounts = await window.ethereum.enable();
+		} catch (error) {
+			console.log(error.message);
+			throw new Error("Denied Ethereum provider access...");
+		}
 	}
-	// Return current owner
+	// Return First account
 	return accounts[0];
 }
 
 EnsLibrary.prototype.getWeb3 = async function() {
-	// EnableMetamask
-	await this.enableMetamask();
-	// web3
-	if (this.web3 == undefined) {
-		if (window.ethers == undefined) {
-			await this.loadEtherJsLibrary();
-		}
-		this.web3 = new window.ethers.providers.Web3Provider(window.ethereum);
+	// Enable current Ethereum provider
+	await this.enableProvider();
+	// Load Web3
+	await this.loadWeb3Library();
+	// Instantiate Web3
+	if (typeof this.web3 === "undefined") {
+		this.web3 = new window.Web3(window.ethereum);
 	}
 	return this.web3;
 }
@@ -194,14 +199,8 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 		await this.loadEtherJsLibrary();
 	}
 	const namehash = window.ethers.utils.namehash(domain);
-	var resolver;
-	try {
-		const ens = await this.getEns();
-		resolver = await ens.resolver(namehash);
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to get Ens domain resolver...");
-	}
+	const ens = await this.getEns();
+	const resolver = await ens.resolver(namehash);
 	// Check
 	if (resolver == undefined || /^0x0+$/.test(resolver) == true) {
 		throw new Error("Undefined Ens domain resolver...");
