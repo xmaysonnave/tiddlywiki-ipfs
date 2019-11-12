@@ -23,7 +23,7 @@ Ipfs Library
 var IpfsLibrary = function() {
 	// https://www.srihash.org/
 	// https://github.com/ipfs/js-ipfs-http-client
-	this.defaultApiUrl = "https://unpkg.com/ipfs-http-client@39.0.2/dist/index.js";
+	this.defaultApiUrl = "https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.js";
 	this.defaultApiSri = "sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e";
 };
 
@@ -97,6 +97,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 			// These is the defaults
 			tryWebExt: true,
 			tryWindow: true,
+			permissions: {},
 			tryApi: true,
 			apiIpfsOpts: {
 				apiUrl: this.defaultApiUrl,
@@ -123,6 +124,7 @@ IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
 			// These is webext only
 			tryWebExt: true,
 			tryWindow: false,
+			permissions: {},
 			tryApi: false,
 			apiIpfsOpts: {},
 			tryJsIpfs: false,
@@ -144,6 +146,7 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 			// These is window only
 			tryWebExt: false,
 			tryWindow: true,
+			permissions: {},
 			tryApi: false,
 			apiIpfsOpts: {},
 			tryJsIpfs: false,
@@ -178,6 +181,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 			// These is the defaults
 			tryWebExt: false,
 			tryWindow: false,
+			permissions: {},
 			tryApi: true,
 			apiIpfsOpts: {
 				apiUrl: this.defaultApiUrl,
