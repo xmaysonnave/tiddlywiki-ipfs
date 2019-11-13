@@ -106,19 +106,19 @@ EnsLibrary.prototype.encodeContenthash = async function(text) {
 }
 
 EnsLibrary.prototype.enableProvider = async function(provider) {
+	// Check
+	if (provider == undefined || provider == null) {
+		throw new Error("Undefined Etheereum provider...");
+	}
 	// Enable Provider
-	let accounts;
-	try {
-		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-		accounts = await provider.send("eth_requestAccounts");
-	} catch (error) {
-		try {
-			// Legacy
-			accounts = await provider.enable();
-		} catch (error) {
-			console.log(error.message);
-			throw new Error("Denied Ethereum provider access...");
-		}
+	var accounts = null;
+  if (typeof provider.enable === "function") {
+    accounts = await provider.enable();
+  } else if (typeof provider.send === "function") {
+    accounts = await provider.send("eth_requestAccounts");
+	}
+	if (accounts == null || Array.isArray(accounts) == false || accounts.length == false) {
+		throw new Error("Unable to provide an Ethereum access...");
 	}
 	// Return First account
 	return accounts[0];
@@ -130,7 +130,7 @@ EnsLibrary.prototype.getProvider = function() {
 	if (typeof window.ethereum !== "undefined") {
 		provider = window.ethereum;
 	}
-	if (provider == null && window.web3 && window.web3.currentProvider) {
+	if (provider == null && window.web3 !== undefined && window.web3.currentProvider !== undefined) {
 		provider = window.web3.currentProvider;
 	}
 	if (provider == null) {
@@ -139,25 +139,20 @@ EnsLibrary.prototype.getProvider = function() {
 	return provider;
 }
 
-EnsLibrary.prototype.getWeb3 = async function(provider) {
+EnsLibrary.prototype.getWeb3 = async function() {
 	// Load Web3
 	await this.loadWeb3Library();
 	// Retrieve the current provider
-	provider = this.getProvider();
-	// Enable provider
-	const account = await this.enableProvider(provider);
-	if ($tw.utils.getIpfsVerbose()) console.log("Selected account: " + account);
+	const provider = this.getProvider();
 	// Instantiate Web3
-	if (typeof this.web3 === "undefined") {
-		this.web3 = new window.Web3(provider);
-	}
-	return this.web3;
+	const web3 = new window.Web3(provider);
+	return web3;
 }
 
-EnsLibrary.prototype.getEns = async function() {
-	// Retrieve Signer
-	const web3 = await this.getWeb3();
-	const info = await web3.eth.getNodeInfo(); // Frame or Metamask
+EnsLibrary.prototype.getEns = async function(web3) {
+	if (web3 == undefined || web3 == null) {
+		throw new Error("Undefined web3...");
+	}
 	const networkId = await web3.eth.net.getId();
 	// Ethereum Ens Registry
 	var network;
@@ -172,48 +167,30 @@ EnsLibrary.prototype.getEns = async function() {
 	if (typeof window.ethers === "undefined") {
 		await this.loadEtherJsLibrary();
 	}
-	// Signer
-	if (typeof this.provider === "undefined") {
-		this.provider = new window.ethers.providers.Web3Provider(this.getProvider());
-	}
-	// Load Ens contract
-	if (typeof this.ens === "undefined") {
-		try {
-			// https://github.com/ensdomains/ui/blob/master/src/ens.js
-			const ens = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/ens").fields.text);
-			this.ens = new window.ethers.Contract(network.registry, ens.abi, this.provider.getSigner());
-		} catch (error) {
-			console.log(error.message);
-			throw new Error("Unable to fetch Ens registry...");
-		}
-	}
-	return this.ens;
+	// Provider
+	const provider = new window.ethers.providers.Web3Provider(this.getProvider());
+	// https://github.com/ensdomains/ui/blob/master/src/ens.js
+	const contract = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/ens").fields.text);
+	const ens = new window.ethers.Contract(network.registry, contract.abi, provider.getSigner());
+	// Return web3 instance and ens contract
+	return ens;
 }
 
 EnsLibrary.prototype.getResolver = async function(resolverAddress) {
-	if (resolverAddress == undefined || /^0x0+$/.test(resolverAddress) == true) {
-		throw new Error("Undefined Ens domain resolver...");
+	// Check
+	if (resolverAddress == undefined || resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
+		throw new Error("Undefined Ens domain resolver address...");
 	}
 	// Load ethers
 	if (typeof window.ethers === "undefined") {
 		await this.loadEtherJsLibrary();
 	}
-	// Signer
-	if (typeof this.provider === "undefined") {
-		this.provider = new window.ethers.providers.Web3Provider(this.getProvider());
-	}
-	// Load Resolver contract
-	if (typeof this.resolver === "undefined") {
-		try {
-			// Mainnet Resolver address
-			const resolver = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);
-			this.resolver = new window.ethers.Contract(resolverAddress, resolver.abi, this.provider.getSigner());
-		} catch (error) {
-			console.log(error.message);
-			throw new Error("Unable to fetch Ens resolver...");
-		}
-	}
-	return this.resolver;
+	// Provider
+	const provider = new window.ethers.providers.Web3Provider(this.getProvider());
+	// https://github.com/ensdomains/ui/blob/master/src/ens.js
+	const contract = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);
+	const resolver = new window.ethers.Contract(resolverAddress, contract.abi, provider.getSigner());
+	return resolver;
 }
 
 EnsLibrary.prototype.getContenthash = async function(domain) {
@@ -224,31 +201,31 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 	if (typeof window.ethers === "undefined") {
 		await this.loadEtherJsLibrary();
 	}
+	// Getting web3 instance
+	const web3 = await this.getWeb3();
+	// Resolve domain as namehash
 	const namehash = window.ethers.utils.namehash(domain);
-	var resolver = null;
-	try {
-		const ens = await this.getEns();
-		resolver = await ens.resolver(namehash);
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to fetch Ens domain resolver...");
-	}
+	const ens = await this.getEns(web3);
+	// Current provider
+	const info = await web3.eth.getNodeInfo(); // Frame or Metamask
+	if ($tw.utils.getIpfsVerbose()) console.log("Ethereum provider: " + info);
+	// Retrieve the current provider
+	const provider = this.getProvider();
+	// Enable provider
+	const account = await this.enableProvider(provider);
+	if ($tw.utils.getIpfsVerbose()) console.log("Selected account: " + account);
+	// Fetch resolver address
+	const resolverAddress = await ens.resolver(namehash);
 	// Check
-	if (resolver == null || /^0x0+$/.test(resolver) == true) {
+	if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
 		throw new Error("Undefined Ens domain resolver...");
 	}
-	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);
+	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver address: " + resolverAddress);
 	// Load Contenthash
-	var content;
-	try {
-		resolver = await this.getResolver(resolver);
-		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens get content hash...");
-		content = await resolver.contenthash(namehash);
-		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens get content hash...");
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to fetch Ens domain content hash...");
-	}
+	const resolver = await this.getResolver(resolverAddress);
+	if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens get content hash...");
+	const content = await resolver.contenthash(namehash);
+	if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens get content hash...");
 	const decoded = await this.decodeContenthash(content);
 	return decoded;
 }
@@ -264,35 +241,35 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	if (typeof window.ethers === "undefined") {
 		await this.loadEtherJsLibrary();
 	}
+	// Getting web3 instance
+	const web3 = await this.getWeb3();
+	// Resolve domain as namehash
 	const namehash = window.ethers.utils.namehash(domain);
 	const encoded = await this.encodeContenthash("ipfs://" + cid);
-	var resolver = null;
-	try {
-		const ens = await this.getEns();
-		resolver = await ens.resolver(namehash);
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to fetch Ens domain resolver...");
-	}
+	const ens = await this.getEns(web3);
+	// Current provider
+	const info = await web3.eth.getNodeInfo(); // Frame or Metamask
+	if ($tw.utils.getIpfsVerbose()) console.log("Ethereum provider: " + info);
+	// Retrieve the current provider
+	const provider = this.getProvider();
+	// Enable provider
+	const account = await this.enableProvider(provider);
+	if ($tw.utils.getIpfsVerbose()) console.log("Selected account: " + account);
+	// Fetch resolver address
+	const resolverAddress = await ens.resolver(namehash);
 	// Exist
-	if (resolver == null || /^0x0+$/.test(resolver) == true) {
-		throw new Error("Undefined Ens domain resolver...");
+	if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
+		throw new Error("Undefined Ens domain resolver address...");
 	}
-	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver: " + resolver);
+	if ($tw.utils.getIpfsVerbose()) console.log("Fetched Ens domain resolver address: " + resolverAddress);
 	// Set Contenthash
-	try {
-		resolver = await this.getResolver(resolver);
-		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content hash...");
-		var tx = await resolver.setContenthash(namehash, encoded);
-		if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
-		// Wait for transaction completion
-		await tx.wait();
-		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to set Ens domain content hash...");
-	}
-	return;
+	const resolver = await this.getResolver(resolverAddress);
+	if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content...");
+	var tx = await resolver.setContenthash(namehash, encoded);
+	if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
+	// Wait for transaction completion
+	await tx.wait();
+	if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content...");
 }
 
 exports.EnsLibrary = EnsLibrary;
