@@ -12,7 +12,6 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 <<lingo Policy>>
 <$radio tiddler="$:/ipfs/saver/policy" value="default"> <<lingo Policy/Default/Description>> </$radio>
-<$radio tiddler="$:/ipfs/saver/policy" value="webext"> <<lingo Policy/Webext/Description>> </$radio>
 <$radio tiddler="$:/ipfs/saver/policy" value="window"> <<lingo Policy/Window/Description>> </$radio>
 <$radio tiddler="$:/ipfs/saver/policy" value="http"> <<lingo Policy/HTTP/Description>> </$radio>
 

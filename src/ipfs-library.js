@@ -95,7 +95,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	try {
 		let { ipfs, provider } = await getIpfs({
 			// These is the defaults
-			tryWebExt: true,
+			tryWebExt: false,
 			tryWindow: true,
 			permissions: {},
 			tryApi: true,
@@ -113,28 +113,6 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	} catch (error) {
 		console.log(error.message);
 		throw new Error("Ipfs default is unavailable...");
-	}
-}
-
-// WebExtension
-IpfsLibrary.prototype.getWebExtensionIpfs = async function() {
-	// Getting
-	try {
-		const { ipfs, provider } = await getIpfs({
-			// These is webext only
-			tryWebExt: true,
-			tryWindow: false,
-			permissions: {},
-			tryApi: false,
-			apiIpfsOpts: {},
-			tryJsIpfs: false,
-			getJsIpfs: null,
-			jsIpfsOpts: {}
-		});
-		return { ipfs, provider };
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Ipfs WebExtension is unavailable...");
 	}
 }
 

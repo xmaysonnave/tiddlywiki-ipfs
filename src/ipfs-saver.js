@@ -253,7 +253,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs
 			if (ipfsCid === ipnsKey || ipfsProtocol === ipfsKeyword) {
 				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
-				var { error, published } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
+				var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
 				if (error != null)  {
 					console.log(error);
 					callback(error.message);

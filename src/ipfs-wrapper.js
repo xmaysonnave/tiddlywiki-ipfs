@@ -30,11 +30,7 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 		var tmpIpfs;
 		var tmpProvider;
 		const policy = $tw.utils.getIpfsPolicy();
-		if (policy === "webext") {
-			const { ipfs, provider } = await this.ipfsLibrary.getWebExtensionIpfs();
-			tmpIpfs = ipfs;
-			tmpProvider = provider;
-		} else if (policy === "window") {
+ 		if (policy === "window") {
 			const { ipfs, provider } = await this.ipfsLibrary.getWindowIpfs();
 			tmpIpfs = ipfs;
 			tmpProvider = provider;
