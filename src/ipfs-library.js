@@ -10,6 +10,7 @@ IpfsLibrary
 import toMultiaddr from "uri-to-multiaddr";
 import getIpfs from"ipfs-provider";
 import CID  from "cids";
+import Readable from "readable-stream";
 
 ( function() {
 
@@ -178,17 +179,13 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	}
 }
 
-IpfsLibrary.prototype.add = async function(client, blob) {
+IpfsLibrary.prototype.add = async function(client, data) {
 	if (client == undefined) {
 		throw new Error("Undefined Ipfs provider...");
 	}
-	if (blob == undefined) {
-		throw new Error("Undefined Ipfs blob...");
+	if (data == undefined) {
+		throw new Error("Undefined data...");
 	}
-	// Process blob
-	if ($tw.utils.getIpfsVerbose()) console.log("Processing blob...");
-	const arrayBuffer = await blob.arrayBuffer();
-	if ($tw.utils.getIpfsVerbose()) console.log("Processed blob...");
 	// Window Ipfs policy
 	if (client.enable) {
 		try {
@@ -201,13 +198,15 @@ IpfsLibrary.prototype.add = async function(client, blob) {
 	// Process
 	if (client !== undefined && client.add !== undefined) {
 		try {
-			const content = Buffer.from(arrayBuffer);
+			const stream = new Readable();
+			stream.push(Buffer.from(data));
+			stream.push(null);
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
-			const result = await client.add(content, { progress: function(len) {
+			const result = await client.add(stream, { progress: function(len) {
 					if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
 				}
 			});
-			if (result == undefined || Array.isArray(result) == false || result.length == false) {
+			if (result === null || Array.isArray(result) === false || result.length === false) {
 				throw new Error("Unable to process Ipfs add, received an empty result...");
 			}
 			if ($tw.utils.getIpfsVerbose()) console.log("Processed Ipfs add...");

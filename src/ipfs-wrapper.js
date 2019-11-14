@@ -133,11 +133,11 @@ IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 		}
 }
 
-IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
+IpfsWrapper.prototype.addToIpfs = async function(ipfs, data) {
 	// Add
 	try {
-		const added = await this.ipfsLibrary.add(ipfs, blob);
-		if (added == undefined || added[0] == undefined || added[0].hash == undefined) {
+		const added = await this.ipfsLibrary.add(ipfs, data);
+		if (added === null || Array.isArray(added) === false || added.length === false) {
 			return {
 				error: new Error("Failed to add content..."),
 				added: null
@@ -146,7 +146,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, blob) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Successfully added content: " + ipfsKeyword + added[0].hash);
 		return {
 			error: null,
-			added: added
+			added: added[0].hash
 		};
 	} catch (error) {
 		return {

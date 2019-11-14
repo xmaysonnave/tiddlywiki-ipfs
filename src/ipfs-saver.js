@@ -230,18 +230,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Upload	current document
 		if ($tw.utils.getIpfsVerbose()) console.log("Uploading current...");
 
-		// Transform the document text into a Blob
-		var blob = null;
-		try {
-			blob = new Blob([text], { type: "text/html" });
-		} catch (error) {
-			console.log(error);
-			callback(error.message);
-			return false;
-		};
-
-		// Upload
-		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, blob);
+		// Add
+		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
 		if (error != null)  {
 			console.log(error);
 			callback(error.message);
@@ -253,7 +243,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs
 			if (ipfsCid === ipnsKey || ipfsProtocol === ipfsKeyword) {
 				if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
-				var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added[0].hash);
+				var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added);
 				if (error != null)  {
 					console.log(error);
 					callback(error.message);
@@ -263,7 +253,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Publish to Ens if ens is requested
 		} else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
 			if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ens domain: " + ensDomain);
-			var { error } = await this.ensWrapper.setContenthash(ensDomain, added[0].hash);
+			var { error } = await this.ensWrapper.setContenthash(ensDomain, added);
 			if (error != null)  {
 				console.log(error);
 				callback(error.message);
@@ -295,7 +285,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 				cid = "/" + ipnsKeyword + "/" + ipfsCid;
 			}
 		} else {
-			cid = "/" + ipfsKeyword + "/" + added[0].hash;
+			cid = "/" + ipfsKeyword + "/" + added;
 		}
 		if (currentProtocol === fileProtocol) {
 			var url;
@@ -315,7 +305,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			const url = "https://" + ensDomain;
 			if ($tw.utils.getIpfsVerbose()) console.log("Assigning new location: " + url);
 			window.location.assign(url);
-		} else if (($tw.utils.getIpfsProtocol() === ipfsKeyword || ipfsProtocol === ipfsKeyword) && cid != added[0].hash) {
+		} else if (($tw.utils.getIpfsProtocol() === ipfsKeyword || ipfsProtocol === ipfsKeyword) && cid != added) {
 			var url;
 			if (currentHostname == gatewayHostname) {
 				url = currentProtocol + "//" + currentHostname + currentPort + cid;
@@ -588,34 +578,30 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 
 	// Upload	current attachment
 	if ($tw.utils.getIpfsVerbose()) console.log("Uploading attachment...");
-	// Transform the base64 encoded file into a Blob
-	var blob = null;
+	// Transform the base64 encoded content into an Array
+	var content = tiddler.getFieldString("text");
 	try {
-		// Content
-		var content = tiddler.getFieldString("text");
 		// Encrypt if tiddlywiki is password protected
 		if ($tw.crypto.hasPassword()) {
 			const decodedBase64 = atob(content);
 			const encryptedText = $tw.crypto.encrypt(decodedBase64, null);
 			content = $tw.utils.StringToUint8Array(encryptedText);
-			type = "application/octet-stream";
 		} else {
 			content = $tw.utils.Base64ToUint8Array(content);
 		}
-		blob = new Blob([content], { type: type });
 	} catch (error) {
 		console.log(error);
 		self.errorDialog("Failed to transform attachment...");
 		return false;
 	};
+
 	// Add
-	var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, blob);
+	var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, content);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;
 	}
-	const cid = added[0].hash;
 
 	// Update current tiddler
 	const addition = $tw.wiki.getModificationFields();
@@ -643,12 +629,12 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	// Process _canonical_uri
 	var url;
 	if (currentProtocol === fileProtocol) {
-		url = gatewayProtocol + "//" + gatewayHostname + gatewayPort + "/" + ipfsKeyword + "/" + cid;
+		url = gatewayProtocol + "//" + gatewayHostname + gatewayPort + "/" + ipfsKeyword + "/" + added;
 	} else {
 		if (currentHostname == gatewayHostname) {
-			url = currentProtocol + "//" + currentHostname + currentPort + "/" + ipfsKeyword + "/" + cid;
+			url = currentProtocol + "//" + currentHostname + currentPort + "/" + ipfsKeyword + "/" + added;
 		} else {
-			url = gatewayProtocol + "//" + gatewayHostname + gatewayPort + "/" + ipfsKeyword + "/" + cid;
+			url = gatewayProtocol + "//" + gatewayHostname + gatewayPort + "/" + ipfsKeyword + "/" + added;
 		}
 	}
 	addition["_canonical_uri"] = url;
@@ -903,7 +889,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	if ($tw.utils.getIpfsVerbose()) console.log("Publishing Ipns name: " + ipnsName);
-	var { error, published } = await self.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
+	var { error } = await self.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
 	if (error != null) {
 		console.log(error);
 		self.errorDialog(error.message);
