@@ -21,12 +21,17 @@ import Readable from "readable-stream";
 /*
 Ipfs Library
 */
-var IpfsLibrary = function() {
-	// https://www.srihash.org/
+var IpfsLibrary = function() {};
+
+// https://www.srihash.org/
+IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
 	// https://github.com/ipfs/js-ipfs-http-client
-	this.defaultApiUrl = "https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/src/index.min.js";
-	this.defaultApiSri = "sha384-vAmDNnZEhDVe9nH8pTxrQ/GuPe5U3LSEMkBmlohtFkJMTUHzU/RkjtOFbXwiz+SS";
-};
+	await $tw.utils.loadLibrary(
+		"IpfsHttpLibrary",
+		"https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.js",
+		"sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e"
+	);
+}
 
 IpfsLibrary.prototype.decodePathname = async function(pathname) {
 	// Check
@@ -92,6 +97,10 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 		console.log(error.message);
 		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
+	// Load Web3 if applicable
+	if (typeof window.IpfsHttpClient === "undefined") {
+		await this.loadIpfsHttpLibrary();
+	}
 	// Getting
 	try {
 		let { ipfs, provider } = await getIpfs({
@@ -102,7 +111,8 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 			tryApi: true,
 			apiIpfsOpts: {
 				apiUrl: this.defaultApiUrl,
-				apiAddress: multi
+				apiAddress: multi,
+				IpfsApi: window.IpfsHttpClient
 			},
 			tryJsIpfs: false,
 			getJsIpfs: null,
@@ -154,6 +164,10 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 		console.log(error.message);
 		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
+	// Load Web3 if applicable
+	if (typeof window.IpfsHttpClient === "undefined") {
+		await this.loadIpfsHttpLibrary();
+	}
 	// Getting
 	try {
 		var { ipfs, provider } = await getIpfs({
@@ -164,7 +178,8 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 			tryApi: true,
 			apiIpfsOpts: {
 				apiUrl: this.defaultApiUrl,
-				apiAddress: multi
+				apiAddress: multi,
+				IpfsApi: window.IpfsHttpClient
 			},
 			tryJsIpfs: false,
 			getJsIpfs: null,
