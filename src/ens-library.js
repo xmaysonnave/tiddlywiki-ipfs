@@ -117,7 +117,7 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
   } else if (typeof provider.send === "function") {
     accounts = await provider.send("eth_requestAccounts");
 	}
-	if (accounts == null || Array.isArray(accounts) == false || accounts.length == false) {
+	if (accounts == undefined || accounts == null || Array.isArray(accounts) == false || accounts.length == 0) {
 		throw new Error("Unable to retrieve an Ethereum account...");
 	}
 	// Return First account

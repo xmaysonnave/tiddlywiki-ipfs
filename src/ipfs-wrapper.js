@@ -137,7 +137,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
 	// Add
 	try {
 		const added = await this.ipfsLibrary.add(ipfs, content);
-		if (added === undefined || Array.isArray(added) === false || added.length === false) {
+		if (added == undefined || added == null || Array.isArray(added) == false || added.length == 0) {
 			return {
 				error: new Error("Failed to add content..."),
 				added: null
@@ -160,7 +160,7 @@ IpfsWrapper.prototype.addFromStreamToIpfs = async function(ipfs, content) {
 	// Add
 	try {
 		const added = await this.ipfsLibrary.addFromStream(ipfs, content);
-		if (added === undefined || Array.isArray(added) === false || added.length === false) {
+		if (added == undefined || added == null || Array.isArray(added) == false || added.length == 0) {
 			return {
 				error: new Error("Failed to add stream content..."),
 				added: null
