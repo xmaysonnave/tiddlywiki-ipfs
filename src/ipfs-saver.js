@@ -177,12 +177,10 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			}
 
 			// Check
-			// Resolve ipnsKey
+			// Resolve ipnsKey, if failure log and continue
 			var { error, resolved } = await this.ipfsWrapper.resolveFromIpfs(ipfs, ipnsKey);
 			if (error != null) {
-				console.log(error);
-				callback(error.message);
-				return false;
+				console.log(error.message);
 			}
 			// Store to unpin previous if any
 			if ($tw.utils.getIpfsUnpin() && resolved != null) {
@@ -231,7 +229,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Uploading current...");
 
 		// Add
-		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
+		var { error, added } = await this.ipfsWrapper.addFromStreamToIpfs(ipfs, text);
 		if (error != null)  {
 			console.log(error);
 			callback(error.message);
@@ -596,7 +594,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	};
 
 	// Add
-	var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, content);
+	var { error, added } = await self.ipfsWrapper.addFromStreamToIpfs(ipfs, content);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);

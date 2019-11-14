@@ -7,7 +7,7 @@ EnsLibrary
 
 \*/
 
-import contentHash  from "content-hash";
+import contentHash from "content-hash";
 
 ( function() {
 
