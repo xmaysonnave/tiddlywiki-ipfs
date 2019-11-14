@@ -45,8 +45,8 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 	// https://github.com/ethers-io/ethers.js/
 	await $tw.utils.loadLibrary(
 		"EthersLibrary",
-		"https://cdn.jsdelivr.net/npm/ethers@4.0.39/dist/ethers.js",
-		"sha384-8OdAmOJEwe+QixxnkPcSZxfA4cONi9uVFkkOYDWlA4cUaAWCP0RocfXcltWlo9gl",
+		"https://cdn.jsdelivr.net/npm/ethers@4.0.39/dist/ethers.min.js",
+		"sha256-yz1Dxy0deOtTgNuwHqGn5+cEA2ONb+siQ4mXgLIK7QI=",
 		true
 	);
 }
@@ -55,8 +55,8 @@ EnsLibrary.prototype.loadWeb3Library = async function() {
 	// https://github.com/ethereum/web3.js/
 	await $tw.utils.loadLibrary(
 		"Web3JsLibrary",
-		"https://cdn.jsdelivr.net/npm/web3@1.2.2/dist/web3.js",
-		"sha384-0MdOndRhW+SsaO8Ki2fauck7Zg1hULyO2e8ioobeVOW69F/1rmpaIvQLPz7KMR8w"
+		"https://cdn.jsdelivr.net/npm/web3@1.2.2/dist/web3.min.js",
+		"sha256-b97Eq0wEAfrYPDDkqiqkHKTCtkEY4w2VsbcyVHjsmgo="
 	);
 }
 

@@ -24,8 +24,8 @@ Ipfs Library
 var IpfsLibrary = function() {
 	// https://www.srihash.org/
 	// https://github.com/ipfs/js-ipfs-http-client
-	this.defaultApiUrl = "https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.js";
-	this.defaultApiSri = "sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e";
+	this.defaultApiUrl = "https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/src/index.min.js";
+	this.defaultApiSri = "sha384-vAmDNnZEhDVe9nH8pTxrQ/GuPe5U3LSEMkBmlohtFkJMTUHzU/RkjtOFbXwiz+SS";
 };
 
 IpfsLibrary.prototype.decodePathname = async function(pathname) {
