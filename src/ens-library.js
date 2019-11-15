@@ -46,7 +46,7 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 	await $tw.utils.loadLibrary(
 		"EthersLibrary",
 		"https://cdn.jsdelivr.net/npm/ethers@4.0.39/dist/ethers.min.js",
-		"sha256-yz1Dxy0deOtTgNuwHqGn5+cEA2ONb+siQ4mXgLIK7QI=",
+		"sha384-iUpsQG19EWNiS8wjUZ9Z0iXfJIZ7/aCTG6QTiL057CoEKAP4+iGPeqzf18rC1w83",
 		true
 	);
 }
@@ -56,7 +56,7 @@ EnsLibrary.prototype.loadWeb3Library = async function() {
 	await $tw.utils.loadLibrary(
 		"Web3JsLibrary",
 		"https://cdn.jsdelivr.net/npm/web3@1.2.2/dist/web3.min.js",
-		"sha256-b97Eq0wEAfrYPDDkqiqkHKTCtkEY4w2VsbcyVHjsmgo="
+		"sha384-WMJZElR6LYJyPYjdf+2SCOYuE/zLSKcZ2gTs+CzYUJAMn91FKQVxDnyek+GmQJ03"
 	);
 }
 
@@ -112,8 +112,11 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 	}
 	// Enable Provider
 	var accounts = null;
-  if (typeof provider.send === "function") {
-		// Handle connecting, per EIP 1102
+	// Legacy
+	if (typeof provider.enable === "function") {
+		accounts = await provider.enable();
+	// Handle connecting, per EIP 1102
+  } else if (typeof provider.send === "function") {
 		try {
 			await provider.send("eth_requestAccounts");
 		} catch (error) {
@@ -121,7 +124,7 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 			if (error.code === 4001) {
 				throw new Error("Rejected connection request...");
 			}
-			throw new Error(error.messsage);
+			throw new Error(error.message);
 		}
 		// Handle user accounts per EIP 1193
 		accounts = await provider.send("eth_accounts");
@@ -130,10 +133,7 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 		if (accounts !== undefined && accounts !== null && typeof accounts.result !== "undefined" && Array.isArray(accounts.result)) {
 			accounts = accounts.result;
 		}
-	} else if (typeof provider.enable === "function") {
-		// Legacy
-    accounts = await provider.enable();
-  }
+	}
 	if (accounts == undefined || accounts == null || Array.isArray(accounts) == false || accounts.length == 0) {
 		throw new Error("Unable to retrieve an Ethereum account...");
 	}
@@ -157,12 +157,16 @@ EnsLibrary.prototype.getProvider = function() {
 }
 
 EnsLibrary.prototype.getWeb3Provider = async function() {
+	// Retrieve the current provider
+	const provider = this.getProvider();
+	// Load ethers
+	if (typeof window.ethers === "undefined") {
+		await this.loadEtherJsLibrary();
+	}
 	// Load Web3 if applicable
 	if (typeof window.Web3 === "undefined") {
 		await this.loadWeb3Library();
 	}
-	// Retrieve the current provider
-	const provider = this.getProvider();
 	// Instantiate Web3 to retrieve its api version and provider name
 	const web3 = new window.Web3(provider);
 	// Current api info
@@ -234,10 +238,6 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 	if (domain == undefined || domain == null || domain.trim() === "") {
 		throw new Error("Undefined Ens domain...");
 	}
-	// Load ethers
-	if (typeof window.ethers === "undefined") {
-		await this.loadEtherJsLibrary();
-	}
 	// Retrieve the current provider
 	const provider = this.getProvider();
 	// Getting web3 provider
@@ -275,10 +275,6 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	}
 	if (cid == undefined || cid == null || cid.trim() === "") {
 		throw new Error("Undefined Ipfs identifier...");
-	}
-	// Load ethers
-	if (typeof window.ethers === "undefined") {
-		await this.loadEtherJsLibrary();
 	}
 	// Retrieve the current provider
 	const provider = this.getProvider();

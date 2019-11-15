@@ -232,43 +232,6 @@ IpfsLibrary.prototype.add = async function(client, content) {
 	}
 }
 
-IpfsLibrary.prototype.addFromStream = async function(client, content) {
-	if (client == undefined) {
-		throw new Error("Undefined Ipfs provider...");
-	}
-	if (content == undefined) {
-		throw new Error("Undefined content...");
-	}
-	// Window Ipfs policy
-	if (client.enable) {
-		try {
-			client = await client.enable({commands: ["addFromStream"]});
-		} catch (error) {
-			console.log(error.message);
-			throw new Error("Unable to enable Ipfs addFromStream...");
-		}
-	}
-	// Process
-	if (client !== undefined && client.addFromStream !== undefined) {
-		try {
-			// Build stream
-			const stream = new Readable();
-			stream.push(Buffer.from(content));
-			stream.push(null);
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs addFromStream...");
-			// https://github.com/ipfs/go-ipfs/issues/5683
-			const result = await client.addFromStream(stream, { pin: false,trickle: true, progress: function(len) {
-					if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
-				}
-			});
-			return result;
-		} catch (error) {
-			console.log(error.message);
-			throw new Error("Unable to Ipfs addFromStream...");
-		}
-	}
-}
-
 IpfsLibrary.prototype.get = async function(client, cid) {
 	if (client == undefined) {
 		throw new Error("Undefined Ipfs provider...");

@@ -229,7 +229,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		if ($tw.utils.getIpfsVerbose()) console.log("Uploading current...");
 
 		// Add
-		var { error, added } = await this.ipfsWrapper.addFromStreamToIpfs(ipfs, text);
+		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
 		if (error != null)  {
 			console.log(error);
 			callback(error.message);
@@ -600,7 +600,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	};
 
 	// Add
-	var { error, added } = await self.ipfsWrapper.addFromStreamToIpfs(ipfs, content);
+	var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, content);
 	if (error != null)  {
 		console.log(error);
 		self.errorDialog(error.message);

@@ -150,29 +150,6 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
 	};
 }
 
-IpfsWrapper.prototype.addFromStreamToIpfs = async function(ipfs, content) {
-	// Add
-	try {
-		const added = await this.ipfsLibrary.addFromStream(ipfs, content);
-		if (added == undefined || added == null || Array.isArray(added) == false || added.length == 0) {
-			return {
-				error: new Error("Failed to add stream content..."),
-				added: null
-			};
-		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully added stream content: " + ipfsKeyword + added[0].hash);
-		return {
-			error: null,
-			added: added[0].hash
-		};
-	} catch (error) {
-		return {
-			error: error,
-			added: null
-		};
-	};
-}
-
 IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 	// Resolve
 	try {
