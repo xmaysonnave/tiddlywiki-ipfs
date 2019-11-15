@@ -220,7 +220,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			// Process
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
 			// https://github.com/ipfs/go-ipfs/issues/5683
-			const result = await client.add(stream, { trickle: true, progress: function(len) {
+			const result = await client.add(stream, { pin: false, trickle: true, progress: function(len) {
 					if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
 				}
 			});
@@ -257,7 +257,7 @@ IpfsLibrary.prototype.addFromStream = async function(client, content) {
 			stream.push(null);
 			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs addFromStream...");
 			// https://github.com/ipfs/go-ipfs/issues/5683
-			const result = await client.addFromStream(stream, { trickle: true, progress: function(len) {
+			const result = await client.addFromStream(stream, { pin: false,trickle: true, progress: function(len) {
 					if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
 				}
 			});

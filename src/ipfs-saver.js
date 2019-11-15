@@ -236,6 +236,12 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			return false;
 		}
 
+		// Pin, if failure log and continue
+		var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
+		if (error != null)  {
+			console.log(error);
+		}
+
 		// Publish to Ipns if current protocol is ipns or ipns is requested
 		if ($tw.utils.getIpfsProtocol() === ipnsKeyword || ipfsProtocol === ipnsKeyword) {
 			// Publish to Ipns if ipnsKey match the current hash or current protocol is ipfs
@@ -408,7 +414,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	if (newUri == undefined || newUri == null || newUri.trim() === "") {
 
 		// Fetch the old cid
-		var { error, fetched } = await self.ipfsWrapper.fetch(ipfs, cid);
+		var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
 		if (error != null)  {
 			console.log(error);
 			self.errorDialog(error.message);
@@ -599,6 +605,12 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		console.log(error);
 		self.errorDialog(error.message);
 		return false;
+	}
+
+	// Pin, if failure log and continue
+	var { error } = await self.ipfsWrapper.pinToIpfs(ipfs, added);
+	if (error != null)  {
+		console.log(error);
 	}
 
 	// Update current tiddler

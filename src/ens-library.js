@@ -112,11 +112,28 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 	}
 	// Enable Provider
 	var accounts = null;
-  if (typeof provider.enable === "function") {
+  if (typeof provider.send === "function") {
+		// Handle connecting, per EIP 1102
+		try {
+			await provider.send("eth_requestAccounts");
+		} catch (error) {
+			// EIP 1193 userRejectedRequest error
+			if (error.code === 4001) {
+				throw new Error("Rejected connection request...");
+			}
+			throw new Error(error.messsage);
+		}
+		// Handle user accounts per EIP 1193
+		accounts = await provider.send("eth_accounts");
+		// https://medium.com/metamask/breaking-changes-to-the-metamask-inpage-provider-b4dde069dd0a
+		// Metmask returns accounts.results rather than an array as described in their above communication
+		if (accounts !== undefined && accounts !== null && typeof accounts.result !== "undefined" && Array.isArray(accounts.result)) {
+			accounts = accounts.result;
+		}
+	} else if (typeof provider.enable === "function") {
+		// Legacy
     accounts = await provider.enable();
-  } else if (typeof provider.send === "function") {
-    accounts = await provider.send("eth_requestAccounts");
-	}
+  }
 	if (accounts == undefined || accounts == null || Array.isArray(accounts) == false || accounts.length == 0) {
 		throw new Error("Unable to retrieve an Ethereum account...");
 	}

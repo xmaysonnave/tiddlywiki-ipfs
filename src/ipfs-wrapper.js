@@ -27,35 +27,29 @@ var IpfsWrapper = function() {
 IpfsWrapper.prototype.getIpfsClient = async function() {
 	// Getting an Ipfs client
 	try {
-		var tmpIpfs;
-		var tmpProvider;
+		var ipfs = null;
+		var provider = null;
 		const policy = $tw.utils.getIpfsPolicy();
  		if (policy === "window") {
-			const { ipfs, provider } = await this.ipfsLibrary.getWindowIpfs();
-			tmpIpfs = ipfs;
-			tmpProvider = provider;
+			var { ipfs, provider } = await this.ipfsLibrary.getWindowIpfs();
 		} else if (policy === "http") {
-			const { ipfs, provider } = await this.ipfsLibrary.getHttpIpfs();
-			tmpIpfs = ipfs;
-			tmpProvider = provider;
+			var { ipfs, provider } = await this.ipfsLibrary.getHttpIpfs();
 		} else  {
-		 const { ipfs, provider }  = await this.ipfsLibrary.getDefaultIpfs();
-		 tmpIpfs = ipfs;
-		 tmpProvider = provider;
+			var { ipfs, provider }  = await this.ipfsLibrary.getDefaultIpfs();
 		}
 		// Return if undefined
-		if (tmpIpfs == undefined)  {
+		if (ipfs == undefined || ipfs == null || provider == undefined || provider == null)  {
 			return {
 				error: new Error("Failed to get an Ipfs provider..."),
 				ipfs: null,
 				provider: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs provider: " + tmpProvider);
+		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs provider: " + provider);
 		return {
 			error: null,
-			ipfs: tmpIpfs,
-			provider: tmpProvider
+			ipfs: ipfs,
+			provider: provider
 		};
 	} catch (error) {
 		return {
@@ -88,7 +82,7 @@ IpfsWrapper.prototype.getKeys = async function(ipfs) {
 	}
 }
 
-IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
+IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
 	try {
 		const fetched = await this.ipfsLibrary.cat(ipfs, ipfsKeyword + cid);
 		if (fetched == undefined)  {
@@ -111,8 +105,8 @@ IpfsWrapper.prototype.fetch = async function(ipfs, cid) {
 }
 
 IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
-		// Fetch the default empty directory to check if the connection is alive
 		try {
+			// Fetch the default empty directory to check if the connection is alive
 			const empty = await this.ipfsLibrary.get(ipfs, ipfsKeyword + "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
 			if (empty == undefined)  {
 				return {
@@ -232,18 +226,18 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 		if (pined == undefined) {
 			return {
 				error: new Error( "Failed to pin: " + ipfsKeyword + cid),
-				unpined: null
+				pined: null
 			};
 		}
 		if ($tw.utils.getIpfsVerbose()) console.log("Successfully pined: " + ipfsKeyword + cid);
 		return {
 			error: null,
-			unpined: pined
+			pined: pined
 		};
 	} catch (error) {
 		return {
 			error: error,
-			unpined: null
+			pined: null
 		};
 	};
 }
