@@ -19,27 +19,28 @@ const EnsLibrary = require("$:/plugins/ipfs/ens-library.js").EnsLibrary;
 Ens Wrapper
 */
 var EnsWrapper = function() {
-	this.ensLibrary = new EnsLibrary();	
+	this.ensLibrary = new EnsLibrary();
 }
 
 EnsWrapper.prototype.getContenthash = async function(domain) {
 	try {
 		const { decoded, protocol } = await this.ensLibrary.getContenthash(domain);
-		if (decoded == undefined || decoded == null)  {
-			return { 
-				error: new Error("Failed to fetch Ens domain content: " + domain),
+		if (decoded !== undefined && decoded !== null && protocol !== undefined && protocol !== null)  {
+			if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched Ens domain content, protocol: " + protocol + ", " + decoded);
+			return {
+				error: null,
+				protocol: protocol,
+				content: decoded
+			};
+		} else {
+			return {
+				error: null,
 				protocol: null,
 				content: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched Ens domain content, protocol: " + protocol + ", " + decoded);	
-		return { 
-			error: null, 
-			protocol: protocol,
-			content: decoded
-		};
 	} catch (error) {
-		return { 
+		return {
 			error: error,
 			protocol: null,
 			content: null
@@ -50,12 +51,12 @@ EnsWrapper.prototype.getContenthash = async function(domain) {
 EnsWrapper.prototype.setContenthash = async function(domain, cid) {
 	try {
 		await this.ensLibrary.setContenthash(domain, cid);
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully set Ens domain content: " + cid);	
-		return { 
+		if ($tw.utils.getIpfsVerbose()) console.log("Successfully set Ens domain content: " + cid);
+		return {
 			error: null
 		};
 	} catch (error) {
-		return { 
+		return {
 			error: error
 		};
 	}
