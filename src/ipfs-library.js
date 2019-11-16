@@ -7,10 +7,10 @@ IpfsLibrary
 
 \*/
 
-import CID  from "cids";
-import getIpfs from"ipfs-provider";
-import toMultiaddr from "uri-to-multiaddr";
-import Readable from "readable-stream";
+const CID  = require("cids");
+const getIpfs = require("ipfs-provider");
+const toMultiaddr = require("uri-to-multiaddr");
+const Readable = require("readable-stream");
 
 ( function() {
 
