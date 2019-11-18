@@ -20,10 +20,10 @@ exports.synchronous = false;
 
 exports.startup = function(continueStartupCallback) {
 	// Load verbose property
-	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
+	if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver is verbose");
 	// Load priority
 	var priority = $tw.utils.getIpfsPriority();
-	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
+	if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver priority: " + priority);
   // Continue
 	return continueStartupCallback();
 };

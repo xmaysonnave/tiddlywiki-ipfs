@@ -94,7 +94,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
-		console.log(error.message);
+		console.error(error.message);
 		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
 	// Load Web3 if applicable
@@ -122,7 +122,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 		provider = provider + ", " + multi;
 		return { ipfs, provider };
 	} catch (error) {
-		console.log(error.message);
+		console.error(error.message);
 		throw new Error("Ipfs default is unavailable...");
 	}
 }
@@ -144,7 +144,7 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 		});
 		return { ipfs, provider };
 	} catch (error) {
-		console.log(error.message);
+		console.error(error.message);
 		throw new Error("Ipfs Companion is unavailable...");
 	}
 }
@@ -161,7 +161,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
-		console.log(error.message);
+		console.error(error.message);
 		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
 	// Load Web3 if applicable
@@ -189,7 +189,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 		provider = provider + ", " + multi;
 		return { ipfs, provider };
 	} catch (error) {
-		console.log(error.message);
+		console.error(error.message);
 		throw new Error("Ipfs Http is unavailable...");
 	}
 }
@@ -206,7 +206,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 		try {
 			client = await client.enable({commands: ["add"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs add...");
 		}
 	}
@@ -218,15 +218,15 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			stream.push(Buffer.from(content));
 			stream.push(null);
 			// Process
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs add...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs add...");
 			// https://github.com/ipfs/go-ipfs/issues/5683
 			const result = await client.add(stream, { pin: false, trickle: true, progress: function(len) {
-					if ($tw.utils.getIpfsVerbose()) console.log("Ipfs upload progress:", len);
+					if ($tw.utils.getIpfsVerbose()) console.info("Ipfs upload progress:", len);
 				}
 			});
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to Ipfs add...");
 		}
 	}
@@ -244,18 +244,18 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["get"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs get...");
 		}
 	}
 	// Process
 	if (client !== undefined && client.get !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs get...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs get...");
 			const result = await client.get(cid);
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to Ipfs get...");
 		}
 	}
@@ -274,18 +274,18 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["cat"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs cat...");
 		}
 	}
 	// Process
 	if (client !== undefined && client.cat !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs cat...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs cat...");
 			const result = await client.cat(cid);
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to Ipfs cat...");
 		}
 	}
@@ -304,18 +304,18 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["pin"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs pin...");
 		}
 	}
 	// Process
 	if (client !== undefined && client.pin !== undefined && client.pin.add !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs pin...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs pin...");
 			const result = await client.pin.add(cid);
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to Ipfs pin...");
 		}
 	}
@@ -334,18 +334,18 @@ IpfsLibrary.prototype.unpin = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["pin"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs pin...");
 		}
 	}
 	// Process
 	if (client !== undefined && client.pin !== undefined && client.pin.rm !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipfs unpin...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs unpin...");
 			const result = await client.pin.rm(cid);
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to Ipfs unpin...");
 		}
 	}
@@ -367,17 +367,17 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
 		try {
 			client = await client.enable({commands: ["name"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipns name...");
 		}
 	}
 	if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing publish Ipns name...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing publish Ipns name...");
 			const result = await client.name.publish(cid, { key: name });
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to publish Ipns name...");
 		}
 	}
@@ -396,17 +396,17 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
 		try {
 			client = await client.enable({commands: ["name"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipns name...");
 		}
 	}
 	if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing resolve Ipns name...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing resolve Ipns name...");
 			const result = await client.name.resolve(cid);
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to resolve Ipns name...");
 		}
 	}
@@ -422,17 +422,17 @@ IpfsLibrary.prototype.id = async function(client) {
 		try {
 			client = await client.enable({commands: ["id"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs id...");
 		}
 	}
 	if (client !== undefined && client.id !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing id...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing id...");
 			const result = await client.id();
 			return result;
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to Ipfs id...");
 		}
 	}
@@ -448,16 +448,17 @@ IpfsLibrary.prototype.keys = async function(client) {
 		try {
 			client = await client.enable({commands: ["key"]});
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			throw new Error("Unable to enable Ipfs key...");
 		}
 	}
 	if (client !== undefined && client.key !== undefined && client.key.list !== undefined) {
 		try {
-			if ($tw.utils.getIpfsVerbose()) console.log("Processing Ipns keys...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipns keys...");
 			const result = await client.key.list();
 			return result;
 		} catch (error) {
+			console.error(error.message);
 			throw new Error("Unable to process Ipns keys...");
 		}
 	}

@@ -45,7 +45,7 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
 				provider: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Ipfs provider: " + provider);
+		if ($tw.utils.getIpfsVerbose()) console.info("Ipfs provider: " + provider);
 		return {
 			error: null,
 			ipfs: ipfs,
@@ -69,7 +69,7 @@ IpfsWrapper.prototype.getKeys = async function(ipfs) {
 				keys: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched Ipfs keys...");
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched Ipfs keys...");
 		return {
 			error: null,
 			keys: keys
@@ -91,7 +91,7 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
 				fetched: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched: " + ipfsKeyword + cid);
 		return {
 			error: null,
 			fetched: fetched
@@ -114,7 +114,7 @@ IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
 					empty: null
 				};
 			}
-			if ($tw.utils.getIpfsVerbose()) console.log("Successfully fetched the Ipfs empty directory...");
+			if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched the Ipfs empty directory...");
 			return {
 				error: null,
 				empty: empty
@@ -137,7 +137,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
 				added: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully added content: " + ipfsKeyword + added[0].hash);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully added content: " + ipfsKeyword + added[0].hash);
 		return {
 			error: null,
 			added: added[0].hash
@@ -160,7 +160,7 @@ IpfsWrapper.prototype.resolveFromIpfs = async function(ipfs, cid) {
 				resolved: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully resolved: " + ipnsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully resolved: " + ipnsKeyword + cid);
 		return {
 			error: null,
 			resolved: resolved
@@ -183,7 +183,7 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 				published: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully published: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully published: " + ipfsKeyword + cid);
 		return {
 			error: null,
 			published: published
@@ -206,7 +206,7 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 				pined: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully pined: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully pined: " + ipfsKeyword + cid);
 		return {
 			error: null,
 			pined: pined
@@ -229,7 +229,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
 				unpined: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.log("Successfully unpined: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully unpined: " + ipfsKeyword + cid);
 		return {
 			error: null,
 			unpined: unpined
