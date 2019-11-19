@@ -220,7 +220,8 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			// Process
 			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs add...");
 			// https://github.com/ipfs/go-ipfs/issues/5683
-			const result = await client.add(stream, { pin: false, trickle: true, progress: function(len) {
+			// default size-262144
+			const result = await client.add(stream, { pin: false, trickle: true, chunker: "rabin-262144-524288-1048576", progress: function(len) {
 					if ($tw.utils.getIpfsVerbose()) console.info("Ipfs upload progress:", len);
 				}
 			});

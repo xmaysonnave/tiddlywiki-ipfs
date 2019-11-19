@@ -33,8 +33,6 @@
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
     "@babel/runtime": "^7.7.2",
-    "@ensdomains/ens": "^0.3.11",
-    "@ensdomains/resolver": "^0.1.13",
     "browserify-derequire": "^1.0.1",
     "buffer": "^5.4.3",
     "cids": "^0.7.1",
