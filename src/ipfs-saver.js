@@ -762,9 +762,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		return false;
 	}
 
-	const msg = "Successfully set Ens domain content:\n\n" + cid;
-	if ($tw.utils.getIpfsVerbose()) console.info(msg);
-	self.messageDialog(msg);
+	self.messageDialog("Successfully set Ens domain:\n\t" + ensDomain + "\nwith:\n\t/ipfs/" + cid);
 
 	return false;
 

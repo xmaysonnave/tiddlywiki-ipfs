@@ -409,11 +409,11 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	// Set Contenthash
 	if ($tw.utils.getIpfsVerbose()) console.info("Processing Ens resolver set content...");
 	const data = this.encodedMethod("setContenthash", ["bytes32", "bytes"], [domainHash, encoded]);
-	const tx = await web3.eth.call({ from: account, to: resolverAddress, data: data });
-
-	// Wait for transaction completion
-	if ($tw.utils.getIpfsVerbose()) console.info("Processing Transaction: " + tx.hash);
-	await tx.wait();
+	await web3.eth.sendTransaction({ from: account, to: resolverAddress, data: data }, function(error, hash) {
+		if (error == undefined && error == null) {
+			if ($tw.utils.getIpfsVerbose()) console.info("Processing Transaction: " + hash);
+		}
+	});
 }
 
 exports.EnsLibrary = EnsLibrary;
