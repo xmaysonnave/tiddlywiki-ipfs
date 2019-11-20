@@ -762,7 +762,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		return false;
 	}
 
-	self.messageDialog("Successfully set Ens domain:\n\t" + ensDomain + "\nwith:\n\t/ipfs/" + cid);
+	self.messageDialog("Successfully set Ens domain:\n\t" + ensDomain + "\nidentifier:\n\t" + cid);
 
 	return false;
 

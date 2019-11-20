@@ -34,6 +34,7 @@ EnsWrapper.prototype.getContenthash = async function(domain) {
 				content: decoded
 			};
 		} else {
+			if ($tw.utils.getIpfsVerbose()) console.warn("Unassigned Ens domain content...");
 			return {
 				error: null,
 				protocol: null,
