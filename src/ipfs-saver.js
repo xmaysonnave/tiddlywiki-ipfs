@@ -173,14 +173,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			return false;
 		}
 
-		// Retrieve the default empty directory to check if the connection is alive
-		// var { error } = await this.ipfsWrapper.getEmptyDirectory(ipfs);
-		// if (error != null)  {
-		// 	console.error(error);
-		// 	callback(error.message);
-		// 	return false;
-		// }
-
 		// Check Ipns Key and Ipns Name
 		if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
 
@@ -439,15 +431,6 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		return tiddler;
 	}
 
-	// Retrieve the default empty directory to check if the connection is alive
-	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	// if (error != null)  {
-	// 	console.error(error);
-	// 	self.errorDialog(error.message);
-	// 	$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
-	// 	return tiddler;
-	// }
-
 	// Download
 	if (newUri == undefined || newUri == null || newUri.trim() === "") {
 
@@ -610,14 +593,6 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		return false;
 	}
 
-	// Retrieve the default empty directory to check if the connection is alive
-	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	// if (error != null)  {
-	// 	console.error(error);
-	// 	self.errorDialog(error.message);
-	// 	return false;
-	// }
-
 	// Upload	current attachment
 	if ($tw.utils.getIpfsVerbose()) console.info("Uploading attachment...");
 	// Transform the base64 encoded content into an Array
@@ -759,14 +734,6 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 			return false;
 		}
 
-		// Retrieve the default empty directory to check if the connection is alive
-		// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-		// if (error != null)  {
-		// 	console.error(error);
-		// 	self.errorDialog(error.message);
-		// 	return false;
-		// }
-
 		// Resolve ipnsKey
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
 		if (error != null)  {
@@ -868,14 +835,6 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		self.errorDialog(error.message);
 		return false;
 	}
-
-	// Retrieve the default empty directory to check if the connection is alive
-	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	// if (error != null)  {
-	// 	console.error(error);
-	// 	self.errorDialog(error.message);
-	// 	return false;
-	// }
 
 	// Resolve current ipnsKey if applicable
 	if (protocol === ipnsKeyword) {
@@ -1005,14 +964,6 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 		return false;
 	}
 
-	// Retrieve the default empty directory to check if the connection is alive
-	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	// if (error != null)  {
-	// 	console.error(error);
-	// 	self.errorDialog(error.message);
-	// 	return false;
-	// }
-
 	// Resolve current ipnsKey if applicable
 	if (protocol === ipnsKeyword) {
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
@@ -1086,14 +1037,6 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 		self.errorDialog(error.message);
 		return false;
 	}
-
-	// Retrieve the default empty directory to check if the connection is alive
-	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	// if (error != null)  {
-	// 	console.error(error);
-	// 	self.errorDialog(error.message);
-	// 	return false;
-	// }
 
 	// Resolve current ipnsKey if applicable
 	if (protocol === ipnsKeyword) {

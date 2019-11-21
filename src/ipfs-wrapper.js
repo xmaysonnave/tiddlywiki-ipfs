@@ -104,29 +104,6 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
 	}
 }
 
-IpfsWrapper.prototype.getEmptyDirectory = async function(ipfs) {
-		try {
-			// Fetch the default empty directory to check if the connection is alive
-			const empty = await this.ipfsLibrary.get(ipfs, ipfsKeyword + "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn");
-			if (empty == undefined)  {
-				return {
-					error: new Error("Failed to fetch the Ipfs empty directory..."),
-					empty: null
-				};
-			}
-			if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched the Ipfs empty directory...");
-			return {
-				error: null,
-				empty: empty
-			};
-		} catch (error) {
-			return {
-				error: error,
-				empty: null
-			};
-		}
-}
-
 IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
 	// Add
 	try {

@@ -427,7 +427,6 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	// Set Contenthash
 	try {
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content hash...");
-		// TODO: ethers V5 will support this feature, https://github.com/ethers-io/ethers.js/issues/659
 		const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
 		const iface = new window.ethers.utils.Interface(abi)
 		const data = iface.functions.setContenthash.encode([domainHash, encoded]);
@@ -438,8 +437,12 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 		await tx.wait();
 		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");
 	} catch (error) {
-		if (error !== undefined && error != null && error.message !== undefined) {
-			console.error(error.message);
+		if (error !== undefined && error !== null) {
+			if (error.message !== undefined) {
+				throw new Error(error.message);
+			} else {
+				throw new Error(error);
+			}
 		}
 		throw new Error("Unable to set Ens domain content hash...");
 	}
