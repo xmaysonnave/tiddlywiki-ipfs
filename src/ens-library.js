@@ -426,44 +426,26 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 
 	// Set Contenthash
 	try {
-		const resolver = await this.getResolver(web3Provider, resolverAddress);
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content hash...");
-		// const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
-		// const iface = new window.ethers.utils.Interface(abi)
-		// const data = iface.functions.setContenthash.encode([domainHash, encoded]);
-		// const tx = await web3Provider.sendTransaction({ from: account, to: resolverAddress, data: data });
-		const tx = await resolver.setContenthash(domainHash, encoded);
+		// TODO: ethers V5 will support this feature, https://github.com/ethers-io/ethers.js/issues/659
+		const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
+		const iface = new window.ethers.utils.Interface(abi)
+		const data = iface.functions.setContenthash.encode([domainHash, encoded]);
+		const signer = web3Provider.getSigner();
+		const tx = await signer.sendTransaction({ to: resolverAddress, data: data });
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
 		// Wait for transaction completion
 		await tx.wait();
 		if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");
 	} catch (error) {
-		console.log(error.message);
+		if (error !== undefined && error != null && error.message !== undefined) {
+			console.error(error.message);
+		}
 		throw new Error("Unable to set Ens domain content hash...");
 	}
 
 	return;
 
-}
-
-EnsLibrary.prototype.getResolver = async function(web3Provider, resolverAddress) {
-	// check
-	if (web3Provider == undefined || web3Provider == null) {
-		throw new Error("Undefined web3 provider...");
-	}
-	if (resolverAddress == undefined || /^0x0+$/.test(resolverAddress) == true) {
-		throw new Error("Undefined Ens domain resolver...");
-	}
-	try {
-		// Load Resolver contract
-		const signer = web3Provider.getSigner();
-		const resolver = JSON.parse($tw.wiki.getTiddler("$:/ipfs/saver/contract/resolver").fields.text);
-		const contract = new window.ethers.Contract(resolverAddress, resolver.abi, signer);
-		return contract;
-	} catch (error) {
-		console.log(error.message);
-		throw new Error("Unable to fetch Ens domain resolver...");
-	}
 }
 
 exports.EnsLibrary = EnsLibrary;

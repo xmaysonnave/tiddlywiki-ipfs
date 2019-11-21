@@ -2,5 +2,8 @@ title: $:/config/PageControlButtons/Visibility/$:/
 tags: [[Hidden Settings]]
 
 core/ui/Buttons/ipfs: show
+core/ui/Buttons/load-mobile-console: show
 core/ui/Buttons/publish-to-ens: hide
 core/ui/Buttons/publish-to-ipns: hide
+core/ui/Buttons/ipfs-pin: hide
+core/ui/Buttons/ipfs-unpin: hide

@@ -199,22 +199,22 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 	// Unpin
 	try {
-		const pined = await this.ipfsLibrary.pin(ipfs, ipfsKeyword + cid);
-		if (pined == undefined) {
+		const pinned = await this.ipfsLibrary.pin(ipfs, ipfsKeyword + cid);
+		if (pinned == undefined) {
 			return {
 				error: new Error( "Failed to pin: " + ipfsKeyword + cid),
-				pined: null
+				pinned: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.info("Successfully pined: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully pinned: " + ipfsKeyword + cid);
 		return {
 			error: null,
-			pined: pined
+			pinned: pinned
 		};
 	} catch (error) {
 		return {
 			error: error,
-			pined: null
+			pinned: null
 		};
 	};
 }
@@ -222,22 +222,22 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
 	// Unpin
 	try {
-		const unpined = await this.ipfsLibrary.unpin(ipfs, ipfsKeyword + cid);
-		if (unpined == undefined) {
+		const unpinned = await this.ipfsLibrary.unpin(ipfs, ipfsKeyword + cid);
+		if (unpinned == undefined) {
 			return {
 				error: new Error("Failed to unpin: " + ipfsKeyword + cid),
-				unpined: null
+				unpinned: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.info("Successfully unpined: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully unpinned: " + ipfsKeyword + cid);
 		return {
 			error: null,
-			unpined: unpined
+			unpinned: unpinned
 		};
 	} catch (error) {
 		return {
 			error: error,
-			unpined: null
+			unpinned: null
 		};
 	};
 }

@@ -43,8 +43,17 @@ var IpfsSaver = function(wiki) {
 	$tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
 		return self.handlePublishToEns(self, event);
 	});
+	$tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
+		return self.handleMobileConsole(self, event);
+	});
 	$tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
 		return self.handlePublishToIpns(self, event);
+	});
+	$tw.rootWidget.addEventListener("tm-ipfs-pin", function(event) {
+		return self.handleIpfsPin(self, event);
+	});
+	$tw.rootWidget.addEventListener("tm-ipfs-unpin", function(event) {
+		return self.handleIpfsUnpin(self, event);
 	});
 	$tw.hooks.addHook("th-deleting-tiddler", function(tiddler) {
 		return self.handleDeleteTiddler(self, tiddler);
@@ -55,6 +64,35 @@ var IpfsSaver = function(wiki) {
 	$tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
 		return self.handleFileImport(self, tiddler);
 	});
+}
+
+// https://www.srihash.org/
+// https://github.com/liriliri/eruda
+IpfsSaver.prototype.loadMobileConsoleLibrary = async function() {
+	await $tw.utils.loadLibrary(
+		"MobileConsoleLibrary",
+		"https://cdn.jsdelivr.net/npm/eruda@1.10.3/eruda.min.js",
+		"sha384-cWU0kVm57Cm5oD8JL8C4uTTgOD6xkKv1se8c3LSVB31FbcMMaV5RsW0qtoccoc0O"
+	);
+}
+
+IpfsSaver.prototype.handleMobileConsole = async function(self, tiddler) {
+	// Load mobile console if applicable
+	if (typeof window.eruda === "undefined") {
+		await self.loadMobileConsoleLibrary();
+		const el = document.createElement("div");
+		window.document.body.appendChild(el);
+		window.eruda.init({
+				container: el,
+				tool: ["console", "elements"],
+				useShadowDom: true,
+				autoScale: true
+		});
+		window.eruda.init();
+	} else {
+		window.eruda.destroy();
+		delete window.eruda;
+	}
 }
 
 IpfsSaver.prototype.errorDialog = function(error) {
@@ -136,12 +174,12 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Retrieve the default empty directory to check if the connection is alive
-		var { error } = await this.ipfsWrapper.getEmptyDirectory(ipfs);
-		if (error != null)  {
-			console.error(error);
-			callback(error.message);
-			return false;
-		}
+		// var { error } = await this.ipfsWrapper.getEmptyDirectory(ipfs);
+		// if (error != null)  {
+		// 	console.error(error);
+		// 	callback(error.message);
+		// 	return false;
+		// }
 
 		// Check Ipns Key and Ipns Name
 		if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
@@ -402,13 +440,13 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	}
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	if (error != null)  {
-		console.error(error);
-		self.errorDialog(error.message);
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
-		return tiddler;
-	}
+	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	// if (error != null)  {
+	// 	console.error(error);
+	// 	self.errorDialog(error.message);
+	// 	$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
+	// 	return tiddler;
+	// }
 
 	// Download
 	if (newUri == undefined || newUri == null || newUri.trim() === "") {
@@ -573,12 +611,12 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	if (error != null)  {
-		console.error(error);
-		self.errorDialog(error.message);
-		return false;
-	}
+	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	// if (error != null)  {
+	// 	console.error(error);
+	// 	self.errorDialog(error.message);
+	// 	return false;
+	// }
 
 	// Upload	current attachment
 	if ($tw.utils.getIpfsVerbose()) console.info("Uploading attachment...");
@@ -662,7 +700,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
 	//Is there anything to do
 	if ($tw.saverHandler.isDirty() == true) {
-		const msg = "Unable to publish an unsaved wiki...";
+		const msg = "Unable to publish to Ens an unsaved wiki...";
 		console.error(msg);
 		self.errorDialog(msg);
 		return false;
@@ -722,12 +760,12 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		}
 
 		// Retrieve the default empty directory to check if the connection is alive
-		var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-		if (error != null)  {
-			console.error(error);
-			self.errorDialog(error.message);
-			return false;
-		}
+		// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+		// if (error != null)  {
+		// 	console.error(error);
+		// 	self.errorDialog(error.message);
+		// 	return false;
+		// }
 
 		// Resolve ipnsKey
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
@@ -768,12 +806,12 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
 }
 
-	/* Beware you are in a widget, not in the instance of this saver */
+/* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 
 	//Is there anything to do
 	if ($tw.saverHandler.isDirty() == true) {
-		const msg = "Unable to publish an unsaved wiki...";
+		const msg = "Unable to publish to Ipns an unsaved wiki...";
 		console.error(msg);
 		self.errorDialog(msg);
 		return false;
@@ -832,12 +870,12 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	// Retrieve the default empty directory to check if the connection is alive
-	var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
-	if (error != null)  {
-		console.error(error);
-		self.errorDialog(error.message);
-		return false;
-	}
+	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	// if (error != null)  {
+	// 	console.error(error);
+	// 	self.errorDialog(error.message);
+	// 	return false;
+	// }
 
 	// Resolve current ipnsKey if applicable
 	if (protocol === ipnsKeyword) {
@@ -920,6 +958,170 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 			return false;
 		}
 	}
+
+	return false;
+
+}
+
+/* Beware you are in a widget, not in the instance of this saver */
+IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
+
+	//Is there anything to do
+	if ($tw.saverHandler.isDirty() == true) {
+		const msg = "Unable to pin to Ipfs an unsaved wiki...";
+		console.error(msg);
+		self.errorDialog(msg);
+		return false;
+	}
+
+	// Process document URL
+	var { protocol, pathname } = $tw.utils.parseUrlShort(document.URL);
+	const currentProtocol = protocol;
+	const currentPathname = pathname;
+
+	// Check
+	if (currentProtocol === fileProtocol) {
+		const msg = "Undefined Ipfs wiki...";
+		console.error(msg);
+		self.errorDialog(msg);
+		return false;
+	}
+
+	// Extract and check URL Ipfs protocol and cid
+	var { protocol, cid } = await self.ipfsLibrary.decodePathname(currentPathname);
+	// Check
+	if (protocol == null || cid == null) {
+		const msg = "Unable to pin. Unknown Ipfs identifier...";
+		console.error(msg);
+		self.errorDialog(msg);
+		return false;
+	}
+
+	// Getting an Ipfs client
+	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+	if (error != null)  {
+		console.error(error);
+		self.errorDialog(error.message);
+		return false;
+	}
+
+	// Retrieve the default empty directory to check if the connection is alive
+	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	// if (error != null)  {
+	// 	console.error(error);
+	// 	self.errorDialog(error.message);
+	// 	return false;
+	// }
+
+	// Resolve current ipnsKey if applicable
+	if (protocol === ipnsKeyword) {
+		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
+		if (error != null) {
+			console.error(error);
+			self.errorDialog(error.message);
+			return false;
+		}
+		if (resolved == null) {
+			const msg = "Nothing to pin. Unable to resolve the current Ipns key....";
+			console.error(msg);
+			self.errorDialog(msg);
+			return false;
+		}
+		// Extract resolved cid
+		cid = resolved.substring(6);
+	}
+
+	if ($tw.utils.getIpfsVerbose()) console.info("Pinning Ipfs identifier: " + cid);
+	var { error } = await self.ipfsWrapper.pinToIpfs(ipfs, cid);
+	if (error != null) {
+		console.error(error);
+		self.errorDialog(error.message);
+		return false;
+	}
+
+	self.messageDialog("Successfully pinned Ipfs identifier:\n\t" + cid);
+
+	return false;
+
+}
+
+/* Beware you are in a widget, not in the instance of this saver */
+IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
+
+	//Is there anything to do
+	if ($tw.saverHandler.isDirty() == true) {
+		const msg = "Unable to unpin from Ipfs an unsaved wiki...";
+		console.error(msg);
+		self.errorDialog(msg);
+		return false;
+	}
+
+	// Process document URL
+	var { protocol, pathname } = $tw.utils.parseUrlShort(document.URL);
+	const currentProtocol = protocol;
+	const currentPathname = pathname;
+
+	// Check
+	if (currentProtocol === fileProtocol) {
+		const msg = "Undefined Ipfs wiki...";
+		console.error(msg);
+		self.errorDialog(msg);
+		return false;
+	}
+
+	// Extract and check URL Ipfs protocol and cid
+	var { protocol, cid } = await self.ipfsLibrary.decodePathname(currentPathname);
+	// Check
+	if (protocol == null || cid == null) {
+		const msg = "Unable to unpin. Unknown Ipfs identifier...";
+		console.error(msg);
+		self.errorDialog(msg);
+		return false;
+	}
+
+	// Getting an Ipfs client
+	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+	if (error != null)  {
+		console.error(error);
+		self.errorDialog(error.message);
+		return false;
+	}
+
+	// Retrieve the default empty directory to check if the connection is alive
+	// var { error } = await self.ipfsWrapper.getEmptyDirectory(ipfs);
+	// if (error != null)  {
+	// 	console.error(error);
+	// 	self.errorDialog(error.message);
+	// 	return false;
+	// }
+
+	// Resolve current ipnsKey if applicable
+	if (protocol === ipnsKeyword) {
+		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
+		if (error != null) {
+			console.error(error);
+			self.errorDialog(error.message);
+			return false;
+		}
+		if (resolved == null) {
+			const msg = "Nothing to unpin. Unable to resolve the current Ipns key....";
+			console.error(msg);
+			self.errorDialog(msg);
+			return false;
+		}
+		// Extract resolved cid
+		cid = resolved.substring(6);
+	}
+
+	if ($tw.utils.getIpfsVerbose()) console.info("Unpinning Ipfs identifier: " + cid);
+	var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, cid);
+	if (error != null) {
+		console.error(error);
+		self.errorDialog(error.message);
+		return false;
+	}
+
+	self.messageDialog("Successfully unpinned Ipfs identifier:\n\t" + cid);
 
 	return false;
 

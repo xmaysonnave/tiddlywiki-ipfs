@@ -1,0 +1,13 @@
+title: $:/core/ui/Buttons/ipfs-unpin
+tags: $:/tags/PageControls
+caption: {{$:/core/images/export-button}} {{$:/language/Buttons/IpfsUnpin/Caption}}
+description: {{$:/language/Buttons/IpfsUnpin/Hint}}
+
+<$button message="tm-ipfs-unpin" tooltip={{$:/language/Buttons/IpfsUnpin/Hint}} aria-label={{$:/language/Buttons/IpfsUnpPin/Caption}} class=<<tv-config-toolbar-class>>>
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/export-button}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsUnpin/Caption}}/></span>
+</$list>
+</$button>

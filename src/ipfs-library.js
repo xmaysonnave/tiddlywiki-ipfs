@@ -7,10 +7,10 @@ IpfsLibrary
 
 \*/
 
-const CID  = require("cids");
-const getIpfs = require("ipfs-provider");
-const toMultiaddr = require("uri-to-multiaddr");
-const Readable = require("readable-stream");
+import CID  from "cids";
+import getIpfs from "ipfs-provider";
+import toMultiaddr from "uri-to-multiaddr";
+import Readable from "readable-stream";
 
 ( function() {
 
@@ -24,8 +24,8 @@ Ipfs Library
 var IpfsLibrary = function() {};
 
 // https://www.srihash.org/
+// https://github.com/ipfs/js-ipfs-http-client
 IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
-	// https://github.com/ipfs/js-ipfs-http-client
 	await $tw.utils.loadLibrary(
 		"IpfsHttpLibrary",
 		"https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.js",

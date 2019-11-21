@@ -10,7 +10,7 @@ Saving/IpfsService/EnsDomain: Ens Domain
 Saving/IpfsService/IpnsName: Ipns Name
 Saving/IpfsService/IpnsKey: Ipns Key
 Saving/IpfsService/Verbose/Description: Verbose
-Saving/IpfsService/Unpin/Description: Unpin
+Saving/IpfsService/Unpin/Description: Unpin current while saving
 Saving/IpfsService/Wait/Description: Wait
 Saving/IpfsService/Protocol: Protocol:
 Saving/IpfsService/Protocol/Ens/Description: Ens
