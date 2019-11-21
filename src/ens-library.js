@@ -8,7 +8,6 @@ EnsLibrary
 \*/
 
 import contentHash from "content-hash";
-import abi from "ethereumjs-abi";
 
 ( function() {
 
@@ -50,19 +49,6 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 		"sha384-iUpsQG19EWNiS8wjUZ9Z0iXfJIZ7/aCTG6QTiL057CoEKAP4+iGPeqzf18rC1w83",
 		true
 	);
-}
-
-EnsLibrary.prototype.encodedMethod = function(name, args, values) {
-	// Check
-	if (name == undefined || name == null)  {
-		throw new Error("Undefined smart contract method name...");
-	}
-	if (args == undefined || args == null || Array.isArray(args) == false)  {
-		throw new Error("Undefined smart contract method arguments...");
-	}
-	const methodId = abi.methodID(name, args).toString("hex");
-	const params = abi.rawEncode(args, values).toString("hex");
-	return "0x" + methodId + params;
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
@@ -208,7 +194,9 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
 		throw new Error("Undefined Ens domain hash...");
 	}
 	// Low level call
-	const data = this.encodedMethod("resolver", ["bytes32"], [node]);
+	const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
+	const iface = new window.ethers.utils.Interface(abi)
+	const data = iface.functions.resolver.encode([node]);
 	const result = await web3Provider.call({ from: account, to: registryAddress, data: data });
 	if (result == undefined || result == null || result === "0x") {
 		return null;
@@ -237,7 +225,9 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
 		throw new Error("Undefined Ethereum address...");
 	}
 	// true when interfaceID is 0x01ffc9a7
-	var data = this.encodedMethod("supportsInterface", ["bytes4"], ["0x01ffc9a7"]);
+	var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
+	var iface = new window.ethers.utils.Interface(abi)
+	var data = iface.functions.supportsInterface.encode(["0x01ffc9a7"]);
 	var result = await web3Provider.call({ from: account, to: address, data: data });
 	if (result == undefined || result == null || result === "0x") {
 		return false;
@@ -253,7 +243,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
 		return false;
 	}
 	// false when interfaceID is 0xffffffff
-	var data = this.encodedMethod("supportsInterface", ["bytes4"], ["0xffffffff"]);
+	var data = iface.functions.supportsInterface.encode( ["0xffffffff"]);
 	var result = await web3Provider.call({ from: account, to: address, data: data });
 	if (result == undefined || result == null || result === "0x") {
 		return false;
@@ -285,7 +275,9 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
 		throw new Error("Undefined Ethereum address...");
 	}
 	// contenthash, true when interfaceID is 0xbc1c58d1
-	var data = this.encodedMethod("supportsInterface", ["bytes4"], ["0xbc1c58d1"]);
+	var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
+	var iface = new window.ethers.utils.Interface(abi)
+	var data = iface.functions.supportsInterface.encode(["0xbc1c58d1"]);
 	var result = await web3Provider.call({ from: account, to: address, data: data });
 	if (result == undefined || result == null || result === "0x") {
 		return false;
@@ -348,7 +340,9 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 
 	// retrieve content hash
 	if ($tw.utils.getIpfsVerbose()) console.info("Processing Ens resolver get content...");
-	const data = this.encodedMethod("contenthash", ["bytes32"], [domainHash]);
+	const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
+	const iface = new window.ethers.utils.Interface(abi)
+	const data = iface.functions.contenthash.encode([domainHash]);
 	const result = await web3Provider.call({ from: account, to: resolverAddress, data: data });
 	if (result == undefined || result == null || result === "0x") {
 		return {
@@ -434,7 +428,11 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 	try {
 		const resolver = await this.getResolver(web3Provider, resolverAddress);
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content hash...");
-		var tx = await resolver.setContenthash(domainHash, encoded);
+		// const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
+		// const iface = new window.ethers.utils.Interface(abi)
+		// const data = iface.functions.setContenthash.encode([domainHash, encoded]);
+		// const tx = await web3Provider.sendTransaction({ from: account, to: resolverAddress, data: data });
+		const tx = await resolver.setContenthash(domainHash, encoded);
 		if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
 		// Wait for transaction completion
 		await tx.wait();
