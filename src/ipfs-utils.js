@@ -277,7 +277,7 @@ exports.getIpfsGatewayUrl = function() {
 Default Gateway Url
 */
 exports.getIpfsDefaultGatewayUrl = function() {
-	return "https://gateway.ipfs.io";
+	return "https://ipfs.infura.io";
 }
 
 /*

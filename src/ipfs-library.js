@@ -217,9 +217,9 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			// https://github.com/ipfs/go-ipfs/issues/5683
 			// chunker: "size-262144"
 			// chunker: "rabin-262144-524288-1048576"
-			const result = await client.add(buffer, { pin: false, progress: function(len) {
-					if ($tw.utils.getIpfsVerbose()) console.info("Ipfs upload progress:", len);
-				}
+			const result = await client.add(buffer, {
+				chunker: "rabin-262144-524288-1048576",
+				pin: false
 			});
 			return result;
 		} catch (error) {
