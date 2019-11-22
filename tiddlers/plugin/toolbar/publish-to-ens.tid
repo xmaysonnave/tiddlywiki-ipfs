@@ -1,11 +1,11 @@
 title: $:/core/ui/Buttons/publish-to-ens
 tags: $:/tags/PageControls
-caption: {{$:/core/images/export-button}} {{$:/language/Buttons/PublishToEns/Caption}}
+caption: {{$:/core/images/globe}} {{$:/language/Buttons/PublishToEns/Caption}}
 description: {{$:/language/Buttons/PublishToEns/Hint}}
 
 <$button message="tm-publish-to-ens" tooltip={{$:/language/Buttons/PublishToEns/Hint}} aria-label={{$:/language/Buttons/PublishToEns/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/core/images/export-button}}
+{{$:/core/images/globe}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text"><$text text={{$:/language/Buttons/PublishToEns/Caption}}/></span>

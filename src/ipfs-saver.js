@@ -68,9 +68,9 @@ var IpfsSaver = function(wiki) {
 
 // https://www.srihash.org/
 // https://github.com/liriliri/eruda
-IpfsSaver.prototype.loadMobileConsoleLibrary = async function() {
+IpfsSaver.prototype.loadErudaLibrary = async function() {
 	await $tw.utils.loadLibrary(
-		"MobileConsoleLibrary",
+		"ErudaLibrary",
 		"https://cdn.jsdelivr.net/npm/eruda@1.10.3/eruda.min.js",
 		"sha384-cWU0kVm57Cm5oD8JL8C4uTTgOD6xkKv1se8c3LSVB31FbcMMaV5RsW0qtoccoc0O"
 	);
@@ -79,12 +79,12 @@ IpfsSaver.prototype.loadMobileConsoleLibrary = async function() {
 IpfsSaver.prototype.handleMobileConsole = async function(self, tiddler) {
 	// Load mobile console if applicable
 	if (typeof window.eruda === "undefined") {
-		await self.loadMobileConsoleLibrary();
-		const el = document.createElement("div");
-		window.document.body.appendChild(el);
+		await self.loadErudaLibrary();
+		const eruda = document.createElement("div");
+		window.document.body.appendChild(eruda);
 		window.eruda.init({
-				container: el,
-				tool: ["console", "elements"],
+				container: eruda,
+				tool: ["console"],
 				useShadowDom: true,
 				autoScale: true
 		});

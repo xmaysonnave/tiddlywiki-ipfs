@@ -29,7 +29,8 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
 	await $tw.utils.loadLibrary(
 		"IpfsHttpLibrary",
 		"https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.js",
-		"sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e"
+		"sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e",
+		true
 	);
 }
 
@@ -123,7 +124,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 		return { ipfs, provider };
 	} catch (error) {
 		console.error(error.message);
-		throw new Error("Ipfs default is unavailable...");
+		throw new Error("Unable to connect. Check Ipfs Companion and your Api Url...");
 	}
 }
 
@@ -145,7 +146,7 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 		return { ipfs, provider };
 	} catch (error) {
 		console.error(error.message);
-		throw new Error("Ipfs Companion is unavailable...");
+		throw new Error("Unable to connect. Check Ipfs Companion...");
 	}
 }
 
@@ -190,7 +191,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 		return { ipfs, provider };
 	} catch (error) {
 		console.error(error.message);
-		throw new Error("Ipfs Http is unavailable...");
+		throw new Error("Unable to connect. Check your Api Url...");
 	}
 }
 
@@ -220,8 +221,9 @@ IpfsLibrary.prototype.add = async function(client, content) {
 			// Process
 			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs add...");
 			// https://github.com/ipfs/go-ipfs/issues/5683
-			// default chunker: size-262144
-			const result = await client.add(stream, { pin: false, chunker: "rabin-262144-524288-1048576", progress: function(len) {
+			// chunker: "size-262144"
+			// chunker: "rabin-262144-524288-1048576"
+			const result = await client.add(stream, { pin: false, progress: function(len) {
 					if ($tw.utils.getIpfsVerbose()) console.info("Ipfs upload progress:", len);
 				}
 			});
