@@ -37,9 +37,8 @@
     "buffer": "^5.4.3",
     "cids": "^0.7.1",
     "content-hash": "2.5.0",
-    "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git#v0.2.7",
+    "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git#v0.2.8",
     "multiaddr": "^7.2.1",
-    "readable-stream": "^3.4.0",
     "uri-to-multiaddr": "^3.0.1"
   },
   "devDependencies": {

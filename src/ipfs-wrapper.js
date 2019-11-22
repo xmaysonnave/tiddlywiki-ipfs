@@ -27,29 +27,28 @@ var IpfsWrapper = function() {
 IpfsWrapper.prototype.getIpfsClient = async function() {
 	// Getting an Ipfs client
 	try {
-		var ipfs = null;
-		var provider = null;
-		const policy = $tw.utils.getIpfsPolicy();
- 		if (policy === "window") {
-			var { ipfs, provider } = await this.ipfsLibrary.getWindowIpfs();
-		} else if (policy === "http") {
-			var { ipfs, provider } = await this.ipfsLibrary.getHttpIpfs();
+		var policy = { ipfs: null, provider: null };
+		const ipfsPolicy = $tw.utils.getIpfsPolicy();
+ 		if (ipfsPolicy === "window") {
+			policy = await this.ipfsLibrary.getWindowIpfs();
+		} else if (ipfsPolicy === "http") {
+			policy = await this.ipfsLibrary.getHttpIpfs();
 		} else  {
-			var { ipfs, provider }  = await this.ipfsLibrary.getDefaultIpfs();
+			policy  = await this.ipfsLibrary.getDefaultIpfs();
 		}
 		// Return if undefined
-		if (ipfs == undefined || ipfs == null || provider == undefined || provider == null)  {
+		if (policy.ipfs == null || policy.provider == null)  {
 			return {
 				error: new Error("Failed to get an Ipfs provider..."),
 				ipfs: null,
 				provider: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.info("Ipfs provider: " + provider);
+		if ($tw.utils.getIpfsVerbose()) console.info("Ipfs provider: " + policy.provider);
 		return {
 			error: null,
-			ipfs: ipfs,
-			provider: provider
+			ipfs: policy.ipfs,
+			provider: policy.provider
 		};
 	} catch (error) {
 		return {

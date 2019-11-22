@@ -10,7 +10,6 @@ IpfsLibrary
 import CID  from "cids";
 import getIpfs from "ipfs-provider";
 import toMultiaddr from "uri-to-multiaddr";
-import Readable from "readable-stream";
 
 ( function() {
 
@@ -26,12 +25,14 @@ var IpfsLibrary = function() {};
 // https://www.srihash.org/
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
-	await $tw.utils.loadLibrary(
-		"IpfsHttpLibrary",
-		"https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.js",
-		"sha384-SbtgpGuHo4HmMg8ZeX2IrF1c4cDnmBTsW84gipxDCzeFhIZaisgrVQbn3WUQsd0e",
-		true
-	);
+	if (typeof window.IpfsHttpClient === "undefined") {
+		await $tw.utils.loadLibrary(
+			"IpfsHttpLibrary",
+			"https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.min.js",
+			"sha384-DUTAjqwwqxmoFuDozFeVvanWVA8QQBYyGSq4MQOlBxH03rqD4yyaSl43RQHU5E8d",
+			true
+		);
+	}
 }
 
 IpfsLibrary.prototype.decodePathname = async function(pathname) {
@@ -91,37 +92,33 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
 		throw new Error("Undefined Ipfs Api Url...");
 	}
-	let multi;
+	var multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
 		console.error(error.message);
 		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
-	// Load Web3 if applicable
-	if (typeof window.IpfsHttpClient === "undefined") {
-		await this.loadIpfsHttpLibrary();
-	}
+	// Load IpfsHttpClient
+	await this.loadIpfsHttpLibrary();
 	// Getting
 	try {
-		let { ipfs, provider } = await getIpfs({
+		const { ipfs, provider } = await getIpfs({
 			// These is the defaults
 			tryWebExt: false,
 			tryWindow: true,
 			permissions: {},
 			tryApi: true,
-			apiIpfsOpts: {
-				apiUrl: this.defaultApiUrl,
-				apiAddress: multi,
-				IpfsApi: window.IpfsHttpClient
-			},
+			apiAddress: multi,
+			IpfsApi: window.IpfsHttpClient,
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
 		});
-		// Enhance provider message
-		provider = provider + ", " + multi;
-		return { ipfs, provider };
+		return {
+			ipfs: ipfs,
+			provider: provider + ", " + multi
+		};
 	} catch (error) {
 		console.error(error.message);
 		throw new Error("Unable to connect. Check Ipfs Companion and your Api Url...");
@@ -138,12 +135,16 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 			tryWindow: true,
 			permissions: {},
 			tryApi: false,
-			apiIpfsOpts: {},
+			apiAddress: null,
+			IpfsApi: null,
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
 		});
-		return { ipfs, provider };
+		return {
+			ipfs: ipfs,
+			provider: provider
+		};
 	} catch (error) {
 		console.error(error.message);
 		throw new Error("Unable to connect. Check Ipfs Companion...");
@@ -158,37 +159,33 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
 	if (apiUrl == undefined || apiUrl == null || apiUrl.trim() == "") {
 		throw new Error("Undefined Ipfs Api Url...");
 	}
-	let multi;
+	var multi;
 	try {
 		 multi = toMultiaddr(apiUrl);
 	} catch (error) {
 		console.error(error.message);
 		throw new Error("Invalid Ipfs Api Url: " + apiUrl);
 	}
-	// Load Web3 if applicable
-	if (typeof window.IpfsHttpClient === "undefined") {
-		await this.loadIpfsHttpLibrary();
-	}
+	// Load IpfsHttpClient
+	await this.loadIpfsHttpLibrary();
 	// Getting
 	try {
-		var { ipfs, provider } = await getIpfs({
+		const { ipfs, provider } = await getIpfs({
 			// These is the defaults
 			tryWebExt: false,
 			tryWindow: false,
 			permissions: {},
 			tryApi: true,
-			apiIpfsOpts: {
-				apiUrl: this.defaultApiUrl,
-				apiAddress: multi,
-				IpfsApi: window.IpfsHttpClient
-			},
+			apiAddress: multi,
+			IpfsApi: window.IpfsHttpClient,
 			tryJsIpfs: false,
 			getJsIpfs: null,
 			jsIpfsOpts: {}
 		});
-		// Enhance provider message
-		provider = provider + ", " + multi;
-		return { ipfs, provider };
+		return {
+			ipfs: ipfs,
+			provider: provider + ", " + multi
+		};
 	} catch (error) {
 		console.error(error.message);
 		throw new Error("Unable to connect. Check your Api Url...");
@@ -214,16 +211,13 @@ IpfsLibrary.prototype.add = async function(client, content) {
 	// Process
 	if (client !== undefined && client.add !== undefined) {
 		try {
-			// Build stream
-			const stream = new Readable();
-			stream.push(Buffer.from(content));
-			stream.push(null);
 			// Process
+			const buffer = Buffer.from(content);
 			if ($tw.utils.getIpfsVerbose()) console.info("Processing Ipfs add...");
 			// https://github.com/ipfs/go-ipfs/issues/5683
 			// chunker: "size-262144"
 			// chunker: "rabin-262144-524288-1048576"
-			const result = await client.add(stream, { pin: false, progress: function(len) {
+			const result = await client.add(buffer, { pin: false, progress: function(len) {
 					if ($tw.utils.getIpfsVerbose()) console.info("Ipfs upload progress:", len);
 				}
 			});

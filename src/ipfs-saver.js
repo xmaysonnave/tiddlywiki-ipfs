@@ -594,10 +594,12 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	}
 
 	// Upload	current attachment
-	if ($tw.utils.getIpfsVerbose()) console.info("Uploading attachment...");
-	// Transform the base64 encoded content into an Array
-	var content = tiddler.getFieldString("text");
+	if ($tw.utils.getIpfsVerbose()) console.log("Uploading attachment...");
+	// Transform the base64 encoded file into a Blob
+	var content = null;
 	try {
+		// Content
+		var content = tiddler.getFieldString("text");
 		// Encrypt if tiddlywiki is password protected
 		if ($tw.crypto.hasPassword()) {
 			const decodedBase64 = atob(content);
@@ -607,7 +609,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 			content = $tw.utils.Base64ToUint8Array(content);
 		}
 	} catch (error) {
-		console.error(error);
+		console.log(error);
 		self.errorDialog("Failed to transform attachment...");
 		return false;
 	};
