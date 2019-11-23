@@ -37,8 +37,8 @@ var IpfsSaver = function(wiki) {
 	$tw.wiki.addEventListener("change", function(changes) {
 		return self.handleChangeEvent(self, changes);
 	});
-	$tw.rootWidget.addEventListener("tm-ipfs-tiddler", function(event) {
-		return self.handleUploadCanonicalUri(self, event);
+	$tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
+		return self.handleExportToIpfs(self, event);
 	});
 	$tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
 		return self.handlePublishToEns(self, event);
@@ -95,9 +95,11 @@ IpfsSaver.prototype.handleMobileConsole = async function(self, tiddler) {
 	}
 }
 
-IpfsSaver.prototype.errorDialog = function(error) {
-	if (error) {
-		alert($tw.language.getString("Error/WhileSaving") + ":\n\n" + error);
+IpfsSaver.prototype.messageDialog = function(message) {
+	if (message !== undefined && message !== null && message.trim() !== "") {
+		alert(message);
+	} else {
+		alert($tw.language.getString("Error/Caption"));
 	}
 }
 
@@ -426,7 +428,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 		return tiddler;
 	}
@@ -438,7 +440,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
 		if (error != null)  {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 			return tiddler;
 		}
@@ -531,7 +533,7 @@ IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
-IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
+IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 
 	// Check
 	if (event.tiddlerTitle == undefined) {
@@ -560,7 +562,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	if (info == undefined || info.encoding !== "base64") {
 		const msg = "Upload to Ipfs is only supported for attached files.";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -575,7 +577,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	if (currentProtocol === fileProtocol && (gatewayUrl == undefined || gatewayUrl == null || gatewayUrl.trim() === "")) {
 		const msg = "Undefined Ipfs gateway Url.";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -589,7 +591,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -610,7 +612,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 		}
 	} catch (error) {
 		console.log(error);
-		self.errorDialog("Failed to transform attachment...");
+		self.messageDialog("Failed to transform attachment...");
 		return false;
 	};
 
@@ -618,7 +620,7 @@ IpfsSaver.prototype.handleUploadCanonicalUri = async function(self, event) {
 	var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, content);
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -679,7 +681,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if ($tw.saverHandler.isDirty() == true) {
 		const msg = "Unable to publish to Ens an unsaved wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -692,7 +694,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if (currentProtocol === fileProtocol) {
 		const msg = "Undefined Ipfs wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -702,7 +704,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if (protocol == null && cid == null) {
 		const msg = "Unable to publish. Unknown Ipfs identifier...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -712,7 +714,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if (ensDomain == null) {
 		const msg  ="Undefined Ens Domain...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 	if ($tw.utils.getIpfsVerbose()) console.info("Ens Domain: " + ensDomain);
@@ -721,7 +723,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	var { error, protocol, content } = await self.ensWrapper.getContenthash(ensDomain);
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -732,7 +734,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 		if (error != null)  {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			return false;
 		}
 
@@ -740,11 +742,11 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
 		if (error != null)  {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			return false;
 		} else if (resolved == null) {
 			console.error(error);
-			self.errorDialog("Nothing to publish. Unresolved current Ipns key...");
+			self.messageDialog("Nothing to publish. Unresolved current Ipns key...");
 			return false;
 		}
 
@@ -757,7 +759,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	if (content !== null && content === cid) {
 		const msg = "Nothing to publish. The current Ipfs identifier is up to date...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -765,7 +767,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	var { error } = await self.ensWrapper.setContenthash(ensDomain, cid);
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -782,7 +784,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if ($tw.saverHandler.isDirty() == true) {
 		const msg = "Unable to publish to Ipns an unsaved wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -795,7 +797,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (currentProtocol === fileProtocol) {
 		const msg = "Undefined Ipfs wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -805,7 +807,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (protocol == null || cid == null) {
 		const msg = "Unable to publish. Unknown Ipfs identifier...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -817,7 +819,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (ipnsName == null || ipnsKey == null) {
 		const msg = "Undefined default Ipns name or key...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 	if ($tw.utils.getIpfsVerbose()) console.info("Default Ipns name: " + ipnsName + ", Ipns key: " + ipnsKey);
@@ -826,7 +828,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (protocol === ipnsKeyword && cid === ipnsKey) {
 		const msg = "Nothing to publish. Ipns keys are matching....";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -834,7 +836,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -843,13 +845,13 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
 		if (error != null) {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			return false;
 		}
 		if (resolved == null) {
 			const msg = "Nothing to publish. Unable to resolve the current Ipns key....";
 			console.error(msg);
-			self.errorDialog(msg);
+			self.messageDialog(msg);
 			return false;
 		}
 		// Extract resolved cid
@@ -860,7 +862,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	var { error, keys } = await self.ipfsWrapper.getKeys(ipfs);
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 	var found = false;
@@ -873,7 +875,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (found == false) {
 		const msg = "Unknown default Ipns name and key...";
 		console.error(msg);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -881,7 +883,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, ipnsKey);
 	if (error != null) {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 	// Extract resolved cid if available
@@ -893,7 +895,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	if (resolved === cid) {
 		const msg = "Nothing to publish. Ipfs identifiers are matching....";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -901,7 +903,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	var { error } = await self.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
 	if (error != null) {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -915,7 +917,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
 		if (error != null)  {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			return false;
 		}
 	}
@@ -931,7 +933,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	if ($tw.saverHandler.isDirty() == true) {
 		const msg = "Unable to pin to Ipfs an unsaved wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -944,7 +946,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	if (currentProtocol === fileProtocol) {
 		const msg = "Undefined Ipfs wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -954,7 +956,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	if (protocol == null || cid == null) {
 		const msg = "Unable to pin. Unknown Ipfs identifier...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -962,7 +964,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -971,13 +973,13 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
 		if (error != null) {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			return false;
 		}
 		if (resolved == null) {
 			const msg = "Nothing to pin. Unable to resolve the current Ipns key....";
 			console.error(msg);
-			self.errorDialog(msg);
+			self.messageDialog(msg);
 			return false;
 		}
 		// Extract resolved cid
@@ -988,7 +990,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	var { error } = await self.ipfsWrapper.pinToIpfs(ipfs, cid);
 	if (error != null) {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -1005,7 +1007,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	if ($tw.saverHandler.isDirty() == true) {
 		const msg = "Unable to unpin from Ipfs an unsaved wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -1018,7 +1020,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	if (currentProtocol === fileProtocol) {
 		const msg = "Undefined Ipfs wiki...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -1028,7 +1030,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	if (protocol == null || cid == null) {
 		const msg = "Unable to unpin. Unknown Ipfs identifier...";
 		console.error(msg);
-		self.errorDialog(msg);
+		self.messageDialog(msg);
 		return false;
 	}
 
@@ -1036,7 +1038,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
 	if (error != null)  {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 
@@ -1045,13 +1047,13 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 		var { error, resolved } = await self.ipfsWrapper.resolveFromIpfs(ipfs, cid);
 		if (error != null) {
 			console.error(error);
-			self.errorDialog(error.message);
+			self.messageDialog(error.message);
 			return false;
 		}
 		if (resolved == null) {
 			const msg = "Nothing to unpin. Unable to resolve the current Ipns key....";
 			console.error(msg);
-			self.errorDialog(msg);
+			self.messageDialog(msg);
 			return false;
 		}
 		// Extract resolved cid
@@ -1062,7 +1064,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, cid);
 	if (error != null) {
 		console.error(error);
-		self.errorDialog(error.message);
+		self.messageDialog(error.message);
 		return false;
 	}
 

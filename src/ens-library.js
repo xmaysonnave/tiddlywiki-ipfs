@@ -152,12 +152,10 @@ EnsLibrary.prototype.getWeb3Provider = async function() {
 	if (window.ethers == undefined) {
 		await this.loadEtherJsLibrary();
 	}
-	// Load web3 provider
-	if (this.web3Provider == undefined || this.web3Provider == null) {
-		const provider = this.getProvider();
-		this.web3Provider = new window.ethers.providers.Web3Provider(provider);
-	}
-	return this.web3Provider;
+	// Instantiate Web3Provider
+	const provider = this.getProvider();
+	const web3Provider = new window.ethers.providers.Web3Provider(provider);
+	return web3Provider;
 }
 
 EnsLibrary.prototype.getRegistryAddress = async function(web3Provider) {
