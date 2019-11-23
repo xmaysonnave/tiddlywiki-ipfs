@@ -1,0 +1,15 @@
+title: Attachment View
+tags: Reference
+type: text/vnd.tiddlywiki
+
+<p>
+<b>Ipfs with ~TiddlyWiki</b> embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] to provide a convenient attachment explorer.
+</p>
+[img[$:/ipfs/saver/image/attachment]]
+<p>
+This specialized [[Attachment]] Tiddler displays all the tags managed by <b>Ipfs with ~TiddlyWiki</b>.
+</p>
+<<list-tagged-draggable tag:"$:/isAttachment" subFilter:"!is[system]">>
+<p>
+This Tiddler is also available in the [[TableOfContents]].
+</p>
