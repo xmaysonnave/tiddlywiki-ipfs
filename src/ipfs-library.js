@@ -28,8 +28,8 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
 	if (typeof window.IpfsHttpClient === "undefined") {
 		await $tw.utils.loadLibrary(
 			"IpfsHttpLibrary",
-			"https://cdn.jsdelivr.net/npm/ipfs-http-client@39.0.2/dist/index.min.js",
-			"sha384-DUTAjqwwqxmoFuDozFeVvanWVA8QQBYyGSq4MQOlBxH03rqD4yyaSl43RQHU5E8d",
+			"https://cdn.jsdelivr.net/npm/ipfs-http-client@40.0.0/dist/index.min.js",
+			"sha384-QCjXnZ/jDYrOegHOuYoR2Sa6gTS/7lgk/WLcdd09P0O1sBFYWi4rLgakaBVMXiIl",
 			true
 		);
 	}

@@ -68,7 +68,7 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
 				keys: null
 			};
 		}
-		if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched Ipfs keys...");
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched Ipns keys...");
 		return {
 			error: null,
 			keys: keys

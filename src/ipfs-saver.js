@@ -29,7 +29,7 @@ var IpfsSaver = function(wiki) {
 	this.wiki = wiki;
 	this.apiUrl = null;
 	this.ipfsProvider = null;
-	this.needTobeUnpinned = [];
+	this.toBeUnpinned = [];
 	this.ipfsWrapper = new IpfsWrapper();
 	this.ensWrapper = new EnsWrapper();
 	this.ipfsLibrary = new IpfsLibrary();
@@ -153,9 +153,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if (protocol != null && cid != null) {
 				ipfsProtocol = protocol;
 				if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
-					if (this.needTobeUnpinned.indexOf(cid) == -1) {
+					if (this.toBeUnpinned.indexOf(cid) == -1) {
 						unpin = cid;
-						this.needTobeUnpinned.push(unpin);
+						this.toBeUnpinned.push(unpin);
 						if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + unpin);
 					}
 				}
@@ -174,7 +174,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
 
 			// Resolve ipns key and ipns name
-			var { error, name: ipnsName, key: ipnsKey, resolved } = await this.resolveIpns(this, ipfs, ipnsKey, ipnsName);
+			var { error, ipnsName, ipnsKey, resolved } = await this.resolveIpns(this, ipfs, ipnsKey, ipnsName);
 			if (error != null) {
 				console.error(error);
 				callback(error.message);
@@ -183,8 +183,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
 			// Store to unpin previous if any
 			if ($tw.utils.getIpfsUnpin() && resolved != null) {
-				if (this.needTobeUnpinned.indexOf(resolved) == -1) {
-					this.needTobeUnpinned.push(resolved);
+				if (this.toBeUnpinned.indexOf(resolved) == -1) {
+					this.toBeUnpinned.push(resolved);
 					if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + resolved);
 				}
 			}
@@ -215,8 +215,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
 				// Store to unpin previous
 				unpin = content;
-				if (this.needTobeUnpinned.indexOf(unpin) == -1) {
-					this.needTobeUnpinned.push(unpin);
+				if (this.toBeUnpinned.indexOf(unpin) == -1) {
+					this.toBeUnpinned.push(unpin);
 					if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + unpin);
 				}
 			}
@@ -264,15 +264,15 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Unpin if applicable
-		if ($tw.utils.getIpfsUnpin() && this.needTobeUnpinned.length > 0) {
-			for (var i = 0; i < this.needTobeUnpinned.length; i++) {
-				var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.needTobeUnpinned[i]);
+		if ($tw.utils.getIpfsUnpin() && this.toBeUnpinned.length > 0) {
+			for (var i = 0; i < this.toBeUnpinned.length; i++) {
+				var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.toBeUnpinned[i]);
 				// Log and continue
 				if (error != null)  {
 					console.warn(error);
 				}
 			}
-			this.needTobeUnpinned = [];
+			this.toBeUnpinned = [];
 		}
 
 		// Done
@@ -356,8 +356,8 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 	const { pathname } = $tw.utils.parseUrlShort(uri);
 	const cid = pathname.substring(6);
 	// Store cid as it needs to be unpined when the wiki is saved if applicable
- 	if ($tw.utils.getIpfsUnpin() && self.needTobeUnpinned.indexOf(cid) == -1) {
-		self.needTobeUnpinned.push(cid);
+ 	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
+		self.toBeUnpinned.push(cid);
 		if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + cid);
 	}
 	return tiddler;
@@ -412,8 +412,8 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		}
 
 		// Store old cid as it needs to be unpined when the wiki is saved if applicable
-		if ($tw.utils.getIpfsUnpin() && self.needTobeUnpinned.indexOf(cid) == -1) {
-			self.needTobeUnpinned.push(cid);
+		if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
+			self.toBeUnpinned.push(cid);
 			if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + cid);
 		}
 
@@ -711,7 +711,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 		return false;
 	}
 
-	self.messageDialog("Successfully set Ens domain:\n\t" + ensDomain + "\nwith:\n\t/" + ipfsKeyword + "/" + cid);
+	self.messageDialog("Successfully set Ens domain:\n\t" + ensDomain + "\nprotocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
@@ -787,7 +787,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	// Resolve ipns key and ipns name
-	var { error, name: ipnsName, key: ipnsKey, resolved } = await self.resolveIpns(self, ipfs, ipnsKey, ipnsName);
+	var { error, ipnsName, ipnsKey, resolved } = await self.resolveIpns(self, ipfs, ipnsKey, ipnsName);
 	if (error != null) {
 		console.error(error);
 		self.messageDialog(error.message);
@@ -820,7 +820,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		}
 	}
 
-	self.messageDialog("Successfully published Ipns name: " + ipnsName + "\nwith:\n\t/" + ipfsKeyword + "/" + cid);
+	self.messageDialog("Successfully published Ipns name:\n\t" + ipnsName + "\nprotocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
@@ -920,7 +920,11 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 		return false;
 	}
 
-	self.messageDialog("Successfully pinned:\n\t/" + ipfsKeyword + "/" + cid);
+	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) !== -1) {
+		self.toBeUnpinned = self.arrayRemove(self.toBeUnpinned, cid);
+	}
+
+	self.messageDialog("Successfully pinned:\n\t" + "\nprotocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
@@ -1020,7 +1024,11 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 		return false;
 	}
 
-	self.messageDialog("Successfully unpinned:\n\t/" + ipfsKeyword + "/" + cid);
+	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) !== -1) {
+		self.toBeUnpinned = self.arrayRemove(self.toBeUnpinned, cid);
+	}
+
+	self.messageDialog("Successfully unpinned:\n\t" + "\nprotocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
@@ -1059,16 +1067,14 @@ IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 
 IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) {
 
-	var ipnsName = ipnsName;
-	var ipnsKey = ipnsKey;
 	var resolved = null;
 
 	// check
 	if ((ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") && (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "")) {
 		return {
 			error: new Error("Undefined Ipns key and Ipns Name..."),
-			name: null,
-			key: null,
+			ipnsName: null,
+			ipnsKey: null,
 			resolved: null
 		};
 	}
@@ -1085,12 +1091,13 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 		ipnsName = null;
 	}
 
+	// Load node Ipns keys
 	var { error, keys } = await self.ipfsWrapper.getIpnsKeys(ipfs);
 	if (error !== null)  {
 		return {
 			error: error,
-			name: null,
-			key: null,
+			ipnsName: null,
+			ipnsKey: null,
 			resolved: null
 		};
 	}
@@ -1108,8 +1115,8 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 		if (found === false) {
 			return {
 				error: new Error("Unknown Ipns name and Ipns key..."),
-				name: null,
-				key: null,
+				ipnsName: null,
+				ipnsKey: null,
 				resolved: null
 			};
 		}
@@ -1126,8 +1133,8 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 		if (found === false) {
 			return {
 				error: new Error("Unknown Ipns name: " + ipnsName),
-				name: null,
-				key: null,
+				ipnsName: null,
+				ipnsKey: null,
 				resolved: null
 			};
 		}
@@ -1144,36 +1151,36 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 		if (found === false) {
 			return {
 				error: new Error("Unknown Ipns key..."),
-				name: null,
-				key: null,
+				ipnsName: null,
+				ipnsKey: null,
 				resolved: null
 			};
 		}
 	}
 
 	// Resolve ipns key
-	var { error, resolved: resolved } = await self.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+	var { error, resolved } = await self.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
 	if (error !== null) {
 		return {
 			error: error,
-			name: null,
-			key: null,
+			ipnsName: null,
+			ipnsKey: null,
 			resolved: null
 		};
 	}
 	if (resolved == null) {
 		return {
 			error: new Error("Unable to resolve..."),
-			name: null,
-			key: null,
+			ipnsName: null,
+			ipnsKey: null,
 			resolved: null
 		};
 	}
 
 	return {
 		error: null,
-		name: ipnsName,
-		key: ipnsKey,
+		ipnsName: ipnsName,
+		ipnsKey: ipnsKey,
 		resolved: resolved.substring(6)
 	}
 
