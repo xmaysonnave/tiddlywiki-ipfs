@@ -2,7 +2,10 @@
   "name": "tiddlywiki-ipfs",
   "version": "v0.2.7-dev",
   "description": "Ipfs with TiddlyWiki",
-  "main": "ipfs-library.js",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
   "browserify": {
     "transform": [
       "babelify"
@@ -54,11 +57,11 @@
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
     "browserify-transform-tools": "^1.7.0",
-    "eslint": "^6.7.0",
+    "eslint": "^6.7.1",
     "eslint-config-prettier": "^6.5.0",
-    "eslint-plugin-flowtype": "^4.4.1",
+    "eslint-plugin-flowtype": "^4.5.2",
     "eslint-plugin-prettier": "^3.1.1",
-    "ethers": "^4.0.39",
+    "eslint-plugin-truffle": "^0.3.1",
     "prettier": "^1.19.1",
     "tiddlywiki": "^5.1.21"
   }

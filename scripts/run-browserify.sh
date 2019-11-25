@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 npx browserify \
   src/ipfs-library.js \
   -s IpfsLibrary \

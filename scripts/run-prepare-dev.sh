@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
 # plugin directory

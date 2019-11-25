@@ -89,6 +89,10 @@ IpfsSaver.prototype.handleMobileConsole = async function(self, tiddler) {
 				autoScale: true
 		});
 		window.eruda.init();
+		// Preserve user preference if any, default is 80
+		if (window.eruda.get().config.get("displaySize") === 80) {
+			window.eruda.get().config.set("displaySize", 40);
+		}
 		if ($tw.utils.getIpfsVerbose()) console.info("Mobile console has been loaded...");
 	} else {
 		window.eruda.destroy();
@@ -810,7 +814,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 		return false;
 	}
 
-	// Unpin previous, if fail log an continue
+	// Unpin previous
 	if ($tw.utils.getIpfsUnpin() && resolved != null) {
 		if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + resolved);
 		var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
@@ -924,7 +928,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 		self.toBeUnpinned = self.arrayRemove(self.toBeUnpinned, cid);
 	}
 
-	self.messageDialog("Successfully pinned:\n\t" + "\nprotocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
+	self.messageDialog("Successfully pinned:\n\t" + "protocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
@@ -1028,7 +1032,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 		self.toBeUnpinned = self.arrayRemove(self.toBeUnpinned, cid);
 	}
 
-	self.messageDialog("Successfully unpinned:\n\t" + "\nprotocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
+	self.messageDialog("Successfully unpinned:\n\t" + "protocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
