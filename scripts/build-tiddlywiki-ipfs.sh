@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 npx tiddlywiki build \
   --output wiki \
   --build \

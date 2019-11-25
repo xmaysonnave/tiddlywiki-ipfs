@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
 rm -f -R ./tw5-kin-filter > /dev/null 2>&1
