@@ -35,3 +35,5 @@ cd tw5-locator
 git checkout tags/v1.5.0 > /dev/null 2>&1
 cd ..
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
+
+exit 0
