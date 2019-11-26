@@ -1,5 +1,5 @@
-title: HowTo
+title: How To
 tags: Documentation
 type: text/vnd.tiddlywiki
 
-<<locator-view baseTitle:"HowTo" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>
+<<locator-view baseTitle:"How To" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

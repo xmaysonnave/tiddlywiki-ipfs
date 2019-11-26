@@ -2,33 +2,93 @@ title: Ens
 tags: Settings
 type: text/vnd.tiddlywiki
 
+<p>
+Some usefull links:
+</p>
 <ul>
-  <li>More informations about [ext[Ens|https://ens.domains/]]</li>
-  <li>More informations about [ext[Ens domain or Ens subdomain|https://app.ens.domains/]]</li>
-  <li>More informations about [ext[Ethereum|https://www.ethereum.org/]]</li>
+  <li>[ext[Ens|https://ens.domains/]]</li>
+  <li>[ext[Ens Application Manager|https://app.ens.domains/]]</li>
+  <li>[ext[Ens Documentation|https://docs.ens.domains/]]</li>
+  <li>[ext[Ethereum|https://www.ethereum.org/]]</li>
 </ul>
 [img[$:/ipfs/saver/image/settings/ens]]
 <p>
-To use the Ens feature, you need to setup your browser with the [ext[Metamask|https://github.com/MetaMask/metamask-extension]] extension.
+<b>Ipfs with ~TiddlyWiki</b> is able to publish to Ens any new or current wiki with an Ipfs identifier.
+</p>
+<p>
+Ens is powered by a set of Ethereum smart contracts and run on the Ethereum blockchain.
+</p>
+<p>
+Rather than accessing a wiki with a complex to remember url:
+</p>
+<p>
+https://ipfs.bluelightav.org/ipfs/QmWG1SH4uCpRZu28HKiDfmenCb7CbLN2eAF2bs5hBpXjgK
+</p>
+<p>
+According to Ens :
+</p>
+<q>
+ENS offers a secure & decentralised way to address resources both on and off the blockchain using simple, human-readable names:
+</q>
+<p>
+https://bluelightav.eth
+</p>
+<p>
+To use the Ens feature your environment needs the Ethereum knowledge.
+<p>
+<p>
+On Desktop you need a qualified browser:
+</p>
+<ul>
+<li>[ext[Firefox|https://www.mozilla.org/]]</li>
+<li>[ext[Chrome|https://www.google.com/chrome]]</li>
+<li>[ext[Chromium|https://www.chromium.org/]]</li>
+</ul>
+With the following qualified Ethereum wallet:
+<ul>
+<li>[ext[Metamask|https://metamask.io/]]</li>
+<li>[ext[Frame|https://frame.sh//]]</li>
+</ul>
+<p>
+On Mobile you need a qualified DApp browser with an Ethereum wallet:
+</p>
+<ul>
+<li>[ext[Metamask|https://metamask.io/]]</li>
+<li>[ext[Status|https://www.google.com/chrome]]</li>
+</ul>
+<p>
+On desktop, we recommend <b>Metamask</b> as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
+<b>Frame</b> add a little more complexity as it needs a native software on your platform plus a browser extension.
+</p>
+<p>
+On mobile, we recommend <b>Metamask</b> as your first choice.
+Either <b>Metamask</b> and <b>Status</b> are Ens capable DApp browsers.
+</p>
+<p>
 See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
 </p>
 <p>
-To use this feature, the [[Ens|Protocol]] protocol should be selected. See the [[How to Publish to Ens]] for more informations.
+To publish to Ens while saving:
+</p>
+<ul>
+<li>The [[Ens|Protocol]] protocol must be selected</li>
+<li>The <b>Ens Domain</b> field must be filled</li>
+</ul>
+<p>
+To publish without saving look at the [[How to Publish to Ens]].
 </p>
 <p>
 While saving the plugin will:
 </p>
 <ul>
-  <li>Save the wiki over Ipfs</li>
   <li>Verify if the Ens domain is valid</li>
   <li>Verify and load the associated Ens domain resolver</li>
-  <li>Update the associated Ens domain resolver with the new Ipfs identifier</li>
-  <li>[[Unpin]] the previous version if applicable</li>
-  <li>Redirect the current page to the Ens domain when the transaction will be completed</li>
+  <li>Save the wiki over Ipfs</li>
+  <li>Interact with your Ethereum wallet</li>
+  <li>Update the associated Ens domain resolver with the new Ipfs identifier on the Ethereum blockchain</li>
+  <li>[[Unpin]] the previous version if this option is selected</li>
+  <li>Redirect the current page to the Ens domain when the transaction is successfull</li>
 </ul>
 <p>
-The Ens Domain will be tested and updated accordindgly as long as you are the owner of this domain and have some [ext[Eth|https://www.ethereum.org/]].
-</p>
-<p>
-  To modify the default Ens domain, edit and modify [[$:/ipfs/saver/ens/domain]].
+  To modify the default Ens domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].
 </p>
