@@ -3,7 +3,7 @@ tags: Attachments
 type: text/vnd.tiddlywiki
 
 <p>
-  Here is the default list of supported attachment Media Types by [ext[TiddlyWiki|https://tiddlywiki.com/]].
+  Here is the default list of supported attachment Media Types by [ext[TiddlyWiki|https://tiddlywiki.com]].
 </p>
 <p>
   Technically only [ext[base64|https://en.wikipedia.org/wiki/Base64]] encoded attachments are supported.

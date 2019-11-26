@@ -6,6 +6,6 @@ type: text/vnd.tiddlywiki
 This [ext[TiddlyWiki|https://tiddlywiki.com/]] uses the [ext[Ipfs with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/]] plugin.
 </p>
 <p>
-To install the plugin drag and drop the following link ([[$:/plugins/ipfs]]) to your <b>~TiddlyWiki</b>.
+To install the plugin drag and drop the following link [[Ipfs with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
 </p>
 <<locator-view baseTitle:"Documentation" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

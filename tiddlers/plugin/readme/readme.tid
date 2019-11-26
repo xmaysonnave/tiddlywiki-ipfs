@@ -1,25 +1,41 @@
-tags:
 title: $:/plugins/ipfs/readme
 type: text/vnd.tiddlywiki
 
-! Ipfs with TiddlyWiki
+! Ipfs with ~TiddlyWiki
 
-This plugin provides the following feature:
-<ul>
-  <li>Persist over Ipfs saved <b>~TiddlyWiki's</b> and file attachments</li>
-  <li>Update Ipns identifier when <b>~TiddlyWiki's</b> are saved</li>
-  <li>Update [ext[Ens domain|https://ens.domains/]] over [ext[Ethereum|https://www.ethereum.org/]]</li>
-</ul>
+Features:
 
-* https://github.com/xmaysonnave/tiddlywiki-ipfs
+* Persist over Ipfs saved <b>~TiddlyWiki's</b> and file attachments
+* Update Ipns identifier when <b>~TiddlyWiki</b> is saved
+* Update [ext[Ens domain|https://ens.domains/]] over [ext[Ethereum|https://www.ethereum.org/]]
+
+Supported Browsers:
+
+* [ext[Firefox|https://www.mozilla.org]]
+* [ext[Chrome|https://www.google.com/chrome/]]
+* [ext[Chromium|https://www.chromium.org]]
+
+Supported Ethereum wallets:
+
+* [ext[Metamask|https://mtamask.io]]
+* [ext[Frame|https://frame.sh]]
+
+Supported Mobile DApp browsers:
+
+* [ext[Metamask|https://metamask.io]]
+* [ext[Status|https://status.im]]
+
+Resources:
+
+* https://github.com/xmaysonnave/tiddlywiki-ipfs/
 * https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md
 
 ! Documentation
 
-ENS Enabled browsers
+ENS Capable browsers
 
 * https://bluelightav.eth
 
-Non ENS Enable browsers
+Non ENS Capable browsers
 
 * https://bluelightav.eth.link

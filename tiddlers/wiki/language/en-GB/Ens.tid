@@ -6,10 +6,10 @@ type: text/vnd.tiddlywiki
 Some usefull links:
 </p>
 <ul>
-  <li>[ext[Ens|https://ens.domains/]]</li>
-  <li>[ext[Ens Application Manager|https://app.ens.domains/]]</li>
-  <li>[ext[Ens Documentation|https://docs.ens.domains/]]</li>
-  <li>[ext[Ethereum|https://www.ethereum.org/]]</li>
+  <li>[ext[Ens|https://ens.domains]]</li>
+  <li>[ext[Ens Application Manager|https://app.ens.domains]]</li>
+  <li>[ext[Ens Documentation|https://docs.ens.domains]]</li>
+  <li>[ext[Ethereum|https://www.ethereum.org]]</li>
 </ul>
 [img[$:/ipfs/saver/image/settings/ens]]
 <p>
@@ -22,7 +22,7 @@ Ens is powered by a set of Ethereum smart contracts and run on the Ethereum bloc
 Rather than accessing a wiki with a complex to remember url:
 </p>
 <p>
-https://ipfs.bluelightav.org/ipfs/QmWG1SH4uCpRZu28HKiDfmenCb7CbLN2eAF2bs5hBpXjgK
+[ext[https://gateway.ipfs.io/ipfs/QmWG1SH4uCpRZu28HKiDfmenCb7CbLN2eAF2bs5hBpXjgK]]
 </p>
 <p>
 According to Ens :
@@ -31,30 +31,30 @@ According to Ens :
 ENS offers a secure & decentralised way to address resources both on and off the blockchain using simple, human-readable names:
 </q>
 <p>
-https://bluelightav.eth
+[ext[https://bluelightav.eth]]
 </p>
 <p>
 To use the Ens feature your environment needs the Ethereum knowledge.
 <p>
 <p>
-On Desktop you need a qualified browser:
+On Desktop you need a supported browser:
 </p>
 <ul>
-<li>[ext[Firefox|https://www.mozilla.org/]]</li>
-<li>[ext[Chrome|https://www.google.com/chrome]]</li>
-<li>[ext[Chromium|https://www.chromium.org/]]</li>
+<li>[ext[Firefox|https://www.mozilla.org]]</li>
+<li>[ext[Chrome|https://www.google.com/chrome/]]</li>
+<li>[ext[Chromium|https://www.chromium.org]]</li>
 </ul>
-With the following qualified Ethereum wallet:
+With the following supported Ethereum wallets:
 <ul>
-<li>[ext[Metamask|https://metamask.io/]]</li>
-<li>[ext[Frame|https://frame.sh//]]</li>
+<li>[ext[Metamask|https://metamask.io]]</li>
+<li>[ext[Frame|https://frame.sh]]</li>
 </ul>
 <p>
-On Mobile you need a qualified DApp browser with an Ethereum wallet:
+On Mobile you need a supported DApp browser:
 </p>
 <ul>
-<li>[ext[Metamask|https://metamask.io/]]</li>
-<li>[ext[Status|https://www.google.com/chrome]]</li>
+<li>[ext[Metamask|https://metamask.io]]</li>
+<li>[ext[Status|https://status.im]]</li>
 </ul>
 <p>
 On desktop, we recommend <b>Metamask</b> as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
@@ -75,7 +75,7 @@ To publish to Ens while saving:
 <li>The <b>Ens Domain</b> field must be filled</li>
 </ul>
 <p>
-To publish without saving look at the [[How to Publish to Ens]].
+To publish without saving look at the [[HowTo Publish to Ens]].
 </p>
 <p>
 While saving the plugin will:

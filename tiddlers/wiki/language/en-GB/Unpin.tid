@@ -12,5 +12,5 @@ type: text/vnd.tiddlywiki
 <p>
   Unpining is not allowed with infura.io and in some situations this is an unwanted mechanism.
   <br/>
-  If you [[Publish to Ipns|How to Publish to Ipns]] an existing Ipns key to a new Ipns key, unpining the previous document could break the former Ipns key.
+  If you [[Publish to Ipns|HowTo Publish to Ipns]] an existing Ipns key to a new Ipns key, unpining the previous document could break the former Ipns key.
 </p>

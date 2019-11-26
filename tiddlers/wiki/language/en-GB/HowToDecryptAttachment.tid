@@ -1,5 +1,5 @@
-title: How To Decrypt Attachment
-tags: How To
+title: HowTo Decrypt Attachment
+tags: HowTo
 type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/decrypt]]
@@ -11,7 +11,7 @@ In its very nature every uploaded attachments and the <b>~TiddlyWiki</b> instanc
 In other word there is a master-child relationship between a <b>~TiddlyWiki</b> instance and its Ipfs attachments.
 </p>
 <p>
-The only way to unencrypt and read the document is to [[embed|How to Embed Attachment]] it in your current document.
+The only way to unencrypt and read the document is to [[embed|HowTo Embed Attachment]] it in your current document.
 </p>
 <p>
 Edit your attachment and remove the <b>_canonical_uri</b> property.
