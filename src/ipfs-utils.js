@@ -208,7 +208,7 @@ exports.getIpfsPriority = function() {
 Default Priority
 */
 exports.getIpfsDefaultPriority = function() {
-	return 3000;
+	return 3100;
 }
 
 /*

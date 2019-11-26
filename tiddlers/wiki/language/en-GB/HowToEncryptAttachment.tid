@@ -1,10 +1,10 @@
 title: How to Encrypt Attachment
-tags: Reference
+tags: HowTo
 type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/encrypt]]
 <p>
-If the locker is opened, your <b>~TiddlyWiki</b> instance is not encrypted. 
+If the locker is opened, your <b>~TiddlyWiki</b> instance is not encrypted.
 </p>
 <p>
 Follow the official [ext[Encryption|https://tiddlywiki.com/#Encryption]] tutorial from <b>~TiddlyWiki</b> for more informations.

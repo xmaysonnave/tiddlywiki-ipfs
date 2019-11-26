@@ -1,17 +1,17 @@
 title: How to Decrypt Attachment
-tags: Reference
+tags: HowTo
 type: text/vnd.tiddlywiki
 
 [img[$:/ipfs/saver/image/decrypt]]
 <p>
-If the locker is closed, your <b>~TiddlyWiki</b> instance is encrypted. 
-A password will be requested to access your document. 
-However attachments are not automatically unencrypted. 
-In its very nature every uploaded attachments and the <b>~TiddlyWiki</b> instance are completely decoupled. 
+If the locker is closed, your <b>~TiddlyWiki</b> instance is encrypted.
+A password will be requested to access your document.
+However attachments are not automatically unencrypted.
+In its very nature every uploaded attachments and the <b>~TiddlyWiki</b> instance are completely decoupled.
 In other word there is a master-child relationship between a <b>~TiddlyWiki</b> instance and its Ipfs attachments.
 </p>
 <p>
-The only way to unencrypt and read the document is to [[embed|How to Embed Attachment]] it in your current document. 
+The only way to unencrypt and read the document is to [[embed|How to Embed Attachment]] it in your current document.
 </p>
 <p>
 Edit your attachment and remove the <b>_canonical_uri</b> property.

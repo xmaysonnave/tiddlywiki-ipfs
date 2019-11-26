@@ -174,7 +174,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 			return false;
 		}
 
-		// Process Ipns if applicable
+		// Resolve Ipns
 		if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
 
 			// Resolve ipns key and ipns name
@@ -228,7 +228,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Upload	current document
-		if ($tw.utils.getIpfsVerbose()) console.info("Uploading current...");
+		if ($tw.utils.getIpfsVerbose()) console.info("Uploading wiki...");
 
 		// Add
 		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
@@ -328,7 +328,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		return false;
 	}
 
-	return false;
+	return true;
 
 };
 
@@ -530,7 +530,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 	}
 	const info = $tw.config.contentTypeInfo[type];
 	if (info == undefined || info.encoding !== "base64") {
-		const msg = "Upload to Ipfs is only supported for 'base64' attachment...";
+		const msg = "Upload to Ipfs is not supported...\nLook at the documentation about 'Supported Attachment'...";
 		console.error(msg);
 		self.messageDialog(msg);
 		return false;
@@ -1196,7 +1196,7 @@ Information about this saver
 IpfsSaver.prototype.info = {
 	name: "ipfs",
 	priority: 3000,
-	capabilities: ["save", "autosave"]
+	capabilities: ["save"]
 };
 
 /*
