@@ -2,7 +2,7 @@ title: Policy
 tags: Settings
 type: text/vnd.tiddlywiki
 
-<h2>Policy Settings</h2>
+<h2>Policy Setting</h2>
 [img[$:/ipfs/saver/image/settings/policy]]
 <p>
   <b>Ipfs with ~TiddlyWiki</b> is able to reach the Ipfs network with multiple providers:

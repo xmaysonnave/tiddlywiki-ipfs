@@ -2,19 +2,27 @@ title: Verbose
 tags: Settings
 type: text/vnd.tiddlywiki
 
+<h2>Verbose Setting</h2>
 [img[$:/ipfs/saver/image/settings/verbose]]
 <p>
-  The plugin is meant to display common errors through dialog boxes. 
-  The <b>Verbose</b> checkbox when selected gives more insight through the browsers Developer Tools Console.
+  The plugin is meant to display common errors through dialog boxes.
 </p>
 <p>
-  If you run a local Ipfs node, performance will be greatly enhanced however if you rely on a public node like Infura the console will give more informations when logical events are happening as the process of saving could be very slow. 
+  Processing content over <b>Ipfs</b> is a lengthy process. Every logical step gives a detailed output in the console.
 </p>
 <p>
-In its current state the plugin is unable to provide any Progress Monitor or an estimated size of files to be uploaded.
+In its current state the plugin is unable to provide feedback through Progress Monitors.
+</p>
+<h2>Desktop Console</h2>
+<p>
+  On desktop the <b>Verbose</b> mode output the feedback of every logical steps in the browser console.
 </p>
 <ul>
-  <li>[[Chrome Console|https://developers.google.com/web/tools/chrome-devtools/console]]</li>
-  <li>[[Firefox Console|https://developer.mozilla.org/en-US/docs/Tools/Web_Console]]</li>
+  <li>[[Chrome or Chromium Console|https://developers.google.com/web/tools/chrome-devtools/open]]</li>
+  <li>[[Firefox Console|https://developer.mozilla.org/en-US/docs/Tools/Web_Console/Opening_the_Web_Console]]</li>
 </ul>
 [img[$:/ipfs/saver/image/console]]
+<h2>Mobile Console</h2>
+<p>
+  On mobile or desktop the <b>Verbose</b> mode output its feedback in the [[Mobile Console]].
+</p>
