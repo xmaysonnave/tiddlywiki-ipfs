@@ -22,10 +22,7 @@ Ens is powered by a set of Ethereum smart contracts and run on the Ethereum bloc
 Rather than accessing a wiki with a complex to remember url:
 </p>
 <p>
-[ext[https://gateway.ipfs.io/ipfs/QmaPUjsVEmTZTXxrvxQDMcd7FpSPVac52mj72dkzRpUQQV/]]
-</p>
-<p>
-According to Ens :
+[ext[https://gateway.ipfs.io/ipfs/QmaPUjsVEmTZTXxrvxQDMcd7FpSPVac52mj72dkzRpUQQV]]
 </p>
 <q>
 ENS offers a secure & decentralised way to address resources both on and off the blockchain using simple, human-readable names:
@@ -44,7 +41,7 @@ On Desktop you need a supported browser:
 <li>[ext[Chrome|https://www.google.com/chrome/]]</li>
 <li>[ext[Chromium|https://www.chromium.org]]</li>
 </ul>
-With the following supported Ethereum wallets:
+With one of the following supported Ethereum browser extension:
 <ul>
 <li>[ext[Metamask|https://metamask.io]]</li>
 <li>[ext[Frame|https://frame.sh]]</li>
@@ -54,7 +51,6 @@ On Mobile you need a supported DApp browser:
 </p>
 <ul>
 <li>[ext[Metamask|https://metamask.io]]</li>
-<li>[ext[Status|https://status.im]]</li>
 </ul>
 <p>
 On desktop, we recommend <b>Metamask</b> as your first choice as the extension is able to resolve the <b>.eth</b> domain name.

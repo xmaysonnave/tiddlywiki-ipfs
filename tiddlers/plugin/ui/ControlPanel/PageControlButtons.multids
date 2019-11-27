@@ -1,5 +1,4 @@
 title: $:/config/PageControlButtons/Visibility/$:/
-tags: [[Hidden Settings]]
 
 core/ui/Buttons/encryption: show
 core/ui/Buttons/ipfs: show

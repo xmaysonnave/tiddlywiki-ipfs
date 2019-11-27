@@ -16,7 +16,7 @@ While saving the plugin will:
   <li>Save the wiki over Ipfs</li>
   <li>Verify if the Ipns Name and Key are valid</li>
   <li>Update the default Ipfs key with the new Ipfs identifier</li>
-  <li>[[Unpin]] the previous version if applicable</li>  
+  <li>[[Unpin]] the previous version if this option is selected</li>
   <li>Redirect the current page to your Ipfs key according to your default gateway</li>
 </ul>
 <p>
