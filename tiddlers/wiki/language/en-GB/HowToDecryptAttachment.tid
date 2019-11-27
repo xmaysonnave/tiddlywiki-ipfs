@@ -2,36 +2,54 @@ title: HowTo Decrypt Attachment
 tags: HowTo
 type: text/vnd.tiddlywiki
 
+<h2>~HowTo Decrypt Attachment</h2>
 [img[$:/ipfs/saver/image/decrypt]]
 <p>
-If the locker is closed, your <b>~TiddlyWiki</b> instance is encrypted.
+If the locker is closed, your wiki is encrypted.
+</p>
+<p>
 A password will be requested to access your document.
-However attachments are not automatically unencrypted.
-In its very nature every uploaded attachments and the <b>~TiddlyWiki</b> instance are completely decoupled.
-In other word there is a master-child relationship between a <b>~TiddlyWiki</b> instance and its Ipfs attachments.
 </p>
 <p>
-The only way to unencrypt and read the document is to [[embed|HowTo Embed Attachment]] it in your current document.
+Attachments are not automatically unencrypted.
+In its very nature every uploaded attachments and the wiki are completely decoupled.
+In other word there is a master-child relationship between a wiki instance and its Ipfs attachments.
 </p>
 <p>
-Edit your attachment and remove the <b>_canonical_uri</b> property.
+The solution to unencrypt and read the document is to [[Embed|HowTo Embed Attachment]] it in your current document.
+</p>
+<p>
+Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
+</p>
+[img[$:/ipfs/saver/image/embedded/console]]
+<p>
+Edit your attachment and remove the Tiddler <b>_canonical_uri</b> attribute.
 </p>
 [img[$:/ipfs/saver/image/encrypted/remove/canonical]]
 <p>
-Be sure to setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
+Save your Tiddler and wait until the process has been completed.
 </p>
-[img[$:/ipfs/saver/image/embedded/console]]
+<p>
+While unencrypting a password could be requested, especially when your wiki is unencrypted but its attachment remains encrypted.
+</p>
+[img[$:/ipfs/saver/image/unencrypt/password]]
 <p>
 Here is the output when your attachment has been unencrypted.
 </p>
 [img[$:/ipfs/saver/image/unencrypt/embedded]]
 <p>
-While unencrypting a password could be requested, especially when your <b>~TiddlyWiki</b> instance is unencrypted but its attachments remains encrypted.
-</p>
-[img[$:/ipfs/saver/image/unencrypt/password]]
-<p>
-[[The Ipfs Encrypted Little Prince]] describes this behaviour. Edit this Tiddler as it contains a password property to unencryt the document.
+[[The Ipfs Encrypted Little Prince]] describes this behaviour.
 </p>
 <p>
-Tags <<tag "$:/isAttachment">><<tag "$:/isIpfs">><<tag "$:/isEmbedded">><<tag "$:/isEncrypted">> always shows the current attachment status.
+Edit this Tiddler as it contains a password attribute whose value will unencryt the document.
+</p>
+<h2>Tags</h2>
+<ul>
+  <li><<tag "$:/isAttachment">></li>
+  <li><<tag "$:/isIpfs">></li>
+  <li><<tag "$:/isEmbedded">></li>
+  <li><<tag "$:/isEncrypted">></li>
+</ul>
+<p>
+Those tags always show the current attachment status.
 </p>

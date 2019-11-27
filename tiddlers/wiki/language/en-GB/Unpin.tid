@@ -16,3 +16,8 @@ type: text/vnd.tiddlywiki
 <p>
   Unpinning is not allowed with the [[ApiUrl|Ipfs]] <b>ipfs.infura.io:5001</b>.
 </p>
+<p>
+  In some situations <b>Unpining</b> is an unwanted mechanism.
+  <br/>
+  If you [[Publish to Ipns|How to Publish to Ipns]] an existing <b>Ipns Name</b> to a different <b>Ipns Name</b>, unpining the previous document will break the former Ipns Name.
+</p>

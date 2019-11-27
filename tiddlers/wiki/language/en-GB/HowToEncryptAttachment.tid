@@ -2,30 +2,45 @@ title: HowTo Encrypt Attachment
 tags: HowTo
 type: text/vnd.tiddlywiki
 
+<h2>~HowTo Encrypt Attachment</h2>
 [img[$:/ipfs/saver/image/encrypt]]
 <p>
-If the locker is opened, your <b>~TiddlyWiki</b> instance is not encrypted.
+If the locker is opened, your wiki is not encrypted.
 </p>
 <p>
 Follow the official [ext[Encryption|https://tiddlywiki.com/#Encryption]] tutorial from <b>~TiddlyWiki</b> for more informations.
 </p>
 <p>
-The default <b>~TiddlyWiki</b> behaviour do not encrypt attachments. <b>Ipfs with ~TiddlyWiki</b> enhance this behaviour.
+The default <b>~TiddlyWiki</b> behaviour do not encrypt attachments.
 </p>
 <p>
-Once you've locked your <b>~TiddlyWiki</b> instance every attachment you are going to deploy over Ipfs will be encrypted. Follow the [[HowTo Export Attachment]] reference tutorial.
+<b>Ipfs with ~TiddlyWiki</b> enhance this behaviour.
 </p>
 <p>
-Beware that even you've locked your document and didn't save it immediately all your attachments will be deployed encrypted. Check the [[HowTo Decrypt Attachment]] to workaround this behaviour.
+Once you've locked your <b>~TiddlyWiki</b> instance every attachment you are going to deploy over Ipfs will be encrypted.
+<br/>
+Follow the [[HowTo Export Attachment]] reference tutorial.
 </p>
 <p>
-Be sure to setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
+Beware that even you've locked your document and didn't save it immediately all your attachments will be deployed encrypted.
+<br/>
+Check the [[HowTo Decrypt Attachment]] to manage this behaviour.
+</p>
+<p>
+Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
 [img[$:/ipfs/saver/image/embedded/console]]
 <p>
 Here is the output when your attachment has been encrypted.
 </p>
 [img[$:/ipfs/saver/image/encrypted/attachment]]
+<h2>Tags</h2>
+<ul>
+  <li><<tag "$:/isAttachment">></li>
+  <li><<tag "$:/isIpfs">></li>
+  <li><<tag "$:/isEmbedded">></li>
+  <li><<tag "$:/isEncrypted">></li>
+</ul>
 <p>
-Tags <<tag "$:/isAttachment">><<tag "$:/isIpfs">><<tag "$:/isEmbedded">><<tag "$:/isEncrypted">> always shows the current attachment status.
+Those tags always show the current attachment status.
 </p>

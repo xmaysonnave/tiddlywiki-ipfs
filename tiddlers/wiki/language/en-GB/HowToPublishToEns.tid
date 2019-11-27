@@ -2,6 +2,7 @@ title: HowTo Publish to Ens
 tags: HowTo
 type: text/vnd.tiddlywiki
 
+<h2>~HowTo Publish to Ens</h2>
 [img[$:/ipfs/saver/image/publish/ens]]
 <p>
 Instead of saving with the [[Ens]] feature, the publish Ens action will update your Ens domain resolver with the current Ipfs identifier.
@@ -28,8 +29,8 @@ In the next step you need to fund your transaction.
 <p>
 The minimum required gas is, 0.000000001 ether or 1 gwei (around 1 cents).
 <br/>
-For faster transaction 5 gwei could be a maximum.
+For faster transaction 5 to 10 gwei could be a maximum.
 </p>
 <p>
-Check [ext[Ethereum Gas Station|https://ethgasstation.info/]] for further details about the current gas price in dollars.
+Check the [ext[Ethereum Gas Station|https://ethgasstation.info/]] for further details about the current gas price in dollars.
 </p>

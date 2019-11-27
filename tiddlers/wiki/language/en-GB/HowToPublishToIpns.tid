@@ -2,21 +2,22 @@ title: HowTo Publish to Ipns
 tags: HowTo
 type: text/vnd.tiddlywiki
 
+<h2>~HowTo Publish to Ipns</h2>
 [img[$:/ipfs/saver/image/publish/ipfs]]
 <p>
-Instead of saving with the [[Ipns]] feature, the publish Ipns action will update your Ipns key with the current Ipfs identifier.
+Instead of saving with the [[Ipns]] feature, the publish Ipns action will publish your <b>Ipns Name</b> with the current wiki Ipfs identifier.
 <br/>
-You can publish to Ipns the Ipfs identifier of another Ipns key. Read [[Unpin]] for more informations.
+You can publish to Ipns the Ipfs identifier of another <b>Ipns Name</b>.
+<br/>
+Read [[Unpin]] for more informations about this use case.
 </p>
 <p>
 While publishing to Ipns the plugin will:
 </p>
 <ul>
-  <li>If applicable, verify if the current Ipns key is valid</li>
-  <li>Verify if the default Ipns Name and Key are valid</li>
-  <li>Update the default Ipfs key with the new Ipfs identifier</li>
+  <li>Verify the <b>Ipns Name</b> and <b>Ipns Key</b> if both are present</li>
+  <li>Resolve the <b>Ipns Key</b> if only the <b>Ipns Name</b> have been filled</li>
+  <li>Resolve the <b>Ipns Name</b> if only the <b>Ipns Key</b> have been filled</li>
+  <li>Publish the <b>Ipfs Name</b> with the new Ipfs identifier</li>
+  <li>[[Unpin]] the previous Ipfs content if this option is selected</li>
 </ul>
-<p>
-When you use this feature, once the update has been completed you will not be redirected to your Ipns key.
-</p>
-
