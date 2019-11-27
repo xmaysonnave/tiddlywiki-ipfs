@@ -217,7 +217,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 		});
 		return result;
 	}
-	throw new Error("Undefined Ipfs add...");
+	throw new Error("Undefined Ipfs command add...");
 }
 
 IpfsLibrary.prototype.get = async function(client, cid) {
@@ -237,7 +237,7 @@ IpfsLibrary.prototype.get = async function(client, cid) {
 		const result = await client.get(cid);
 		return result;
 	}
-	throw new Error("Undefined Ipfs get...");
+	throw new Error("Undefined Ipfs command get...");
 }
 
 IpfsLibrary.prototype.cat = async function(client, cid) {
@@ -257,7 +257,7 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
 		const result = await client.cat(cid);
 		return result;
 	}
-	throw new Error("Undefined Ipfs cat...");
+	throw new Error("Undefined Ipfs command cat...");
 }
 
 IpfsLibrary.prototype.pin = async function(client, cid) {
@@ -277,7 +277,7 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
 		const result = await client.pin.add(cid);
 		return result;
 	}
-	throw new Error("Undefined Ipfs pin...");
+	throw new Error("Undefined Ipfs command pin...");
 }
 
 IpfsLibrary.prototype.unpin = async function(client, cid) {
@@ -297,7 +297,7 @@ IpfsLibrary.prototype.unpin = async function(client, cid) {
 		const result = await client.pin.rm(cid);
 		return result;
 	}
-	throw new Error("Undefined Ipfs unpin");
+	throw new Error("Undefined Ipfs command unpin");
 }
 
 IpfsLibrary.prototype.publish = async function(client, name, cid) {
@@ -319,7 +319,7 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
 		const result = await client.name.publish(cid, { key: name });
 		return result;
 	}
-	throw new Error("Undefined Ipns publish name...");
+	throw new Error("Undefined Ipfs command publish name...");
 }
 
 IpfsLibrary.prototype.resolve = async function(client, cid) {
@@ -327,20 +327,20 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
 		throw new Error("Undefined Ipfs provider...");
 	}
 	if (cid == undefined || cid == null || cid.trim() === "") {
-		throw new Error("Undefined Ipfs identifier...");
+		throw new Error("Undefined Ipns key...");
 	}
 	// Window Ipfs policy
 	if (client.enable) {
 		client = await client.enable({commands: ["name"]});
 	}
 	if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
-		if ($tw.utils.getIpfsVerbose()) console.info("Processing resolve Ipns identifier...");
+		if ($tw.utils.getIpfsVerbose()) console.info("Processing resolve Ipns key...");
 		const result = await client.name.resolve(cid, {
 			recursive: true
 		});
 		return result;
 	}
-	throw new Error("Undefined Ipns name resolve...");
+	throw new Error("Undefined Ipfs command name resolve...");
 }
 
 IpfsLibrary.prototype.keys = async function(client) {
@@ -356,7 +356,7 @@ IpfsLibrary.prototype.keys = async function(client) {
 		const result = await client.key.list();
 		return result;
 	}
-	throw new Error("Undefined Ipfs keys...");
+	throw new Error("Undefined Ipfs command keys...");
 }
 
 exports.IpfsLibrary = IpfsLibrary;

@@ -2,7 +2,7 @@ title: Ipfs
 tags: Settings
 type: text/vnd.tiddlywiki
 
-<h3>Ipfs</h3>
+<h2>Ipfs Settings</h2>
 [img[$:/ipfs/saver/image/settings/ipfs]]
 <p>
 To save your wiki over Ipfs, you need to select:
@@ -19,30 +19,33 @@ While saving the plugin will:
   <li>[[Unpin]] the previous version if this option is selected</li>
   <li>Redirect the current page to the new Ipfs identifier according to your default gateway</li>
 </ul>
+<h3>Url Selection</h3>
 <p>
 The plugin eases Url selections through drop-down lists.
 </p>
+<h4>Api Url</h4>
 <p>
 <<list-tagged-draggable tag:"$:/ipfs/saver/api">>
 <p>
-  To enhance the Api Url list:
+  To enhance the <b>Api Url</b> list:
 </p>
 <ul>
-  <li>Clone an existing Api Url Tiddler</li>
+  <li>Clone an existing <b>Api Url</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
   <li>Update the [[Default Api Url Tiddler|$:/ipfs/saver/api/default]] text if applicable</li>
 </ul>
+<h4>Gateway Url</h4>
 <p>
 <<list-tagged-draggable tag:"$:/ipfs/saver/gateway">>
 <p>
-  To enhance the Gateway Url list:
+  To enhance the <b>Gateway Url</b> list:
 </p>
 <ul>
-  <li>Clone an existing Gateway Url Tiddler</li>
+  <li>Clone an existing <b>Gateway Url</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
   <li>Update the [[Default Gateway Url Tiddler|$:/ipfs/saver/gateway/default]] if applicable</li>
 </ul>
-<h3>Utils</h3>
+<h2>Utils</h2>
 <p>
 [ext[Infura Status|https://status.infura.io/]]
 </p>

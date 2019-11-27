@@ -2,15 +2,7 @@ title: Ens
 tags: Settings
 type: text/vnd.tiddlywiki
 
-<p>
-Some usefull links:
-</p>
-<ul>
-  <li>[ext[Ens|https://ens.domains]]</li>
-  <li>[ext[Ens Application Manager|https://app.ens.domains]]</li>
-  <li>[ext[Ens Documentation|https://docs.ens.domains]]</li>
-  <li>[ext[Ethereum|https://www.ethereum.org]]</li>
-</ul>
+<h2>Ens Settings</h2>
 [img[$:/ipfs/saver/image/settings/ens]]
 <p>
 <b>Ipfs with ~TiddlyWiki</b> is able to publish to Ens any new or current wiki with an Ipfs identifier.
@@ -71,7 +63,7 @@ To publish to Ens while saving:
 <li>The <b>Ens Domain</b> field must be filled</li>
 </ul>
 <p>
-To publish without saving look at the [[HowTo Publish to Ens]].
+To publish without saving see [[HowTo Publish to Ens]].
 </p>
 <p>
 While saving the plugin will:
@@ -88,3 +80,10 @@ While saving the plugin will:
 <p>
   To modify the default Ens domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].
 </p>
+<h2>Reference</h2>
+<ul>
+  <li>[ext[Ens|https://ens.domains]]</li>
+  <li>[ext[Ens Application Manager|https://app.ens.domains]]</li>
+  <li>[ext[Ens Documentation|https://docs.ens.domains]]</li>
+  <li>[ext[Ethereum|https://www.ethereum.org]]</li>
+</ul>
