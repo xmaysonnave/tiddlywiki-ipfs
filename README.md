@@ -74,7 +74,7 @@ Starting from the file system, Follow the developer instructions [Running Tiddly
 * * [Ipfs Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
 * * [Ipfs Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
 
-<Remarks:
+Remarks:
 
 [EthDNS and EthLink](https://eth.link) take care of https://bluelightav.eth.link.
 
