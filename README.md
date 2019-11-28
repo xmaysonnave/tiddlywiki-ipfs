@@ -39,14 +39,6 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 * * [Ipfs with TiddlyWiki](https://bluelightav.eth.link)
 * * [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth.link/#Documentation)
 
-- [place this after nvm initialization!](#place-this-after-nvm-initialization)
-      - [Building TiddlyWiki](#building-tiddlywiki)
-      - [Running TiddlyWiki](#running-tiddlywiki)
-  - [Contributing](#contributing)
-  - [Authors](#authors)
-  - [License](#license)
-  - [Acknowledgments](#acknowledgments)
-
 ### Getting Started
 <a name="getting-started"/>
 
