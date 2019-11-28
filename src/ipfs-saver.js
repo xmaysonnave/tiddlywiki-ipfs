@@ -93,6 +93,10 @@ IpfsSaver.prototype.handleMobileConsole = async function(self, tiddler) {
 		if (window.eruda.get().config.get("displaySize") === 80) {
 			window.eruda.get().config.set("displaySize", 40);
 		}
+		// Preserve user preference if any, default is 0.95
+		if (window.eruda.get().config.get("transparency") === 0.95) {
+			window.eruda.get().config.set("transparency", 1);
+		}
 		if ($tw.utils.getIpfsVerbose()) console.info("Mobile console has been loaded...");
 	} else {
 		window.eruda.destroy();
