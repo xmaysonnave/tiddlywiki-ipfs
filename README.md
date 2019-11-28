@@ -7,8 +7,8 @@ This plugin provides the following features:
 
 * Persist over Ipfs saved `TiddlyWiki's` and file attachments
 * Publish Ipns Names when `TiddlyWiki's` are saved
-* Interact with Ethereum wallets [ext[Metamask|https://metamask.io]] or [ext[Frame|https://frame.sh]]
-* Publish [Ens Domain Resolver content](https://app.ens.domains) over [Ethereum](https://www.ethereum.org/)
+* Interact with Ethereum wallets [Metamask](https://metamask.io) or [Frame](https://frame.sh)
+* Publish [Ens Domain Resolver content](https://app.ens.domains) over [Ethereum](https://www.ethereum.org)
 
 According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
@@ -71,16 +71,13 @@ Starting from the file system, Follow the developer instructions [Running Tiddly
 * * [Ipfs Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
 * * [Ipfs Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
 
-<b>Remarks:</b>
-<p>
-[EthDNS and EthLink](https://eth.link/) take care of https://bluelightav.eth.link.
-</p>
-<p>
-https://bluelightav.eth.link requires [Ipfs Companion](https://ipfs-shipyard.github.io/ipfs-companion/) to be fully resolved as an Ipns identifier.
-</p>
-<p>
+<Remarks:
+
+[EthDNS and EthLink](https://eth.link) take care of https://bluelightav.eth.link.
+
+https://bluelightav.eth.link requires [Ipfs Companion](https://ipfs-shipyard.github.io/ipfs-companion) to be fully resolved as an Ipns identifier.
+
 If you don't need or don't want to interact with Ens or install [Ipfs Companion](https://ipfs-shipyard.github.io/ipfs-companion/) https://bluelightav.eth.link is enough to interact with Ipfs.
-</p>
 
 #### Run a local Ipfs node with Ipfs Desktop
 <a name="ipfs-desktop"/>
