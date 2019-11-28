@@ -1,13 +1,15 @@
 title: Supported Attachment
-tags: Reference
+tags: Attachments
 type: text/vnd.tiddlywiki
 
 <p>
-  Here is the default list of supported attachment [ext[Media Types|http://www.iana.org/assignments/media-types/media-types.xhtml]] by ~TiddlyWiki. 
+  Here is the default list of supported attachment Media Types by [ext[TiddlyWiki|https://tiddlywiki.com]].
+</p>
+<p>
   Technically only [ext[base64|https://en.wikipedia.org/wiki/Base64]] encoded attachments are supported.
 </p>
 <p>
-  <b>~TiddlyWiki</b> plugins are able to add new Media Types and as such this list could be more extensive.
+  <b>~TiddlyWiki</b> plugins are able to add new [ext[Media Types|http://www.iana.org/assignments/media-types/media-types.xhtml]] and as such this list could be more extensive.
 </p>
 <p>
 <table>

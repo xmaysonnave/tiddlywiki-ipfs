@@ -1,13 +1,14 @@
-title: How to Embed Attachment
-tags: Reference
+title: HowTo Embed Attachment
+tags: HowTo
 type: text/vnd.tiddlywiki
 
+<h2>~HowTo Embed Attachment</h2>
 [img[$:/ipfs/saver/image/ipfs]]
 <p>
-Embedding an attachment means retrieving an Ipfs attachment back to your <b>~TiddlyWiki</b> instance.
+Embedding an attachment means retrieving an Ipfs attachment back to your wiki.
 </p>
 <p>
-Edit your Tiddler and remove the <b>_canonical_uri</b> property.
+Edit your Tiddler and remove the Tiddler <b>_canonical_uri</b> attribute.
 </p>
 [img[$:/ipfs/saver/image/remove/canonical]]
 <p>
@@ -22,12 +23,9 @@ The attachment should be embedded in your document.
 </p>
 [img[$:/ipfs/saver/image/embedded]]
 <p>
-When you will save your document <b>Ipfs with ~TiddlyWiki</b> will unpin the previous Ipfs attachment.
+When you will save your document <b>Ipfs with ~TiddlyWiki</b> will unpin the previous Ipfs attachment if the [[Unpin]] has been selected.
 </p>
 <p>
-Be sure to setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
+Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
 [img[$:/ipfs/saver/image/embedded/console]]
-<p>
-Tags <<tag "$:/isAttachment">><<tag "$:/isIpfs">><<tag "$:/isEmbedded">><<tag "$:/isEncrypted">> always shows the current attachment status.
-</p>

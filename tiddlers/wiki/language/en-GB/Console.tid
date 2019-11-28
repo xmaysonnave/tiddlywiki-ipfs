@@ -1,0 +1,18 @@
+title: Console
+tags: Documentation
+type: text/vnd.tiddlywiki
+
+<h2>Desktop Console</h2>
+<p>
+On desktop the [[Verbose]] mode output feedbacks to the browser console and the Mobile console.
+</p>
+<ul>
+  <li>[[Chrome or Chromium Console|https://developers.google.com/web/tools/chrome-devtools/open]]</li>
+  <li>[[Firefox Console|https://developer.mozilla.org/en-US/docs/Tools/Web_Console/Opening_the_Web_Console]]</li>
+</ul>
+[img[$:/ipfs/saver/image/console]]
+<h2>Mobile Console</h2>
+<p>
+<b>Ipfs with ~TiddlyWiki</b> embeds a light console who provides feedbacks on mobile and desktop.
+</p>
+[img[$:/ipfs/saver/image/mobile/console]]

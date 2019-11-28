@@ -32,6 +32,8 @@ cp -R ./tw5-kin-filter/plugins/kin-filter ./build/plugins/kin-filter > /dev/null
 # tw5-locator
 git clone https://github.com/bimlas/tw5-locator
 cd tw5-locator
-git checkout tags/v1.4.0 > /dev/null 2>&1
+git checkout tags/v1.5.0 > /dev/null 2>&1
 cd ..
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
+
+exit 0

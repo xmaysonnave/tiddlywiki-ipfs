@@ -1,5 +1,0 @@
-title: Attachment
-tags: TableOfContents
-type: text/vnd.tiddlywiki
-
-<<locator-view baseTitle:"$:/isAttachment" tagFilter:"+[sort[color]]">>

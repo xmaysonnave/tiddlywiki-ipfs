@@ -46,7 +46,7 @@ exports.parseUrlShort = function(url) {
 	if (url == undefined || url == null || url.trim() === "") {
 		throw new Error("Undefined Url...");
 	}
-	const { protocol, host, hostname, port, pathname, search, searchObject, hash } = this.parseUrlFull(url);
+	const { protocol, hostname, port, pathname } = this.parseUrlFull(url);
 	return {
 		protocol: protocol,
 		hostname: hostname,
@@ -197,7 +197,7 @@ exports.getIpfsPriority = function() {
 		try {
 			priority = parseInt(priority);
 		} catch (error) {
-			console.log(error.message);
+			console.error(error.message);
 			priority = -1;
 		}
 	}
@@ -208,7 +208,7 @@ exports.getIpfsPriority = function() {
 Default Priority
 */
 exports.getIpfsDefaultPriority = function() {
-	return 3000;
+	return 3100;
 }
 
 /*
@@ -277,7 +277,7 @@ exports.getIpfsGatewayUrl = function() {
 Default Gateway Url
 */
 exports.getIpfsDefaultGatewayUrl = function() {
-	return "https://gateway.ipfs.io";
+	return "https://ipfs.infura.io";
 }
 
 /*
@@ -366,12 +366,21 @@ exports.getIpfsDefaultPolicy = function() {
 	return "http";
 }
 
+// https://observablehq.com/@bryangingechen/dynamic-import-polyfill
 exports.loadLibrary = async function(id, url, sri, module) {
 	const err = "Unable to load: " + url;
   return new Promise((resolve, reject) => {
 		try {
-			if (window.document.getElementById(id) == null) {
+			if (document.getElementById(id) == null) {
 				const script = document.createElement("script");
+				const cleanup = () => {
+					delete window[id];
+					script.onerror = null;
+					script.onload = null;
+					script.remove();
+					URL.revokeObjectURL(script.src);
+					script.src = "";
+				};
 				if (module == undefined) {
 					script.type = "text/javascript";
 				} else {
@@ -379,23 +388,24 @@ exports.loadLibrary = async function(id, url, sri, module) {
 				}
         script.id = id;
         script.async = false;
-        script.defer = false;
+        script.defer = "defer";
 				script.src = url;
 				if (sri) {
 					script.integrity = sri;
 				}
 				script.crossOrigin = "anonymous";
-				window.document.head.appendChild(script);
+				document.head.appendChild(script);
 				script.onload = () => {
-					console.log("Loaded: " + url);
-					resolve(true);
+					resolve(window[id]);
+					cleanup();
+					if ($tw.utils.getIpfsVerbose()) console.info("Loaded: " + url);
 				}
 				script.onerror = () => {
-					document.head.removeChild(script);
-					reject(new Error(err));
+					reject(new Error("Failed to load: " + url));
+					cleanup();
 				}
 			} else {
-				return resolve(true);
+				return resolve(window[id]);
 			}
 		} catch (error) {
 			reject(new Error(err));

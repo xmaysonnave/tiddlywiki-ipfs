@@ -1,27 +1,25 @@
-title: How to Export Attachment
-tags: Reference
+title: HowTo Export Attachment
+tags: HowTo
 type: text/vnd.tiddlywiki
 
+<h2>~HowTo Export Attachment</h2>
 [img[$:/ipfs/saver/image/export/embedded]]
 <p>
 Uploading an attachment could be a slow process. It really depends the attachment size and/or which server your are using.
 </p>
 <p>
-Try to experiment with infura.io Api Url and its Gateway Url and the following Tiddler:
+Use the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs]] and the <b>https://ipfs.infura.io</b> [[Gateway Url|Ipfs]] and experiment with the following Tiddler:
 </p>
 [[The Embedded Little Prince]]
 <p>
-Be sure to setup the [[Verbose]] property and watch the console displayed events. Be patient and let it go.
+Be sure to setup the [[Verbose]] property and watch the console displayed events.
 </p>
 [img[$:/ipfs/saver/image/console]]
 <p>
-Another good experiment is to use the infura.io Api Url and the gateway.ipfs.io Gateway Url. 
-That way you upload your attachment on infura and retrieve it with another server. 
-It helps to spread your attachment on different servers increasing its resilience.
+Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs]]  and the <b>https://gateway.ipfs.io</b> [[Gateway Url|Ipfs]].
+That way you upload your attachment on infura and retrieve it with another server.
+It helps spreading your attachment on another Ipfs server increasing its resilience.
 </p>
 <p>
-Each attachments, including the current <b>~TiddlyWiki</b> instance is carefully pined to avoid any garbage collection from Ipfs nodes.
-</p>
-<p>
-Tags <<tag "$:/isAttachment">><<tag "$:/isIpfs">><<tag "$:/isEmbedded">><<tag "$:/isEncrypted">> always shows the current attachment status.
+Each attachments, including the current wiki is carefully pinned to avoid any garbage collection from Ipfs nodes.
 </p>

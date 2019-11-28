@@ -20,18 +20,10 @@ exports.synchronous = false;
 
 exports.startup = function(continueStartupCallback) {
 	// Load verbose property
-	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver is verbose");
+	if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver is verbose");
 	// Load priority
 	var priority = $tw.utils.getIpfsPriority();
-	if ($tw.utils.getIpfsVerbose()) console.log("Ipfs Saver priority: " + priority);
-	// Prevent Metamask to reload the current page when network changes
-	var { protocol } = $tw.utils.parseUrlShort(document.URL);
-	if (protocol !== "file:") {
-		if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
-			// https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
-			window.ethereum.autoRefreshOnNetworkChange = false;
-		}
-	}
+	if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver priority: " + priority);
   // Continue
 	return continueStartupCallback();
 };

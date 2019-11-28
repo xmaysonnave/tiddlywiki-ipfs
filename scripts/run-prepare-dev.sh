@@ -25,3 +25,5 @@ cp ./src/plugin.info ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./tw5-kin-filter/plugins/kin-filter ./build/plugins/kin-filter > /dev/null 2>&1
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
+
+exit 0

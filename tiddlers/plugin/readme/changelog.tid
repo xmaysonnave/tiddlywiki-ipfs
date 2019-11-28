@@ -1,6 +1,9 @@
-tags:
 title: $:/plugins/ipfs/changelog
 type: text/vnd.tiddlywiki
+
+!! v0.2.7
+
+[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.6...v0.2.7]]
 
 !! v0.2.6
 

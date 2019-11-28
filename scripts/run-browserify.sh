@@ -8,3 +8,5 @@ npx browserify \
   -s EnsLibrary \
   -o build/plugins/ipfs/ens-library.js || exit 1
 
+  exit 0
+
