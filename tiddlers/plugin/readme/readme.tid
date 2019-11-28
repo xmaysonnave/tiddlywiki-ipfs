@@ -6,8 +6,9 @@ type: text/vnd.tiddlywiki
 Features:
 
 * Persist over Ipfs saved <b>~TiddlyWiki's</b> and file attachments
-* Update Ipns identifier when <b>~TiddlyWiki</b> is saved
-* Update [ext[Ens domain|https://ens.domains/]] over [ext[Ethereum|https://www.ethereum.org/]]
+* Publish Ipns Names when <b>~TiddlyWiki</b> is saved
+* Interact with Ethereum wallets
+* Publish [ext[Ens Domain Resolver content|https://ens.domains/]] over [ext[Ethereum|https://www.ethereum.org/]]
 
 Supported Browsers:
 

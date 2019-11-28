@@ -14,11 +14,11 @@
   "scripts": {
     "build-all-dev": "./scripts/build-all-dev.sh",
     "build-all": "./scripts/build-all.sh",
+    "build-tiddlywiki-ipfs": "./scripts/build-tiddlywiki-ipfs.sh",
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-dev": "./scripts/run-prepare-dev.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "test": "./scripts/test.sh",
-    "build-tiddlywiki-ipfs": "./scripts/build-tiddlywiki-ipfs.sh"
+    "test": "./scripts/test.sh"
   },
   "repository": {
     "type": "git",
