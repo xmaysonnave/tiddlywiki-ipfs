@@ -10,6 +10,7 @@ This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io
 This specialized [[Attachment]] Tiddler displays all the tagged attachments managed by [[Ipfs with TiddlyWiki|$:/plugins/ipfs]].
 </p>
 <ul>
+  <li><<tag "$:/isAttachment">></li>
   <li><<tag "$:/isEmbedded">></li>
   <li><<tag "$:/isEncrypted">></li>
   <li><<tag "$:/isIpfs">></li>

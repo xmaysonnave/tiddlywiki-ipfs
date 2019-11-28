@@ -17,30 +17,18 @@ The default <b>~TiddlyWiki</b> behaviour do not encrypt attachments.
 <b>Ipfs with ~TiddlyWiki</b> enhance this behaviour.
 </p>
 <p>
-Once you've locked your <b>~TiddlyWiki</b> instance every attachment you are going to deploy over Ipfs will be encrypted.
-<br/>
-Follow the [[HowTo Export Attachment]] reference tutorial.
+Once you've locked your wiki, uploaded attachments will be encrypted.
+Read the [[HowTo Export Attachment]] reference tutorial for more informations.
 </p>
 <p>
-Beware that even you've locked your document and didn't save it immediately all your attachments will be deployed encrypted.
-<br/>
-Check the [[HowTo Decrypt Attachment]] to manage this behaviour.
+Beware that even you've locked your wiki and didn't save it immediately the attachments you already uploaded are encrypted.
+Read the [[HowTo Decrypt Attachment]] to manage this behaviour.
 </p>
 <p>
 Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
 [img[$:/ipfs/saver/image/embedded/console]]
 <p>
-Here is the output when your attachment has been encrypted.
+Here is the output when a pdf attachment has been encrypted.
 </p>
 [img[$:/ipfs/saver/image/encrypted/attachment]]
-<h2>Tags</h2>
-<ul>
-  <li><<tag "$:/isAttachment">></li>
-  <li><<tag "$:/isIpfs">></li>
-  <li><<tag "$:/isEmbedded">></li>
-  <li><<tag "$:/isEncrypted">></li>
-</ul>
-<p>
-Those tags always show the current attachment status.
-</p>

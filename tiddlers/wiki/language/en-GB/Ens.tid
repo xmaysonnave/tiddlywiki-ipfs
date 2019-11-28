@@ -37,6 +37,7 @@ With one of the following supported Ethereum browser extension:
 <ul>
 <li>[ext[Metamask|https://metamask.io]]</li>
 <li>[ext[Frame|https://frame.sh]]</li>
+<li>[ext[Status|https://status.im]]</li>
 </ul>
 <p>
 On Mobile you need a supported DApp browser:
@@ -45,12 +46,12 @@ On Mobile you need a supported DApp browser:
 <li>[ext[Metamask|https://metamask.io]]</li>
 </ul>
 <p>
-On desktop, we recommend <b>Metamask</b> as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
+On desktop, we recommend [ext[Frame|https://frame.sh]] as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
 <b>Frame</b> add a little more complexity as it needs a native software on your platform plus a browser extension.
 </p>
 <p>
-On mobile, we recommend <b>Metamask</b> as your first choice.
-Either <b>Metamask</b> and <b>Status</b> are Ens capable DApp browsers.
+On mobile, we recommend [ext[Frame|https://frame.sh]] as your first choice.
+Either [ext[Frame|https://frame.sh]] and [ext[Status|https://status.im]] are Ens capable DApp browsers.
 </p>
 <p>
 See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
@@ -73,7 +74,7 @@ While saving the plugin will:
   <li>Verify and load the associated Ens domain resolver</li>
   <li>Save the wiki over Ipfs</li>
   <li>Interact with your Ethereum wallet</li>
-  <li>Update the associated Ens domain resolver with the new Ipfs identifier on the Ethereum blockchain</li>
+  <li>Update the associated Ens domain resolver content with the new Ipfs identifier on the Ethereum blockchain</li>
   <li>[[Unpin]] the previous version if this option is selected</li>
   <li>Redirect the current page to the Ens domain when the transaction is successfull</li>
 </ul>

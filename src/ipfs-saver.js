@@ -1051,12 +1051,16 @@ IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	if (priority !== undefined) {
 		// Update Ipfs saver
 		$tw.utils.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-		if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver priority: " + $tw.utils.getIpfsPriority());
+		if ($tw.utils.getIpfsVerbose()) console.info("Updated Ipfs Saver priority: " + $tw.utils.getIpfsPriority());
 	}
 	// process verbose
 	var verbose = changes["$:/ipfs/saver/verbose"];
 	if (verbose !== undefined) {
-		if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver is verbose...");
+		if ($tw.utils.getIpfsVerbose()) {
+			console.info("Ipfs Saver is verbose...");
+		} else {
+			console.info("Ipfs Saver is not verbose...");
+		}
 	}
 	// process unpin
 	var unpin = changes["$:/ipfs/saver/unpin"];

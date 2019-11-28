@@ -23,19 +23,9 @@ The attachment should be embedded in your document.
 </p>
 [img[$:/ipfs/saver/image/embedded]]
 <p>
-When you will save your document <b>Ipfs with ~TiddlyWiki</b> will [[Unpin]] if set the previous Ipfs attachment.
+When you will save your document <b>Ipfs with ~TiddlyWiki</b> will unpin the previous Ipfs attachment if the [[Unpin]] has been selected.
 </p>
 <p>
 Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
 [img[$:/ipfs/saver/image/embedded/console]]
-<h2>Tags</h2>
-<ul>
-  <li><<tag "$:/isAttachment">></li>
-  <li><<tag "$:/isIpfs">></li>
-  <li><<tag "$:/isEmbedded">></li>
-  <li><<tag "$:/isEncrypted">></li>
-</ul>
-<p>
-Those tags always show the current attachment status.
-</p>
