@@ -81,6 +81,13 @@ While saving the plugin will:
 <p>
   To modify the default Ens domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].
 </p>
+<h2>Supported Ens Ethereum Networks</h2>
+<ul>
+  <li>'Mainnet': Ethereum Main Network</li>
+	<li>'Ropsten': Ethereum Test Network (PoW)</li>
+	<li>'Rinkeby': Ethereum Test Network (PoA)</li>
+	<li>'Goerli': Ethereum Test Network (PoA)</li>
+</ul>
 <h2>Reference</h2>
 <ul>
   <li>[ext[Ens|https://ens.domains]]</li>
