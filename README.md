@@ -1,4 +1,4 @@
-# ```Ipfs with TiddyWiki```
+## ```Ipfs with TiddyWiki```
 <a name="ipfs-with-tiddlywiki"/>
 
 ```Ipfs with TiddyWiki``` is a [TiddlyWiki](https://tiddlywiki.com/) plugin who aims to help users, editors and developers to save their wikis and attachments over [Ipfs](https://ipfs.io).
@@ -26,7 +26,7 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 * Unstoppable
 * Transparency
 
-# Using ```Ipfs with TiddlyWiki```:
+## Using ```Ipfs with TiddlyWiki```:
 <a name="using-ipfs-with-tiddlywiki"/>
 
 * With a capable Ens browser:
@@ -39,10 +39,13 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 * * [Ipfs with TiddlyWiki](https://bluelightav.eth.link)
 * * [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth.link/#Documentation)
 
-* [Contributing](#contributing)
-* [Authors](#authors)
-* [License](#license)
-* [Acknowledgment](#acknowledgment)
+- [place this after nvm initialization!](#place-this-after-nvm-initialization)
+      - [Building TiddlyWiki](#building-tiddlywiki)
+      - [Running TiddlyWiki](#running-tiddlywiki)
+  - [Contributing](#contributing)
+  - [Authors](#authors)
+  - [License](#license)
+  - [Acknowledgments](#acknowledgments)
 
 ### Getting Started
 <a name="getting-started"/>
