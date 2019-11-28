@@ -84,9 +84,9 @@ While saving the plugin will:
 <h2>Supported Ens Ethereum Networks</h2>
 <ul>
   <li>'Mainnet': Ethereum Main Network</li>
-	<li>'Ropsten': Ethereum Test Network (PoW)</li>
-	<li>'Rinkeby': Ethereum Test Network (PoA)</li>
-	<li>'Goerli': Ethereum Test Network (PoA)</li>
+	<li>'Ropsten': Ethereum Test Network (~PoW)</li>
+	<li>'Rinkeby': Ethereum Test Network (~PoA)</li>
+	<li>'Goerli': Ethereum Test Network (~PoA)</li>
 </ul>
 <h2>Reference</h2>
 <ul>

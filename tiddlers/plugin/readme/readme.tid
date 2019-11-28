@@ -1,7 +1,7 @@
 title: $:/plugins/ipfs/readme
 type: text/vnd.tiddlywiki
 
-! Ipfs with ~TiddlyWiki
+!! Ipfs with ~TiddlyWiki
 
 Features:
 
@@ -21,29 +21,30 @@ Supported Ethereum wallets:
 * [ext[Metamask|https://metamask.io]]
 * [ext[Frame|https://frame.sh]]
 
-Supported Mobile DApp browsers:
+Supported Mobile DApp browser:
 
 * [ext[Metamask|https://metamask.io]]
 
 Supported Ens Ethereum Networks
+
 * 'Mainnet': Ethereum Main Network
-* 'Ropsten': Ethereum Test Network (PoW)
-* 'Rinkeby': Ethereum Test Network (PoA)
-* 'Goerli': Ethereum Test Network (PoA)
+* 'Ropsten': Ethereum Test Network (~PoW)
+* 'Rinkeby': Ethereum Test Network (~PoA)
+* 'Goerli': Ethereum Test Network (~PoA)
 
 Resources:
 
 * https://github.com/xmaysonnave/tiddlywiki-ipfs/
 * https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md
 
-! With a capable Ens browser:
+!! With a capable Ens browser:
 
 * [ext[Ipfs with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
 * [ext[Ipfs with TiddlyWiki Beta|https://bluelightav.eth]] on "Ropsten: Ethereum Test Network"
 * [ext[Ipfs with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
 * [ext[Ipfs with TiddlyWiki Documentation|https://bluelightav.eth/#Documentation]]
 
-! With a non capable Ens browser:
+!! With a non capable Ens browser:
 
 * [ext[Ipfs with TiddlyWiki|https://bluelightav.eth.link]]
 * [ext[Ipfs with TiddlyWiki Documentation|https://bluelightav.eth.link/#Documentation]]
