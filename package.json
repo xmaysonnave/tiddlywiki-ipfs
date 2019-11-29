@@ -42,7 +42,8 @@
     "content-hash": "2.5.0",
     "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git#v0.2.8",
     "multiaddr": "^7.2.1",
-    "uri-to-multiaddr": "^3.0.1"
+    "uri-to-multiaddr": "^3.0.1",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
