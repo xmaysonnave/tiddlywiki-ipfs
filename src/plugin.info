@@ -2,7 +2,7 @@
   "title": "$:/plugins/ipfs",
   "description": "Ipfs with TiddlyWiki",
   "author": "Xavier Maysonnave",
-  "version": "v0.2.7",
+  "version": "v0.2.8-dev",
   "license": "GPL-3.0-or-later",
   "core-version": ">=5.1.2",
   "source": "https://github.com/xmaysonnave/tiddlywiki-ipfs",

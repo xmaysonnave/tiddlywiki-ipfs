@@ -10,6 +10,7 @@ IpfsLibrary
 import CID  from "cids";
 import getIpfs from "ipfs-provider";
 import toMultiaddr from "uri-to-multiaddr";
+import url from "url";
 
 ( function() {
 
@@ -35,37 +36,73 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
 	}
 }
 
-IpfsLibrary.prototype.decodePathname = async function(pathname) {
+IpfsLibrary.prototype.parseUrl = function(urlToBeParsed) {
 	// Check
-	if (pathname == undefined || pathname == null || pathname.trim() === "") {
+	if (urlToBeParsed == undefined || urlToBeParsed == null || urlToBeParsed.trim() === "") {
+		throw new Error("Undefined Url...");
+	}
+	const urlData = url.parse(urlToBeParsed);
+	return {
+			href: urlData.href,
+			protocol: urlData.protocol,
+			host: urlData.host,
+			auth: urlData.auth,
+			hostname: urlData.hostname,
+			port: urlData.port,
+			pathname: urlData.pathname,
+			search: urlData.search,
+			fragment: urlData.hash
+	};
+}
+
+IpfsLibrary.prototype.decodePathname = function(pathname) {
+	// Check
+	if (pathname == undefined || pathname == null || pathname.trim() === "" || pathname.trim() === "/") {
 		return {
 			protocol: null,
 			cid: null
 		};
 	}
-	// Check
-	if (pathname.startsWith("/ipfs/") == false && pathname.startsWith("/ipns/") == false) {
-		return {
-			protocol: null,
-			cid: null
-		};
-	}
-	// Extract
-	var cid = null;
+	// Parse
+	const members = pathname.split("/");
 	var protocol = null;
-	try  {
-		protocol = pathname.substring(1, 5);
-		cid = pathname.substring(6);
-	} catch (error) {
+	var cid = null;
+	for (var i = 0; i < members.length; i++) {
+		// Ignore
+		if (members[i].trim() === "") {
+			continue;
+		}
+		// First non empty member
+		if (protocol == null) {
+			protocol = members[i];
+			continue;
+		}
+		// Second non empty member
+		if (cid == null) {
+			cid = members[i];
+			break;
+		}
+		// Nothing to process
+		break;
+	}
+	// Check
+	if (protocol == null || cid == null) {
+		return {
+			protocol: null,
+			cid: null
+		};
+	}
+	// Check protocol
+	if (protocol !== "ipfs" && protocol !== "ipns") {
 		return {
 			protocol: null,
 			cid: null
 		};
 	}
 	// Check
-	if (await this.isCid(cid) == false) {
+	if (this.isCid(cid) == false) {
 		return {
-			protocol: null,
+			protocol: protocol,
 			cid: null
 		};
 	}
@@ -76,9 +113,10 @@ IpfsLibrary.prototype.decodePathname = async function(pathname) {
 	}
 }
 
-IpfsLibrary.prototype.isCid = async function(cid) {
+IpfsLibrary.prototype.isCid = function(cid) {
 	try {
-		return CID.isCID(new CID(cid));
+		const newCid = new CID(cid);
+		return CID.isCID(newCid);
 	} catch (error) {
 		return false;
 	}

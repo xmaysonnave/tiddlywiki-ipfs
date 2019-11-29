@@ -53,7 +53,7 @@ EnsWrapper.prototype.getContenthash = async function(domain) {
 EnsWrapper.prototype.setContenthash = async function(domain, cid) {
 	try {
 		await this.ensLibrary.setContenthash(domain, cid);
-		if ($tw.utils.getIpfsVerbose()) console.info("Successfully set Ens domain content: " + ipfsKeyword + cid);
+		if ($tw.utils.getIpfsVerbose()) console.info("Successfully set Ens domain content...");
 		return {
 			error: null
 		};

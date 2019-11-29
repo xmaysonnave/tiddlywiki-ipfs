@@ -424,7 +424,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 
 	// Set Contenthash
 	try {
-		if ($tw.utils.getIpfsVerbose()) console.log("Processing Ens set content hash...");
+		if ($tw.utils.getIpfsVerbose()) console.info("Processing Ens domain content, protocol: ipfs, " + cid);
 		const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
 		const iface = new window.ethers.utils.Interface(abi)
 		const data = iface.functions.setContenthash.encode([domainHash, encoded]);

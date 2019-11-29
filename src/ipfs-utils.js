@@ -13,48 +13,6 @@ utils
 /*global $tw: false */
 "use strict";
 
-exports.parseUrlFull = function(url) {
-	// Check
-	if (url == undefined || url == null || url.trim() === "") {
-		throw new Error("Undefined Url...");
-	}
-	const parser = document.createElement("a");
-	const searchObject = {};
-	// Let the browser do the work
-	parser.href = url;
-	// Convert query string to object
-	var split;
-	const queries = parser.search.replace(/^\?/, "").split("&");
-	for (var i = 0; i < queries.length; i++ ) {
-			split = queries[i].split("=");
-			searchObject[split[0]] = split[1];
-	}
-	return {
-			protocol: parser.protocol,
-			host: parser.host,
-			hostname: parser.hostname,
-			port: parser.port,
-			pathname: parser.pathname,
-			search: parser.search,
-			searchObject: searchObject,
-			hash: parser.hash
-	};
-}
-
-exports.parseUrlShort = function(url) {
-	// Check
-	if (url == undefined || url == null || url.trim() === "") {
-		throw new Error("Undefined Url...");
-	}
-	const { protocol, hostname, port, pathname } = this.parseUrlFull(url);
-	return {
-		protocol: protocol,
-		hostname: hostname,
-		pathname: pathname,
-		port: port
-	};
-}
-
 exports.Base64ToUint8Array = function(base64) {
 	var raw = atob(base64);
 	var uint8Array = new Uint8Array(raw.length);

@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.2.7",
+  "version": "v0.2.8-dev",
   "description": "Ipfs with TiddlyWiki",
   "main": "truffle.js",
   "directories": {
