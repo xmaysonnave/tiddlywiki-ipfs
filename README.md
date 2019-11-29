@@ -16,8 +16,8 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 ```Ipfs with TiddlyWiki``` is a decentralized application (Đapps) who uses distributed computing systems:
 
-* [Ipfs](https://ipfs.io) as a decentralized storage network
-* [Ethereum Smart Contracts](https://ethereum.org/learn/#smart-contracts) as decentralized applications
+* [Ipfs](https://ipfs.io) is a decentralized storage network
+* [Ethereum Smart Contracts](https://ethereum.org/learn/#smart-contracts) are decentralized applications
 
 ```Ipfs with TiddlyWiki``` has the following (Đapps) characteristics:
 
