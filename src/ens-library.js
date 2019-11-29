@@ -120,7 +120,7 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 		// Handle user accounts per EIP 1193
 		accounts = await provider.send("eth_accounts");
 		// https://medium.com/metamask/breaking-changes-to-the-metamask-inpage-provider-b4dde069dd0a
-		// Metmask returns accounts.results rather than an array as described in their above communication
+		// Metamask returns accounts.results rather than an array as described in their above communication
 		if (accounts !== undefined && accounts !== null && typeof accounts.result !== "undefined" && Array.isArray(accounts.result)) {
 			accounts = accounts.result;
 		}
