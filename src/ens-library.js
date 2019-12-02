@@ -23,19 +23,19 @@ var EnsLibrary = function() {
 	this.registries = {
 		1: {
 			address: "0x314159265dd8dbb310642f98f50c066173c1259b",
-			network: "'Mainnet': Ethereum Main Network"
+			network: "Ethereum Main Network: 'Mainnet', chainId: '1'"
 		},
 		3: {
 			address: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
-			network: "'Ropsten': Ethereum Test Network (PoW)"
+			network: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'"
 		},
 		4: {
 			address: "0xe7410170f87102df0055eb195163a03b7f2bff4a",
-			network: "'Rinkeby': Ethereum Test Network (PoA)"
+			network: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'"
 		},
 		5: {
 			address: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
-			network: "'Goerli': Ethereum Test Network (PoA)"
+			network: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'"
 		}
 	};
 };
