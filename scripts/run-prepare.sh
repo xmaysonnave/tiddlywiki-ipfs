@@ -8,12 +8,7 @@ mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 # wiki directory
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 # ipfs scripts
-cp ./src/ens-wrapper.js ./build/plugins/ipfs > /dev/null 2>&1
-cp ./src/ipfs-saver.js ./build/plugins/ipfs > /dev/null 2>&1
-cp ./src/ipfs-startup.js ./build/plugins/ipfs > /dev/null 2>&1
-cp ./src/ipfs-utils.js ./build/plugins/ipfs > /dev/null 2>&1
-cp ./src/ipfs-version.js ./build/plugins/ipfs > /dev/null 2>&1
-cp ./src/ipfs-wrapper.js ./build/plugins/ipfs > /dev/null 2>&1
+cp ./src/*.js ./build/plugins/ipfs > /dev/null 2>&1
 # plugin tiddlers
 cp -R ./tiddlers/plugin/* ./build/plugins/ipfs > /dev/null 2>&1
 # wiki tiddlers
