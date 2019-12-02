@@ -96,6 +96,31 @@ exports.DecryptStringToBase64 = function(content, password) {
 	return base64;
 }
 
+exports.decryptFromPasswordPrompt = async function(content) {
+	return new Promise(function(resolve, reject) {
+		$tw.passwordPrompt.createPrompt({
+			serviceName: "Enter a password to decrypt the imported content!!",
+			noUserName: true,
+			canCancel: true,
+			submitText: "Decrypt",
+			callback: function(data) {
+				// Exit if the user cancelled
+				if (!data) {
+					reject(new Error("User canceled Password input..."));
+					return false;
+				}
+				// Password
+				const password = data.password;
+				// Decrypt
+				const base64 = $tw.utils.DecryptStringToBase64(content, password);
+				resolve(base64);
+				// Exit and remove the password prompt
+				return true;
+			}
+		});
+	});
+}
+
 /*
 Update a saver priority
 */
