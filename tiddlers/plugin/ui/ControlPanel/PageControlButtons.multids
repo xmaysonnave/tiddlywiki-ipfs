@@ -1,5 +1,7 @@
 title: $:/config/PageControlButtons/Visibility/$:/
 
+core/ui/Buttons/home: show
+core/ui/Buttons/more: show
 core/ui/Buttons/encryption: show
 core/ui/Buttons/ipfs: show
 core/ui/Buttons/load-mobile-console: show
