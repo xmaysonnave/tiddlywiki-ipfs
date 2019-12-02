@@ -332,13 +332,11 @@ IpfsSaver.prototype.handleFileImport = function(self, tiddler) {
 	addition.title = tiddler.fields.title;
 	addition.tags = (tiddler.fields.tags || []).slice(0);
 	// Add isAttachment tag
-	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
-	if (index == -1) {
+	if (tiddler.hasTag("$:/isAttachment")) {
 		$tw.utils.pushTop(addition.tags, "$:/isAttachment");
 	}
 	// Add isEmbedded tag
-	index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
-	if (index == -1) {
+	if (tiddler.hasTag("$:/isEmbedded")) {
 		$tw.utils.pushTop(addition.tags, "$:/isEmbedded");
 	}
 	return new $tw.Tiddler(tiddler, addition);
@@ -352,7 +350,7 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 		return tiddler;
 	}
 	const { pathname } = self.ipfsLibrary.parseUrl(uri);
-	const cid = pathname.substring(6);
+	const { cid } = self.ipfsLibrary.decodePathname(pathname);
 	// Store cid as it needs to be unpined when the wiki is saved if applicable
  	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
 		self.toBeUnpinned.push(cid);
@@ -367,13 +365,11 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	// oldTiddler
 	const oldTiddler = self.wiki.getTiddler(tiddler.fields.title);
 	if (oldTiddler == undefined || oldTiddler == null) {
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 		return tiddler;
 	}
 	// Process if _canonical_uri is set
 	const oldUri = oldTiddler.getFieldString("_canonical_uri");
 	if (oldUri == undefined || oldUri == null || oldUri.trim() === "") {
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 		return tiddler;
 	}
 
@@ -381,33 +377,11 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	const newUri = tiddler.getFieldString("_canonical_uri");
 	// Nothing to do
 	if (oldUri === newUri) {
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
-		return tiddler;
-	}
-
-	const { pathname } = self.ipfsLibrary.parseUrl(oldUri);
-	const cid = pathname.substring(6);
-
-	// Getting an Ipfs client
-	var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-	if (error != null)  {
-		console.error(error);
-		self.messageDialog(error.message);
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
 		return tiddler;
 	}
 
 	// Download
 	if (newUri == undefined || newUri == null || newUri.trim() === "") {
-
-		// Fetch the old cid
-		var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
-		if (error != null)  {
-			console.error(error);
-			self.messageDialog(error.message);
-			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler));
-			return tiddler;
-		}
 
 		// Store old cid as it needs to be unpined when the wiki is saved if applicable
 		if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
@@ -415,50 +389,51 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + cid);
 		}
 
-		// Content
-		var content = fetched;
+		// // Decode
+		const { pathname } = self.ipfsLibrary.parseUrl(oldUri);
+	 	var { cid } = self.ipfsLibrary.decodePathname(pathname);
+
+		// Getting an Ipfs client
+		var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+		if (error != null)  {
+			console.error(error);
+			self.messageDialog(error.message);
+			return tiddler;
+		}
+
+		// Fetch the old cid
+		var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
+		if (error != null)  {
+			console.error(error);
+			self.messageDialog(error.message);
+			return tiddler;
+		}
+
+		var newTiddler = tiddler;
 
 		// Decrypt
-		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
-		if (index != -1) {
+		if (tiddler.hasTag("$:/isEncrypted")) {
 			// Request for password if unknown
-			var password = null;
 			if ($tw.crypto.hasPassword() == false) {
-				// Prompt
-				$tw.passwordPrompt.createPrompt({
-					serviceName: "Enter a password to decrypt the imported attachment!!",
-					noUserName: true,
-					canCancel: true,
-					submitText: "Decrypt",
-					callback: function(data) {
-						// Exit if the user cancelled
-						if (!data) {
-							return false;
-						}
-						// Store
-						password = data.password;
-						if($tw.config.usePasswordVault) {
-							$tw.crypto.setPassword(data.password);
-						}
-						// Decrypt
-						const base64 = $tw.utils.DecryptStringToBase64(content, password);
-						self.updateSaveTiddler(self, tiddler, base64);
-						// Exit and remove the password prompt
-						return true;
-					}
-				});
+				try {
+					const base64 = await $tw.utils.decryptFromPasswordPrompt(fetched);
+					newTiddler = self.updateSaveTiddler(self, tiddler, base64);
+				} catch (error) {
+					console.error(error);
+					self.messageDialog(error.message);
+				}
 			} else {
 				// Decrypt
-				const base64 = $tw.utils.DecryptStringToBase64(content, null);
-				self.updateSaveTiddler(self, tiddler, base64);
+				const base64 = $tw.utils.DecryptStringToBase64(fetched, $tw.crypto.currentPassword);
+				newTiddler = self.updateSaveTiddler(self, tiddler, base64);
 			}
 		} else {
-			const base64 = $tw.utils.Uint8ArrayToBase64(content);
-			self.updateSaveTiddler(self, tiddler, base64);
+			const base64 = $tw.utils.Uint8ArrayToBase64(fetched);
+			newTiddler = self.updateSaveTiddler(self, tiddler, base64);
 		}
 
 		// Return
-		return tiddler;
+		return newTiddler;
 
 	}
 
@@ -470,30 +445,28 @@ IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
 		addition.title = tiddler.fields.title;
 		addition.tags = (tiddler.fields.tags || []).slice(0);
 		// Add isAttachment tag
-		var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
-		if (index == -1) {
+		if (tiddler.hasTag("$:/isAttachment")) {
 			$tw.utils.pushTop(addition.tags, "$:/isAttachment");
 		}
 		// Add isEmbedded tag
-		index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
-		if (index == -1) {
+		if (tiddler.hasTag("$:/isEmbedded")) {
 			$tw.utils.pushTop(addition.tags, "$:/isEmbedded");
 		}
 		// Remove isIpfs tag
-		index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
-		if (index != -1) {
+		if (tiddler.hasTag("$:/isIpfs")) {
 			addition.tags = self.arrayRemove(addition.tags, "$:/isIpfs");
 		}
 		// Remove isEncrypted tag
-		index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEncrypted") : -1;
-		if (index != -1) {
+		if (tiddler.hasTag("$:/isEncrypted")) {
 			addition.tags = self.arrayRemove(addition.tags, "$:/isEncrypted");
 		}
 		// Remaining attributes
 		addition["_canonical_uri"] = undefined;
 		addition["text"] = content;
 		// Update tiddler
-		$tw.wiki.addTiddler(new $tw.Tiddler(tiddler, addition));
+		const newTiddler = new $tw.Tiddler(tiddler, addition);
+		$tw.wiki.addTiddler(newTiddler);
+		return newTiddler;
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
@@ -592,14 +565,12 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 	addition.tags = (tiddler.fields.tags || []).slice(0);
 
 	// Add isAttachment tag
-	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isAttachment") : -1;
-	if (index == -1) {
+	if (tiddler.hasTag("$:/isAttachment")) {
 		$tw.utils.pushTop(addition.tags, "$:/isAttachment");
 	}
 
 	// Add isIpfs tag
-	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isIpfs") : -1;
-	if (index == -1) {
+	if (tiddler.hasTag("$:/isIpfs")) {
 		$tw.utils.pushTop(addition.tags, "$:/isIpfs");
 	}
 
@@ -609,8 +580,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 	}
 
 	// Remove Embedded tag
-	var index = tiddler.fields.tags !== undefined ? tiddler.fields.tags.indexOf("$:/isEmbedded") : -1;
-	if (index != -1) {
+	if (tiddler.hasTag("$:/isEncrypted")) {
 		addition.tags = self.arrayRemove(addition.tags, "$:/isEmbedded");
 	}
 
@@ -1175,11 +1145,14 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 		};
 	}
 
+	// resolve cid
+	const { cid } = self.ipfsLibrary.decodePathname(resolved);
+
 	return {
 		error: null,
 		ipnsName: ipnsName,
 		ipnsKey: ipnsKey,
-		resolved: resolved.substring(6)
+		resolved: cid
 	}
 
 }
