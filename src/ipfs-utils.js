@@ -89,6 +89,21 @@ exports.Utf8ArrayToStr = function(array) {
 	return out;
 }
 
+exports.updateTiddler = function(tiddler, type, text, url) {
+	// Update tiddler
+	const addition = $tw.wiki.getModificationFields();
+	addition.type = type;
+	addition.title = tiddler.fields.title;
+	addition.tags = (tiddler.fields.tags || []).slice(0);
+	// Remaining attributes
+	addition["_canonical_uri"] = url;
+	addition["text"] = text;
+	// Update tiddler
+	const newTiddler = new $tw.Tiddler(tiddler, addition);
+	$tw.wiki.addTiddler(newTiddler);
+	return newTiddler;
+}
+
 exports.DecryptStringToBase64 = function(content, password) {
 	var encryptedText = this.Utf8ArrayToStr(content);
 	var decryptedText = $tw.crypto.decrypt(encryptedText, password);

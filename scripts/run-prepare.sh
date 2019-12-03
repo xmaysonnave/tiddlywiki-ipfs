@@ -8,16 +8,15 @@ mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 # wiki directory
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 # ipfs scripts
-cp ./src/*.js ./build/plugins/ipfs > /dev/null 2>&1
+cp -R ./src/* ./build/plugins/ipfs > /dev/null 2>&1
 # plugin tiddlers
 cp -R ./tiddlers/plugin/* ./build/plugins/ipfs > /dev/null 2>&1
 # wiki tiddlers
 cp -R ./tiddlers/wiki/* ./build/tiddlers > /dev/null 2>&1
 # metadata
-cp ./src/tiddlywiki.files ./build > /dev/null 2>&1
-cp ./src/tiddlywiki.info ./build > /dev/null 2>&1
-# plugin.info
-cp ./src/plugin.info ./build/plugins/ipfs > /dev/null 2>&1
+cp ./metadata/tiddlywiki.files ./build > /dev/null 2>&1
+cp ./metadata/tiddlywiki.info ./build > /dev/null 2>&1
+cp ./metadata/plugin.info ./build/plugins/ipfs > /dev/null 2>&1
 # tw5-kin-filter
 git clone https://github.com/bimlas/tw5-kin-filter
 cd tw5-kin-filter

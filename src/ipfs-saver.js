@@ -156,7 +156,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		// Extract and check URL Ipfs protocol and cid
 		if (wikiProtocol !== fileProtocol) {
 			// Decode pathname
-			var { protocol, cid } = this.ipfsLibrary.decodePathname(wikiPathname);
+			var { protocol, cid } = this.ipfsLibrary.decodeCid(wikiPathname);
 			// Check
 			if (protocol != null && cid != null) {
 				ipfsProtocol = protocol;
@@ -350,7 +350,7 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 		return tiddler;
 	}
 	const { pathname } = self.ipfsLibrary.parseUrl(uri);
-	const { cid } = self.ipfsLibrary.decodePathname(pathname);
+	const { cid } = self.ipfsLibrary.decodeCid(pathname);
 	// Store cid as it needs to be unpined when the wiki is saved if applicable
  	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
 		self.toBeUnpinned.push(cid);
@@ -383,57 +383,46 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 	// Download
 	if (newUri == undefined || newUri == null || newUri.trim() === "") {
 
+		// Decode
+		const { pathname } = self.ipfsLibrary.parseUrl(oldUri);
+	 	var { cid } = self.ipfsLibrary.decodeCid(pathname);
+
 		// Store old cid as it needs to be unpined when the wiki is saved if applicable
 		if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
 			self.toBeUnpinned.push(cid);
 			if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + cid);
 		}
-
-		// // Decode
-		const { pathname } = self.ipfsLibrary.parseUrl(oldUri);
-	 	var { cid } = self.ipfsLibrary.decodePathname(pathname);
-
-		// Getting an Ipfs client
-		var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-		if (error != null)  {
-			console.error(error);
-			self.messageDialog(error.message);
-			return tiddler;
-		}
-
-		// Fetch the old cid
-		var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
-		if (error != null)  {
-			console.error(error);
-			self.messageDialog(error.message);
-			return tiddler;
-		}
-
-		var newTiddler = tiddler;
-
 		// Decrypt
 		if (tiddler.hasTag("$:/isEncrypted")) {
-			// Request for password if unknown
-			if ($tw.crypto.hasPassword() == false) {
-				try {
-					const base64 = await $tw.utils.decryptFromPasswordPrompt(fetched);
-					newTiddler = self.updateSaveTiddler(self, tiddler, base64);
-				} catch (error) {
-					console.error(error);
-					self.messageDialog(error.message);
-				}
-			} else {
-				// Decrypt
-				const base64 = $tw.utils.DecryptStringToBase64(fetched, $tw.crypto.currentPassword);
-				newTiddler = self.updateSaveTiddler(self, tiddler, base64);
+			const text = $tw.language.getRawString("LazyLoadingWarning");
+			$tw.utils.updateTiddler(tiddler, "text/vnd.tiddlywiki", text, oldUri);
+			const { error, tiddler } = await self.ipfsWrapper.loadTiddlerFromIpfsAndDecrypt(tiddler, oldUri);
+			if (error != null)  {
+				console.error(error);
+				self.messageDialog(error.message);
+				return tiddler;
 			}
 		} else {
+			// Getting an Ipfs client
+			var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+			if (error != null)  {
+				console.error(error);
+				self.messageDialog(error.message);
+				return tiddler;
+			}
+			// Fetch
+			var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
+			if (error != null)  {
+				console.error(error);
+				self.messageDialog(error.message);
+				return tiddler;
+			}
 			const base64 = $tw.utils.Uint8ArrayToBase64(fetched);
-			newTiddler = self.updateSaveTiddler(self, tiddler, base64);
+		 	tiddler = self.updateSaveTiddler(self, tiddler, base64);
 		}
 
 		// Return
-		return newTiddler;
+		return tiddler;
 
 	}
 
@@ -623,7 +612,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 	}
 
 	// Extract and check URL Ipfs protocol and cid
-	var { protocol, cid } = self.ipfsLibrary.decodePathname(pathname);
+	var { protocol, cid } = self.ipfsLibrary.decodeCid(pathname);
 
 	// Check
 	if (protocol == null) {
@@ -707,7 +696,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 	}
 
 	// Extract and check URL Ipfs protocol and cid
-	var { protocol, cid } = self.ipfsLibrary.decodePathname(pathname);
+	var { protocol, cid } = self.ipfsLibrary.decodeCid(pathname);
 
 	// Check
 	if (protocol == null) {
@@ -842,7 +831,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	}
 
 	// Extract and check URL Ipfs protocol and cid
-	var { protocol, cid } = self.ipfsLibrary.decodePathname(pathname);
+	var { protocol, cid } = self.ipfsLibrary.decodeCid(pathname);
 
 	// Check
 	if (protocol == null) {
@@ -946,7 +935,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	}
 
 	// Extract and check URL Ipfs protocol and cid
-	var { protocol, cid } = self.ipfsLibrary.decodePathname(pathname);
+	var { protocol, cid } = self.ipfsLibrary.decodeCid(pathname);
 
 	// Check
 	if (protocol == null) {
@@ -1146,7 +1135,7 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 	}
 
 	// resolve cid
-	const { cid } = self.ipfsLibrary.decodePathname(resolved);
+	const { cid } = self.ipfsLibrary.decodeCid(resolved);
 
 	return {
 		error: null,

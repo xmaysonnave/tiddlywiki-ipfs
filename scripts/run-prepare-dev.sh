@@ -6,16 +6,15 @@ mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 # wiki directory
 mkdir ./build/tiddlers > /dev/null 2>&1
 # plugin scripts
-cp ./src/*.js ./build/plugins/ipfs > /dev/null 2>&1
+cp -R ./src/* ./build/plugins/ipfs > /dev/null 2>&1
 # plugin tiddlers
 cp -R ./tiddlers/plugin/* ./build/plugins/ipfs > /dev/null 2>&1
 # wiki tiddlers
 cp -R ./tiddlers/wiki/* ./build/tiddlers > /dev/null 2>&1
 # metadata
-cp ./src/tiddlywiki.files ./build > /dev/null 2>&1
-cp ./src/tiddlywiki.info ./build > /dev/null 2>&1
-# plugin.info
-cp ./src/plugin.info ./build/plugins/ipfs > /dev/null 2>&1
+cp ./metadata/tiddlywiki.files ./build > /dev/null 2>&1
+cp ./metadata/tiddlywiki.info ./build > /dev/null 2>&1
+cp ./metadata/plugin.info ./build/plugins/ipfs > /dev/null 2>&1
 # tw5-kin-filter
 cp -R ./tw5-kin-filter/plugins/kin-filter ./build/plugins/kin-filter > /dev/null 2>&1
 # tw5-locator

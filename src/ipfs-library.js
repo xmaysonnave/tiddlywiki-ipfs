@@ -55,7 +55,7 @@ IpfsLibrary.prototype.parseUrl = function(urlToBeParsed) {
 	};
 }
 
-IpfsLibrary.prototype.decodePathname = function(pathname) {
+IpfsLibrary.prototype.decodeCid = function(pathname) {
 	// Check
 	if (pathname == undefined || pathname == null || pathname.trim() === "" || pathname.trim() === "/") {
 		return {

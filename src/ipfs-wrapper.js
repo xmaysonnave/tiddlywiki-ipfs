@@ -81,6 +81,47 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
 	}
 }
 
+IpfsWrapper.prototype.loadTiddlerFromIpfsAndDecrypt = async function(tiddler, url) {
+	// Decode
+	const { pathname } = this.ipfsLibrary.parseUrl(url);
+	var { cid } = this.ipfsLibrary.decodeCid(pathname);
+	// Getting an Ipfs client
+	var { error, ipfs } = await this.getIpfsClient();
+	if (error != null)  {
+		return {
+			error: error,
+			tiddler: null
+		}
+	}
+	// Fetch cid
+	var { error, fetched } = await this.fetchFromIpfs(ipfs, cid);
+	if (error != null)  {
+		return {
+			error: error,
+			tiddler: null
+		}
+	}
+	// Request for password if unknown
+	if ($tw.crypto.hasPassword() == false) {
+		const type = tiddler.getFieldString("type");
+		try {
+			fetched = await $tw.utils.decryptFromPasswordPrompt(fetched);
+			tiddler = $tw.utils.updateTiddler(tiddler, type, fetched);
+		} catch (error) {
+			fetched = $tw.utils.Uint8ArrayToBase64(fetched);
+			tiddler = $tw.utils.updateTiddler(tiddler, type, fetched, url);
+			if ($tw.utils.getIpfsVerbose()) console.warn(error.message);
+		}
+	} else {
+		const base64 = $tw.utils.DecryptStringToBase64(fetched, $tw.crypto.currentPassword);
+		tiddler = self.updateSaveTiddler(self, tiddler, base64);
+	}
+	return {
+		error: null,
+		tiddler: tiddler
+	}
+};
+
 IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
 	try {
 		const fetched = await this.ipfsLibrary.cat(ipfs, ipfsKeyword + cid);
