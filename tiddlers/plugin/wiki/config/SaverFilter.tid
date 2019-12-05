@@ -1,3 +1,0 @@
-title: $:/config/SaverFilter
-
-[all[]] -[[$:/HistoryList]] -[[$:/StoryList]] -[[$:/Import]] -[[$:/isEncrypted]] -[[$:/UploadName]] -[prefix[$:/state/]] -[prefix[$:/temp/]] -[tag[$:/isIpfs]]
