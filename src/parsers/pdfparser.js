@@ -15,8 +15,8 @@ The PDF parser embeds a PDF viewer
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 var ImageParser = function(type,text,options) {
-	const canonical_uri =  options._canonical_uri;
-	const tiddler =  options.tiddler;
+	let canonical_uri =  options._canonical_uri;
+	let tiddler =  options.tiddler;
 	let element = {
 			type: "element",
 			tag: "embed",
@@ -24,20 +24,27 @@ var ImageParser = function(type,text,options) {
 		},
 		src;
 	// Check for an externally encrypted linked pdf
-	if($tw.browser && canonical_uri && tiddler.hasTag("$:/isEncrypted")) {
+	if(canonical_uri && tiddler.hasTag("$:/isEncrypted")) {
 		// Decrypt
-		if ((text || "") === "") {
-			const ipfsWrapper = new IpfsWrapper();
-			ipfsWrapper.loadTiddlerFromIpfsAndDecrypt(tiddler, canonical_uri);
-			text = $tw.language.getRawString("LazyLoadingWarning");
-			$tw.utils.updateTiddler(tiddler, "text/vnd.tiddlywiki", text, canonical_uri);
-		} else {
-			element.attributes.src = {type: "string", value: canonical_uri};
-		}
+		const ipfsWrapper = new IpfsWrapper();
+		ipfsWrapper.loadFromIpfs(canonical_uri)
+		.then( (encrypted) => {
+			$tw.utils.decrypt(encrypted)
+			.then( (content) => {
+				const base64 = btoa(content);
+				element.attributes.src = {type: "string", value: "data:application/pdf;base64," + base64};
+				$tw.rootWidget.refresh([tiddler]);
+			})
+			.catch( (error) => {
+				if ($tw.utils.getIpfsVerbose()) console.warn(error.message);
+				element.attributes.src = {type: "string", value: canonical_uri};
+				$tw.rootWidget.refresh([tiddler]);
+			});
+		});
 	} else {
-		if(canonical_uri) {
+		if(canonical_uri && ((text || "") === "")) {
 			element.attributes.src = {type: "string", value: canonical_uri};
-		} else if(text) {
+		} else if (text) {
 			element.attributes.src = {type: "string", value: "data:application/pdf;base64," + text};
 		}
 	}

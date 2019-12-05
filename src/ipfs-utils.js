@@ -49,93 +49,6 @@ exports.StringToUint8Array = function(string) {
 	return ua;
 }
 
-// http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
-
-/* utf.js - UTF-8 <=> UTF-16 convertion
- *
- * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
- * Version: 1.0
- * LastModified: Dec 25 1999
- * This library is free.  You can redistribute it and/or modify it.
- */
-
-exports.Utf8ArrayToStr = function(array) {
-	var c, char2, char3;
-	var out = "";
-	var len = array.length;
-	var i = 0;
-	while(i < len) {
-		c = array[i++];
-		switch(c >> 4) {
-		case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-			// 0xxxxxxx
-			out += String.fromCharCode(c);
-			break;
-		case 12: case 13:
-			// 110x xxxx   10xx xxxx
-			char2 = array[i++];
-			out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-			break;
-		case 14:
-			// 1110 xxxx  10xx xxxx  10xx xxxx
-			char2 = array[i++];
-			char3 = array[i++];
-			out += String.fromCharCode(((c & 0x0F) << 12)
-				| ((char2 & 0x3F) << 6)
-				| ((char3 & 0x3F) << 0));
-			break;
-		}
-	}
-	return out;
-}
-
-exports.updateTiddler = function(tiddler, type, text, url) {
-	// Update tiddler
-	const addition = $tw.wiki.getModificationFields();
-	addition.type = type;
-	addition.title = tiddler.fields.title;
-	addition.tags = (tiddler.fields.tags || []).slice(0);
-	// Remaining attributes
-	addition["_canonical_uri"] = url;
-	addition["text"] = text;
-	// Update tiddler
-	const newTiddler = new $tw.Tiddler(tiddler, addition);
-	$tw.wiki.addTiddler(newTiddler);
-	return newTiddler;
-}
-
-exports.DecryptStringToBase64 = function(content, password) {
-	var encryptedText = this.Utf8ArrayToStr(content);
-	var decryptedText = $tw.crypto.decrypt(encryptedText, password);
-	var base64 = btoa(decryptedText);
-	return base64;
-}
-
-exports.decryptFromPasswordPrompt = async function(content) {
-	return new Promise(function(resolve, reject) {
-		$tw.passwordPrompt.createPrompt({
-			serviceName: "Enter a password to decrypt the imported content!!",
-			noUserName: true,
-			canCancel: true,
-			submitText: "Decrypt",
-			callback: function(data) {
-				// Exit if the user cancelled
-				if (!data) {
-					reject(new Error("User canceled Password input..."));
-					return false;
-				}
-				// Password
-				const password = data.password;
-				// Decrypt
-				const base64 = $tw.utils.DecryptStringToBase64(content, password);
-				resolve(base64);
-				// Exit and remove the password prompt
-				return true;
-			}
-		});
-	});
-}
-
 /*
 Update a saver priority
 */
@@ -163,8 +76,7 @@ exports.updateSaver = function(name, priority) {
 Sort the savers into priority order
 */
 exports.sortSavers = function() {
-	// Sort the savers into priority order
-	$tw.saverHandler.savers.sort(function(a, b) {
+	$tw.saverHandler.savers.sort( function(a, b) {
 		if (a.info.priority < b.info.priority) {
 			return -1;
 		} else {
@@ -175,7 +87,39 @@ exports.sortSavers = function() {
 			}
 		}
 	});
-	return;
+};
+
+exports.decrypt = async function(encrypted) {
+	// Request for password if unknown
+	var content = null;
+	if ($tw.crypto.hasPassword() == false) {
+			content = await $tw.utils.decryptFromPasswordPrompt(encrypted);
+	} else {
+		content = $tw.crypto.decrypt(encrypted, $tw.crypto.currentPassword);
+	}
+	return content;
+};
+
+exports.decryptFromPasswordPrompt = async function(encrypted) {
+	return new Promise(function(resolve, reject) {
+		$tw.passwordPrompt.createPrompt({
+			serviceName: "Enter a password to decrypt the imported content!!",
+			noUserName: true,
+			canCancel: true,
+			submitText: "Decrypt",
+			callback: function(data) {
+				if (!data) {
+					reject(new Error("User canceled password input..."));
+					return false;
+				}
+				// Decrypt
+				const password = data.password;
+				const decrypted = $tw.crypto.decrypt(encrypted, password);
+				resolve(decrypted);
+				return true;
+			}
+		});
+	});
 }
 
 /*

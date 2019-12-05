@@ -232,7 +232,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 		}
 
 		// Upload	current document
-		if ($tw.utils.getIpfsVerbose()) console.info("Uploading wiki...");
+		if ($tw.utils.getIpfsVerbose()) console.info("Uploading wiki: " + text.length + " bytes");
 
 		// Add
 		var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
@@ -362,92 +362,89 @@ IpfsSaver.prototype.handleDeleteTiddler = async function(self, tiddler) {
 /* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
-	// oldTiddler
-	const oldTiddler = self.wiki.getTiddler(tiddler.fields.title);
-	if (oldTiddler == undefined || oldTiddler == null) {
+	// previousTiddler
+	const previousTiddler = self.wiki.getTiddler(tiddler.fields.title);
+	if (previousTiddler == undefined || previousTiddler == null) {
 		return tiddler;
 	}
+
 	// Process if _canonical_uri is set
-	const oldUri = oldTiddler.getFieldString("_canonical_uri");
-	if (oldUri == undefined || oldUri == null || oldUri.trim() === "") {
+	const previousUri = previousTiddler.getFieldString("_canonical_uri");
+	if (previousUri == undefined || previousUri == null || previousUri.trim() === "") {
 		return tiddler;
 	}
 
-	// newTiddler _canonical_uri
-	const newUri = tiddler.getFieldString("_canonical_uri");
+	// process _canonical_uri
+	const uri = tiddler.getFieldString("_canonical_uri");
+
 	// Nothing to do
-	if (oldUri === newUri) {
+	if (previousUri === uri) {
 		return tiddler;
 	}
 
-	// Download
-	if (newUri == undefined || newUri == null || newUri.trim() === "") {
+	// _canonical_uri attribute has been removed
+	if (uri == undefined || uri == null || uri.trim() === "") {
+
+		// Load
+		var content = null;
+		try {
+			content = await self.ipfsWrapper.loadFromIpfs(previousUri);
+		} catch (error) {
+			console.error(error);
+			self.messageDialog(error.message);
+			return tiddler;
+		}
+
+		if ($tw.utils.getIpfsVerbose()) console.log("Embedding attachment: " + content.length + " bytes");
+
+		// Decrypt if necessary
+		var base64 = null;
+		if (tiddler.hasTag("$:/isEncrypted")) {
+			try {
+				const decrypted = await $tw.utils.decrypt(content);
+				base64 = btoa(decrypted);
+			} catch (error) {
+				console.warn(error.message);
+				return tiddler;
+			}
+		} else {
+			base64 = btoa(content);
+		}
+
+		// Reload Tiddler
+		tiddler = self.reloadTiddler(self, tiddler, base64, ["$:/isAttachment", "$:/isEmbedded"], ["$:/isIpfs", "$:/isEncrypted"]);
 
 		// Decode
-		const { pathname } = self.ipfsLibrary.parseUrl(oldUri);
-	 	var { cid } = self.ipfsLibrary.decodeCid(pathname);
+		const { pathname } = self.ipfsLibrary.parseUrl(previousUri);
+	 	const { cid } = self.ipfsLibrary.decodeCid(pathname);
 
 		// Store old cid as it needs to be unpined when the wiki is saved if applicable
 		if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
 			self.toBeUnpinned.push(cid);
 			if ($tw.utils.getIpfsVerbose()) console.info("Request to unpin: /" + ipfsKeyword + "/" + cid);
 		}
-		// Decrypt
-		if (tiddler.hasTag("$:/isEncrypted")) {
-			const text = $tw.language.getRawString("LazyLoadingWarning");
-			$tw.utils.updateTiddler(tiddler, "text/vnd.tiddlywiki", text, oldUri);
-			const { error, tiddler } = await self.ipfsWrapper.loadTiddlerFromIpfsAndDecrypt(tiddler, oldUri);
-			if (error != null)  {
-				console.error(error);
-				self.messageDialog(error.message);
-				return tiddler;
-			}
-		} else {
-			// Getting an Ipfs client
-			var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-			if (error != null)  {
-				console.error(error);
-				self.messageDialog(error.message);
-				return tiddler;
-			}
-			// Fetch
-			var { error, fetched } = await self.ipfsWrapper.fetchFromIpfs(ipfs, cid);
-			if (error != null)  {
-				console.error(error);
-				self.messageDialog(error.message);
-				return tiddler;
-			}
-			const base64 = $tw.utils.Uint8ArrayToBase64(fetched);
-		 	tiddler = self.updateSaveTiddler(self, tiddler, base64);
-		}
-
-		// Return
-		return tiddler;
 
 	}
 
+	// Return
+	return tiddler;
+
 }
 
-IpfsSaver.prototype.updateSaveTiddler = function(self, tiddler, content) {
+IpfsSaver.prototype.reloadTiddler = function(self, tiddler, content, addTags, removeTags) {
 		// Update tiddler
 		const addition = $tw.wiki.getModificationFields();
-		addition.title = tiddler.fields.title;
 		addition.tags = (tiddler.fields.tags || []).slice(0);
-		// Add isAttachment tag
-		if (tiddler.hasTag("$:/isAttachment")) {
-			$tw.utils.pushTop(addition.tags, "$:/isAttachment");
+		// Add Tags
+		for (var i = 0; i < addTags.length; i++) {
+			const tag = addTags[i];
+			if (tiddler.hasTag(tag) == false) {
+				$tw.utils.pushTop(addition.tags, tag);
+			}
 		}
-		// Add isEmbedded tag
-		if (tiddler.hasTag("$:/isEmbedded")) {
-			$tw.utils.pushTop(addition.tags, "$:/isEmbedded");
-		}
-		// Remove isIpfs tag
-		if (tiddler.hasTag("$:/isIpfs")) {
-			addition.tags = self.arrayRemove(addition.tags, "$:/isIpfs");
-		}
-		// Remove isEncrypted tag
-		if (tiddler.hasTag("$:/isEncrypted")) {
-			addition.tags = self.arrayRemove(addition.tags, "$:/isEncrypted");
+		// Remove Tags
+		for (var i = 0; i < removeTags.length; i++) {
+			$tw.utils.removeArrayEntries(addition.tags, removeTags);
 		}
 		// Remaining attributes
 		addition["_canonical_uri"] = undefined;
@@ -512,14 +509,14 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 		return false;
 	}
 
+	// Content
+	var content = tiddler.getFieldString("text");
+
 	// Upload	current attachment
-	if ($tw.utils.getIpfsVerbose()) console.log("Uploading attachment...");
+	if ($tw.utils.getIpfsVerbose()) console.log("Uploading attachment: " + content.length + " bytes");
 
 	// Transform the base64 encoded file into a Blob
-	var content = null;
 	try {
-		// Content
-		var content = tiddler.getFieldString("text");
 		// Encrypt if tiddlywiki is password protected
 		if ($tw.crypto.hasPassword()) {
 			const decodedBase64 = atob(content);
@@ -554,23 +551,23 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 	addition.tags = (tiddler.fields.tags || []).slice(0);
 
 	// Add isAttachment tag
-	if (tiddler.hasTag("$:/isAttachment")) {
+	if (tiddler.hasTag("$:/isAttachment") == false) {
 		$tw.utils.pushTop(addition.tags, "$:/isAttachment");
 	}
 
 	// Add isIpfs tag
-	if (tiddler.hasTag("$:/isIpfs")) {
+	if (tiddler.hasTag("$:/isIpfs") == false) {
 		$tw.utils.pushTop(addition.tags, "$:/isIpfs");
 	}
 
 	// Add isEncrypted tag
-	if ($tw.crypto.hasPassword()) {
+	if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
 		$tw.utils.pushTop(addition.tags, "$:/isEncrypted");
 	}
 
 	// Remove Embedded tag
-	if (tiddler.hasTag("$:/isEncrypted")) {
-		addition.tags = self.arrayRemove(addition.tags, "$:/isEmbedded");
+	if (tiddler.hasTag("$:/isEmbedded")) {
+		$tw.utils.removeArrayEntries(addition.tags, "$:/isEmbedded");
 	}
 
 	// Process _canonical_uri
@@ -874,7 +871,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 	}
 
 	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) !== -1) {
-		self.toBeUnpinned = self.arrayRemove(self.toBeUnpinned, cid);
+		$tw.utils.removeArrayEntries(self.toBeUnpinned, cid);
 	}
 
 	self.messageDialog("Successfully pinned:\n\t" + "protocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
@@ -978,19 +975,13 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 	}
 
 	if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) !== -1) {
-		self.toBeUnpinned = self.arrayRemove(self.toBeUnpinned, cid);
+		$tw.utils.removeArrayEntries(self.toBeUnpinned, cid);
 	}
 
 	self.messageDialog("Successfully unpinned:\n\t" + "protocol:\n\t" + ipfsKeyword + "\nidentifier:\n\t" + cid);
 
 	return false;
 
-}
-
-IpfsSaver.prototype.arrayRemove = function(array, value) {
-	return array.filter(function(element){
-			return element != value;
-	});
 }
 
 /* Beware you are in a widget, not in the saver */
