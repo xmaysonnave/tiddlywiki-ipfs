@@ -23,7 +23,10 @@ exports.startup = function(continueStartupCallback) {
   if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver is verbose");
   // Load priority
   var priority = $tw.utils.getIpfsPriority();
-  if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver priority: " + priority);
+  if ($tw.utils.getIpfsVerbose()) console.info(
+    "Ipfs Saver priority: "
+    + priority)
+  ;
 };
 
 })();

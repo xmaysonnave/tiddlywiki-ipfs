@@ -44,7 +44,10 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
         provider: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Ipfs provider: " + policy.provider);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Ipfs provider: "
+      + policy.provider
+    );
     return {
       error: null,
       ipfs: policy.ipfs,
@@ -90,7 +93,11 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
         fetched: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched: " + ipfsKeyword + cid);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully fetched: "
+      + ipfsKeyword
+      + cid)
+    ;
     return {
       error: null,
       fetched: fetched
@@ -113,7 +120,11 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
         added: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully added content: " + ipfsKeyword + added[0].hash);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully added content: "
+      + ipfsKeyword
+      + added[0].hash
+    );
     return {
       error: null,
       added: added[0].hash
@@ -136,7 +147,11 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
         resolved: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully resolved: " + ipnsKeyword + cid);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully resolved: "
+      + ipnsKeyword
+      + cid)
+    ;
     return {
       error: null,
       resolved: resolved
@@ -159,7 +174,11 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
         published: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully published: " + ipfsKeyword + cid);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully published: "
+      + ipfsKeyword
+      + cid
+    );
     return {
       error: null,
       published: published
@@ -182,7 +201,11 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
         pinned: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully pinned: " + ipfsKeyword + cid);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully pinned: "
+      + ipfsKeyword
+      + cid)
+    ;
     return {
       error: null,
       pinned: pinned
@@ -205,7 +228,11 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
         unpinned: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully unpinned: " + ipfsKeyword + cid);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully unpinned: "
+      + ipfsKeyword
+      + cid
+    );
     return {
       error: null,
       unpinned: unpinned
