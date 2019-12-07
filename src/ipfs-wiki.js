@@ -9,8 +9,8 @@ Adds the following properties to the wiki object:
 
 * `eventListeners` is a hashmap by type of arrays of listener functions
 * `changedTiddlers` is a hashmap describing changes to named tiddlers since wiki change events were last dispatched. Each entry is a hashmap containing two fields:
-	modified: true/false
-	deleted: true/false
+  modified: true/false
+  deleted: true/false
 * `changeCount` is a hashmap by tiddler title containing a numerical index that starts at zero and is incremented each time a tiddler is created changed or deleted
 * `caches` is a hashmap by tiddler title containing a further hashmap of named cache objects. Caches are automatically cleared when a tiddler is modified or deleted
 * `globalCache` is a hashmap by cache name of cache objects that are cleared whenever any tiddler change occurs

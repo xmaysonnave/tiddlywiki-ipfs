@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/parsers/audioparser.js
+title: $:/plugins/ipfs/parsers/audioparser.js
 type: application/javascript
 module-type: parser
 
@@ -13,29 +13,29 @@ The audio parser parses an audio tiddler into an embeddable HTML element
 "use strict";
 
 var AudioParser = function(type,text,options) {
-	const canonical_uri =  options._canonical_uri;
-	const tiddler =  options.tiddler;
-	const value = "data:" + type + ";base64,";
-	var element = {
-			type: "element",
-			tag: "audio",
-			attributes: {
-				controls: {type: "string", value: "controls"},
-				style: {type: "string", value: "width: 100%; object-fit: contain"}
-			}
-		},
-		src;
-	// Decrypt or not external resource
-	if (tiddler && canonical_uri && tiddler.hasTag("$:/isEncrypted")) {
-		$tw.utils.parserDecryptBase64(tiddler, value, element);
-	} else {
-		if (canonical_uri) {
-			element.attributes.src = {type: "string", value: canonical_uri};
-		} else if (text) {
-			element.attributes.src = {type: "string", value: value + text};
-		}
-	}
-	this.tree = [element];
+  const canonical_uri =  options._canonical_uri;
+  const tiddler =  options.tiddler;
+  const value = "data:" + type + ";base64,";
+  var element = {
+      type: "element",
+      tag: "audio",
+      attributes: {
+        controls: {type: "string", value: "controls"},
+        style: {type: "string", value: "width: 100%; object-fit: contain"}
+      }
+    },
+    src;
+  // Decrypt or not external resource
+  if (tiddler && canonical_uri && tiddler.hasTag("$:/isEncrypted")) {
+    $tw.utils.parserDecryptBase64(tiddler, value, element);
+  } else {
+    if (canonical_uri) {
+      element.attributes.src = {type: "string", value: canonical_uri};
+    } else if (text) {
+      element.attributes.src = {type: "string", value: value + text};
+    }
+  }
+  this.tree = [element];
 };
 
 exports["audio/ogg"] = AudioParser;
