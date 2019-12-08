@@ -25,8 +25,8 @@ exports.startup = function(continueStartupCallback) {
   var priority = $tw.utils.getIpfsPriority();
   if ($tw.utils.getIpfsVerbose()) console.info(
     "Ipfs Saver priority: "
-    + priority)
-  ;
+    + priority
+  );
 };
 
 })();
