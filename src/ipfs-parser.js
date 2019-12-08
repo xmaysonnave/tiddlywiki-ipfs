@@ -20,11 +20,11 @@ exports.httpGetToUint8Array = async function(url) {
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 300) {
-          reject(new Error("Status: " + xhr.status));
+          reject(new Error("Http Loading Error: " + xhr.status));
         } else {
           var content = new Uint8Array(this.response);
           if ($tw.utils.getIpfsVerbose()) console.info(
-            "Status: "
+            "Http Loading Success: "
             + xhr.status
             + ", "
             + url
@@ -68,13 +68,15 @@ exports.decryptUint8ArrayToBase64 = async function(encrypted) {
     const content = $tw.utils.Utf8ArrayToStr(encrypted);
     if ($tw.crypto.hasPassword() == false) {
       try {
-        const base64 = await $tw.utils.decryptFromPasswordPrompt(content);
+        const decrypted = await $tw.utils.decryptFromPasswordPrompt(content);
+        const base64 = btoa(decrypted);
         resolve(base64);
       } catch (error) {
         reject(error);
       }
     } else {
-      const base64 = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
+      const decrypted = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
+      const base64 = btoa(decrypted);
       resolve(base64);
     }
   });
@@ -94,8 +96,8 @@ exports.decryptFromPasswordPrompt = async function(content) {
         }
         // Decrypt
         const password = data.password;
-        const base64 = $tw.crypto.decrypt(content, password);
-        resolve(base64);
+        const decrypted = $tw.crypto.decrypt(content, password);
+        resolve(decrypted);
         return true;
       }
     });

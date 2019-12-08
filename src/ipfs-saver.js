@@ -465,13 +465,11 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 		// Load
 		var content = null;
 		try {
-			content = await $tw.utils.httpGetToUint8Array(uri);
+			content = await $tw.utils.httpGetToUint8Array(oldUri);
 		} catch (error) {
 			console.error(error);
 			self.messageDialog(error.message);
-			const newTiddler = new $tw.Tiddler(tiddler);
-			$tw.wiki.addTiddler(newTiddler);
-			return newTiddler;
+			return oldTiddler;
 		}
 		// Decrypt if necessary
 		if (tiddler.hasTag("$:/isEncrypted")) {
@@ -479,9 +477,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 				content = await $tw.utils.decryptUint8ArrayToBase64(content);
 			} catch (error) {
 				console.warn(error.message);
-				const newTiddler = new $tw.Tiddler(tiddler);
-				$tw.wiki.addTiddler(newTiddler);
-				return newTiddler;
+				return oldTiddler;
 			}
 		} else {
 			content = $tw.utils.Uint8ArrayToBase64(content);
@@ -505,7 +501,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 				tiddler,
 				["$:/isAttachment", "$:/isIpfs"],
 				["$:/isEmbedded", "$:/isEncrypted"],
-				undefined,
+				"",
 				uri
 			);
 		} else {
@@ -513,7 +509,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 				tiddler,
 				["$:/isAttachment"],
 				["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"],
-				undefined,
+				"",
 				uri)
 			;
 		}
@@ -633,6 +629,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 	try {
 		// Encrypt
 		if ($tw.crypto.hasPassword()) {
+			content = atob(content);
 			content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
 		}
 	} catch (error) {
@@ -660,10 +657,16 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 	addition.title = tiddler.fields.title;
 	addition.tags = (tiddler.fields.tags || []).slice(0);
 	// Process _canonical_uri
-	var uri = gatewayProtocol + "//" + gatewayHost + "/" + ipfsKeyword + "/" + added;
+	var uri = gatewayProtocol
+		+ "//"
+		+ gatewayHost
+		+ "/"
+		+ ipfsKeyword
+		+ "/"
+		+ added;
 	addition["_canonical_uri"] = uri;
 	// Reset text
-	addition["text"] = undefined;
+	addition["text"] = "";
 	// Add isAttachment tag
 	if (addition.tags.indexOf("$:/isAttachment") == -1) {
 		$tw.utils.pushTop(addition.tags, "$:/isAttachment");
