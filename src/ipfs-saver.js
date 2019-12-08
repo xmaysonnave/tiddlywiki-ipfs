@@ -511,8 +511,8 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         ["$:/isAttachment"],
         ["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"],
         "",
-        uri)
-      ;
+        uri
+      );
     }
   }
 
@@ -590,7 +590,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
     type = "text/html";
   }
   const info = $tw.config.contentTypeInfo[type.trim()];
-  if (info == undefined || info.encoding !== "base64") {
+  if (info == undefined || info == null || info.encoding !== "base64") {
     const msg = "Upload to Ipfs is not supported...\nLook at the documentation about 'Supported Attachment'...";
     console.error(msg);
     self.messageDialog(msg);
@@ -658,7 +658,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   addition.title = tiddler.fields.title;
   addition.tags = (tiddler.fields.tags || []).slice(0);
   // Process _canonical_uri
-  var uri = gatewayProtocol
+  uri = gatewayProtocol
     + "//"
     + gatewayHost
     + "/"
@@ -876,7 +876,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
       self.messageDialog(msg);
       return false;
     }
-  // Resolve cid
+    // Resolve cid
     var { error, resolved: cid } = await self.resolveIpns(self, ipfs, cid);
     if (error != null) {
       console.error(error);
@@ -905,6 +905,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
     "Publishing Ipns name: "
     + ipnsName
   );
+
   var { error } = await self.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
   if (error != null) {
     console.error(error);
@@ -918,8 +919,8 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
       "Request to unpin: /"
       + ipfsKeyword
       + "/"
-      + resolved)
-    ;
+      + resolved
+    );
     var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
     // Log and continue
     if (error != null)	{
@@ -1030,8 +1031,9 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
     "Pinning: /"
     + ipfsKeyword
     + "/"
-    + cid)
-  ;
+    + cid
+  );
+
   var { error } = await self.ipfsWrapper.pinToIpfs(ipfs, cid);
   if (error != null) {
     console.error(error);
@@ -1243,8 +1245,8 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
       + " and Ipns key: /"
       + ipnsKeyword
       + "/"
-      + ipnsKey)
-    ;
+      + ipnsKey
+    );
     var found = false;
     for (var index = 0; index < keys.length; index++) {
       if (keys[index].name === ipnsName && keys[index].id === ipnsKey) {
