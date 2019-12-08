@@ -149,8 +149,8 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
     }
     if ($tw.utils.getIpfsVerbose()) console.info(
       "Successfully resolved: "
-      + ipnsKeyword
-      + cid
+      + ipfsKeyword
+      + resolved
     );
     return {
       error: null,
