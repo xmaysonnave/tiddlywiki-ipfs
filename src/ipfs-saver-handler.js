@@ -1,21 +1,37 @@
 /*\
 title: $:/plugins/ipfs/ipfs-saver-handler.js
 type: application/javascript
-module-type: utils
+module-type: global
 
 The saver handler tracks changes to the store and handles saving the entire wiki via saver modules.
 
 \*/
-( function(){
+( function() {
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
 "use strict";
 
+function IpfsSaverHandler() {}
+
+IpfsSaverHandler.prototype.initSavers = function(moduleType) {
+	moduleType = moduleType || "saver";
+	// Instantiate the available savers
+	this.savers = [];
+	var self = this;
+	$tw.modules.forEachModuleOfType(moduleType,function(title,module) {
+		if(module.canSave(self)) {
+			self.savers.push(module.create(self.wiki));
+		}
+	});
+	// Sort savers
+	this.sortSavers();
+};
+
 /*
 Update a saver priority
 */
-exports.updateSaver = function(name, priority) {
+IpfsSaverHandler.prototype.updateSaver = function(name, priority) {
   if (priority !== undefined && name !== undefined) {
     // Locate saver
     var saver = null;
@@ -30,7 +46,7 @@ exports.updateSaver = function(name, priority) {
       // Update saver priority info
       saver.info.priority = priority;
       // Sort savers
-      $tw.utils.sortSavers();
+      this.sortSavers();
     }
   }
 };
@@ -38,7 +54,7 @@ exports.updateSaver = function(name, priority) {
 /*
 Sort the savers into priority order
 */
-exports.sortSavers = function() {
+IpfsSaverHandler.prototype.sortSavers = function() {
   $tw.saverHandler.savers.sort(function(a,b) {
     if(a.info.priority < b.info.priority) {
       return -1;
@@ -51,5 +67,7 @@ exports.sortSavers = function() {
     }
   });
 };
+
+exports.IpfsSaverHandler = IpfsSaverHandler;
 
 })();

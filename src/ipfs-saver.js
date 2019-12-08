@@ -1176,7 +1176,7 @@ IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
 	var priority = changes["$:/ipfs/saver/priority/default"];
 	if (priority !== undefined) {
 		// Update Ipfs saver
-		$tw.utils.updateSaver("ipfs", $tw.utils.getIpfsPriority());
+		$tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
 		if ($tw.utils.getIpfsVerbose()) console.info(
 			"Updated Ipfs Saver priority: "
 			+ $tw.utils.getIpfsPriority()

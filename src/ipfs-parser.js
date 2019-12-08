@@ -7,7 +7,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
 
 \*/
 
-( function(){
+( function() {
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
