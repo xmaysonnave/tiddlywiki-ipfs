@@ -20,10 +20,19 @@ exports.httpGetToUint8Array = async function(url) {
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 300) {
-          reject(new Error("Status code = " + xhr.status));
+          reject(new Error("Status: " + xhr.status + ", Text: " + xhr.statusText));
         } else {
           var content = new Uint8Array(this.response);
-          if ($tw.utils.getIpfsVerbose()) console.info("Successfully loaded: " + url);
+          if ($tw.utils.getIpfsVerbose()) console.info(
+            "Status: "
+            + xhr.status
+            + ", "
+            + xhr.statusText
+          );
+          if ($tw.utils.getIpfsVerbose()) console.info(
+            "Loaded: "
+            + url
+          );
           resolve(content);
         }
       }
@@ -64,7 +73,7 @@ exports.decryptUint8ArrayToBase64 = async function(encrypted) {
     const content = $tw.utils.Utf8ArrayToStr(encrypted);
     if ($tw.crypto.hasPassword() == false) {
       try {
-        const base64 = await $tw.utils.decryptFromPasswordPromptToBase64(content);
+        const base64 = await $tw.utils.decryptFromPasswordPrompt(content);
         resolve(base64);
       } catch (error) {
         reject(error);
@@ -76,7 +85,7 @@ exports.decryptUint8ArrayToBase64 = async function(encrypted) {
   });
 };
 
-exports.decryptFromPasswordPromptToBase64 = async function(content) {
+exports.decryptFromPasswordPrompt = async function(content) {
   return new Promise( (resolve, reject) => {
     $tw.passwordPrompt.createPrompt({
       serviceName: "Enter a password to decrypt the imported content!!",
