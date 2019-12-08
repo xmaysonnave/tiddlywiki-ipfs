@@ -20,17 +20,13 @@ exports.httpGetToUint8Array = async function(url) {
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 300) {
-          reject(new Error("Status: " + xhr.status + ", Text: " + xhr.statusText));
+          reject(new Error("Status: " + xhr.status));
         } else {
           var content = new Uint8Array(this.response);
           if ($tw.utils.getIpfsVerbose()) console.info(
             "Status: "
             + xhr.status
             + ", "
-            + xhr.statusText
-          );
-          if ($tw.utils.getIpfsVerbose()) console.info(
-            "Loaded: "
             + url
           );
           resolve(content);
