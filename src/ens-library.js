@@ -307,7 +307,10 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
 
   // Enable provider
   const account = await this.enableProvider(provider);
-  if ($tw.utils.getIpfsVerbose()) console.info("Selected account: " + account);
+  if ($tw.utils.getIpfsVerbose()) console.info(
+    "Selected account: "
+    + account
+  );
 
   // Resolve domain as namehash
   const domainHash = window.ethers.utils.namehash(domain);
@@ -322,7 +325,10 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
     throw new Error("Undefined Ens resolver...");
   }
-  if ($tw.utils.getIpfsVerbose()) console.info("Ens resolver address: " + resolverAddress);
+  if ($tw.utils.getIpfsVerbose()) console.info(
+    "Ens resolver address: "
+    + resolverAddress
+  );
 
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
@@ -390,7 +396,10 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 
   // Enable provider
   const account = await this.enableProvider(provider);
-  if ($tw.utils.getIpfsVerbose()) console.info("Selected account: " + account);
+  if ($tw.utils.getIpfsVerbose()) console.info(
+    "Selected account: "
+    + account
+  );
 
   // Resolve domain as namehash
   const domainHash = window.ethers.utils.namehash(domain);
@@ -405,7 +414,10 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
     throw new Error("Undefined Ens resolver...");
   }
-  if ($tw.utils.getIpfsVerbose()) console.info("Ens resolver address: " + resolverAddress);
+  if ($tw.utils.getIpfsVerbose()) console.info(
+    "Ens resolver address: "
+    + resolverAddress)
+  ;
 
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
@@ -424,13 +436,19 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
 
   // Set Contenthash
   try {
-    if ($tw.utils.getIpfsVerbose()) console.info("Processing Ens domain content, protocol: ipfs, " + cid);
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Processing Ens domain content, protocol: ipfs, "
+      + cid
+    );
     const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
     const iface = new window.ethers.utils.Interface(abi)
     const data = iface.functions.setContenthash.encode([domainHash, encoded]);
     const signer = web3Provider.getSigner();
     const tx = await signer.sendTransaction({ to: resolverAddress, data: data });
-    if ($tw.utils.getIpfsVerbose()) console.log("Processing Transaction: " + tx.hash);
+    if ($tw.utils.getIpfsVerbose()) console.log(
+      "Processing Transaction: "
+      + tx.hash
+    );
     // Wait for transaction completion
     await tx.wait();
     if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");
