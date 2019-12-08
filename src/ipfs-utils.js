@@ -15,11 +15,11 @@ utils
 
 exports.Base64ToUint8Array = function(base64) {
   var raw = atob(base64);
-  var uint8Array = new Uint8Array(raw.length);
+  var ua = new Uint8Array(raw.length);
   for (var i = 0; i < raw.length; i++) {
-    uint8Array[i] = raw.charCodeAt(i);
+    ua[i] = raw.charCodeAt(i);
   }
-  return uint8Array;
+  return ua;
 }
 
 exports.Uint8ArrayToBase64 = function(uint8) {
@@ -33,8 +33,7 @@ exports.Uint8ArrayToBase64 = function(uint8) {
     str += String.fromCharCode.apply(null, slice);
     index += CHUNK_SIZE;
   }
-  const base64 = btoa(str);
-  return base64;
+  return btoa(str);
 }
 
 // String to uint array
@@ -92,7 +91,6 @@ exports.Utf8ArrayToStr = function(array) {
 
 // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
 exports.loadLibrary = async function(id, url, sri, module) {
-  const err = "Unable to load: " + url;
   return new Promise((resolve, reject) => {
     try {
       if (document.getElementById(id) == null) {
@@ -122,7 +120,10 @@ exports.loadLibrary = async function(id, url, sri, module) {
         script.onload = () => {
           resolve(window[id]);
           cleanup();
-          if ($tw.utils.getIpfsVerbose()) console.info("Loaded: " + url);
+          if ($tw.utils.getIpfsVerbose()) console.info(
+            "Loaded: "
+            + url
+          );
         }
         script.onerror = () => {
           reject(new Error("Failed to load: " + url));
@@ -132,7 +133,7 @@ exports.loadLibrary = async function(id, url, sri, module) {
         return resolve(window[id]);
       }
     } catch (error) {
-      reject(new Error(err));
+      reject(error);
     }
   });
 };
