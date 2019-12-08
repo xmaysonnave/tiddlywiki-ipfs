@@ -96,8 +96,8 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
     if ($tw.utils.getIpfsVerbose()) console.info(
       "Successfully fetched: "
       + ipfsKeyword
-      + cid)
-    ;
+      + cid
+    );
     return {
       error: null,
       fetched: fetched
@@ -150,8 +150,8 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
     if ($tw.utils.getIpfsVerbose()) console.info(
       "Successfully resolved: "
       + ipnsKeyword
-      + cid)
-    ;
+      + cid
+    );
     return {
       error: null,
       resolved: resolved
@@ -204,8 +204,8 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
     if ($tw.utils.getIpfsVerbose()) console.info(
       "Successfully pinned: "
       + ipfsKeyword
-      + cid)
-    ;
+      + cid
+    );
     return {
       error: null,
       pinned: pinned
