@@ -49,7 +49,7 @@ exports.parseText = function(type,text,options) {
   return new Parser(type,text, {
     parseAsInline: options.parseAsInline,
     wiki: this,
-    tiddler: options.tiddler,
+    _is_encrypted: options._is_encrypted,
     _canonical_uri: options._canonical_uri
   });
 };
@@ -66,7 +66,9 @@ exports.parseTiddler = function(title,options) {
       if(tiddler.hasField("_canonical_uri")) {
         options._canonical_uri = tiddler.fields._canonical_uri;
       }
-      options.tiddler = tiddler;
+      if(tiddler.hasTag("$:/isEncrypted")) {
+        options._is_encrypted = true;
+      }
       return self.parseText(tiddler.fields.type,tiddler.fields.text,options);
     }) : null;
 };

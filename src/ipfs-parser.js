@@ -41,20 +41,19 @@ exports.httpGetToUint8Array = async function(url) {
 /*
 Update a saver priority
 */
-exports.parserDecryptBase64 = function(tiddler, type, element) {
+exports.parserDecryptBase64 = function(uri, type, element) {
   // Decrypt
-  const canonical_uri = tiddler.getFieldString("_canonical_uri");
-  $tw.utils.httpGetToUint8Array(canonical_uri)
+  $tw.utils.httpGetToUint8Array(uri)
   .then( (content) => {
     $tw.utils.decryptUint8ArrayToBase64(content)
     .then( (base64) => {
       element.attributes.src = {type: "string", value: type + base64};
-      $tw.rootWidget.refresh([tiddler]);
+      $tw.rootWidget.refresh([]);
     })
     .catch( (error) => {
       if ($tw.utils.getIpfsVerbose()) console.warn(error.message);
-      element.attributes.src = {type: "string", value: canonical_uri};
-      $tw.rootWidget.refresh([tiddler]);
+      element.attributes.src = {type: "string", value: uri};
+      $tw.rootWidget.refresh([]);
     });
   })
   .catch( (error) => {

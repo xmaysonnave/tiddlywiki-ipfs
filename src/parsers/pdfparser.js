@@ -14,7 +14,7 @@ The PDF parser embeds a PDF viewer
 
 var ImageParser = function(type,text,options) {
   const canonical_uri =  options._canonical_uri;
-  const tiddler =  options.tiddler;
+  const is_encrypted =  options._is_encrypted;
   const value = "data:application/pdf;base64,";
   var element = {
       type: "element",
@@ -23,8 +23,8 @@ var ImageParser = function(type,text,options) {
     },
     src;
   // Decrypt or not external resource
-  if (tiddler && canonical_uri && tiddler.hasTag("$:/isEncrypted")) {
-    $tw.utils.parserDecryptBase64(tiddler, value, element);
+  if (canonical_uri && is_encrypted) {
+    $tw.utils.parserDecryptBase64(canonical_uri, value, element);
   } else {
     if (canonical_uri) {
       element.attributes.src = {type: "string", value: canonical_uri};
