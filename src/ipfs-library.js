@@ -36,12 +36,12 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
   }
 }
 
-IpfsLibrary.prototype.parseUrl = function(url) {
+IpfsLibrary.prototype.parseUrl = function(uri) {
   // Check
-  if (url == undefined || url == null || url.trim() === "") {
+  if (uri == undefined || uri == null || uri.trim() === "") {
     throw new Error("Undefined Url...");
   }
-  const urlData = url.parse(url.trim());
+  const urlData = url.parse(uri.trim());
   return {
       href: urlData.href,
       protocol: urlData.protocol,
