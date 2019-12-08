@@ -494,6 +494,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 			+ " bytes"
 		);
 	} else {
+		// New _canonical_uri, unable to decide whether or not the content is encrypted
 		const { pathname } = self.ipfsLibrary.parseUrl(uri);
 		const { cid } = self.ipfsLibrary.decodeCid(pathname);
 		if (cid !== null) {
