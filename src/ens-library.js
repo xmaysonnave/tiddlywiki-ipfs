@@ -7,6 +7,7 @@ EnsLibrary
 
 \*/
 
+import CID  from "cids";
 import contentHash from "content-hash";
 
 ( function() {
@@ -76,21 +77,30 @@ EnsLibrary.prototype.decodeContenthash = function(encoded) {
   };
 }
 
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1577.md
 EnsLibrary.prototype.encodeContenthash = function(text) {
-  let content, contentType;
+  let type;
+  let content;
   let encoded = false;
   if (!!text) {
     const matched = text.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || text.match(/\/(ipfs)\/(.*)/);
     if (matched) {
-      contentType = matched[1];
+      type = matched[1];
       content = matched[2];
     }
-    if (contentType === "ipfs") {
+    if (type === "ipfs") {
       if (content.length >= 4) {
+        var cid = new CID(content);
+        if (cid.version === 1) {
+          if (cid.codec !== "dag-pb") {
+            throw new Error("This Cid V1 is not 'dag-pb' encoded: " + content);
+          }
+          content = cid.toV0().toString();
+        }
         encoded = "0x" + contentHash.fromIpfs(content);
       }
     } else {
-      throw new Error("Unsupported Ens domain protocol: " + contentType);
+      throw new Error("Unsupported Ens domain protocol: " + type);
     }
   }
   return encoded;

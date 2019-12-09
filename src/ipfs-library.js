@@ -250,6 +250,8 @@ IpfsLibrary.prototype.add = async function(client, content) {
     // chunker: "size-262144"
     // chunker: "rabin-262144-524288-1048576"
     const result = await client.add(buffer, {
+      cidVersion: 1,
+      hash: "keccak-256",
       chunker: "rabin-262144-524288-1048576",
       pin: false
     });
