@@ -18,6 +18,8 @@
 		"tiddlywiki/highlight",
 		"tiddlywiki/mobiledragdrop"
 	],
+	"includeWikis": [
+	],
 	"themes": [
 		"tiddlywiki/vanilla",
 		"tiddlywiki/snowwhite"
