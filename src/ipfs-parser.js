@@ -47,7 +47,7 @@ exports.loadAndDecryptToBase64 = function(tiddler, type, element) {
 	const uri = tiddler.fields._canonical_uri;
 	$tw.utils.httpGetToUint8Array(uri)
 	.then( (array) => {
-		if (Array.isArray(array) !== false && array.length > 0) {
+		if (array instanceof Uint8Array && array.length > 0) {
 			$tw.utils.decryptUint8ArrayToBase64(array)
 			.then( (base64) => {
 				element.attributes.src = { type: "string", value: type + base64 };
@@ -100,7 +100,7 @@ exports.loadAndDecryptToUtf8 = function(tiddler, type, element) {
 	const uri = tiddler.fields._canonical_uri;
 	$tw.utils.httpGetToUint8Array(uri)
 	.then( (array) => {
-		if (Array.isArray(array) !== false && array.length > 0) {
+		if (array instanceof Uint8Array && array.length > 0) {
 			$tw.utils.decryptUint8ArrayToUtf8(array)
 			.then( (decrypted) => {
 				element.attributes.src = { type: "string", value: type + encodeURIComponent(decrypted) };
