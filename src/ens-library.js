@@ -97,7 +97,7 @@ EnsLibrary.prototype.encodeContenthash = function(text) {
           }
           content = cid.toV0().toString();
           if ($tw.utils.getIpfsVerbose()) console.info(
-            "Convert CidV1 Base32 to CidV0 Base58: "
+            "Converted CidV1 Base32 to CidV0 Base58: "
             + content
           );
         }
