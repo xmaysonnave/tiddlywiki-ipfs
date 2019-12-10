@@ -15,17 +15,17 @@ The saver handler tracks changes to the store and handles saving the entire wiki
 function IpfsSaverHandler() {}
 
 IpfsSaverHandler.prototype.initSavers = function(moduleType) {
-	moduleType = moduleType || "saver";
-	// Instantiate the available savers
-	this.savers = [];
-	var self = this;
-	$tw.modules.forEachModuleOfType(moduleType,function(title,module) {
-		if(module.canSave(self)) {
-			self.savers.push(module.create(self.wiki));
-		}
-	});
-	// Sort savers
-	this.sortSavers();
+  moduleType = moduleType || "saver";
+  // Instantiate the available savers
+  this.savers = [];
+  var self = this;
+  $tw.modules.forEachModuleOfType(moduleType,function(title,module) {
+    if(module.canSave(self)) {
+      self.savers.push(module.create(self.wiki));
+    }
+  });
+  // Sort savers
+  this.sortSavers();
 };
 
 /*
