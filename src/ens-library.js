@@ -96,6 +96,10 @@ EnsLibrary.prototype.encodeContenthash = function(text) {
             throw new Error("This Cid V1 is not 'dag-pb' encoded: " + content);
           }
           content = cid.toV0().toString();
+          if ($tw.utils.getIpfsVerbose()) console.info(
+            "Convert CidV1 Base32 to CidV0 Base58: "
+            + content
+          );
         }
         encoded = "0x" + contentHash.fromIpfs(content);
       }
