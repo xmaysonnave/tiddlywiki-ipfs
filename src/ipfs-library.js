@@ -251,7 +251,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
 		// chunker: "rabin-262144-524288-1048576"
 		const result = await client.add(buffer, {
 			cidVersion: 1,
-			hashAlg: "keccak-256",
+			hashAlg: "sha-256",
 			chunker: "rabin-262144-524288-1048576",
 			pin: false
 		});
