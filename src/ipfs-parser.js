@@ -51,16 +51,16 @@ exports.loadAndDecryptToBase64 = function(tiddler, type, element) {
 			$tw.utils.decryptUint8ArrayToBase64(array)
 			.then( (base64) => {
 				element.attributes.src = { type: "string", value: type + base64 };
-				$tw.rootWidget.refresh([tiddler.fields.title]);
+				$tw.rootWidget.refresh([tiddler]);
 			})
 			.catch( (error) => {
 				console.error(error);
 				element.attributes.src = { type: "string", value: uri };
-				$tw.rootWidget.refresh([tiddler.fields.title]);
+				$tw.rootWidget.refresh([tiddler]);
 			});
 		} else {
 			element.attributes.src = { type: "string", value: uri };
-			$tw.rootWidget.refresh([tiddler.fields.title]);
+			$tw.rootWidget.refresh([tiddler]);
 		}
 	})
 	.catch( (error) => {
@@ -104,11 +104,11 @@ exports.loadAndDecryptToUtf8 = function(tiddler, type, element) {
 			$tw.utils.decryptUint8ArrayToUtf8(array)
 			.then( (decrypted) => {
 				element.attributes.src = { type: "string", value: type + encodeURIComponent(decrypted) };
-				$tw.rootWidget.refresh([tiddler.fields.title]);
+				$tw.rootWidget.refresh([tiddler]);
 			})
 			.catch( (error) => {
 				console.error(error);
-				$tw.rootWidget.refresh([tiddler.fields.title]);
+				$tw.rootWidget.refresh([tiddler]);
 			});
 		}
 	})
