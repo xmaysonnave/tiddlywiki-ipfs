@@ -140,7 +140,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Process document URL
     const {
       protocol: wikiProtocol,
-      host: wikiHost,
       pathname: wikiPathname,
       search: wikiSearch,
       fragment: wikiFragment
@@ -186,7 +185,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Getting an Ipfs client
     var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
-    if (error != null)	{
+    if (error != null)  {
       console.error(error);
       callback(error.message);
       return false;
@@ -223,7 +222,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       ensDomain = $tw.utils.getIpfsEnsDomain();
       // Check
       if (ensDomain == null) {
-        const msg	="Undefined Ens Domain...";
+        const msg  ="Undefined Ens Domain...";
         console.error(msg);
         callback(msg);
         return false;
@@ -237,7 +236,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
       // Fetch Ens domain content
       const { error, protocol, content } = await this.ensWrapper.getContenthash(ensDomain);
-      if (error != null)	{
+      if (error != null)  {
         console.error(error);
         callback(error.message);
         return false;
@@ -260,7 +259,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     }
 
-    // Upload	current document
+    // Upload  current document
     if ($tw.utils.getIpfsVerbose()) console.info(
       "Uploading wiki: "
       + text.length
@@ -269,7 +268,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Add
     var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
-    if (error != null)	{
+    if (error != null)  {
       console.error(error);
       callback(error.message);
       return false;
@@ -277,7 +276,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Pin, if failure log and continue
     var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
-    if (error != null)	{
+    if (error != null)  {
       console.warn(error);
     }
 
@@ -290,7 +289,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           + ipnsName
         );
         var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added);
-        if (error != null)	{
+        if (error != null)  {
           console.error(error);
           callback(error.message);
           return false;
@@ -303,7 +302,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         + ensDomain
       );
       var { error } = await this.ensWrapper.setContenthash(ensDomain, added);
-      if (error != null)	{
+      if (error != null)  {
         console.error(error);
         callback(error.message);
         return false;
@@ -315,7 +314,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       for (var i = 0; i < this.toBeUnpinned.length; i++) {
         var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, this.toBeUnpinned[i]);
         // Log and continue
-        if (error != null)	{
+        if (error != null)  {
           console.warn(error);
         }
       }
@@ -462,6 +461,18 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
   // _canonical_uri attribute has been removed
   if (uri == null) {
+
+    // Check content type, only base64 and image/svg+xml are suppported yet
+    var type = tiddler.getFieldString("type");
+    // Retrieve content-type
+    const info = $tw.config.contentTypeInfo[type.trim()];
+    if (info == undefined || info == null || (info.encoding !== "base64" && info.deserializerType !== "image/svg+xml"))  {
+      const msg = "Embedding from Ipfs is not supported...\nLook at the documentation about 'Supported Attachment'...";
+      console.error(msg);
+      self.messageDialog(msg);
+      return oldTiddler;
+    }
+
     // Load
     var content = null;
     try {
@@ -474,13 +485,21 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
     // Decrypt if necessary
     if (tiddler.hasTag("$:/isEncrypted")) {
       try {
-        content = await $tw.utils.decryptUint8ArrayToBase64(content);
+        if (info.encoding === "base64") {
+          content = await $tw.utils.decryptUint8ArrayToBase64(content);
+        } else {
+          content = await $tw.utils.decryptUint8ArrayToUtf8(content);
+        }
       } catch (error) {
         console.warn(error.message);
         return oldTiddler;
       }
     } else {
-      content = $tw.utils.Uint8ArrayToBase64(content);
+      if (info.encoding === "base64") {
+        content = $tw.utils.Uint8ArrayToBase64(content);
+      } else {
+        content = $tw.utils.Utf8ArrayToStr(content);
+      }
     }
     updatedTiddler = self.updateTiddler(
       tiddler,
@@ -493,7 +512,9 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
       + content.length
       + " bytes"
     );
+
   } else {
+
     // New _canonical_uri, unable to decide whether or not the content is encrypted
     const { pathname } = self.ipfsLibrary.parseUrl(uri);
     const { cid } = self.ipfsLibrary.decodeCid(pathname);
@@ -514,6 +535,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         uri
       );
     }
+
   }
 
   if (oldUri !== null) {
@@ -583,14 +605,11 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
     return false;
   }
 
-  // Check content type, only base64 is suppported yet
+  // Check content type, only base64 and image/svg+xml are suppported yet
   var type = tiddler.getFieldString("type");
-  // default
-  if (type == undefined || type == null || type.trim() === "") {
-    type = "text/html";
-  }
+  // Retrieve content-type
   const info = $tw.config.contentTypeInfo[type.trim()];
-  if (info == undefined || info == null || info.encoding !== "base64") {
+  if (info == undefined || info == null || (info.encoding !== "base64" && info.deserializerType !== "image/svg+xml"))  {
     const msg = "Upload to Ipfs is not supported...\nLook at the documentation about 'Supported Attachment'...";
     console.error(msg);
     self.messageDialog(msg);
@@ -600,7 +619,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   // Check
   const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
   if (gatewayUrl == null) {
-    const msg = "Undefined Ipfs gateway Url.";
+    const msg = "Undefined Ipfs gateway Url...";
     console.error(msg);
     self.messageDialog(msg);
     return false;
@@ -611,16 +630,14 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 
   // Getting an Ipfs client
   var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
   }
 
-  // Content
+  // Upload
   var content = tiddler.getFieldString("text");
-
-  // Upload	current attachment
   if ($tw.utils.getIpfsVerbose()) console.log(
     "Uploading attachment: "
     + content.length
@@ -630,7 +647,9 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   try {
     // Encrypt
     if ($tw.crypto.hasPassword()) {
-      content = atob(content);
+      if (info.encoding === "base64") {
+        content = atob(content);
+      }
       content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
     }
   } catch (error) {
@@ -641,7 +660,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 
   // Add
   var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, content);
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -649,7 +668,7 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 
   // Pin, if failure log and continue
   var { error } = await self.ipfsWrapper.pinToIpfs(ipfs, added);
-  if (error != null)	{
+  if (error != null)  {
     console.warn(error);
   }
 
@@ -657,6 +676,8 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   const addition = $tw.wiki.getModificationFields();
   addition.title = tiddler.fields.title;
   addition.tags = (tiddler.fields.tags || []).slice(0);
+  // Process Type
+  addition["type"] = type;
   // Process _canonical_uri
   uri = gatewayProtocol
     + "//"
@@ -735,7 +756,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
   // Getting an Ipfs client
   var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -755,7 +776,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
   var ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
-    const msg	="Undefined Ens Domain...";
+    const msg  ="Undefined Ens Domain...";
     console.error(msg);
     self.messageDialog(msg);
     return false;
@@ -767,7 +788,7 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
   // Fetch Ens domain content
   var { error, protocol, content } = await self.ensWrapper.getContenthash(ensDomain);
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -783,10 +804,10 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
 
   if ($tw.utils.getIpfsVerbose()) console.info(
     "Publishing Ens domain: "
-    + ensDomain)
-  ;
+    + ensDomain
+  );
   var { error } = await self.ensWrapper.setContenthash(ensDomain, cid);
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -798,8 +819,8 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
     + "\nprotocol:\n\t"
     + ipfsKeyword
     + "\nidentifier:\n\t"
-    + cid)
-  ;
+    + cid
+  );
 
   return false;
 
@@ -850,7 +871,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
 
   // Getting an Ipfs client
   var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -923,7 +944,7 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
     );
     var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
     // Log and continue
-    if (error != null)	{
+    if (error != null)  {
       console.error(error);
     }
   }
@@ -1011,7 +1032,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 
   // Getting an Ipfs client
   var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -1127,7 +1148,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
 
   // Getting an Ipfs client
   var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
-  if (error != null)	{
+  if (error != null)  {
     console.error(error);
     self.messageDialog(error.message);
     return false;
@@ -1228,7 +1249,7 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 
   // Load node Ipns keys
   var { error, keys } = await self.ipfsWrapper.getIpnsKeys(ipfs);
-  if (error !== null)	{
+  if (error !== null)  {
     return {
       error: error,
       ipnsName: null,
