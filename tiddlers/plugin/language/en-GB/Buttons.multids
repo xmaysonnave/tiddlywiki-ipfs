@@ -17,3 +17,5 @@ IpfsUnpin/Caption: unpin from Ipfs
 IpfsUnpin/Hint: Unpin this wiki from Ipfs
 MobileConsole/Caption: mobile console
 MobileConsole/Hint: Load/Unload Mobile Console
+Ipfs/Refresh/Caption: refresh
+Ipfs/Refresh/Hint: Perform a full refresh of the tiddler

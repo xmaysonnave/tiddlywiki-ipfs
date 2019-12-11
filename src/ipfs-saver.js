@@ -55,6 +55,9 @@ var IpfsSaver = function(wiki) {
   $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
     return self.handlePublishToIpns(self, event);
   });
+  $tw.rootWidget.addEventListener("tm-tiddler-refresh", function(event) {
+    return self.handleRefreshTiddler(self, event);
+  });
   $tw.hooks.addHook("th-deleting-tiddler", function(tiddler) {
     return self.handleDeleteTiddler(self, tiddler);
   });
@@ -461,7 +464,12 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
     // Retrieve content-type
     const info = $tw.config.contentTypeInfo[type];
     if (info == undefined || info == null)  {
-      const msg = "Embedding from Ipfs is not supported...\nUnknown Content-Type: " + type;
+      var msg = "Unable to Embed from Ipfs. Unknown Tiddler Type";
+      if (type == undefined || type == null || type.trim() == "") {
+        msg = msg + "..."
+      } else {
+        msg = msg + ": " + type;
+      }
       console.error(msg);
       self.messageDialog(msg);
       return oldTiddler;
@@ -597,7 +605,12 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   // Retrieve content-type
   const info = $tw.config.contentTypeInfo[type];
   if (info == undefined || info == null)  {
-    const msg = "Upload to Ipfs is not supported...\nUnknown Content-Type: " + type;
+    var msg = "Unable to Upload to Ipfs. Unknown Tiddler Type";
+    if (type == undefined || type == null || type.trim() == "") {
+      msg = msg + "..."
+    } else {
+      msg = msg + ": " + type;
+    }
     console.error(msg);
     self.messageDialog(msg);
     return false;
@@ -1083,6 +1096,24 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 
   return false;
 
+}
+
+/* Beware you are in a widget, not in the instance of this saver */
+IpfsSaver.prototype.handleRefreshTiddler = async function(self, event) {
+  if (event.param !== undefined && event.param !== null) {
+    // current tiddler
+    const tiddler = self.wiki.getTiddler(event.param);
+    if (tiddler == undefined || tiddler == null) {
+      const msg = "Unknown tiddler: " + event.param;
+      console.error(msg);
+      self.messageDialog(msg);
+      return false;
+    }
+    $tw.wiki.clearCache(event.param);
+    $tw.wiki.enqueueTiddlerEvent(event.param, false);
+    $tw.rootWidget.refresh([tiddler]);
+  }
+  return true;
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
