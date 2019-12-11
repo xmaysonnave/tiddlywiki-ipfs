@@ -138,4 +138,30 @@ exports.loadLibrary = async function(id, url, sri, module) {
   });
 };
 
+exports.updateTiddler = function(tiddler, addTags, removeTags, content, uri) {
+  // Update tiddler
+  const addition = $tw.wiki.getModificationFields();
+  addition.tags = (tiddler.fields.tags || []).slice(0);
+  addition["_canonical_uri"] = uri;
+  addition["text"] = content;
+  // Add Tags
+  for (var i = 0; i < addTags.length; i++) {
+    const tag = addTags[i];
+    if (addition.tags.indexOf(tag) == -1) {
+      $tw.utils.pushTop(addition.tags, tag);
+    }
+  }
+  // Remove Tags
+  for (var i = 0; i < removeTags.length; i++) {
+    const tag = removeTags[i];
+    if (addition.tags.indexOf(tag) !== -1) {
+      $tw.utils.removeArrayEntries(addition.tags, tag);
+    }
+  }
+  // Update tiddler
+  const updatedTiddler = new $tw.Tiddler(tiddler, addition);
+  $tw.wiki.addTiddler(updatedTiddler);
+  return updatedTiddler;
+}
+
 })();

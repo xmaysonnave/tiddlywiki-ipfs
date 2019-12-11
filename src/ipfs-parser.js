@@ -15,13 +15,12 @@ The saver handler tracks changes to the store and handles saving the entire wiki
 
 exports.httpGetToUint8Array = async function(url) {
   var xhr = new XMLHttpRequest();
-  var self = this;
   xhr.responseType = "arraybuffer";
   return new Promise(function(resolve, reject) {
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 300) {
-          reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status, null, self));
+          reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           var array = new Uint8Array(this.response);
           if ($tw.utils.getIpfsVerbose()) console.info(
@@ -34,38 +33,37 @@ exports.httpGetToUint8Array = async function(url) {
         }
       }
     };
-    xhr.open("get", url, true);
-    xhr.send();
+    try {
+      xhr.open("get", url, true);
+      xhr.send();
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
 /*
  * Load and decrypt to Base64
 */
-exports.loadAndDecryptToBase64 = function(tiddler, type, element) {
-  // Decrypt
-  const uri = tiddler.fields._canonical_uri;
-  $tw.utils.httpGetToUint8Array(uri)
-  .then( (array) => {
-    if (array instanceof Uint8Array && array.length > 0) {
-      $tw.utils.decryptUint8ArrayToBase64(array)
-      .then( (base64) => {
-        element.attributes.src = { type: "string", value: type + base64 };
-        $tw.rootWidget.refresh([tiddler]);
-      })
-      .catch( (error) => {
-        console.error(error);
-        element.attributes.src = { type: "string", value: uri };
-        $tw.rootWidget.refresh([tiddler]);
-      });
-    } else {
-      element.attributes.src = { type: "string", value: uri };
-      $tw.rootWidget.refresh([tiddler]);
-    }
-  })
-  .catch( (error) => {
-    console.error(error);
-    throw error;
+exports.loadAndDecryptToBase64 = function(uri) {
+  return new Promise( async (resolve, reject) => {
+    $tw.utils.httpGetToUint8Array(uri)
+    .then( (array) => {
+      if (array instanceof Uint8Array && array.length > 0) {
+        $tw.utils.decryptUint8ArrayToBase64(array)
+        .then( (base64) => {
+          resolve(base64);
+        })
+        .catch( (error) => {
+          reject(error);
+        });
+      } else {
+        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+      }
+    })
+    .catch( (error) => {
+      reject(error);
+    });
   });
 };
 
@@ -95,60 +93,56 @@ exports.decryptUint8ArrayToBase64 = async function(array) {
 /*
  * Load and decrypt to UTF-8
 */
-exports.loadAndDecryptToUtf8 = function(tiddler, type, element) {
-  // Decrypt
-  const uri = tiddler.fields._canonical_uri;
-  $tw.utils.httpGetToUint8Array(uri)
-  .then( (array) => {
-    if (array instanceof Uint8Array && array.length > 0) {
-      $tw.utils.decryptUint8ArrayToUtf8(array)
-      .then( (decrypted) => {
-        element.attributes.src = { type: "string", value: type + encodeURIComponent(decrypted) };
-        $tw.rootWidget.refresh([tiddler]);
-      })
-      .catch( (error) => {
-        console.error(error);
-        $tw.rootWidget.refresh([tiddler]);
-      });
-    }
-  })
-  .catch( (error) => {
-    console.error(error);
-    throw error;
+exports.loadAndDecryptToUtf8 = function(uri) {
+  return new Promise( async (resolve, reject) => {
+    // Decrypt
+    $tw.utils.httpGetToUint8Array(uri)
+    .then( (array) => {
+      if (array instanceof Uint8Array && array.length > 0) {
+        $tw.utils.decryptUint8ArrayToUtf8(array)
+        .then( (data) => {
+          resolve(data);
+        })
+        .catch( (error) => {
+          reject(error);
+        });
+      }
+    })
+    .catch( (error) => {
+      reject(error);
+    });
   });
 };
 
 /*
  * Load to UTF-8
 */
-exports.loadToUtf8 = function(tiddler, type, element) {
-  const uri = tiddler.fields._canonical_uri;
-  $tw.utils.httpGetToUint8Array(uri)
-  .then( (array) => {
-    const content = $tw.utils.Utf8ArrayToStr(array);
-    element.attributes.src = { type: "string", value: type + encodeURIComponent(content) };
-    $tw.rootWidget.refresh([]);
-  })
-  .catch( (error) => {
-    console.error(error);
-    throw error;
+exports.loadToUtf8 = function(uri) {
+  return new Promise( async (resolve, reject) => {
+    $tw.utils.httpGetToUint8Array(uri)
+    .then( (array) => {
+      const data = $tw.utils.Utf8ArrayToStr(array);
+      resolve(data);
+    })
+    .catch( (error) => {
+      reject(error);
+    });
   });
 };
 
 exports.decryptUint8ArrayToUtf8 = async function(array) {
   return new Promise( async (resolve, reject) => {
-    const content = $tw.utils.Utf8ArrayToStr(array);
+    const encrypted = $tw.utils.Utf8ArrayToStr(array);
     if ($tw.crypto.hasPassword() == false) {
       try {
-        // Request for password if unknown
-        const decrypted = await $tw.utils.decryptFromPasswordPrompt(content);
+        const decrypted = await $tw.utils.decryptFromPasswordPrompt(encrypted);
         resolve(decrypted);
       } catch (error) {
         reject(error);
       }
     } else {
       try {
-        const decrypted = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
+        const decrypted = $tw.crypto.decrypt(encrypted, $tw.crypto.currentPassword);
         resolve(decrypted);
       } catch (error) {
         reject(error);
@@ -157,7 +151,7 @@ exports.decryptUint8ArrayToUtf8 = async function(array) {
   });
 };
 
-exports.decryptFromPasswordPrompt = async function(content) {
+exports.decryptFromPasswordPrompt = async function(encrypted) {
   return new Promise( (resolve, reject) => {
     $tw.passwordPrompt.createPrompt({
       serviceName: "Enter a password to decrypt the imported content!!",
@@ -172,7 +166,7 @@ exports.decryptFromPasswordPrompt = async function(content) {
         // Decrypt
         const password = data.password;
         try {
-          const decrypted = $tw.crypto.decrypt(content, password);
+          const decrypted = $tw.crypto.decrypt(encrypted, password);
           resolve(decrypted);
         } catch (error) {
           reject(error);

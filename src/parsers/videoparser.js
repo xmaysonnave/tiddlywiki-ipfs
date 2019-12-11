@@ -13,7 +13,7 @@ The video parser parses a video tiddler into an embeddable HTML element
 "use strict";
 
 var VideoParser = function(type,text,options) {
-  const canonical_uri = options._canonical_uri;
+  const uri = options._canonical_uri;
   const tiddler = options.tiddler;
   const isEncrypted = tiddler.hasTag("$:/isEncrypted");
   const value = "data:" + type + ";base64,";
@@ -27,11 +27,20 @@ var VideoParser = function(type,text,options) {
     },
     src;
   // Decrypt or not external resource
-  if (canonical_uri && isEncrypted) {
-    $tw.utils.loadAndDecryptToBase64(tiddler, value, element);
+  if (uri && isEncrypted) {
+    $tw.utils.loadAndDecryptToBase64(uri)
+    .then( (base64) => {
+      element.attributes.src = { type: "string", value: value + base64 };
+      $tw.rootWidget.refresh([tiddler]);
+    })
+    .catch( (error) => {
+      console.error(error);
+      element.attributes.src = { type: "string", value: uri };
+      $tw.rootWidget.refresh([tiddler]);
+    });
   } else {
-    if (canonical_uri) {
-      element.attributes.src = { type: "string", value: canonical_uri };
+    if (uri) {
+      element.attributes.src = { type: "string", value: uri };
     } else if (text) {
       element.attributes.src = { type: "string", value: value + text };
     }

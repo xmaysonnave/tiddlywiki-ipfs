@@ -113,12 +113,6 @@ IpfsSaver.prototype.messageDialog = function(message) {
   }
 }
 
-IpfsSaver.prototype.messageDialog = function(message) {
-  if (message) {
-    alert(message);
-  }
-}
-
 IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
   //Is there anything to do
@@ -430,6 +424,8 @@ IpfsSaver.prototype.handleFileImport = function(self, tiddler) {
 /* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
+  var updatedTiddler = null;
+
   // store tiddler _canonical_uri if any
   var uri = tiddler.getFieldString("_canonical_uri");
   if (uri !== undefined && uri !== null && uri.trim() !== "") {
@@ -452,66 +448,80 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
   // Nothing to do
   if (oldUri == uri) {
-    const newTiddler = new $tw.Tiddler(tiddler);
-    $tw.wiki.addTiddler(newTiddler);
-    return newTiddler;
+    updatedTiddler = new $tw.Tiddler(tiddler);
+    $tw.wiki.addTiddler(updatedTiddler);
+    return updatedTiddler;
   }
 
-  var updatedTiddler = null;
+  var type = tiddler.getFieldString("type").trim();
 
   // _canonical_uri attribute has been removed
   if (uri == null) {
 
-    // Check content type, only base64 and image/svg+xml are suppported yet
-    var type = tiddler.getFieldString("type");
     // Retrieve content-type
-    const info = $tw.config.contentTypeInfo[type.trim()];
-    if (info == undefined || info == null || (info.encoding !== "base64" && info.deserializerType !== "image/svg+xml"))  {
-      const msg = "Embedding from Ipfs is not supported...\nLook at the documentation about 'Supported Attachment'...";
+    const info = $tw.config.contentTypeInfo[type];
+    if (info == undefined || info == null)  {
+      const msg = "Embedding from Ipfs is not supported...\nUnknown Content-Type: " + type;
       console.error(msg);
       self.messageDialog(msg);
       return oldTiddler;
     }
 
-    // Load
-    var content = null;
-    try {
-      content = await $tw.utils.httpGetToUint8Array(oldUri);
-    } catch (error) {
-      console.error(error);
-      self.messageDialog(error.message);
-      return oldTiddler;
-    }
-    // Decrypt if necessary
-    if (tiddler.hasTag("$:/isEncrypted")) {
+    var content = tiddler.getFieldString("text");
+
+    if (info.encoding === "base64" || type === "image/svg+xml") {
+
+      // Load
       try {
-        if (info.encoding === "base64") {
-          content = await $tw.utils.decryptUint8ArrayToBase64(content);
-        } else {
-          content = await $tw.utils.decryptUint8ArrayToUtf8(content);
-        }
+        content = await $tw.utils.httpGetToUint8Array(oldUri);
       } catch (error) {
-        console.warn(error.message);
+        console.error(error);
+        self.messageDialog(error.message);
         return oldTiddler;
       }
-    } else {
-      if (info.encoding === "base64") {
-        content = $tw.utils.Uint8ArrayToBase64(content);
+      // Decrypt if necessary
+      if (tiddler.hasTag("$:/isEncrypted")) {
+        try {
+          if (info.encoding === "base64") {
+            content = await $tw.utils.decryptUint8ArrayToBase64(content);
+          } else {
+            content = await $tw.utils.decryptUint8ArrayToUtf8(content);
+          }
+        } catch (error) {
+          console.warn(error.message);
+          return oldTiddler;
+        }
       } else {
-        content = $tw.utils.Utf8ArrayToStr(content);
+        if (info.encoding === "base64") {
+          content = $tw.utils.Uint8ArrayToBase64(content);
+        } else {
+          content = $tw.utils.Utf8ArrayToStr(content);
+        }
       }
+
+      updatedTiddler = $tw.utils.updateTiddler(
+        tiddler,
+        ["$:/isAttachment", "$:/isEmbedded"],
+        ["$:/isEncrypted", "$:/isIpfs"],
+        content
+      );
+
+      if ($tw.utils.getIpfsVerbose()) console.log(
+        "Embedding attachment: "
+        + content.length
+        + " bytes"
+      );
+
+    } else {
+
+      updatedTiddler = $tw.utils.updateTiddler(
+        tiddler,
+        [],
+        ["$:/isAttachment", "$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"],
+        content
+      );
+
     }
-    updatedTiddler = self.updateTiddler(
-      tiddler,
-      ["$:/isAttachment", "$:/isEmbedded"],
-      ["$:/isEncrypted", "$:/isIpfs"],
-      content
-    );
-    if ($tw.utils.getIpfsVerbose()) console.log(
-      "Embedding attachment: "
-      + content.length
-      + " bytes"
-    );
 
   } else {
 
@@ -519,7 +529,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
     const { pathname } = self.ipfsLibrary.parseUrl(uri);
     const { cid } = self.ipfsLibrary.decodeCid(pathname);
     if (cid !== null) {
-      updatedTiddler = self.updateTiddler(
+      updatedTiddler = $tw.utils.updateTiddler(
         tiddler,
         ["$:/isAttachment", "$:/isIpfs"],
         ["$:/isEmbedded", "$:/isEncrypted"],
@@ -527,7 +537,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         uri
       );
     } else {
-      updatedTiddler = self.updateTiddler(
+      updatedTiddler = $tw.utils.updateTiddler(
         tiddler,
         ["$:/isAttachment"],
         ["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"],
@@ -559,29 +569,6 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
 }
 
-IpfsSaver.prototype.updateTiddler = function(tiddler, addTags, removeTags, content, uri) {
-  // Update tiddler
-  const addition = $tw.wiki.getModificationFields();
-  addition.tags = (tiddler.fields.tags || []).slice(0);
-  addition["_canonical_uri"] = uri;
-  addition["text"] = content;
-  // Add Tags
-  for (var i = 0; i < addTags.length; i++) {
-    const tag = addTags[i];
-    if (addition.tags.indexOf(tag) == -1) {
-      $tw.utils.pushTop(addition.tags, tag);
-    }
-  }
-  // Remove Tags
-  for (var i = 0; i < removeTags.length; i++) {
-    $tw.utils.removeArrayEntries(addition.tags, removeTags);
-  }
-  // Update tiddler
-  const newTiddler = new $tw.Tiddler(tiddler, addition);
-  $tw.wiki.addTiddler(newTiddler);
-  return newTiddler;
-}
-
 /* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 
@@ -606,11 +593,11 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   }
 
   // Check content type, only base64 and image/svg+xml are suppported yet
-  var type = tiddler.getFieldString("type");
+  var type = tiddler.getFieldString("type").trim();
   // Retrieve content-type
-  const info = $tw.config.contentTypeInfo[type.trim()];
-  if (info == undefined || info == null || (info.encoding !== "base64" && info.deserializerType !== "image/svg+xml"))  {
-    const msg = "Upload to Ipfs is not supported...\nLook at the documentation about 'Supported Attachment'...";
+  const info = $tw.config.contentTypeInfo[type];
+  if (info == undefined || info == null)  {
+    const msg = "Upload to Ipfs is not supported...\nUnknown Content-Type: " + type;
     console.error(msg);
     self.messageDialog(msg);
     return false;
@@ -637,7 +624,24 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
   }
 
   // Upload
-  var content = tiddler.getFieldString("text");
+  var content = null;
+  if (info.encoding === "base64" || type === "image/svg+xml") {
+    content = tiddler.getFieldString("text");
+  } else {
+    const options = {
+      downloadType: "text/plain",
+      method: "download",
+      template: "$:/core/templates/exporters/TidFile",
+      variables: {
+        exportFilter: "[[" + event.tiddlerTitle + "]]"
+      }
+    };
+    content = $tw.wiki.renderTiddler(
+      "text/plain",
+      "$:/core/templates/exporters/TidFile",
+      options
+    );
+  }
   if ($tw.utils.getIpfsVerbose()) console.log(
     "Uploading attachment: "
     + content.length
@@ -672,42 +676,45 @@ IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
     console.warn(error);
   }
 
-  // Update current tiddler
-  const addition = $tw.wiki.getModificationFields();
-  addition.title = tiddler.fields.title;
-  addition.tags = (tiddler.fields.tags || []).slice(0);
-  // Process Type
-  addition["type"] = type;
-  // Process _canonical_uri
+  // Build _canonical_uri
   uri = gatewayProtocol
-    + "//"
-    + gatewayHost
-    + "/"
-    + ipfsKeyword
-    + "/"
-    + added;
-  addition["_canonical_uri"] = uri;
-  // Reset text
-  addition["text"] = "";
-  // Add isAttachment tag
-  if (addition.tags.indexOf("$:/isAttachment") == -1) {
-    $tw.utils.pushTop(addition.tags, "$:/isAttachment");
-  }
-  // Add isIpfs tag
-  if (addition.tags.indexOf("$:/isIpfs") == -1) {
-    $tw.utils.pushTop(addition.tags, "$:/isIpfs");
-  }
-  // Add isEncrypted tag
-  if ($tw.crypto.hasPassword() && addition.tags.indexOf("$:/isEncrypted") == -1) {
-    $tw.utils.pushTop(addition.tags, "$:/isEncrypted");
-  }
-  // Remove Embedded tag
-  if (addition.tags.indexOf("$:/isEmbedded") !== -1) {
-    $tw.utils.removeArrayEntries(addition.tags, "$:/isEmbedded");
-  }
-  $tw.wiki.addTiddler(new $tw.Tiddler(tiddler, addition));
+  + "//"
+  + gatewayHost
+  + "/"
+  + ipfsKeyword
+  + "/"
+  + added;
 
-  return false;
+  var addTags = [];
+  var removeTags = [];
+  if (info.encoding === "base64" || type === "image/svg+xml") {
+    if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
+      addTags = ["$:/isAttachment", "$:/isEncrypted", "$:/isIpfs"];
+      removeTags = ["$:/isImported", "$:/isEmbedded"];
+    } else {
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
+      removeTags = ["$:/isImported", "$:/isEmbedded"];
+    }
+  } else {
+    if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
+      addTags = ["$:/isImported", "$:/isEncrypted", "$:/isIpfs"];
+      removeTags = ["$:/isAttachment", "$:/isEmbedded"];
+    } else {
+      addTags = ["$:/isImported", "$:/isIpfs"];
+      removeTags = ["$:/isAttachment", "$:/isEmbedded"];
+    }
+  }
+
+  // Process
+  $tw.utils.updateTiddler(
+    tiddler,
+    addTags,
+    removeTags,
+    "",
+    uri
+  );
+
+  return true;
 
 }
 
