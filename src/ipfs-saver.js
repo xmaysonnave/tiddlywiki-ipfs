@@ -35,7 +35,7 @@ var IpfsSaver = function(wiki) {
   this.ipfsLibrary = new IpfsLibrary();
   // Event management
   $tw.wiki.addEventListener("change", function(changes) {
-    return self.handleChangeEvent(self, changes);
+    return self.handleChangeEvent(changes);
   });
   $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
     return self.handleExportToIpfs(self, event);
@@ -580,13 +580,10 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 /* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handleExportToIpfs = async function(self, event) {
 
-  // Check
-  if (event.tiddlerTitle == undefined) {
-    return false;
-  }
+  const title = event.tiddlerTitle;
 
   // Current tiddler
-  const tiddler = self.wiki.getTiddler(event.tiddlerTitle);
+  const tiddler = self.wiki.getTiddler(title);
   if (tiddler == undefined || tiddler == null) {
     return false;
   }
@@ -834,11 +831,11 @@ IpfsSaver.prototype.handlePublishToEns = async function(self, event) {
   }
 
   self.messageDialog(
-    "Successfully set Ens domain:\n\t"
+    "Successfully set Ens domain:\n"
     + ensDomain
-    + "\nprotocol:\n\t"
+    + "\nprotocol:\n"
     + ipfsKeyword
-    + "\nidentifier:\n\t"
+    + "\nidentifier:\n"
     + cid
   );
 
@@ -970,11 +967,11 @@ IpfsSaver.prototype.handlePublishToIpns = async function(self, event) {
   }
 
   self.messageDialog(
-    "Successfully published Ipns name:\n\t"
+    "Successfully published Ipns name:\n"
     + ipnsName
-    + "\nprotocol:\n\t"
+    + "\nprotocol:\n"
     + ipfsKeyword
-    + "\nidentifier:\n\t"
+    + "\nidentifier:\n"
     + cid
   );
 
@@ -990,10 +987,11 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
   var cid = null;
 
   if (event.param !== undefined && event.param !== null) {
+    const title = event.tiddlerTitle;
     // current tiddler
-    const tiddler = self.wiki.getTiddler(event.param);
+    const tiddler = self.wiki.getTiddler(title);
     if (tiddler == undefined || tiddler == null) {
-      const msg = "Unknown tiddler: " + event.param;
+      const msg = "Unknown tiddler: " + title;
       console.error(msg);
       self.messageDialog(msg);
       return false;
@@ -1087,34 +1085,15 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
   }
 
   self.messageDialog(
-    "Successfully pinned:\n\t"
-    + "protocol:\n\t"
+    "Successfully pinned:"
+    + "\nprotocol:\n"
     + ipfsKeyword
-    + "\nidentifier:\n\t"
+    + "\nidentifier:\n"
     + cid
   );
 
   return false;
 
-}
-
-/* Beware you are in a widget, not in the instance of this saver */
-IpfsSaver.prototype.handleRefreshTiddler = async function(self, event) {
-  const title = event.tiddlerTitle;
-  if (title !== undefined && title !== null) {
-    // current tiddler
-    const tiddler = self.wiki.getTiddler(title);
-    if (tiddler == undefined || tiddler == null) {
-      const msg = "Unknown tiddler: " + title;
-      console.error(msg);
-      self.messageDialog(msg);
-      return false;
-    }
-    $tw.wiki.clearCache(title);
-    const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-    $tw.rootWidget.refresh(changedTiddlers);
-  }
-  return true;
 }
 
 /* Beware you are in a widget, not in the instance of this saver */
@@ -1125,10 +1104,11 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
   var cid = null;
 
   if (event.param !== undefined && event.param !== null) {
+    const title = event.tiddlerTitle;
     // current tiddler
-    const tiddler = self.wiki.getTiddler(event.param);
+    const tiddler = self.wiki.getTiddler(title);
     if (tiddler == undefined || tiddler == null) {
-      const msg = "Unknown tiddler: " + event.param;
+      const msg = "Unknown tiddler: " + title;
       console.error(msg);
       self.messageDialog(msg);
       return false;
@@ -1221,47 +1201,15 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
   }
 
   self.messageDialog(
-    "Successfully unpinned:\n\t"
-    + "protocol:\n\t"
+    "Successfully unpinned:"
+    + "\nprotocol:\n"
     + ipfsKeyword
-    + "\nidentifier:\n\t"
+    + "\nidentifier:\n"
     + cid
   );
 
   return false;
 
-}
-
-/* Beware you are in a widget, not in the saver */
-IpfsSaver.prototype.handleChangeEvent = function(self, changes) {
-  // process priority
-  var priority = changes["$:/ipfs/saver/priority/default"];
-  if (priority !== undefined) {
-    // Update Ipfs saver
-    $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-    if ($tw.utils.getIpfsVerbose()) console.info(
-      "Updated Ipfs Saver priority: "
-      + $tw.utils.getIpfsPriority()
-    );
-  }
-  // process verbose
-  var verbose = changes["$:/ipfs/saver/verbose"];
-  if (verbose !== undefined) {
-    if ($tw.utils.getIpfsVerbose()) {
-      console.info("Ipfs Saver is verbose...");
-    } else {
-      console.info("Ipfs Saver is not verbose...");
-    }
-  }
-  // process unpin
-  var unpin = changes["$:/ipfs/saver/unpin"];
-  if (unpin !== undefined) {
-    if ($tw.utils.getIpfsUnpin()) {
-      if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver will unpin previous content...");
-    } else {
-      if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver will not unpin previous content...");
-    }
-  }
 }
 
 IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) {
@@ -1397,6 +1345,57 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
     resolved: cid
   }
 
+}
+
+/* Beware you are in a widget, not in the saver */
+IpfsSaver.prototype.handleChangeEvent = function(changes) {
+  // process priority
+  var priority = changes["$:/ipfs/saver/priority/default"];
+  if (priority !== undefined) {
+    // Update Ipfs saver
+    $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Updated Ipfs Saver priority: "
+      + $tw.utils.getIpfsPriority()
+    );
+  }
+  // process verbose
+  var verbose = changes["$:/ipfs/saver/verbose"];
+  if (verbose !== undefined) {
+    if ($tw.utils.getIpfsVerbose()) {
+      console.info("Ipfs Saver is verbose...");
+    } else {
+      console.info("Ipfs Saver is not verbose...");
+    }
+  }
+  // process unpin
+  var unpin = changes["$:/ipfs/saver/unpin"];
+  if (unpin !== undefined) {
+    if ($tw.utils.getIpfsUnpin()) {
+      if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver will unpin previous content...");
+    } else {
+      if ($tw.utils.getIpfsVerbose()) console.info("Ipfs Saver will not unpin previous content...");
+    }
+  }
+}
+
+/* Beware you are in a widget, not in the instance of this saver */
+IpfsSaver.prototype.handleRefreshTiddler = async function(self, event) {
+  const title = event.tiddlerTitle;
+  if (title !== undefined && title !== null) {
+    // current tiddler
+    const tiddler = self.wiki.getTiddler(title);
+    if (tiddler == undefined || tiddler == null) {
+      const msg = "Unknown tiddler: " + title;
+      console.error(msg);
+      self.messageDialog(msg);
+      return false;
+    }
+    $tw.wiki.clearCache(title);
+    const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+    $tw.rootWidget.refresh(changedTiddlers);
+  }
+  return true;
 }
 
 /*

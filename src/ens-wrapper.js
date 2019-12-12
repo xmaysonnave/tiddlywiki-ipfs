@@ -14,6 +14,7 @@ EnsWrapper
 "use strict";
 
 const EnsLibrary = require("$:/plugins/ipfs/ens-library.js").EnsLibrary;
+const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
 const ipfsKeyword = "/ipfs/";
 
 /*
@@ -21,6 +22,7 @@ Ens Wrapper
 */
 var EnsWrapper = function() {
   this.ensLibrary = new EnsLibrary();
+  this.ipfsLibrary = new IpfsLibrary();
 }
 
 EnsWrapper.prototype.getContenthash = async function(domain) {
@@ -57,7 +59,8 @@ EnsWrapper.prototype.getContenthash = async function(domain) {
 
 EnsWrapper.prototype.setContenthash = async function(domain, cid) {
   try {
-    await this.ensLibrary.setContenthash(domain, cid);
+    const cidv0 = this.ipfsLibrary.CidV1ToCidV0(cid);
+    await this.ensLibrary.setContenthash(domain, cidv0);
     if ($tw.utils.getIpfsVerbose()) console.info("Successfully set Ens domain content...");
     return {
       error: null

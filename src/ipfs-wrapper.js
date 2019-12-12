@@ -62,16 +62,41 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
   }
 }
 
+IpfsWrapper.prototype.genKey = async function(ipfs, name) {
+  try {
+    const { id } = await this.ipfsLibrary.genKey(ipfs, name);
+    if (id == undefined || id == null)  {
+      return {
+        error: new Error("Failed to generate key..."),
+        key: null
+      };
+    }
+    if ($tw.utils.getIpfsVerbose()) console.info(
+      "Successfully generated key: "
+      + id
+    );
+    return {
+      error: null,
+      key: id
+    };
+  } catch (error) {
+    return {
+      error: error,
+      key: null
+    };
+  }
+}
+
 IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
   try {
-    const keys = await this.ipfsLibrary.keys(ipfs);
+    const keys = await this.ipfsLibrary.getKeys(ipfs);
     if (keys == undefined || keys == null)  {
       return {
-        error: new Error("Failed to fetch Ipfs keys..."),
+        error: new Error("Failed to fetch keys..."),
         keys: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched Ipns keys...");
+    if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched keys...");
     return {
       error: null,
       keys: keys
@@ -143,7 +168,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
     const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + cid);
     if (resolved == undefined || resolved == null) {
       return {
-        error: null,
+        error: new Error("Failed to resolve..."),
         resolved: null
       };
     }
@@ -170,7 +195,7 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
     const published = await this.ipfsLibrary.publish(ipfs, name, ipfsKeyword + cid);
     if (published == undefined || published == null) {
       return {
-        error: new Error("Failed to publish: " + ipfsKeyword + cid),
+        error: new Error("Failed to publish..."),
         published: null
       };
     }
@@ -197,7 +222,7 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
     const pinned = await this.ipfsLibrary.pin(ipfs, ipfsKeyword + cid);
     if (pinned == undefined || pinned == null) {
       return {
-        error: new Error( "Failed to pin: " + ipfsKeyword + cid),
+        error: new Error( "Failed to pin..."),
         pinned: null
       };
     }
@@ -224,7 +249,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
     const unpinned = await this.ipfsLibrary.unpin(ipfs, ipfsKeyword + cid);
     if (unpinned == undefined || unpinned == null) {
       return {
-        error: new Error("Failed to unpin: " + ipfsKeyword + cid),
+        error: new Error("Failed to unpin..."),
         unpinned: null
       };
     }

@@ -91,15 +91,8 @@ EnsLibrary.prototype.encodeContenthash = function(text) {
     if (type === "ipfs") {
       if (content.length >= 4) {
         var cid = new CID(content);
-        if (cid.version === 1) {
-          if (cid.codec !== "dag-pb") {
-            throw new Error("This Cid V1 is not 'dag-pb' encoded: " + content);
-          }
-          content = cid.toV0().toString();
-          if ($tw.utils.getIpfsVerbose()) console.info(
-            "Converted CidV1 Base32 to CidV0 Base58: "
-            + content
-          );
+        if (cid.version !== 0) {
+            throw new Error("Ens Content hash should be Base58 (CidV0): " + content);
         }
         encoded = "0x" + contentHash.fromIpfs(content);
       }
