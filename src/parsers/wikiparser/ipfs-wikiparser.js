@@ -111,6 +111,9 @@ Attributes are stored as hashmaps of the following objects:
         }
       }
       importedTiddler["tags"] = importedTags;
+      if (importedTiddler["title"] !== title) {
+        importedTiddler["_imported_title"] = importedTiddler["title"];
+      }
       importedTiddler["title"] = title;
       self.wiki.addTiddler(importedTiddler);
     });
