@@ -31,12 +31,14 @@ var AudioParser = function(type,text,options) {
     $tw.utils.loadAndDecryptToBase64(uri)
     .then( (base64) => {
       element.attributes.src = { type: "string", value: value + base64 };
-      $tw.rootWidget.refresh([tiddler]);
+      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+      $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
       console.error(error);
       element.attributes.src = { type: "string", value: uri };
-      $tw.rootWidget.refresh([tiddler]);
+      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+      $tw.rootWidget.refresh(changedTiddlers);
     });
   } else {
     if (uri) {

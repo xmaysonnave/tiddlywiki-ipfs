@@ -1100,18 +1100,19 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
 
 /* Beware you are in a widget, not in the instance of this saver */
 IpfsSaver.prototype.handleRefreshTiddler = async function(self, event) {
-  if (event.param !== undefined && event.param !== null) {
+  const title = event.tiddlerTitle;
+  if (title !== undefined && title !== null) {
     // current tiddler
-    const tiddler = self.wiki.getTiddler(event.param);
+    const tiddler = self.wiki.getTiddler(title);
     if (tiddler == undefined || tiddler == null) {
-      const msg = "Unknown tiddler: " + event.param;
+      const msg = "Unknown tiddler: " + title;
       console.error(msg);
       self.messageDialog(msg);
       return false;
     }
-    $tw.wiki.clearCache(event.param);
-    $tw.wiki.enqueueTiddlerEvent(event.param, false);
-    $tw.rootWidget.refresh([tiddler]);
+    $tw.wiki.clearCache(title);
+    const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+    $tw.rootWidget.refresh(changedTiddlers);
   }
   return true;
 }

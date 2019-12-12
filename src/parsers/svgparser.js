@@ -27,11 +27,13 @@ var ImageParser = function(type,text,options) {
     $tw.utils.loadAndDecryptToUtf8(uri)
     .then( (data) => {
       element.attributes.src = { type: "string", value: value + encodeURIComponent(data) };
-      $tw.rootWidget.refresh([tiddler]);
+      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+      $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
       console.error(error);
-      $tw.rootWidget.refresh([tiddler]);
+      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+      $tw.rootWidget.refresh(changedTiddlers);
     });
   } else {
     if (uri) {
