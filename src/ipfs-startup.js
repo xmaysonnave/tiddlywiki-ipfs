@@ -12,8 +12,9 @@ Startup initialisation
 /*global $tw: false */
 "use strict";
 
-const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
+const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
+const IpfsActions = require("$:/plugins/ipfs/ipfs-actions.js").IpfsActions;
 
 // Export name and synchronous status
 exports.name = "ipfs-startup";
@@ -34,6 +35,29 @@ exports.startup = function() {
     "Ipfs Saver priority: "
     + priority
   );
+  // Event
+  const ipfsActions = new IpfsActions();
+  $tw.wiki.addEventListener("change", function(changes) {
+    return ipfsActions.handleChangeEvent(changes);
+  });
+  $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
+    return ipfsActions.handleExportToIpfs(ipfsActions, event);
+  });
+  $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
+    return ipfsActions.handleMobileConsole(ipfsActions, event);
+  });
+  $tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
+    return ipfsActions.handlePublishToEns(ipfsActions, event);
+  });
+  $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
+    return ipfsActions.handlePublishToIpns(ipfsActions, event);
+  });
+  $tw.rootWidget.addEventListener("tm-tiddler-refresh", function(event) {
+    return ipfsActions.handleRefreshTiddler(event);
+  });
+  $tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
+    return ipfsActions.handleFileImport(tiddler);
+  });
 };
 
 })();

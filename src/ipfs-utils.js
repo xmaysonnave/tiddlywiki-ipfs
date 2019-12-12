@@ -172,4 +172,12 @@ exports.updateTiddler = function(tiddler, addTags, removeTags, content, uri) {
   return updatedTiddler;
 }
 
+exports.messageDialog = function(message) {
+  if (message !== undefined && message !== null && message.trim() !== "") {
+    alert(message.trim());
+  } else {
+    alert($tw.language.getString("Error/Caption"));
+  }
+}
+
 })();

@@ -93,16 +93,21 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
   }
 
   // Check content type, only base64 and image/svg+xml are suppported yet
-  var type = tiddler.getFieldString("type").trim();
+  var type = tiddler.getFieldString("type");
+  // Check
+  if (type == undefined || type == null || type.trim() == "") {
+    var msg = "Unknown Tiddler Type...";
+    console.error(msg);
+    $tw.utils.messageDialog(msg);
+    return false;
+  }
+  type = type.trim();
+
   // Retrieve content-type
   const info = $tw.config.contentTypeInfo[type];
+  // Check
   if (info == undefined || info == null)  {
-    var msg = "Unable to Upload to Ipfs. Unknown Tiddler Type";
-    if (type == undefined || type == null || type.trim() == "") {
-      msg = msg + "..."
-    } else {
-      msg = msg + ": " + type;
-    }
+    var msg = "Unknown Content Type: " + type;
     console.error(msg);
     $tw.utils.messageDialog(msg);
     return false;
