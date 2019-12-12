@@ -466,7 +466,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         addTags = ["$:/isAttachment", "$:/isIpfs"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted"];
       } else {
-        addTags = ["$:/isExternal", "$:/isIpfs"];
+        addTags = ["$:/isImported", "$:/isIpfs"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted"];
       }
     } else {
@@ -474,7 +474,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         addTags = ["$:/isAttachment"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"];
       } else {
-        addTags = ["$:/isExternal"];
+        addTags = ["$:/isImported"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"];
       }
     }
