@@ -100,6 +100,7 @@ Attributes are stored as hashmaps of the following objects:
   WikiParser.prototype.importTiddlers = function(self, tiddler, uri, data) {
     const importedTiddlers = self.wiki.deserializeTiddlers(".tid",data,self.wiki.getCreationFields());
     const addTags = (tiddler.fields.tags || []).slice(0);
+    const title = tiddler.getFieldString("title");
     $tw.utils.each(importedTiddlers, function(importedTiddler) {
       importedTiddler["_canonical_uri"] = uri;
       var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
@@ -110,6 +111,7 @@ Attributes are stored as hashmaps of the following objects:
         }
       }
       importedTiddler["tags"] = importedTags;
+      importedTiddler["title"] = title;
       self.wiki.addTiddler(importedTiddler);
     });
   }
