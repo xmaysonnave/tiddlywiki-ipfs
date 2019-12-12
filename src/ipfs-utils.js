@@ -140,9 +140,10 @@ exports.loadLibrary = async function(id, url, sri, module) {
 
 exports.getChangedTiddlers = function(tiddler) {
   const title = tiddler.getFieldString("title");
-  var changedTiddlers = $tw.wiki.changedTiddlers;
-  changedTiddlers = changedTiddlers || Object.create(null);
-  changedTiddlers[title] = changedTiddlers[title] || Object.create(null);
+  var changedTiddlers = Object.create(null);
+  if (title !== undefined && title !== null && title.trim() !== "") {
+    changedTiddlers[title] = changedTiddlers[title] || Object.create(null);
+  }
   return changedTiddlers;
 }
 
