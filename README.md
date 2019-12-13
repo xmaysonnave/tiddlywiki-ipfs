@@ -31,7 +31,7 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 * With a capable Ens browser:
 * * [Ipfs with TiddlyWiki](https://bluelightav.eth) on "Mainnet: Ethereum Main Network"
-* * [Ipfs with TiddlyWiki Beta](https://bluelightav.eth) on "Ropsten: Ethereum Test Network"
+* * [Ipfs with TiddlyWiki Development](https://bluelightav.eth) on "Ropsten (PoW) or Rinkeby (PoA): Ethereum Test Network"
 * * [Ipfs with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
 * * [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth/#Documentation)
 

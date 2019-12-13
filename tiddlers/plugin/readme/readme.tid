@@ -40,7 +40,7 @@ Resources:
 !! With a capable Ens browser:
 
 * [ext[Ipfs with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
-* [ext[Ipfs with TiddlyWiki Beta|https://bluelightav.eth]] on "Ropsten: Ethereum Test Network"
+* [ext[Ipfs with TiddlyWiki Development|https://bluelightav.eth]] on "Ropsten (PoW) or Rinkeby (PoA): Ethereum Test Network"
 * [ext[Ipfs with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
 * [ext[Ipfs with TiddlyWiki Documentation|https://bluelightav.eth/#Documentation]]
 

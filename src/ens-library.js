@@ -144,9 +144,11 @@ EnsLibrary.prototype.getProvider = function() {
   // Check if an Ethereum provider is available
   if (typeof window.ethereum !== "undefined") {
     provider = window.ethereum;
+    if ($tw.utils.getIpfsVerbose()) console.info("Ethereum provider: 'window.ethereum'...");
   }
   if (provider == null && window.web3 !== undefined && window.web3.currentProvider !== undefined) {
     provider = window.web3.currentProvider;
+    if ($tw.utils.getIpfsVerbose()) console.info("Ethereum provider: 'window.web3.currentProvider'...");
   }
   if (provider == null) {
     throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
@@ -159,10 +161,21 @@ EnsLibrary.prototype.getWeb3Provider = async function() {
   if (window.ethers == undefined) {
     await this.loadEtherJsLibrary();
   }
-  // Instantiate Web3Provider
+  // Retrieve provider
   const provider = this.getProvider();
+  // Enable provider
+  // https://github.com/ethers-io/ethers.js/issues/433
+  const account = await this.enableProvider(provider);
+  if ($tw.utils.getIpfsVerbose()) console.info(
+    "Selected account: "
+    + account
+  );
+  // Instantiate Web3Provider
   const web3Provider = new window.ethers.providers.Web3Provider(provider);
-  return web3Provider;
+  return {
+    web3Provider: web3Provider,
+    account: account
+  }
 }
 
 EnsLibrary.prototype.getRegistryAddress = async function(web3Provider) {
@@ -306,18 +319,8 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
     throw new Error("Undefined Ens domain...");
   }
 
-  // Retrieve the current provider
-  const provider = this.getProvider();
-
   // Retrieve web3 provider
-  const web3Provider = await this.getWeb3Provider();
-
-  // Enable provider
-  const account = await this.enableProvider(provider);
-  if ($tw.utils.getIpfsVerbose()) console.info(
-    "Selected account: "
-    + account
-  );
+  const { web3Provider, account } = await this.getWeb3Provider();
 
   // Resolve domain as namehash
   const domainHash = window.ethers.utils.namehash(domain);
@@ -395,18 +398,8 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
     throw new Error("Undefined Ipfs identifier...");
   }
 
-  // Retrieve the current provider
-  const provider = this.getProvider();
-
   // Retrieve web3
-  const web3Provider = await this.getWeb3Provider();
-
-  // Enable provider
-  const account = await this.enableProvider(provider);
-  if ($tw.utils.getIpfsVerbose()) console.info(
-    "Selected account: "
-    + account
-  );
+  const { web3Provider, account } = await this.getWeb3Provider();
 
   // Resolve domain as namehash
   const domainHash = window.ethers.utils.namehash(domain);
