@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/parsers/videoparser.js
+title: $:/core/modules/parsers/videoparser.js
 type: application/javascript
 module-type: parser
 

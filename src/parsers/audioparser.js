@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/parsers/audioparser.js
+title: $:/core/modules/parsers/audioparser.js
 type: application/javascript
 module-type: parser
 

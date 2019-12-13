@@ -1,0 +1,33 @@
+title: Media Types
+tags: Attachments
+type: text/vnd.tiddlywiki
+
+<p>
+  Here is the list of supported Media Types.
+</p>
+<p>
+<table>
+<tr><th>Media Types</th><th>Extension</th></tr>
+<tr><td>application/pdf</td><td>pdf</td></tr>
+<tr><td>application/x-tiddler"</td><td>tid</td></tr>
+<tr><td>audio/ogg</td><td>ogg</td></tr>
+<tr><td>audio/mpeg</td><td></td></tr>
+<tr><td>audio/mp3</td><td>mp3</td></tr>
+<tr><td>audio/mp4</td><td>mp4 or m4a</td></tr>
+<tr><td>image/gif</td><td>gif</td></tr>
+<tr><td>image/heic</td><td>heic</td></tr>
+<tr><td>image/heif</td><td>heif</td></tr>
+<tr><td>image/jpg</td><td>jpg or jpeg</td></tr>
+<tr><td>image/jpeg</td><td>jpg or jpeg</td></tr>
+<tr><td>image/png</td><td>png</td></tr>
+<tr><td>image/svg+xml</td><td>svg</td></tr>
+<tr><td>image/webp</td><td>webp</td></tr>
+<tr><td>image/x-icon</td><td>ico</td></tr>
+<tr><td>text/vnd.tiddlywiki</td><td>tid</td></tr>
+<tr><td>video/mp4</td><td>mp4</td></tr>
+<tr><td>video/quicktime</td><td>mov or qt</td></tr>
+<tr><td>application/vnd.openxmlformats-officedocument.wordprocessingml.document</td><td>docx</td></tr>
+<tr><td>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</td><td>xlsx</td></tr>
+<tr><td>application/vnd.openxmlformats-officedocument.presentationml.presentation</td><td>pptx</td></tr>
+</table>
+</p>

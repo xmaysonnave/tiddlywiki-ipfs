@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/parsers/svgparser.js
+title: $:/core/modules/parsers/svgparser.js
 type: application/javascript
 module-type: parser
 

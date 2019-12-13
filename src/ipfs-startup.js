@@ -35,6 +35,11 @@ exports.startup = function() {
     "Ipfs Saver priority: "
     + priority
   );
+  // Missing Media Types
+  $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
+	$tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
+  $tw.utils.registerFileType("image/jpg","base64",".jpg",{flags:["image"]});
+	$tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
   // Event
   const ipfsActions = new IpfsActions();
   $tw.wiki.addEventListener("change", function(changes) {
