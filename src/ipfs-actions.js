@@ -160,6 +160,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
       options
     );
   }
+
   if ($tw.utils.getIpfsVerbose()) console.log(
     "Uploading attachment: "
     + content.length
@@ -243,10 +244,10 @@ IpfsActions.prototype.handleMobileConsole = async function(self, tiddler) {
     const eruda = document.createElement("div");
     window.document.body.appendChild(eruda);
     window.eruda.init({
-        container: eruda,
-        tool: ["console"],
-        useShadowDom: true,
-        autoScale: true
+      container: eruda,
+      tool: ["console"],
+      useShadowDom: true,
+      autoScale: true
     });
     window.eruda.init();
     // Preserve user preference if any, default is 80
@@ -335,13 +336,22 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
     $tw.utils.messageDialog(msg);
     return false;
   }
+
   if ($tw.utils.getIpfsVerbose()) console.info(
     "Ens Domain: "
     + ensDomain
   );
 
+  // Retrieve a Web3 provider
+  var { error, web3Provider, account } = await self.ensWrapper.getWeb3Provider();
+  if (error != null)  {
+    console.error(error);
+    $tw.utils.messageDialog(error.message);
+    return false;
+  }
+
   // Fetch Ens domain content
-  var { error, protocol, content } = await self.ensWrapper.getContenthash(ensDomain);
+  var { error, decoded, protocol } = await self.ensWrapper.getContenthash(ensDomain, web3Provider, account);
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -349,7 +359,7 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
   }
 
   // Nothing to publish
-  if (content !== null && content === cid) {
+  if (decoded !== null && decoded === cid) {
     const msg = "Nothing to publish. The current Ipfs identifier is up to date...";
     console.error(msg);
     $tw.utils.messageDialog(msg);
@@ -360,7 +370,8 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
     "Publishing Ens domain: "
     + ensDomain
   );
-  var { error } = await self.ensWrapper.setContenthash(ensDomain, cid);
+
+  var { error } = await self.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);

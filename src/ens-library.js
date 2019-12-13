@@ -53,14 +53,14 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
-EnsLibrary.prototype.decodeContenthash = function(encoded) {
+EnsLibrary.prototype.decodeContenthash = function(content) {
   let decoded, protocol;
-  if (encoded.error) {
-    throw new Error(encoded.error);
+  if (content.error) {
+    throw new Error(content.error);
   }
-  if (encoded) {
-    const codec = contentHash.getCodec(encoded);
-    decoded = contentHash.decode(encoded);
+  if (content) {
+    const codec = contentHash.getCodec(content);
+    decoded = contentHash.decode(content);
     if (codec === "ipfs-ns") {
       protocol = "ipfs";
     } else if (codec === "swarm-ns") {
@@ -78,29 +78,31 @@ EnsLibrary.prototype.decodeContenthash = function(encoded) {
 }
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1577.md
-EnsLibrary.prototype.encodeContenthash = function(text) {
+EnsLibrary.prototype.encodeContenthash = function(content) {
   let type;
-  let content;
-  let encoded = false;
-  if (!!text) {
-    const matched = text.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || text.match(/\/(ipfs)\/(.*)/);
+  let text;
+  let encoded;
+  if (!!content) {
+    const matched = content.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || content.match(/\/(ipfs)\/(.*)/);
     if (matched) {
       type = matched[1];
-      content = matched[2];
+      text = matched[2];
     }
     if (type === "ipfs") {
-      if (content.length >= 4) {
-        var cid = new CID(content);
+      if (text.length >= 4) {
+        const cid = new CID(text);
         if (cid.version !== 0) {
-            throw new Error("Ens Content hash should be Base58 (CidV0): " + content);
+            throw new Error("Ens Content hash should be Base58 (CidV0): " + text);
         }
-        encoded = "0x" + contentHash.fromIpfs(content);
+        encoded = "0x" + contentHash.fromIpfs(text);
       }
     } else {
       throw new Error("Unsupported Ens domain protocol: " + type);
     }
   }
-  return encoded;
+  return {
+    encoded: encoded
+  };
 }
 
 EnsLibrary.prototype.enableProvider = async function(provider) {
@@ -166,10 +168,6 @@ EnsLibrary.prototype.getWeb3Provider = async function() {
   // Enable provider
   // https://github.com/ethers-io/ethers.js/issues/433
   const account = await this.enableProvider(provider);
-  if ($tw.utils.getIpfsVerbose()) console.info(
-    "Selected account: "
-    + account
-  );
   // Instantiate Web3Provider
   const web3Provider = new window.ethers.providers.Web3Provider(provider);
   return {
@@ -313,14 +311,16 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
   // return
   return true;}
 
-EnsLibrary.prototype.getContenthash = async function(domain) {
+EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, account) {
 
-  if (domain == undefined || domain == null || domain.trim() === "") {
+  if (domain == undefined || domain == null) {
     throw new Error("Undefined Ens domain...");
   }
 
   // Retrieve web3 provider
-  const { web3Provider, account } = await this.getWeb3Provider();
+  if (web3Provider == undefined || account == undefined) {
+    var { web3Provider, account } = await this.getWeb3Provider();
+  }
 
   // Resolve domain as namehash
   const domainHash = window.ethers.utils.namehash(domain);
@@ -365,8 +365,8 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
     }
   }
   // decode bytes result
-  var decoded =  window.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
-  if (decoded == undefined || decoded == null || Array.isArray(decoded) === false || decoded[0] === "0x") {
+  var content =  window.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
+  if (content == undefined || content == null || Array.isArray(content) === false || content[0] === "0x") {
     return {
       decoded: null,
       protocol: null
@@ -374,7 +374,7 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
   }
   // decode content hash
   try {
-    var { decoded, protocol } = this.decodeContenthash(decoded[0]);
+    var { decoded, protocol } = this.decodeContenthash(content[0]);
     return {
       decoded: decoded,
       protocol: protocol
@@ -388,18 +388,20 @@ EnsLibrary.prototype.getContenthash = async function(domain) {
   }
 }
 
-EnsLibrary.prototype.setContenthash = async function(domain, cid) {
+EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, account) {
 
-  if (domain == undefined || domain == null || domain.trim() === "") {
+  if (domain == undefined || domain == null) {
     throw new Error("Undefined Ens domain...");
   }
 
-  if (cid == undefined || cid == null || cid.trim() === "") {
+  if (cid == undefined || cid == null) {
     throw new Error("Undefined Ipfs identifier...");
   }
 
-  // Retrieve web3
-  const { web3Provider, account } = await this.getWeb3Provider();
+  // Retrieve web3 provider
+  if (web3Provider == undefined || account == undefined) {
+    var { web3Provider, account } = await this.getWeb3Provider();
+  }
 
   // Resolve domain as namehash
   const domainHash = window.ethers.utils.namehash(domain);
@@ -414,10 +416,11 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
     throw new Error("Undefined Ens resolver...");
   }
+
   if ($tw.utils.getIpfsVerbose()) console.info(
     "Ens resolver address: "
-    + resolverAddress)
-  ;
+    + resolverAddress
+  );
 
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
@@ -432,7 +435,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid) {
   }
 
   // Encode cid
-  const encoded = this.encodeContenthash("ipfs://" + cid);
+  const { encoded } = this.encodeContenthash("ipfs://" + cid);
 
   // Set Contenthash
   try {

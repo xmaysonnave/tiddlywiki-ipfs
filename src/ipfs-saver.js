@@ -64,6 +64,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     var cid = null;
     var ipfsProtocol = ipfsKeyword;
     var ensDomain = null;
+    var web3Provider = null;
+    var account = null;
     options = options || {};
 
     // Process document URL
@@ -163,8 +165,16 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         + ensDomain
       );
 
+      // Retrieve a Web3 provider
+      var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
+      if (error != null)  {
+        console.error(error);
+        callback(error.message);
+        return false;
+      }
+
       // Fetch Ens domain content
-      const { error, protocol, content } = await this.ensWrapper.getContenthash(ensDomain);
+      var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
       if (error != null)  {
         console.error(error);
         callback(error.message);
@@ -174,7 +184,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       // Check is content protocol is ipfs to unpin previous
       if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
         // Store to unpin previous
-        unpin = content;
+        unpin = decoded;
         if (this.toBeUnpinned.indexOf(unpin) == -1) {
           this.toBeUnpinned.push(unpin);
           if ($tw.utils.getIpfsVerbose()) console.info(
@@ -230,7 +240,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         "Publishing Ens domain: "
         + ensDomain
       );
-      var { error } = await this.ensWrapper.setContenthash(ensDomain, added);
+      var { error } = await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
       if (error != null)  {
         console.error(error);
         callback(error.message);
