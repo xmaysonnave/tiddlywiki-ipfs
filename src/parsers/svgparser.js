@@ -12,7 +12,14 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var ImageParser = function(type,text,options) {
+var SvgParser = function() {
+  this.init = false;
+};
+
+SvgParser.prototype.initParser = function(type,text,options) {
+  if (this.init) {
+    return;
+  }
   const uri = options._canonical_uri;
   const tiddler = options.tiddler;
   const isEncrypted = tiddler.hasTag("$:/isEncrypted");
@@ -51,9 +58,12 @@ var ImageParser = function(type,text,options) {
     }
   }
   this.tree = [element];
+  this.init = true;
 };
 
-exports["image/svg+xml"] = ImageParser;
+exports["image/svg+xml"] = SvgParser;
+
+exports.SvgParser = SvgParser;
 
 })();
 

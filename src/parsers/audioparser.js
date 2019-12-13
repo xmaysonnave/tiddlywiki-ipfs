@@ -12,7 +12,14 @@ The audio parser parses an audio tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var AudioParser = function(type,text,options) {
+var AudioParser = function() {
+  this.init = false;
+};
+
+AudioParser.prototype.initParser = function(type,text,options) {
+  if (this.init) {
+    return;
+  }
   const uri = options._canonical_uri;
   const tiddler = options.tiddler;
   const isEncrypted = tiddler.hasTag("$:/isEncrypted");
@@ -48,12 +55,15 @@ var AudioParser = function(type,text,options) {
     }
   }
   this.tree = [element];
-};
+  this.init = true;
+}
 
 exports["audio/ogg"] = AudioParser;
 exports["audio/mpeg"] = AudioParser;
 exports["audio/mp3"] = AudioParser;
 exports["audio/mp4"] = AudioParser;
+
+exports.AudioParser = AudioParser;
 
 })();
 

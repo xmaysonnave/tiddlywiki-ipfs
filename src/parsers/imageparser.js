@@ -12,7 +12,14 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var ImageParser = function(type,text,options) {
+var ImageParser = function() {
+  this.init = false;
+};
+
+ImageParser.prototype.initParser = function(type,text,options) {
+  if (this.init) {
+    return;
+  }
   const uri = options._canonical_uri;
   const tiddler = options.tiddler;
   const isEncrypted = tiddler.hasTag("$:/isEncrypted");
@@ -44,6 +51,7 @@ var ImageParser = function(type,text,options) {
     }
   }
   this.tree = [element];
+  this.init = true;
 };
 
 exports["image/jpg"] = ImageParser;
@@ -54,6 +62,8 @@ exports["image/webp"] = ImageParser;
 exports["image/heic"] = ImageParser;
 exports["image/heif"] = ImageParser;
 exports["image/x-icon"] = ImageParser;
+
+exports.ImageParser = ImageParser;
 
 })();
 

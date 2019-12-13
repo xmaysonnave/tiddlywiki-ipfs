@@ -12,7 +12,14 @@ The PDF parser embeds a PDF viewer
 /*global $tw: false */
 "use strict";
 
-var ImageParser = function(type,text,options) {
+var PdfParser = function() {
+  this.init = false;
+};
+
+PdfParser.prototype.initParser = function(type,text,options) {
+  if (this.init) {
+    return;
+  }
   const uri = options._canonical_uri;
   const tiddler = options.tiddler;
   const isEncrypted = tiddler.hasTag("$:/isEncrypted");
@@ -44,8 +51,11 @@ var ImageParser = function(type,text,options) {
     }
   }
   this.tree = [element];
+  this.init = true;
 };
 
-exports["application/pdf"] = ImageParser;
+exports["application/pdf"] = PdfParser;
+
+exports.PdfParser = PdfParser;
 
 })();

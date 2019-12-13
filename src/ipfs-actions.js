@@ -114,6 +114,14 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
   }
 
   // Check
+  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
+    const msg = "Exporting to Ipfs is not supported...\nLook at the documentation...";
+    console.error(msg);
+    $tw.utils.messageDialog(msg);
+    return false;
+  }
+
+  // Check
   const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
   if (gatewayUrl == null) {
     const msg = "Undefined Ipfs gateway Url...";

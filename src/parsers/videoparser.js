@@ -12,7 +12,14 @@ The video parser parses a video tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var VideoParser = function(type,text,options) {
+var VideoParser = function() {
+  this.init = false;
+};
+
+VideoParser.prototype.initParser = function(type,text,options) {
+  if (this.init) {
+    return;
+  }
   const uri = options._canonical_uri;
   const tiddler = options.tiddler;
   const isEncrypted = tiddler.hasTag("$:/isEncrypted");
@@ -48,10 +55,13 @@ var VideoParser = function(type,text,options) {
     }
   }
   this.tree = [element];
+  this.init = true;
 };
 
 exports["video/mp4"] = VideoParser;
 exports["video/quicktime"] = VideoParser;
+
+exports.VideoParser = VideoParser;
 
 })();
 

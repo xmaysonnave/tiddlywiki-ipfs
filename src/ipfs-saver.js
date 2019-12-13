@@ -392,6 +392,14 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
     return oldTiddler;
   }
 
+  // Check
+  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
+    const msg = "Embedding from Ipfs is not supported...\nLook at the documentation...";
+    console.error(msg);
+    $tw.utils.messageDialog(msg);
+    return oldTiddler;
+  }
+
   // _canonical_uri attribute has been removed
   if (uri == null) {
 
