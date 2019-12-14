@@ -12,34 +12,30 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var ImageParser = function() {
-  this.init = false;
-};
-
-ImageParser.prototype.initParser = function(type,text,options) {
-  if (this.init) {
-    return;
-  }
-  const uri = options._canonical_uri;
-  const tiddler = options.tiddler;
-  const isEncrypted = tiddler.hasTag("$:/isEncrypted");
-  var value = "data:" + type + ";base64,";
-  var element = {
-      type: "element",
-      tag: "img",
-      attributes: {}
-    };
+var ImageParser = function(type,text,options) {
+  let self = this;
+  let uri = options._canonical_uri;
+  let tiddler = options.tiddler;
+  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
+  let value = "data:" + type + ";base64,";
+  let element = {
+    type: "element",
+    tag: "img",
+    attributes: {}
+  };
   // Decrypt or not external resource
   if (uri && isEncrypted) {
     $tw.utils.loadAndDecryptToBase64(uri)
     .then( (base64) => {
       element.attributes.src = { type: "string", value: value + base64 };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
       console.error(error);
       element.attributes.src = { type: "string", value: uri };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     });
@@ -51,7 +47,6 @@ ImageParser.prototype.initParser = function(type,text,options) {
     }
   }
   this.tree = [element];
-  this.init = true;
 };
 
 exports["image/jpg"] = ImageParser;
@@ -62,8 +57,6 @@ exports["image/webp"] = ImageParser;
 exports["image/heic"] = ImageParser;
 exports["image/heif"] = ImageParser;
 exports["image/x-icon"] = ImageParser;
-
-exports.ImageParser = ImageParser;
 
 })();
 

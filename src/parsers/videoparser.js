@@ -12,38 +12,33 @@ The video parser parses a video tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var VideoParser = function() {
-  this.init = false;
-};
-
-VideoParser.prototype.initParser = function(type,text,options) {
-  if (this.init) {
-    return;
-  }
-  const uri = options._canonical_uri;
-  const tiddler = options.tiddler;
-  const isEncrypted = tiddler.hasTag("$:/isEncrypted");
-  const value = "data:" + type + ";base64,";
-  var element = {
-      type: "element",
-      tag: "video",
-      attributes: {
-        controls: {type: "string", value: "controls"},
-        style: {type: "string", value: "width: 100%; object-fit: contain"}
-      }
-    },
-    src;
+var VideoParser = function(type,text,options) {
+  let self = this;
+  let uri = options._canonical_uri;
+  let tiddler = options.tiddler;
+  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
+  let value = "data:" + type + ";base64,";
+  let element = {
+    type: "element",
+    tag: "video",
+    attributes: {
+      controls: {type: "string", value: "controls"},
+      style: {type: "string", value: "width: 100%; object-fit: contain"}
+    }
+  };
   // Decrypt or not external resource
   if (uri && isEncrypted) {
     $tw.utils.loadAndDecryptToBase64(uri)
     .then( (base64) => {
       element.attributes.src = { type: "string", value: value + base64 };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
       console.error(error);
       element.attributes.src = { type: "string", value: uri };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     });
@@ -55,13 +50,10 @@ VideoParser.prototype.initParser = function(type,text,options) {
     }
   }
   this.tree = [element];
-  this.init = true;
 };
 
 exports["video/mp4"] = VideoParser;
 exports["video/quicktime"] = VideoParser;
-
-exports.VideoParser = VideoParser;
 
 })();
 

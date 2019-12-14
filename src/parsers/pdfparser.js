@@ -12,34 +12,29 @@ The PDF parser embeds a PDF viewer
 /*global $tw: false */
 "use strict";
 
-var PdfParser = function() {
-  this.init = false;
-};
-
-PdfParser.prototype.initParser = function(type,text,options) {
-  if (this.init) {
-    return;
-  }
-  const uri = options._canonical_uri;
-  const tiddler = options.tiddler;
-  const isEncrypted = tiddler.hasTag("$:/isEncrypted");
-  const value = "data:application/pdf;base64,";
-  var element = {
-      type: "element",
-      tag: "embed",
-      attributes: {}
-    },
-    src;
+var PdfParser = function(type,text,options) {
+  let self = this;
+  let uri = options._canonical_uri;
+  let tiddler = options.tiddler;
+  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
+  let value = "data:application/pdf;base64,";
+  let element = {
+    type: "element",
+    tag: "embed",
+    attributes: {}
+  };
   if (uri && isEncrypted) {
     $tw.utils.loadAndDecryptToBase64(uri)
     .then( (base64) => {
       element.attributes.src = { type: "string", value: value + base64 };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
       console.error(error);
       element.attributes.src = { type: "string", value: uri };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     });
@@ -51,11 +46,8 @@ PdfParser.prototype.initParser = function(type,text,options) {
     }
   }
   this.tree = [element];
-  this.init = true;
 };
 
 exports["application/pdf"] = PdfParser;
-
-exports.PdfParser = PdfParser;
 
 })();

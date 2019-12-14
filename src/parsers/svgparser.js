@@ -12,58 +12,44 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-var SvgParser = function() {
-  this.init = false;
-};
-
-SvgParser.prototype.initParser = function(type,text,options) {
-  if (this.init) {
-    return;
-  }
-  const uri = options._canonical_uri;
-  const tiddler = options.tiddler;
-  const isEncrypted = tiddler.hasTag("$:/isEncrypted");
-  const value = "data:image/svg+xml,";
-  var element = {
-      type: "element",
-      tag: "img",
-      attributes: {}
-    };
+var SvgParser = function(type,text,options) {
+  let self = this;
+  let uri = options._canonical_uri;
+  let tiddler = options.tiddler;
+  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
+  let value = "data:image/svg+xml,";
+  let element = {
+    type: "element",
+    tag: "img",
+    attributes: {}
+  };
   // Decrypt or not external resource
   if (uri && isEncrypted) {
     $tw.utils.loadAndDecryptToUtf8(uri)
     .then( (data) => {
       element.attributes.src = { type: "string", value: value + encodeURIComponent(data) };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
       console.error(error);
+      element.attributes.src = { type: "string", value: uri };
+      self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     });
   } else {
     if (uri) {
-      $tw.utils.loadToUtf8(uri)
-      .then( (data) => {
-        element.attributes.src = { type: "string", value: value + encodeURIComponent(data) };
-        $tw.rootWidget.refresh([tiddler]);
-      })
-      .catch( (error) => {
-        console.error(error);
-        $tw.rootWidget.refresh([tiddler]);
-      });
+      element.attributes.src = { type: "string", value: uri };
     } else if (text) {
       element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
     }
   }
   this.tree = [element];
-  this.init = true;
 };
 
 exports["image/svg+xml"] = SvgParser;
-
-exports.SvgParser = SvgParser;
 
 })();
 

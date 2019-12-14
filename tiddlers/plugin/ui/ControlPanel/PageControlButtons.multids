@@ -1,11 +1,10 @@
 title: $:/config/PageControlButtons/Visibility/$:/
 
-core/ui/Buttons/home: show
-core/ui/Buttons/more: show
 core/ui/Buttons/encryption: show
-core/ui/Buttons/ipfs: show
-core/ui/Buttons/load-mobile-console: show
-core/ui/Buttons/publish-to-ens: hide
-core/ui/Buttons/publish-to-ipns: hide
+core/ui/Buttons/home: show
 core/ui/Buttons/ipfs-pin: hide
 core/ui/Buttons/ipfs-unpin: hide
+core/ui/Buttons/load-mobile-console: show
+core/ui/Buttons/more-page-actions: show
+core/ui/Buttons/publish-to-ens: hide
+core/ui/Buttons/publish-to-ipns: hide

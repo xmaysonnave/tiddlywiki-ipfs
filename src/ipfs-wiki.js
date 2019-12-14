@@ -45,15 +45,13 @@ exports.parseText = function(type,text,options) {
   if(!Parser) {
     return null;
   }
-  const parser = new Parser();
-  parser.initParser(type,text, {
+  // Return the parser instance
+  return new Parser(type,text, {
     parseAsInline: options.parseAsInline,
     wiki: this,
-    tiddler: options.tiddler,
-    _canonical_uri: options._canonical_uri
+    _canonical_uri: options._canonical_uri,
+    tiddler: options.tiddler
   });
-  // Return the parser instance
-  return parser;
 };
 
 /*

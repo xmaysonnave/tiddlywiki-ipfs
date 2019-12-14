@@ -1,5 +1,5 @@
 /*\
-title: $:/ipfs/plugins/parsers/wikiparser/wikiparser.js
+title: $:/core/modules/parsers/wikiparser/wikiparser.js
 type: application/javascript
 module-type: parser
 
@@ -25,19 +25,11 @@ Attributes are stored as hashmaps of the following objects:
   /*global $tw: false */
   "use strict";
 
-  var WikiParser = function() {
-    this.init = false;
-  };
-
-  WikiParser.prototype.initParser = function(type,text,options) {
-    if (this.init) {
-      return;
-    }
+  var WikiParser = function(type,text,options) {
     this.wiki = options.wiki;
-    var self = this;
     // Check for an externally linked tiddler
     if($tw.browser && (text || "") === "" && options._canonical_uri) {
-      this.loadRemoteTiddler(options);
+      this.loadRemoteTiddler(options.tiddler, options._canonical_uri);
       text = $tw.language.getRawString("LazyLoadingWarning");
     }
     // Initialise the classes if we don't have them already
@@ -75,40 +67,55 @@ Attributes are stored as hashmaps of the following objects:
     } else {
       topBranch.push.apply(topBranch,this.parseBlocks());
     }
-    this.init = true;
     // Return the parse tree
   };
 
   /*
   */
-  WikiParser.prototype.loadRemoteTiddler = function(options) {
-    const uri = options._canonical_uri;
-    const hostTiddler = options.tiddler;
-    const isEncrypted = hostTiddler.hasTag("$:/isEncrypted");
-    var self = this;
-    if (isEncrypted) {
-      $tw.utils.loadAndDecryptToUtf8(uri)
-      .then( (data) => {
-        self.importTiddlers(self, hostTiddler, uri, data);
-      })
-      .catch( (error) => {
-        console.error(error);
-      });
+  WikiParser.prototype.loadRemoteTiddler = function(tiddler, uri) {
+    let self = this;
+    if (tiddler) {
+      if (tiddler.hasTag("$:/isEncrypted")) {
+        $tw.utils.loadAndDecryptToUtf8(uri)
+        .then( (data) => {
+          self.importTiddlers(tiddler, uri, data);
+        })
+        .catch( (error) => {
+          console.error(error);
+        });
+      } else {
+        $tw.utils.loadToUtf8(uri)
+        .then( (data) => {
+          self.importTiddlers(tiddler, uri, data);
+        })
+        .catch( (error) => {
+          console.error(error);
+        });
+      }
     } else {
-      $tw.utils.loadToUtf8(uri)
-      .then( (data) => {
-        self.importTiddlers(self, hostTiddler, uri, data);
-      })
-      .catch( (error) => {
-        console.error(error);
+      $tw.utils.httpRequest({
+        url: uri,
+        type: "GET",
+        callback: function(err,data) {
+          if (!err) {
+            var tiddlers = self.wiki.deserializeTiddlers(".tid",data,self.wiki.getCreationFields());
+            $tw.utils.each(tiddlers,function(tiddler) {
+              tiddler["_canonical_uri"] = uri;
+            });
+            if (tiddlers) {
+              self.wiki.addTiddlers(tiddlers);
+            }
+          }
+        }
       });
     }
   };
 
-  WikiParser.prototype.importTiddlers = function(self, tiddler, uri, data) {
-    const importedTiddlers = self.wiki.deserializeTiddlers(".tid",data,self.wiki.getCreationFields());
-    const addTags = (tiddler.fields.tags || []).slice(0);
-    const title = tiddler.getFieldString("title");
+  WikiParser.prototype.importTiddlers = function(tiddler, uri, data) {
+    let self = this;
+    let importedTiddlers = this.wiki.deserializeTiddlers(".tid",data,this.wiki.getCreationFields());
+    let addTags = (tiddler.fields.tags || []).slice(0);
+    let title = tiddler.getFieldString("title");
     $tw.utils.each(importedTiddlers, function(importedTiddler) {
       importedTiddler["_canonical_uri"] = uri;
       var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
@@ -448,8 +455,6 @@ Attributes are stored as hashmaps of the following objects:
   };
 
   exports["text/vnd.tiddlywiki"] = WikiParser;
-
-  exports.WikiParser = WikiParser;
 
   })();
 
