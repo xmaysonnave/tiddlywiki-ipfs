@@ -141,7 +141,7 @@ exports.loadLibrary = async function(id, url, sri, module) {
 exports.getChangedTiddlers = function(tiddler) {
   const title = tiddler.getFieldString("title");
   var changedTiddlers = Object.create(null);
-  if (title !== undefined && title !== null && title.trim() !== "") {
+  if (title !== undefined && title !== null) {
     changedTiddlers[title] = changedTiddlers[title] || Object.create(null);
   }
   return changedTiddlers;
