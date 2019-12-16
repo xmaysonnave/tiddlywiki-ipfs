@@ -124,7 +124,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Resolve Ipns
     if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
-
       // Resolve ipns key and ipns name
       var { error, ipnsName, ipnsKey, resolved } = await this.resolveIpns(this, ipfs, ipnsKey, ipnsName);
       if (error != null) {
@@ -132,7 +131,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         callback(error.message);
         return false;
       }
-
       // Store to unpin previous if any
       if ($tw.utils.getIpfsUnpin() && resolved != null) {
         if (this.toBeUnpinned.indexOf(resolved) == -1) {
@@ -145,9 +143,10 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           );
         }
       }
+    }
 
     // Check Ens domain
-    } else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
+    if ($tw.utils.getIpfsProtocol() === ensKeyword) {
 
       // Getting default ens domain
       ensDomain = $tw.utils.getIpfsEnsDomain();
@@ -234,8 +233,10 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           return false;
         }
       }
+    }
+
     // Publish to Ens if ens is requested
-    } else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
+    if ($tw.utils.getIpfsProtocol() === ensKeyword) {
       if ($tw.utils.getIpfsVerbose()) console.info(
         "Publishing Ens domain: "
         + ensDomain
