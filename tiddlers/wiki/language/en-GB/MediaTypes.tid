@@ -1,9 +1,9 @@
 title: Media Types
-tags: Attachments
+tags: Explorers
 type: text/vnd.tiddlywiki
 
 <p>
-  Here is the list of supported Media Types.
+  Supported Media Types.
 </p>
 <p>
 <table>
@@ -26,8 +26,5 @@ type: text/vnd.tiddlywiki
 <tr><td>text/vnd.tiddlywiki</td><td>tid</td></tr>
 <tr><td>video/mp4</td><td>mp4</td></tr>
 <tr><td>video/quicktime</td><td>mov or qt</td></tr>
-<tr><td>application/vnd.openxmlformats-officedocument.wordprocessingml.document</td><td>docx</td></tr>
-<tr><td>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</td><td>xlsx</td></tr>
-<tr><td>application/vnd.openxmlformats-officedocument.presentationml.presentation</td><td>pptx</td></tr>
 </table>
 </p>

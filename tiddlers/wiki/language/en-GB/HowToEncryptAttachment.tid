@@ -3,7 +3,7 @@ tags: HowTo
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Encrypt Attachment</h2>
-[img[$:/ipfs/saver/image/encrypt]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/encrypt]]
 <p>
 If the locker is opened, your wiki is not encrypted.
 </p>
@@ -27,8 +27,8 @@ Read the [[HowTo Decrypt Attachment]] to manage this behaviour.
 <p>
 Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
-[img[$:/ipfs/saver/image/embedded/console]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/embedded/console]]
 <p>
 Here is the output when a pdf attachment has been encrypted.
 </p>
-[img[$:/ipfs/saver/image/encrypted/attachment]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/encrypted/attachment]]

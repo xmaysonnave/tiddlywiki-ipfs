@@ -3,7 +3,7 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Policy Setting</h2>
-[img[$:/ipfs/saver/image/settings/policy]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/policy]]
 <p>
   <b>Ipfs with ~TiddlyWiki</b> is able to reach the Ipfs network with multiple providers:
 </p>
@@ -28,4 +28,4 @@ type: text/vnd.tiddlywiki
 <p>
   When the [[Verbose]] property is selected, the console always shows which policy is used.
 </p>
-[img[$:/ipfs/saver/image/settings/policy/console]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/policy/console]]

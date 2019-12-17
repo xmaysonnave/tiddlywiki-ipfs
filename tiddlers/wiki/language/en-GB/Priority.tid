@@ -3,7 +3,7 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Priority Setting</h2>
-[img[$:/ipfs/saver/image/settings/priority]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/priority]]
 <p>
 The plugin modifies the default behaviour of <b>~TiddlyWiki</b> and exposes its saver's priority.
 </p>

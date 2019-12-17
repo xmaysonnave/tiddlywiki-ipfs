@@ -3,7 +3,7 @@ tags: HowTo
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Decrypt Attachment</h2>
-[img[$:/ipfs/saver/image/decrypt]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/decrypt]]
 <p>
 If the locker is closed, your wiki is encrypted.
 </p>
@@ -21,11 +21,11 @@ The solution to unencrypt and read the document is to [[Embed|HowTo Embed Attach
 <p>
 Setup the [[Verbose]] property and watch the console displayed events as the process can take some times.
 </p>
-[img[$:/ipfs/saver/image/embedded/console]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/embedded/console]]
 <p>
 Edit your attachment and remove the Tiddler <b>_canonical_uri</b> attribute.
 </p>
-[img[$:/ipfs/saver/image/encrypted/remove/canonical]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/encrypted/remove/canonical]]
 <p>
 Save your Tiddler and wait until the process has been completed.
 </p>
@@ -33,13 +33,13 @@ Save your Tiddler and wait until the process has been completed.
 While unencrypting a password could be requested, especially when your wiki is unencrypted but its attachment is encrypted.
 However if your wiki is encrypted this process will be done automatically.
 </p>
-[img[$:/ipfs/saver/image/unencrypt/password]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/unencrypt/password]]
 <p>
 Here is the output when your attachment has been unencrypted.
 </p>
-[img[$:/ipfs/saver/image/unencrypt/embedded]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/unencrypt/embedded]]
 <p>
-[[The Ipfs Encrypted Little Prince]] describes this behaviour.
+[[IPFS - Encrypted - The Little Prince]] describes this behaviour.
 </p>
 <p>
 Edit this Tiddler as it contains a password attribute whose value will unencryt the document.

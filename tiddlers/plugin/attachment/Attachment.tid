@@ -1,5 +1,5 @@
 title: Attachment
-tags: TableOfContents
+tags: Explorer
 type: text/vnd.tiddlywiki
 
 <<locator-view baseTitle:"$:/isAttachment" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

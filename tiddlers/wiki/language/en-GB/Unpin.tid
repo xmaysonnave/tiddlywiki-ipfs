@@ -3,21 +3,21 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Unpin Setting</h2>
-[img[$:/ipfs/saver/image/settings/unpin]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/unpin]]
 <p>
   The <b>Unpin</b> checkbox when selected try to unpin previous content while saving.
 </p>
 <p>
-  Each time you save your wiki or publish an [[Ipns]] Name the previous content will be unpined.
+  Each time you save your wiki or publish an [[Ipns|Ipns Settings]] Name, the previous content will be unpined.
 </p>
 <p>
   When you embed in your wiki a previously saved Ipfs attachment, an <b>Unpin</b> request will be recorded and processed while saving.
 </p>
 <p>
-  Unpinning is not allowed with the [[ApiUrl|Ipfs]] <b>ipfs.infura.io:5001</b>.
+  Unpinning is not allowed with the [[ApiUrl|Ipfs Settings]] <b>ipfs.infura.io:5001</b>.
 </p>
 <p>
-  In some situations <b>Unpining</b> is an unwanted mechanism.
-  <br/>
-  If you [[Publish to Ipns|How to Publish to Ipns]] an existing <b>Ipns Name</b> to a different <b>Ipns Name</b>, unpining the previous document will break the former Ipns Name.
+  In some situations <b>Unpining</b> is an unwanted mechanism. If you [[Publish to Ipns|HowTo Publish to Ipns]] an existing [[Ipns|Ipns Settings]] Name</b>
+  to a different <b>Ipns Name</b>, unpining the previous document will break the former Ipns Name. This behaviour also applies to [[Ens|Ens Settings]]
+  if you <b>Unpin</b> a content referenced with [[Ens|Ens Settings]].
 </p>

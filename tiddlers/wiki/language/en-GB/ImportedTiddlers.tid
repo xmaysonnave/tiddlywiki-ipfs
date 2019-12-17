@@ -1,0 +1,22 @@
+title: Imported Tiddlers
+tags: Explorers
+type: text/vnd.tiddlywiki
+
+<p>
+This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] who provides a convenient <<tag "$:/isIpfs">>Tiddler explorer.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/imported/tiddler]]
+<p>
+The specialized [[Imported Tiddler]] displays the <<tag "$:/isIpfs">>with the following tag status:
+</p>
+<ul>
+  <li><<tag "$:/isEncrypted">></li>
+  <li><<tag "$:/isIpfs">></li>
+</ul>
+<p>
+The <b>Ipfs with ~TiddlyWiki</b> plugin embeds the [[Imported Tiddler]] however you need to install the
+[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]].
+</p>
+<p>
+The [[Imported Tiddler]] is available in the [[TableOfContents]].
+</p>

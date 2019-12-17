@@ -3,7 +3,7 @@ tags: HowTo
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Unpin</h2>
-[img[$:/ipfs/saver/image/unpin]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/unpin]]
 <p>
 Instead of saving to [[Unpin]] a previous content, the <b>unpin to Ipfs</b> action will <b>unpin</b> the current wiki Ipfs identifier.
 </p>

@@ -3,12 +3,31 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Protocol Setting</h2>
-[img[$:/ipfs/saver/image/settings/protocol]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/protocol]]
 <p>
-The <b>Protocol</b> setting controls the way <b>Ipfs with ~TiddlyWiki</b> saves your wiki over Ipfs:
+The <b>Protocol</b> setting controls the way <b>Ipfs with ~TiddlyWiki</b> saves your wiki over Ipfs.
 </p>
-<ul>
-  <li>The [[Ipfs]] protocol saves <b>~TiddlyWiki</b> and its embedded file attachments over Ipfs</li>
-  <li>The [[Ipns]] protocol enhances the Ipfs protocol and publish an <b>Ipns Name</b> with a new Ipfs identifier</li>
-  <li>The [[Ens]] protocol enhances the Ipfs protocol and publish an <b>Ens domain</b> or <b>Ens subdomain</b> with a new Ipfs identifier</li>
-</ul>
+<h3>Ipfs</h3>
+<p>
+  The [[Ipfs|Ipfs Settings]] protocol saves <b>~TiddlyWiki</b> and its embedded file attachments over Ipfs.
+</p>
+<p>
+  Once your wiki is saved you'll be redirected to the new Ipfs identifier location.
+</p>
+<h3>Ipns</h3>
+<p>
+  The [[Ipns|Ipns Settings]] protocol enhances the Ipfs protocol and publish an <b>Ipns Name</b> with a new [[Ipfs|Ipfs Settings]] identifier.
+</p>
+<p>
+  Once your wiki is saved you'll be redirected to the new Ipns identifier location.
+</p>
+<h3>Ens</h3>
+<p>
+  The [[Ens|Ens Settings]] protocol enhances the Ipfs protocol and publish an [[Ens|Ens Settings]] domain or [[Ens|Ens Settings]] subdomain with a new [[Ipfs|Ipfs Settings]] identifier.
+</p>
+<p>
+  Once your wiki is saved you'll be redirected to your [[Ens|Ens Settings]] domain or [[Ens|Ens Settings]] subdomain<.
+</p>
+<p>
+  If you comes from an [[Ipns|Ipns Settings]] location the [[Ens|Ens Settings]] protocol always updates your previous [[Ipns|Ipns Settings]] location.
+</p>

@@ -10,9 +10,10 @@ On desktop the [[Verbose]] mode output feedbacks to the browser console and the 
   <li>[[Chrome or Chromium Console|https://developers.google.com/web/tools/chrome-devtools/open]]</li>
   <li>[[Firefox Console|https://developer.mozilla.org/en-US/docs/Tools/Web_Console/Opening_the_Web_Console]]</li>
 </ul>
-[img[$:/ipfs/saver/image/console]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/console]]
 <h2>Mobile Console</h2>
 <p>
 <b>Ipfs with ~TiddlyWiki</b> embeds a light console who provides feedbacks on mobile and desktop.
+This <b>Mobile Console</b> is particularly useful on Mobile.
 </p>
-[img[$:/ipfs/saver/image/mobile/console]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/mobile/console]]

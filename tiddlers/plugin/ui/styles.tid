@@ -1,0 +1,11 @@
+title: $:/plugins/ipfs/styles
+tags: $:/tags/Stylesheet
+type: text/css
+
+.tc-image-documentation {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+	border: 1px solid black;
+}

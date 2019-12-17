@@ -2,7 +2,12 @@ title: Settings
 tags: Documentation
 type: text/vnd.tiddlywiki
 
+<p>
 The [[Ipfs Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
-<br/><br/>
-[img[$:/ipfs/saver/image/settings]]
-<<locator-view baseTitle:"Settings" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>
+</p>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/settings]]
+<div class="tc-table-of-contents">
+
+<<toc-selective-expandable 'Settings'>>
+
+</div>

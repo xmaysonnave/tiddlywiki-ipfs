@@ -3,9 +3,9 @@ tags: HowTo
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Publish to Ipns</h2>
-[img[$:/ipfs/saver/image/publish/ipfs]]
+[img class="tc-image-documentation" [$:/ipfs/saver/image/publish/ipfs]]
 <p>
-Instead of saving with the [[Ipns]] feature, the publish [[Ipns]] action will publish your <b>Ipns Name</b> with the current wiki Ipfs identifier.
+Instead of saving with the [[Ipns|Protocol]] protocol feature, the publish [[Ipns|Ipns Settings]] action will publish your <b>Ipns Name</b> with the current wiki Ipfs identifier.
 </p>
 <p>
 You can publish to Ipns the Ipfs identifier of another <b>Ipns Name</b>.

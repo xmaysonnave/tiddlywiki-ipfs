@@ -1,5 +1,23 @@
 title: Attachments
-tags: Documentation
+tags: Explorers
 type: text/vnd.tiddlywiki
 
-<<locator-view baseTitle:"Attachments" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>
+<p>
+This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] who provides a convenient <<tag "$:/isAttachment">>explorer.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/attachment]]
+<p>
+The specialized [[Attachment]] Tiddler displays the <<tag "$:/isAttachment">>tag with the following tag status:
+</p>
+<ul>
+  <li><<tag "$:/isEmbedded">></li>
+  <li><<tag "$:/isEncrypted">></li>
+  <li><<tag "$:/isIpfs">></li>
+</ul>
+<p>
+The <b>Ipfs with ~TiddlyWiki</b> plugin embeds the [[Attachment]] Tiddler however you need to install the
+[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]].
+</p>
+<p>
+The [[Attachment]] Tiddler is available in the [[TableOfContents]].
+</p>
