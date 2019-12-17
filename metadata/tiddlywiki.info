@@ -30,11 +30,6 @@
 			"$:/core/save/all",
 			"index.html",
 			"text/plain"
-		],
-		"favicon": [
-			"--savetiddler",
-			"$:/favicon.ico",
-			"favicon.ico"
 		]
 	}
 }
