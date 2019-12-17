@@ -35,14 +35,19 @@ var SvgParser = function(type,text,options) {
     })
     .catch( (error) => {
       console.error(error);
-      element.attributes.src = { type: "string", value: uri };
-      self.tree = [element];
-      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-      $tw.rootWidget.refresh(changedTiddlers);
     });
   } else {
     if (uri) {
-      element.attributes.src = { type: "string", value: uri };
+      $tw.utils.loadToUtf8(uri)
+      .then( (data) => {
+        element.attributes.src = { type: "string", value: value + encodeURIComponent(data) };
+        self.tree = [element];
+        const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+        $tw.rootWidget.refresh(changedTiddlers);
+      })
+      .catch( (error) => {
+        console.error(error);
+      });
     } else if (text) {
       element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
     }
