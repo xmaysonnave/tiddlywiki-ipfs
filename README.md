@@ -183,14 +183,14 @@ We update npm to use the latest:
 ```
 npm install -g npm@latest
 npm -v
-6.13.1
+6.13.4
 ```
 
 At this stage your global environment should look like this:
 ```
 npm -g ls --depth=0
 /home/user/.nvm/versions/node/v10.17.0/lib
-└── npm@6.13.1
+└── npm@6.13.4
 ```
 
 #### Repository install
@@ -214,17 +214,20 @@ npm install
 
 The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`. The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
 
-* build-all-dev
+* build-all-noclone
 * build-all
+* build-tiddlywiki-ipfs-dev
 * build-tiddlywiki-ipfs
 * run-browserify
-* run-prepare-dev
+* run-prepare-clone
 * run-prepare
 * test
 
-Use the `build-all` script to build ```Ipfs with TiddlyWiki``` and the `wiki` directory will contain a runnable wiki:
+Use the `build-all` script to build ```Ipfs with TiddlyWiki``` and the `wiki` directory will contain two runnable wikis:
+
 * favicon.ico
-* index.html
+* index.html (production)
+* dev.html (non-minified)
 
 #### Running TiddlyWiki
 <a name="developer-running"/>
@@ -246,7 +249,7 @@ See also the list of [contributors](https://github.com/xmaysonnave/tiddlywiki-ip
 ## License
 <a name="license"/>
 
-This project is licensed under the [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html) from [SPDX](https://spdx.org/) - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html) - see the [LICENSE](LICENSE) file for details.
 
 
 ## Acknowledgments

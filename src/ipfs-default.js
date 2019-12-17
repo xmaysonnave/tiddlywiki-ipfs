@@ -7,15 +7,15 @@ utils
 
 \*/
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
 "use strict";
 
 /*
-Retrieve ipfs saver priority with default value if applicable
-*/
+ * Retrieve ipfs saver priority with default value if applicable
+ */
 exports.getIpfsPriority = function() {
   var priority = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/priority/default") !== undefined) {
@@ -44,15 +44,15 @@ exports.getIpfsPriority = function() {
 }
 
 /*
-Default Priority
-*/
+ * Default Priority
+ */
 exports.getIpfsDefaultPriority = function() {
   return 3100;
 }
 
 /*
-Retrieve ipfs saver protocol with default value if applicable
-*/
+ * Retrieve ipfs saver protocol with default value if applicable
+ */
 exports.getIpfsProtocol = function() {
   var protocol = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/protocol") !== undefined) {
@@ -68,15 +68,15 @@ exports.getIpfsProtocol = function() {
 }
 
 /*
-Default Protocol
-*/
+ * Default Protocol
+ */
 exports.getIpfsDefaultProtocol = function() {
   return "ipfs";
 }
 
 /*
-Retrieve ipfs saver api url with default value if applicable
-*/
+ * Retrieve ipfs saver api url with default value if applicable
+ */
 exports.getIpfsApiUrl = function() {
   var api = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/api/default") !== undefined) {
@@ -98,15 +98,15 @@ exports.getIpfsApiUrl = function() {
 }
 
 /*
-Default Api Url
-*/
+ * Default Api Url
+ */
 exports.getIpfsDefaultApiUrl = function() {
   return "https://ipfs.infura.io:5001";
 }
 
 /*
-Retrieve ipfs saver gateway url with default value if applicable
-*/
+ * Retrieve ipfs saver gateway url with default value if applicable
+ */
 exports.getIpfsGatewayUrl = function() {
   var gateway = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/gateway/default") !== undefined) {
@@ -128,15 +128,15 @@ exports.getIpfsGatewayUrl = function() {
 }
 
 /*
-Default Gateway Url
-*/
+ * Default Gateway Url
+ */
 exports.getIpfsDefaultGatewayUrl = function() {
   return "https://ipfs.infura.io";
 }
 
 /*
-Retrieve ipfs saver ens domain with default value if applicable
-*/
+ * Retrieve ipfs saver ens domain with default value if applicable
+ */
 exports.getIpfsEnsDomain = function() {
   var ensDomain = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") !== undefined) {
@@ -149,8 +149,8 @@ exports.getIpfsEnsDomain = function() {
 }
 
 /*
-Retrieve ipfs saver ipns name with default value if applicable
-*/
+ * Retrieve ipfs saver ipns name with default value if applicable
+ */
 exports.getIpfsIpnsName = function() {
   var ipnsName = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") !== undefined) {
@@ -163,8 +163,8 @@ exports.getIpfsIpnsName = function() {
 }
 
 /*
-Retrieve ipfs saver ipns key with default value if applicable
-*/
+ * Retrieve ipfs saver ipns key with default value if applicable
+ */
 exports.getIpfsIpnsKey = function() {
   var ipnsKey = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") !== undefined) {
@@ -177,8 +177,8 @@ exports.getIpfsIpnsKey = function() {
 }
 
 /*
-Retrieve ipfs saver verbose with default value if applicable
-*/
+ * Retrieve ipfs saver verbose with default value if applicable
+ */
 exports.getIpfsVerbose = function() {
   var verbose = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/verbose") !== undefined) {
@@ -196,8 +196,8 @@ exports.getIpfsVerbose = function() {
 }
 
 /*
-Retrieve ipfs saver unpin with default value if applicable
-*/
+ * Retrieve ipfs saver unpin with default value if applicable
+ */
 exports.getIpfsUnpin = function() {
   var unpin = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/unpin") !== undefined) {
@@ -215,8 +215,8 @@ exports.getIpfsUnpin = function() {
 }
 
 /*
-Retrieve ipfs saver policy with default value if applicable
-*/
+ * Retrieve ipfs saver policy with default value if applicable
+ */
 exports.getIpfsPolicy = function() {
   var policy = null;
   if ($tw.wiki.getTiddler("$:/ipfs/saver/policy") !== undefined) {
@@ -232,8 +232,8 @@ exports.getIpfsPolicy = function() {
 }
 
 /*
-Default Policy
-*/
+ * Default Policy
+ */
 exports.getIpfsDefaultPolicy = function() {
   return "http";
 }

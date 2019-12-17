@@ -7,7 +7,7 @@ IpfsSaver
 
 \*/
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -23,8 +23,8 @@ const ipfsKeyword = "ipfs";
 const ipnsKeyword = "ipns";
 
 /*
-Select the appropriate saver module and set it up
-*/
+ * Select the appropriate saver module and set it up
+ */
 var IpfsSaver = function(wiki) {
   const self = this;
   this.wiki = wiki;
@@ -60,7 +60,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Init
     var ipnsKey = $tw.utils.getIpfsIpnsKey();
     var ipnsName = $tw.utils.getIpfsIpnsName();
-    var unpin = null;
     var cid = null;
     var ipfsProtocol = ipfsKeyword;
     var ensDomain = null;
@@ -101,7 +100,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         ipfsProtocol = protocol;
         if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
           if (this.toBeUnpinned.indexOf(cid) == -1) {
-            unpin = cid;
+            const unpin = cid;
             this.toBeUnpinned.push(unpin);
             if ($tw.utils.getIpfsVerbose()) console.info(
               "Request to unpin: /"
@@ -156,13 +155,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         console.error(msg);
         callback(msg);
         return false;
-      } else {
-        ensDomain = ensDomain.trim();
       }
-      if ($tw.utils.getIpfsVerbose()) console.info(
-        "Ens Domain: "
-        + ensDomain
-      );
 
       // Retrieve a Web3 provider
       var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
@@ -181,9 +174,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       }
 
       // Check is content protocol is ipfs to unpin previous
-      if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
+      if ($tw.utils.getIpfsUnpin() && decoded !== null) {
         // Store to unpin previous
-        unpin = decoded;
+        const unpin = decoded;
         if (this.toBeUnpinned.indexOf(unpin) == -1) {
           this.toBeUnpinned.push(unpin);
           if ($tw.utils.getIpfsVerbose()) console.info(
@@ -264,8 +257,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Done
     callback(null);
 
-    // Next location
-    var nextCid;
+    // Next Cid
+    var nextCid = null;
     if ($tw.utils.getIpfsProtocol() === ipnsKeyword) {
       if (ipfsProtocol == ipfsKeyword || cid == null) {
         nextCid = "/" + ipnsKeyword + "/" + ipnsKey;
@@ -275,6 +268,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     } else {
       nextCid = "/" + ipfsKeyword + "/" + added;
     }
+
+    // Next location
     if (wikiProtocol === fileProtocol) {
       const url = gatewayProtocol
         + "//"
@@ -460,7 +455,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
     } else {
 
-      removeTags = ["$:/isImported", "$:/isAttachment", "$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"];
+      removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"];
 
     }
 
@@ -485,7 +480,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         addTags = ["$:/isAttachment", "$:/isIpfs"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted"];
       } else {
-        addTags = ["$:/isImported", "$:/isIpfs"];
+        addTags = ["$:/isIpfs"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted"];
       }
     } else {
@@ -493,7 +488,6 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
         addTags = ["$:/isAttachment"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"];
       } else {
-        addTags = ["$:/isImported"];
         removeTags = ["$:/isEmbedded", "$:/isEncrypted", "$:/isIpfs"];
       }
     }
@@ -898,8 +892,8 @@ IpfsSaver.prototype.resolveIpns = async function(self, ipfs, ipnsKey, ipnsName) 
 }
 
 /*
-Information about this saver
-*/
+ * Information about this saver
+ */
 IpfsSaver.prototype.info = {
   name: "ipfs",
   priority: 3000,
@@ -907,15 +901,15 @@ IpfsSaver.prototype.info = {
 };
 
 /*
-Static method that returns true if this saver is capable of working
-*/
+ * Static method that returns true if this saver is capable of working
+ */
 exports.canSave = function(wiki) {
   return true;
 };
 
 /*
-Create an instance of this saver
-*/
+ * Create an instance of this saver
+ */
 exports.create = function(wiki) {
   return new IpfsSaver(wiki);
 };

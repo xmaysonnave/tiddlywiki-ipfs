@@ -5,8 +5,11 @@ module-type: global
 
 The saver handler tracks changes to the store and handles saving the entire wiki via saver modules.
 
+global
+
 \*/
-( function() {
+
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -29,8 +32,8 @@ IpfsSaverHandler.prototype.initSavers = function(moduleType) {
 };
 
 /*
-Update a saver priority
-*/
+ * Update a saver priority
+ */
 IpfsSaverHandler.prototype.updateSaver = function(name, priority) {
   if (priority !== undefined && name !== undefined) {
     // Locate saver
@@ -52,8 +55,8 @@ IpfsSaverHandler.prototype.updateSaver = function(name, priority) {
 };
 
 /*
-Sort the savers into priority order
-*/
+ * Sort the savers into priority order
+ */
 IpfsSaverHandler.prototype.sortSavers = function() {
   $tw.saverHandler.savers.sort(function(a,b) {
     if(a.info.priority < b.info.priority) {

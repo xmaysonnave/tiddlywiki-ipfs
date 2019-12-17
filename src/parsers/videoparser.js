@@ -6,6 +6,7 @@ module-type: parser
 The video parser parses a video tiddler into an embeddable HTML element
 
 \*/
+
 (function(){
 
 /*jslint node: true, browser: true */
@@ -56,4 +57,3 @@ exports["video/mp4"] = VideoParser;
 exports["video/quicktime"] = VideoParser;
 
 })();
-

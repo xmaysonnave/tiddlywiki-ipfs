@@ -7,7 +7,7 @@ EnsWrapper
 
 \*/
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -15,11 +15,7 @@ EnsWrapper
 
 const EnsLibrary = require("$:/plugins/ipfs/ens-library.js").EnsLibrary;
 const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
-const ipfsKeyword = "/ipfs/";
 
-/*
-Ens Wrapper
-*/
 var EnsWrapper = function() {
   this.ensLibrary = new EnsLibrary();
   this.ipfsLibrary = new IpfsLibrary();

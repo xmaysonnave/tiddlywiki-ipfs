@@ -6,6 +6,7 @@ module-type: parser
 The image parser parses an image into an embeddable HTML element
 
 \*/
+
 (function(){
 
 /*jslint node: true, browser: true */
@@ -59,4 +60,3 @@ exports["image/heif"] = ImageParser;
 exports["image/x-icon"] = ImageParser;
 
 })();
-

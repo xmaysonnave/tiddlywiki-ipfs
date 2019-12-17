@@ -7,7 +7,7 @@ utils
 
 \*/
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -51,14 +51,14 @@ exports.StringToUint8Array = function(string) {
 
 // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
 
-/* utf.js - UTF-8 <=> UTF-16 convertion
+/*
+ * utf.js - UTF-8 <=> UTF-16 convertion
  *
  * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
  * Version: 1.0
  * LastModified: Dec 25 1999
  * This library is free.  You can redistribute it and/or modify it.
  */
-
 exports.Utf8ArrayToStr = function(array) {
   var c, char2, char3;
   var out = "";

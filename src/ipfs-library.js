@@ -12,15 +12,12 @@ import getIpfs from "ipfs-provider";
 import toMultiaddr from "uri-to-multiaddr";
 import url from "url";
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
 "use strict";
 
-/*
-Ipfs Library
-*/
 var IpfsLibrary = function() {};
 
 // https://www.srihash.org/

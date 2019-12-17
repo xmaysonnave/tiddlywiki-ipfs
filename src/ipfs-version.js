@@ -5,25 +5,24 @@ module-type: macro
 
 \*/
 
-( function() {
+(function(){
 
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
-  "use strict";
+/*jslint node: true, browser: true */
+/*global $tw: false */
+"use strict";
 
-  /*
-  Information about this macro
-  */
+/*
+ * Information about this macro
+ */
+exports.name = "ipfs-version";
 
-  exports.name = "ipfs-version";
+exports.params = [];
 
-  exports.params = [];
+/*
+ * Run the macro
+ */
+exports.run = function() {
+  return $tw.wiki.getTiddler("$:/plugins/ipfs").fields.version
+};
 
-  /*
-  Run the macro
-  */
-  exports.run = function() {
-    return $tw.wiki.getTiddler("$:/plugins/ipfs").fields.version
-  };
-
-  })();
+})();

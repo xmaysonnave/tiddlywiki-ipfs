@@ -6,6 +6,7 @@ module-type: parser
 The image parser parses an image into an embeddable HTML element
 
 \*/
+
 (function(){
 
 /*jslint node: true, browser: true */
@@ -52,4 +53,3 @@ var SvgParser = function(type,text,options) {
 exports["image/svg+xml"] = SvgParser;
 
 })();
-

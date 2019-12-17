@@ -7,7 +7,7 @@ IpfsWrapper
 
 \*/
 
-( function() {
+(function() {
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -17,9 +17,6 @@ const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
 const ipfsKeyword = "/ipfs/";
 const ipnsKeyword = "/ipns/";
 
-/*
-Ipfs Wrapper
-*/
 var IpfsWrapper = function() {
   this.ipfsLibrary = new IpfsLibrary();
 }

@@ -22,7 +22,7 @@ The <b>Ipfs with ~TiddlyWiki</b> plugin embeds the [[Attachment]] Tiddler.
 If you drag and drop this plugin in your wiki you need to add the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] to have a functional [[Attachment]] Tiddler.
 </p>
 <p>
-To enhance the filtering options of the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] you may also need to install the [ext[Kin filter plugin|https://bimlas.gitlab.io/tw5-kin-filter/]].
+To enhance the filtering options of the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]].
 </p>
 <p>
 The [[Attachment]] Tiddler is also available in the [[TableOfContents]].

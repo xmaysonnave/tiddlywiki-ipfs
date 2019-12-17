@@ -7,7 +7,7 @@ IpfsActions
 
 \*/
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -20,10 +20,6 @@ const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
 const fileProtocol = "file:";
 const ipfsKeyword = "ipfs";
 const ipnsKeyword = "ipns";
-
-/*
-Ipfs Actions
-*/
 var IpfsActions = function() {
   this.ipfsWrapper = new IpfsWrapper();
   this.ensWrapper = new EnsWrapper();
@@ -209,17 +205,17 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
   if (info.encoding === "base64" || type === "image/svg+xml") {
     if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
       addTags = ["$:/isAttachment", "$:/isEncrypted", "$:/isIpfs"];
-      removeTags = ["$:/isImported", "$:/isEmbedded"];
+      removeTags = ["$:/isEmbedded"];
     } else {
       addTags = ["$:/isAttachment", "$:/isIpfs"];
-      removeTags = ["$:/isImported", "$:/isEmbedded"];
+      removeTags = ["$:/isEmbedded"];
     }
   } else {
     if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
-      addTags = ["$:/isImported", "$:/isEncrypted", "$:/isIpfs"];
+      addTags = ["$:/isEncrypted", "$:/isIpfs"];
       removeTags = ["$:/isAttachment", "$:/isEmbedded"];
     } else {
-      addTags = ["$:/isImported", "$:/isIpfs"];
+      addTags = ["$:/isIpfs"];
       removeTags = ["$:/isAttachment", "$:/isEmbedded"];
     }
   }

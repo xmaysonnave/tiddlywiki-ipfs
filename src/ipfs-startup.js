@@ -6,7 +6,8 @@ module-type: startup
 Startup initialisation
 
 \*/
-( function() {
+
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -16,7 +17,6 @@ const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSa
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 const IpfsActions = require("$:/plugins/ipfs/ipfs-actions.js").IpfsActions;
 
-// Export name and synchronous status
 exports.name = "ipfs-startup";
 exports.platforms = ["browser"];
 exports.after = ["load-modules"];
@@ -37,9 +37,9 @@ exports.startup = function() {
   );
   // Missing Media Types
   $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
-	$tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
+  $tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
   $tw.utils.registerFileType("image/jpg","base64",".jpg",{flags:["image"]});
-	$tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
+  $tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
   // Event
   const ipfsActions = new IpfsActions();
   $tw.wiki.addEventListener("change", function(changes) {

@@ -10,15 +10,12 @@ EnsLibrary
 import CID  from "cids";
 import contentHash from "content-hash";
 
-( function() {
+(function(){
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
+/*jslint node: true, browser: true*/
+/*global $tw: false*/
 "use strict";
 
-/*
-Ens Library
-*/
 var EnsLibrary = function() {
   // https://github.com/ensdomains/ui/blob/master/src/ens.js
   this.registries = {

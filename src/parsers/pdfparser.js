@@ -6,6 +6,7 @@ module-type: parser
 The PDF parser embeds a PDF viewer
 
 \*/
+
 (function(){
 
 /*jslint node: true, browser: true */

@@ -1,5 +1,6 @@
 title: GettingStarted
 tags: TableOfContents
+type: text/vnd.tiddlywiki
 
 \define lingo-base() $:/language/ControlPanel/Basics/
 <p>

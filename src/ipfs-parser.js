@@ -5,9 +5,11 @@ module-type: utils
 
 The saver handler tracks changes to the store and handles saving the entire wiki via saver modules.
 
+utils
+
 \*/
 
-( function() {
+(function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
@@ -44,7 +46,7 @@ exports.httpGetToUint8Array = async function(url) {
 
 /*
  * Load and decrypt to Base64
-*/
+ */
 exports.loadAndDecryptToBase64 = function(uri) {
   return new Promise( async (resolve, reject) => {
     $tw.utils.httpGetToUint8Array(uri)
@@ -69,7 +71,7 @@ exports.loadAndDecryptToBase64 = function(uri) {
 
 /*
  * Decrypt Uint8Array to Base64
-*/
+ */
 exports.decryptUint8ArrayToBase64 = async function(array) {
   return new Promise( async (resolve, reject) => {
     const content = $tw.utils.Utf8ArrayToStr(array);
@@ -92,7 +94,7 @@ exports.decryptUint8ArrayToBase64 = async function(array) {
 
 /*
  * Load and decrypt to UTF-8
-*/
+ */
 exports.loadAndDecryptToUtf8 = function(uri) {
   return new Promise( async (resolve, reject) => {
     // Decrypt
@@ -116,7 +118,7 @@ exports.loadAndDecryptToUtf8 = function(uri) {
 
 /*
  * Load to UTF-8
-*/
+ */
 exports.loadToUtf8 = function(uri) {
   return new Promise( async (resolve, reject) => {
     $tw.utils.httpGetToUint8Array(uri)
