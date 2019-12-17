@@ -38,10 +38,6 @@ var VideoParser = function(type,text,options) {
     })
     .catch( (error) => {
       console.error(error);
-      element.attributes.src = { type: "string", value: uri };
-      self.tree = [element];
-      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-      $tw.rootWidget.refresh(changedTiddlers);
     });
   } else {
     if (uri) {
