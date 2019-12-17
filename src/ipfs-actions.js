@@ -91,13 +91,12 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
   // Check content type, only base64 and image/svg+xml are suppported yet
   var type = tiddler.getFieldString("type");
   // Check
-  if (type == undefined || type == null || type.trim() == "") {
+  if (type == undefined || type == null) {
     var msg = "Unknown Tiddler Type...";
     console.error(msg);
     $tw.utils.messageDialog(msg);
     return false;
   }
-  type = type.trim();
 
   // Retrieve content-type
   const info = $tw.config.contentTypeInfo[type];
@@ -166,10 +165,19 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
   try {
     // Encrypt
     if ($tw.crypto.hasPassword()) {
+      // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
       if (info.encoding === "base64") {
         content = atob(content);
       }
       content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
+      content = $tw.utils.StringToUint8Array(content);
+    } else {
+      // process base64
+      if (info.encoding === "base64") {
+        content = $tw.utils.Base64ToUint8Array(content);
+      } else {
+        content = $tw.utils.StringToUint8Array(content);
+      }
     }
   } catch (error) {
     console.error(error);
