@@ -1,0 +1,30 @@
+title: Embed External Resource
+tags: View
+type: text/vnd.tiddlywiki
+
+<h2>~HowTo Embed External Resource</h2>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/ipfs]]
+<p>
+Embedding an external resource means retrieving from Ipfs a content back to your wiki.
+</p>
+<p>
+<b>Ipfs with ~TiddlyWiki</b> lets you embed from Ipfs the following supported [[Media Types]].
+</p>
+<p>
+Edit your Tiddler and remove the Tiddler <b>_canonical_uri</b> field.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/remove/canonical]]
+<p>
+Save your Tiddler.
+</p>
+<p>
+Experiment with the following Ipfs attachment:
+</p>
+[[IPFS - The Little Prince]]
+<p>
+Once you removed the <b>_canonical_uri</b> field and saved your Tiddler, the external resource will be embedded in your wiki.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/embedded]]
+<p>
+When you will save your document <b>Ipfs with ~TiddlyWiki</b> will unpin the previous Ipfs external resources if the [[Unpin]] has been selected.
+</p>

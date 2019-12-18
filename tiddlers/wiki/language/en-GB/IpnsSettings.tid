@@ -15,7 +15,7 @@ To publish to Ipns while saving:
 <li>The <b>Ipns Name</b> field must be filled or The <b>Ipns Key</b> field must be filled</li>
 </ul>
 <p>
-To publish without saving see [[HowTo Publish to Ipns]].
+To publish without saving see [[Publish TiddlyWiki to Ipns]].
 </p>
 <p>
 While saving the plugin will:
@@ -30,7 +30,7 @@ While saving the plugin will:
   <li>Redirect the current page to your Ipns key according to your default gateway</li>
 </ul>
 <p>
-This feature do not work with Ipfs Companion or the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs]].
+This feature do not work with Ipfs Companion or the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs Settings]].
 <br/>
 Ipns Name and Ipns Key needs to be generated with a full Ipfs server with the following [ext[Cli command|https://docs.ipfs.io/reference/api/cli/#ipfs-key-gen]].
 </p>

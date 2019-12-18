@@ -1,8 +1,8 @@
-title: Page Publish to Ens
+title: Publish TiddlyWiki to Ens
 tags: Page
 type: text/vnd.tiddlywiki
 
-<h2>~HowTo Publish to Ens</h2>
+<h2>~HowTo Publish ~TiddlyWiki to Ens</h2>
 [img class="tc-image-documentation" [$:/ipfs/saver/image/publish/ens]]
 <p>
 The <b>publish to Ens</b> action updates Ens with the current Ipfs identifier.

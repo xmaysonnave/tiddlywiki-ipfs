@@ -17,7 +17,7 @@ type: text/vnd.tiddlywiki
   Unpinning is not allowed with the [[ApiUrl|Ipfs Settings]] <b>ipfs.infura.io:5001</b>.
 </p>
 <p>
-  In some situations <b>Unpining</b> is an unwanted mechanism. If you [[Publish to Ipns|HowTo Publish to Ipns]] an existing [[Ipns|Ipns Settings]] Name</b>
-  to a different <b>Ipns Name</b>, unpining the previous document will break the former Ipns Name. This behaviour also applies to [[Ens|Ens Settings]]
+  In some situations <b>Unpining</b> is an unwanted mechanism. If you [[Publish TiddlyWiki to Ipns]] an existing [[Ipns|Ipns Settings]] Name
+  to a different <b>Ipns Name</b>, unpining the previous document will break the former <b>Ipns Name</b>. This behaviour also applies to [[Ens|Ens Settings]]
   if you <b>Unpin</b> a content referenced with [[Ens|Ens Settings]].
 </p>

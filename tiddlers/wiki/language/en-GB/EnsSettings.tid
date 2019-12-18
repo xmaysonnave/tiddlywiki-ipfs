@@ -62,7 +62,7 @@ To publish to Ens while saving:
 <li>The [[Ens Domain|Ens Settings]] field must be filled</li>
 </ul>
 <p>
-To publish without saving see [[HowTo Publish to Ens]].
+To publish without saving see [[Publish TiddlyWiki to Ens]].
 </p>
 <p>
 While saving the plugin will:
