@@ -398,14 +398,6 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
     return oldTiddler;
   }
 
-  // Check
-  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
-    const msg = "Embedding from Ipfs is not supported...\nLook at the documentation...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
-    return oldTiddler;
-  }
-
   // _canonical_uri attribute has been removed
   if (uri == null) {
 
@@ -475,6 +467,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
     // New _canonical_uri, unable to decide whether or not the content is encrypted
     const { pathname } = self.ipfsLibrary.parseUrl(uri);
     const { cid } = self.ipfsLibrary.decodeCid(pathname);
+    // Ipfs resource
     if (cid !== null) {
       if (info.encoding === "base64" || type === "image/svg+xml") {
         addTags = ["$:/isAttachment", "$:/isIpfs"];
@@ -502,20 +495,18 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
 
   }
 
+  // Process previous cid if any
   if (oldUri !== null) {
-    const { pathname } = self.ipfsLibrary.parseUrl(oldUri);
-    const { cid } = self.ipfsLibrary.decodeCid(pathname);
-    // Process previous cid if any
-    if (cid !== null) {
-      if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(cid) == -1) {
-        self.toBeUnpinned.push(cid);
-        if ($tw.utils.getIpfsVerbose()) console.info(
-          "Request to unpin: /"
-          + ipfsKeyword
-          + "/"
-          + cid
-        );
-      }
+    const { pathname: oldPathname } = self.ipfsLibrary.parseUrl(oldUri);
+    const { cid: oldCid } = self.ipfsLibrary.decodeCid(oldPathname);
+    if ($tw.utils.getIpfsUnpin() && self.toBeUnpinned.indexOf(oldCid) == -1) {
+      self.toBeUnpinned.push(oldCid);
+      if ($tw.utils.getIpfsVerbose()) console.info(
+        "Request to unpin: /"
+        + ipfsKeyword
+        + "/"
+        + oldCid
+      );
     }
   }
 

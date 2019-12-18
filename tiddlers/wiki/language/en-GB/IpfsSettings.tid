@@ -46,10 +46,3 @@ The plugin eases Url selections through drop-down lists.
   <li>Update the cloned Tiddler's title and text</li>
   <li>Update the [[Default Gateway Url|$:/ipfs/saver/gateway/default]] if applicable</li>
 </ul>
-<h2>Utils</h2>
-<p>
-[ext[Infura Status|https://status.infura.io/]]
-</p>
-<p>
-[ext[Fastest Ipfs Gateways|https://ipfs.github.io/public-gateway-checker/]]
-</p>

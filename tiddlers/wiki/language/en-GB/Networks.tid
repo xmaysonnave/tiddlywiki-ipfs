@@ -1,0 +1,20 @@
+title: Networks
+tags: Explorers
+type: text/vnd.tiddlywiki
+
+<p>
+You can check the Ipfs network with the following tools:
+</p>
+<ul>
+<li>[ext[Infura Status|https://status.infura.io]]</li>
+<li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
+<li>[ext[Ipfs Public Gateway Status|https://gateway.ipfs.io/ipfs/QmV8dDdfXEiEznLNesKynBpEvhipLUv5HjWYEUpDB7buHZ/]]</li>
+</ul>
+<p>
+And their respective [ext[GitHub|https://github.com/]] repositories:
+</p>
+<ul>
+<li>[ext[Infura|https://github.com/INFURA/]]</li>
+<li>[ext[Ipfs Public Gateway Checker|https://github.com/ipfs/public-gateway-checker/]]</li>
+<li>[ext[Ipfs Gateway Status Checker|https://github.com/fooock/ipfs-gateway-checker/]]</li>
+</ul>
