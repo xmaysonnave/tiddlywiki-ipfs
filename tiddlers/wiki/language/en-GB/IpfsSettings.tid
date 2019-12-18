@@ -8,8 +8,8 @@ type: text/vnd.tiddlywiki
 To save your wiki over Ipfs, you need to select:
 </p>
 <ul>
-<li>One prefered [ext[Http Api Url|https://docs.ipfs.io/reference/api/http/]] where you upload</li>
-<li>One prefered [ext[Http Gateway|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] where you retrieve</li>
+<li>The [ext[Api Url|https://docs.ipfs.io/reference/api/http/]] where the Ipfs commands are sent</li>
+<li>The [ext[Gateway Url|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] where you browse Ipfs content</li>
 </ul>
 <p>
 While saving the plugin will:
@@ -33,7 +33,7 @@ The plugin eases Url selections through drop-down lists.
 <ul>
   <li>Clone an existing <b>Api Url</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default Api Url Tiddler|$:/ipfs/saver/api/default]] text if applicable</li>
+  <li>Update the [[Default Api Url|$:/ipfs/saver/api/default]] text if applicable</li>
 </ul>
 <h4>Gateway Url</h4>
 <p>
@@ -44,7 +44,7 @@ The plugin eases Url selections through drop-down lists.
 <ul>
   <li>Clone an existing <b>Gateway Url</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default Gateway Url Tiddler|$:/ipfs/saver/gateway/default]] if applicable</li>
+  <li>Update the [[Default Gateway Url|$:/ipfs/saver/gateway/default]] if applicable</li>
 </ul>
 <h2>Utils</h2>
 <p>

@@ -2,8 +2,4 @@ title: Explorers
 tags: Documentation
 type: text/vnd.tiddlywiki
 
-<div class="tc-table-of-contents">
-
-<<toc-selective-expandable 'Explorers'>>
-
-</div>
+<<locator-view baseTitle:"Explorers" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

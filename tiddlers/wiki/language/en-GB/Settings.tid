@@ -6,8 +6,4 @@ type: text/vnd.tiddlywiki
 The [[Ipfs Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/saver/image/settings]]
-<div class="tc-table-of-contents">
-
-<<toc-selective-expandable 'Settings'>>
-
-</div>
+<<locator-view baseTitle:"Settings" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

@@ -9,7 +9,7 @@ type: text/vnd.tiddlywiki
 <table>
 <tr><th>Media Types</th><th>Extension</th></tr>
 <tr><td>application/pdf</td><td>pdf</td></tr>
-<tr><td>application/x-tiddler"</td><td>tid</td></tr>
+<tr><td>application/x-tiddler</td><td>tid</td></tr>
 <tr><td>audio/ogg</td><td>ogg</td></tr>
 <tr><td>audio/mpeg</td><td></td></tr>
 <tr><td>audio/mp3</td><td>mp3</td></tr>

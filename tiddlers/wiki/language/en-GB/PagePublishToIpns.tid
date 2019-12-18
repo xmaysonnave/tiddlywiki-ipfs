@@ -1,0 +1,26 @@
+title: Page Publish to Ipns
+tags: Page
+type: text/vnd.tiddlywiki
+
+<h2>~HowTo Publish to Ipns</h2>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/publish/ipfs]]
+<p>
+The <b>publish to Ipns</b> action publishes the [[Ipns Name|Ipns Settings]] with the current wiki Ipfs identifier using the [[Default Api Url|$:/ipfs/saver/api/default]].
+</p>
+<p>
+You can publish an [[Ipns Name|Ipns Settings]] with the Ipfs identifier of another <b>Ipns Name</b>.
+Read [[Unpin]] for more informations about this use case.
+</p>
+<p>
+While publishing to Ipns the plugin will:
+</p>
+<ul>
+  <li>Verify the <b>Ipns Name</b> and <b>Ipns Key</b> if both are filled</li>
+  <li>Resolve the <b>Ipns Key</b> if only the <b>Ipns Name</b> is filled</li>
+  <li>Resolve the <b>Ipns Name</b> if only the <b>Ipns Key</b> is filled</li>
+  <li>Publish the <b>Ipfs Name</b> with the new Ipfs identifier</li>
+  <li>[[Unpin]] the previous Ipfs content if this option is selected</li>
+</ul>
+<p>
+A dialog box will be displayed at the end of the process with a success or failure message.
+</p>

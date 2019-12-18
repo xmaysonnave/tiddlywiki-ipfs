@@ -1,0 +1,12 @@
+title: Page Pin
+tags: Page
+type: text/vnd.tiddlywiki
+
+<h2>~HowTo Pin</h2>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/page/pin]]
+<p>
+The <b>pin to Ipfs</b> action pins the current wiki Ipfs identifier using the [[Default Api Url|$:/ipfs/saver/api/default]].
+</p>
+<p>
+A dialog box will be displayed at the end of the process with a success or failure message.
+</p>

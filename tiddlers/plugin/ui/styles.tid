@@ -9,3 +9,11 @@ type: text/css
 	width: 90%;
 	border: 1px solid black;
 }
+
+.tc-image-documentation-small {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+	border: 1px solid black;
+}

@@ -7,7 +7,7 @@ This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io
 </p>
 [img class="tc-image-documentation" [$:/ipfs/saver/image/attachment]]
 <p>
-The specialized [[Attachment]] Tiddler displays the <<tag "$:/isAttachment">>tag with the following tag status:
+The specialized [[Attachment]] Tiddler displays the <<tag-pill "$:/isAttachment">>tag with the following tag status:
 </p>
 <ul>
   <li><<tag "$:/isEmbedded">></li>

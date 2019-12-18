@@ -543,7 +543,7 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
     // Process if _canonical_uri is set
     const uri = tiddler.getFieldString("_canonical_uri");
     if (uri == undefined || uri == null || uri.trim() === "") {
-      const msg = "The '_canonical_uri' field is not defined....";
+      const msg = "This Tiddler is not an external resource...";
       console.error(msg);
       $tw.utils.messageDialog(msg);
       return false;
@@ -660,7 +660,7 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
     // Process if _canonical_uri is set
     const uri = tiddler.getFieldString("_canonical_uri");
     if (uri == undefined || uri == null || uri.trim() === "") {
-      const msg = "The '_canonical_uri' field is not defined....";
+      const msg = "This Tiddler is not an external resource...";
       console.error(msg);
       $tw.utils.messageDialog(msg);
       return false;

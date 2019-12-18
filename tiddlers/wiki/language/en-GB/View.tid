@@ -1,0 +1,8 @@
+title: View
+tags: Action
+type: text/vnd.tiddlywiki
+
+<h2>View</h2>
+[img class="tc-image-documentation" [$:/ipfs/saver/image/view/toolbar]]
+
+<<locator-view baseTitle:"View" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>
