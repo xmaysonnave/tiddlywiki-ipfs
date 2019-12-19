@@ -229,14 +229,13 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 
 Use the `build-all` script to build ```Ipfs with TiddlyWiki``` and the `wiki` directory will contain two runnable wikis:
 
-* favicon.ico
 * index.html (production)
 * dev.html (non-minified)
 
 #### Running TiddlyWiki
 <a name="developer-running"/>
 
-Open `wiki/index.html` file in your favorite browser. The `favicon.ico` is available as a convenience as its content is embedded in the `index.html`.
+Open `wiki/index.html` file in your favorite browser.
 
 ## Contributing
 <a name="contributing"/>
