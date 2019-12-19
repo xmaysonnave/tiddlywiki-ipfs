@@ -216,7 +216,8 @@ npm install
 #### Building TiddlyWiki
 <a name="developer-building-tiddlywiki"/>
 
-The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`. The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
+The repository contains several scripts who build TiddWiki instances bundled with `Ipfs with TiddlyWiki`.
+The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
 
 * build-all-noclone
 * build-all
