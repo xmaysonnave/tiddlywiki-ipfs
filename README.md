@@ -30,21 +30,18 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 <a name="using-ipfs-with-tiddlywiki"/>
 
 * With a capable Ens browser:
-
-* [Ipfs with TiddlyWiki](https://bluelightav.eth) on "Mainnet: Ethereum Main Network"
-* [Ipfs with TiddlyWiki Development](https://bluelightav.eth) on "Ropsten (PoW) or Rinkeby (PoA): Ethereum Test Network"
-* [Ipfs with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
-* [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth/#Documentation)
+* * [Ipfs with TiddlyWiki](https://bluelightav.eth) on "Mainnet: Ethereum Main Network"
+* * [Ipfs with TiddlyWiki Development](https://bluelightav.eth) on "Ropsten (PoW) or Rinkeby (PoA): Ethereum Test Network"
+* * [Ipfs with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
+* * [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth/#Documentation)
 
 * With a non capable Ens browser:
-
-* [Ipfs with TiddlyWiki](https://bluelightav.eth.link)
-* [Ipfs with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
-* [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth.link/#Documentation)
+* * [Ipfs with TiddlyWiki](https://bluelightav.eth.link)
+* * [Ipfs with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
+* * [Ipfs with TiddlyWiki Documentation](https://bluelightav.eth.link/#Documentation)
 
 * Required TiddlyWiki Plugin
-
-* [TiddlyWiki Locator Plugin](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
+* * [TiddlyWiki Locator Plugin](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
 
 ### Getting Started
 <a name="getting-started"/>
