@@ -3,7 +3,7 @@ tags: View
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Decrypt External Resource</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/decrypt]]
+[img class="tc-image-documentation" [$:/ipfs/image/decrypt]]
 <p>
 If the locker is closed your wiki is encrypted or will be encrypted once saved.
 </p>
@@ -22,7 +22,7 @@ While unencrypting an external resource, a password could be requested:
 </ul>
 <p>
 </p>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/unencrypt/password]]
+[img class="tc-image-documentation" [$:/ipfs/image/unencrypt/password]]
 <p>
 [[IPFS - Encrypted - The Little Prince]] describes this behaviour.
 </p>

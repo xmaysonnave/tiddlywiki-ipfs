@@ -3,7 +3,7 @@ tags: View
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Pin External Resource to Ipfs</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/view/pin]]
+[img class="tc-image-documentation" [$:/ipfs/image/view/pin]]
 <p>
 The <b>pin to Ipfs</b> action pins the current Tiddler <b>_canonical_uri</b> field using the [[Default Api Url|$:/ipfs/saver/api/default]].
 </p>

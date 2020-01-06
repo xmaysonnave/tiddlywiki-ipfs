@@ -3,7 +3,7 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Ipns Settings</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/ipns]]
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipns]]
 <p>
 The plugin is able to publish your <b>Ipns Name</b> with a new Ipfs identifier everytime you save your wiki.
 </p>

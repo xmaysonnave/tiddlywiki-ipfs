@@ -3,7 +3,7 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Verbose Setting</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/verbose]]
+[img class="tc-image-documentation" [$:/ipfs/image/settings/verbose]]
 <p>
 The plugin will display common errors through dialog boxes.
 </p>

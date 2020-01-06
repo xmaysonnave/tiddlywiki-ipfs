@@ -3,7 +3,7 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Ipfs Settings</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/ipfs]]
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipfs]]
 <p>
 To save your wiki over Ipfs, you need to select:
 </p>

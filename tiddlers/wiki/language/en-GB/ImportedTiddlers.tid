@@ -5,7 +5,7 @@ type: text/vnd.tiddlywiki
 <p>
 This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] who provides a convenient <<tag "$:/isIpfs">>Tiddler explorer.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/imported/tiddler]]
+[img class="tc-image-documentation" [$:/ipfs/image/imported/tiddler]]
 <p>
 The specialized [[Imported Tiddler]] displays the <<tag-pill "$:/isIpfs">>with the following tag status:
 </p>

@@ -3,7 +3,7 @@ tags: View
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Encrypt External Resource</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/encrypt]]
+[img class="tc-image-documentation" [$:/ipfs/image/encrypt]]
 <p>
 If the locker is opened, your wiki is not encrypted.
 </p>

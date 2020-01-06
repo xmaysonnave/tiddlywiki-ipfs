@@ -3,7 +3,7 @@ tags: Page
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Pin ~TiddlyWiki to Ipfs</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/page/pin]]
+[img class="tc-image-documentation" [$:/ipfs/image/page/pin]]
 <p>
 The <b>pin to Ipfs</b> action pins the current wiki Ipfs identifier using the [[Default Api Url|$:/ipfs/saver/api/default]].
 </p>

@@ -3,7 +3,7 @@ tags: Settings
 type: text/vnd.tiddlywiki
 
 <h2>Ens Settings</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/settings/ens]]
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ens]]
 <p>
 <b>Ipfs with ~TiddlyWiki</b> is able to publish to Ens any new or current wiki with an Ipfs identifier.
 </p>

@@ -2,7 +2,7 @@ title: Version
 tags: Documentation
 type: text/vnd.tiddlywiki
 
-[img class="tc-image-documentation" [$:/ipfs/saver/image/version]]
+[img class="tc-image-documentation" [$:/ipfs/image/version]]
 <p>
 You can get the current <b>~TidlyWiki</b> and <b>Ipfs with ~TiddlyWiki</b> version within the Tools tab.
 </p>

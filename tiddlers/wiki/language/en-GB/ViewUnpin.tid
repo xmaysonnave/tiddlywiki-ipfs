@@ -3,7 +3,7 @@ tags: View
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Unpin External Resource from Ipfs</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/view/unpin]]
+[img class="tc-image-documentation" [$:/ipfs/image/view/unpin]]
 <p>
 The <b>unpin from Ipfs</b> action unpins the current Tiddler <b>_canonical_uri</b> field using the [[Default Api Url|$:/ipfs/saver/api/default]].
 </p>

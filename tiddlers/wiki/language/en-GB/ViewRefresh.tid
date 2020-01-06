@@ -3,7 +3,7 @@ tags: View
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Refresh Tiddler from Ipfs</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/view/refresh]]
+[img class="tc-image-documentation" [$:/ipfs/image/view/refresh]]
 <p>
 The <b>refresh</b> action reloads the current Tiddler from Ipfs.
 </p>

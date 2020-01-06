@@ -3,7 +3,7 @@ tags: View
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Export Embedded Resource</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/export/embedded]]
+[img class="tc-image-documentation" [$:/ipfs/image/export/embedded]]
 <p>
 Exporting an embedded resource means exporting to Ipfs a content from your wiki.
 </p>
@@ -20,7 +20,7 @@ Use the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs Settings]] and the <b>
 <p>
 Be sure to setup the [[Verbose]] property and watch the console displayed events.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/console]]
+[img class="tc-image-documentation" [$:/ipfs/image/console]]
 <p>
 Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs Settings]]  and the <b>https://gateway.ipfs.io</b> [[Gateway Url|Ipfs Settings]].
 That way you upload your attachment on infura and retrieve it with another server.

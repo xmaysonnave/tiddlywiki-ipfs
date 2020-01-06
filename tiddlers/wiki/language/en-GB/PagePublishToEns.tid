@@ -3,7 +3,7 @@ tags: Page
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Publish ~TiddlyWiki to Ens</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/publish/ens]]
+[img class="tc-image-documentation" [$:/ipfs/image/publish/ens]]
 <p>
 The <b>publish to Ens</b> action updates Ens with the current Ipfs identifier.
 </p>
@@ -26,11 +26,11 @@ When you use this action you will not be redirected to your Ens domain when the 
 <p>
 [ext[Metamask|https://metamask.io]] or [ext[Frame|https://frame.sh]] will request your authorization as your Ethereum account is involved.
 </p>
-[img class="tc-image-documentation-small" [$:/ipfs/saver/image/metamask/allow]]
+[img class="tc-image-documentation-small" [$:/ipfs/image/metamask/allow]]
 <p>
 In the next step you need to fund your transaction.
 </p>
-[img class="tc-image-documentation-small" [$:/ipfs/saver/image/metamask/gas]]
+[img class="tc-image-documentation-small" [$:/ipfs/image/metamask/gas]]
 <p>
 The minimum required gas is, 0.000000001 ether or 1 gwei (around 1 cents).
 <br/>

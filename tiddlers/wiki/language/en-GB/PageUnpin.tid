@@ -3,7 +3,7 @@ tags: Page
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Unpin ~TiddlyWiki from Ipfs</h2>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/page/unpin]]
+[img class="tc-image-documentation" [$:/ipfs/image/page/unpin]]
 <p>
 The <b>unpin from Ipfs</b> action unpins the current wiki Ipfs identifier using the [[Default Api Url|$:/ipfs/saver/api/default]].
 </p>

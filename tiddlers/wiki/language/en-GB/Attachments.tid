@@ -5,7 +5,7 @@ type: text/vnd.tiddlywiki
 <p>
 This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] who provides a convenient <<tag "$:/isAttachment">>explorer.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/saver/image/attachment]]
+[img class="tc-image-documentation" [$:/ipfs/image/attachment]]
 <p>
 The specialized [[Attachment]] Tiddler displays the <<tag-pill "$:/isAttachment">>tag with the following tag status:
 </p>
