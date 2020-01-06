@@ -31,8 +31,8 @@ var IpfsActions = function() {
 IpfsActions.prototype.loadErudaLibrary = async function() {
   await $tw.utils.loadLibrary(
     "ErudaLibrary",
-    "https://cdn.jsdelivr.net/npm/eruda@1.10.3/eruda.min.js",
-    "sha384-cWU0kVm57Cm5oD8JL8C4uTTgOD6xkKv1se8c3LSVB31FbcMMaV5RsW0qtoccoc0O"
+    "https://cdn.jsdelivr.net/npm/eruda@2.0.0/eruda.min.js",
+    "sha384-QV5YIRmfipQ1WWpseJDAMyuc8BSOn/UBLo4Hi4b9Fxolig++WuQssLr2JNQAQn4R"
   );
 }
 
