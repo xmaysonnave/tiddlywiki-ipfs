@@ -13,18 +13,20 @@ type: text/vnd.tiddlywiki
 <tr><td>audio/ogg</td><td>ogg</td></tr>
 <tr><td>audio/mpeg</td><td></td></tr>
 <tr><td>audio/mp3</td><td>mp3</td></tr>
-<tr><td>audio/mp4</td><td>mp4 or m4a</td></tr>
+<tr><td>audio/mp4</td><td>mp4, m4a</td></tr>
 <tr><td>image/gif</td><td>gif</td></tr>
 <tr><td>image/heic</td><td>heic</td></tr>
 <tr><td>image/heif</td><td>heif</td></tr>
-<tr><td>image/jpg</td><td>jpg or jpeg</td></tr>
-<tr><td>image/jpeg</td><td>jpg or jpeg</td></tr>
+<tr><td>image/jpg</td><td>jpg, jpeg</td></tr>
+<tr><td>image/jpeg</td><td>jpg, jpeg</td></tr>
 <tr><td>image/png</td><td>png</td></tr>
 <tr><td>image/svg+xml</td><td>svg</td></tr>
 <tr><td>image/webp</td><td>webp</td></tr>
 <tr><td>image/x-icon</td><td>ico</td></tr>
 <tr><td>text/vnd.tiddlywiki</td><td>tid</td></tr>
+<tr><td>video/ogg</td><td>ogm, ogv, ogg</td></tr>
 <tr><td>video/mp4</td><td>mp4</td></tr>
-<tr><td>video/quicktime</td><td>mov or qt</td></tr>
+<tr><td>video/quicktime</td><td>mov, qt</td></tr>
+<tr><td>video/webm</td><td>webm</td></tr>
 </table>
 </p>

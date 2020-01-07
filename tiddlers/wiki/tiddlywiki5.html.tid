@@ -20,7 +20,7 @@ title: $:/core/templates/tiddlywiki5.html
 <link href="https://gateway.ipfs.io/ipfs/bafkreib4utaof4466wgvomefjakcz6vbfv2ucf4lq7uupuxtyassxdscum" rel="apple-touch-icon" sizes="180x180">
 <link href="https://gateway.ipfs.io/ipfs/bafkreihi27cp35a6gyzwgi3qljmfhnpmio5ysyatpmvfaip7fd3lem7ksq" rel="icon" sizes="32x32" type="image/png">
 <link href="https://gateway.ipfs.io/ipfs/bafkreie3w4fbd4u2u2hligtimgcgqfmzdqr4gfyyu7rxtmodjc5gqjsutq" rel="icon" sizes="16x16" type="image/png">
-<link id="faviconLink" rel="icon" href="https://gateway.ipfs.io/ipfs/bafkreicva7pu4ugoywb3lx77fjs7kgfwb4nlnfoa2mhvofw26noiuj3uyi" type="image/x-icon"/>
+<link id="faviconLink" rel="icon" href="https://gateway.ipfs.io/ipfs/QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF?filename=favicon.ico" type="image/x-icon"/>
 <title>`{{$:/core/wiki/title}}`</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->
 
