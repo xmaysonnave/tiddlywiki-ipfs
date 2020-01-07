@@ -8,8 +8,7 @@ IpfsLibrary
 \*/
 
 import CID  from "cids";
-import getIpfs from "ipfs-provider";
-import toMultiaddr from "uri-to-multiaddr";
+import { getIpfs, providers } from "ipfs-provider";
 import url from "url";
 
 (function(){
@@ -30,6 +29,7 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
       "sha384-fc3b0MPGwqRHihuzLtdXhI0pke73kDwbCUugwZh3312MkgAKXo6c6tKbp9jJDMjy",
       true
     );
+    window.httpClient = window.IpfsHttpClient;
   }
 }
 
@@ -138,38 +138,28 @@ IpfsLibrary.prototype.isCid = function(cid) {
 
 // Default
 IpfsLibrary.prototype.getDefaultIpfs = async function() {
-  // Multiaddr
+  // Api Url
   const apiUrl = $tw.utils.getIpfsApiUrl();
   // Check
   if (apiUrl == null) {
     throw new Error("Undefined Ipfs Api Url...");
   }
-  var multi = null
-  try {
-     multi = toMultiaddr(apiUrl);
-  } catch (error) {
-    console.error(error.message);
-    throw new Error("Invalid Ipfs Api Url: " + apiUrl);
-  }
   // Load IpfsHttpClient
   await this.loadIpfsHttpLibrary();
   // Getting
   try {
+    const { httpClient, windowIpfs } = providers;
     const { ipfs, provider } = await getIpfs({
-      // These is the defaults
-      tryWebExt: false,
-      tryWindow: true,
-      permissions: {},
-      tryApi: true,
-      apiAddress: multi,
-      IpfsApi: window.IpfsHttpClient,
-      tryJsIpfs: false,
-      getJsIpfs: null,
-      jsIpfsOpts: {}
+      providers: [
+        windowIpfs(),
+        httpClient({
+          apiAddress: apiUrl
+        })
+      ]
     });
     return {
       ipfs: ipfs,
-      provider: provider + ", " + multi
+      provider: provider + ", " + apiUrl
     };
   } catch (error) {
     console.error(error.message);
@@ -181,17 +171,11 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
 IpfsLibrary.prototype.getWindowIpfs = async function() {
   // Getting
   try {
+    const { windowIpfs } = providers;
     const { ipfs, provider } = await getIpfs({
-      // These is window only
-      tryWebExt: false,
-      tryWindow: true,
-      permissions: {},
-      tryApi: false,
-      apiAddress: null,
-      IpfsApi: null,
-      tryJsIpfs: false,
-      getJsIpfs: null,
-      jsIpfsOpts: {}
+      providers: [
+        windowIpfs()
+      ]
     });
     return {
       ipfs: ipfs,
@@ -205,38 +189,27 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 
 // ipfs-http-client
 IpfsLibrary.prototype.getHttpIpfs = async function() {
-  // Multiaddr
+  // Api Url
   const apiUrl = $tw.utils.getIpfsApiUrl();
   // Check
   if (apiUrl == null) {
     throw new Error("Undefined Ipfs Api Url...");
   }
-  var multi = null;
-  try {
-     multi = toMultiaddr(apiUrl);
-  } catch (error) {
-    console.error(error.message);
-    throw new Error("Invalid Ipfs Api Url: " + apiUrl);
-  }
   // Load IpfsHttpClient
   await this.loadIpfsHttpLibrary();
   // Getting
   try {
+    const { httpClient } = providers;
     const { ipfs, provider } = await getIpfs({
-      // These is the defaults
-      tryWebExt: false,
-      tryWindow: false,
-      permissions: {},
-      tryApi: true,
-      apiAddress: multi,
-      IpfsApi: window.IpfsHttpClient,
-      tryJsIpfs: false,
-      getJsIpfs: null,
-      jsIpfsOpts: {}
+      providers: [
+        httpClient({
+          apiAddress: apiUrl
+        })
+      ]
     });
     return {
       ipfs: ipfs,
-      provider: provider + ", " + multi
+      provider: provider + ", " + apiUrl
     };
   } catch (error) {
     console.error(error.message);
