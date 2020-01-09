@@ -4,28 +4,28 @@ type: text/vnd.tiddlywiki
 
 \define lingo-base() $:/language/ControlPanel/Basics/
 <p>
-Welcome to <b>Ipfs with ~TiddlyWiki</b>.
+Welcome to <b>IPFS with ~TiddlyWiki</b>.
 </p>
 <ul>
   <li>[ext[TiddlyWiki|https://tiddlywiki.com]]</li>
   <li>[ext[TiddlyWiki Community|https://tiddlywiki.com/#Community]]</li>
   <li>[ext[TiddlyWiki5 GitHub|https://github.com/Jermolene/TiddlyWiki5/]]</li>
-  <li>[ext[Ipfs with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
+  <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
 </ul>
 <p>
-Before you start storing important information in <b>~TiddlyWiki</b> it is vital to make sure that you can reliably save changes with Ipfs:
+Before you start storing important information in <b>~TiddlyWiki</b> it is vital to make sure that you can reliably save changes with IPFS:
 <br/>
 <br/>
-See the embedded [[Documentation]] for more details about <b>Ipfs with ~TiddlyWiki</b>.
+See the embedded [[Documentation]] for more details about <b>IPFS with ~TiddlyWiki</b>.
 <br/>
 See the <b>~TiddlyWiki</b> [[Getting Started|https://tiddlywiki.com/#GettingStarted]] for more details.
 <br/>
-See the <b>Ipfs with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
+See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
 </p>
 <ul>
   <li>[ext[TiddlyWiki Forum|https://groups.google.com/forum/#!forum/tiddlywiki]]</li>
   <li>[ext[TiddlyWikiDev Forum|https://groups.google.com/forum/#!forum/tiddlywikidev]]</li>
-  <li>[ext[Ipfs Forum|https://discuss.ipfs.io/]]</li>
+  <li>[ext[IPFS Forum|https://discuss.ipfs.io/]]</li>
 </ul>
 
 !! Set up this ~TiddlyWiki

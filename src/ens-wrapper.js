@@ -26,7 +26,7 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
     const { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
     if (decoded !== undefined && decoded !== null && protocol !== undefined && protocol !== null)  {
       if ($tw.utils.getIpfsVerbose()) console.info(
-        "Successfully fetched Ens domain content, protocol: "
+        "Successfully fetched ENS domain content, protocol: "
         + protocol
         + ", "
         + decoded
@@ -37,7 +37,7 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
         protocol: protocol
       };
     } else {
-      if ($tw.utils.getIpfsVerbose()) console.warn("Unassigned Ens domain content...");
+      if ($tw.utils.getIpfsVerbose()) console.warn("Unassigned ENS domain content...");
       return {
         error: null,
         decoded: null,
@@ -57,7 +57,7 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
   try {
     const cidv0 = this.ipfsLibrary.CidV1ToCidV0(cid);
     await this.ensLibrary.setContenthash(domain, cidv0, web3Provider, account);
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully set Ens domain content...");
+    if ($tw.utils.getIpfsVerbose()) console.info("Successfully set ENS domain content...");
     return {
       error: null
     };

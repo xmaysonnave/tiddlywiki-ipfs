@@ -5,29 +5,29 @@ type: text/vnd.tiddlywiki
 <h2>Protocol Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/protocol]]
 <p>
-The <b>Protocol</b> setting controls the way <b>Ipfs with ~TiddlyWiki</b> saves your wiki over Ipfs.
+The <b>Protocol</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> saves your wiki over IPFS.
 </p>
-<h3>Ipfs</h3>
+<h3>IPFS</h3>
 <p>
-  The [[Ipfs|Ipfs Settings]] protocol saves <b>~TiddlyWiki</b> and its embedded file attachments over Ipfs.
-</p>
-<p>
-  Once your wiki is saved you'll be redirected to the new Ipfs identifier location.
-</p>
-<h3>Ipns</h3>
-<p>
-  The [[Ipns|Ipns Settings]] protocol enhances the Ipfs protocol and publish an <b>Ipns Name</b> with a new [[Ipfs|Ipfs Settings]] identifier.
+  The [[IPFS|IPFS Settings]] protocol saves <b>~TiddlyWiki</b> and its embedded file attachments over IPFS.
 </p>
 <p>
-  Once your wiki is saved you'll be redirected to the new Ipns identifier location.
+  Once your wiki is saved you'll be redirected to the new IPFS identifier location.
 </p>
-<h3>Ens</h3>
+<h3>IPNS</h3>
 <p>
-  The [[Ens|Ens Settings]] protocol enhances the Ipfs protocol and publish an [[Ens|Ens Settings]] domain or [[Ens|Ens Settings]] subdomain with a new [[Ipfs|Ipfs Settings]] identifier.
-</p>
-<p>
-  Once your wiki is saved you'll be redirected to your [[Ens|Ens Settings]] domain or [[Ens|Ens Settings]] subdomain.
+  The [[IPNS|IPNS Settings]] protocol enhances the IPFS protocol and publish an <b>IPNS Name</b> with a new [[IPFS|IPFS Settings]] identifier.
 </p>
 <p>
-  If you comes from an [[Ipns|Ipns Settings]] location the [[Ens|Ens Settings]] protocol always updates your previous [[Ipns|Ipns Settings]] location.
+  Once your wiki is saved you'll be redirected to the new IPNS identifier location.
+</p>
+<h3>ENS</h3>
+<p>
+  The [[ENS|ENS Settings]] protocol enhances the IPFS protocol and publish an [[ENS|ENS Settings]] domain or [[ENS|ENS Settings]] subdomain with a new [[IPFS|IPFS Settings]] identifier.
+</p>
+<p>
+  Once your wiki is saved you'll be redirected to your [[ENS|ENS Settings]] domain or [[ENS|ENS Settings]] subdomain.
+</p>
+<p>
+  If you comes from an [[IPNS|IPNS Settings]] location the [[ENS|ENS Settings]] protocol always updates your previous [[IPNS|IPNS Settings]] location.
 </p>

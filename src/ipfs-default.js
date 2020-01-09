@@ -98,7 +98,7 @@ exports.getIpfsApiUrl = function() {
 }
 
 /*
- * Default Api Url
+ * Default API URL
  */
 exports.getIpfsDefaultApiUrl = function() {
   return "https://ipfs.infura.io:5001";
@@ -128,7 +128,7 @@ exports.getIpfsGatewayUrl = function() {
 }
 
 /*
- * Default Gateway Url
+ * Default Gateway URL
  */
 exports.getIpfsDefaultGatewayUrl = function() {
   return "https://ipfs.infura.io";

@@ -1,48 +1,48 @@
-title: Ipfs Settings
+title: IPFS Settings
 tags: Settings
 type: text/vnd.tiddlywiki
 
-<h2>Ipfs Settings</h2>
+<h2>IPFS Settings</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipfs]]
 <p>
-To save your wiki over Ipfs, you need to select:
+To save your wiki over IPFS, you need to select:
 </p>
 <ul>
-<li>The [ext[Api Url|https://docs.ipfs.io/reference/api/http/]] where the Ipfs commands are sent</li>
-<li>The [ext[Gateway Url|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] where you browse Ipfs content</li>
+<li>The [ext[API URL|https://docs.ipfs.io/reference/api/http/]] where the IPFS commands are sent</li>
+<li>The [ext[Gateway URL|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] where you browse IPFS content</li>
 </ul>
 <p>
 While saving the plugin will:
 </p>
 <ul>
-  <li>Save the wiki over Ipfs</li>
-  <li>Pin the new wiki over Ipfs</li>
+  <li>Save the wiki over IPFS</li>
+  <li>Pin the new wiki over IPFS</li>
   <li>[[Unpin]] the previous version if this option is selected</li>
-  <li>Redirect the current page to the new Ipfs identifier according to your default gateway</li>
+  <li>Redirect the current page to the new IPFS identifier according to your default gateway</li>
 </ul>
-<h3>Url Selection</h3>
+<h3>URL Selection</h3>
 <p>
-The plugin eases Url selections through drop-down lists.
+The plugin eases URL selections through drop-down lists.
 </p>
-<h4>Api Url</h4>
+<h4>API URL</h4>
 <p>
 <<list-tagged-draggable tag:"$:/ipfs/saver/api">>
 <p>
-  To enhance the <b>Api Url</b> list:
+  To enhance the <b>API URL</b> list:
 </p>
 <ul>
-  <li>Clone an existing <b>Api Url</b> Tiddler</li>
+  <li>Clone an existing <b>API URL</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default Api Url|$:/ipfs/saver/api/default]] text if applicable</li>
+  <li>Update the [[Default API URL|$:/ipfs/saver/api/default]] text if applicable</li>
 </ul>
-<h4>Gateway Url</h4>
+<h4>Gateway URL</h4>
 <p>
 <<list-tagged-draggable tag:"$:/ipfs/saver/gateway">>
 <p>
-  To enhance the <b>Gateway Url</b> list:
+  To enhance the <b>Gateway URL</b> list:
 </p>
 <ul>
-  <li>Clone an existing <b>Gateway Url</b> Tiddler</li>
+  <li>Clone an existing <b>Gateway URL</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default Gateway Url|$:/ipfs/saver/gateway/default]] if applicable</li>
+  <li>Update the [[Default Gateway URL|$:/ipfs/saver/gateway/default]] if applicable</li>
 </ul>

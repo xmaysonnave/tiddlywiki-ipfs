@@ -1,11 +1,11 @@
-title: Unpin TiddlyWiki from Ipfs
+title: Unpin TiddlyWiki from IPFS
 tags: Page
 type: text/vnd.tiddlywiki
 
-<h2>~HowTo Unpin ~TiddlyWiki from Ipfs</h2>
+<h2>~HowTo Unpin ~TiddlyWiki from IPFS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/page/unpin]]
 <p>
-The <b>unpin from Ipfs</b> action unpins the current wiki Ipfs identifier using the [[Default Api Url|$:/ipfs/saver/api/default]].
+The <b>unpin from IPFS</b> action unpins the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api/default]].
 </p>
 <p>
 A dialog box will be displayed at the end of the process with a success or failure message.

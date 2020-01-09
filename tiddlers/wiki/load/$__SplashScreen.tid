@@ -110,7 +110,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	Please wait while {{$:/SiteTitle}} is loading...
 </p>
 <p>
-	with Ipfs <<ipfs-version>>
+	with IPFS <<ipfs-version>>
 </p>
 </div>
 

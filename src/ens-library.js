@@ -89,12 +89,12 @@ EnsLibrary.prototype.encodeContenthash = function(content) {
       if (text.length >= 4) {
         const cid = new CID(text);
         if (cid.version !== 0) {
-            throw new Error("Ens Content hash should be Base58 (CidV0): " + text);
+            throw new Error("ENS Content hash should be Base58 (CidV0): " + text);
         }
         encoded = "0x" + contentHash.fromIpfs(text);
       }
     } else {
-      throw new Error("Unsupported Ens domain protocol: " + type);
+      throw new Error("Unsupported ENS domain protocol: " + type);
     }
   }
   return {
@@ -179,7 +179,7 @@ EnsLibrary.prototype.getRegistryAddress = async function(web3Provider) {
     throw new Error("Undefined web3 provider...");
   }
   const network = await web3Provider.getNetwork();
-  // Retrieve Ethereum Ens Registry address
+  // Retrieve Ethereum ENS Registry address
   var registry;
   try {
     registry = this.registries[network.chainId];
@@ -201,10 +201,10 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
     throw new Error("Undefined Ethereum account...");
   }
   if (registryAddress == undefined || registryAddress == null || registryAddress.trim() === "") {
-    throw new Error("Undefined Ens registry address...");
+    throw new Error("Undefined ENS registry address...");
   }
   if (node == undefined || node == null || node.trim() === "") {
-    throw new Error("Undefined Ens domain hash...");
+    throw new Error("Undefined ENS domain hash...");
   }
   // Low level call
   const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
@@ -311,7 +311,7 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
 EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, account) {
 
   if (domain == undefined || domain == null) {
-    throw new Error("Undefined Ens domain...");
+    throw new Error("Undefined ENS domain...");
   }
 
   // Retrieve web3 provider
@@ -330,27 +330,27 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
 
   // Check
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
-    throw new Error("Undefined Ens resolver...");
+    throw new Error("Undefined ENS resolver...");
   }
   if ($tw.utils.getIpfsVerbose()) console.info(
-    "Ens resolver address: "
+    "ENS resolver address: "
     + resolverAddress
   );
 
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
   if (eip165 == false) {
-    throw new Error("Ens resolver do not conform to EIP165...");
+    throw new Error("ENS resolver do not conform to EIP165...");
   }
 
   // Check if resolver is EIP1577
   const eip1577 = await this.checkEip1577(web3Provider, account, resolverAddress);
   if (eip1577 == false) {
-    throw new Error("Ens resolver do not conform to EIP1577...");
+    throw new Error("ENS resolver do not conform to EIP1577...");
   }
 
   // retrieve content hash
-  if ($tw.utils.getIpfsVerbose()) console.info("Processing Ens resolver get content...");
+  if ($tw.utils.getIpfsVerbose()) console.info("Processing ENS resolver get content...");
   const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
   const iface = new window.ethers.utils.Interface(abi)
   const data = iface.functions.contenthash.encode([domainHash]);
@@ -388,11 +388,11 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
 EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, account) {
 
   if (domain == undefined || domain == null) {
-    throw new Error("Undefined Ens domain...");
+    throw new Error("Undefined ENS domain...");
   }
 
   if (cid == undefined || cid == null) {
-    throw new Error("Undefined Ipfs identifier...");
+    throw new Error("Undefined IPFS identifier...");
   }
 
   // Retrieve web3 provider
@@ -411,24 +411,24 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
 
   // Check
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
-    throw new Error("Undefined Ens resolver...");
+    throw new Error("Undefined ENS resolver...");
   }
 
   if ($tw.utils.getIpfsVerbose()) console.info(
-    "Ens resolver address: "
+    "ENS resolver address: "
     + resolverAddress
   );
 
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
   if (eip165 == false) {
-    throw new Error("Ens resolver do not conform to EIP165...");
+    throw new Error("ENS resolver do not conform to EIP165...");
   }
 
   // Check if resolver is EIP1577
   const eip1577 = await this.checkEip1577(web3Provider, account, resolverAddress);
   if (eip1577 == false) {
-    throw new Error("Ens resolver do not conform to EIP1577...");
+    throw new Error("ENS resolver do not conform to EIP1577...");
   }
 
   // Encode cid
@@ -437,7 +437,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
   // Set Contenthash
   try {
     if ($tw.utils.getIpfsVerbose()) console.info(
-      "Processing Ens domain content, protocol: ipfs, "
+      "Processing ENS domain content, protocol: ipfs, "
       + cid
     );
     const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
@@ -451,7 +451,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
     );
     // Wait for transaction completion
     await tx.wait();
-    if ($tw.utils.getIpfsVerbose()) console.log("Processed Ens set content hash...");
+    if ($tw.utils.getIpfsVerbose()) console.log("Processed ENS set content hash...");
   } catch (error) {
     if (error !== undefined && error !== null) {
       if (error.message !== undefined) {
@@ -460,7 +460,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
         throw new Error(error);
       }
     }
-    throw new Error("Unable to set Ens domain content hash...");
+    throw new Error("Unable to set ENS domain content hash...");
   }
 
   return;

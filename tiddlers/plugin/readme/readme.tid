@@ -1,14 +1,14 @@
 title: $:/plugins/ipfs/readme
 type: text/vnd.tiddlywiki
 
-!! Ipfs with ~TiddlyWiki
+!! IPFS with ~TiddlyWiki
 
 Features:
 
-* Persist over Ipfs saved <b>~TiddlyWiki's</b> and file attachments
-* Publish Ipns Names when <b>~TiddlyWiki</b> is saved
+* Persist over IPFS saved <b>~TiddlyWiki's</b> and file attachments
+* Publish IPNS Names when <b>~TiddlyWiki</b> is saved
 * Interact with Ethereum wallets
-* Publish [ext[Ens Domain Resolver content|https://app.ens.domains]] over [ext[Ethereum|https://www.ethereum.org]]
+* Publish [ext[ENS Domain Resolver content|https://app.ens.domains]] over [ext[Ethereum|https://www.ethereum.org]]
 
 Supported Browsers:
 
@@ -25,7 +25,7 @@ Supported Mobile ĐApp browser:
 
 * [ext[Metamask|https://metamask.io]]
 
-Supported Ens Ethereum Networks
+Supported ENS Ethereum Networks
 
 * 'Mainnet': Ethereum Main Network
 * 'Ropsten': Ethereum Test Network (~PoW)
@@ -37,15 +37,15 @@ Resources:
 * https://github.com/xmaysonnave/tiddlywiki-ipfs/
 * https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md
 
-!! With a capable Ens browser:
+!! With a capable ENS browser:
 
-* [ext[Ipfs with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
-* [ext[Ipfs with TiddlyWiki Development|https://bluelightav.eth]] on "Ropsten (~PoW) or Rinkeby (~PoA): Ethereum Test Network"
-* [ext[Ipfs with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
-* [ext[Ipfs with TiddlyWiki Documentation|https://bluelightav.eth/#Documentation]]
+* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
+* [ext[IPFS with TiddlyWiki Development|https://bluelightav.eth]] on "Ropsten (~PoW) or Rinkeby (~PoA): Ethereum Test Network"
+* [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
+* [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#Documentation]]
 
-!! With a non capable Ens browser:
+!! With a non capable ENS browser:
 
-* [ext[Ipfs with TiddlyWiki|https://bluelightav.eth.link]]
-* [ext[Ipfs with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]
-* [ext[Ipfs with TiddlyWiki Documentation|https://bluelightav.eth.link/#Documentation]]
+* [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link]]
+* [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]
+* [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth.link/#Documentation]]

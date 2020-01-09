@@ -3,7 +3,7 @@ tags: $:/tags/ControlPanel/Saving
 caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 \define lingo-base() $:/language/ControlPanel/Saving/IpfsService/
-\define service-name() ~Ipfs
+\define service-name() Ipfs
 
 <<lingo Description>>
 

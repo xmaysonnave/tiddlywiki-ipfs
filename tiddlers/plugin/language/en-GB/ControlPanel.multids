@@ -1,23 +1,23 @@
 title: $:/language/ControlPanel/
 
-Saving/IpfsService/Caption: Ipfs Saver
-Saving/IpfsService/Description: These settings are only used when saving to Ipfs.
+Saving/IpfsService/Caption: IPFS Saver
+Saving/IpfsService/Description: These settings are only used when saving to IPFS.
 Saving/IpfsService/Priority: Saver Priority
 Saving/IpfsService/Verbose: Saver Verbose
-Saving/IpfsService/ApiUrl: Api Url
-Saving/IpfsService/GatewayUrl: Gateway Url
-Saving/IpfsService/EnsDomain: Ens Domain
-Saving/IpfsService/IpnsName: Ipns Name
-Saving/IpfsService/IpnsKey: Ipns Key
+Saving/IpfsService/ApiUrl: API URL
+Saving/IpfsService/GatewayUrl: Gateway URL
+Saving/IpfsService/EnsDomain: ENS Domain
+Saving/IpfsService/IpnsName: IPNS Name
+Saving/IpfsService/IpnsKey: IPNS Key
 Saving/IpfsService/Verbose/Description: Verbose
-Saving/IpfsService/Unpin/Description: Unpin previous content while saving
+Saving/IpfsService/Unpin/Description: Unpin previous content while saving.
 Saving/IpfsService/Wait/Description: Wait
 Saving/IpfsService/Protocol: Protocol:
-Saving/IpfsService/Protocol/Ens/Description: Ens
-Saving/IpfsService/Protocol/Ipfs/Description: Ipfs
-Saving/IpfsService/Protocol/Ipns/Description: Ipns
+Saving/IpfsService/Protocol/Ens/Description: ENS
+Saving/IpfsService/Protocol/Ipfs/Description: IPFS
+Saving/IpfsService/Protocol/Ipns/Description: IPNS
 Saving/IpfsService/Policy: Policy:
-Saving/IpfsService/Policy/Default/Description: Default Ipfs Provider
-Saving/IpfsService/Policy/Window/Description: Ipfs Companion
-Saving/IpfsService/Policy/HTTP/Description: Http Client
-Ipfs/Version/Prompt: Ipfs:
+Saving/IpfsService/Policy/Default/Description: Default IPFS Provider
+Saving/IpfsService/Policy/Window/Description: IPFS Companion
+Saving/IpfsService/Policy/HTTP/Description: HTTP Client
+Ipfs/Version/Prompt: IPFS:

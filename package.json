@@ -1,8 +1,8 @@
 {
   "name": "tiddlywiki-ipfs",
   "version": "v0.2.10-dev",
-  "description": "Ipfs with TiddlyWiki",
-  "main": "truffle.js",
+  "description": "IPFS with TiddlyWiki",
+  "main": "ipfs-library.js",
   "directories": {
     "test": "test"
   },
@@ -26,6 +26,7 @@
     "url": "git+https://github.com/xmaysonnave/tiddlywiki-ipfs.git"
   },
   "keywords": [
+    "ens",
     "ipfs",
     "tiddlywiki"
   ],

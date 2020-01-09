@@ -1,11 +1,11 @@
-title: Unpin External Resource from Ipfs
+title: Unpin External Resource from IPFS
 tags: View
 type: text/vnd.tiddlywiki
 
-<h2>~HowTo Unpin External Resource from Ipfs</h2>
+<h2>~HowTo Unpin External Resource from IPFS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/view/unpin]]
 <p>
-The <b>unpin from Ipfs</b> action unpins the current Tiddler <b>_canonical_uri</b> field using the [[Default Api Url|$:/ipfs/saver/api/default]].
+The <b>unpin from IPFS</b> action unpins the current Tiddler <b>_canonical_uri</b> field using the [[Default API URL|$:/ipfs/saver/api/default]].
 </p>
 <p>
 A dialog box will be displayed at the end of the process with a success or failure message.

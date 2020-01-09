@@ -5,16 +5,16 @@ type: text/vnd.tiddlywiki
 <h2>~HowTo Export Embedded Resource</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/export/embedded]]
 <p>
-Exporting an embedded resource means exporting to Ipfs a content from your wiki.
+Exporting an embedded resource means exporting to IPFS a content from your wiki.
 </p>
 <p>
-<b>Ipfs with ~TiddlyWiki</b> lets you export to Ipfs the following supported [[Media Types]].
+<b>IPFS with ~TiddlyWiki</b> lets you export to IPFS the following supported [[Media Types]].
 </p>
 <p>
-Uploading to Ipfs an attachment could be a slow process. It depends the attachment size and/or which server your are using.
+Uploading to IPFS an attachment could be a slow process. It depends the attachment size and/or which server your are using.
 </p>
 <p>
-Use the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs Settings]] and the <b>https://ipfs.infura.io</b> [[Gateway Url|Ipfs Settings]] and experiment with the following Tiddler:
+Use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Settings]] and the <b>https://ipfs.infura.io</b> [[Gateway URL|IPFS Settings]] and experiment with the following Tiddler:
 </p>
 [[Embedded - The Little Prince]]
 <p>
@@ -22,10 +22,10 @@ Be sure to setup the [[Verbose]] property and watch the console displayed events
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/console]]
 <p>
-Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[Api Url|Ipfs Settings]]  and the <b>https://gateway.ipfs.io</b> [[Gateway Url|Ipfs Settings]].
+Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Settings]]  and the <b>https://gateway.ipfs.io</b> [[Gateway URL|IPFS Settings]].
 That way you upload your attachment on infura and retrieve it with another server.
-It helps spreading your attachment on another Ipfs server increasing its resilience.
+It helps spreading your attachment on another IPFS server increasing its resilience.
 </p>
 <p>
-Each embedded resource once exported to Ipfs is pinned to avoid any garbage collection from Ipfs nodes.
+Each embedded resource once exported to IPFS is pinned to avoid any garbage collection from IPFS nodes.
 </p>

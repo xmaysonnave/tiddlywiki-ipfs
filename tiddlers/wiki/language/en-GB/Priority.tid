@@ -8,13 +8,13 @@ type: text/vnd.tiddlywiki
 The plugin modifies the default behaviour of <b>~TiddlyWiki</b> and exposes its saver's priority.
 </p>
 <p>
-The default value <b>3100</b> defines <b>Ipfs with ~TiddlyWiki</b> to be the default saver.
+The default value <b>3100</b> defines <b>IPFS with ~TiddlyWiki</b> to be the default saver.
 </p>
 <p>
-If you're unable to reach any Ipfs servers and want to save locally your wiki select the <b>-1</b> value and the default local filesystem saver will be called.
+If you're unable to reach any IPFS servers and want to save locally your wiki select the <b>-1</b> value and the default local filesystem saver will be called.
 </p>
 <p>
-In case you install a saver who supersedes <b>Ipfs with ~TiddlyWiki</b> select the value <b>6000</b> to supersede this saver.
+In case you install a saver who supersedes <b>IPFS with ~TiddlyWiki</b> select the value <b>6000</b> to supersede this saver.
 </p>
 <h3>Priority Selection</h3>
 <p>

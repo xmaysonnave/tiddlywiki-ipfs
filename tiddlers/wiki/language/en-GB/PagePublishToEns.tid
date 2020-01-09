@@ -1,27 +1,27 @@
-title: Publish TiddlyWiki to Ens
+title: Publish TiddlyWiki to ENS
 tags: Page
 type: text/vnd.tiddlywiki
 
-<h2>~HowTo Publish ~TiddlyWiki to Ens</h2>
+<h2>~HowTo Publish ~TiddlyWiki to ENS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/publish/ens]]
 <p>
-The <b>publish to Ens</b> action updates Ens with the current Ipfs identifier.
+The <b>publish to ENS</b> action updates ENS with the current IPFS identifier.
 </p>
 <p>
-While publishing to Ens the plugin will:
+While publishing to ENS the plugin will:
 </p>
 <ul>
-  <li>Verify if the Ens domain is valid</li>
-  <li>Verify and load the associated Ens domain resolver</li>
+  <li>Verify if the ENS domain is valid</li>
+  <li>Verify and load the associated ENS domain resolver</li>
   <li>Interact with your Ethereum wallet</li>
-  <li>Update the associated Ens domain resolver content with the new Ipfs identifier on the Ethereum blockchain</li>
+  <li>Update the associated ENS domain resolver content with the new IPFS identifier on the Ethereum blockchain</li>
   <li>[[Unpin]] the previous version if this option is selected</li>
 </ul>
 <p>
 A dialog box will be displayed at the end of the process with a success or failure message.
 </p>
 <p>
-When you use this action you will not be redirected to your Ens domain when the transaction will be completed.
+When you use this action you will not be redirected to your ENS domain when the transaction will be completed.
 </p>
 <p>
 [ext[Metamask|https://metamask.io]] or [ext[Frame|https://frame.sh]] will request your authorization as your Ethereum account is involved.

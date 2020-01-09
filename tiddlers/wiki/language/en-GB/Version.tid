@@ -4,5 +4,5 @@ type: text/vnd.tiddlywiki
 
 [img class="tc-image-documentation" [$:/ipfs/image/version]]
 <p>
-You can get the current <b>~TidlyWiki</b> and <b>Ipfs with ~TiddlyWiki</b> version within the Tools tab.
+You can get the current <b>~TidlyWiki</b> and <b>IPFS with ~TiddlyWiki</b> version within the Tools tab.
 </p>

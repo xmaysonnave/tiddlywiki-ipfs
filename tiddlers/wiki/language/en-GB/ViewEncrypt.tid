@@ -14,7 +14,7 @@ Follow the official [ext[Encryption|https://tiddlywiki.com/#Encryption]] tutoria
 The default official <b>~TiddlyWiki</b> behaviour do not encrypt external resources.
 </p>
 <p>
-<b>Ipfs with ~TiddlyWiki</b> enhance this behaviour.
+<b>IPFS with ~TiddlyWiki</b> enhance this behaviour.
 </p>
 <p>
 Once you've locked and password protected your wiki, uploaded resources will be encrypted.

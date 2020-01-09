@@ -1,14 +1,14 @@
-title: Ens Settings
+title: ENS Settings
 tags: Settings
 type: text/vnd.tiddlywiki
 
-<h2>Ens Settings</h2>
+<h2>ENS Settings</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ens]]
 <p>
-<b>Ipfs with ~TiddlyWiki</b> is able to publish to Ens any new or current wiki with an Ipfs identifier.
+<b>IPFS with ~TiddlyWiki</b> is able to publish to ENS any new or current wiki with an IPFS identifier.
 </p>
 <p>
-Ens is powered by a set of Ethereum smart contracts and run on the Ethereum blockchain.
+ENS is powered by a set of Ethereum smart contracts and run on the Ethereum blockchain.
 </p>
 <p>
 Rather than accessing a wiki with a complex to remember url:
@@ -23,7 +23,7 @@ ENS offers a secure & decentralised way to address resources both on and off the
 [ext[https://bluelightav.eth]]
 </p>
 <p>
-To use the Ens feature your environment needs the Ethereum knowledge.
+To use the ENS feature your environment needs the Ethereum knowledge.
 <p>
 <p>
 On Desktop you need a supported browser:
@@ -55,31 +55,31 @@ On mobile, we recommend [ext[Metamask|https://matamask.io]] as your first choice
 See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
 </p>
 <p>
-To publish to Ens while saving:
+To publish to ENS while saving:
 </p>
 <ul>
-<li>The [[Ens|Protocol]] protocol must be selected</li>
-<li>The [[Ens Domain|Ens Settings]] field must be filled</li>
+<li>The [[ENS|Protocol]] protocol must be selected</li>
+<li>The [[ENS Domain|ENS Settings]] field must be filled</li>
 </ul>
 <p>
-To publish without saving see [[Publish TiddlyWiki to Ens]].
+To publish without saving see [[Publish TiddlyWiki to ENS]].
 </p>
 <p>
 While saving the plugin will:
 </p>
 <ul>
-  <li>Verify if the Ens domain is valid</li>
-  <li>Verify and load the associated Ens domain resolver</li>
-  <li>Save the wiki over Ipfs</li>
+  <li>Verify if the ENS domain is valid</li>
+  <li>Verify and load the associated ENS domain resolver</li>
+  <li>Save the wiki over IPFS</li>
   <li>Interact with your Ethereum wallet</li>
-  <li>Update the associated Ens domain resolver content with the new Ipfs identifier on the Ethereum blockchain</li>
+  <li>Update the associated ENS domain resolver content with the new IPFS identifier on the Ethereum blockchain</li>
   <li>[[Unpin]] the previous version if this option is selected</li>
-  <li>Redirect the current page to the Ens domain when the transaction is successfull</li>
+  <li>Redirect the current page to the ENS domain when the transaction is successfull</li>
 </ul>
 <p>
-  To modify the default Ens domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].
+  To modify the default ENS domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].
 </p>
-<h2>Supported Ens Ethereum Networks</h2>
+<h2>Supported ENS Ethereum Networks</h2>
 <ul>
   <li>'Mainnet': Ethereum Main Network</li>
 	<li>'Ropsten': Ethereum Test Network (~PoW)</li>
@@ -88,8 +88,8 @@ While saving the plugin will:
 </ul>
 <h2>Reference</h2>
 <ul>
-  <li>[ext[Ens|https://ens.domains]]</li>
-  <li>[ext[Ens Application Manager|https://app.ens.domains]]</li>
-  <li>[ext[Ens Documentation|https://docs.ens.domains]]</li>
+  <li>[ext[ENS|https://ens.domains]]</li>
+  <li>[ext[ENS Application Manager|https://app.ens.domains]]</li>
+  <li>[ext[ENS Documentation|https://docs.ens.domains]]</li>
   <li>[ext[Ethereum|https://www.ethereum.org]]</li>
 </ul>

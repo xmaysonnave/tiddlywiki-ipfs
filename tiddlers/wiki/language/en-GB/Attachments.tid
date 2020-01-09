@@ -15,7 +15,7 @@ The specialized [[Attachment]] Tiddler displays the <<tag-pill "$:/isAttachment"
   <li><<tag "$:/isIpfs">></li>
 </ul>
 <p>
-The <b>Ipfs with ~TiddlyWiki</b> plugin embeds the [[Attachment]] Tiddler however you need to install the
+The <b>IPFS with ~TiddlyWiki</b> plugin embeds the [[Attachment]] Tiddler however you need to install the
 [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]].
 </p>
 <p>

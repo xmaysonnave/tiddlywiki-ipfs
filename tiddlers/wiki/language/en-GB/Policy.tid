@@ -5,10 +5,10 @@ type: text/vnd.tiddlywiki
 <h2>Policy Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/policy]]
 <p>
-  <b>Ipfs with ~TiddlyWiki</b> is able to reach the Ipfs network with multiple providers:
+  <b>IPFS with ~TiddlyWiki</b> is able to reach the IPFS network with multiple providers:
 </p>
 <ul>
-  <li>[ext[Ipfs Companion|https://github.com/ipfs-shipyard/ipfs-companion]]</li>
+  <li>[ext[IPFS Companion|https://github.com/ipfs-shipyard/ipfs-companion]]</li>
   <li>[ext[Http Client|https://github.com/ipfs/js-ipfs-http-client]]</li>
 </ul>
 <p>
@@ -16,13 +16,13 @@ type: text/vnd.tiddlywiki
 </p>
 <ul>
   <li>
-  <b>Default Ipfs Provider</b>
+  <b>Default IPFS Provider</b>
   <ol>
-    <li>Try to use <b>Ipfs Companion</b> if available otherwise fallback</li>
+    <li>Try to use <b>IPFS Companion</b> if available otherwise fallback</li>
     <li>Use the embedded <b>HTTP Client</b> provider</li>
   </ol>
   </li>
-  <li><b>Ipfs Companion</b> only uses the <b>Ipfs Companion</b> provider</li>
+  <li><b>IPFS Companion</b> only uses the <b>IPFS Companion</b> provider</li>
   <li><b>HTTP Client</b> only uses the embedded <b>HTTP Client</b> provider</li>
 </ul>
 <p>

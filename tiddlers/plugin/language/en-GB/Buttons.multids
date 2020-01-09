@@ -1,20 +1,20 @@
 title: $:/language/Buttons/
 
-ExportTiddlerToIpfs/Caption: export to Ipfs
-ExportTiddlerToIpfs/Hint: Export this tiddler to Ipfs
-IpfsTiddlerPin/Caption: pin to Ipfs
-IpfsTiddlerPin/Hint: Pin this tiddler to Ipfs
-IpfsTiddlerUnpin/Caption: unpin from Ipfs
-IpfsTiddlerUnpin/Hint: Unpin this tiddler from Ipfs
+ExportTiddlerToIpfs/Caption: export to IPFS
+ExportTiddlerToIpfs/Hint: Export this tiddler to IPFS
+IpfsTiddlerPin/Caption: pin to IPFS
+IpfsTiddlerPin/Hint: Pin this tiddler to IPFS
+IpfsTiddlerUnpin/Caption: unpin from IPFS
+IpfsTiddlerUnpin/Hint: Unpin this tiddler from IPFS
 
-PublishToEns/Caption: publish to Ens
-PublishToEns/Hint: Publish this wiki to Ens
-PublishToIpns/Caption: publish to Ipns
-PublishToIpns/Hint: Publish this wiki to Ipns
-IpfsPin/Caption: pin to Ipfs
-IpfsPin/Hint: Pin this wiki to Ipfs
-IpfsUnpin/Caption: unpin from Ipfs
-IpfsUnpin/Hint: Unpin this wiki from Ipfs
+PublishToEns/Caption: publish to ENS
+PublishToEns/Hint: Publish this wiki to ENS
+PublishToIpns/Caption: publish to IPNS
+PublishToIpns/Hint: Publish this wiki to IPNS
+IpfsPin/Caption: pin to IPFS
+IpfsPin/Hint: Pin this wiki to IPFS
+IpfsUnpin/Caption: unpin from IPFS
+IpfsUnpin/Hint: Unpin this wiki from IPFS
 MobileConsole/Caption: mobile console
 MobileConsole/Hint: Load/Unload Mobile Console
 Ipfs/Refresh/Caption: refresh

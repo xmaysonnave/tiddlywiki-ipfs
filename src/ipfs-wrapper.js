@@ -22,7 +22,7 @@ var IpfsWrapper = function() {
 }
 
 IpfsWrapper.prototype.getIpfsClient = async function() {
-  // Getting an Ipfs client
+  // Getting an IPFS client
   try {
     var policy = { ipfs: null, provider: null };
     const ipfsPolicy = $tw.utils.getIpfsPolicy();
@@ -36,13 +36,13 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
     // Return if undefined
     if (policy.ipfs == null || policy.provider == null)  {
       return {
-        error: new Error("Failed to get an Ipfs provider..."),
+        error: new Error("Failed to get an IPFS provider..."),
         ipfs: null,
         provider: null
       };
     }
     if ($tw.utils.getIpfsVerbose()) console.info(
-      "Ipfs provider: "
+      "IPFS provider: "
       + policy.provider
     );
     return {
