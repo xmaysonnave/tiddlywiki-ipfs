@@ -13,19 +13,27 @@ EnsWrapper
 /*global $tw: false */
 "use strict";
 
-const EnsLibrary = require("$:/plugins/ipfs/ens-library.js").EnsLibrary;
-const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
+const EnsLibrary = require("./ens-library.js").EnsLibrary;
+const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 var EnsWrapper = function() {
   this.ensLibrary = new EnsLibrary();
   this.ipfsLibrary = new IpfsLibrary();
 }
 
+EnsWrapper.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
+}
+
 EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, account) {
   try {
     const { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
     if (decoded !== undefined && decoded !== null && protocol !== undefined && protocol !== null)  {
-      if ($tw.utils.getIpfsVerbose()) console.info(
+      if (this.isVerbose()) console.info(
         "Successfully fetched ENS domain content, protocol: "
         + protocol
         + ", "
@@ -37,7 +45,7 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
         protocol: protocol
       };
     } else {
-      if ($tw.utils.getIpfsVerbose()) console.warn("Unassigned ENS domain content...");
+      if (this.isVerbose()) console.warn("Unassigned ENS domain content...");
       return {
         error: null,
         decoded: null,
@@ -55,9 +63,9 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
 
 EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, account) {
   try {
-    const cidv0 = this.ipfsLibrary.CidV1ToCidV0(cid);
+    const cidv0 = this.ipfsLibrary.cidV1ToCidV0(cid);
     await this.ensLibrary.setContenthash(domain, cidv0, web3Provider, account);
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully set ENS domain content...");
+    if (this.isVerbose()) console.info("Successfully set ENS domain content...");
     return {
       error: null
     };
@@ -71,7 +79,7 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
 EnsWrapper.prototype.getWeb3Provider = async function() {
   try {
     const { web3Provider, account } = await this.ensLibrary.getWeb3Provider();
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully fetched Ethereum account: "
       + account
     );

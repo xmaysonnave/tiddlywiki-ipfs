@@ -13,18 +13,58 @@ IpfsActions
 /*global $tw: false */
 "use strict";
 
-const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
+const IpfsWrapper = require("./ipfs-wrapper.js").IpfsWrapper;
+const EnsWrapper = require("./ens-wrapper.js").EnsWrapper;
+const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 const fileProtocol = "file:";
 const ipfsKeyword = "ipfs";
 const ipnsKeyword = "ipns";
 var IpfsActions = function() {
+  this.once = false;
   this.ipfsWrapper = new IpfsWrapper();
   this.ensWrapper = new EnsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
 };
+
+IpfsActions.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
+}
+
+IpfsActions.prototype.init = function() {
+  // Init once
+  if (this.once) {
+    return;
+  }
+  const self = this;
+  $tw.wiki.addEventListener("change", function(changes) {
+    return self.handleChangeEvent(changes);
+  });
+  $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
+    return self.handleExportToIpfs(event);
+  });
+  $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
+    return self.handleMobileConsole(event);
+  });
+  $tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
+    return self.handlePublishToEns(event);
+  });
+  $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
+    return self.handlePublishToIpns(event);
+  });
+  $tw.rootWidget.addEventListener("tm-tiddler-refresh", function(event) {
+    return self.handleRefreshTiddler(event);
+  });
+  $tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
+    return self.handleFileImport(tiddler);
+  });
+  // Init once
+  this.once = true;
+}
 
 // https://www.srihash.org/
 // https://github.com/liriliri/eruda
@@ -43,7 +83,7 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
   if (priority !== undefined) {
     // Update IPFS saver
     $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Updated IPFS Saver priority: "
       + $tw.utils.getIpfsPriority()
     );
@@ -51,7 +91,7 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
   // process verbose
   var verbose = changes["$:/ipfs/saver/verbose"];
   if (verbose !== undefined) {
-    if ($tw.utils.getIpfsVerbose()) {
+    if (this.isVerbose()) {
       console.info("IPFS Saver is verbose...");
     } else {
       console.info("IPFS Saver is not verbose...");
@@ -61,15 +101,14 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
   var unpin = changes["$:/ipfs/saver/unpin"];
   if (unpin !== undefined) {
     if ($tw.utils.getIpfsUnpin()) {
-      if ($tw.utils.getIpfsVerbose()) console.info("IPFS Saver will unpin previous content...");
+      if (this.isVerbose()) console.info("IPFS Saver will unpin previous content...");
     } else {
-      if ($tw.utils.getIpfsVerbose()) console.info("IPFS Saver will not unpin previous content...");
+      if (this.isVerbose()) console.info("IPFS Saver will not unpin previous content...");
     }
   }
 }
 
-/* Beware you are in a widget, not in the instance of this saver */
-IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
+IpfsActions.prototype.handleExportToIpfs = async function(event) {
 
   const title = event.tiddlerTitle;
 
@@ -156,7 +195,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
     );
   }
 
-  if ($tw.utils.getIpfsVerbose()) console.log(
+  if (this.isVerbose()) console.log(
     "Uploading attachment: "
     + content.length
     + " bytes"
@@ -241,7 +280,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(self, event) {
 
 }
 
-IpfsActions.prototype.handleMobileConsole = async function(self, tiddler) {
+IpfsActions.prototype.handleMobileConsole = async function(tiddler) {
   // Load mobile console if applicable
   if (typeof window.eruda === "undefined") {
     await self.loadErudaLibrary();
@@ -262,16 +301,15 @@ IpfsActions.prototype.handleMobileConsole = async function(self, tiddler) {
     if (window.eruda.get().config.get("transparency") === 0.95) {
       window.eruda.get().config.set("transparency", 1);
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Mobile console has been loaded...");
+    if (this.isVerbose()) console.info("Mobile console has been loaded...");
   } else {
     window.eruda.destroy();
     delete window.eruda;
-    if ($tw.utils.getIpfsVerbose()) console.info("Mobile console has been unloaded...");
+    if (this.isVerbose()) console.info("Mobile console has been unloaded...");
   }
 }
 
-/* Beware you are in a widget, not in the instance of this saver */
-IpfsActions.prototype.handlePublishToEns = async function(self, event) {
+IpfsActions.prototype.handlePublishToEns = async function(event) {
 
   // Process document URL
   var { protocol, pathname } = self.ipfsLibrary.parseUrl(document.URL);
@@ -323,7 +361,7 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
 
   // Resolve ipns key if applicable
   if (protocol === ipnsKeyword) {
-    var { error, resolved: cid } = await self.resolveIpns(self, ipfs, cid);
+    var { error, resolved: cid } = await self.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null) {
       console.error(error);
       $tw.utils.messageDialog(error.message);
@@ -341,7 +379,7 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
     return false;
   }
 
-  if ($tw.utils.getIpfsVerbose()) console.info(
+  if (this.isVerbose()) console.info(
     "ENS Domain: "
     + ensDomain
   );
@@ -370,7 +408,7 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
     return false;
   }
 
-  if ($tw.utils.getIpfsVerbose()) console.info(
+  if (this.isVerbose()) console.info(
     "Publishing ENS domain: "
     + ensDomain
   );
@@ -395,7 +433,7 @@ IpfsActions.prototype.handlePublishToEns = async function(self, event) {
 
 }
 
-IpfsActions.prototype.handlePublishToIpns = async function(self, event) {
+IpfsActions.prototype.handlePublishToIpns = async function(event) {
 
   // Process document URL
   var { protocol, pathname } = self.ipfsLibrary.parseUrl(document.URL);
@@ -466,7 +504,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(self, event) {
       return false;
     }
     // Resolve cid
-    var { error, resolved: cid } = await self.resolveIpns(self, ipfs, cid);
+    var { error, resolved: cid } = await self.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null) {
       console.error(error);
       $tw.utils.messageDialog(error.message);
@@ -475,7 +513,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(self, event) {
   }
 
   // Resolve ipns key and ipns name
-  var { error, ipnsName, ipnsKey, resolved } = await self.resolveIpns(self, ipfs, ipnsKey, ipnsName);
+  var { error, ipnsName, ipnsKey, resolved } = await self.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
   if (error != null) {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -490,7 +528,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(self, event) {
     return false;
   }
 
-  if ($tw.utils.getIpfsVerbose()) console.info(
+  if (this.isVerbose()) console.info(
     "Publishing IPNS name: "
     + ipnsName
   );
@@ -504,7 +542,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(self, event) {
 
   // Unpin previous
   if ($tw.utils.getIpfsUnpin() && resolved != null) {
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Request to unpin: /"
       + ipfsKeyword
       + "/"

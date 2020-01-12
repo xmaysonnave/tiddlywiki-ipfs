@@ -13,12 +13,21 @@ IpfsWrapper
 /*global $tw: false */
 "use strict";
 
-const IpfsLibrary = require("$:/plugins/ipfs/ipfs-library.js").IpfsLibrary;
+const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
+
 const ipfsKeyword = "/ipfs/";
 const ipnsKeyword = "/ipns/";
 
 var IpfsWrapper = function() {
   this.ipfsLibrary = new IpfsLibrary();
+}
+
+IpfsWrapper.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
 }
 
 IpfsWrapper.prototype.getIpfsClient = async function() {
@@ -41,7 +50,7 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
         provider: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "IPFS provider: "
       + policy.provider
     );
@@ -59,6 +68,139 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
   }
 }
 
+IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
+
+  var resolved = null;
+
+  // Cleanup
+  if (ipnsKey == undefined || ipnsKey == null) {
+    ipnsKey = null;
+  }
+  if (ipnsName == undefined || ipnsName == null) {
+    ipnsName = null;
+  }
+
+  // check
+  if (ipnsKey == null && ipnsName == null) {
+    return {
+      error: new Error("Undefined IPNS key and IPNS Name..."),
+      ipnsName: null,
+      ipnsKey: null,
+      resolved: null
+    };
+  }
+
+  // Load node IPNS keys
+  var { error, keys } = await this.getIpnsKeys(ipfs);
+  if (error !== null)  {
+    return {
+      error: error,
+      ipnsName: null,
+      ipnsKey: null,
+      resolved: null
+    };
+  }
+
+  // Resolve IPNS name and IPNS key
+  if (ipnsName !== null && ipnsKey !== null) {
+    if (this.isVerbose()) console.info(
+      "Resolve IPNS name: "
+      + ipnsName
+      + " and IPNS key: "
+      + ipnsKeyword
+      + ipnsKey
+    );
+    var found = false;
+    for (var index = 0; index < keys.length; index++) {
+      if (keys[index].name === ipnsName && keys[index].id === ipnsKey) {
+        found = true;
+        break;
+      }
+    }
+    if (found === false) {
+      return {
+        error: new Error("Unknown IPNS name and IPNS key..."),
+        ipnsName: null,
+        ipnsKey: null,
+        resolved: null
+      };
+    }
+  } else if (ipnsName !== null) {
+    if (this.isVerbose()) console.info(
+      "Resolve IPNS name: "
+      + ipnsName
+    );
+    var found = false;
+    for (var index = 0; index < keys.length; index++) {
+      if (keys[index].name === ipnsName) {
+        ipnsKey = keys[index].id;
+        found = true;
+        break;
+      }
+    }
+    if (found === false) {
+      return {
+        error: new Error("Unknown IPNS name: " + ipnsName),
+        ipnsName: null,
+        ipnsKey: null,
+        resolved: null
+      };
+    }
+  } else {
+    if (this.isVerbose()) console.info(
+      "Resolve IPNS key: "
+      + ipnsKeyword
+      + ipnsKey
+    );
+    var found = false;
+    for (var index = 0; index < keys.length; index++) {
+      if (keys[index].id === ipnsKey) {
+        ipnsName = keys[index].name;
+        found = true;
+        break;
+      }
+    }
+    if (found === false) {
+      return {
+        error: new Error("Unknown IPNS key..."),
+        ipnsName: null,
+        ipnsKey: null,
+        resolved: null
+      };
+    }
+  }
+
+  // Resolve IPNS key
+  var { error, resolved } = await this.resolveIpnsKey(ipfs, ipnsKey);
+  if (error !== null) {
+    return {
+      error: error,
+      ipnsName: null,
+      ipnsKey: null,
+      resolved: null
+    };
+  }
+  if (resolved == null) {
+    return {
+      error: new Error("Unable to resolve..."),
+      ipnsName: null,
+      ipnsKey: null,
+      resolved: null
+    };
+  }
+
+  // resolve cid
+  const { cid } = await this.ipfsLibrary.decodeCid(resolved);
+
+  return {
+    error: null,
+    ipnsName: ipnsName,
+    ipnsKey: ipnsKey,
+    resolved: cid
+  }
+
+}
+
 IpfsWrapper.prototype.genKey = async function(ipfs, name) {
   try {
     const { id } = await this.ipfsLibrary.genKey(ipfs, name);
@@ -68,7 +210,7 @@ IpfsWrapper.prototype.genKey = async function(ipfs, name) {
         key: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully generated key: "
       + id
     );
@@ -93,7 +235,7 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
         keys: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info("Successfully fetched keys...");
+    if (this.isVerbose()) console.info("Successfully fetched keys...");
     return {
       error: null,
       keys: keys
@@ -115,7 +257,7 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
         fetched: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully fetched: "
       + ipfsKeyword
       + cid
@@ -142,7 +284,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
         added: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully added content: "
       + ipfsKeyword
       + added[0].hash
@@ -169,9 +311,8 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
         resolved: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully resolved: "
-      + ipfsKeyword
       + resolved
     );
     return {
@@ -196,7 +337,7 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
         published: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully published: "
       + ipfsKeyword
       + cid
@@ -223,7 +364,7 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
         pinned: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully pinned: "
       + ipfsKeyword
       + cid
@@ -250,7 +391,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
         unpinned: null
       };
     }
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Successfully unpinned: "
       + ipfsKeyword
       + cid

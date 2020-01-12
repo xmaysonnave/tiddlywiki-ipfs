@@ -13,9 +13,10 @@ Startup initialisation
 /*global $tw: false */
 "use strict";
 
-const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
-const IpfsActions = require("$:/plugins/ipfs/ipfs-actions.js").IpfsActions;
+
+const IpfsSaverHandler = require("./ipfs-saver-handler.js").IpfsSaverHandler;
+const IpfsActions = require("./ipfs-actions.js").IpfsActions;
 
 exports.name = "ipfs-startup";
 exports.platforms = ["browser"];
@@ -42,29 +43,9 @@ exports.startup = function() {
   $tw.utils.registerFileType("video/ogg","base64",[".ogm",".ogv",".ogg"]);
   $tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
   $tw.utils.registerFileType("video/webm","base64",".webm");
-  // Event
+  // Init Event
   const ipfsActions = new IpfsActions();
-  $tw.wiki.addEventListener("change", function(changes) {
-    return ipfsActions.handleChangeEvent(changes);
-  });
-  $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
-    return ipfsActions.handleExportToIpfs(ipfsActions, event);
-  });
-  $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
-    return ipfsActions.handleMobileConsole(ipfsActions, event);
-  });
-  $tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
-    return ipfsActions.handlePublishToEns(ipfsActions, event);
-  });
-  $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
-    return ipfsActions.handlePublishToIpns(ipfsActions, event);
-  });
-  $tw.rootWidget.addEventListener("tm-tiddler-refresh", function(event) {
-    return ipfsActions.handleRefreshTiddler(event);
-  });
-  $tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
-    return ipfsActions.handleFileImport(tiddler);
-  });
+  ipfsActions.init();
 };
 
 })();

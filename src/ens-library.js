@@ -49,6 +49,14 @@ EnsLibrary.prototype.loadEtherJsLibrary = async function() {
   );
 }
 
+EnsLibrary.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
+}
+
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
 EnsLibrary.prototype.decodeContenthash = function(content) {
   let decoded, protocol;
@@ -143,11 +151,11 @@ EnsLibrary.prototype.getProvider = function() {
   // Check if an Ethereum provider is available
   if (typeof window.ethereum !== "undefined") {
     provider = window.ethereum;
-    if ($tw.utils.getIpfsVerbose()) console.info("Ethereum provider: 'window.ethereum'...");
+    if (this.isVerbose()) console.info("Ethereum provider: 'window.ethereum'...");
   }
   if (provider == null && window.web3 !== undefined && window.web3.currentProvider !== undefined) {
     provider = window.web3.currentProvider;
-    if ($tw.utils.getIpfsVerbose()) console.info("Ethereum provider: 'window.web3.currentProvider'...");
+    if (this.isVerbose()) console.info("Ethereum provider: 'window.web3.currentProvider'...");
   }
   if (provider == null) {
     throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
@@ -187,7 +195,7 @@ EnsLibrary.prototype.getRegistryAddress = async function(web3Provider) {
     console.error(error.message);
     throw new Error("Unsupported Ethereum network: " + network.chainid);
   }
-  if ($tw.utils.getIpfsVerbose()) console.info(registry.network);
+  if (this.isVerbose()) console.info(registry.network);
   // Return registry address
   return registry.address;
 }
@@ -332,7 +340,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
     throw new Error("Undefined ENS resolver...");
   }
-  if ($tw.utils.getIpfsVerbose()) console.info(
+  if (this.isVerbose()) console.info(
     "ENS resolver address: "
     + resolverAddress
   );
@@ -350,7 +358,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   }
 
   // retrieve content hash
-  if ($tw.utils.getIpfsVerbose()) console.info("Processing ENS resolver get content...");
+  if (this.isVerbose()) console.info("Processing ENS resolver get content...");
   const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
   const iface = new window.ethers.utils.Interface(abi)
   const data = iface.functions.contenthash.encode([domainHash]);
@@ -414,7 +422,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
     throw new Error("Undefined ENS resolver...");
   }
 
-  if ($tw.utils.getIpfsVerbose()) console.info(
+  if (this.isVerbose()) console.info(
     "ENS resolver address: "
     + resolverAddress
   );
@@ -436,7 +444,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
 
   // Set Contenthash
   try {
-    if ($tw.utils.getIpfsVerbose()) console.info(
+    if (this.isVerbose()) console.info(
       "Processing ENS domain content, protocol: ipfs, "
       + cid
     );
@@ -445,13 +453,13 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
     const data = iface.functions.setContenthash.encode([domainHash, encoded]);
     const signer = web3Provider.getSigner();
     const tx = await signer.sendTransaction({ to: resolverAddress, data: data });
-    if ($tw.utils.getIpfsVerbose()) console.log(
+    if (this.isVerbose()) console.log(
       "Processing Transaction: "
       + tx.hash
     );
     // Wait for transaction completion
     await tx.wait();
-    if ($tw.utils.getIpfsVerbose()) console.log("Processed ENS set content hash...");
+    if (this.isVerbose()) console.log("Processed ENS set content hash...");
   } catch (error) {
     if (error !== undefined && error !== null) {
       if (error.message !== undefined) {

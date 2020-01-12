@@ -2,7 +2,7 @@
   "name": "tiddlywiki-ipfs",
   "version": "v0.2.10-dev",
   "description": "IPFS with TiddlyWiki",
-  "main": "ipfs-library.js",
+  "main": "src/ipfs-saver.js",
   "directories": {
     "test": "test"
   },
@@ -19,7 +19,7 @@
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "test": "./scripts/test.sh"
+    "test": "jest --verbose ./test"
   },
   "repository": {
     "type": "git",
@@ -62,6 +62,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-flowtype": "^4.5.3",
     "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "tiddlywiki": "^5.1.21"
   }
