@@ -12,8 +12,8 @@
     ]
   },
   "scripts": {
-    "build-all-noclone": "./scripts/build-all-noclone.sh",
-    "build-all": "./scripts/build-all.sh",
+    "build-noclone": "./scripts/build-all-noclone.sh",
+    "build": "./scripts/build-all.sh",
     "build-tiddlywiki-ipfs-dev": "./scripts/build-tiddlywiki-ipfs-dev.sh",
     "build-tiddlywiki-ipfs": "./scripts/build-tiddlywiki-ipfs.sh",
     "run-browserify": "./scripts/run-browserify.sh",
