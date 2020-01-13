@@ -414,7 +414,9 @@ IpfsLibrary.prototype.genKey = async function(client, name) {
       type: "rsa",
       size: 2048
     });
-    return result;
+    return {
+      cid: result
+    };
   }
   throw new Error("Undefined IPNS key gen...");
 }
