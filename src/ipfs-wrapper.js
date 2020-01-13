@@ -119,7 +119,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
     }
     if (found === false) {
       return {
-        error: new Error("Unknown IPNS name and IPNS key..."),
+        error: new Error("Unknown IPNS key and IPNS name..."),
         ipnsName: null,
         ipnsKey: null,
         resolved: null
@@ -140,7 +140,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
     }
     if (found === false) {
       return {
-        error: new Error("Unknown IPNS name: " + ipnsName),
+        error: new Error("Unknown IPNS name..."),
         ipnsName: null,
         ipnsKey: null,
         resolved: null
