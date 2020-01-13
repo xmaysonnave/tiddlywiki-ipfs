@@ -231,11 +231,11 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
     const keys = await this.ipfsLibrary.getKeys(ipfs);
     if (keys == undefined || keys == null)  {
       return {
-        error: new Error("Failed to fetch keys..."),
+        error: new Error("Failed to fetch IPNS keys..."),
         keys: null
       };
     }
-    if (this.isVerbose()) console.info("Successfully fetched keys...");
+    if (this.isVerbose()) console.info("Successfully fetched IPNS keys...");
     return {
       error: null,
       keys: keys
@@ -307,12 +307,12 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
     const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + cid);
     if (resolved == undefined || resolved == null) {
       return {
-        error: new Error("Failed to resolve..."),
+        error: new Error("Failed to resolve IPNS key..."),
         resolved: null
       };
     }
     if (this.isVerbose()) console.info(
-      "Successfully resolved: "
+      "Successfully resolved IPNS key: "
       + resolved
     );
     return {
