@@ -3,8 +3,6 @@
 
 const IpfsWrapper = require("../build/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
-const unknown = "QmQQWAWNBZqiB9u8ykiT2Jjf5mg8vKiQoVaUoJNC7QRBS8";
-
 const resolvedTiddly = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau";
 
 const decodedCid = {
@@ -31,7 +29,7 @@ jest.mock("../build/plugins/ipfs/ipfs-library.js");
 
 describe("IPNS", () => {
 
-  it("Undefined IPNS key and IPNS Name. ipnsName and ipnsKey are undefined.", async () => {
+  it("Undefined IPNS key and IPNS Name.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns();
     expect(
@@ -43,10 +41,89 @@ describe("IPNS", () => {
     ).toBeTruthy()
   });
 
-  it("Unknown IPNS key. ipnsName is undefined, ipnsKey is defined, ipnsKey is unknown.", async () => {
+  it("Unknown IPNS keys.", async () => {
+    const ipfsWrapper = new IpfsWrapper();
+    ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(null);
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, "dummy", null);
+    expect(
+      error !== null
+      && error.message === "Failed to fetch IPNS keys..."
+      && ipnsName == null
+      && ipnsKey == null
+      && resolved == null
+    ).toBeTruthy()
+  });
+
+});
+
+describe("IPNS key and IPNS name", () => {
+
+  it("Unknown IPNS key and IPNS name.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
-    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, unknown, null);
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, "dummy", "dummy");
+    expect(
+      error !== null
+      && error.message === "Unknown IPNS key and IPNS name..."
+      && ipnsName == null
+      && ipnsKey == null
+      && resolved == null
+    ).toBeTruthy()
+  });
+
+  it("Resolve IPNS key and IPNS name.", async () => {
+    const ipfsWrapper = new IpfsWrapper();
+    ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
+    ipfsWrapper.ipfsLibrary.resolve.mockResolvedValue(resolvedTiddly);
+    ipfsWrapper.ipfsLibrary.decodeCid.mockResolvedValue(decodedCid);
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf", "tiddly");
+    expect(
+      error == null
+      && ipnsName === "tiddly"
+      && ipnsKey === "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf"
+      && resolved === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau"
+    ).toBeTruthy()
+  });
+
+});
+
+describe("IPNS name", () => {
+
+  it("Unknown IPNS name.", async () => {
+    const ipfsWrapper = new IpfsWrapper();
+    ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, null, "dummy");
+    expect(
+      error !== null
+      && error.message === "Unknown IPNS name..."
+      && ipnsName == null
+      && ipnsKey == null
+      && resolved == null
+    ).toBeTruthy()
+  });
+
+  it("Resolve IPNS name.", async () => {
+    const ipfsWrapper = new IpfsWrapper();
+    ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
+    ipfsWrapper.ipfsLibrary.resolve.mockResolvedValue(resolvedTiddly);
+    ipfsWrapper.ipfsLibrary.decodeCid.mockResolvedValue(decodedCid);
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, null, "tiddly");
+    expect(
+      error == null
+      && ipnsName === "tiddly"
+      && ipnsKey === "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf"
+      && resolved === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau"
+    ).toBeTruthy()
+  });
+
+});
+
+describe("IPNS key", () => {
+
+  it("Unknown IPNS key.", async () => {
+    const ipfsWrapper = new IpfsWrapper();
+    ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, "dummy", null);
     expect(
       error !== null
       && error.message === "Unknown IPNS key..."
@@ -56,7 +133,7 @@ describe("IPNS", () => {
     ).toBeTruthy()
   });
 
-  it("Resolve an IPNS key. ipnsKey is defined and known.", async () => {
+  it("Resolve one IPNS key.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsLibrary.resolve.mockResolvedValue(resolvedTiddly);
     const { error, resolved } = await ipfsWrapper.resolveIpnsKey(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
@@ -66,7 +143,7 @@ describe("IPNS", () => {
     ).toBeTruthy()
   });
 
-  it("Resolve IPNS key. ipnsName is undefined, ipnsKey is defined and known.", async () => {
+  it("Resolve IPNS key.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     ipfsWrapper.ipfsLibrary.resolve.mockResolvedValue(resolvedTiddly);
