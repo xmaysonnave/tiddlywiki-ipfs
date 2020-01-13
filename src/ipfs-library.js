@@ -25,8 +25,8 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
   if (typeof window.IpfsHttpClient === "undefined") {
     await $tw.utils.loadLibrary(
       "IpfsHttpLibrary",
-      "https://cdn.jsdelivr.net/npm/ipfs-http-client@40.2.1/dist/index.min.js",
-      "sha384-qduWpsJcFqBNM2hnbg86MBlavt1q36oCQLK3JxYkX/rcN2sIFQ6U9/khxWsu6tQa",
+      "https://cdn.jsdelivr.net/npm/ipfs-http-client@41.0.0/dist/index.min.js",
+      "sha384-YcSPas6I/IQQZY68hlXpCZqQ9Y35wL0Ff8u1ApTKcWlobgygNEEFAZrjfVlr1A7M",
       true
     );
     window.httpClient = window.IpfsHttpClient;
