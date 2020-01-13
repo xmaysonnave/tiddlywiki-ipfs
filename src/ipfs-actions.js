@@ -165,10 +165,10 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   }
 
   // Process Gateway URL
-  const { protocol: gatewayProtocol, host: gatewayHost } = self.ipfsLibrary.parseUrl(gatewayUrl);
+  const { protocol: gatewayProtocol, host: gatewayHost } = this.ipfsLibrary.parseUrl(gatewayUrl);
 
   // Getting an IPFS client
-  var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -225,7 +225,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   };
 
   // Add
-  var { error, added } = await self.ipfsWrapper.addToIpfs(ipfs, content);
+  var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -233,7 +233,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   }
 
   // Pin, if failure log and continue
-  var { error } = await self.ipfsWrapper.pinToIpfs(ipfs, added);
+  var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
   if (error != null)  {
     console.warn(error);
   }
@@ -283,7 +283,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
 IpfsActions.prototype.handleMobileConsole = async function(tiddler) {
   // Load mobile console if applicable
   if (typeof window.eruda === "undefined") {
-    await self.loadErudaLibrary();
+    await this.loadErudaLibrary();
     const eruda = document.createElement("div");
     window.document.body.appendChild(eruda);
     window.eruda.init({
@@ -312,7 +312,7 @@ IpfsActions.prototype.handleMobileConsole = async function(tiddler) {
 IpfsActions.prototype.handlePublishToEns = async function(event) {
 
   // Process document URL
-  var { protocol, pathname } = self.ipfsLibrary.parseUrl(document.URL);
+  var { protocol, pathname } = this.ipfsLibrary.parseUrl(document.URL);
 
   // Check
   if (protocol == undefined || protocol == null) {
@@ -335,7 +335,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
   }
 
   // Extract and check URL IPFS protocol and cid
-  var { protocol, cid } = self.ipfsLibrary.decodeCid(pathname);
+  var { protocol, cid } = this.ipfsLibrary.decodeCid(pathname);
 
   // Check
   if (protocol == null) {
@@ -352,7 +352,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
   }
 
   // Getting an IPFS client
-  var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -361,7 +361,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
 
   // Resolve ipns key if applicable
   if (protocol === ipnsKeyword) {
-    var { error, resolved: cid } = await self.ipfsWrapper.resolveIpns(ipfs, cid);
+    var { error, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null) {
       console.error(error);
       $tw.utils.messageDialog(error.message);
@@ -385,7 +385,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
   );
 
   // Retrieve a Web3 provider
-  var { error, web3Provider, account } = await self.ensWrapper.getWeb3Provider();
+  var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -393,7 +393,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
   }
 
   // Fetch ENS domain content
-  var { error, decoded, protocol } = await self.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+  var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -413,7 +413,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
     + ensDomain
   );
 
-  var { error } = await self.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
+  var { error } = await this.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -436,7 +436,7 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
 IpfsActions.prototype.handlePublishToIpns = async function(event) {
 
   // Process document URL
-  var { protocol, pathname } = self.ipfsLibrary.parseUrl(document.URL);
+  var { protocol, pathname } = this.ipfsLibrary.parseUrl(document.URL);
 
   // Check
   if (protocol == undefined || protocol == null) {
@@ -459,7 +459,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
   }
 
   // Extract and check URL IPFS protocol and cid
-  var { protocol, cid } = self.ipfsLibrary.decodeCid(pathname);
+  var { protocol, cid } = this.ipfsLibrary.decodeCid(pathname);
 
   // Check
   if (protocol == null) {
@@ -476,7 +476,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
   }
 
   // Getting an IPFS client
-  var { error, ipfs } = await self.ipfsWrapper.getIpfsClient();
+  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -504,7 +504,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
       return false;
     }
     // Resolve cid
-    var { error, resolved: cid } = await self.ipfsWrapper.resolveIpns(ipfs, cid);
+    var { error, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null) {
       console.error(error);
       $tw.utils.messageDialog(error.message);
@@ -513,7 +513,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
   }
 
   // Resolve ipns key and ipns name
-  var { error, ipnsName, ipnsKey, resolved } = await self.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
+  var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
   if (error != null) {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -533,7 +533,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
     + ipnsName
   );
 
-  var { error } = await self.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
+  var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
   if (error != null) {
     console.error(error);
     $tw.utils.messageDialog(error.message);
@@ -548,7 +548,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
       + "/"
       + resolved
     );
-    var { error } = await self.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
+    var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
     // Log and continue
     if (error != null)  {
       console.error(error);
