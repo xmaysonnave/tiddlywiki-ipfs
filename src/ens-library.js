@@ -43,8 +43,8 @@ var EnsLibrary = function() {
 EnsLibrary.prototype.loadEtherJsLibrary = async function() {
   return await $tw.utils.loadLibrary(
     "EtherJsLibrary",
-    "https://cdn.jsdelivr.net/npm/ethers@4.0.42/dist/ethers.min.js",
-    "sha384-WXeC2B0b8MIn9XAwWyvEOaNchGdmFf8tz8fwDPUCzDbfWBa48lH8kEBAittNuCUe",
+    "https://cdn.jsdelivr.net/npm/ethers@4.0.43/dist/ethers.min.js",
+    "sha384-QRwmP146iWM3rRaoUqzKQqvZ7EH8SVSIr9V411ZVGJrQrOPUZdEoAMEeeswO7ATu",
     true
   );
 }
