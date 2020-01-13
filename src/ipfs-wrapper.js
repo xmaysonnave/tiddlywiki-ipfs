@@ -139,12 +139,17 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
       }
     }
     if (found === false) {
-      return {
-        error: new Error("Unknown IPNS name..."),
-        ipnsName: null,
-        ipnsKey: null,
-        resolved: null
-      };
+      // Generate a new IPNS key
+      var { error, key } = await this.genKey(ipfs, ipnsName);
+      if (error !== null) {
+        return {
+          error: error,
+          ipnsName: null,
+          ipnsKey: null,
+          resolved: null
+        };
+      }
+      ipnsKey = key;
     }
   } else {
     if (this.isVerbose()) console.info(
@@ -170,7 +175,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
     }
   }
 
-  // Resolve IPNS key
+  // Resolve IPNS key if any
   var { error, resolved } = await this.resolveIpnsKey(ipfs, ipnsKey);
   if (error !== null) {
     return {
@@ -180,31 +185,30 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
       resolved: null
     };
   }
-  if (resolved == null) {
+  if (resolved != null) {
+    // resolve cid
+    const { cid } = await this.ipfsLibrary.decodeCid(resolved);
     return {
-      error: new Error("Unable to resolve..."),
-      ipnsName: null,
-      ipnsKey: null,
-      resolved: null
-    };
+      error: null,
+      ipnsName: ipnsName,
+      ipnsKey: ipnsKey,
+      resolved: cid
+    }
   }
-
-  // resolve cid
-  const { cid } = await this.ipfsLibrary.decodeCid(resolved);
 
   return {
     error: null,
     ipnsName: ipnsName,
     ipnsKey: ipnsKey,
-    resolved: cid
+    resolved: null
   }
 
 }
 
 IpfsWrapper.prototype.genKey = async function(ipfs, name) {
   try {
-    const { id } = await this.ipfsLibrary.genKey(ipfs, name);
-    if (id == undefined || id == null)  {
+    const { cid } = await this.ipfsLibrary.genKey(ipfs, name);
+    if (cid == undefined || cid == null)  {
       return {
         error: new Error("Failed to generate key..."),
         key: null
@@ -212,11 +216,11 @@ IpfsWrapper.prototype.genKey = async function(ipfs, name) {
     }
     if (this.isVerbose()) console.info(
       "Successfully generated key: "
-      + id
+      + cid
     );
     return {
       error: null,
-      key: id
+      key: cid
     };
   } catch (error) {
     return {
@@ -305,19 +309,19 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
   // Resolve
   try {
     const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + cid);
-    if (resolved == undefined || resolved == null) {
+    if (resolved !== "undefined" && resolved !== null) {
+      if (this.isVerbose()) console.info(
+        "Successfully resolved IPNS key: "
+        + resolved
+      );
       return {
-        error: new Error("Failed to resolve IPNS key..."),
-        resolved: null
+        error: null,
+        resolved: resolved
       };
     }
-    if (this.isVerbose()) console.info(
-      "Successfully resolved IPNS key: "
-      + resolved
-    );
     return {
       error: null,
-      resolved: resolved
+      resolved: null
     };
   } catch (error) {
     return {
