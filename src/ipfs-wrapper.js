@@ -90,7 +90,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
     };
   }
 
-  // Load node IPNS keys
+  // Load IPNS keys
   var { error, keys } = await this.getIpnsKeys(ipfs);
   if (error !== null)  {
     return {
