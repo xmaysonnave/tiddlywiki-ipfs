@@ -410,13 +410,14 @@ IpfsLibrary.prototype.genKey = async function(client, name) {
   }
   if (client !== undefined && client.key !== undefined && client.key.gen !== undefined) {
     if (this.isVerbose()) console.info("Processing IPNS key gen...");
-    const result = await client.key.gen(name.trim(), {
+    const key = await client.key.gen(name.trim(), {
       type: "rsa",
       size: 2048
     });
-    return {
-      cid: result
-    };
+    if (key !== undefined && key.id !== undefined && key.id !== null) {
+      return key.id;
+    }
+    return null;
   }
   throw new Error("Undefined IPNS key gen...");
 }

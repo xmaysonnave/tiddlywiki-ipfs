@@ -104,9 +104,8 @@ describe("IPNS name", () => {
   it("Generate IPNS key.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
-    ipfsWrapper.ipfsLibrary.genKey.mockResolvedValue( { cid: "QmVuvaQLcGzjWXLiC6qSe4m4Y44SarUMgsuZJVUyYc4MHD" });
+    ipfsWrapper.ipfsLibrary.genKey.mockResolvedValue("QmVuvaQLcGzjWXLiC6qSe4m4Y44SarUMgsuZJVUyYc4MHD");
     const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, null, "plugins");
-    if (error !== null) console.log(error.message);
     expect(
       error == null
       && ipnsName == "plugins"

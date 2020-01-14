@@ -138,8 +138,8 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
         break;
       }
     }
+      // Generate a new IPNS key if not found
     if (found === false) {
-      // Generate a new IPNS key
       var { error, key } = await this.genKey(ipfs, ipnsName);
       if (error !== null) {
         return {
@@ -176,38 +176,32 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
   }
 
   // Resolve IPNS key if any
+  // ipfs-http-client generates errors when an IPNS key is unassigned
   var { error, resolved } = await this.resolveIpnsKey(ipfs, ipnsKey);
   if (error !== null) {
-    return {
-      error: error,
-      ipnsName: null,
-      ipnsKey: null,
-      resolved: null
-    };
-  }
-  if (resolved != null) {
-    // resolve cid
-    const { cid } = await this.ipfsLibrary.decodeCid(resolved);
+    if (this.isVerbose()) console.warn(error.message);
     return {
       error: null,
       ipnsName: ipnsName,
       ipnsKey: ipnsKey,
-      resolved: cid
+      resolved: null
     }
   }
 
+  // Resolve cid
+  const { cid } = await this.ipfsLibrary.decodeCid(resolved);
   return {
     error: null,
     ipnsName: ipnsName,
     ipnsKey: ipnsKey,
-    resolved: null
+    resolved: cid
   }
 
 }
 
 IpfsWrapper.prototype.genKey = async function(ipfs, name) {
   try {
-    const { cid } = await this.ipfsLibrary.genKey(ipfs, name);
+    const cid = await this.ipfsLibrary.genKey(ipfs, name);
     if (cid == undefined || cid == null)  {
       return {
         error: new Error("Failed to generate key..."),
@@ -309,19 +303,19 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, cid) {
   // Resolve
   try {
     const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + cid);
-    if (resolved !== "undefined" && resolved !== null) {
-      if (this.isVerbose()) console.info(
-        "Successfully resolved IPNS key: "
-        + resolved
-      );
+    if (resolved == undefined || resolved == null) {
       return {
-        error: null,
-        resolved: resolved
+        error: new Error("Failed to resolve IPNS key..."),
+        resolved: null
       };
     }
+    if (this.isVerbose()) console.info(
+      "Successfully resolved IPNS key: "
+      + resolved
+    );
     return {
       error: null,
-      resolved: null
+      resolved: resolved
     };
   } catch (error) {
     return {
