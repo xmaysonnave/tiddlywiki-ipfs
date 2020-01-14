@@ -227,6 +227,7 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 * run-prepare-clone
 * run-prepare
 * test
+* test-no-build
 
 Use the `build-all` script to build ```IPFS with TiddlyWiki``` and the `wiki` directory will contain two runnable wikis:
 
