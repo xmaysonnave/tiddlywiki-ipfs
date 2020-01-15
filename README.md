@@ -8,7 +8,7 @@ This plugin provides the following features:
 * Persist over IPFS saved `TiddlyWiki's` and file attachments
 * Publish IPNS Names when `TiddlyWiki's` are saved
 * Interact with Ethereum wallets [Metamask](https://metamask.io) or [Frame](https://frame.sh)
-* Publish [ENS Domain Resolver content](https://app.ens.domains) over [Ethereum](https://www.ethereum.org)
+* Publish [ENS domain resolver content](https://app.ens.domains) over [Ethereum](https://www.ethereum.org)
 
 According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 

@@ -8,7 +8,7 @@ Features:
 * Persist over IPFS saved <b>~TiddlyWiki's</b> and file attachments
 * Publish IPNS Names when <b>~TiddlyWiki</b> is saved
 * Interact with Ethereum wallets
-* Publish [ext[ENS Domain Resolver content|https://app.ens.domains]] over [ext[Ethereum|https://www.ethereum.org]]
+* Publish [ext[ENS domain resolver content|https://app.ens.domains]] over [ext[Ethereum|https://www.ethereum.org]]
 
 Supported Browsers:
 

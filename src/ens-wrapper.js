@@ -34,9 +34,9 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
     const { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
     if (decoded !== undefined && decoded !== null && protocol !== undefined && protocol !== null)  {
       if (this.isVerbose()) console.info(
-        "Successfully fetched ENS domain content, protocol: "
+        "Successfully fetched ENS domain content: /"
         + protocol
-        + ", "
+        + "/"
         + decoded
       );
       return {

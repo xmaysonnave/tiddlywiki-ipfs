@@ -16,7 +16,7 @@ The <b>Protocol</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> saves 
 </p>
 <h3>IPNS</h3>
 <p>
-  The [[IPNS|IPNS Settings]] protocol enhances the IPFS protocol and publish an <b>IPNS Name</b> with a new [[IPFS|IPFS Settings]] identifier.
+  The [[IPNS|IPNS Settings]] protocol enhances the IPFS protocol and publish an <b>IPNS name</b> with a new [[IPFS|IPFS Settings]] identifier.
 </p>
 <p>
   Once your wiki is saved you'll be redirected to the new IPNS identifier location.

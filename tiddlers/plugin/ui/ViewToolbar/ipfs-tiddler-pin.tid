@@ -9,9 +9,9 @@ description: {{$:/language/Buttons/IpfsTiddlerPin/Hint}}
 {{$:/core/images/chevron-up}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
-<span class="tc-btn-text">
-<$text text=" "/>
-<$text text={{$:/language/Buttons/IpfsTiddlerPin/Caption}}/>
-</span>
+  <span class="tc-btn-text">
+    <$text text=" "/>
+    <$text text={{$:/language/Buttons/IpfsTiddlerPin/Caption}}/>
+  </span>
 </$list>
 </$button>

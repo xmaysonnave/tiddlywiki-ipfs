@@ -357,11 +357,11 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
   throw new Error("Undefined IPNS name publish...");
 }
 
-IpfsLibrary.prototype.resolve = async function(client, cid) {
+IpfsLibrary.prototype.resolve = async function(client, id) {
   if (client == undefined || client == null) {
     throw new Error("Undefined IPFS provider...");
   }
-  if (cid == undefined || cid == null || cid.trim() === "") {
+  if (id == undefined || id == null || id.trim() === "") {
     throw new Error("Undefined IPNS key...");
   }
   // Window IPFS policy
@@ -370,10 +370,10 @@ IpfsLibrary.prototype.resolve = async function(client, cid) {
   }
   if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
     if (this.isVerbose()) console.info("Processing IPNS name resolve...");
-    const result = await client.name.resolve(cid.trim(), {
+    const resolved = await client.name.resolve(id.trim(), {
       recursive: true
     });
-    return result;
+    return resolved;
   }
   throw new Error("Undefined IPNS name resolve...");
 }
@@ -420,6 +420,28 @@ IpfsLibrary.prototype.genKey = async function(client, name) {
     return null;
   }
   throw new Error("Undefined IPNS key gen...");
+}
+
+IpfsLibrary.prototype.rmKey = async function(client, name) {
+  if (client == undefined || client == null) {
+    throw new Error("Undefined IPFS provider...");
+  }
+  if (name == undefined || name == null || name.trim() === "") {
+    throw new Error("Undefined IPNS name...");
+  }
+  // Window IPFS policy
+  if (client.enable) {
+    client = await client.enable({commands: ["key"]});
+  }
+  if (client !== undefined && client.key !== undefined && client.key.rm !== undefined) {
+    if (this.isVerbose()) console.info("Processing IPNS key rm...");
+    const key = await client.key.rm(name.trim());
+    if (key !== undefined && key.id !== undefined && key.id !== null) {
+      return key.id;
+    }
+    return null;
+  }
+  throw new Error("Undefined IPNS key rm...");
 }
 
 exports.IpfsLibrary = IpfsLibrary;

@@ -445,7 +445,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
   // Set Contenthash
   try {
     if (this.isVerbose()) console.info(
-      "Processing ENS domain content, protocol: ipfs, "
+      "Processing ENS domain content: /ipfs/"
       + cid
     );
     const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];

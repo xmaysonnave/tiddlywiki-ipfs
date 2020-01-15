@@ -29,7 +29,7 @@ exports.startup = function() {
   SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
   SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
   // Load verbose property
-  if ($tw.utils.getIpfsVerbose()) console.info("IPFS Saver is verbose");
+  if ($tw.utils.getIpfsVerbose()) console.info("IPFS with TiddlyWiki is verbose");
   // Load priority
   var priority = $tw.utils.getIpfsPriority();
   if ($tw.utils.getIpfsVerbose()) console.info(

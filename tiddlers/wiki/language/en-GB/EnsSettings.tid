@@ -59,7 +59,7 @@ To publish to ENS while saving:
 </p>
 <ul>
 <li>The [[ENS|Protocol]] protocol must be selected</li>
-<li>The [[ENS Domain|ENS Settings]] field must be filled</li>
+<li>The [[ENS domain|ENS Settings]] field must be filled</li>
 </ul>
 <p>
 To publish without saving see [[Publish TiddlyWiki to ENS]].

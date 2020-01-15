@@ -5,20 +5,20 @@ type: text/vnd.tiddlywiki
 <h2>~HowTo Publish ~TiddlyWiki to IPNS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/publish/ipfs]]
 <p>
-The <b>publish to IPNS</b> action publishes the [[IPNS Name|IPNS Settings]] with the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api/default]].
+The <b>publish to IPNS</b> action publishes the [[IPNS name|IPNS Settings]] with the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api/default]].
 </p>
 <p>
-You can publish an [[IPNS Name|IPNS Settings]] with the IPFS identifier of another <b>IPNS Name</b>.
+You can publish an [[IPNS name|IPNS Settings]] with the IPFS identifier of another <b>IPNS name</b>.
 Read [[Unpin]] for more informations about this use case.
 </p>
 <p>
 While publishing to IPNS the plugin will:
 </p>
 <ul>
-  <li>Verify the <b>IPNS Name</b> and <b>IPNS Key</b> if both are filled</li>
-  <li>Resolve the <b>IPNS Key</b> if only the <b>IPNS Name</b> is filled</li>
-  <li>Resolve the <b>IPNS Name</b> if only the <b>IPNS Key</b> is filled</li>
-  <li>Publish the <b>IPFS Name</b> with the new IPFS identifier</li>
+  <li>Verify the <b>IPNS name</b> and <b>IPNS key</b> if both are filled</li>
+  <li>Resolve the <b>IPNS key</b> if only the <b>IPNS name</b> is filled</li>
+  <li>Resolve the <b>IPNS name</b> if only the <b>IPNS key</b> is filled</li>
+  <li>Publish the <b>IPFS name</b> with the new IPFS identifier</li>
   <li>[[Unpin]] the previous IPFS content if this option is selected</li>
 </ul>
 <p>

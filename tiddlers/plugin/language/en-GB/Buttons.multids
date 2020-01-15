@@ -19,3 +19,7 @@ MobileConsole/Caption: mobile console
 MobileConsole/Hint: Load/Unload Mobile Console
 Ipfs/Refresh/Caption: refresh
 Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
+IpnsGenerate/Caption: generate
+IpnsGenerate/Hint: Generate IPNS key
+IpnsRemove/Caption: remove
+IpnsRemove/Hint: Remove IPNS key

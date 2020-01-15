@@ -5,14 +5,14 @@ type: text/vnd.tiddlywiki
 <h2>IPNS Settings</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns]]
 <p>
-The plugin is able to publish your <b>IPNS Name</b> with a new IPFS identifier everytime you save your wiki.
+The plugin is able to publish your <b>IPNS name</b> with a new IPFS identifier everytime you save your wiki.
 </p>
 <p>
 To publish to IPNS while saving:
 </p>
 <ul>
 <li>The [[IPNS|Protocol]] protocol must be selected</li>
-<li>The <b>IPNS Name</b> field must be filled or The <b>IPNS Key</b> field must be filled</li>
+<li>The <b>IPNS name</b> field must be filled or The <b>IPNS key</b> field must be filled</li>
 </ul>
 <p>
 To publish without saving see [[Publish TiddlyWiki to IPNS]].
@@ -22,19 +22,19 @@ While saving the plugin will:
 </p>
 <ul>
   <li>Save the wiki over IPFS</li>
-  <li>Verify the <b>IPNS Name</b> and <b>IPNS Key</b> if both are filled</li>
-  <li>Resolve the <b>IPNS Key</b> if only the <b>IPNS Name</b> is filled</li>
-  <li>Resolve the <b>IPNS Name</b> if only the <b>IPNS Key</b> is filled</li>
-  <li>Publish the <b>IPFS Name</b> with the new IPFS identifier</li>
+  <li>Verify the <b>IPNS name</b> and <b>IPNS key</b> if both are filled</li>
+  <li>Resolve the <b>IPNS key</b> if only the <b>IPNS name</b> is filled</li>
+  <li>Resolve the <b>IPNS name</b> if only the <b>IPNS key</b> is filled</li>
+  <li>Publish the <b>IPFS name</b> with the new IPFS identifier</li>
   <li>[[Unpin]] the previous IPFS content if this option is selected</li>
   <li>Redirect the current page to your IPNS key according to your default gateway</li>
 </ul>
 <p>
 This feature do not work with IPFS Companion or the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Settings]].
 <br/>
-IPNS Name and IPNS Key needs to be generated with a full IPFS server with the following [ext[Cli command|https://docs.ipfs.io/reference/api/cli/#ipfs-key-gen]].
+IPNS name and IPNS key needs to be generated with a full IPFS server with the following [ext[Cli command|https://docs.ipfs.io/reference/api/cli/#ipfs-key-gen]].
 </p>
 <ul>
-  <li>To modify the default IPNS Name, edit and modify [[$:/ipfs/saver/ipns/name]]</li>
+  <li>To modify the default IPNS name, edit and modify [[$:/ipfs/saver/ipns/name]]</li>
   <li>To modify the default IPNS key, edit and modify [[$:/ipfs/saver/ipns/key]]</li>
 </ul>

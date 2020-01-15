@@ -6,11 +6,11 @@ Saving/IpfsService/Priority: Saver Priority
 Saving/IpfsService/Verbose: Saver Verbose
 Saving/IpfsService/ApiUrl: API URL
 Saving/IpfsService/GatewayUrl: Gateway URL
-Saving/IpfsService/EnsDomain: ENS Domain
-Saving/IpfsService/IpnsName: IPNS Name
-Saving/IpfsService/IpnsKey: IPNS Key
+Saving/IpfsService/EnsDomain: ENS domain
+Saving/IpfsService/IpnsName: IPNS name
+Saving/IpfsService/IpnsKey: IPNS key
 Saving/IpfsService/Verbose/Description: Verbose
-Saving/IpfsService/Unpin/Description: Unpin previous content while saving.
+Saving/IpfsService/Unpin/Description: Unpin previous content while saving
 Saving/IpfsService/Wait/Description: Wait
 Saving/IpfsService/Protocol: Protocol:
 Saving/IpfsService/Protocol/Ens/Description: ENS

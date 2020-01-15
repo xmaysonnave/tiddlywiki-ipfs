@@ -29,12 +29,12 @@ jest.mock("../build/plugins/ipfs/ipfs-library.js");
 
 describe("IPNS", () => {
 
-  it("Undefined IPNS key and IPNS Name.", async () => {
+  it("Undefined IPNS key and IPNS name.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns();
     expect(
       error !== null
-      && error.message === "Undefined IPNS key and IPNS Name..."
+      && error.message === "Undefined IPNS key and IPNS name..."
       && ipnsName == null
       && ipnsKey == null
       && resolved == null
@@ -101,15 +101,15 @@ describe("IPNS key and IPNS name", () => {
 
 describe("IPNS name", () => {
 
-  it("Generate IPNS key.", async () => {
+  it("Unknown IPNS name.", async () => {
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
-    ipfsWrapper.ipfsLibrary.genKey.mockResolvedValue("QmVuvaQLcGzjWXLiC6qSe4m4Y44SarUMgsuZJVUyYc4MHD");
-    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, null, "plugins");
+    const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, null, "dummy");
     expect(
-      error == null
-      && ipnsName == "plugins"
-      && ipnsKey == "QmVuvaQLcGzjWXLiC6qSe4m4Y44SarUMgsuZJVUyYc4MHD"
+      error !== null
+      && error.message === "Unknown IPNS name..."
+      && ipnsName == null
+      && ipnsKey == null
       && resolved == null
     ).toBeTruthy()
   });
