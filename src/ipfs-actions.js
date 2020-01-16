@@ -27,6 +27,27 @@ var IpfsActions = function() {
   this.ipfsLibrary = new IpfsLibrary();
 };
 
+IpfsActions.prototype.updateResolvedIpnsKey = function(resolved) {
+  // Retrieve parent
+  const parentElement = document.getElementById("resolveIpnsKey");
+  if (parentElement !== null) {
+    // Remove previous link
+    if (parentElement.firstChild !== null) {
+      parentElement.removeChild(parentElement.firstChild);
+    }
+    // Create link
+    if (resolved !== undefined && resolved !== null) {
+      const link = document.createElement("a");
+      link.href = resolved;
+      link.id = "resolvedIpfsUrl";
+      link.text= "Resolved IPFS URL";
+      link.class = "tc-tiddlylink-external";
+      link.target = "_blank";
+      parentElement.appendChild(link);
+    }
+  }
+}
+
 IpfsActions.prototype.isVerbose = function() {
   try {
     return $tw.utils.getIpfsVerbose();
@@ -52,6 +73,9 @@ IpfsActions.prototype.init = function() {
   });
   $tw.rootWidget.addEventListener("tm-remove-ipns-key", function(event) {
     return self.handleRemoveIpnsKey(event);
+  });
+  $tw.rootWidget.addEventListener("tm-resolve-ipns-key", function(event) {
+    return self.handleResolveIpnsKey(event);
   });
   $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
     return self.handleMobileConsole(event);
@@ -315,8 +339,8 @@ IpfsActions.prototype.handleGenerateIpnsKey = async function(event) {
     return false;
   }
 
-  // Update Tiddler
-  const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+  // Update Tiddlers
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
   if (tiddler !== undefined) {
     // Process
     $tw.utils.updateTiddler(
@@ -326,6 +350,9 @@ IpfsActions.prototype.handleGenerateIpnsKey = async function(event) {
       key
     );
   }
+
+  // Remove link
+  this.updateResolvedIpnsKey();
 
   return true;
 
@@ -396,7 +423,7 @@ IpfsActions.prototype.handleRemoveIpnsKey = async function(event) {
     );
   }
   tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-  if (tiddler !== undefined) {
+  if (tiddler !== undefined && $tw.utils.getIpfsIpnsKey() !== null) {
     // Process
     $tw.utils.updateTiddler(
       tiddler,
@@ -405,6 +432,87 @@ IpfsActions.prototype.handleRemoveIpnsKey = async function(event) {
       ""
     );
   }
+
+  // Remove link
+  this.updateResolvedIpnsKey();
+
+  return true;
+
+}
+
+
+IpfsActions.prototype.handleResolveIpnsKey = async function(event) {
+
+  // Retrieve default IPNS name
+  var ipnsName = $tw.utils.getIpfsIpnsName();
+  var ipnsKey = $tw.utils.getIpfsIpnsKey();
+
+  // Check
+  if (ipnsName == null) {
+    const msg = "Undefined IPNS name....";
+    console.error(msg);
+    $tw.utils.messageDialog(msg);
+    return false;
+  }
+
+  // Retrieve Gateway URL
+  const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
+  // Check
+  if (gatewayUrl == null) {
+    const msg = "Undefined IPFS Gateway URL...";
+    console.error(msg);
+    $tw.utils.messageDialog(msg);
+    return false;
+  }
+
+  // Process Gateway URL
+  const {
+    protocol: gatewayProtocol,
+    host: gatewayHost
+  } = this.ipfsLibrary.parseUrl(gatewayUrl);
+
+  // IPFS client
+  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
+  if (error != null)  {
+    console.error(error);
+    $tw.utils.messageDialog(error.message);
+    return false;
+  }
+
+  // Resolve CID
+  var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
+  if (error != null) {
+    console.error(error);
+    $tw.utils.messageDialog(error.message);
+    return false;
+  }
+
+  // Next host
+  var ipfsResolved = null;
+  if (resolved !== null) {
+    ipfsResolved = gatewayProtocol
+    + "//"
+    + gatewayHost
+    + "/"
+    + ipfsKeyword
+    + "/"
+    + resolved;
+  }
+
+  // Update Tiddlers
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+  if (tiddler !== undefined) {
+    // Process
+    $tw.utils.updateTiddler(
+      tiddler,
+      [],
+      [],
+      ipnsKey
+    );
+  }
+
+  // Update link
+  this.updateResolvedIpnsKey(ipfsResolved);
 
   return true;
 

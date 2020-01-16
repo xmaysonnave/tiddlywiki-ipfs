@@ -23,3 +23,5 @@ IpnsGenerate/Caption: generate
 IpnsGenerate/Hint: Generate IPNS key
 IpnsRemove/Caption: remove
 IpnsRemove/Hint: Remove IPNS key
+IpfsResolve/Caption: resolve
+IpfsResolve/Hint: Resolve IPNS key

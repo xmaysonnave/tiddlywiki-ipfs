@@ -69,17 +69,20 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     var ipfsProtocol = null;
     var ipnsKey = null;
     var ipnsName = null;
+    var ipnsContent = null;
     var cid = null;
     var ensDomain = null;
     var ensContent = null;
     var web3Provider = null;
     var account = null;
-    var next = null;
+    var nextHost = null;
+    var nextWiki = null;
     options = options || {};
 
     // Process document URL
     const {
       protocol: wikiProtocol,
+      host: wikiHost,
       pathname: wikiPathname,
       search: wikiSearch,
       fragment: wikiFragment
@@ -123,6 +126,15 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           }
         }
       }
+      // Next host
+      nextHost = wikiProtocol
+      + "//"
+      + wikiHost
+    } else {
+      // Next host
+      nextHost = gatewayProtocol
+      + "//"
+      + gatewayHost
     }
 
     // IPFS client
@@ -138,7 +150,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
       // Resolve current IPNS
       if (ipfsProtocol === ipnsKeyword) {
-        var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
+        var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
         if (error != null)  {
           // Log and continue
           console.warn(error.message);
@@ -146,7 +158,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           if ($tw.utils.getIpfsProtocol() === ipnsKeyword) {
             ipnsName = $tw.utils.getIpfsIpnsName();
             ipnsKey = $tw.utils.getIpfsIpnsKey();
-            var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
+            var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
             if (error != null) {
               console.error(error);
               callback(error.message);
@@ -158,7 +170,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       } else {
         ipnsName = $tw.utils.getIpfsIpnsName();
         ipnsKey = $tw.utils.getIpfsIpnsKey();
-        var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
+        var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
         if (error != null) {
           console.error(error);
           callback(error.message);
@@ -167,14 +179,14 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       }
 
       // Store to unpin previous if any
-      if ($tw.utils.getIpfsUnpin() && resolved !== null) {
-        if (this.toBeUnpinned.indexOf(resolved) == -1) {
-          this.toBeUnpinned.push(resolved);
+      if ($tw.utils.getIpfsUnpin() && ipnsContent !== null) {
+        if (this.toBeUnpinned.indexOf(ipnsContent) == -1) {
+          this.toBeUnpinned.push(ipnsContent);
           if (this.isVerbose()) console.info(
             "Request to unpin: /"
             + ipfsKeyword
             + "/"
-            + resolved
+            + ipnsContent
           );
         }
       }
@@ -241,6 +253,14 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       return false;
     }
 
+    // Default next
+    nextWiki = nextHost
+      + "/"
+      + ipfsKeyword
+      + "/"
+      + added
+      + `/${wikiSearch || ''}${wikiFragment || ''}`;
+
     // Pin, if failure log and continue
     var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
     if (error != null)  {
@@ -257,6 +277,26 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       if (error != null)  {
         // Log and continue
         console.warn(error.message);
+        // Remove from unpin
+        if (this.toBeUnpinned.indexOf(ipnsContent) !== -1) {
+          this.toBeUnpinned.splice(this.toBeUnpinned.indexOf(ipnsContent), 1);
+          if (this.isVerbose()) console.info(
+            "Unrequest to unpin: /"
+            + ipfsKeyword
+            + "/"
+            + ipnsContent
+          );
+        }
+      } else {
+        if ((ipfsProtocol === ipnsKeyword && cid !== ipnsKey) || ($tw.utils.getIpfsProtocol() === ipnsKeyword && ipfsProtocol !== ipnsKeyword)) {
+          // IPNS next
+          nextWiki = nextHost
+          + "/"
+          + ipnsKeyword
+          + "/"
+          + ipnsKey
+          + `/${wikiSearch || ''}${wikiFragment || ''}`;
+        }
       }
     }
 
@@ -271,10 +311,14 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         // Log and continue
         console.warn(error.message);
         // Fallback
-        if (ipfsProtocol === ipnsKeyword && ipnsKey !== null) {
-          next = "/" + ipnsKeyword + "/" + ipnsKey + `/${wikiSearch || ''}${wikiFragment || ''}`;
-        } else {
-          next = "/" + ipfsKeyword + "/" + added + `/${wikiSearch || ''}${wikiFragment || ''}`;
+        if (ipfsProtocol === ipnsKeyword && cid !== ipnsKey) {
+          // IPNS next
+          nextWiki = nextHost
+          + "/"
+          + ipnsKeyword
+          + "/"
+          + ipnsKey
+          + `/${wikiSearch || ''}${wikiFragment || ''}`;
         }
         // Remove from unpin
         if (this.toBeUnpinned.indexOf(ensContent) !== -1) {
@@ -286,6 +330,11 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
             + ensContent
           );
         }
+      } else {
+        // ENS next
+        nextWiki = "https://"
+          + ensDomain
+          + `/${wikiSearch || ''}${wikiFragment || ''}`;
       }
     }
 
@@ -304,63 +353,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Done
     callback(null);
 
-    // IPNS and IPFS Next
-    if ($tw.utils.getIpfsProtocol() === ipnsKeyword) {
-      next = "/" + ipnsKeyword + "/" + ipnsKey + `/${wikiSearch || ''}${wikiFragment || ''}`;
-    } else if ($tw.utils.getIpfsProtocol() === ipfsKeyword) {
-      next = "/" + ipfsKeyword + "/" + added + `/${wikiSearch || ''}${wikiFragment || ''}`;
-    }
-
-    // Next location
-    if (wikiProtocol === fileProtocol) {
-      const url = gatewayProtocol
-        + "//"
-        + gatewayHost
-        + next;
+    // Next
+    if (nextWiki !== document.URL) {
       if (this.isVerbose()) console.info(
         "Assigning new location: "
-        + url
+        + nextWiki
       );
-      window.location.assign(url);
-    } else if ($tw.utils.getIpfsProtocol() === ipnsKeyword && (ipfsProtocol !== ipnsKeyword || cid !== ipnsKey)) {
-      const url = gatewayProtocol
-        + "//"
-        + gatewayHost
-        + next;
-      if (this.isVerbose()) console.info(
-        "Assigning new location: "
-        + url
-      );
-      window.location.assign(url);
-    } else if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-      var url = null;
-      if (next !== null) {
-        url = gatewayProtocol
-        + "//"
-        + gatewayHost
-        + next;
-      } else {
-        url = "https://"
-          + ensDomain
-          + `/${wikiSearch || ''}${wikiFragment || ''}`;
-      }
-      if (url !== document.URL) {
-        if (this.isVerbose()) console.info(
-          "Assigning new location: "
-          + url
-        );
-        window.location.assign(url);
-      }
-    } else if ($tw.utils.getIpfsProtocol() === ipfsKeyword && cid !== added) {
-      const url = gatewayProtocol
-        + "//"
-        + gatewayHost
-        + next;
-      if (this.isVerbose()) console.info(
-        "Assigning new location: "
-        + url
-      );
-      window.location.assign(url);
+      window.location.assign(nextWiki);
     }
 
   } catch (error) {

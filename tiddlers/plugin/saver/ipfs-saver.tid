@@ -5,7 +5,17 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 \define lingo-base() $:/language/ControlPanel/Saving/IpfsService/
 \define service-name() Ipfs
 
+''<<lingo Priority>>''
+
+<$select tiddler="$:/ipfs/saver/priority/default" class="tc-edit-texteditor">
+<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/priority]!has[draft.of]]">
+  <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
+</$list>
+</$select>
+
 <<lingo Description>>
+
+''<<lingo Global>>''
 
 <table>
 <tbody>
@@ -20,56 +30,60 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 </tbody>
 </table>
 
-<<lingo Policy>>
+''<<lingo Policy>>''
+
 <$radio tiddler="$:/ipfs/saver/policy" value="default"><<lingo Policy/Default/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/policy" value="window"><<lingo Policy/Window/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/policy" value="http"><<lingo Policy/HTTP/Description>></$radio>
 
-<<lingo Protocol>>
+''<<lingo Protocol>>''
+
 <$radio tiddler="$:/ipfs/saver/protocol" value="ens"><<lingo Protocol/Ens/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/protocol" value="ipfs"><<lingo Protocol/Ipfs/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/protocol" value="ipns"><<lingo Protocol/Ipns/Description>></$radio>
 
+''<<lingo Url>>''
+
 <table>
 <tbody>
 <tr>
-<td width="20%"><<lingo Priority>></td>
-<td width="75%">
-  <$select tiddler="$:/ipfs/saver/priority/default" class="tc-edit-texteditor">
-  <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/priority]!has[draft.of]]">
-    <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
-  </$list>
-  </$select>
-</td>
-<td width="5%"></td>
-</tr>
-<tr>
 <td width="20%"><<lingo ApiUrl>></td>
-<td width="75%">
+<td width="80%">
   <$select tiddler="$:/ipfs/saver/api/default" class="tc-edit-texteditor">
   <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]]">
     <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
   </$list>
   </$select>
 </td>
-<td width="5%"></td>
 </tr>
 <tr>
 <td width="20%"><<lingo GatewayUrl>></td>
-<td width="75%">
+<td width="80%">
   <$select tiddler="$:/ipfs/saver/gateway/default" class="tc-edit-texteditor">
   <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]]">
     <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
   </$list>
   </$select>
 </td>
-<td width="5%"></td>
 </tr>
+</tbody>
+</table>
+
+''<<lingo Ens>>''
+
+<table>
+<tbody>
 <tr>
 <td width="20%"><<lingo EnsDomain>></td>
-<td width="75%"><$edit-text tiddler="$:/ipfs/saver/ens/domain" class="tc-edit-texteditor" default="" tag="input"/></td>
-<td width="5%"></td>
+<td width="80%"><$edit-text tiddler="$:/ipfs/saver/ens/domain" class="tc-edit-texteditor" default="" tag="input"/></td>
 </tr>
+</tbody>
+</table>
+
+''<<lingo Ipns>>''
+
+<table>
+<tbody>
 <tr>
 <td width="20%"><<lingo IpnsName>></td>
 <td width="75%"><$edit-text tiddler="$:/ipfs/saver/ipns/name" class="tc-edit-texteditor" default="" tag="input"/></td>
@@ -94,6 +108,20 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
     </$list>
     <$list filter="[<tv-config-toolbar-text>match[yes]]">
       <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpnsRemove/Caption}}/></span>
+    </$list>
+  </$button>
+</td>
+</tr>
+<tr>
+<td width="20%"><<lingo Resolved>></td>
+<td id="resolveIpnsKey" width="75%"></td>
+<td width="5%">
+  <$button message="tm-resolve-ipns-key" tooltip={{$:/language/Buttons/IpfsResolve/Hint}} aria-label={{$:/language/Buttons/IpfsResolve/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
+    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
+    {{$:/core/images/refresh-button}}
+    </$list>
+    <$list filter="[<tv-config-toolbar-text>match[yes]]">
+      <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsResolve/Caption}}/></span>
     </$list>
   </$button>
 </td>
