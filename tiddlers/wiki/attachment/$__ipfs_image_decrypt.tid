@@ -1,6 +1,6 @@
 _canonical_uri: https://gateway.ipfs.io/ipfs/bafybeig5ql2dln2pv5jbnh4wxvnpgleb2c5y32hkibewvovzlsnyfd7tbm
 created: 20191015101027725
 modified: 20191127101050380
-tags: $:/isAttachment $:/isIpfs
+tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs
 title: $:/ipfs/image/decrypt
 type: image/png

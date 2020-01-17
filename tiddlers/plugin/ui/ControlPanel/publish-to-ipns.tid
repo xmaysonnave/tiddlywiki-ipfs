@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/publish-to-ipns
-tags: $:/tags/PageControls
+tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/excise}} {{$:/language/Buttons/PublishToIpns/Caption}}
 description: {{$:/language/Buttons/PublishToIpns/Hint}}
 

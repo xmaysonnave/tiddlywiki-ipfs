@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-wiki.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: wikimethod
 
 wikimethod

@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/ipfs/tiddler/export
-tags: $:/tags/ViewToolbar
+tags: $:/ipfs/core $:/tags/ViewToolbar
 caption: {{$:/core/images/link}} {{$:/language/Buttons/ExportTiddlerToIpfs/Caption}}
 description: {{$:/language/Buttons/ExportTiddlerToIpfs/Hint}}
 

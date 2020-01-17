@@ -1,5 +1,5 @@
 title: $:/core/ui/SideBar/Tools
-tags: $:/tags/SideBar
+tags: $:/ipfs/core $:/tags/SideBar
 caption: {{$:/language/SideBar/Tools/Caption}}
 
 \define lingo-base() $:/language/ControlPanel/

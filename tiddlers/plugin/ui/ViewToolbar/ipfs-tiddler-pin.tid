@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/ipfs/tiddler/pin
-tags: $:/tags/ViewToolbar
+tags: $:/ipfs/core $:/tags/ViewToolbar
 caption: {{$:/core/images/chevron-up}} {{$:/language/Buttons/IpfsTiddlerPin/Caption}}
 description: {{$:/language/Buttons/IpfsTiddlerPin/Hint}}
 

@@ -1,5 +1,5 @@
 title: Action
-tags: Documentation
+tags: $:/ipfs/documentation Documentation
 type: text/vnd.tiddlywiki
 
 <<locator-view baseTitle:"Action" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

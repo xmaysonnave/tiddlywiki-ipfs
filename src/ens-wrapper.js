@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ens-wrapper.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: library
 
 EnsWrapper

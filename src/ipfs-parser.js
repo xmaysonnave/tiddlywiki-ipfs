@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-parser.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: utils
 
 The saver handler tracks changes to the store and handles saving the entire wiki via saver modules.

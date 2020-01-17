@@ -4,6 +4,6 @@ modified: 20191210044634920
 source: https://www.opengraphicdesign.com
 license: https://www.opengraphicdesign.com/terms-of-use/
 password: blue
-tags: $:/isAttachment $:/isIpfs $:/isEncrypted
+tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs $:/isEncrypted
 title: IPFS - Encrypted - Fun Dingbats
 type: image/svg+xml

@@ -1,5 +1,5 @@
 title: Pin TiddlyWiki to IPFS
-tags: Page
+tags: $:/ipfs/documentation Page
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Pin ~TiddlyWiki to IPFS</h2>

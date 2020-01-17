@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-version.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: macro
 
 \*/

@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/mobile-console
-tags: $:/tags/PageControls
+tags: $:/ipfs/core  $:/tags/PageControls
 caption: {{$:/core/images/preview-open}} {{$:/language/Buttons/MobileConsole/Caption}}
 description: {{$:/language/Buttons/MobileConsole/Hint}}
 

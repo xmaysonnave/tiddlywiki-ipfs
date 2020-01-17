@@ -1,5 +1,5 @@
 title: $:/config/PageControlButtons/Visibility/$:/
-tags: [[Hidden Settings]]
+tags: bluelightav.eth
 
 core/ui/Buttons/home: show
 core/ui/Buttons/more-page-actions: show

@@ -1,5 +1,5 @@
 title: $:/core/ui/ControlPanel/Saving/Ipfs
-tags: $:/tags/ControlPanel/Saving
+tags: $:/ipfs/core $:/tags/ControlPanel/Saving
 caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 \define lingo-base() $:/language/ControlPanel/Saving/IpfsService/
@@ -86,8 +86,19 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tbody>
 <tr>
 <td width="20%"><<lingo IpnsName>></td>
-<td width="75%"><$edit-text tiddler="$:/ipfs/saver/ipns/name" class="tc-edit-texteditor" default="" tag="input"/></td>
-<td width="5%">
+<td width="80%"><$edit-text tiddler="$:/ipfs/saver/ipns/name" class="tc-edit-texteditor" default="" tag="input"/></td>
+</tr>
+<tr>
+<td width="20%"><<lingo IpnsKey>></td>
+<td width="80%"><$text text={{$:/ipfs/saver/ipns/key}} class="tc-edit-texteditor"/></td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:40%;margin-left:30%;margin-right:30%">
+<tbody>
+<tr>
+<td width="10%">
   <$button message="tm-generate-ipns-key" tooltip={{$:/language/Buttons/IpnsGenerate/Hint}} aria-label={{$:/language/Buttons/IpnsGenerate/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
     <$list filter="[<tv-config-toolbar-icons>match[yes]]">
     {{$:/core/images/new-here-button}}
@@ -97,11 +108,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
     </$list>
   </$button>
 </td>
-</tr>
-<tr>
-<td width="20%"><<lingo IpnsKey>></td>
-<td width="75%"><$edit-text tiddler="$:/ipfs/saver/ipns/key" class="tc-edit-texteditor" default="" tag="input"/></td>
-<td width="5%">
+<td width="10%">
   <$button message="tm-remove-ipns-key" tooltip={{$:/language/Buttons/IpnsRemove/Hint}} aria-label={{$:/language/Buttons/IpnsRemove/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
     <$list filter="[<tv-config-toolbar-icons>match[yes]]">
     {{$:/core/images/delete-button}}
@@ -111,17 +118,23 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
     </$list>
   </$button>
 </td>
-</tr>
-<tr>
-<td width="20%"><<lingo Resolved>></td>
-<td id="resolveIpnsKey" width="75%"></td>
-<td width="5%">
+<td width="10%">
   <$button message="tm-resolve-ipns-key" tooltip={{$:/language/Buttons/IpfsResolve/Hint}} aria-label={{$:/language/Buttons/IpfsResolve/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
     <$list filter="[<tv-config-toolbar-icons>match[yes]]">
     {{$:/core/images/refresh-button}}
     </$list>
     <$list filter="[<tv-config-toolbar-text>match[yes]]">
       <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsResolve/Caption}}/></span>
+    </$list>
+  </$button>
+</td>
+<td width="10%">
+  <$button message="tm-resolve-ipns-key-and-open" tooltip={{$:/language/Buttons/IpfsResolveAndOpen/Hint}} aria-label={{$:/language/Buttons/IpfsResolveAndOpen/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
+    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
+    {{$:/core/images/globe}}
+    </$list>
+    <$list filter="[<tv-config-toolbar-text>match[yes]]">
+      <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsResolveAndOpen/Caption}}/></span>
     </$list>
   </$button>
 </td>

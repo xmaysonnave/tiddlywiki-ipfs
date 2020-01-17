@@ -1,4 +1,5 @@
 title: $:/core/templates/tiddlywiki5.html
+tags: bluelightav.eth
 
 <$set name="saveTiddlerAndShadowsFilter" filter="[subfilter<saveTiddlerFilter>] [subfilter<saveTiddlerFilter>plugintiddlers[]]">
 `<!doctype html>

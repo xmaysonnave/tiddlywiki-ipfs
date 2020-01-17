@@ -1,6 +1,6 @@
 _canonical_uri: https://gateway.ipfs.io/ipfs/bafkreibgef76lbrod3mwkzmq3eyenleaowhxamgv57t5wg23makcf3jcmy
 created: 20191217065050534
 modified: 20191217065100279
-tags: $:/isAttachment $:/isIpfs
+tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs
 title: $:/ipfs/image/imported/tiddler
 type: image/png

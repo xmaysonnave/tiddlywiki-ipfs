@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-startup.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: startup
 
 Startup initialisation
@@ -15,8 +16,8 @@ Startup initialisation
 
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 
-const IpfsSaverHandler = require("./ipfs-saver-handler.js").IpfsSaverHandler;
-const IpfsActions = require("./ipfs-actions.js").IpfsActions;
+const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
+const IpfsActions = require("$:/plugins/ipfs/ipfs-actions.js").IpfsActions;
 
 exports.name = "ipfs-startup";
 exports.platforms = ["browser"];

@@ -1,4 +1,5 @@
 title: $:/language/Buttons/
+tags: $:/ipfs/core
 
 ExportTiddlerToIpfs/Caption: export to IPFS
 ExportTiddlerToIpfs/Hint: Export this tiddler to IPFS
@@ -25,3 +26,5 @@ IpnsRemove/Caption: remove
 IpnsRemove/Hint: Remove IPNS key
 IpfsResolve/Caption: resolve
 IpfsResolve/Hint: Resolve IPNS key
+IpfsResolveAndOpen/Caption: resolve and open
+IpfsResolveAndOpen/Hint: Resolve IPNS key and Open

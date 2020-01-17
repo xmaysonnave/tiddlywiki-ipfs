@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/publish-to-ens
-tags: $:/tags/PageControls
+tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/globe}} {{$:/language/Buttons/PublishToEns/Caption}}
 description: {{$:/language/Buttons/PublishToEns/Hint}}
 

@@ -1,5 +1,5 @@
 title: Unpin TiddlyWiki from IPFS
-tags: Page
+tags: $:/ipfs/documentation Page
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Unpin ~TiddlyWiki from IPFS</h2>

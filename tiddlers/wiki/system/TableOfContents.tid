@@ -1,8 +1,8 @@
 title: TableOfContents
-tags: $:/tags/SideBar
+tags: bluelightav.eth $:/tags/SideBar
 type: text/vnd.tiddlywiki
 caption: {{$:/language/SideBar/TableOfContents/Caption}}
-list: Features Languages Editions Reference Community About
+list: Features Reference Community About IPFS IPNS ENS
 list-after: $:/core/ui/SideBar/Open
 
 <div class="tc-table-of-contents">

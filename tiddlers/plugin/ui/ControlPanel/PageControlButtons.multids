@@ -1,4 +1,5 @@
 title: $:/config/PageControlButtons/Visibility/$:/
+tags: $:/ipfs/core
 
 core/ui/Buttons/encryption: show
 core/ui/Buttons/home: show

@@ -4,6 +4,6 @@ modified: 20190917044634920
 source: https://onemorelibrary.com/index.php/en/books/literature/book/french-literature-135/the-little-prince-2785
 license: Creative Commons CC BY-NC-ND 4.0
 password: blue
-tags: $:/isAttachment $:/isIpfs $:/isEncrypted
+tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs $:/isEncrypted
 title: IPFS - Encrypted - The Little Prince
 type: application/pdf

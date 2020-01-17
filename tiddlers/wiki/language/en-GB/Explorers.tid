@@ -1,5 +1,5 @@
 title: Explorers
-tags: Documentation
+tags: $:/ipfs/documentation Documentation
 type: text/vnd.tiddlywiki
 
 <<locator-view baseTitle:"Explorers" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

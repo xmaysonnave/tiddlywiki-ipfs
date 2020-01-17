@@ -1,5 +1,5 @@
 title: Attachment
-tags: Explorer
+tags: $:/ipfs/core Explorer
 type: text/vnd.tiddlywiki
 
 <<locator-view baseTitle:"$:/isAttachment" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>

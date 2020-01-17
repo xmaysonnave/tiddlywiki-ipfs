@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-wrapper.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: library
 
 IpfsWrapper
@@ -149,7 +150,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
       };
     }
     if (this.isVerbose()) console.info(
-      "Successfully resolved IPNS key: "
+      "Successfully fetched IPNS key: "
       + ipnsKey
     );
   } else {
@@ -180,12 +181,11 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
   }
 
   // Resolve IPNS key if any
-  // ipfs-http-client generates errors when an IPNS key is unassigned
+  // ipfs-http-client generates different kind of errors when an IPNS key is unassigned
   var { error, resolved } = await this.resolveIpnsKey(ipfs, ipnsKey);
   if (error !== null) {
-    if (this.isVerbose()) console.warn(error.message);
     return {
-      error: null,
+      error: error,
       ipnsName: ipnsName,
       ipnsKey: ipnsKey,
       resolved: null
@@ -341,7 +341,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, id) {
       };
     }
     if (this.isVerbose()) console.info(
-      "Successfully resolved: "
+      "Successfully resolved IPNS key: "
       + resolved
     );
     return {

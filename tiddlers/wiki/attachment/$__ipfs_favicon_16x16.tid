@@ -1,6 +1,6 @@
 _canonical_uri: https://gateway.ipfs.io/ipfs/bafkreie3w4fbd4u2u2hligtimgcgqfmzdqr4gfyyu7rxtmodjc5gqjsutq
 created: 20191220080313707
 modified: 20191220080313707
-tags: $:/isAttachment $:/isIpfs
+tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs
 title: $:/ipfs/favicon/16x16
 type: image/png

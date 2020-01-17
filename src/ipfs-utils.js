@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-utils.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: utils
 
 utils
@@ -163,8 +164,9 @@ exports.updateTiddler = function(tiddler, addTags, removeTags, content, uri) {
   // Remove Tags
   for (var i = 0; i < removeTags.length; i++) {
     const tag = removeTags[i];
-    if (addition.tags.indexOf(tag) !== -1) {
-      $tw.utils.removeArrayEntries(addition.tags, tag);
+    const index = addition.tags.indexOf(tag);
+    if (index !== -1) {
+      addition.tags.splice(index, 1);
     }
   }
   // Update tiddler

@@ -1,4 +1,5 @@
 title: $:/config/ViewToolbarButtons/Visibility/$:/
+tags: $:/ipfs/core
 
 core/ui/Buttons/ipfs/export: show
 core/ui/Buttons/ipfs/refresh: hide

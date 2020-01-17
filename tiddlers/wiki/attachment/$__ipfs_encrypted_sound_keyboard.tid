@@ -4,6 +4,6 @@ modified: 20191205104119842
 source: https://bigsoundbank.com/detail-0229-computer-keyboard.html
 license: https://creativecommons.org/publicdomain/zero/1.0/deed.en
 password: blue
-tags: $:/isAttachment $:/isIpfs $:/isEncrypted
+tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs $:/isEncrypted
 title: IPFS - Encrypted - Keyboard
 type: audio/ogg

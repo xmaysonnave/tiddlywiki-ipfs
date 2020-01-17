@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ens-library.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: library
 
 EnsLibrary

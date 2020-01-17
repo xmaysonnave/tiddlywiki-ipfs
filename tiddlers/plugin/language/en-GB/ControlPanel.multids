@@ -1,10 +1,11 @@
 title: $:/language/ControlPanel/
+tags: $:/ipfs/core
 
 Saving/IpfsService/Caption: IPFS Saver
 Saving/IpfsService/Description: These settings are only used when saving to IPFS.
 Saving/IpfsService/Priority: Saver Priority
 Saving/IpfsService/Verbose: Saver Verbose
-Saving/IpfsService/Url: URL
+Saving/IpfsService/Url: IPFS Server URL
 Saving/IpfsService/ApiUrl: API
 Saving/IpfsService/GatewayUrl: Gateway
 Saving/IpfsService/Ens: ENS
