@@ -152,11 +152,12 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
       // Resolve current IPNS
       if (ipfsProtocol === ipnsKeyword) {
+        if (this.isVerbose()) console.info("Processing current IPNS...");
         var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
         if (error != null)  {
           // Log and continue
           if (ipnsName !== null && ipnsKey !== null) {
-            console.warn(error.message);
+            console.warn(error);
             console.warn("Unable to resolve current IPNS key...");
           } else {
             console.warn(error);
@@ -165,10 +166,11 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           if (ipnsName === null && ipnsKey === null && $tw.utils.getIpfsProtocol() === ipnsKeyword) {
             ipnsName = $tw.utils.getIpfsIpnsName();
             ipnsKey = $tw.utils.getIpfsIpnsKey();
+            if (this.isVerbose()) console.info("Processing default IPNS...");
             var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
             if (error != null) {
               if (ipnsName !== null && ipnsKey !== null) {
-                console.warn(error.message);
+                console.warn(error);
                 console.warn("Unable to resolve default IPNS key...");
               } else {
                 // Unable to resolve current and default
@@ -183,10 +185,11 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       } else {
         ipnsName = $tw.utils.getIpfsIpnsName();
         ipnsKey = $tw.utils.getIpfsIpnsKey();
+        if (this.isVerbose()) console.info("Processing default IPNS...");
         var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
         if (error != null) {
           if (ipnsName !== null && ipnsKey !== null) {
-            console.warn(error.message);
+            console.warn(error);
             console.warn("Unable to resolve default IPNS key...");
           } else {
             // Unable to resolve current and default
@@ -295,17 +298,20 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, added);
       if (error != null)  {
         // Log and continue
-        console.warn(error.message);
+        console.warn(error);
+        console.warn("Unable to publish IPNS name...");
         // Remove from unpin
-        const index = this.toBeUnpinned.indexOf(ipnsContent);
-        if (index !== -1) {
-          this.toBeUnpinned.splice(index, 1);
-          if (this.isVerbose()) console.info(
-            "Discard request to unpin: /"
-            + ipfsKeyword
-            + "/"
-            + ipnsContent
-          );
+        if (ipfsProtocol === ipnsKeyword) {
+          const index = this.toBeUnpinned.indexOf(ipnsContent);
+          if (index !== -1) {
+            this.toBeUnpinned.splice(index, 1);
+            if (this.isVerbose()) console.info(
+              "Discard request to unpin: /"
+              + ipfsKeyword
+              + "/"
+              + ipnsContent
+            );
+          }
         }
       } else {
         // IPNS next
@@ -327,7 +333,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       var { error } = await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
       if (error != null)  {
         // Log and continue
-        console.warn(error.message);
+        console.warn(error);
+        console.warn("Unable to publish IPFS identifier to ENS...");
         // Remove from unpin
         const index = this.toBeUnpinned.indexOf(ensContent);
         if (index !== -1) {
@@ -482,7 +489,7 @@ IpfsSaver.prototype.handleSaveTiddler = async function(self, tiddler) {
             content = await $tw.utils.decryptUint8ArrayToUtf8(content);
           }
         } catch (error) {
-          console.warn(error.message);
+          console.warn(error);
           return oldTiddler;
         }
       } else {
@@ -684,11 +691,10 @@ IpfsSaver.prototype.handleIpfsPin = async function(self, event) {
     self.toBeUnpinned.splice(index, 1);
   }
 
-  $tw.utils.messageDialog(
-    "Successfully pinned:"
-    + "\nprotocol:\n"
+  if (self.isVerbose()) console.info(
+    "Successfully pinned: /"
     + ipfsKeyword
-    + "\nidentifier:\n"
+    + "/"
     + cid
   );
 
@@ -808,11 +814,10 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(self, event) {
     self.toBeUnpinned.splice(index, 1);
   }
 
-  $tw.utils.messageDialog(
-    "Successfully unpinned:"
-    + "\nprotocol:\n"
+  if (self.isVerbose()) console.info(
+    "Successfully unpinned: /"
     + ipfsKeyword
-    + "\nidentifier:\n"
+    + "/"
     + cid
   );
 

@@ -37,7 +37,7 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
       priority = -1;
     }
   }

@@ -95,9 +95,19 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 </tbody>
 </table>
 
-<table style="width:40%;margin-left:30%;margin-right:30%">
+<table style="width:50%;margin-left:25%;margin-right:25%">
 <tbody>
 <tr>
+<td width="10%">
+  <$button message="tm-rename-ipns-name" tooltip={{$:/language/Buttons/IpnsRename/Hint}} aria-label={{$:/language/Buttons/IpnsRename/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
+    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
+    {{$:/core/images/mono-line}}
+    </$list>
+    <$list filter="[<tv-config-toolbar-text>match[yes]]">
+      <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpnsRename/Caption}}/></span>
+    </$list>
+  </$button>
+</td>
 <td width="10%">
   <$button message="tm-generate-ipns-key" tooltip={{$:/language/Buttons/IpnsGenerate/Hint}} aria-label={{$:/language/Buttons/IpnsGenerate/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
     <$list filter="[<tv-config-toolbar-icons>match[yes]]">
@@ -119,12 +129,12 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
   </$button>
 </td>
 <td width="10%">
-  <$button message="tm-resolve-ipns-key" tooltip={{$:/language/Buttons/IpfsResolve/Hint}} aria-label={{$:/language/Buttons/IpfsResolve/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
+  <$button message="tm-fetch-ipns-key" tooltip={{$:/language/Buttons/IpfsFetch/Hint}} aria-label={{$:/language/Buttons/IpfsFetch/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
     <$list filter="[<tv-config-toolbar-icons>match[yes]]">
     {{$:/core/images/refresh-button}}
     </$list>
     <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsResolve/Caption}}/></span>
+      <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsFetch/Caption}}/></span>
     </$list>
   </$button>
 </td>
