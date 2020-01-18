@@ -98,7 +98,7 @@ EnsLibrary.prototype.encodeContenthash = function(content) {
       if (text.length >= 4) {
         const cid = new CID(text);
         if (cid.version !== 0) {
-            throw new Error("ENS Content hash should be Base58 (CidV0): " + text);
+            throw new Error("ENS domain content should be Base58 (CidV0): " + text);
         }
         encoded = "0x" + contentHash.fromIpfs(text);
       }
@@ -193,7 +193,7 @@ EnsLibrary.prototype.getRegistryAddress = async function(web3Provider) {
   try {
     registry = this.registries[network.chainId];
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     throw new Error("Unsupported Ethereum network: " + network.chainid);
   }
   if (this.isVerbose()) console.info(registry.network);
@@ -213,7 +213,7 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
     throw new Error("Undefined ENS registry address...");
   }
   if (node == undefined || node == null || node.trim() === "") {
-    throw new Error("Undefined ENS domain hash...");
+    throw new Error("Undefined ENS domain resolver...");
   }
   // Low level call
   const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
@@ -228,7 +228,7 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
     const decoded = window.ethers.utils.defaultAbiCoder.decode(["address"], result);
     return decoded[0];
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
   // Return
   return null;
@@ -261,7 +261,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
       return false;
     }
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     return false;
   }
   // false when interfaceID is 0xffffffff
@@ -278,7 +278,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
       return true;
     }
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
   // do not conform to spec
   return false;
@@ -311,7 +311,7 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
       return false;
     }
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     return false;
   }
   // return
@@ -339,27 +339,27 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
 
   // Check
   if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
-    throw new Error("Undefined ENS resolver...");
+    throw new Error("Undefined ENS domain resolver...");
   }
   if (this.isVerbose()) console.info(
-    "ENS resolver address: "
+    "ENS domain resolver: "
     + resolverAddress
   );
 
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
   if (eip165 == false) {
-    throw new Error("ENS resolver do not conform to EIP165...");
+    throw new Error("ENS domain resolver do not conform to EIP165...");
   }
 
   // Check if resolver is EIP1577
   const eip1577 = await this.checkEip1577(web3Provider, account, resolverAddress);
   if (eip1577 == false) {
-    throw new Error("ENS resolver do not conform to EIP1577...");
+    throw new Error("ENS domain resolver do not conform to EIP1577...");
   }
 
   // retrieve content hash
-  if (this.isVerbose()) console.info("Processing ENS resolver get content...");
+  if (this.isVerbose()) console.info("Processing ENS domain content...");
   const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
   const iface = new window.ethers.utils.Interface(abi)
   const data = iface.functions.contenthash.encode([domainHash]);
@@ -386,7 +386,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
       protocol: protocol
     };
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
   return {
     decoded: null,
@@ -445,10 +445,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
 
   // Set Contenthash
   try {
-    if (this.isVerbose()) console.info(
-      "Processing ENS domain content: /ipfs/"
-      + cid
-    );
+    if (this.isVerbose()) console.info("Processing ENS domain content...");
     const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
     const iface = new window.ethers.utils.Interface(abi)
     const data = iface.functions.setContenthash.encode([domainHash, encoded]);
@@ -460,7 +457,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
     );
     // Wait for transaction completion
     await tx.wait();
-    if (this.isVerbose()) console.log("Processed ENS set content hash...");
+    if (this.isVerbose()) console.log("Processed ENS domain content...");
   } catch (error) {
     if (error !== undefined && error !== null) {
       if (error.message !== undefined) {
@@ -469,7 +466,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
         throw new Error(error);
       }
     }
-    throw new Error("Unable to set ENS domain content hash...");
+    throw new Error("Unable to set ENS domain content...");
   }
 
   return;
