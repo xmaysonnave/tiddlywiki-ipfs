@@ -31,7 +31,7 @@ IpfsWrapper.prototype.isVerbose = function() {
   }
 }
 
-IpfsWrapper.prototype.getIpfsClient = async function() {
+IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
   // IPFS client
   try {
     var policy = { ipfs: null, provider: null };
@@ -39,9 +39,9 @@ IpfsWrapper.prototype.getIpfsClient = async function() {
      if (ipfsPolicy === "window") {
       policy = await this.ipfsLibrary.getWindowIpfs();
     } else if (ipfsPolicy === "http") {
-      policy = await this.ipfsLibrary.getHttpIpfs();
+      policy = await this.ipfsLibrary.getHttpIpfs(apiUrl);
     } else  {
-      policy  = await this.ipfsLibrary.getDefaultIpfs();
+      policy  = await this.ipfsLibrary.getDefaultIpfs(apiUrl);
     }
     // Return if undefined
     if (policy.ipfs == null || policy.provider == null)  {
@@ -105,7 +105,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
   // Resolve IPNS name and IPNS key
   if (ipnsName !== null && ipnsKey !== null) {
     if (this.isVerbose()) console.info(
-      "Resolve IPNS name: "
+      "Fetch IPNS name: "
       + ipnsName
       + " and IPNS key: "
       + ipnsKey
@@ -126,11 +126,11 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
       };
     }
     if (this.isVerbose()) console.info(
-      "Successfully resolved IPNS name and IPNS key..."
+      "Successfully fetched IPNS name and IPNS key..."
     );
   } else if (ipnsName !== null) {
     if (this.isVerbose()) console.info(
-      "Resolve IPNS name: "
+      "Fetch IPNS name: "
       + ipnsName
     );
     var found = false;
@@ -155,7 +155,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
     );
   } else {
     if (this.isVerbose()) console.info(
-      "Resolve IPNS key: "
+      "Fetch IPNS key: "
       + ipnsKey
     );
     var found = false;
@@ -175,7 +175,7 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
       };
     }
     if (this.isVerbose()) console.info(
-      "Successfully resolved IPNS name: "
+      "Successfully fetched IPNS name: "
       + ipnsName
     );
   }
@@ -251,6 +251,36 @@ IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, name) {
     return {
       error: error,
       key: null
+    };
+  }
+}
+
+IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
+  try {
+    const { id, was, now } = await this.ipfsLibrary.renameKey(ipfs, oldName, newName);
+    if (now == undefined || now == null)  {
+      return {
+        error: new Error("Failed to rename IPNS name..."),
+        key: null,
+        name: null
+      };
+    }
+    if (this.isVerbose()) console.info(
+      "Successfully renamed IPNS name: "
+      + was
+      + " with "
+      + now
+    );
+    return {
+      error: null,
+      key: id,
+      name: now
+    };
+  } catch (error) {
+    return {
+      error: error,
+      key: null,
+      name: null
     };
   }
 }
