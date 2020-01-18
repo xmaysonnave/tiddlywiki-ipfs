@@ -146,11 +146,13 @@ IpfsLibrary.prototype.isCid = function(cid) {
 }
 
 // Default
-IpfsLibrary.prototype.getDefaultIpfs = async function() {
+IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
   // API URL
-  const apiUrl = $tw.utils.getIpfsApiUrl();
+  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
+    apiUrl = $tw.utils.getIpfsApiUrl();
+  }
   // Check
-  if (apiUrl == null) {
+  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
     throw new Error("Undefined IPFS API URL...");
   }
   // Load IpfsHttpClient
@@ -171,7 +173,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function() {
       provider: provider + ", " + apiUrl
     };
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     throw new Error("Unable to connect. Check IPFS Companion and your API URL...");
   }
 }
@@ -191,17 +193,19 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
       provider: provider
     };
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     throw new Error("Unable to connect. Check IPFS Companion...");
   }
 }
 
 // ipfs-http-client
-IpfsLibrary.prototype.getHttpIpfs = async function() {
+IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
   // API URL
-  const apiUrl = $tw.utils.getIpfsApiUrl();
+  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
+    apiUrl = $tw.utils.getIpfsApiUrl();
+  }
   // Check
-  if (apiUrl == null) {
+  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
     throw new Error("Undefined IPFS API URL...");
   }
   // Load IpfsHttpClient
@@ -221,7 +225,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function() {
       provider: provider + ", " + apiUrl
     };
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     throw new Error("Unable to connect. Check your API URL...");
   }
 }
@@ -443,6 +447,57 @@ IpfsLibrary.prototype.rmKey = async function(client, name) {
     return null;
   }
   throw new Error("Undefined IPNS key rm...");
+}
+
+IpfsLibrary.prototype.renameKey = async function(client, oldName, newName) {
+  if (client == undefined || client == null) {
+    throw new Error("Undefined IPFS provider...");
+  }
+  if (oldName == undefined || oldName == null || oldName.trim() === "") {
+    throw new Error("Undefined IPNS old name...");
+  }
+  if (newName == undefined || newName == null || newName.trim() === "") {
+    throw new Error("Undefined IPNS nem name...");
+  }
+  // Window IPFS policy
+  if (client.enable) {
+    client = await client.enable({commands: ["key"]});
+  }
+  if (client !== undefined && client.key !== undefined && client.key.rename !== undefined) {
+    if (this.isVerbose()) console.info("Processing IPNS key rename...");
+    const key = await client.key.rename(oldName.trim(), newName.trim());
+    if (key !== undefined) {
+      var id = null;
+      if (key.id !== undefined && key.id !== null) {
+        id = key.id;
+      }
+      var was = null;
+      if (key.was !== undefined && key.was !== null) {
+        was = key.was;
+      }
+      var now = null;
+      if (key.now !== undefined && key.now !== null) {
+        now = key.now;
+      }
+      var overwrite = null;
+      if (key.overwrite !== undefined && key.overwrite !== null) {
+        overwrite = key.overwrite;
+      }
+      return {
+        id: id,
+        was: was,
+        now: now,
+        overwrite: overwrite
+      };
+    }
+    return {
+      id: null,
+      was: null,
+      now: null,
+      overwrite: null
+    };
+  }
+  throw new Error("Undefined IPNS key rename...");
 }
 
 exports.IpfsLibrary = IpfsLibrary;
