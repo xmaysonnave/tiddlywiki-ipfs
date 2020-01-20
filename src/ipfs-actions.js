@@ -29,6 +29,7 @@ var IpfsActions = function() {
   this.ipfsLibrary = new IpfsLibrary();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
+  this.logger = new $tw.utils.Logger("ipfs");
 };
 
 IpfsActions.prototype.isVerbose = function() {
@@ -51,17 +52,17 @@ IpfsActions.prototype.init = function() {
   $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
     return self.handleExportToIpfs(event);
   });
-  $tw.rootWidget.addEventListener("tm-rename-ipns-name", function(event) {
-    return self.handleRenameIpnsName(event);
+  $tw.rootWidget.addEventListener("tm-fetch-ipns-key", function(event) {
+    return self.handleFetchIpnsKey(event);
   });
   $tw.rootWidget.addEventListener("tm-generate-ipns-key", function(event) {
     return self.handleGenerateIpnsKey(event);
   });
+  $tw.rootWidget.addEventListener("tm-rename-ipns-name", function(event) {
+    return self.handleRenameIpnsName(event);
+  });
   $tw.rootWidget.addEventListener("tm-remove-ipns-key", function(event) {
     return self.handleRemoveIpnsKey(event);
-  });
-  $tw.rootWidget.addEventListener("tm-fetch-ipns-key", function(event) {
-    return self.handleFetchIpnsKey(event);
   });
   $tw.rootWidget.addEventListener("tm-resolve-ipns-key-and-open", function(event) {
     return self.handleResolveIpnsKeyAndOpen(event);
@@ -102,7 +103,7 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
   if (priority !== undefined && priority.modified) {
     // Update IPFS saver
     $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-    if (this.isVerbose()) console.info(
+    if (this.isVerbose()) this.logger.info(
       "Updated IPFS Saver priority: "
       + $tw.utils.getIpfsPriority()
     );
@@ -111,18 +112,18 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
   const verbose = changes["$:/ipfs/saver/verbose"];
   if (verbose !== undefined && verbose.modified) {
     if (this.isVerbose()) {
-      console.info("IPFS with TiddlyWiki is verbose...");
+      this.logger.info("IPFS with TiddlyWiki is verbose...");
     } else {
-      console.info("IPFS with TiddlyWiki is not verbose...");
+      this.logger.info("IPFS with TiddlyWiki is not verbose...");
     }
   }
   // process unpin
   const unpin = changes["$:/ipfs/saver/unpin"];
   if (unpin !== undefined && unpin.modified) {
     if ($tw.utils.getIpfsUnpin()) {
-      if (this.isVerbose()) console.info("IPFS with TiddlyWiki will unpin previous content...");
+      if (this.isVerbose()) this.logger.info("IPFS with TiddlyWiki will unpin previous content...");
     } else {
-      if (this.isVerbose()) console.info("IPFS with TiddlyWiki will not unpin previous content...");
+      if (this.isVerbose()) this.logger.info("IPFS with TiddlyWiki will not unpin previous content...");
     }
   }
   // process IPNS name
@@ -166,9 +167,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   // Do not process if _canonical_uri is set
   var uri = tiddler.getFieldString("_canonical_uri");
   if (uri !== undefined && uri !== null && uri.trim() !== "") {
-    const msg = "Nothing to export...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Nothing to export...");
     return false;
   }
 
@@ -176,9 +175,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   var type = tiddler.getFieldString("type");
   // Check
   if (type == undefined || type == null) {
-    var msg = "Unknown Tiddler Type...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown Tiddler Type...");
     return false;
   }
 
@@ -186,26 +183,20 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   const info = $tw.config.contentTypeInfo[type];
   // Check
   if (info == undefined || info == null)  {
-    var msg = "Unknown Content Type: " + type;
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown Content Type: " + type);
     return false;
   }
 
   // Check
   if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
-    const msg = "Exporting to IPFS is not supported...\nLook at the documentation...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Exporting to IPFS is not supported...\nLook at the documentation...");
     return false;
   }
 
   // Check
   const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
   if (gatewayUrl == null) {
-    const msg = "Undefined IPFS Gateway URL...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPFS Gateway URL...");
     return false;
   }
 
@@ -215,8 +206,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
@@ -240,7 +230,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
     );
   }
 
-  if (this.isVerbose()) console.log(
+  if (this.isVerbose()) this.logger.info(
     "Uploading attachment: "
     + content.length
     + " bytes"
@@ -264,23 +254,22 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
       }
     }
   } catch (error) {
-    console.error(error);
-    $tw.utils.messageDialog("Failed to encrypt content...");
+    this.logger.error(error.message);
+    this.logger.alert("Failed to encrypt content...");
     return false;
   };
 
   // Add
   var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Pin, if failure log and continue
   var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
   if (error != null)  {
-    console.warn(error);
+    this.logger.alert(error.message);
   }
 
   // Build _canonical_uri
@@ -320,7 +309,7 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
     uri
   );
 
-  if (this.isVerbose()) console.info(
+  if (this.isVerbose()) this.logger.info(
     "Successfully published Tiddler: "
     + title
     + " with IPFS identifier: /"
@@ -340,31 +329,26 @@ IpfsActions.prototype.handleRenameIpnsName = async function(event) {
 
   // Check
   if (ipnsName == null) {
-    const msg = "Undefined IPNS name....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPNS name....");
     return false;
   }
   if (this.ipnsName == null || this.ipnsName === ipnsName) {
-    const msg = "Nothing to rename....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Nothing to rename....");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Rename IPNS name
   var { error, key } = await this.ipfsWrapper.renameIpnsName(ipfs, this.ipnsName, ipnsName);
   if (error != null) {
-    console.error(error);
-    $tw.utils.messageDialog("Unable to rename IPNS name...");
+    this.logger.error(error.message);
+    this.logger.alert("Unable to rename IPNS name...");
     return false;
   }
 
@@ -394,25 +378,22 @@ IpfsActions.prototype.handleGenerateIpnsKey = async function(event) {
 
   // Check
   if (ipnsName == null) {
-    const msg = "Undefined IPNS name....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPNS name....");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Generate IPNS key
   var { error, key } = await this.ipfsWrapper.generateIpnsKey(ipfs, ipnsName);
   if (error != null) {
-    console.error(error);
-    $tw.utils.messageDialog("Unable to generate IPNS key...");
+    this.logger.error(error.message);
+    this.logger.alert("Unable to generate IPNS key...");
     return false;
   }
 
@@ -443,17 +424,14 @@ IpfsActions.prototype.handleRemoveIpnsKey = async function(event) {
 
   // Check
   if (ipnsName == null) {
-    const msg = "Undefined IPNS name....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPNS name....");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
@@ -462,18 +440,17 @@ IpfsActions.prototype.handleRemoveIpnsKey = async function(event) {
   if (error != null) {
     if (ipnsName !== null && ipnsKey !== null) {
       // Log, warn user and continue
-      console.warn(error);
-      console.warn("Unable to resolve IPNS key...");
+      this.logger.error(error.message);
+      this.logger.alert("Unable to resolve IPNS key...");
     } else {
-      console.error(error);
-      $tw.utils.messageDialog(error.message);
+      this.logger.alert(error.message);
       return false;
     }
   }
 
   // Unpin previous
   if ($tw.utils.getIpfsUnpin() && resolved != null) {
-    if (this.isVerbose()) console.info(
+    if (this.isVerbose()) this.logger.info(
       "Request to unpin: /"
       + ipfsKeyword
       + "/"
@@ -482,17 +459,15 @@ IpfsActions.prototype.handleRemoveIpnsKey = async function(event) {
     var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
     // Log and continue
     if (error != null)  {
-      console.warn(error);
+      this.logger.alert(error.message);
     }
   }
 
   // Remove IPNS key
   var { error } = await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName);
   if (error != null) {
-    const msg = "Unable to remove resolved IPNS key...";
-    console.error(error);
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.error(error.message);
+    this.logger.alert("Unable to remove resolved IPNS key...");
     return false;
   }
 
@@ -532,32 +507,22 @@ IpfsActions.prototype.handleFetchIpnsKey = async function(event) {
 
   // Check
   if (ipnsName == null) {
-    const msg = "Undefined IPNS name....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPNS name....");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
-  // Resolve CID
-  var { error, ipnsKey } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
+  // Fetch
+  var { error, ipnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
   if (error != null) {
-    if (ipnsName !== null && ipnsKey !== null) {
-      const msg = "Unable to resolve IPNS key...";
-      console.warn(error);
-      console.warn(msg);
-    } else {
-      console.error(error);
-      $tw.utils.messageDialog(error.message);
-      return false;
-    }
+    this.logger.alert(error.message);
+    return false;
   }
 
   // Update Tiddler
@@ -585,9 +550,7 @@ IpfsActions.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
 
   // Check
   if (ipnsName == null) {
-    const msg = "Undefined IPNS name....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPNS name....");
     return false;
   }
 
@@ -595,9 +558,7 @@ IpfsActions.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
   const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
   // Check
   if (gatewayUrl == null) {
-    const msg = "Undefined IPFS Gateway URL...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPFS Gateway URL...");
     return false;
   }
 
@@ -610,24 +571,15 @@ IpfsActions.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Resolve CID
   var { error, ipnsKey, ipnsName, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
   if (error != null) {
-    if (ipnsName !== null && ipnsKey !== null) {
-      const msg = "Unable to resolve IPNS key...";
-      console.error(error);
-      console.error(msg);
-      $tw.utils.messageDialog(msg);
-    } else {
-      console.error(error);
-      $tw.utils.messageDialog(error.message);
-      return false;
-    }
+    this.logger.alert(error.message);
+    return false;
   }
 
   // Update Tiddler
@@ -681,11 +633,11 @@ IpfsActions.prototype.handleMobileConsole = async function(tiddler) {
     if (window.eruda.get().config.get("transparency") === 0.95) {
       window.eruda.get().config.set("transparency", 1);
     }
-    if (this.isVerbose()) console.info("Mobile console has been loaded...");
+    if (this.isVerbose()) this.logger.info("Mobile console has been loaded...");
   } else {
     window.eruda.destroy();
     delete window.eruda;
-    if (this.isVerbose()) console.info("Mobile console has been unloaded...");
+    if (this.isVerbose()) this.logger.info("Mobile console has been unloaded...");
   }
 }
 
@@ -696,21 +648,15 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
 
   // Check
   if (protocol == undefined || protocol == null) {
-    const msg = "Unknown protocol...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown protocol...");
     return false;
   }
   if (protocol === fileProtocol) {
-    const msg = "Undefined IPFS wiki...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPFS wiki...");
     return false;
   }
   if (pathname == undefined || pathname == null) {
-    const msg = "Unknown pathname...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown pathname...");
     return false;
   }
 
@@ -719,39 +665,26 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
 
   // Check
   if (protocol == null) {
-    const msg = "Unknown IPFS protocol...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown IPFS protocol...");
     return false;
   }
   if (cid == null) {
-    const msg = "Unknown IPFS identifier...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown IPFS identifier...");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Resolve IPNS key if applicable
   if (protocol === ipnsKeyword) {
-    var { error, ipnsName, ipnsKey, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
+    var { error, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null) {
-      if (ipnsName !== null && ipnsKey !== null) {
-        const msg = "Unable to resolve current IPNS key...";
-        console.error(error);
-        console.error(msg);
-        $tw.utils.messageDialog(msg);
-      } else {
-        console.error(error);
-        $tw.utils.messageDialog(error.message);
-      }
+      this.logger.alert(error.message);
       return false;
     }
   }
@@ -760,13 +693,11 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
   var ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
-    const msg  ="Undefined ENS domain...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined ENS domain...");
     return false;
   }
 
-  if (this.isVerbose()) console.info(
+  if (this.isVerbose()) this.logger.info(
     "ENS domain: "
     + ensDomain
   );
@@ -774,38 +705,32 @@ IpfsActions.prototype.handlePublishToEns = async function(event) {
   // Retrieve a WEB3 provider
   var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Fetch ENS domain content
   var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
   // Nothing to publish
   if (decoded !== null && decoded === cid) {
-    const msg = "The current resolved ENS domain content is up to date...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("The current resolved ENS domain content is up to date...");
     return false;
   }
 
-  if (this.isVerbose()) console.info(
+  if (this.isVerbose()) this.logger.info(
     "Publishing ENS domain: "
     + ensDomain
   );
 
   var { error } = await this.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
   if (error != null)  {
-    const msg = "Unable to publish IPFS identifier to ENS...";
-    console.error(error);
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.error(error.message);
+    this.logger.alert("Unable to publish IPFS identifier to ENS...");
     return false;
   }
 
@@ -820,21 +745,15 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
 
   // Check
   if (protocol == undefined || protocol == null) {
-    const msg = "Unknown protocol...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown protocol...");
     return false;
   }
   if (protocol === fileProtocol) {
-    const msg = "Undefined IPFS identifier...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined IPFS identifier...");
     return false;
   }
   if (pathname == undefined || pathname == null) {
-    const msg = "Unknown pathname...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown pathname...");
     return false;
   }
 
@@ -843,23 +762,18 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
 
   // Check
   if (protocol == null) {
-    const msg = "Unknown IPFS protocol...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown IPFS protocol...");
     return false;
   }
   if (cid == null) {
-    const msg = "Unknown IPFS identifier...";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Unknown IPFS identifier...");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    console.error(error);
-    $tw.utils.messageDialog(error.message);
+    this.logger.alert(error.message);
     return false;
   }
 
@@ -869,76 +783,54 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
 
   // Check
   if (ipnsKey == null) {
-    const msg = "Undefined default IPNS key....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("Undefined default IPNS key....");
     return false;
   }
 
   if (protocol === ipnsKeyword) {
     // Check
     if (ipnsKey === cid) {
-      const msg = "Default IPNS key matches current IPNS key....";
-      console.error(msg);
-      $tw.utils.messageDialog(msg);
+      this.logger.alert("Default IPNS key matches current IPNS key....");
       return false;
     }
     // Resolve current IPNS key
-    var { error, ipnsName: currentIpnsName, ipnsKey: currentIpnsKey, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
+    if (this.isVerbose()) this.logger.info("Processing current IPNS...");
+    var { error, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null)  {
-      if (currentIpnsName !== null && currentIpnsKey !== null) {
-        const msg = "Unable to resolve current IPNS key...";
-        console.error(error);
-        console.error(msg);
-        $tw.utils.messageDialog(msg);
-      } else {
-        console.error(error);
-        $tw.utils.messageDialog(error.message);
-      }
+      this.logger.alert(error.message);
       return false;
     }
   }
 
   // Resolve default IPNS key and IPNS name
+  if (this.isVerbose()) this.logger.info("Processing default IPNS...");
   var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
   if (error != null)  {
-    if (ipnsName !== null && ipnsKey !== null) {
-      const msg = "Unable to resolve default IPNS key...";
-      console.error(error);
-      console.error(msg);
-      $tw.utils.messageDialog(msg);
-    } else {
-      console.error(error);
-      $tw.utils.messageDialog(error.message);
-    }
+    this.logger.alert(error.message);
     return false;
   }
 
   // Check
   if (resolved === cid) {
-    const msg = "IPFS identifiers are matching....";
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.alert("IPFS identifiers are matching....");
     return false;
   }
 
-  if (this.isVerbose()) console.info(
+  if (this.isVerbose()) this.logger.info(
     "Publishing IPNS name: "
     + ipnsName
   );
 
   var { error } = await this.ipfsWrapper.publishToIpfs(ipfs, ipnsName, cid);
   if (error != null) {
-    const msg = "Unable to publish IPNS name...";
-    console.error(error);
-    console.error(msg);
-    $tw.utils.messageDialog(msg);
+    this.logger.error(error.message);
+    this.logger.alert("Unable to publish IPNS name...");
     return false;
   }
 
   // Unpin previous
   if ($tw.utils.getIpfsUnpin() && resolved != null) {
-    if (this.isVerbose()) console.info(
+    if (this.isVerbose()) this.logger.info(
       "Request to unpin: /"
       + ipfsKeyword
       + "/"
@@ -947,7 +839,7 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
     var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
     // Log and continue
     if (error != null)  {
-      console.warn(error);
+      this.logger.alert(error.message);
     }
   }
 
@@ -961,9 +853,7 @@ IpfsActions.prototype.handleRefreshTiddler = function(event) {
     // current tiddler
     const tiddler = $tw.wiki.getTiddler(title);
     if (tiddler == undefined || tiddler == null) {
-      const msg = "Unknown tiddler: " + title;
-      console.error(msg);
-      $tw.utils.messageDialog(msg);
+      this.logger.alert("Unknown tiddler: " + title);
       return false;
     }
     $tw.wiki.clearCache(title);

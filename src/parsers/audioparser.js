@@ -49,6 +49,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
 "use strict";
 
 var AudioParser = function(type,text,options) {
+  let logger = new $tw.utils.Logger("ipfs");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;
@@ -72,7 +73,7 @@ var AudioParser = function(type,text,options) {
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
-      console.error(error);
+      logger.error(error.message);
     });
   } else {
     if (uri) {

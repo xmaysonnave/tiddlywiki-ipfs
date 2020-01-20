@@ -49,6 +49,7 @@ The image parser parses an image into an embeddable HTML element
 "use strict";
 
 var SvgParser = function(type,text,options) {
+  let logger = new $tw.utils.Logger("ipfs");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;
@@ -69,7 +70,7 @@ var SvgParser = function(type,text,options) {
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
-      console.error(error);
+      logger.error(error.message);
     });
   } else {
     if (uri) {
@@ -81,7 +82,7 @@ var SvgParser = function(type,text,options) {
         $tw.rootWidget.refresh(changedTiddlers);
       })
       .catch( (error) => {
-        console.error(error);
+        logger.error(error.message);
       });
     } else if (text) {
       element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };

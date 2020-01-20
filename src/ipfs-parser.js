@@ -17,7 +17,7 @@ utils
 "use strict";
 
 exports.httpGetToUint8Array = async function(url) {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.responseType = "arraybuffer";
   return new Promise(function(resolve, reject) {
     xhr.onreadystatechange = function() {
@@ -25,8 +25,9 @@ exports.httpGetToUint8Array = async function(url) {
         if (xhr.status >= 300) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
-          var array = new Uint8Array(this.response);
-          if ($tw.utils.getIpfsVerbose()) console.info(
+          const array = new Uint8Array(this.response);
+          const logger = new $tw.utils.Logger("ipfs");
+          if ($tw.utils.getIpfsVerbose()) logger.info(
             "Success/XMLHttpRequest: "
             + xhr.status
             + ", "

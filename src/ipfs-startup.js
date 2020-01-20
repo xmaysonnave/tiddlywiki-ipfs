@@ -25,15 +25,21 @@ exports.after = ["load-modules"];
 exports.synchronous = true;
 
 exports.startup = function() {
+  // Requirement
+  const logger = new $tw.utils.Logger("ipfs");
+	if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
+		logger.alert("The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed");
+	}
   // Update SaverHandler
   SaverHandler.prototype.initSavers = IpfsSaverHandler.prototype.initSavers;
-  SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
+  SaverHandler.prototype.saveWiki = IpfsSaverHandler.prototype.saveWiki;
   SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
+  SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
   // Load verbose property
-  if ($tw.utils.getIpfsVerbose()) console.info("IPFS with TiddlyWiki is verbose");
+  if ($tw.utils.getIpfsVerbose()) logger.info("IPFS with TiddlyWiki is verbose...");
   // Load priority
   var priority = $tw.utils.getIpfsPriority();
-  if ($tw.utils.getIpfsVerbose()) console.info(
+  if ($tw.utils.getIpfsVerbose()) logger.info(
     "IPFS Saver priority: "
     + priority
   );

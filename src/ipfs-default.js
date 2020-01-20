@@ -37,7 +37,8 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      console.error(error);
+      this.logger = new $tw.utils.Logger("ipfs");
+      this.logger.alert(error.message);
       priority = -1;
     }
   }

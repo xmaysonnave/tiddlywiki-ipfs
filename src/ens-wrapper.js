@@ -18,8 +18,15 @@ const EnsLibrary = require("./ens-library.js").EnsLibrary;
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 var EnsWrapper = function() {
+  // Libraries
   this.ensLibrary = new EnsLibrary();
   this.ipfsLibrary = new IpfsLibrary();
+  // Logger
+  try {
+    this.logger = new $tw.utils.Logger("ipfs");
+  } catch (error) {
+    this.logger = console;
+  }
 }
 
 EnsWrapper.prototype.isVerbose = function() {
@@ -34,7 +41,7 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
   try {
     const { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
     if (decoded !== undefined && decoded !== null && protocol !== undefined && protocol !== null)  {
-      if (this.isVerbose()) console.info(
+      if (this.isVerbose()) this.logger.info(
         "Successfully fetched ENS domain content: /"
         + protocol
         + "/"
@@ -46,7 +53,7 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
         protocol: protocol
       };
     } else {
-      if (this.isVerbose()) console.warn("Unassigned ENS domain content...");
+      if (this.isVerbose()) this.logger.warn("Unassigned ENS domain content...");
       return {
         error: null,
         decoded: null,
@@ -66,7 +73,7 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
   try {
     const cidv0 = this.ipfsLibrary.cidV1ToCidV0(cid);
     await this.ensLibrary.setContenthash(domain, cidv0, web3Provider, account);
-    if (this.isVerbose()) console.info("Successfully set ENS domain content...");
+    if (this.isVerbose()) this.logger.info("Successfully set ENS domain content...");
     return {
       error: null
     };
@@ -80,7 +87,7 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
 EnsWrapper.prototype.getWeb3Provider = async function() {
   try {
     const { web3Provider, account } = await this.ensLibrary.getWeb3Provider();
-    if (this.isVerbose()) console.info(
+    if (this.isVerbose()) this.logger.info(
       "Successfully fetched Ethereum account: "
       + account
     );

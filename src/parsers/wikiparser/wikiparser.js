@@ -49,6 +49,7 @@ wikiparser
 "use strict";
 
 var WikiParser = function(type,text,options) {
+  this.logger = new $tw.utils.Logger("ipfs");
   this.wiki = options.wiki;
   // Check for an externally linked tiddler
   if($tw.browser && (text || "") === "" && options._canonical_uri) {
@@ -104,7 +105,7 @@ WikiParser.prototype.loadRemoteTiddler = function(tiddler, uri) {
         self.importTiddlers(tiddler, uri, data);
       })
       .catch( (error) => {
-        console.error(error);
+        this.logger.error(error.message);
       });
     } else {
       $tw.utils.loadToUtf8(uri)
@@ -112,7 +113,7 @@ WikiParser.prototype.loadRemoteTiddler = function(tiddler, uri) {
         self.importTiddlers(tiddler, uri, data);
       })
       .catch( (error) => {
-        console.error(error);
+        this.logger.error(error.message);
       });
     }
   } else {

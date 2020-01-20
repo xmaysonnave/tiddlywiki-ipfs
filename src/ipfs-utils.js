@@ -121,7 +121,8 @@ exports.loadLibrary = async function(id, url, sri, module) {
         script.onload = () => {
           resolve(window[id]);
           cleanup();
-          if ($tw.utils.getIpfsVerbose()) console.info(
+          const logger = new $tw.utils.Logger("ipfs");
+          if ($tw.utils.getIpfsVerbose()) logger.info(
             "Loaded: "
             + url
           );
@@ -173,14 +174,6 @@ exports.updateTiddler = function(tiddler, addTags, removeTags, content, uri) {
   const updatedTiddler = new $tw.Tiddler(tiddler, addition);
   $tw.wiki.addTiddler(updatedTiddler);
   return updatedTiddler;
-}
-
-exports.messageDialog = function(message) {
-  if (message !== undefined && message !== null && message.trim() !== "") {
-    alert(message.trim());
-  } else {
-    alert($tw.language.getString("Error/Caption"));
-  }
 }
 
 })();
