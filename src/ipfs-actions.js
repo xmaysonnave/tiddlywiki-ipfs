@@ -15,7 +15,6 @@ IpfsActions
 "use strict";
 
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
@@ -25,7 +24,6 @@ const ipnsKeyword = "ipns";
 var IpfsActions = function() {
   this.once = false;
   this.ipfsWrapper = new IpfsWrapper();
-  this.ensWrapper = new EnsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
@@ -69,9 +67,6 @@ IpfsActions.prototype.init = function() {
   });
   $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
     return self.handleMobileConsole(event);
-  });
-  $tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
-    return self.handlePublishToEns(event);
   });
   $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
     return self.handlePublishToIpns(event);
@@ -641,103 +636,6 @@ IpfsActions.prototype.handleMobileConsole = async function(tiddler) {
   }
 }
 
-IpfsActions.prototype.handlePublishToEns = async function(event) {
-
-  // Process document URL
-  var { protocol, pathname } = this.ipfsLibrary.parseUrl(document.URL);
-
-  // Check
-  if (protocol == undefined || protocol == null) {
-    this.logger.alert("Unknown protocol...");
-    return false;
-  }
-  if (protocol === fileProtocol) {
-    this.logger.alert("Undefined IPFS wiki...");
-    return false;
-  }
-  if (pathname == undefined || pathname == null) {
-    this.logger.alert("Unknown pathname...");
-    return false;
-  }
-
-  // Extract and check URL IPFS protocol and CID
-  var { protocol, cid } = this.ipfsLibrary.decodeCid(pathname);
-
-  // Check
-  if (protocol == null) {
-    this.logger.alert("Unknown IPFS protocol...");
-    return false;
-  }
-  if (cid == null) {
-    this.logger.alert("Unknown IPFS identifier...");
-    return false;
-  }
-
-  // IPFS client
-  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Resolve IPNS key if applicable
-  if (protocol === ipnsKeyword) {
-    var { error, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
-    if (error != null) {
-      this.logger.alert(error.message);
-      return false;
-    }
-  }
-
-  // Getting default ENS domain
-  var ensDomain = $tw.utils.getIpfsEnsDomain();
-  // Check
-  if (ensDomain == null) {
-    this.logger.alert("Undefined ENS domain...");
-    return false;
-  }
-
-  if (this.isVerbose()) this.logger.info(
-    "ENS domain: "
-    + ensDomain
-  );
-
-  // Retrieve a WEB3 provider
-  var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Fetch ENS domain content
-  var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Nothing to publish
-  if (decoded !== null && decoded === cid) {
-    this.logger.alert("The current resolved ENS domain content is up to date...");
-    return false;
-  }
-
-  if (this.isVerbose()) this.logger.info(
-    "Publishing ENS domain: "
-    + ensDomain
-  );
-
-  var { error } = await this.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
-  if (error != null)  {
-    this.logger.error(error.message);
-    this.logger.alert("Unable to publish IPFS identifier to ENS...");
-    return false;
-  }
-
-  return false;
-
-}
-
 IpfsActions.prototype.handlePublishToIpns = async function(event) {
 
   // Process document URL
@@ -806,8 +704,12 @@ IpfsActions.prototype.handlePublishToIpns = async function(event) {
   if (this.isVerbose()) this.logger.info("Processing default IPNS...");
   var { error, ipnsName, ipnsKey, resolved } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
   if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
+    if (ipnsName !== null && ipnsKey !== null) {
+      this.logger.error(error.message);
+    } else {
+      this.logger.alert(error.message);
+      return false;
+    }
   }
 
   // Check

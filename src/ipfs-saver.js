@@ -148,7 +148,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
         if (error != null)  {
           // Log and continue
-          this.logger.alert(error.message);
+          this.logger.error(error.message);
           // Fallback
           if (ipnsName === null && ipnsKey === null && $tw.utils.getIpfsProtocol() === ipnsKeyword) {
             ipnsName = $tw.utils.getIpfsIpnsName();
@@ -156,9 +156,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
             if (this.isVerbose()) this.logger.info("Processing default IPNS...");
             var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
             if (error != null) {
-              // Unable to resolve current and default
-              callback(error.message);
-              return false;
+              if (ipnsName !== null && ipnsKey !== null) {
+                this.logger.alert(error.message);
+              } else {
+                // Unable to resolve default
+                callback(error.message);
+                return false;
+              }
             }
           }
         }
@@ -169,9 +173,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         if (this.isVerbose()) this.logger.info("Processing default IPNS...");
         var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
         if (error != null) {
-          // Unable to resolve current and default
-          callback(error.message);
-          return false;
+          if (ipnsName !== null && ipnsKey !== null) {
+            this.logger.error(error.message);
+          } else {
+            // Unable to resolve default
+            callback(error.message);
+            return false;
+          }
         }
       }
 

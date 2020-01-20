@@ -10,6 +10,11 @@ IpfsTiddlerUnpin/Hint: Unpin this tiddler from IPFS
 
 PublishToEns/Caption: publish to ENS
 PublishToEns/Hint: Publish this wiki to ENS
+OpenEnsManager/Caption: open
+OpenEnsManager/Hint: Open ENS Domain Manager
+ResolveEnsAndOpen/Caption: resolve and open
+ResolveEnsAndOpen/Hint: Open resolved ENS Domain content
+
 PublishToIpns/Caption: publish to IPNS
 PublishToIpns/Hint: Publish this wiki to IPNS
 IpfsPin/Caption: pin to IPFS
@@ -20,13 +25,13 @@ MobileConsole/Caption: mobile console
 MobileConsole/Hint: Load/Unload Mobile Console
 Ipfs/Refresh/Caption: refresh
 Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
-IpnsGenerate/Caption: generate
-IpnsGenerate/Hint: Generate IPNS key
-IpnsRemove/Caption: remove
-IpnsRemove/Hint: Remove IPNS key
-IpnsRename/Caption: rename
-IpnsRename/Hint: Rename IPNS name
-IpfsFetch/Caption: fetch
-IpfsFetch/Hint: Fetch IPNS key
-IpfsResolveAndOpen/Caption: resolve and open
-IpfsResolveAndOpen/Hint: Open resolved IPNS key
+GenerateIpnsKey/Caption: generate
+GenerateIpnsKey/Hint: Generate IPNS key
+RemoveIpnsKey/Caption: remove
+RemoveIpnsKey/Hint: Remove IPNS name nd IPNS key
+RenameIpnsName/Caption: rename
+RenameIpnsName/Hint: Rename IPNS name
+FetchIpnsKey/Caption: fetch
+FetchIpnsKey/Hint: Fetch IPNS key
+ResolveIpnsKeyAndOpen/Caption: resolve and open
+ResolveIpnsKeyAndOpen/Hint: Open resolved IPNS key

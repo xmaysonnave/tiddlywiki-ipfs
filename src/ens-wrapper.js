@@ -52,17 +52,17 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, accou
         decoded: decoded,
         protocol: protocol
       };
-    } else {
-      if (this.isVerbose()) this.logger.warn("Unassigned ENS domain content...");
-      return {
-        error: null,
-        decoded: null,
-        protocol: null
-      };
     }
-  } catch (error) {
+    if (this.isVerbose()) this.logger.warn("Unassigned ENS domain content...");
     return {
-      error: error,
+      error: null,
+      decoded: null,
+      protocol: null
+    };
+  } catch (error) {
+    this.logger.error(error.message);
+    return {
+      error: new Error("Unable to fetch ENS domain content..."),
       decoded: null,
       protocol: null
     };
@@ -78,8 +78,9 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
       error: null
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error
+      error: new Error("Unable to set ENS domain content...")
     };
   }
 }
@@ -88,7 +89,7 @@ EnsWrapper.prototype.getWeb3Provider = async function() {
   try {
     const { web3Provider, account } = await this.ensLibrary.getWeb3Provider();
     if (this.isVerbose()) this.logger.info(
-      "Successfully fetched Ethereum account: "
+      "Successfully fetched current Ethereum account: "
       + account
     );
     return {
@@ -97,8 +98,9 @@ EnsWrapper.prototype.getWeb3Provider = async function() {
       account: account
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: new Error("Unable to fetch current Ethereum account..."),
       web3Provider: null,
       account: null
     };

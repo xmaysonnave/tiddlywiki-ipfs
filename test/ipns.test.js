@@ -77,6 +77,7 @@ describe("IPNS key and IPNS name", () => {
     const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf", "tiddly");
     expect(
       error !== null
+      && error.message === "Failed to resolve IPNS key..."
       && ipnsName === "tiddly"
       && ipnsKey === "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf"
       && resolved === null
@@ -120,6 +121,7 @@ describe("IPNS name", () => {
     const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, null, "tiddly");
     expect(
       error !== null
+      && error.message === "Failed to resolve IPNS key..."
       && ipnsName === "tiddly"
       && ipnsKey === "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf"
       && resolved === null
@@ -173,6 +175,7 @@ describe("IPNS key", () => {
     const { error, ipnsName, ipnsKey, resolved } = await ipfsWrapper.resolveIpns(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf", null);
     expect(
       error !== null
+      && error.message === "Failed to resolve IPNS key..."
       && ipnsName === "tiddly"
       && ipnsKey === "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf"
       && resolved === null

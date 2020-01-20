@@ -40,6 +40,7 @@ IpfsWrapper.prototype.isVerbose = function() {
 
 IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
   // IPFS client
+  const err = new Error("Failed to get an IPFS provider...");
   try {
     var policy = { ipfs: null, provider: null };
     const ipfsPolicy = $tw.utils.getIpfsPolicy();
@@ -53,7 +54,7 @@ IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
     // Return if undefined
     if (policy.ipfs == null || policy.provider == null)  {
       return {
-        error: new Error("Failed to get an IPFS provider..."),
+        error: err,
         ipfs: null,
         provider: null
       };
@@ -68,8 +69,9 @@ IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
       provider: policy.provider
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       ipfs: null,
       provider: null
     };
@@ -224,11 +226,12 @@ IpfsWrapper.prototype.resolveIpns = async function(ipfs, ipnsKey, ipnsName) {
 }
 
 IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, name) {
+  const err = new Error("Failed to generate IPNS key...");
   try {
     const id = await this.ipfsLibrary.genKey(ipfs, name);
     if (id == undefined || id == null)  {
       return {
-        error: new Error("Failed to generate IPNS key..."),
+        error: err,
         key: null
       };
     }
@@ -241,19 +244,21 @@ IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, name) {
       key: id
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       key: null
     };
   }
 }
 
 IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, name) {
+  const err = new Error("Failed to remove IPNS key...");
   try {
     const id = await this.ipfsLibrary.rmKey(ipfs, name);
     if (id == undefined || id == null)  {
       return {
-        error: new Error("Failed to remove IPNS key..."),
+        error: err,
         key: null
       };
     }
@@ -268,19 +273,21 @@ IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, name) {
       key: id
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       key: null
     };
   }
 }
 
 IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
+  const err = new Error("Failed to rename IPNS name...");
   try {
     const { id, was, now } = await this.ipfsLibrary.renameKey(ipfs, oldName, newName);
     if (now == undefined || now == null)  {
       return {
-        error: new Error("Failed to rename IPNS name..."),
+        error: err,
         key: null,
         name: null
       };
@@ -297,8 +304,9 @@ IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
       name: now
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       key: null,
       name: null
     };
@@ -306,11 +314,12 @@ IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
 }
 
 IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
+  const err = new Error("Failed to fetch IPNS keys...");
   try {
     const keys = await this.ipfsLibrary.getKeys(ipfs);
     if (keys == undefined || keys == null)  {
       return {
-        error: new Error("Failed to fetch IPNS keys..."),
+        error: err,
         keys: null
       };
     }
@@ -320,19 +329,21 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
       keys: keys
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       keys: null
     };
   }
 }
 
 IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
+  const err = new Error("Failed to fetch: " + ipfsKeyword + cid);
   try {
     const fetched = await this.ipfsLibrary.cat(ipfs, ipfsKeyword + cid);
     if (fetched == undefined || fetched == null)  {
       return {
-        error: new Error("Failed to fetch: " + ipfsKeyword + cid),
+        error: err,
         fetched: null
       };
     }
@@ -346,8 +357,9 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
       fetched: fetched
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       fetched: null
     };
   }
@@ -355,11 +367,12 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
 
 IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
   // Add
+  const err = new Error("Failed to add content...");
   try {
     const added = await this.ipfsLibrary.add(ipfs, content);
     if (added == undefined || added == null || Array.isArray(added) == false || added.length == 0) {
       return {
-        error: new Error("Failed to add content..."),
+        error: err,
         added: null
       };
     }
@@ -373,8 +386,9 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
       added: added[0].hash
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       added: null
     };
   };
@@ -382,11 +396,12 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
 
 IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, id) {
   // Resolve
+  const err = new Error("Failed to resolve IPNS key...");
   try {
     const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + id);
     if (resolved == undefined || resolved == null) {
       return {
-        error: new Error("Failed to resolve IPNS key..."),
+        error: err,
         resolved: null
       };
     }
@@ -399,8 +414,9 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, id) {
       resolved: resolved
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       resolved: null
     };
   };
@@ -408,11 +424,12 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, id) {
 
 IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
   // Publish
+  const err = new Error("Failed to publish...");
   try {
     const published = await this.ipfsLibrary.publish(ipfs, name, ipfsKeyword + cid);
     if (published == undefined || published == null) {
       return {
-        error: new Error("Failed to publish..."),
+        error: err,
         published: null
       };
     }
@@ -426,8 +443,9 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
       published: published
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       published: null
     };
   };
@@ -435,11 +453,12 @@ IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
 
 IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
   // Unpin
+  const err = new Error( "Failed to pin...");
   try {
     const pinned = await this.ipfsLibrary.pin(ipfs, ipfsKeyword + cid);
     if (pinned == undefined || pinned == null) {
       return {
-        error: new Error( "Failed to pin..."),
+        error: err,
         pinned: null
       };
     }
@@ -453,8 +472,9 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
       pinned: pinned
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       pinned: null
     };
   };
@@ -462,11 +482,12 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 
 IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
   // Unpin
+  const err = new Error("Failed to unpin...");
   try {
     const unpinned = await this.ipfsLibrary.unpin(ipfs, ipfsKeyword + cid);
     if (unpinned == undefined || unpinned == null) {
       return {
-        error: new Error("Failed to unpin..."),
+        error: err,
         unpinned: null
       };
     }
@@ -480,8 +501,9 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
       unpinned: unpinned
     };
   } catch (error) {
+    this.logger.error(error.message);
     return {
-      error: error,
+      error: err,
       unpinned: null
     };
   };

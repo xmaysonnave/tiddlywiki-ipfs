@@ -16,6 +16,7 @@ Startup initialisation
 
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 
+const EnsActions = require("$:/plugins/ipfs/ens-actions.js").EnsActions;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const IpfsActions = require("$:/plugins/ipfs/ipfs-actions.js").IpfsActions;
 
@@ -53,6 +54,8 @@ exports.startup = function() {
   // Init Event
   const ipfsActions = new IpfsActions();
   ipfsActions.init();
+  const ensActions = new EnsActions();
+  ensActions.init();
 };
 
 })();
