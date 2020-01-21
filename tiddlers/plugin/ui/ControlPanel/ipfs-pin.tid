@@ -8,6 +8,6 @@ description: {{$:/language/Buttons/IpfsPin/Hint}}
 {{$:/core/images/chevron-up}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
-  <span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsPin/Caption}}/></span>
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/IpfsPin/Caption}}/></span>
 </$list>
 </$button>

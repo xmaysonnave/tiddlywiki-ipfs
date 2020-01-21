@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.2.10-dev",
+  "version": "v0.2.10-dev.200121358",
   "description": "IPFS with TiddlyWiki",
   "main": "src/ipfs-saver.js",
   "directories": {
@@ -16,6 +16,7 @@
     "build-all": "./scripts/build-all.sh",
     "build-tiddlywiki-ipfs-dev": "./scripts/build-tiddlywiki-ipfs-dev.sh",
     "build-tiddlywiki-ipfs": "./scripts/build-tiddlywiki-ipfs.sh",
+    "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
@@ -59,6 +60,7 @@
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
     "browserify-transform-tools": "^1.7.0",
+    "build-number-generator": "0.0.6",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-flowtype": "^4.6.0",

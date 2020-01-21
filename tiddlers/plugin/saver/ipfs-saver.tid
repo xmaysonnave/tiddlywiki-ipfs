@@ -9,7 +9,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 <$select tiddler="$:/ipfs/saver/priority/default" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/priority]!has[draft.of]]">
-  <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
+<option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>
 </$select>
 
@@ -49,21 +49,21 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tr>
 <td width="20%"><<lingo ApiUrl>></td>
 <td width="80%">
-  <$select tiddler="$:/ipfs/saver/api/default" class="tc-edit-texteditor">
-  <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]]">
-    <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
-  </$list>
-  </$select>
+<$select tiddler="$:/ipfs/saver/api/default" class="tc-edit-texteditor">
+<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]]">
+<option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
+</$list>
+</$select>
 </td>
 </tr>
 <tr>
 <td width="20%"><<lingo GatewayUrl>></td>
 <td width="80%">
-  <$select tiddler="$:/ipfs/saver/gateway/default" class="tc-edit-texteditor">
-  <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]]">
-    <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
-  </$list>
-  </$select>
+<$select tiddler="$:/ipfs/saver/gateway/default" class="tc-edit-texteditor">
+<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]]">
+<option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
+</$list>
+</$select>
 </td>
 </tr>
 </tbody>
@@ -84,24 +84,24 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tbody>
 <tr>
 <td width="10%">
-  <$button message="tm-open-ens-manager" tooltip={{$:/language/Buttons/OpenEnsManager/Hint}} aria-label={{$:/language/Buttons/OpenEnsManager/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/ipfs/ens/icon}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/OpenEnsManager/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-open-ens-manager" tooltip={{$:/language/Buttons/OpenEnsManager/Hint}} aria-label={{$:/language/Buttons/OpenEnsManager/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/ipfs/image/logo/ens}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/OpenEnsManager/Caption}}/></span>
+</$list>
+</$button>
 </td>
 <td width="10%">
-  <$button message="tm-resolve-ens-and-open" tooltip={{$:/language/Buttons/ResolveEnsAndOpen/Hint}} aria-label={{$:/language/Buttons/ResolveEnsAndOpen/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/core/images/globe}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/ResolveEnsAndOpen/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-resolve-ens-and-open" tooltip={{$:/language/Buttons/ResolveEnsAndOpen/Hint}} aria-label={{$:/language/Buttons/ResolveEnsAndOpen/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/ipfs/image/logo/ipfs}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/ResolveEnsAndOpen/Caption}}/></span>
+</$list>
+</$button>
 </td>
 </tr>
 </tbody>
@@ -126,54 +126,54 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tbody>
 <tr>
 <td width="10%">
-  <$button message="tm-rename-ipns-name" tooltip={{$:/language/Buttons/RenameIpnsName/Hint}} aria-label={{$:/language/Buttons/RenameIpnsName/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/core/images/mono-line}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/RenameIpnsName/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-rename-ipns-name" tooltip={{$:/language/Buttons/RenameIpnsName/Hint}} aria-label={{$:/language/Buttons/RenameIpnsName/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/mono-line}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/RenameIpnsName/Caption}}/></span>
+</$list>
+</$button>
 </td>
 <td width="10%">
-  <$button message="tm-generate-ipns-key" tooltip={{$:/language/Buttons/GenerateIpnsKey/Hint}} aria-label={{$:/language/Buttons/GenerateIpnsKey/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/core/images/new-here-button}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/GenerateIpnsKey/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-generate-ipns-key" tooltip={{$:/language/Buttons/GenerateIpnsKey/Hint}} aria-label={{$:/language/Buttons/GenerateIpnsKey/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/new-here-button}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/GenerateIpnsKey/Caption}}/></span>
+</$list>
+</$button>
 </td>
 <td width="10%">
-  <$button message="tm-remove-ipns-key" tooltip={{$:/language/Buttons/RemoveIpnsKey/Hint}} aria-label={{$:/language/Buttons/RemoveIpnsKey/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/core/images/delete-button}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/RemoveIpnsKey/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-remove-ipns-key" tooltip={{$:/language/Buttons/RemoveIpnsKey/Hint}} aria-label={{$:/language/Buttons/RemoveIpnsKey/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/delete-button}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/RemoveIpnsKey/Caption}}/></span>
+</$list>
+</$button>
 </td>
 <td width="10%">
-  <$button message="tm-fetch-ipns-key" tooltip={{$:/language/Buttons/FetchIpnsKey/Hint}} aria-label={{$:/language/Buttons/FetchIpnsKey/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/core/images/refresh-button}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/FetchIpnsKey/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-fetch-ipns-key" tooltip={{$:/language/Buttons/FetchIpnsKey/Hint}} aria-label={{$:/language/Buttons/FetchIpnsKey/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/refresh-button}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/FetchIpnsKey/Caption}}/></span>
+</$list>
+</$button>
 </td>
 <td width="10%">
-  <$button message="tm-resolve-ipns-key-and-open" tooltip={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Hint}} aria-label={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Caption}} style="display:block;margin-left:auto;margin-right:auto;" class="tc-btn-invisible">
-    <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-    {{$:/core/images/globe}}
-    </$list>
-    <$list filter="[<tv-config-toolbar-text>match[yes]]">
-      <span class="tc-btn-text"><$text text={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Caption}}/></span>
-    </$list>
-  </$button>
+<$button message="tm-resolve-ipns-key-and-open" tooltip={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Hint}} aria-label={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Caption}} class="tc-btn-invisible tc-image-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/ipfs/image/logo/ipfs}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Caption}}/></span>
+</$list>
+</$button>
 </td>
 </tr>
 </tbody>

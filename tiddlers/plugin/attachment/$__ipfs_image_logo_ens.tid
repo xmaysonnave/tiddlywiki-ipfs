@@ -1,0 +1,8 @@
+_canonical_uri: https://gateway.ipfs.io/ipfs/bafkreifw3jm5cw62t3ko63z76ebinlhnybrxyqfwcocukoujvyj7ip7kty
+created: 20200120044634920
+modified: 20200120044634920
+source: https://github.com/ensdomains/ens-app/blob/dev/public/safari-pinned-tab.svg
+license: https://github.com/ensdomains/ens-app/blob/dev/LICENSE
+tags: $:/ipfs/core $:/isAttachment $:/isIpfs
+title: $:/ipfs/image/logo/ens
+type: image/svg+xml

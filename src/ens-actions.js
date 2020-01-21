@@ -21,6 +21,8 @@ const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 const fileProtocol = "file:";
 const ipnsKeyword = "ipns";
+const ipfsKeyword = "ipfs";
+
 var EnsActions = function() {
   this.once = false;
   this.ensWrapper = new EnsWrapper();
@@ -69,6 +71,58 @@ EnsActions.prototype.handleOpenEnsManager = async function(event) {
 }
 
 EnsActions.prototype.handleResolveEnsAndOpen = async function(event) {
+
+  // Getting default ENS domain
+  const ensDomain = $tw.utils.getIpfsEnsDomain();
+  // Check
+  if (ensDomain == null) {
+    this.logger.alert("Undefined ENS domain...");
+    return false;
+  }
+
+  // Retrieve Gateway URL
+  const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
+  // Check
+  if (gatewayUrl == null) {
+    this.logger.alert("Undefined IPFS Gateway URL...");
+    return false;
+  }
+
+  // Process Gateway URL
+  const {
+    protocol: gatewayProtocol,
+    host: gatewayHost
+  } = this.ipfsLibrary.parseUrl(gatewayUrl);
+
+  if (this.isVerbose()) this.logger.info(
+    "ENS domain: "
+    + ensDomain
+  );
+
+  // Retrieve a WEB3 provider
+  var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
+  if (error != null)  {
+    this.logger.alert(error.message);
+    return false;
+  }
+
+  // Fetch ENS domain content
+  var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+  if (error != null)  {
+    this.logger.alert(error.message);
+    return false;
+  }
+
+  if (decoded !== null) {
+    const url = gatewayProtocol
+      + "//"
+      + gatewayHost
+      + "/"
+      + ipfsKeyword
+      + "/"
+      + decoded;
+    window.open(url, "_blank");
+  }
 
   return true;
 
@@ -123,7 +177,7 @@ EnsActions.prototype.handlePublishToEns = async function(event) {
   }
 
   // Getting default ENS domain
-  var ensDomain = $tw.utils.getIpfsEnsDomain();
+  const ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
     this.logger.alert("Undefined ENS domain...");
@@ -143,14 +197,14 @@ EnsActions.prototype.handlePublishToEns = async function(event) {
   }
 
   // Fetch ENS domain content
-  var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+  var { error, decoded: ensContent, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
   if (error != null)  {
     this.logger.alert(error.message);
     return false;
   }
 
   // Nothing to publish
-  if (decoded !== null && decoded === cid) {
+  if (ensContent !== null && ensContent === cid) {
     this.logger.alert("The current resolved ENS domain content is up to date...");
     return false;
   }
@@ -167,7 +221,16 @@ EnsActions.prototype.handlePublishToEns = async function(event) {
     return false;
   }
 
-  return false;
+  // Unpin if applicable
+  if ($tw.utils.getIpfsUnpin() && ensContent !== null) {
+    var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, ensContent);
+    // Log and continue
+    if (error != null)  {
+      this.logger.alert(error.message);
+    }
+  }
+
+  return true;
 
 }
 

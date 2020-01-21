@@ -3,11 +3,11 @@ tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/globe}} {{$:/language/Buttons/PublishToEns/Caption}}
 description: {{$:/language/Buttons/PublishToEns/Hint}}
 
-<$button message="tm-publish-to-ens" tooltip={{$:/language/Buttons/PublishToEns/Hint}} aria-label={{$:/language/Buttons/PublishToEns/Caption}} class=<<tv-config-toolbar-class>>>
+<$button message="tm-publish-to-ens" tooltip={{$:/language/Buttons/PublishToEns/Hint}} aria-label={{$:/language/Buttons/PublishToEns/Caption}} class=<<tv-config-toolbar-class tc-image-action>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/core/images/globe}}
+{{$:/ipfs/image/logo/ens}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
-  <span class="tc-btn-text"><$text text={{$:/language/Buttons/PublishToEns/Caption}}/></span>
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/PublishToEns/Caption}}/></span>
 </$list>
 </$button>

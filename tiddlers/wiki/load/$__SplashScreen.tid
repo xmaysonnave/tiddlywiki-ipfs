@@ -15,7 +15,7 @@ type: text/vnd.tiddlywiki
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 	margin: 20px auto 0;
-	width: 200px;
+	width: 400px;
 	text-align: center;
 	color: <<colour foreground>>;
 	fill: <<colour foreground>>;
@@ -110,7 +110,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	Please wait while {{$:/SiteTitle}} is loading...
 </p>
 <p>
-	with IPFS <<ipfs-version>>
+	<<ipfs-version>>
 </p>
 </div>
 

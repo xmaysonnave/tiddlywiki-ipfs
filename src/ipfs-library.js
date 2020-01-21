@@ -58,9 +58,10 @@ IpfsLibrary.prototype.cidV1ToCidV0 = function(cidv1) {
     cidv0 = cidv0.toV0().toString();
     if (this.isVerbose())
       this.logger.info(
-        "Convert Base32: "
+        "Convert..."
+        + "\n\tBase32: "
         + cidv1
-        + "\n\tto Base58: "
+        + "\n\tBase58: "
         + cidv0
       );
   }
