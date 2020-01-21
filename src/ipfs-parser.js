@@ -28,9 +28,9 @@ exports.httpGetToUint8Array = async function(url) {
           const array = new Uint8Array(this.response);
           const logger = new $tw.utils.Logger("ipfs");
           if ($tw.utils.getIpfsVerbose()) logger.info(
-            "Success/XMLHttpRequest: "
+            "XMLHttpRequest status: "
             + xhr.status
-            + ", "
+            + ",\n\t"
             + url
           );
           resolve(array);

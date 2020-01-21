@@ -216,8 +216,7 @@ EnsActions.prototype.handlePublishToEns = async function(event) {
 
   var { error } = await this.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
   if (error != null)  {
-    this.logger.error(error.message);
-    this.logger.alert("Unable to publish IPFS identifier to ENS...");
+    this.logger.alert(error.message);
     return false;
   }
 

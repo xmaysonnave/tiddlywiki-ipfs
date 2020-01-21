@@ -78,9 +78,8 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
       error: null
     };
   } catch (error) {
-    this.logger.error(error.message);
     return {
-      error: new Error("Unable to set ENS domain content...")
+      error: error
     };
   }
 }

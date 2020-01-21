@@ -310,7 +310,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       var { error } = await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
       if (error != null)  {
         // Log and continue
-        this.logger.alert("Unable to publish IPFS identifier to ENS...");
+        this.logger.alert(error.message);
         // Remove from unpin
         const index = this.toBeUnpinned.indexOf(ensContent);
         if (index !== -1) {
@@ -637,13 +637,6 @@ IpfsSaver.prototype.handleIpfsPin = async function(event) {
     this.toBeUnpinned.splice(index, 1);
   }
 
-  if (this.isVerbose()) this.logger.info(
-    "Successfully pinned: /"
-    + ipfsKeyword
-    + "/"
-    + cid
-  );
-
   return false;
 
 }
@@ -735,13 +728,6 @@ IpfsSaver.prototype.handleIpfsUnpin = async function(event) {
   if ($tw.utils.getIpfsUnpin() && this.toBeUnpinned.indexOf(cid) !== -1) {
     this.toBeUnpinned.splice(index, 1);
   }
-
-  if (this.isVerbose()) this.logger.info(
-    "Successfully unpinned: /"
-    + ipfsKeyword
-    + "/"
-    + cid
-  );
 
   return false;
 

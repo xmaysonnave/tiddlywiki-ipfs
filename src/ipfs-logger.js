@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/logger.js
+title: $:/core/modules/utils/logger.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: utils
@@ -65,7 +65,7 @@ A basic logging implementation
   */
   Logger.prototype.log = function(/* args */) {
     if(this.enable && console !== undefined && console.log !== undefined) {
-      return Function.apply.call(console.log, console, );
+      return Function.apply.call(console.log, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
     }
   };
 

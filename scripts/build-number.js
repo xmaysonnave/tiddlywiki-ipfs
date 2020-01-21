@@ -29,16 +29,12 @@ console.log(sourcePackage + " version: " + infoProject.version);
 if (validate(version) == false) {
   version = generate(version)
 }
-console.log("Version: " + version);
+console.log("Generated version: " + version);
 
 // update version
 infoProject.version = version;
 infoPlugin.version = version;
 
-// backup package.json
-fs.copyFile(sourcePackage, sourcePackage + ".bak", (err) => {
-  if (err) throw err;
-});
 // update package.json
 var data = JSON.stringify(infoProject, null, 2);
 fs.writeFile(sourcePackage, data, (err) => {

@@ -465,12 +465,8 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
     await tx.wait();
     if (this.isVerbose()) this.logger.info("Processed ENS domain content...");
   } catch (error) {
-    if (error !== undefined && error !== null) {
-      if (error.message !== undefined) {
-        throw new Error(error.message);
-      } else {
-        throw new Error(error);
-      }
+    if (error.message !== undefined) {
+      this.logger.error(error.message);
     }
     throw new Error("Unable to set ENS domain content...");
   }

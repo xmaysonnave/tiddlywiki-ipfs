@@ -26,4 +26,5 @@ Saving/IpfsService/Policy: Policy
 Saving/IpfsService/Policy/Default/Description: Default IPFS Provider
 Saving/IpfsService/Policy/Window/Description: IPFS Companion
 Saving/IpfsService/Policy/HTTP/Description: HTTP Client
-Ipfs/Version/Prompt: IPFS version:
+Basics/Version/Prompt: ~TiddlyWiki:
+Ipfs/Version/Prompt: IPFS:
