@@ -223,6 +223,7 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 * build-all
 * build-tiddlywiki-ipfs-dev
 * build-tiddlywiki-ipfs
+* run-build-number
 * run-browserify
 * run-prepare-clone
 * run-prepare
