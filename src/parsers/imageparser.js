@@ -49,7 +49,7 @@ The image parser parses an image into an embeddable HTML element
 "use strict";
 
 var ImageParser = function(type,text,options) {
-  let logger = new $tw.utils.Logger("ipfs");
+  let logger = new $tw.utils.Logger("ipfs-plugin");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;

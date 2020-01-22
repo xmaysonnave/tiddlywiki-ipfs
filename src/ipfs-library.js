@@ -21,7 +21,7 @@ import url from "url";
 var IpfsLibrary = function() {
   // Logger
   try {
-    this.logger = new $tw.utils.Logger("ipfs");
+    this.logger = new $tw.utils.Logger("ipfs-plugin");
   } catch (error) {
     this.logger = console;
   }

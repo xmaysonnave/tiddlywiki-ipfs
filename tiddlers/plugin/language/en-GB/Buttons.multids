@@ -3,35 +3,48 @@ tags: $:/ipfs/core
 
 ExportTiddlerToIpfs/Caption: export to IPFS
 ExportTiddlerToIpfs/Hint: Export this tiddler to IPFS
+
+FetchIpnsKey/Caption: fetch
+FetchIpnsKey/Hint: Fetch IPNS key
+
+GenerateIpnsKey/Caption: generate
+GenerateIpnsKey/Hint: Generate IPNS key
+
+Ipfs/Refresh/Caption: refresh
+Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
+
+IpfsPin/Caption: pin to IPFS
+IpfsPin/Hint: Pin this wiki to IPFS
+
 IpfsTiddlerPin/Caption: pin to IPFS
 IpfsTiddlerPin/Hint: Pin this tiddler to IPFS
+
 IpfsTiddlerUnpin/Caption: unpin from IPFS
 IpfsTiddlerUnpin/Hint: Unpin this tiddler from IPFS
 
-PublishToEns/Caption: publish to ENS
-PublishToEns/Hint: Publish this wiki to ENS
+IpfsUnpin/Caption: unpin from IPFS
+IpfsUnpin/Hint: Unpin this wiki from IPFS
+
+MobileConsole/Caption: mobile console
+MobileConsole/Hint: Load/Unload Mobile Console
+
 OpenEnsManager/Caption: open
 OpenEnsManager/Hint: Open ENS Domain Manager
+
+PublishToEns/Caption: publish to ENS
+PublishToEns/Hint: Publish this wiki to ENS
+
 ResolveEnsAndOpen/Caption: resolve and open
 ResolveEnsAndOpen/Hint: Open resolved ENS Domain content
 
 PublishToIpns/Caption: publish to IPNS
 PublishToIpns/Hint: Publish this wiki to IPNS
-IpfsPin/Caption: pin to IPFS
-IpfsPin/Hint: Pin this wiki to IPFS
-IpfsUnpin/Caption: unpin from IPFS
-IpfsUnpin/Hint: Unpin this wiki from IPFS
-MobileConsole/Caption: mobile console
-MobileConsole/Hint: Load/Unload Mobile Console
-Ipfs/Refresh/Caption: refresh
-Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
-GenerateIpnsKey/Caption: generate
-GenerateIpnsKey/Hint: Generate IPNS key
+
 RemoveIpnsKey/Caption: remove
-RemoveIpnsKey/Hint: Remove IPNS name nd IPNS key
+RemoveIpnsKey/Hint: Remove IPNS name and IPNS key
+
 RenameIpnsName/Caption: rename
 RenameIpnsName/Hint: Rename IPNS name
-FetchIpnsKey/Caption: fetch
-FetchIpnsKey/Hint: Fetch IPNS key
+
 ResolveIpnsKeyAndOpen/Caption: resolve and open
 ResolveIpnsKeyAndOpen/Hint: Open resolved IPNS key

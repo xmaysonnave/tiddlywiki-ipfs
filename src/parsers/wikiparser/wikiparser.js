@@ -49,7 +49,7 @@ wikiparser
 "use strict";
 
 var WikiParser = function(type,text,options) {
-  this.logger = new $tw.utils.Logger("ipfs");
+  this.logger = new $tw.utils.Logger("ipfs-plugin");
   this.wiki = options.wiki;
   // Check for an externally linked tiddler
   if($tw.browser && (text || "") === "" && options._canonical_uri) {

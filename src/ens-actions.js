@@ -28,7 +28,7 @@ var EnsActions = function() {
   this.ensWrapper = new EnsWrapper();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
-  this.logger = new $tw.utils.Logger("ipfs");
+  this.logger = new $tw.utils.Logger("ipfs-plugin");
 };
 
 EnsActions.prototype.isVerbose = function() {
@@ -63,7 +63,7 @@ EnsActions.prototype.handleOpenEnsManager = async function(event) {
   const ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
-    window.open("https://app.ens.domains/name/", "_blank");
+    window.open("https://app.ens.domains", "_blank");
   } else {
     window.open("https://app.ens.domains/name/" + ensDomain, "_blank");
   }

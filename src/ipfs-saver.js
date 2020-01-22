@@ -35,7 +35,7 @@ var IpfsSaver = function(wiki) {
   this.ipfsWrapper = new IpfsWrapper();
   this.ensWrapper = new EnsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
-  this.logger = new $tw.utils.Logger("ipfs");
+  this.logger = new $tw.utils.Logger("ipfs-plugin");
   const self = this;
   $tw.rootWidget.addEventListener("tm-ipfs-pin", function(event) {
     return self.handleIpfsPin(event);

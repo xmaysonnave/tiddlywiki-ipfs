@@ -27,7 +27,7 @@ var IpfsActions = function() {
   this.ipfsLibrary = new IpfsLibrary();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
-  this.logger = new $tw.utils.Logger("ipfs");
+  this.logger = new $tw.utils.Logger("ipfs-plugin");
 };
 
 IpfsActions.prototype.isVerbose = function() {

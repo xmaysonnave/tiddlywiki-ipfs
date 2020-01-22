@@ -1,0 +1,13 @@
+title: $:/core/ui/Buttons/mobile-console
+tags: $:/ipfs/core  $:/tags/PageControls
+caption: {{$:/core/images/preview-open}} {{$:/language/Buttons/MobileConsole/Caption}}
+description: {{$:/language/Buttons/MobileConsole/Hint}}
+
+<$button message="tm-mobile-console" tooltip={{$:/language/Buttons/MobileConsole/Hint}} aria-label={{$:/language/Buttons/MobileConsole/Caption}} class=<<tv-config-toolbar-class>>>
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/preview-open}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/MobileConsole/Caption}}/></span>
+</$list>
+</$button>

@@ -65,25 +65,41 @@ A basic logging implementation
   */
   Logger.prototype.log = function(/* args */) {
     if(this.enable && console !== undefined && console.log !== undefined) {
-      return Function.apply.call(console.log, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      if($tw.browser == false) {
+        return Function.apply.call(console.log, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      } else {
+        return Function.apply.call(console.log, console, [this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)));
+      }
     }
   };
 
   Logger.prototype.info = function(/* args */) {
     if(this.enable && console !== undefined && console.info !== undefined) {
-      return Function.apply.call(console.info, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      if($tw.browser == false) {
+        return Function.apply.call(console.info, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      } else {
+        return Function.apply.call(console.info, console, [this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)));
+      }
     }
   };
 
   Logger.prototype.warn = function(/* args */) {
     if(this.enable && console !== undefined && console.warn !== undefined) {
-      return Function.apply.call(console.warn, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      if($tw.browser == false) {
+        return Function.apply.call(console.warn, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      } else {
+        return Function.apply.call(console.warn, console, [this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)));
+      }
     }
   };
 
   Logger.prototype.error = function(/* args */) {
     if(this.enable && console !== undefined && console.error !== undefined) {
-      return Function.apply.call(console.error, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      if($tw.browser == false) {
+        return Function.apply.call(console.error, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
+      } else {
+        return Function.apply.call(console.error, console, [this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)));
+      }
     }
   };
 

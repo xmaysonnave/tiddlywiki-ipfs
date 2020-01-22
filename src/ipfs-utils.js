@@ -121,7 +121,7 @@ exports.loadLibrary = async function(id, url, sri, module) {
         script.onload = () => {
           resolve(window[id]);
           cleanup();
-          const logger = new $tw.utils.Logger("ipfs");
+          const logger = new $tw.utils.Logger("ipfs-plugin");
           if ($tw.utils.getIpfsVerbose()) logger.info(
             "Loaded: "
             + url

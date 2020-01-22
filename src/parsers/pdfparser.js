@@ -49,7 +49,7 @@ The PDF parser embeds a PDF viewer
 "use strict";
 
 var PdfParser = function(type,text,options) {
-  let logger = new $tw.utils.Logger("ipfs");
+  let logger = new $tw.utils.Logger("ipfs-plugin");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;

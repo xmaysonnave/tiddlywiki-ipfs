@@ -7,10 +7,6 @@ caption: {{$:/language/SideBar/Tools/Caption}}
 $:/config/PageControlButtons/Visibility/$(listItem)$
 \end
 
-\define tiddlywiki-ipfs-version()
-$()$
-\end
-
 <<lingo Basics/Version/Prompt>> <<version>>, <<lingo Ipfs/Version/Prompt>> <<ipfs-version>>
 
 <$set name="tv-config-toolbar-icons" value="yes">

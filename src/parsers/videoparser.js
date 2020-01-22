@@ -49,7 +49,7 @@ The video parser parses a video tiddler into an embeddable HTML element
 "use strict";
 
 var VideoParser = function(type,text,options) {
-  let logger = new $tw.utils.Logger("ipfs");
+  let logger = new $tw.utils.Logger("ipfs-plugin");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;

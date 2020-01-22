@@ -14,7 +14,7 @@ if (infoPlugin.version == undefined) {
   return false;
 }
 var version = infoPlugin.version;
-console.log(sourceMetadata + " version: " + version);
+console.log("Current: " + sourceMetadata + " version: " + version);
 
 // package.json
 var rawdata = fs.readFileSync(sourcePackage);
@@ -23,7 +23,7 @@ if (infoProject.version == undefined) {
   console.error("Undefined 'package.json' version...");
   return false;
 }
-console.log(sourcePackage + " version: " + infoProject.version);
+console.log("Current: " + sourcePackage + " version: " + infoProject.version);
 
 // Generate new version if applicable
 if (validate(version) == false) {
