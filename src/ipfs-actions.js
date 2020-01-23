@@ -56,14 +56,8 @@ IpfsActions.prototype.init = function() {
   $tw.rootWidget.addEventListener("tm-generate-ipns-key", function(event) {
     return self.handleGenerateIpnsKey(event);
   });
-  $tw.rootWidget.addEventListener("tm-rename-ipns-name", function(event) {
-    return self.handleRenameIpnsName(event);
-  });
-  $tw.rootWidget.addEventListener("tm-remove-ipns-key", function(event) {
-    return self.handleRemoveIpnsKey(event);
-  });
-  $tw.rootWidget.addEventListener("tm-resolve-ipns-key-and-open", function(event) {
-    return self.handleResolveIpnsKeyAndOpen(event);
+  $tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
+    return self.handleFileImport(tiddler);
   });
   $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
     return self.handleMobileConsole(event);
@@ -71,11 +65,17 @@ IpfsActions.prototype.init = function() {
   $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
     return self.handlePublishToIpns(event);
   });
-  $tw.rootWidget.addEventListener("tm-tiddler-refresh", function(event) {
+  $tw.rootWidget.addEventListener("tm-refresh-tiddler", function(event) {
     return self.handleRefreshTiddler(event);
   });
-  $tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
-    return self.handleFileImport(tiddler);
+  $tw.rootWidget.addEventListener("tm-remove-ipns-key", function(event) {
+    return self.handleRemoveIpnsKey(event);
+  });
+  $tw.rootWidget.addEventListener("tm-rename-ipns-name", function(event) {
+    return self.handleRenameIpnsName(event);
+  });
+  $tw.rootWidget.addEventListener("tm-resolve-ipns-key-and-open", function(event) {
+    return self.handleResolveIpnsKeyAndOpen(event);
   });
   // Init once
   this.once = true;
@@ -149,132 +149,31 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
   }
 }
 
-IpfsActions.prototype.handleExportToIpfs = async function(event) {
+IpfsActions.prototype.updateExportedTiddler = async function(tiddler, canonical_uri) {
 
-  const title = event.tiddlerTitle;
-
-  // Current tiddler
-  const tiddler = $tw.wiki.getTiddler(title);
+  // Check
   if (tiddler == undefined || tiddler == null) {
+    this.logger.alert("Unknown Tiddler...");
+    return false;
+  }
+  if (canonical_uri == undefined || canonical_uri == null || canonical_uri.trim() === "") {
+    this.logger.alert("Unknown 'canonical_uri'...");
     return false;
   }
 
-  // Do not process if _canonical_uri is set
-  var uri = tiddler.getFieldString("_canonical_uri");
-  if (uri !== undefined && uri !== null && uri.trim() !== "") {
-    this.logger.alert("Nothing to export...");
-    return false;
-  }
-
-  // Check content type, only base64 and image/svg+xml are suppported yet
-  var type = tiddler.getFieldString("type");
+  const type = tiddler.getFieldString("type");
   // Check
   if (type == undefined || type == null) {
-    this.logger.alert("Unknown Tiddler Type...");
+    this.logger.alert("Unknown Tiddler field 'type'...");
     return false;
   }
 
-  // Retrieve content-type
   const info = $tw.config.contentTypeInfo[type];
   // Check
   if (info == undefined || info == null)  {
     this.logger.alert("Unknown Content Type: " + type);
     return false;
   }
-
-  // Check
-  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
-    this.logger.alert("Exporting to IPFS is not supported...\nLook at the documentation...");
-    return false;
-  }
-
-  // Check
-  const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
-  if (gatewayUrl == null) {
-    this.logger.alert("Undefined IPFS Gateway URL...");
-    return false;
-  }
-
-  // Process Gateway URL
-  const { protocol: gatewayProtocol, host: gatewayHost } = this.ipfsLibrary.parseUrl(gatewayUrl);
-
-  // IPFS client
-  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Upload
-  var content = null;
-  if (info.encoding === "base64" || type === "image/svg+xml") {
-    content = tiddler.getFieldString("text");
-  } else {
-    const options = {
-      downloadType: "text/plain",
-      method: "download",
-      template: "$:/core/templates/exporters/TidFile",
-      variables: {
-        exportFilter: "[[" + event.tiddlerTitle + "]]"
-      }
-    };
-    content = $tw.wiki.renderTiddler(
-      "text/plain",
-      "$:/core/templates/exporters/TidFile",
-      options
-    );
-  }
-
-  if (this.isVerbose()) this.logger.info(
-    "Uploading attachment: "
-    + content.length
-    + " bytes"
-  );
-
-  try {
-    // Encrypt
-    if ($tw.crypto.hasPassword()) {
-      // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
-      if (info.encoding === "base64") {
-        content = atob(content);
-      }
-      content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
-      content = $tw.utils.StringToUint8Array(content);
-    } else {
-      // process base64
-      if (info.encoding === "base64") {
-        content = $tw.utils.Base64ToUint8Array(content);
-      } else {
-        content = $tw.utils.StringToUint8Array(content);
-      }
-    }
-  } catch (error) {
-    this.logger.error(error.message);
-    this.logger.alert("Failed to encrypt content...");
-    return false;
-  };
-
-  // Add
-  var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Pin, if failure log and continue
-  var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
-  if (error != null)  {
-    this.logger.alert(error.message);
-  }
-
-  // Build _canonical_uri
-  uri = gatewayProtocol
-  + "//"
-  + gatewayHost
-  + "/"
-  + ipfsKeyword
-  + "/"
-  + added;
 
   var addTags = [];
   var removeTags = [];
@@ -296,24 +195,87 @@ IpfsActions.prototype.handleExportToIpfs = async function(event) {
     }
   }
 
+  // Update
   $tw.utils.updateTiddler(
     tiddler,
     addTags,
     removeTags,
     "",
-    uri
-  );
-
-  if (this.isVerbose()) this.logger.info(
-    "Successfully published Tiddler: "
-    + title
-    + " with IPFS identifier: /"
-    + ipfsKeyword
-    + "/"
-    + added
+    canonical_uri
   );
 
   return true;
+
+}
+
+IpfsActions.prototype.handleExportToIpfs = async function(event) {
+
+  const title = event.tiddlerTitle;
+
+  // Load tiddler
+  const tiddler = $tw.wiki.getTiddler(title);
+  if (tiddler == undefined || tiddler == null) {
+    this.logger.alert("Unknown Tiddler...");
+    return false;
+  }
+
+  // Do not process if _canonical_uri is set
+  const canonical_uri = tiddler.getFieldString("_canonical_uri");
+  if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
+    this.logger.alert("The current Tiddler is already exported to IPFS...");
+    return false;
+  }
+
+  // Check
+  const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
+  if (gatewayUrl == null) {
+    this.logger.alert("Undefined IPFS Gateway URL...");
+    return false;
+  }
+
+  // Getting content
+  const content = this.ipfsWrapper.getContent(tiddler)
+  if (content == null) {
+    return false;
+  }
+
+  if (this.isVerbose()) this.logger.info(
+    "Uploading Tiddler: "
+    + content.length
+    + " bytes"
+  );
+
+  // IPFS client
+  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
+  if (error != null)  {
+    this.logger.alert(error.message);
+    return false;
+  }
+
+  // Add
+  var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
+  if (error != null)  {
+    this.logger.alert(error.message);
+    return false;
+  }
+
+  // Pin, if failure log and continue
+  var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
+  if (error != null)  {
+    this.logger.alert(error.message);
+  }
+
+  // Build _canonical_uri
+  const { protocol: gatewayProtocol, host: gatewayHost } = this.ipfsLibrary.parseUrl(gatewayUrl);
+  const uri = gatewayProtocol
+  + "//"
+  + gatewayHost
+  + "/"
+  + ipfsKeyword
+  + "/"
+  + added;
+
+  return this.updateExportedTiddler(tiddler, uri);
 
 }
 
@@ -600,7 +562,7 @@ IpfsActions.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
       + ipfsKeyword
       + "/"
       + resolved;
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener");
   }
 
   return true;

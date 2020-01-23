@@ -1,8 +1,14 @@
 title: $:/language/Buttons/
 tags: $:/ipfs/core
 
+ExportTiddlerToEns/Caption: export to ENS
+ExportTiddlerToEns/Hint: Export this tiddler to ENS
+
 ExportTiddlerToIpfs/Caption: export to IPFS
 ExportTiddlerToIpfs/Hint: Export this tiddler to IPFS
+
+ExportTiddlerToIpns/Caption: export to IPNS
+ExportTiddlerToIpns/Hint: Export this tiddler to IPNS
 
 FetchIpnsKey/Caption: fetch
 FetchIpnsKey/Hint: Fetch IPNS key

@@ -63,9 +63,9 @@ EnsActions.prototype.handleOpenEnsManager = async function(event) {
   const ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
-    window.open("https://app.ens.domains", "_blank");
+    window.open("https://app.ens.domains", "_blank", "noopener");
   } else {
-    window.open("https://app.ens.domains/name/" + ensDomain, "_blank");
+    await window.open("https://app.ens.domains/name/" + ensDomain, "_blank", "noopener");
   }
   return true;
 }
@@ -121,7 +121,7 @@ EnsActions.prototype.handleResolveEnsAndOpen = async function(event) {
       + ipfsKeyword
       + "/"
       + decoded;
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener");
   }
 
   return true;

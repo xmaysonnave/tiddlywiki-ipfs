@@ -96,6 +96,7 @@ exports.loadLibrary = async function(id, url, sri, module) {
     try {
       if (document.getElementById(id) == null) {
         const script = document.createElement("script");
+        // Cleanup function
         const cleanup = () => {
           delete window[id];
           script.onerror = null;

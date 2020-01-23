@@ -37,6 +37,9 @@ var IpfsSaver = function(wiki) {
   this.ipfsLibrary = new IpfsLibrary();
   this.logger = new $tw.utils.Logger("ipfs-plugin");
   const self = this;
+  $tw.rootWidget.addEventListener("tm-export-to-ipns", function(event) {
+    return self.handleExportToIpns(event);
+  });
   $tw.rootWidget.addEventListener("tm-ipfs-pin", function(event) {
     return self.handleIpfsPin(event);
   });
@@ -347,10 +350,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Next
     if (nextWiki !== document.URL) {
-      if (this.isVerbose()) this.logger.info(
-        "Assigning new location: "
-        + nextWiki
-      );
       window.location.assign(nextWiki);
     }
 

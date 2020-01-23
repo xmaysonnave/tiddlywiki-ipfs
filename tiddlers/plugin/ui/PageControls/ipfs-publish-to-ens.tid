@@ -1,4 +1,4 @@
-title: $:/core/ui/Buttons/publish-to-ens
+title: $:/core/ui/Buttons/publish/ens
 tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/ens}} {{$:/language/Buttons/PublishToEns/Caption}}
 description: {{$:/language/Buttons/PublishToEns/Hint}}

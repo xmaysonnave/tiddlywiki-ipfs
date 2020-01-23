@@ -96,7 +96,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <td style="width:10%">
 <$button message="tm-resolve-ens-and-open" tooltip={{$:/language/Buttons/ResolveEnsAndOpen/Hint}} aria-label={{$:/language/Buttons/ResolveEnsAndOpen/Caption}} class="tc-btn-invisible tc-ipfs-action">
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/core/images/ipfs}}
+{{$:/core/images/globe}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text"><$text text={{$:/language/Buttons/ResolveEnsAndOpen/Caption}}/></span>
@@ -168,7 +168,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <td style="width:10%">
 <$button message="tm-resolve-ipns-key-and-open" tooltip={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Hint}} aria-label={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Caption}} class="tc-btn-invisible tc-ipfs-action">
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/core/images/ipfs}}
+{{$:/core/images/globe}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text"><$text text={{$:/language/Buttons/ResolveIpnsKeyAndOpen/Caption}}/></span>

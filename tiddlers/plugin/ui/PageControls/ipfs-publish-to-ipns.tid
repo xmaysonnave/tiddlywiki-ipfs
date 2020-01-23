@@ -1,4 +1,4 @@
-title: $:/core/ui/Buttons/publish-to-ipns
+title: $:/core/ui/Buttons/publish/ipns
 tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/excise}} {{$:/language/Buttons/PublishToIpns/Caption}}
 description: {{$:/language/Buttons/PublishToIpns/Hint}}

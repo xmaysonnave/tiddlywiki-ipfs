@@ -1,0 +1,17 @@
+title: $:/core/ui/Buttons/export/tiddler/ipns
+tags: $:/ipfs/core $:/tags/ViewToolbar
+caption: {{$:/core/images/excise}} {{$:/language/Buttons/ExportTiddlerToIpns/Caption}}
+description: {{$:/language/Buttons/ExportTiddlerToIpns/Hint}}
+
+\whitespace trim
+<$button message="tm-export-to-ipns" param=<<currentTiddler>> tooltip={{$:/language/Buttons/ExportTiddlerToIpns/Hint}} aria-label={{$:/language/Buttons/ExportTiddlerToIpns/Caption}} class=<<tv-config-toolbar-class>>>
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/excise}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text">
+<$text text=" "/>
+<$text text={{$:/language/Buttons/ExportTiddlerToIpns/Caption}}/>
+</span>
+</$list>
+</$button>

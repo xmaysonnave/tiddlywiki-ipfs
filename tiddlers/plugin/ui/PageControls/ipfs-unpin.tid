@@ -1,4 +1,4 @@
-title: $:/core/ui/Buttons/ipfs-unpin
+title: $:/core/ui/Buttons/ipfs/unpin
 tags: $:/ipfs/core  $:/tags/PageControls
 caption: {{$:/core/images/chevron-down}} {{$:/language/Buttons/IpfsUnpin/Caption}}
 description: {{$:/language/Buttons/IpfsUnpin/Hint}}

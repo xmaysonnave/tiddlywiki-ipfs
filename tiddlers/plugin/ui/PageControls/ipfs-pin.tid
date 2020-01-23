@@ -1,4 +1,4 @@
-title: $:/core/ui/Buttons/ipfs-pin
+title: $:/core/ui/Buttons/ipfs/pin
 tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/chevron-up}} {{$:/language/Buttons/IpfsPin/Caption}}
 description: {{$:/language/Buttons/IpfsPin/Hint}}

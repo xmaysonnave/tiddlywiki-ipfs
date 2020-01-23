@@ -38,6 +38,81 @@ IpfsWrapper.prototype.isVerbose = function() {
   }
 }
 
+IpfsWrapper.prototype.getContent = function(tiddler) {
+
+  // Check
+  if (tiddler == undefined || tiddler == null) {
+    this.logger.alert("Unknown Tiddler...");
+    return null;
+  }
+
+  const type = tiddler.getFieldString("type");
+  // Check
+  if (type == undefined || type == null) {
+    this.logger.alert("Unknown Tiddler field 'type'...");
+    return null;
+  }
+
+  const info = $tw.config.contentTypeInfo[type];
+  // Check
+  if (info == undefined || info == null)  {
+    this.logger.alert("Unknown Content Type: " + type);
+    return null;
+  }
+
+  // Check
+  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
+    this.logger.alert("Unsupported content...\nLook at the documentation...");
+    return null;
+  }
+
+  // Retrieve content to upload
+  var content = null;
+  if (info.encoding === "base64" || type === "image/svg+xml") {
+    content = tiddler.getFieldString("text");
+  } else {
+    const options = {
+      downloadType: "text/plain",
+      method: "download",
+      template: "$:/core/templates/exporters/TidFile",
+      variables: {
+        exportFilter: "[[" + tiddler.fields.title + "]]"
+      }
+    };
+    content = $tw.wiki.renderTiddler(
+      "text/plain",
+      "$:/core/templates/exporters/TidFile",
+      options
+    );
+  }
+
+  try {
+    // Encrypt
+    if ($tw.crypto.hasPassword()) {
+      // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
+      if (info.encoding === "base64") {
+        content = atob(content);
+      }
+      content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
+      content = $tw.utils.StringToUint8Array(content);
+    } else {
+      // process base64
+      if (info.encoding === "base64") {
+        content = $tw.utils.Base64ToUint8Array(content);
+      } else {
+        content = $tw.utils.StringToUint8Array(content);
+      }
+    }
+  } catch (error) {
+    this.logger.error(error.message);
+    this.logger.alert("Failed to encrypt content...");
+    return null;
+  };
+
+  return content;
+
+}
+
 IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
   // IPFS client
   const err = new Error("Failed to get an IPFS provider...");
