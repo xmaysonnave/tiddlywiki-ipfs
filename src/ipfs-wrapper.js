@@ -24,7 +24,7 @@ var IpfsWrapper = function() {
   this.ipfsLibrary = new IpfsLibrary();
   // Logger
   try {
-    this.logger = new $tw.utils.Logger("ipfs-plugin");
+    this.logger = new $tw.utils.Logger("ipfs-wrapper");
   } catch (error) {
     this.logger = console;
   }
@@ -38,7 +38,7 @@ IpfsWrapper.prototype.isVerbose = function() {
   }
 }
 
-IpfsWrapper.prototype.getContent = function(tiddler) {
+IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
 
   // Check
   if (tiddler == undefined || tiddler == null) {
@@ -56,20 +56,22 @@ IpfsWrapper.prototype.getContent = function(tiddler) {
   const info = $tw.config.contentTypeInfo[type];
   // Check
   if (info == undefined || info == null)  {
-    this.logger.alert("Unknown Content Type: " + type);
+    this.logger.alert("Unknown Tiddler Content Type: " + type);
     return null;
   }
 
   // Check
   if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
-    this.logger.alert("Unsupported content...\nLook at the documentation...");
+    this.logger.alert("Unsupported Tiddler Content Type...\nLook at the documentation...");
     return null;
   }
 
-  // Retrieve content to upload
+  // Retrieve content
   var content = null;
+  // Attachment
   if (info.encoding === "base64" || type === "image/svg+xml") {
     content = tiddler.getFieldString("text");
+  // Tiddler
   } else {
     const options = {
       downloadType: "text/plain",
@@ -110,6 +112,87 @@ IpfsWrapper.prototype.getContent = function(tiddler) {
   };
 
   return content;
+
+}
+
+IpfsWrapper.prototype.updateIpfsTiddler = async function(tiddler, uri) {
+
+  // Check
+  if (tiddler == undefined || tiddler == null) {
+    this.logger.alert("Unknown Tiddler...");
+    return false;
+  }
+  if (uri == undefined || uri == null || uri.trim() === "") {
+    this.logger.alert("Unknown 'uri'...");
+    return false;
+  }
+
+  const type = tiddler.getFieldString("type");
+  // Check
+  if (type == undefined || type == null) {
+    this.logger.alert("Unknown Tiddler field 'type'...");
+    return false;
+  }
+
+  const info = $tw.config.contentTypeInfo[type];
+  // Check
+  if (info == undefined || info == null)  {
+    this.logger.alert("Unknown Tiddler Content Type: " + type);
+    return false;
+  }
+
+  // Check
+  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
+    this.logger.alert("Unsupported Tiddler Content Type...\nLook at the documentation...");
+    return false;
+  }
+
+  var addTags = [];
+  var removeTags = [];
+  // Attachment
+  if (info.encoding === "base64" || type === "image/svg+xml") {
+    if ($tw.crypto.hasPassword()) {
+      addTags = ["$:/isAttachment", "$:/isEncrypted", "$:/isIpfs"];
+      removeTags = ["$:/isEmbedded"];
+    } else {
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
+      removeTags = ["$:/isEmbedded"];
+    }
+    // Update
+    const updatedTiddler = $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      addTags: addTags,
+      removeTags: removeTags,
+      fields: [
+        { key: "text", value: "" },
+        { key: "_canonical_uri", value: uri }
+      ]
+    });
+    if (updatedTiddler !== null) {
+      $tw.wiki.addTiddler(updatedTiddler);
+    }
+  // Tiddler
+  } else {
+    if ($tw.crypto.hasPassword()) {
+      addTags = ["$:/isEncrypted", "$:/isExported", "$:/isIpfs"];
+    } else {
+      addTags = ["$:/isEncrypted", "$:/isExported", "$:/isIpfs"];
+    }
+    // Update
+    const updatedTiddler = $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      addTags: addTags,
+      removeTags: removeTags,
+      fields: [
+        { key: "_ipfs_uri", value: uri }
+      ]
+    });
+    if (updatedTiddler !== null) {
+      $tw.wiki.addTiddler(updatedTiddler);
+    }
+  }
+
+  return true;
 
 }
 

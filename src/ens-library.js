@@ -39,7 +39,7 @@ var EnsLibrary = function() {
   };
   // Logger
   try {
-    this.logger = new $tw.utils.Logger("ipfs-plugin");
+    this.logger = new $tw.utils.Logger("ens-library");
   } catch (error) {
     this.logger = console;
   }

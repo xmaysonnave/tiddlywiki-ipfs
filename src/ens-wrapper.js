@@ -23,7 +23,7 @@ var EnsWrapper = function() {
   this.ipfsLibrary = new IpfsLibrary();
   // Logger
   try {
-    this.logger = new $tw.utils.Logger("ipfs-plugin");
+    this.logger = new $tw.utils.Logger("ens-wrapper");
   } catch (error) {
     this.logger = console;
   }

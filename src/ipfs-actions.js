@@ -27,7 +27,7 @@ var IpfsActions = function() {
   this.ipfsLibrary = new IpfsLibrary();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
-  this.logger = new $tw.utils.Logger("ipfs-plugin");
+  this.logger = new $tw.utils.Logger("ipfs-actions");
 };
 
 IpfsActions.prototype.isVerbose = function() {
@@ -46,9 +46,6 @@ IpfsActions.prototype.init = function() {
   const self = this;
   $tw.wiki.addEventListener("change", function(changes) {
     return self.handleChangeEvent(changes);
-  });
-  $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
-    return self.handleExportToIpfs(event);
   });
   $tw.rootWidget.addEventListener("tm-fetch-ipns-key", function(event) {
     return self.handleFetchIpnsKey(event);
@@ -128,155 +125,25 @@ IpfsActions.prototype.handleChangeEvent = function(changes) {
     if (tiddler !== undefined) {
       if ($tw.utils.getIpfsIpnsName() !== this.ipnsName) {
         if ($tw.utils.getIpfsIpnsKey() !== null) {
-          $tw.utils.updateTiddler(
-            tiddler,
-            [],
-            [],
-            ""
-          );
+          $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            fields: [
+              { key: "text", value: "" }
+            ]
+          });
         }
       } else if ($tw.utils.getIpfsIpnsName() !== null) {
         if (this.ipnsKey !== null) {
-          $tw.utils.updateTiddler(
-            tiddler,
-            [],
-            [],
-            this.ipnsKey
-          );
+          $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            fields: [
+              { key: "text", value: this.ipnsKey }
+            ]
+          });
         }
       }
     }
   }
-}
-
-IpfsActions.prototype.updateExportedTiddler = async function(tiddler, canonical_uri) {
-
-  // Check
-  if (tiddler == undefined || tiddler == null) {
-    this.logger.alert("Unknown Tiddler...");
-    return false;
-  }
-  if (canonical_uri == undefined || canonical_uri == null || canonical_uri.trim() === "") {
-    this.logger.alert("Unknown 'canonical_uri'...");
-    return false;
-  }
-
-  const type = tiddler.getFieldString("type");
-  // Check
-  if (type == undefined || type == null) {
-    this.logger.alert("Unknown Tiddler field 'type'...");
-    return false;
-  }
-
-  const info = $tw.config.contentTypeInfo[type];
-  // Check
-  if (info == undefined || info == null)  {
-    this.logger.alert("Unknown Content Type: " + type);
-    return false;
-  }
-
-  var addTags = [];
-  var removeTags = [];
-  if (info.encoding === "base64" || type === "image/svg+xml") {
-    if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
-      addTags = ["$:/isAttachment", "$:/isEncrypted", "$:/isIpfs"];
-      removeTags = ["$:/isEmbedded"];
-    } else {
-      addTags = ["$:/isAttachment", "$:/isIpfs"];
-      removeTags = ["$:/isEmbedded"];
-    }
-  } else {
-    if ($tw.crypto.hasPassword() && tiddler.hasTag("$:/isEncrypted") == false) {
-      addTags = ["$:/isEncrypted", "$:/isIpfs"];
-      removeTags = ["$:/isAttachment", "$:/isEmbedded"];
-    } else {
-      addTags = ["$:/isIpfs"];
-      removeTags = ["$:/isAttachment", "$:/isEmbedded"];
-    }
-  }
-
-  // Update
-  $tw.utils.updateTiddler(
-    tiddler,
-    addTags,
-    removeTags,
-    "",
-    canonical_uri
-  );
-
-  return true;
-
-}
-
-IpfsActions.prototype.handleExportToIpfs = async function(event) {
-
-  const title = event.tiddlerTitle;
-
-  // Load tiddler
-  const tiddler = $tw.wiki.getTiddler(title);
-  if (tiddler == undefined || tiddler == null) {
-    this.logger.alert("Unknown Tiddler...");
-    return false;
-  }
-
-  // Do not process if _canonical_uri is set
-  const canonical_uri = tiddler.getFieldString("_canonical_uri");
-  if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-    this.logger.alert("The current Tiddler is already exported to IPFS...");
-    return false;
-  }
-
-  // Check
-  const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
-  if (gatewayUrl == null) {
-    this.logger.alert("Undefined IPFS Gateway URL...");
-    return false;
-  }
-
-  // Getting content
-  const content = this.ipfsWrapper.getContent(tiddler)
-  if (content == null) {
-    return false;
-  }
-
-  if (this.isVerbose()) this.logger.info(
-    "Uploading Tiddler: "
-    + content.length
-    + " bytes"
-  );
-
-  // IPFS client
-  var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Add
-  var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
-  if (error != null)  {
-    this.logger.alert(error.message);
-    return false;
-  }
-
-  // Pin, if failure log and continue
-  var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
-  if (error != null)  {
-    this.logger.alert(error.message);
-  }
-
-  // Build _canonical_uri
-  const { protocol: gatewayProtocol, host: gatewayHost } = this.ipfsLibrary.parseUrl(gatewayUrl);
-  const uri = gatewayProtocol
-  + "//"
-  + gatewayHost
-  + "/"
-  + ipfsKeyword
-  + "/"
-  + added;
-
-  return this.updateExportedTiddler(tiddler, uri);
-
 }
 
 IpfsActions.prototype.handleRenameIpnsName = async function(event) {
@@ -312,12 +179,12 @@ IpfsActions.prototype.handleRenameIpnsName = async function(event) {
   // Update Tiddler
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
   if (tiddler !== undefined) {
-    $tw.utils.updateTiddler(
-      tiddler,
-      [],
-      [],
-      key
-    );
+    $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: key }
+      ]
+    });
   }
 
   // Successfully renamed
@@ -357,12 +224,12 @@ IpfsActions.prototype.handleGenerateIpnsKey = async function(event) {
   // Update Tiddler
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
   if (tiddler !== undefined) {
-    $tw.utils.updateTiddler(
-      tiddler,
-      [],
-      [],
-      key
-    );
+    $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: key }
+      ]
+    });
   }
 
   // Successfully generated
@@ -431,21 +298,21 @@ IpfsActions.prototype.handleRemoveIpnsKey = async function(event) {
   // Update Tiddlers
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
   if (tiddler !== undefined) {
-    $tw.utils.updateTiddler(
-      tiddler,
-      [],
-      [],
-      ""
-    );
+    $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: "" }
+      ]
+    });
   }
   tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
   if (tiddler !== undefined && $tw.utils.getIpfsIpnsKey() !== null) {
-    $tw.utils.updateTiddler(
-      tiddler,
-      [],
-      [],
-      ""
-    );
+    $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: "" }
+      ]
+    });
   }
 
   // Successfully removed
@@ -485,12 +352,12 @@ IpfsActions.prototype.handleFetchIpnsKey = async function(event) {
   // Update Tiddler
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
   if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
-    $tw.utils.updateTiddler(
-      tiddler,
-      [],
-      [],
-      ipnsKey
-    );
+    $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: ipnsKey }
+      ]
+    });
     this.ipnsKey = ipnsKey;
   }
   this.ipnsName = ipnsName;
@@ -542,13 +409,12 @@ IpfsActions.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
   // Update Tiddler
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
   if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
-    // Process
-    $tw.utils.updateTiddler(
-      tiddler,
-      [],
-      [],
-      ipnsKey
-    );
+    $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: ipnsKey }
+      ]
+    });
     this.ipnsKey = ipnsKey;
   }
   this.ipnsName = ipnsName;
@@ -720,9 +586,39 @@ IpfsActions.prototype.handleRefreshTiddler = function(event) {
       this.logger.alert("Unknown tiddler: " + title);
       return false;
     }
-    $tw.wiki.clearCache(title);
-    const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-    $tw.rootWidget.refresh(changedTiddlers);
+    const type = tiddler.getFieldString("type");
+    // Check
+    if (type == undefined || type == null) {
+      this.logger.alert("Unknown Tiddler field 'type'...");
+      return false;
+    }
+    const info = $tw.config.contentTypeInfo[type];
+    // Check
+    if (info == undefined || info == null)  {
+      this.logger.alert("Unknown Tiddler Content Type: " + type);
+      return false;
+    }
+    // Check
+    if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
+      this.logger.alert("Unsupported Tiddler Content Type...\nLook at the documentation...");
+      return false;
+    }
+    if (info.encoding === "base64" || type === "image/svg+xml") {
+      $tw.wiki.clearCache(title);
+      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
+      $tw.rootWidget.refresh(changedTiddlers);
+    } else {
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [
+          { key: "text", value: "" }
+        ]
+      });
+      // Check
+      if (updatedTiddler !== null) {
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
+    }
   }
   return true;
 }

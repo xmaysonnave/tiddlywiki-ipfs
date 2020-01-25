@@ -122,7 +122,7 @@ exports.loadLibrary = async function(id, url, sri, module) {
         script.onload = () => {
           resolve(window[id]);
           cleanup();
-          const logger = new $tw.utils.Logger("ipfs-plugin");
+          const logger = new $tw.utils.Logger("ipfs-utils");
           if ($tw.utils.getIpfsVerbose()) logger.info(
             "Loaded: "
             + url
@@ -143,37 +143,51 @@ exports.loadLibrary = async function(id, url, sri, module) {
 
 exports.getChangedTiddlers = function(tiddler) {
   const title = tiddler.getFieldString("title");
-  var changedTiddlers = Object.create(null);
+  const changedTiddlers = Object.create(null);
   if (title !== undefined && title !== null) {
-    changedTiddlers[title] = changedTiddlers[title] || Object.create(null);
+    changedTiddlers[title] = Object.create(null);
   }
   return changedTiddlers;
 }
 
-exports.updateTiddler = function(tiddler, addTags, removeTags, content, uri) {
-  // Update tiddler
-  const addition = $tw.wiki.getModificationFields();
-  addition.tags = (tiddler.fields.tags || []).slice(0);
-  addition["_canonical_uri"] = uri;
-  addition["text"] = content;
-  // Add Tags
-  for (var i = 0; i < addTags.length; i++) {
-    const tag = addTags[i];
-    if (addition.tags.indexOf(tag) == -1) {
-      $tw.utils.pushTop(addition.tags, tag);
+exports.updateTiddler = function(updates) {
+  // Is there anything to do
+  if (updates == undefined || updates == null || updates.tiddler == undefined || updates.tiddler == null) {
+    return null;
+  }
+  // Prepare updates
+  const fields = $tw.wiki.getModificationFields();
+  fields.tags = (updates.tiddler.fields.tags || []).slice(0);
+  // Process add tags
+  if (updates.addTags !== undefined && updates.addTags !== null && Array.isArray(updates.addTags)) {
+    for (var i = 0; i < updates.addTags.length; i++) {
+      const tag = updates.addTags[i];
+      if (fields.tags.indexOf(tag) == -1) {
+        $tw.utils.pushTop(fields.tags, tag);
+      }
     }
   }
-  // Remove Tags
-  for (var i = 0; i < removeTags.length; i++) {
-    const tag = removeTags[i];
-    const index = addition.tags.indexOf(tag);
-    if (index !== -1) {
-      addition.tags.splice(index, 1);
+  // Process remove tags
+  if (updates.removeTags !== undefined && updates.removeTags !== null && Array.isArray(updates.removeTags)) {
+    for (var i = 0; i < updates.removeTags.length; i++) {
+      const tag = updates.removeTags[i];
+      const index = fields.tags.indexOf(tag);
+      if (index !== -1) {
+        fields.tags.splice(index, 1);
+      }
+    }
+  }
+  // Process fields
+  if (updates.fields !== undefined && updates.fields !== null && Array.isArray(updates.fields)) {
+    for (var i = 0; i < updates.fields.length; i++) {
+      const field = updates.fields[i];
+      if (field.key !== undefined && field.key !== null) {
+        fields[field.key] = field.value;
+      }
     }
   }
   // Update tiddler
-  const updatedTiddler = new $tw.Tiddler(tiddler, addition);
-  $tw.wiki.addTiddler(updatedTiddler);
+  const updatedTiddler = new $tw.Tiddler(updates.tiddler, fields);
   return updatedTiddler;
 }
 

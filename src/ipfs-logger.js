@@ -63,7 +63,7 @@ A basic logging implementation
   /*
   Log a message
   */
-  Logger.prototype.log = function(/* args */) {
+  Logger.prototype.log = function(value) {
     if(this.enable && console !== undefined && console.log !== undefined) {
       if($tw.browser == false) {
         return Function.apply.call(console.log, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));
@@ -73,7 +73,7 @@ A basic logging implementation
     }
   };
 
-  Logger.prototype.info = function(/* args */) {
+  Logger.prototype.info = function(value) {
     if(this.enable && console !== undefined && console.info !== undefined) {
       if($tw.browser == false) {
         return Function.apply.call(console.info, console, [$tw.utils.terminalColour(this.colour),this.componentName + ":"].concat(Array.prototype.slice.call(arguments,0)).concat($tw.utils.terminalColour()));

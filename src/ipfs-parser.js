@@ -26,7 +26,7 @@ exports.httpGetToUint8Array = async function(url) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const logger = new $tw.utils.Logger("ipfs-plugin");
+          const logger = new $tw.utils.Logger("ipfs-parser");
           if ($tw.utils.getIpfsVerbose()) logger.info(
             "XMLHttpRequest status: "
             + xhr.status

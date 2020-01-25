@@ -21,7 +21,7 @@ import url from "url";
 var IpfsLibrary = function() {
   // Logger
   try {
-    this.logger = new $tw.utils.Logger("ipfs-plugin");
+    this.logger = new $tw.utils.Logger("ipfs-library");
   } catch (error) {
     this.logger = console;
   }
@@ -33,8 +33,8 @@ IpfsLibrary.prototype.loadIpfsHttpLibrary = async function() {
   if (typeof window.IpfsHttpClient === "undefined") {
     await $tw.utils.loadLibrary(
       "IpfsHttpLibrary",
-      "https://cdn.jsdelivr.net/npm/ipfs-http-client@41.0.0/dist/index.min.js",
-      "sha384-YcSPas6I/IQQZY68hlXpCZqQ9Y35wL0Ff8u1ApTKcWlobgygNEEFAZrjfVlr1A7M",
+      "https://cdn.jsdelivr.net/npm/ipfs-http-client@41.0.1/dist/index.min.js",
+      "sha384-FhotltYqd3Ahyy0tJkqdR0dTReYsWEk0NQpF+TAxMPl15GmLtZhZijk1j/Uq7Xsh",
       true
     );
     window.httpClient = window.IpfsHttpClient;

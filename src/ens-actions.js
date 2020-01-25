@@ -28,7 +28,7 @@ var EnsActions = function() {
   this.ensWrapper = new EnsWrapper();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
-  this.logger = new $tw.utils.Logger("ipfs-plugin");
+  this.logger = new $tw.utils.Logger("ens-actions");
 };
 
 EnsActions.prototype.isVerbose = function() {

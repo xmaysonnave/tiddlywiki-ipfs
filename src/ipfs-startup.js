@@ -27,7 +27,7 @@ exports.synchronous = true;
 
 exports.startup = function() {
   // Requirement
-  const logger = new $tw.utils.Logger("ipfs-plugin");
+  const logger = new $tw.utils.Logger("ipfs-startup");
 	if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
 		logger.alert("The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed");
 	}
