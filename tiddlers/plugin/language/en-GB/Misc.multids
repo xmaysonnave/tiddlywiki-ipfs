@@ -1,0 +1,4 @@
+title: $:/language/
+
+LazyLoadingWarning: <p>Trying to load external Tiddler content from:<p></p>''<a href={{!!_canonical_uri}} target="_blank"><$text text={{!!_canonical_uri}}/></a>''</p>
+EmptyTidddler: <p>An external Tiddler content has been loaded:</p><p>''<a href={{!!_canonical_uri}} target="_blank"><$text text={{!!_canonical_uri}}/></a>''</p><p>The imported Tiddler content is empty, possible reasons:</p><ul><li>The Tiddler Content Type doesn't match the type of the external content.</li><li>The external Tiddler is encrypted. Consider the <<tag-pill '$:/isEncrypted'>> tag.</li></ul>

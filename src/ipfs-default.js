@@ -19,16 +19,20 @@ utils
  */
 exports.getIpfsPriority = function() {
   var priority = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/priority/default") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/priority/default").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/priority/default");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       priority = text.trim();
     }
   }
-  if (priority !== null && $tw.wiki.getTiddler(priority) !== undefined) {
-    const text = $tw.wiki.getTiddler(priority).getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
-      priority = text.trim();
+  if (priority !== null) {
+    tiddler = $tw.wiki.getTiddler(priority);
+    if (tiddler !== undefined && tiddler !== null) {
+      const text = tiddler.getFieldString("text");
+      if (text !== undefined && text !== null && text.trim() !== "") {
+        priority = text.trim();
+      }
     }
   }
   if (priority === null) {
@@ -57,9 +61,10 @@ exports.getIpfsDefaultPriority = function() {
  */
 exports.getIpfsProtocol = function() {
   var protocol = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/protocol") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/protocol").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/protocol");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       protocol = text.trim();
     }
   }
@@ -81,16 +86,20 @@ exports.getIpfsDefaultProtocol = function() {
  */
 exports.getIpfsApiUrl = function() {
   var api = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/api/default") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/api/default").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/api/default");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text =tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       api = text.trim();
     }
   }
-  if (api !== null && $tw.wiki.getTiddler(api) !== undefined) {
-    const text = $tw.wiki.getTiddler(api).getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
-      api = text.trim();
+  if (api !== null) {
+    tiddler = $tw.wiki.getTiddler(api);
+    if (tiddler !== undefined && tiddler !== null) {
+      const text = tiddler.getFieldString("text");
+      if (text !== undefined && text !== null && text.trim() !== "") {
+        api = text.trim();
+      }
     }
   }
   if (api === null) {
@@ -111,16 +120,20 @@ exports.getIpfsDefaultApiUrl = function() {
  */
 exports.getIpfsGatewayUrl = function() {
   var gateway = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/gateway/default") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       gateway = text.trim();
     }
   }
-  if (gateway !== null && $tw.wiki.getTiddler(gateway) !== undefined) {
-    const text = $tw.wiki.getTiddler(gateway).getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
-      gateway = text.trim();
+  if (gateway !== null) {
+    tiddler = $tw.wiki.getTiddler(gateway);
+    if ($tw.wiki.getTiddler(gateway) !== undefined) {
+      const text = $tw.wiki.getTiddler(gateway).getFieldString("text");
+      if (text !== undefined && text !== null && text.trim() !== "") {
+        gateway = text.trim();
+      }
     }
   }
   if (gateway === null) {
@@ -141,9 +154,10 @@ exports.getIpfsDefaultGatewayUrl = function() {
  */
 exports.getIpfsEnsDomain = function() {
   var ensDomain = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/ens/domain") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       ensDomain = text.trim();
     }
   }
@@ -155,9 +169,10 @@ exports.getIpfsEnsDomain = function() {
  */
 exports.getIpfsIpnsName = function() {
   var ipnsName = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/name") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       ipnsName = text.trim();
     }
   }
@@ -169,9 +184,10 @@ exports.getIpfsIpnsName = function() {
  */
 exports.getIpfsIpnsKey = function() {
   var ipnsKey = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/ipns/key") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       ipnsKey = text.trim();
     }
   }
@@ -183,9 +199,10 @@ exports.getIpfsIpnsKey = function() {
  */
 exports.getIpfsVerbose = function() {
   var verbose = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/verbose") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/verbose").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/verbose");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       verbose = text.trim();
     }
   }
@@ -202,9 +219,10 @@ exports.getIpfsVerbose = function() {
  */
 exports.getIpfsUnpin = function() {
   var unpin = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/unpin") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/unpin").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/unpin");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       unpin = text.trim();
     }
   }
@@ -221,9 +239,10 @@ exports.getIpfsUnpin = function() {
  */
 exports.getIpfsPolicy = function() {
   var policy = null;
-  if ($tw.wiki.getTiddler("$:/ipfs/saver/policy") !== undefined) {
-    const text = $tw.wiki.getTiddler("$:/ipfs/saver/policy").getFieldString("text");
-    if (text !== undefined && text.trim() !== "") {
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/policy");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
       policy = text.trim();
     }
   }

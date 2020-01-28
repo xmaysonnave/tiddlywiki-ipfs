@@ -1,14 +1,8 @@
 title: $:/language/Buttons/
 tags: $:/ipfs/core
 
-ExportTiddlerToEns/Caption: export to ENS
-ExportTiddlerToEns/Hint: Export this tiddler to ENS
-
-ExportTiddlerToIpfs/Caption: export to IPFS
-ExportTiddlerToIpfs/Hint: Export this tiddler to IPFS
-
-ExportTiddlerToIpns/Caption: export to IPNS
-ExportTiddlerToIpns/Hint: Export this tiddler to IPNS
+ExportToIpfs/Caption: export to IPFS
+ExportToIpfs/Hint: Export this tiddler to IPFS
 
 FetchIpnsKey/Caption: fetch
 FetchIpnsKey/Hint: Fetch IPNS key
@@ -39,6 +33,9 @@ OpenEnsManager/Hint: Open ENS Domain Manager
 
 PublishToEns/Caption: publish to ENS
 PublishToEns/Hint: Publish this wiki to ENS
+
+PublishToIpfs/Caption: publish to IPFS
+PublishToIpfs/Hint: Publish this attachment to IPFS
 
 ResolveEnsAndOpen/Caption: resolve and open
 ResolveEnsAndOpen/Hint: Open resolved ENS Domain content

@@ -28,10 +28,10 @@ exports.httpGetToUint8Array = async function(url) {
           const array = new Uint8Array(this.response);
           const logger = new $tw.utils.Logger("ipfs-parser");
           if ($tw.utils.getIpfsVerbose()) logger.info(
-            "XMLHttpRequest status: "
-            + xhr.status
-            + ",\n\t"
+            "Loaded: "
             + url
+            + " with HTTP status: "
+            + xhr.status
           );
           resolve(array);
         }

@@ -53,7 +53,7 @@ var WikiParser = function(type,text,options) {
   this.wiki = options.wiki;
   // Check for an externally linked tiddler
   if($tw.browser && (text || "") === "" && options._canonical_uri) {
-    this.loadRemoteTiddler(options.tiddler, options._canonical_uri);
+    this.loadRemoteTiddlers(options.tiddler, options._canonical_uri);
     text = $tw.language.getRawString("LazyLoadingWarning");
   }
   // Initialise the classes if we don't have them already
@@ -96,66 +96,39 @@ var WikiParser = function(type,text,options) {
 
 /*
 */
-WikiParser.prototype.loadRemoteTiddler = function(tiddler, uri) {
+WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
   let self = this;
-  if (tiddler) {
-    if (tiddler.hasTag("$:/isEncrypted")) {
-      $tw.utils.loadAndDecryptToUtf8(uri)
-      .then( (data) => {
-        self.importTiddlers(tiddler, uri, data);
-      })
-      .catch( (error) => {
-        this.logger.error(error.message);
-      });
-    } else {
-      $tw.utils.loadToUtf8(uri)
-      .then( (data) => {
-        self.importTiddlers(tiddler, uri, data);
-      })
-      .catch( (error) => {
-        this.logger.error(error.message);
-      });
-    }
+  if (tiddler.hasTag("$:/isEncrypted")) {
+    $tw.utils.loadAndDecryptToUtf8(uri)
+    .then( (data) => {
+      self.importTiddlers(tiddler, uri, data);
+    })
+    .catch( (error) => {
+      self.logger.error(error.message);
+    });
   } else {
-    $tw.utils.httpRequest({
-      url: uri,
-      type: "GET",
-      callback: function(err,data) {
-        if (!err) {
-          var tiddlers = self.wiki.deserializeTiddlers(".tid",data,self.wiki.getCreationFields());
-          $tw.utils.each(tiddlers,function(tiddler) {
-            tiddler["_canonical_uri"] = uri;
-          });
-          if (tiddlers) {
-            self.wiki.addTiddlers(tiddlers);
-          }
-        }
-      }
+    $tw.utils.loadToUtf8(uri)
+    .then( (data) => {
+      self.importTiddlers(tiddler, uri, data);
+    })
+    .catch( (error) => {
+      self.logger.error(error.message);
     });
   }
 };
 
 WikiParser.prototype.importTiddlers = function(tiddler, uri, data) {
-  let self = this;
-  let importedTiddlers = this.wiki.deserializeTiddlers(".tid",data,this.wiki.getCreationFields());
-  let addTags = (tiddler.fields.tags || []).slice(0);
-  let title = tiddler.getFieldString("title");
+  const importedTiddlers = this.wiki.deserializeTiddlers(".tid",data,this.wiki.getCreationFields());
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
-    importedTiddler["_canonical_uri"] = uri;
-    var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
-    for (var i = 0; i < addTags.length; i++) {
-      const tag = addTags[i];
-      if (importedTags.includes(tag) == false) {
-        importedTags = importedTags + " " + tag;
-      }
+    const text = importedTiddler["text"];
+    if (text == undefined || text == null || text.trim() === "") {
+      importedTiddler["text"] = $tw.language.getRawString("EmptyTidddler");;
     }
-    importedTiddler["tags"] = importedTags;
-    if (importedTiddler["title"] !== title) {
-      importedTiddler["_imported_title"] = importedTiddler["title"];
-    }
-    importedTiddler["title"] = title;
-    self.wiki.addTiddler(importedTiddler);
+    $tw.wiki.addTiddler(importedTiddler);
   });
+  if (importedTiddlers) {
+    this.wiki.addTiddlers(importedTiddlers);
+  }
 }
 
 /*

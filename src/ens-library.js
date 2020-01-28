@@ -104,7 +104,7 @@ EnsLibrary.prototype.encodeContenthash = function(content) {
       if (text.length >= 4) {
         const cid = new CID(text);
         if (cid.version !== 0) {
-            throw new Error("ENS domain content should be Base58 (CidV0): " + text);
+          throw new Error("ENS domain content should be Base58 (CidV0): " + text);
         }
         encoded = "0x" + contentHash.fromIpfs(text);
       }
@@ -376,28 +376,32 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
       protocol: null
     }
   }
+
   // decode bytes result
-  var content =  window.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
+  var content = window.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
   if (content == undefined || content == null || Array.isArray(content) === false || content[0] === "0x") {
     return {
       decoded: null,
       protocol: null
     }
   }
+
   // decode content hash
+  var { decoded, protocol } = this.decodeContenthash(content[0]);
+
+  // Convert CidV0 to CidV1
   try {
-    var { decoded, protocol } = this.decodeContenthash(content[0]);
-    return {
-      decoded: decoded,
-      protocol: protocol
-    };
+    decoded = this.ipfsLibrary.cidV0ToCidV1(decoded);
   } catch (error) {
-    this.logger.error(error.message);
+    this.logger.alert(error.message);
+    return false;
   }
+  
   return {
-    decoded: null,
-    protocol: null
-  }
+    decoded: decoded,
+    protocol: protocol
+  };
+
 }
 
 EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, account) {

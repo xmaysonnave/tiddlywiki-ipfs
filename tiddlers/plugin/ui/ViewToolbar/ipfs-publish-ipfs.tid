@@ -1,0 +1,17 @@
+title: $:/core/ui/Buttons/publish/ipfs
+tags: $:/ipfs/core $:/tags/ViewToolbar
+caption: {{$:/core/images/ipfs}} {{$:/language/Buttons/PublishToIpfs/Caption}}
+description: {{$:/language/Buttons/ExportTiddlerToIpfs/Hint}}
+
+\whitespace trim
+<$button message="tm-publish-to-ipfs" param=<<currentTiddler>> tooltip={{$:/language/Buttons/PublishToIpfs/Hint}} aria-label={{$:/language/Buttons/PublishToIpfs/Caption}} class=<<tv-config-toolbar-class>>>
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/ipfs}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text">
+<$text text=" "/>
+<$text text={{$:/language/Buttons/PublishToIpfs/Caption}}/>
+</span>
+</$list>
+</$button>

@@ -23,7 +23,6 @@ type: text/vnd.tiddlywiki
 <tr><td>image/svg+xml</td><td>svg</td></tr>
 <tr><td>image/webp</td><td>webp</td></tr>
 <tr><td>image/x-icon</td><td>ico</td></tr>
-<tr><td>text/vnd.tiddlywiki</td><td>tid</td></tr>
 <tr><td>video/ogg</td><td>ogm, ogv, ogg</td></tr>
 <tr><td>video/mp4</td><td>mp4</td></tr>
 <tr><td>video/quicktime</td><td>mov, qt</td></tr>

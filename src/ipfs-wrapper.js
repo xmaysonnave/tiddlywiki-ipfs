@@ -46,13 +46,14 @@ IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
     return null;
   }
 
-  const type = tiddler.getFieldString("type");
-  // Check
-  if (type == undefined || type == null) {
-    this.logger.alert("Unknown Tiddler field 'type'...");
-    return null;
+  // Type
+  var type = tiddler.getFieldString("type");
+  // Default
+  if (type == undefined || type == null || type.trim() === "") {
+    type = "text/vnd.tiddlywiki";
   }
 
+  // Content Type
   const info = $tw.config.contentTypeInfo[type];
   // Check
   if (info == undefined || info == null)  {
@@ -61,31 +62,15 @@ IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
   }
 
   // Check
-  if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
+  if (info.encoding !== "base64" && type !== "image/svg+xml")  {
     this.logger.alert("Unsupported Tiddler Content Type...\nLook at the documentation...");
     return null;
   }
 
   // Retrieve content
-  var content = null;
-  // Attachment
-  if (info.encoding === "base64" || type === "image/svg+xml") {
-    content = tiddler.getFieldString("text");
-  // Tiddler
-  } else {
-    const options = {
-      downloadType: "text/plain",
-      method: "download",
-      template: "$:/core/templates/exporters/TidFile",
-      variables: {
-        exportFilter: "[[" + tiddler.fields.title + "]]"
-      }
-    };
-    content = $tw.wiki.renderTiddler(
-      "text/plain",
-      "$:/core/templates/exporters/TidFile",
-      options
-    );
+  var text = tiddler.getFieldString("text");
+  if (text == undefined || text == null || text.trim() === "") {
+    return null;
   }
 
   try {
@@ -93,16 +78,16 @@ IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
     if ($tw.crypto.hasPassword()) {
       // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
       if (info.encoding === "base64") {
-        content = atob(content);
+        text = atob(text);
       }
-      content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
-      content = $tw.utils.StringToUint8Array(content);
+      text = $tw.crypto.encrypt(text, $tw.crypto.currentPassword);
+      text = $tw.utils.StringToUint8Array(text);
     } else {
       // process base64
       if (info.encoding === "base64") {
-        content = $tw.utils.Base64ToUint8Array(content);
+        text = $tw.utils.Base64ToUint8Array(text);
       } else {
-        content = $tw.utils.StringToUint8Array(content);
+        text = $tw.utils.StringToUint8Array(text);
       }
     }
   } catch (error) {
@@ -111,88 +96,67 @@ IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
     return null;
   };
 
-  return content;
+  return text;
 
 }
 
-IpfsWrapper.prototype.updateIpfsTiddler = async function(tiddler, uri) {
+IpfsWrapper.prototype.getTiddlerAsTid = function(tiddler) {
 
   // Check
   if (tiddler == undefined || tiddler == null) {
     this.logger.alert("Unknown Tiddler...");
-    return false;
-  }
-  if (uri == undefined || uri == null || uri.trim() === "") {
-    this.logger.alert("Unknown 'uri'...");
-    return false;
+    return null;
   }
 
-  const type = tiddler.getFieldString("type");
-  // Check
-  if (type == undefined || type == null) {
-    this.logger.alert("Unknown Tiddler field 'type'...");
-    return false;
+  // Type
+  var type = tiddler.getFieldString("type");
+  // Default
+  if (type == undefined || type == null || type.trim() === "") {
+    type = "text/vnd.tiddlywiki";
   }
 
+  // Content Type
   const info = $tw.config.contentTypeInfo[type];
   // Check
   if (info == undefined || info == null)  {
     this.logger.alert("Unknown Tiddler Content Type: " + type);
-    return false;
+    return null;
   }
 
   // Check
   if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
     this.logger.alert("Unsupported Tiddler Content Type...\nLook at the documentation...");
-    return false;
+    return null;
   }
 
-  var addTags = [];
-  var removeTags = [];
-  // Attachment
-  if (info.encoding === "base64" || type === "image/svg+xml") {
-    if ($tw.crypto.hasPassword()) {
-      addTags = ["$:/isAttachment", "$:/isEncrypted", "$:/isIpfs"];
-      removeTags = ["$:/isEmbedded"];
-    } else {
-      addTags = ["$:/isAttachment", "$:/isIpfs"];
-      removeTags = ["$:/isEmbedded"];
+  // Export Tiddler as tid
+  const options = {
+    downloadType: "text/plain",
+    method: "download",
+    template: "$:/core/templates/exporters/TidFile",
+    variables: {
+      exportFilter: "[[" + tiddler.fields.title + "]]"
     }
-    // Update
-    const updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: tiddler,
-      addTags: addTags,
-      removeTags: removeTags,
-      fields: [
-        { key: "text", value: "" },
-        { key: "_canonical_uri", value: uri }
-      ]
-    });
-    if (updatedTiddler !== null) {
-      $tw.wiki.addTiddler(updatedTiddler);
-    }
-  // Tiddler
-  } else {
-    if ($tw.crypto.hasPassword()) {
-      addTags = ["$:/isEncrypted", "$:/isExported", "$:/isIpfs"];
-    } else {
-      addTags = ["$:/isEncrypted", "$:/isExported", "$:/isIpfs"];
-    }
-    // Update
-    const updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: tiddler,
-      addTags: addTags,
-      removeTags: removeTags,
-      fields: [
-        { key: "_ipfs_uri", value: uri }
-      ]
-    });
-    if (updatedTiddler !== null) {
-      $tw.wiki.addTiddler(updatedTiddler);
-    }
-  }
+  };
+  var tid = $tw.wiki.renderTiddler(
+    "text/plain",
+    "$:/core/templates/exporters/TidFile",
+    options
+  );
 
-  return true;
+  try {
+    // Encrypt
+    if ($tw.crypto.hasPassword()) {
+      tid = $tw.crypto.encrypt(tid, $tw.crypto.currentPassword);
+    }
+    tid = $tw.utils.StringToUint8Array(tid);
+  } catch (error) {
+    this.logger.error(error.message);
+    this.logger.alert("Failed to encrypt content...");
+    return null;
+  };
+
+  return tid;
 
 }
 
@@ -542,27 +506,32 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
   // Add
   const err = new Error("Failed to add content...");
   try {
-    const added = await this.ipfsLibrary.add(ipfs, content);
-    if (added == undefined || added == null || Array.isArray(added) == false || added.length == 0) {
+    const { hash, size } = await this.ipfsLibrary.add(ipfs, content);
+    if (hash == null) {
       return {
         error: err,
-        added: null
+        added: null,
+        size: null
       };
     }
     if (this.isVerbose()) this.logger.info(
-      "Successfully added content: "
+      "Successfully added "
+      + size
+      + " bytes to "
       + ipfsKeyword
-      + added[0].hash
+      + hash
     );
     return {
       error: null,
-      added: added[0].hash
+      added: hash,
+      size: size
     };
   } catch (error) {
     this.logger.error(error.message);
     return {
       error: err,
-      added: null
+      added: null,
+      size: null
     };
   };
 }
@@ -598,7 +567,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, id) {
   };
 }
 
-IpfsWrapper.prototype.publishToIpfs = async function(ipfs, name, cid) {
+IpfsWrapper.prototype.publishToIpns = async function(ipfs, name, cid) {
   // Publish
   const err = new Error(
     "Failed to publish: "

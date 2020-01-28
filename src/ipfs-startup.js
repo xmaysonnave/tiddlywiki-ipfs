@@ -16,9 +16,12 @@ Startup initialisation
 
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 
-const EnsActions = require("$:/plugins/ipfs/ens-actions.js").EnsActions;
+const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
+const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
-const IpfsActions = require("$:/plugins/ipfs/ipfs-actions.js").IpfsActions;
+const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
+
+const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 exports.name = "ipfs-startup";
 exports.platforms = ["browser"];
@@ -26,11 +29,12 @@ exports.after = ["load-modules"];
 exports.synchronous = true;
 
 exports.startup = function() {
-  // Requirement
+  // Logger
   const logger = new $tw.utils.Logger("ipfs-startup");
-	if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
-		logger.alert("The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed");
-	}
+  // Requirement
+  if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
+    logger.alert("The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed");
+  }
   // Update SaverHandler
   SaverHandler.prototype.initSavers = IpfsSaverHandler.prototype.initSavers;
   SaverHandler.prototype.saveWiki = IpfsSaverHandler.prototype.saveWiki;
@@ -44,6 +48,8 @@ exports.startup = function() {
     "IPFS Saver priority: "
     + priority
   );
+  // Unpin
+  window.unpin = [];
   // Missing Media Types
   $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
   $tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
@@ -52,10 +58,12 @@ exports.startup = function() {
   $tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
   $tw.utils.registerFileType("video/webm","base64",".webm");
   // Init Event
-  const ipfsActions = new IpfsActions();
-  ipfsActions.init();
-  const ensActions = new EnsActions();
-  ensActions.init();
+  const ensAction = new EnsAction();
+  ensAction.init();
+  const ipfsAction = new IpfsAction();
+  ipfsAction.init();
+  const ipfsTiddler = new IpfsTiddler();
+  ipfsTiddler.init();
 };
 
 })();
