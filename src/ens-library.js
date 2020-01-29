@@ -46,10 +46,24 @@ var EnsLibrary = function() {
 };
 
 EnsLibrary.prototype.getLogger = function() {
-  if (window.log !== undefined) {
-    return window.log.getLogger(name);
+  if (window !== undefined && window.log !== undefined) {
+    const logger = window.log.getLogger(name);
+    if (this.isVerbose()) {
+      logger.setLevel("trace", false);
+    } else {
+      logger.setLevel("warn", false);
+    }
+    return logger;
   }
   return console;
+}
+
+EnsLibrary.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js

@@ -40,14 +40,29 @@ exports.startup = async function() {
   // Load loglevel
   await ipfsModule.loadLoglevel();
   // Logger
-  const log = window.log.getLogger("ipfs-startup");
-  if ($tw.utils.getIpfsVerbose()) {
-    window.log.setLevel("trace", false);
-    log.info("IPFS with TiddlyWiki is verbose...");
+  var log = null;
+  if (window !== undefined && window.log !== undefined) {
+    log = window.log.getLogger("ipfs-startup");
   } else {
-    window.log.setLevel("trace", false);
-    log.info("IPFS with TiddlyWiki is not verbose...");
-    window.log.setLevel("warn", false);
+    log = console;
+  }
+  const verboseMsg = "IPFS with TiddlyWiki is verbose...";
+  if ($tw.utils.getIpfsVerbose()) {
+    if (window !== undefined && window.log !== undefined) {
+      window.log.setLevel("trace", false);
+      log.setLevel("trace", false);
+    }
+    log.info(verboseMsg);
+  } else {
+    if (window !== undefined && window.log !== undefined) {
+      window.log.setLevel("trace", false);
+      log.setLevel("trace", false);
+      log.info("IPFS with TiddlyWiki is not verbose...");
+      window.log.setLevel("warn", false);
+      log.setLevel("warn", false);
+    } else {
+      log.info(verboseMsg);
+    }
   }
   // Log priority
   log.info(

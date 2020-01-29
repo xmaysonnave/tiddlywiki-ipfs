@@ -20,15 +20,31 @@ import { IpfsModule } from "./ipfs-module.js"
 /*global $tw: false */
 "use strict";
 
+const name = "ipfs-library";
+
 var IpfsLibrary = function() {
   this.ipfsModule = new IpfsModule();
 };
 
 IpfsLibrary.prototype.getLogger = function() {
-  if (window.log !== undefined) {
-    return window.log.getLogger("ipfs-library");
+  if (window !== undefined && window.log !== undefined) {
+    const logger = window.log.getLogger(name);
+    if (this.isVerbose()) {
+      logger.setLevel("trace", false);
+    } else {
+      logger.setLevel("warn", false);
+    }
+    return logger;
   }
   return console;
+}
+
+IpfsLibrary.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
 }
 
 IpfsLibrary.prototype.isVerbose = function() {

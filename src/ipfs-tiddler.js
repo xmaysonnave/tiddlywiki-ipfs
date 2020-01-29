@@ -33,8 +33,14 @@ var IpfsTiddler = function() {
 };
 
 IpfsTiddler.prototype.getLogger = function() {
-  if (window.log !== undefined) {
-    return window.log.getLogger(name);
+  if (window !== undefined && window.log !== undefined) {
+    const logger = window.log.getLogger(name);
+    if (this.isVerbose()) {
+      logger.setLevel("trace", false);
+    } else {
+      logger.setLevel("warn", false);
+    }
+    return logger;
   }
   return console;
 }
@@ -89,14 +95,16 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   // process verbose
   const verbose = changes["$:/ipfs/saver/verbose"];
   if (verbose !== undefined && verbose.modified) {
-    if (this.isVerbose()) {
-      window.log.setLevel("trace", false);
-      this.getLogger().info("IPFS with TiddlyWiki is verbose...");
-    } else {
-      window.log.setLevel("trace", false);
-      this.getLogger().info("IPFS with TiddlyWiki is not verbose...");
-      window.log.setLevel("warn", false);
-
+    if (window !== undefined && window.log !== undefined) {
+      if (this.isVerbose()) {
+        this.updateLoggers("trace");
+        this.getLogger().info("IPFS with TiddlyWiki is verbose...");
+      } else {
+        const logger = this.getLogger();
+        logger.setLevel("info", false);
+        logger.info("IPFS with TiddlyWiki is not verbose...");
+        this.updateLoggers("warn");
+      }
     }
   }
   // process unpin
@@ -131,6 +139,19 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
             ]
           });
         }
+      }
+    }
+  }
+}
+
+IpfsTiddler.prototype.updateLoggers = function(level) {
+  if (window !== undefined && window.log !== undefined) {
+    window.log.setLevel(level, false);
+    const loggers = window.log.getLoggers();
+    for (var property in loggers) {
+      if (Object.prototype.hasOwnProperty.call(loggers, property)) {
+        const logger = window.log.getLogger(property);
+        logger.setLevel(level, false);
       }
     }
   }
@@ -473,12 +494,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           addTags = ["$:/isImported"];
           removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isExported", "$:/isIpfs"];
         }
-
-        this.getLogger().info(
-          "Embedding Tiddler..."
-          + content.length
-          + " bytes"
-        );
 
         // Update Tiddler
         updatedTiddler = $tw.utils.updateTiddler({

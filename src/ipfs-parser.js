@@ -17,10 +17,24 @@ utils
 "use strict";
 
 exports.getLog = function() {
-  if (window.log !== undefined) {
-    return window.log;
+  if (window !== undefined && window.log !== undefined) {
+    const logger = window.log;
+    if (this.isVerbose()) {
+      logger.setLevel("trace", false);
+    } else {
+      logger.setLevel("warn", false);
+    }
+    return logger;
   }
   return console;
+}
+
+exports.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return false;
+  }
 }
 
 exports.httpGetToUint8Array = async function(url) {
