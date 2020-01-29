@@ -48,8 +48,9 @@ wikiparser
 /*global $tw: false */
 "use strict";
 
+const name = "ipfs-wikiparser";
+
 var WikiParser = function(type,text,options) {
-  this.logger = new $tw.utils.Logger("ipfs-parser");
   this.wiki = options.wiki;
   // Check for an externally linked tiddler
   if($tw.browser && (text || "") === "" && options._canonical_uri) {
@@ -94,6 +95,13 @@ var WikiParser = function(type,text,options) {
   // Return the parse tree
 };
 
+WikiParser.prototype.getLogger = function() {
+  if (window.log !== undefined) {
+    return window.log.getLogger(name);
+  }
+  return console;
+}
+
 /*
 */
 WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
@@ -104,7 +112,8 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
       self.importTiddlers(tiddler, uri, data);
     })
     .catch( (error) => {
-      self.logger.error(error.message);
+      self.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     });
   } else {
     $tw.utils.loadToUtf8(uri)
@@ -112,7 +121,8 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
       self.importTiddlers(tiddler, uri, data);
     })
     .catch( (error) => {
-      self.logger.error(error.message);
+      self.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     });
   }
 };

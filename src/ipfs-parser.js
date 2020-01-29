@@ -16,18 +16,25 @@ utils
 /*global $tw: false */
 "use strict";
 
+exports.getLog = function() {
+  if (window.log !== undefined) {
+    return window.log;
+  }
+  return console;
+}
+
 exports.httpGetToUint8Array = async function(url) {
   const xhr = new XMLHttpRequest();
   xhr.responseType = "arraybuffer";
   return new Promise(function(resolve, reject) {
     xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4) {
+      if (xhr.readyState == 4 && xhr.status !== 0) {
         if (xhr.status >= 300) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const logger = new $tw.utils.Logger("ipfs-parser");
-          if ($tw.utils.getIpfsVerbose()) logger.info(
+          const log = $tw.utils.getLog();
+          log.info(
             "Loaded: "
             + url
             + " with HTTP status: "
@@ -36,6 +43,9 @@ exports.httpGetToUint8Array = async function(url) {
           resolve(array);
         }
       }
+    };
+    xhr.onerror = function() {
+      reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest") + " " + url));
     };
     try {
       xhr.open("get", url, true);

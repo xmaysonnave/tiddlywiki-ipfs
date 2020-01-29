@@ -14,20 +14,30 @@ IpfsTiddler
 /*global $tw: false */
 "use strict";
 
+const IpfsModule = require("$:/plugins/ipfs/ipfs-module.js").IpfsModule;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 const ipfsKeyword = "ipfs";
 
+const name = "ipfs-tiddler";
+
 var IpfsTiddler = function() {
   this.once = false;
-  this.ipfsWrapper = new IpfsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
+  this.ipfsModule = new IpfsModule();
+  this.ipfsWrapper = new IpfsWrapper();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
-  this.logger = new $tw.utils.Logger("ipfs-tiddler");
 };
+
+IpfsTiddler.prototype.getLogger = function() {
+  if (window.log !== undefined) {
+    return window.log.getLogger(name);
+  }
+  return console;
+}
 
 IpfsTiddler.prototype.isVerbose = function() {
   try {
@@ -71,7 +81,7 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   if (priority !== undefined && priority.modified) {
     // Update IPFS saver
     $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-    if (this.isVerbose()) this.logger.info(
+    this.getLogger().info(
       "Updated IPFS Saver priority: "
       + $tw.utils.getIpfsPriority()
     );
@@ -80,18 +90,22 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   const verbose = changes["$:/ipfs/saver/verbose"];
   if (verbose !== undefined && verbose.modified) {
     if (this.isVerbose()) {
-      this.logger.info("IPFS with TiddlyWiki is verbose...");
+      window.log.setLevel("trace", false);
+      this.getLogger().info("IPFS with TiddlyWiki is verbose...");
     } else {
-      this.logger.info("IPFS with TiddlyWiki is not verbose...");
+      window.log.setLevel("trace", false);
+      this.getLogger().info("IPFS with TiddlyWiki is not verbose...");
+      window.log.setLevel("warn", false);
+
     }
   }
   // process unpin
   const unpin = changes["$:/ipfs/saver/unpin"];
   if (unpin !== undefined && unpin.modified) {
     if ($tw.utils.getIpfsUnpin()) {
-      if (this.isVerbose()) this.logger.info("IPFS with TiddlyWiki will unpin previous content...");
+      this.getLogger().info("IPFS with TiddlyWiki will unpin previous content...");
     } else {
-      if (this.isVerbose()) this.logger.info("IPFS with TiddlyWiki will not unpin previous content...");
+      this.getLogger().info("IPFS with TiddlyWiki will not unpin previous content...");
     }
   }
   // process IPNS name
@@ -137,7 +151,7 @@ IpfsTiddler.prototype.handleDeleteTiddler = function(tiddler) {
     && window.unpin.indexOf(cid) == -1
   ) {
     window.unpin.push(cid);
-    if (this.isVerbose()) this.logger.info(
+    this.getLogger().info(
       "Request to unpin: /"
       + ipfsKeyword
       + "/"
@@ -169,7 +183,7 @@ IpfsTiddler.prototype.handleRefreshTiddler = function(event) {
     // current tiddler
     const tiddler = $tw.wiki.getTiddler(title);
     if (tiddler == undefined || tiddler == null) {
-      this.logger.alert("Unknown tiddler: " + title);
+      $tw.utils.alert(name, "Unknown tiddler: " + title);
       return false;
     }
     // Type
@@ -182,12 +196,12 @@ IpfsTiddler.prototype.handleRefreshTiddler = function(event) {
     const info = $tw.config.contentTypeInfo[type];
     // Check
     if (info == undefined || info == null)  {
-      this.logger.alert("Unknown Tiddler Content Type: " + type);
+      $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
       return false;
     }
     // Check
     if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
-      this.logger.alert("Unsupported Tiddler Content Type...\nLook at the documentation...");
+      $tw.utils.alert(name, "Unsupported Tiddler Content Type...\nLook at the documentation...");
       return false;
     }
     if (info.encoding === "base64" || type === "image/svg+xml") {
@@ -322,7 +336,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         try {
           content = await $tw.utils.httpGetToUint8Array(old_canonical_uri);
         } catch (error) {
-          this.logger.alert(error.message);
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
           return oldTiddler;
         }
         // Decrypt if necessary
@@ -334,7 +349,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
               content = await $tw.utils.decryptUint8ArrayToUtf8(content);
             }
           } catch (error) {
-            this.logger.alert(error.message);
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
             return oldTiddler;
           }
         } else {
@@ -345,7 +361,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           }
         }
 
-        if (this.isVerbose()) this.logger.info(
+        this.getLogger().info(
           "Embedding attachment: "
           + content.length
           + " bytes"
@@ -390,7 +406,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           const index = window.unpin.indexOf(cid);
           if (index !== -1) {
             window.unpin.splice(index, 1);
-            if (this.isVerbose()) this.logger.info(
+            this.getLogger().info(
               "Discard request to unpin: /"
               + ipfsKeyword
               + "/"
@@ -399,7 +415,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           }
         }
 
-        this.logger.alert(
+        $tw.utils.alert(name,
           "Embedded remote attachment..."
           + "<br/>Unable to decide if the imported attachment is encrypted or not..."
           + "<br/>Consider the <<tag-pill '$:/isEncrypted'>> tag..."
@@ -416,7 +432,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           && window.unpin.indexOf(oldCid) == -1
         ) {
           window.unpin.push(oldCid);
-          if (this.isVerbose()) this.logger.info(
+          this.getLogger().info(
             "Request to unpin: /"
             + ipfsKeyword
             + "/"
@@ -436,7 +452,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       // _canonical_uri attribute has been removed
       if (canonical_uri == null) {
 
-        if (this.isVerbose()) this.logger.info("Embedding Tiddler...");
+        this.getLogger().info("Embedding Tiddler...");
 
         // Update Tiddler
         updatedTiddler = $tw.utils.updateTiddler({
@@ -458,7 +474,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isExported", "$:/isIpfs"];
         }
 
-        if (this.isVerbose()) this.logger.info(
+        this.getLogger().info(
           "Embedding Tiddler..."
           + content.length
           + " bytes"
@@ -529,7 +545,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           const index = window.unpin.indexOf(cid);
           if (index !== -1) {
             window.unpin.splice(index, 1);
-            if (this.isVerbose()) this.logger.info(
+            this.getLogger().info(
               "Discard request to unpin: /"
               + ipfsKeyword
               + "/"
@@ -549,7 +565,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           && window.unpin.indexOf(oldCid) == -1
         ) {
           window.unpin.push(oldCid);
-          if (this.isVerbose()) this.logger.info(
+          this.getLogger().info(
             "Request to unpin: /"
             + ipfsKeyword
             + "/"

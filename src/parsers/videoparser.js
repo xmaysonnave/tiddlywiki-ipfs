@@ -48,8 +48,9 @@ The video parser parses a video tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
+const name = "ipfs-videoparser";
+
 var VideoParser = function(type,text,options) {
-  let logger = new $tw.utils.Logger("ipfs-parser");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;
@@ -73,7 +74,8 @@ var VideoParser = function(type,text,options) {
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
-      logger.error(error.message);
+      self.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     });
   } else {
     if (uri) {
@@ -84,6 +86,13 @@ var VideoParser = function(type,text,options) {
   }
   this.tree = [element];
 };
+
+VideoParser.prototype.getLogger = function() {
+  if (window.log !== undefined) {
+    return window.log.getLogger(name);
+  }
+  return console;
+}
 
 exports["video/ogg"] = VideoParser;
 exports["video/webm"] = VideoParser;

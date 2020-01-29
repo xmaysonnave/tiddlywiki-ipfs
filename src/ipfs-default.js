@@ -14,6 +14,13 @@ utils
 /*global $tw: false */
 "use strict";
 
+exports.getLog = function() {
+  if (window.log !== undefined) {
+    return window.log;
+  }
+  return console;
+}
+
 /*
  * Retrieve ipfs saver priority with default value if applicable
  */
@@ -41,8 +48,9 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      this.logger = new $tw.utils.Logger("ipfs-default");
-      this.logger.alert(error.message);
+      const log = $tw.utils.getLog();
+      log.error(error);
+      $tw.utils.alert("ipfs-default", error.message);
       priority = -1;
     }
   }

@@ -1,4 +1,4 @@
-/* global jest, describe, it, expect, beforeAll */
+/* global jest, describe, it, expect */
 "use strict";
 
 const IpfsWrapper = require("../build/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;

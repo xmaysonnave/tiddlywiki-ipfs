@@ -23,20 +23,20 @@ const fileProtocol = "file:";
 const ipnsKeyword = "ipns";
 const ipfsKeyword = "ipfs";
 
+const name = "ens-action"
+
 var EnsAction = function() {
   this.once = false;
   this.ensWrapper = new EnsWrapper();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
-  this.logger = new $tw.utils.Logger("ens-action");
 };
 
-EnsAction.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
+EnsAction.prototype.getLogger = function() {
+  if (window.log !== undefined) {
+    return window.log.getLogger(name);
   }
+  return console;
 }
 
 EnsAction.prototype.init = function() {
@@ -76,7 +76,7 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
   const ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
-    this.logger.alert("Undefined ENS domain...");
+    $tw.utils.alert(name, "Undefined ENS domain...");
     return false;
   }
 
@@ -84,7 +84,7 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
   const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
   // Check
   if (gatewayUrl == null) {
-    this.logger.alert("Undefined IPFS Gateway URL...");
+    $tw.utils.alert(name, "Undefined IPFS Gateway URL...");
     return false;
   }
 
@@ -94,7 +94,7 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
     host: gatewayHost
   } = this.ipfsLibrary.parseUrl(gatewayUrl);
 
-  if (this.isVerbose()) this.logger.info(
+  this.getLogger().info(
     "ENS domain: "
     + ensDomain
   );
@@ -102,14 +102,16 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
   // Retrieve a WEB3 provider
   var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
   if (error != null)  {
-    this.logger.alert(error.message);
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
     return false;
   }
 
   // Fetch ENS domain content
-  var { error, decoded, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+  var { error, decoded } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
   if (error != null)  {
-    this.logger.alert(error.message);
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
     return false;
   }
 
@@ -135,15 +137,15 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
 
   // Check
   if (protocol == undefined || protocol == null) {
-    this.logger.alert("Unknown protocol...");
+    $tw.utils.alert(name, "Unknown protocol...");
     return false;
   }
   if (protocol === fileProtocol) {
-    this.logger.alert("Undefined IPFS wiki...");
+    $tw.utils.alert(name, "Undefined IPFS wiki...");
     return false;
   }
   if (pathname == undefined || pathname == null) {
-    this.logger.alert("Unknown pathname...");
+    $tw.utils.alert(name, "Unknown pathname...");
     return false;
   }
 
@@ -152,18 +154,18 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
 
   // Check
   if (protocol == null) {
-    this.logger.alert("Unknown IPFS protocol...");
+    $tw.utils.alert(name, "Unknown IPFS protocol...");
     return false;
   }
   if (cid == null) {
-    this.logger.alert("Unknown IPFS identifier...");
+    $tw.utils.alert(name, "Unknown IPFS identifier...");
     return false;
   }
 
   // IPFS client
   var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
   if (error != null)  {
-    this.logger.alert(error.message);
+    $tw.utils.alert(name, error.message);
     return false;
   }
 
@@ -171,7 +173,8 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
   if (protocol === ipnsKeyword) {
     var { error, resolved: cid } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
     if (error != null) {
-      this.logger.alert(error.message);
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
       return false;
     }
   }
@@ -180,11 +183,11 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
   const ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
-    this.logger.alert("Undefined ENS domain...");
+    $tw.utils.alert(name, "Undefined ENS domain...");
     return false;
   }
 
-  if (this.isVerbose()) this.logger.info(
+  this.getLogger().info(
     "ENS domain: "
     + ensDomain
   );
@@ -192,31 +195,34 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
   // Retrieve a WEB3 provider
   var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
   if (error != null)  {
-    this.logger.alert(error.message);
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
     return false;
   }
 
   // Fetch ENS domain content
   var { error, decoded: ensContent, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
   if (error != null)  {
-    this.logger.alert(error.message);
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
     return false;
   }
 
   // Nothing to publish
   if (ensContent !== null && ensContent === cid) {
-    this.logger.alert("The current resolved ENS domain content is up to date...");
+    $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
     return false;
   }
 
-  if (this.isVerbose()) this.logger.info(
+  this.getLogger().info(
     "Publishing ENS domain: "
     + ensDomain
   );
 
   var { error } = await this.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
   if (error != null)  {
-    this.logger.alert(error.message);
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
     return false;
   }
 
@@ -225,7 +231,8 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
     var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, ensContent);
     // Log and continue
     if (error != null)  {
-      this.logger.alert(error.message);
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     }
   }
 

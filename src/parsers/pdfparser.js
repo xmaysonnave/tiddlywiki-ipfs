@@ -48,8 +48,9 @@ The PDF parser embeds a PDF viewer
 /*global $tw: false */
 "use strict";
 
+const name = "ipfs-pdfparser";
+
 var PdfParser = function(type,text,options) {
-  let logger = new $tw.utils.Logger("ipfs-parser");
   let self = this;
   let uri = options._canonical_uri;
   let tiddler = options.tiddler;
@@ -69,7 +70,8 @@ var PdfParser = function(type,text,options) {
       $tw.rootWidget.refresh(changedTiddlers);
     })
     .catch( (error) => {
-      logger.error(error.message);
+      self.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     });
   } else {
     if (uri) {
@@ -80,6 +82,13 @@ var PdfParser = function(type,text,options) {
   }
   this.tree = [element];
 };
+
+PdfParser.prototype.getLogger = function() {
+  if (window.log !== undefined) {
+    return window.log.getLogger(name);
+  }
+  return console;
+}
 
 exports["application/pdf"] = PdfParser;
 

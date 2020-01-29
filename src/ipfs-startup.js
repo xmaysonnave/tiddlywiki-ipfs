@@ -18,36 +18,47 @@ const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 
 const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
 const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
+const IpfsModule = require("$:/plugins/ipfs/ipfs-module.js").IpfsModule;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
-
-const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 exports.name = "ipfs-startup";
 exports.platforms = ["browser"];
 exports.after = ["load-modules"];
 exports.synchronous = true;
 
-exports.startup = function() {
-  // Logger
-  const logger = new $tw.utils.Logger("ipfs-startup");
+exports.startup = async function() {
   // Requirement
   if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
-    logger.alert("The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed");
+    $tw.utils.alert(
+      "ipfs-startup",
+      "The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed"
+    );
   }
+  // Logger
+  const ipfsModule = new IpfsModule();
+  // Load loglevel
+  await ipfsModule.loadLoglevel();
+  // Logger
+  const log = window.log.getLogger("ipfs-startup");
+  if ($tw.utils.getIpfsVerbose()) {
+    window.log.setLevel("trace", false);
+    log.info("IPFS with TiddlyWiki is verbose...");
+  } else {
+    window.log.setLevel("trace", false);
+    log.info("IPFS with TiddlyWiki is not verbose...");
+    window.log.setLevel("warn", false);
+  }
+  // Log priority
+  log.info(
+    "IPFS Saver priority: "
+    + $tw.utils.getIpfsPriority()
+  );
   // Update SaverHandler
   SaverHandler.prototype.initSavers = IpfsSaverHandler.prototype.initSavers;
   SaverHandler.prototype.saveWiki = IpfsSaverHandler.prototype.saveWiki;
   SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
   SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
-  // Load verbose property
-  if ($tw.utils.getIpfsVerbose()) logger.info("IPFS with TiddlyWiki is verbose...");
-  // Load priority
-  var priority = $tw.utils.getIpfsPriority();
-  if ($tw.utils.getIpfsVerbose()) logger.info(
-    "IPFS Saver priority: "
-    + priority
-  );
   // Unpin
   window.unpin = [];
   // Missing Media Types
@@ -59,10 +70,10 @@ exports.startup = function() {
   $tw.utils.registerFileType("video/webm","base64",".webm");
   // Init Event
   const ensAction = new EnsAction();
-  ensAction.init();
   const ipfsAction = new IpfsAction();
-  ipfsAction.init();
   const ipfsTiddler = new IpfsTiddler();
+  ensAction.init();
+  ipfsAction.init();
   ipfsTiddler.init();
 };
 

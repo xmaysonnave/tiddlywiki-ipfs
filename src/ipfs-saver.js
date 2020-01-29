@@ -24,6 +24,8 @@ const ensKeyword = "ens";
 const ipfsKeyword = "ipfs";
 const ipnsKeyword = "ipns";
 
+const name = "ipfs-saver";
+
 /*
  * Select the appropriate saver module and set it up
  */
@@ -34,15 +36,13 @@ var IpfsSaver = function(wiki) {
   this.ipfsWrapper = new IpfsWrapper();
   this.ensWrapper = new EnsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
-  this.logger = new $tw.utils.Logger("ipfs-saver");
 }
 
-IpfsSaver.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
+IpfsSaver.prototype.getLogger = function() {
+  if (window.log !== undefined) {
+    return window.log.getLogger(name);
   }
+  return console;
 }
 
 IpfsSaver.prototype.save = async function(text, method, callback, options) {
@@ -110,7 +110,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           && window.unpin.indexOf(cid) == -1
         ) {
           unpin.push(cid);
-          if (this.isVerbose()) this.logger.info(
+          this.getLogger().info(
             "Request to unpin IPFS wiki: /"
             + ipfsKeyword
             + "/"
@@ -132,20 +132,21 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
       // Resolve current IPNS
       if (ipfsProtocol === ipnsKeyword) {
-        if (this.isVerbose()) this.logger.info("Processing current IPNS key...");
+        this.getLogger().info("Processing current IPNS key...");
         var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
         if (error != null)  {
           // Log and continue
-          this.logger.error(error.message);
+          this.getLogger().error(error.message);
           // Fallback
           if (ipnsName === null && ipnsKey === null && $tw.utils.getIpfsProtocol() === ipnsKeyword) {
             ipnsName = $tw.utils.getIpfsIpnsName();
             ipnsKey = $tw.utils.getIpfsIpnsKey();
-            if (this.isVerbose()) this.logger.info("Processing default IPNS...");
+            this.getLogger().info("Processing default IPNS...");
             var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
             if (error != null) {
               if (ipnsName !== null && ipnsKey !== null) {
-                this.logger.alert(error.message);
+                this.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
               } else {
                 // Unable to resolve default
                 callback(error.message);
@@ -158,11 +159,12 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       } else {
         ipnsName = $tw.utils.getIpfsIpnsName();
         ipnsKey = $tw.utils.getIpfsIpnsKey();
-        if (this.isVerbose()) this.logger.info("Processing default IPNS name and IPNS key...");
+        this.getLogger().info("Processing default IPNS name and IPNS key...");
         var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
         if (error != null) {
           if (ipnsName !== null && ipnsKey !== null) {
-            this.logger.error(error.message);
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
           } else {
             // Unable to resolve default
             callback(error.message);
@@ -178,7 +180,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         && window.unpin.indexOf(ipnsContent) == -1
       ) {
         unpin.push(ipnsContent);
-        if (this.isVerbose()) this.logger.info(
+        this.getLogger().info(
           "Request to unpin IPNS wiki: /"
           + ipfsKeyword
           + "/"
@@ -220,7 +222,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         && window.unpin.indexOf(ensContent) == -1
       ) {
         unpin.push(ensContent);
-        if (this.isVerbose()) this.logger.info(
+        this.getLogger().info(
           "Request to unpin ENS wiki: /"
           + ipfsKeyword
           + "/"
@@ -231,7 +233,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     }
 
     // Upload  current document
-    if (this.isVerbose()) this.logger.info(
+    this.getLogger().info(
       "Uploading wiki: "
       + text.length
       + " bytes"
@@ -255,19 +257,21 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Pin, if failure log and continue
     var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
     if (error != null)  {
-      this.logger.alert(error.message);
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     }
 
     // Publish to IPNS
     if (ipnsName !== null && (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword)) {
-      if (this.isVerbose()) this.logger.info(
+      this.getLogger().info(
         "Publishing IPNS wiki: "
         + ipnsName
       );
       var { error } = await this.ipfsWrapper.publishToIpns(ipfs, ipnsName, added);
       if (error != null)  {
         // Log and continue
-        this.logger.alert("Unable to publish IPNS wiki...");
+        this.getLogger().error(error);
+        $tw.utils.alert(name, "Unable to publish IPNS wiki...");
         // Remove from unpin
         if (ipfsProtocol === ipnsKeyword) {
           // Discard unpin
@@ -282,7 +286,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           }
           // Log
           if (index !== -1 && this.isVerbose()) {
-            this.logger.info(
+            this.getLogger().info(
               "Discard request to unpin IPNS wiki: /"
               + ipfsKeyword
               + "/"
@@ -303,14 +307,15 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Publish to ENS
     if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-      if (this.isVerbose()) this.logger.info(
+      this.getLogger().info(
         "Publishing ENS wiki: "
         + ensDomain
       );
       var { error } = await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
       if (error != null)  {
         // Log and continue
-        this.logger.alert(error.message);
+        this.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
         // Discard unpin
         var index = window.unpin.indexOf(ensContent);
         if (index !== -1) {
@@ -323,7 +328,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         }
         // Log
         if (index !== -1 && this.isVerbose()) {
-          this.logger.info(
+          this.getLogger().info(
             "Discard request to unpin ENS wiki: /"
             + ipfsKeyword
             + "/"
@@ -345,7 +350,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, window.unpin[i]);
         // Log and continue
         if (error != null)  {
-          this.logger.alert(error.message);
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
       }
       window.unpin = [];
@@ -354,7 +360,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin[i]);
         // Log and continue
         if (error != null)  {
-          this.logger.alert(error.message);
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
       }
       unpin = [];

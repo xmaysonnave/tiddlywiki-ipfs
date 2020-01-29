@@ -90,56 +90,88 @@ exports.Utf8ArrayToStr = function(array) {
   return out;
 }
 
-// https://observablehq.com/@bryangingechen/dynamic-import-polyfill
-exports.loadLibrary = async function(id, url, sri, module) {
-  return new Promise((resolve, reject) => {
-    try {
-      if (document.getElementById(id) == null) {
-        const script = document.createElement("script");
-        // Cleanup function
-        const cleanup = () => {
-          delete window[id];
-          script.onerror = null;
-          script.onload = null;
-          script.remove();
-          URL.revokeObjectURL(script.src);
-          script.src = "";
-        };
-        if (module == undefined) {
-          script.type = "text/javascript";
-        } else {
-          script.type = "module";
-        }
-        script.id = id;
-        script.async = false;
-        script.defer = "defer";
-        script.src = url;
-        if (sri) {
-          script.integrity = sri;
-        }
-        script.crossOrigin = "anonymous";
-        document.head.appendChild(script);
-        script.onload = () => {
-          resolve(window[id]);
-          cleanup();
-          const logger = new $tw.utils.Logger("ipfs-utils");
-          if ($tw.utils.getIpfsVerbose()) logger.info(
-            "Loaded: "
-            + url
-          );
-        }
-        script.onerror = () => {
-          reject(new Error("Failed to load: " + url));
-          cleanup();
-        }
-      } else {
-        return resolve(window[id]);
-      }
-    } catch (error) {
-      reject(error);
+/**
+ * $:/core/modules/utils/logger.js
+ *
+ * TiddlyWiki created by Jeremy Ruston, (jeremy [at] jermolene [dot] com)
+ *
+ * Copyright (c) 2004-2007, Jeremy Ruston
+ * Copyright (c) 2007-2018, UnaMesa Association
+ * Copyright (c) 2019-2020, Blue Light
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * * Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+exports.alert = function(callee, text) {
+
+  if (typeof window === "undefined" || typeof window.navigator === "undefined") {
+    return;
+  }
+
+  const ALERT_TAG = "$:/tags/Alert";
+
+  // Check if there is an existing alert with the same text and the same component
+  var existingAlerts = $tw.wiki.getTiddlersWithTag("$:/tags/Alert");
+  var alertFields;
+  var existingCount;
+
+  $tw.utils.each(existingAlerts, function(title) {
+    var tiddler = $tw.wiki.getTiddler(title);
+    if (tiddler.fields.text === text
+      && tiddler.fields.component === self.componentName
+      && tiddler.fields.modified
+      && (!alertFields || tiddler.fields.modified < alertFields.modified)
+    ) {
+        alertFields = $tw.utils.extend({}, tiddler.fields);
     }
   });
-};
+
+  if (alertFields) {
+    existingCount = alertFields.count || 1;
+  } else {
+    alertFields = {
+      title: $tw.wiki.generateNewTitle("$:/temp/alerts/alert", {prefix: ""}),
+      text: text,
+      tags: [ALERT_TAG],
+      component: callee
+    };
+    existingCount = 0;
+  }
+
+  alertFields.modified = new Date();
+  if (++existingCount > 1) {
+    alertFields.count = existingCount;
+  } else {
+    alertFields.count = undefined;
+  }
+
+  $tw.wiki.addTiddler(new $tw.Tiddler(alertFields));
+
+}
 
 exports.getChangedTiddlers = function(tiddler) {
   const title = tiddler.getFieldString("title");
