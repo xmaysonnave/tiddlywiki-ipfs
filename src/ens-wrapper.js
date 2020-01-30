@@ -14,36 +14,25 @@ EnsWrapper
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const EnsLibrary = require("./ens-library.js").EnsLibrary;
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 const name = "ens-wrapper";
 
 var EnsWrapper = function() {
-  // Libraries
   this.ensLibrary = new EnsLibrary();
   this.ipfsLibrary = new IpfsLibrary();
 }
 
 EnsWrapper.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-EnsWrapper.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, account) {

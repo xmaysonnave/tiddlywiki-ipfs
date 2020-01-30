@@ -14,6 +14,10 @@ EnsAction
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
@@ -33,24 +37,10 @@ var EnsAction = function() {
 };
 
 EnsAction.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-EnsAction.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 EnsAction.prototype.init = function() {

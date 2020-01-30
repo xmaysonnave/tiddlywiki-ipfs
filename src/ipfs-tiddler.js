@@ -14,7 +14,10 @@ IpfsTiddler
 /*global $tw: false */
 "use strict";
 
-const IpfsModule = require("$:/plugins/ipfs/ipfs-module.js").IpfsModule;
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
@@ -26,31 +29,16 @@ const name = "ipfs-tiddler";
 var IpfsTiddler = function() {
   this.once = false;
   this.ipfsLibrary = new IpfsLibrary();
-  this.ipfsModule = new IpfsModule();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
 };
 
 IpfsTiddler.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-IpfsTiddler.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 IpfsTiddler.prototype.init = function() {
@@ -95,16 +83,13 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   // process verbose
   const verbose = changes["$:/ipfs/saver/verbose"];
   if (verbose !== undefined && verbose.modified) {
-    if (window !== undefined && window.log !== undefined) {
-      if (this.isVerbose()) {
-        this.updateLoggers("trace");
-        this.getLogger().info("IPFS with TiddlyWiki is verbose...");
-      } else {
-        const logger = this.getLogger();
-        logger.setLevel("info", false);
-        logger.info("IPFS with TiddlyWiki is not verbose...");
-        this.updateLoggers("warn");
-      }
+    if (root.ipfsModule.isVerbose()) {
+      root.ipfsModule.updateLoggers("trace");
+      this.getLogger().info("IPFS with TiddlyWiki is verbose...");
+    } else {
+      this.getLogger().setLevel("info", false);
+      this.getLogger().info("IPFS with TiddlyWiki is not verbose...");
+      root.ipfsModule.updateLoggers("warn");
     }
   }
   // process unpin
@@ -144,19 +129,6 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   }
 }
 
-IpfsTiddler.prototype.updateLoggers = function(level) {
-  if (window !== undefined && window.log !== undefined) {
-    window.log.setLevel(level, false);
-    const loggers = window.log.getLoggers();
-    for (var property in loggers) {
-      if (Object.prototype.hasOwnProperty.call(loggers, property)) {
-        const logger = window.log.getLogger(property);
-        logger.setLevel(level, false);
-      }
-    }
-  }
-}
-
 IpfsTiddler.prototype.handleDeleteTiddler = function(tiddler) {
   // Process if _canonical_uri is set
   const uri = tiddler.getFieldString("_canonical_uri");
@@ -169,9 +141,9 @@ IpfsTiddler.prototype.handleDeleteTiddler = function(tiddler) {
   // Store old cid as it needs to be unpined when the wiki is saved if applicable
   if ($tw.utils.getIpfsUnpin()
     && cid !== null
-    && window.unpin.indexOf(cid) == -1
+    && root.unpin.indexOf(cid) == -1
   ) {
-    window.unpin.push(cid);
+    root.unpin.push(cid);
     this.getLogger().info(
       "Request to unpin: /"
       + ipfsKeyword
@@ -424,9 +396,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         });
 
         if (cid !== null) {
-          const index = window.unpin.indexOf(cid);
+          const index = root.unpin.indexOf(cid);
           if (index !== -1) {
-            window.unpin.splice(index, 1);
+            root.unpin.splice(index, 1);
             this.getLogger().info(
               "Discard request to unpin: /"
               + ipfsKeyword
@@ -450,9 +422,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         const { cid: oldCid } = this.ipfsLibrary.decodeCid(oldPathname);
         if ($tw.utils.getIpfsUnpin()
           && oldCid !== null
-          && window.unpin.indexOf(oldCid) == -1
+          && root.unpin.indexOf(oldCid) == -1
         ) {
-          window.unpin.push(oldCid);
+          root.unpin.push(oldCid);
           this.getLogger().info(
             "Request to unpin: /"
             + ipfsKeyword
@@ -557,9 +529,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         });
 
         if (cid !== null) {
-          const index = window.unpin.indexOf(cid);
+          const index = root.unpin.indexOf(cid);
           if (index !== -1) {
-            window.unpin.splice(index, 1);
+            root.unpin.splice(index, 1);
             this.getLogger().info(
               "Discard request to unpin: /"
               + ipfsKeyword
@@ -577,9 +549,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         const { cid: oldCid } = this.ipfsLibrary.decodeCid(oldPathname);
         if ($tw.utils.getIpfsUnpin()
           && oldCid !== null
-          && window.unpin.indexOf(oldCid) == -1
+          && root.unpin.indexOf(oldCid) == -1
         ) {
-          window.unpin.push(oldCid);
+          root.unpin.push(oldCid);
           this.getLogger().info(
             "Request to unpin: /"
             + ipfsKeyword

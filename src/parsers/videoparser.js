@@ -48,6 +48,10 @@ The video parser parses a video tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const name = "ipfs-videoparser";
 
 var VideoParser = function(type,text,options) {
@@ -84,12 +88,13 @@ var VideoParser = function(type,text,options) {
       element.attributes.src = { type: "string", value: value + text };
     }
   }
+  // Return the parsed tree
   this.tree = [element];
 };
 
 VideoParser.prototype.getLogger = function() {
-  if (window.log !== undefined) {
-    return window.log.getLogger(name);
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
 }

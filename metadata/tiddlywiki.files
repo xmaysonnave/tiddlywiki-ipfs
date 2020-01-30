@@ -1,4 +1,19 @@
 {
-"tiddlers": [],
-"comment": "This file is here so the tiddlers inside edition/tiddlers are not picked up by the plugin bundling process"
+	"tiddlers": [
+		{
+			"file": "loglevel/loglevel.js",
+			"fields": {
+				"type": "application/javascript",
+				"title": "$:/plugins/ipfs/loglevel/loglevel.js",
+				"module-type": "library"
+			}
+		},{
+			"file": "loglevel/LICENSE-MIT",
+			"fields": {
+				"type": "text/plain",
+				"title": "$:/plugins/ipfs/loglevel/license"
+			}
+		}
+
+	]
 }

@@ -16,26 +16,9 @@ utils
 /*global $tw: false */
 "use strict";
 
-exports.getLog = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log;
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
-  }
-  return console;
-}
-
-exports.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
-}
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
 
 exports.httpGetToUint8Array = async function(url) {
   const xhr = new XMLHttpRequest();
@@ -47,8 +30,8 @@ exports.httpGetToUint8Array = async function(url) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const log = $tw.utils.getLog();
-          log.info(
+          const logger = root.log.getLogger("ipfs-parser");
+          logger.info(
             "Loaded: "
             + url
             + " with HTTP status: "

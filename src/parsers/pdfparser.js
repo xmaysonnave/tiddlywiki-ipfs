@@ -48,6 +48,10 @@ The PDF parser embeds a PDF viewer
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const name = "ipfs-pdfparser";
 
 var PdfParser = function(type,text,options) {
@@ -80,12 +84,13 @@ var PdfParser = function(type,text,options) {
       element.attributes.src = { type: "string", value: value + text };
     }
   }
+  // Return the parsed tree
   this.tree = [element];
 };
 
 PdfParser.prototype.getLogger = function() {
-  if (window.log !== undefined) {
-    return window.log.getLogger(name);
+  if (root !== undefined) {
+    return root.root.getLogger(name);
   }
   return console;
 }

@@ -11,59 +11,46 @@ EnsLibrary
 import CID  from "cids";
 import contentHash from "content-hash";
 
-import { IpfsModule } from "./ipfs-module.js"
-
 (function(){
 
 /*jslint node: true, browser: true*/
 /*global $tw: false*/
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const name = "ens-library";
 
 var EnsLibrary = function() {
-  // Module
-  this.ipfsModule = new IpfsModule();
+  // https://docs.ens.domains/ens-deployments
   // https://github.com/ensdomains/ui/blob/master/src/ens.js
   this.registries = {
     1: {
-      address: "0x314159265dd8dbb310642f98f50c066173c1259b",
+      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       network: "Ethereum Main Network: 'Mainnet', chainId: '1'"
     },
     3: {
-      address: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
+      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       network: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'"
     },
     4: {
-      address: "0xe7410170f87102df0055eb195163a03b7f2bff4a",
+      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       network: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'"
     },
     5: {
-      address: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
+      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       network: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'"
     }
   };
 };
 
 EnsLibrary.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-EnsLibrary.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
@@ -158,13 +145,13 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 EnsLibrary.prototype.getProvider = function() {
   var provider = null;
   // Check if an Ethereum provider is available
-  if (typeof window.ethereum !== "undefined") {
-    provider = window.ethereum;
-    this.getLogger().info("Ethereum provider: 'window.ethereum'...");
+  if (typeof root.ethereum !== "undefined") {
+    provider = root.ethereum;
+    this.getLogger().info("Ethereum provider: 'root.ethereum'...");
   }
-  if (provider == null && window.web3 !== undefined && window.web3.currentProvider !== undefined) {
-    provider = window.web3.currentProvider;
-    this.getLogger().info("Ethereum provider: 'window.web3.currentProvider'...");
+  if (provider == null && root.web3 !== undefined && root.web3.currentProvider !== undefined) {
+    provider = root.web3.currentProvider;
+    this.getLogger().info("Ethereum provider: 'root.web3.currentProvider'...");
   }
   if (provider == null) {
     throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
@@ -174,14 +161,14 @@ EnsLibrary.prototype.getProvider = function() {
 
 EnsLibrary.prototype.getWeb3Provider = async function() {
   // Load ethers
-  await this.ipfsModule.loadEtherJsLibrary();
+  await root.ipfsModule.loadEtherJsLibrary();
   // Retrieve provider
   const provider = this.getProvider();
   // Enable provider
   // https://github.com/ethers-io/ethers.js/issues/433
   const account = await this.enableProvider(provider);
   // Instantiate Web3Provider
-  const web3Provider = new window.ethers.providers.Web3Provider(provider);
+  const web3Provider = new root.ethers.providers.Web3Provider(provider);
   return {
     web3Provider: web3Provider,
     account: account
@@ -223,7 +210,7 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
   }
   // Low level call
   const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
-  const iface = new window.ethers.utils.Interface(abi)
+  const iface = new root.ethers.utils.Interface(abi)
   const data = iface.functions.resolver.encode([node]);
   const result = await web3Provider.call({ from: account, to: registryAddress, data: data });
   if (result == undefined || result == null || result === "0x") {
@@ -231,7 +218,7 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
   }
   // decode if applicable
   try {
-    const decoded = window.ethers.utils.defaultAbiCoder.decode(["address"], result);
+    const decoded = root.ethers.utils.defaultAbiCoder.decode(["address"], result);
     return decoded[0];
   } catch (error) {
     this.getLogger().error(error);
@@ -254,7 +241,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
   }
   // true when interfaceID is 0x01ffc9a7
   var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
-  var iface = new window.ethers.utils.Interface(abi)
+  var iface = new root.ethers.utils.Interface(abi)
   var data = iface.functions.supportsInterface.encode(["0x01ffc9a7"]);
   var result = await web3Provider.call({ from: account, to: address, data: data });
   if (result == undefined || result == null || result === "0x") {
@@ -262,7 +249,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
   }
   // decode
   try {
-    var decoded = window.ethers.utils.defaultAbiCoder.decode(["bool"], result);
+    var decoded = root.ethers.utils.defaultAbiCoder.decode(["bool"], result);
     if (decoded[0] == false) {
       return false;
     }
@@ -278,7 +265,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
   }
   // decode
   try {
-    var decoded = window.ethers.utils.defaultAbiCoder.decode(["bool"], result);
+    var decoded = root.ethers.utils.defaultAbiCoder.decode(["bool"], result);
     // conform to spec
     if (decoded[0] == false) {
       return true;
@@ -304,7 +291,7 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
   }
   // contenthash, true when interfaceID is 0xbc1c58d1
   var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
-  var iface = new window.ethers.utils.Interface(abi)
+  var iface = new root.ethers.utils.Interface(abi)
   var data = iface.functions.supportsInterface.encode(["0xbc1c58d1"]);
   var result = await web3Provider.call({ from: account, to: address, data: data });
   if (result == undefined || result == null || result === "0x") {
@@ -312,7 +299,7 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
   }
   try {
     // decode
-    var decoded = window.ethers.utils.defaultAbiCoder.decode(["bool"], result);
+    var decoded = root.ethers.utils.defaultAbiCoder.decode(["bool"], result);
     if (decoded[0] == false) {
       return false;
     }
@@ -335,7 +322,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   }
 
   // Resolve domain as namehash
-  const domainHash = window.ethers.utils.namehash(domain);
+  const domainHash = root.ethers.utils.namehash(domain);
 
   // Fetch ens registry address
   const registryAddress = await this.getRegistryAddress(web3Provider);
@@ -367,7 +354,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   // retrieve content hash
   this.getLogger().info("Processing ENS domain content...");
   const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
-  const iface = new window.ethers.utils.Interface(abi)
+  const iface = new root.ethers.utils.Interface(abi)
   const data = iface.functions.contenthash.encode([domainHash]);
   const result = await web3Provider.call({ from: account, to: resolverAddress, data: data });
   if (result == undefined || result == null || result === "0x") {
@@ -378,7 +365,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   }
 
   // decode bytes result
-  var content = window.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
+  var content = root.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
   if (content == undefined || content == null || Array.isArray(content) === false || content[0] === "0x") {
     return {
       decoded: null,
@@ -421,7 +408,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
   }
 
   // Resolve domain as namehash
-  const domainHash = window.ethers.utils.namehash(domain);
+  const domainHash = root.ethers.utils.namehash(domain);
 
   // Fetch ens registry address
   const registryAddress = await this.getRegistryAddress(web3Provider);
@@ -458,7 +445,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
   try {
     this.getLogger().info("Processing ENS domain content...");
     const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
-    const iface = new window.ethers.utils.Interface(abi)
+    const iface = new root.ethers.utils.Interface(abi)
     const data = iface.functions.setContenthash.encode([domainHash, encoded]);
     const signer = web3Provider.getSigner();
     const tx = await signer.sendTransaction({ to: resolverAddress, data: data });

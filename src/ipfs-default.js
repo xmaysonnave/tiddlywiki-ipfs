@@ -14,26 +14,9 @@ utils
 /*global $tw: false */
 "use strict";
 
-exports.getLog = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log;
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
-  }
-  return console;
-}
-
-exports.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
-}
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
 
 /*
  * Retrieve ipfs saver priority with default value if applicable
@@ -62,8 +45,8 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      const log = $tw.utils.getLog();
-      log.error(error);
+      const logger = root.log.getLogger();
+      logger.error(error);
       $tw.utils.alert("ipfs-default", error.message);
       priority = -1;
     }

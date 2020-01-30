@@ -14,6 +14,10 @@ IpfsWrapper
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 const ipfsKeyword = "/ipfs/";
@@ -22,29 +26,14 @@ const ipnsKeyword = "/ipns/";
 const name = "ipfs-wrapper";
 
 var IpfsWrapper = function() {
-  // Library
   this.ipfsLibrary = new IpfsLibrary();
 }
 
 IpfsWrapper.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-IpfsWrapper.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
@@ -190,7 +179,7 @@ IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
         provider: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "IPFS provider: "
       + policy.provider
     );
@@ -240,7 +229,7 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
 
   // Fetch IPNS name and IPNS key
   if (ipnsName !== null && ipnsKey !== null) {
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Fetch IPNS name: "
       + ipnsName
       + " and IPNS key: "
@@ -260,11 +249,11 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
         ipnsKey: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully fetched IPNS name and IPNS key..."
     );
   } else if (ipnsName !== null) {
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Fetch IPNS name: "
       + ipnsName
     );
@@ -283,12 +272,12 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
         ipnsKey: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully fetched IPNS key: "
       + ipnsKey
     );
   } else {
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Fetch IPNS key: "
       + ipnsKey
     );
@@ -307,7 +296,7 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
         ipnsKey: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully fetched IPNS name: "
       + ipnsName
     );
@@ -369,7 +358,7 @@ IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, name) {
         key: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully generated IPNS key: "
       + id
     );
@@ -399,7 +388,7 @@ IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, name) {
         key: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully removed IPNS name: "
       + name
       + " and IPNS key: "
@@ -434,7 +423,7 @@ IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
         name: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully renamed IPNS name: "
       + was
       + " with "
@@ -465,7 +454,7 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
         keys: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info("Successfully fetched IPNS keys...");
+   this.getLogger().info("Successfully fetched IPNS keys...");
     return {
       error: null,
       keys: keys
@@ -493,7 +482,7 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
         fetched: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully fetched: "
       + ipfsKeyword
       + cid
@@ -523,7 +512,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
         size: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully added "
       + size
       + " bytes to "
@@ -559,7 +548,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, id) {
         resolved: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully resolved IPNS key: "
       + resolved
     );
@@ -591,7 +580,7 @@ IpfsWrapper.prototype.publishToIpns = async function(ipfs, name, cid) {
         published: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully published: "
       + ipfsKeyword
       + cid
@@ -624,7 +613,7 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
         pinned: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully pinned: "
       + ipfsKeyword
       + cid
@@ -657,7 +646,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
         unpinned: null
       };
     }
-    if (this.isVerbose()) this.getLogger().info(
+   this.getLogger().info(
       "Successfully unpinned: "
       + ipfsKeyword
       + cid
@@ -667,7 +656,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
       unpinned: unpinned
     };
   } catch (error) {
-    this.getLogger.error(error);
+    this.getLogger().error(error);
     return {
       error: err,
       unpinned: null

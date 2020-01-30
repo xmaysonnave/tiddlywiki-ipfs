@@ -1,6 +1,10 @@
-/* global jest, describe, it, expect */
+/* global jest, beforeAll, describe, it, expect */
 "use strict";
 
+const log = require("loglevel");
+const root = require("window-or-global");
+
+const IpfsModule = require("../build/plugins/ipfs/ipfs-module.js").IpfsModule;
 const IpfsWrapper = require("../build/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const resolvedTiddly = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau";
@@ -26,6 +30,13 @@ const keys = [
 ];
 
 jest.mock("../build/plugins/ipfs/ipfs-library.js");
+
+beforeAll(() => {
+  const ipfsModule = new IpfsModule();
+  root.ipfsModule = ipfsModule;
+  root.log = log;
+  ipfsModule.getLogger().setLevel("warn", false);
+});
 
 describe("IPNS", () => {
 

@@ -14,7 +14,13 @@ Startup initialisation
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
+
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
 const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
 const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
@@ -22,50 +28,36 @@ const IpfsModule = require("$:/plugins/ipfs/ipfs-module.js").IpfsModule;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
-exports.name = "ipfs-startup";
 exports.platforms = ["browser"];
-exports.after = ["load-modules"];
+exports.after = ["startup"];
 exports.synchronous = true;
 
 exports.startup = async function() {
+  const name = "ipfs-startup";
   // Requirement
   if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
     $tw.utils.alert(
-      "ipfs-startup",
+      name,
       "The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed"
     );
   }
-  // Logger
+  // Module
   const ipfsModule = new IpfsModule();
-  // Load loglevel
-  await ipfsModule.loadLoglevel();
-  // Logger
-  var log = null;
-  if (window !== undefined && window.log !== undefined) {
-    log = window.log.getLogger("ipfs-startup");
-  } else {
-    log = console;
-  }
+  root.ipfsModule = ipfsModule;
+  root.log = log;
+  // Init Logger and populate root with log property
+  const logger = ipfsModule.getLogger(name);
   const verboseMsg = "IPFS with TiddlyWiki is verbose...";
   if ($tw.utils.getIpfsVerbose()) {
-    if (window !== undefined && window.log !== undefined) {
-      window.log.setLevel("trace", false);
-      log.setLevel("trace", false);
-    }
-    log.info(verboseMsg);
+    logger.setLevel("trace", false);
+    logger.info(verboseMsg);
   } else {
-    if (window !== undefined && window.log !== undefined) {
-      window.log.setLevel("trace", false);
-      log.setLevel("trace", false);
-      log.info("IPFS with TiddlyWiki is not verbose...");
-      window.log.setLevel("warn", false);
-      log.setLevel("warn", false);
-    } else {
-      log.info(verboseMsg);
-    }
+    logger.setLevel("trace", false);
+    logger.info("IPFS with TiddlyWiki is not verbose...");
+    logger.setLevel("warn", false);
   }
   // Log priority
-  log.info(
+  logger.info(
     "IPFS Saver priority: "
     + $tw.utils.getIpfsPriority()
   );
@@ -75,7 +67,7 @@ exports.startup = async function() {
   SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
   SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
   // Unpin
-  window.unpin = [];
+  root.unpin = [];
   // Missing Media Types
   $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
   $tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
@@ -85,10 +77,10 @@ exports.startup = async function() {
   $tw.utils.registerFileType("video/webm","base64",".webm");
   // Init Event
   const ensAction = new EnsAction();
-  const ipfsAction = new IpfsAction();
-  const ipfsTiddler = new IpfsTiddler();
   ensAction.init();
+  const ipfsAction = new IpfsAction();
   ipfsAction.init();
+  const ipfsTiddler = new IpfsTiddler();
   ipfsTiddler.init();
 };
 

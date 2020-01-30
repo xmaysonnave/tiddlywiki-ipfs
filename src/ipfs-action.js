@@ -14,8 +14,11 @@ IpfsAction
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-const IpfsModule = require("$:/plugins/ipfs/ipfs-module.js").IpfsModule;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
@@ -30,31 +33,16 @@ var IpfsAction = function() {
   this.once = false;
   this.ensWrapper = new EnsWrapper();
   this.ipfsLibrary = new IpfsLibrary();
-  this.ipfsModule = new IpfsModule();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
 };
 
 IpfsAction.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-IpfsAction.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 IpfsAction.prototype.init = function() {
@@ -182,7 +170,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     const { cid } = this.ipfsLibrary.decodeCid(pathname);
     if ($tw.utils.getIpfsUnpin()
       && cid !== null
-      && window.unpin.indexOf(cid) == -1
+      && root.unpin.indexOf(cid) == -1
     ) {
       unpin.push(cid);
       this.getLogger().info(
@@ -209,7 +197,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     if (
       $tw.utils.getIpfsUnpin()
       && ipnsContent !== null
-      && window.unpin.indexOf(ipnsContent) == -1
+      && root.unpin.indexOf(ipnsContent) == -1
     ) {
       unpin.push(ipnsContent);
       this.getLogger().info(
@@ -241,7 +229,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     if (
       $tw.utils.getIpfsUnpin()
       && ensContent !== null
-      && window.unpin.indexOf(ensContent) == -1
+      && root.unpin.indexOf(ensContent) == -1
     ) {
       unpin.push(ensContent);
       this.getLogger().info(
@@ -570,9 +558,9 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
     return false;
   }
 
-  const index = window.unpin.indexOf(cid);
+  const index = root.unpin.indexOf(cid);
   if ($tw.utils.getIpfsUnpin() && index !== -1) {
-    window.unpin.splice(index, 1);
+    root.unpin.splice(index, 1);
     this.getLogger().info(
       "Discard request to unpin: /"
       + ipfsKeyword
@@ -670,9 +658,9 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
     return false;
   }
 
-  const index = window.unpin.indexOf(cid);
-  if ($tw.utils.getIpfsUnpin() && window.unpin.indexOf(cid) !== -1) {
-    window.unpin.splice(index, 1);
+  const index = root.unpin.indexOf(cid);
+  if ($tw.utils.getIpfsUnpin() && root.unpin.indexOf(cid) !== -1) {
+    root.unpin.splice(index, 1);
   }
 
   return false;
@@ -966,7 +954,7 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
       + ipfsKeyword
       + "/"
       + resolved;
-    window.open(url, "_blank", "noopener");
+    root.open(url, "_blank", "noopener");
   }
 
   return true;
@@ -975,29 +963,29 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
 
 IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
   // Load mobile console if applicable
-  if (typeof window.eruda === "undefined") {
-    await this.ipfsModule.loadErudaLibrary();
+  if (typeof root.eruda === "undefined") {
+    await root.ipfsModule.loadErudaLibrary();
     const eruda = document.createElement("div");
-    window.document.body.appendChild(eruda);
-    window.eruda.init({
+    root.document.body.appendChild(eruda);
+    root.eruda.init({
       container: eruda,
       tool: ["console"],
       useShadowDom: true,
       autoScale: true
     });
-    window.eruda.init();
+    root.eruda.init();
     // Preserve user preference if any, default is 80
-    if (window.eruda.get().config.get("displaySize") === 80) {
-      window.eruda.get().config.set("displaySize", 40);
+    if (root.eruda.get().config.get("displaySize") === 80) {
+      root.eruda.get().config.set("displaySize", 40);
     }
     // Preserve user preference if any, default is 0.95
-    if (window.eruda.get().config.get("transparency") === 0.95) {
-      window.eruda.get().config.set("transparency", 1);
+    if (root.eruda.get().config.get("transparency") === 0.95) {
+      root.eruda.get().config.set("transparency", 1);
     }
     this.getLogger().info("Mobile console has been loaded...");
   } else {
-    window.eruda.destroy();
-    delete window.eruda;
+    root.eruda.destroy();
+    delete root.eruda;
     this.getLogger().info("Mobile console has been unloaded...");
   }
 }

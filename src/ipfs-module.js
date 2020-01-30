@@ -8,57 +8,75 @@ IpfsModule
 
 \*/
 
+
 (function(){
 
 /*jslint node: true, browser: true */
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const name = "ipfs-module";
 
 var IpfsModule = function() {};
-
-IpfsModule.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
-  }
-  return console;
-}
 
 IpfsModule.prototype.isVerbose = function() {
   try {
     return $tw.utils.getIpfsVerbose();
   } catch (error) {
-    return false;
+    return true;
+  }
+}
+
+IpfsModule.prototype.getLogger = function(name) {
+  var logger = null;
+  // Retrieve
+  if (root !== undefined && root.log !== undefined) {
+    if (name == undefined || name == null || name.trim() === "") {
+      logger = root.log;
+    } else {
+      logger = root.log.getLogger(name);
+    }
+  } else {
+    logger = console;
+  }
+  return logger;
+}
+
+IpfsModule.prototype.updateLoggers = function(level) {
+  root.log.setLevel(level, false);
+  const loggers = root.log.getLoggers();
+  for (var property in loggers) {
+    if (Object.prototype.hasOwnProperty.call(loggers, property)) {
+      const logger = root.log.getLogger(property);
+      logger.setLevel(level, false);
+    }
   }
 }
 
 // https://www.srihash.org/
 // https://github.com/liriliri/eruda
 IpfsModule.prototype.loadErudaLibrary = async function() {
-  if (typeof window.eruda === "undefined") {
+  if (typeof root.eruda === "undefined") {
     await this.loadLibrary(
       "ErudaLibrary",
       "https://cdn.jsdelivr.net/npm/eruda@2.0.2/eruda.min.js",
       "sha384-GLqmQCByhqGAIgMwKsNaIgNZgaNZel7Moqd2mEoeQWUXUVBth0Yo3Nt6QiWiG9+w"
     );
-    }
+  }
 }
 
 // https://www.srihash.org/
 // https://github.com/ethers-io/ethers.js/
 IpfsModule.prototype.loadEtherJsLibrary = async function() {
-  if (typeof window.ethers === "undefined") {
+  if (typeof root.ethers === "undefined") {
     return await this.loadLibrary(
       "EtherJsLibrary",
-      "https://cdn.jsdelivr.net/npm/ethers@4.0.43/dist/ethers.min.js",
-      "sha384-QRwmP146iWM3rRaoUqzKQqvZ7EH8SVSIr9V411ZVGJrQrOPUZdEoAMEeeswO7ATu",
+      "https://cdn.jsdelivr.net/npm/ethers@4.0.44/dist/ethers.min.js",
+      "sha384-OVtNQuuquwgl2WspNZSP1tVXyso/+dUUAU7tGnC1bV7vjXGwQN8RUG13biHCbHij",
       true
     );
   }
@@ -67,26 +85,14 @@ IpfsModule.prototype.loadEtherJsLibrary = async function() {
 // https://www.srihash.org/
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsModule.prototype.loadIpfsHttpLibrary = async function() {
-  if (typeof window.IpfsHttpClient === "undefined") {
+  if (typeof root.IpfsHttpClient === "undefined") {
     await this.loadLibrary(
       "IpfsHttpLibrary",
       "https://cdn.jsdelivr.net/npm/ipfs-http-client@41.0.1/dist/index.min.js",
       "sha384-FhotltYqd3Ahyy0tJkqdR0dTReYsWEk0NQpF+TAxMPl15GmLtZhZijk1j/Uq7Xsh",
       true
     );
-    window.httpClient = window.IpfsHttpClient;
-  }
-}
-
-// https://www.srihash.org/
-// https://github.com/pimterry/loglevel
-IpfsModule.prototype.loadLoglevel = async function() {
-  if (typeof window.log === "undefined") {
-    await this.loadLibrary(
-      "IpfsLoglevel",
-      "https://cdn.jsdelivr.net/npm/loglevel@1.6.6/dist/loglevel.min.js",
-      "sha384-3V+3/NiJdobcq0r73GeVUvXWTlV8FQhXDwmjqBLQcr7YYFoOROPqU9sZNnYa36KU"
-    );
+    root.httpClient = root.IpfsHttpClient;
   }
 }
 
@@ -99,7 +105,7 @@ IpfsModule.prototype.loadLibrary = async function(id, url, sri, module) {
         const script = document.createElement("script");
         // Cleanup function
         const cleanup = () => {
-          delete window[id];
+          delete root[id];
           script.onerror = null;
           script.onload = null;
           script.remove();
@@ -121,9 +127,9 @@ IpfsModule.prototype.loadLibrary = async function(id, url, sri, module) {
         script.crossOrigin = "anonymous";
         document.head.appendChild(script);
         script.onload = () => {
-          resolve(window[id]);
+          resolve(root[id]);
           cleanup();
-          self.getLogger().info(
+          self.getLogger(name).info(
             "Loaded: "
             + url
           );
@@ -133,7 +139,7 @@ IpfsModule.prototype.loadLibrary = async function(id, url, sri, module) {
           cleanup();
         }
       } else {
-        return resolve(window[id]);
+        return resolve(root[id]);
       }
     } catch (error) {
       reject(error);

@@ -48,6 +48,10 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const name = "ipfs-imageparser";
 
 var ImageParser = function(type,text,options) {
@@ -81,12 +85,13 @@ var ImageParser = function(type,text,options) {
       element.attributes.src = { type: "string", value: value + text };
     }
   }
+  // Return the parsed tree
   this.tree = [element];
 };
 
 ImageParser.prototype.getLogger = function() {
-  if (window.log !== undefined) {
-    return window.log.getLogger(name);
+  if (root !== undefined) {
+    return root.root.getLogger(name);
   }
   return console;
 }

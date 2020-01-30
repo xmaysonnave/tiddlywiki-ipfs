@@ -1,6 +1,6 @@
 #!/bin/bash
 # plugin directory
-mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
+mkdir -p ./build/plugins/ipfs/files > /dev/null 2>&1
 # wiki directory
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 # ipfs scripts
@@ -10,8 +10,13 @@ cp -R ./tiddlers/plugin/* ./build/plugins/ipfs > /dev/null 2>&1
 # wiki tiddlers
 cp -R ./tiddlers/wiki/* ./build/tiddlers > /dev/null 2>&1
 # metadata
-cp ./metadata/tiddlywiki.files ./build > /dev/null 2>&1
 cp ./metadata/tiddlywiki.info ./build > /dev/null 2>&1
+# modules
+cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
+# loglevel
+mkdir -p ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
+cp -R ./node_modules/loglevel/lib/loglevel.js ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
+cp -R ./node_modules/loglevel/LICENSE-MIT ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # generate build number

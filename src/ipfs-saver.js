@@ -14,6 +14,10 @@ IpfsSaver
 /*global $tw: false */
 "use strict";
 
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
+
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 
@@ -39,24 +43,10 @@ var IpfsSaver = function(wiki) {
 }
 
 IpfsSaver.prototype.getLogger = function() {
-  if (window !== undefined && window.log !== undefined) {
-    const logger = window.log.getLogger(name);
-    if (this.isVerbose()) {
-      logger.setLevel("trace", false);
-    } else {
-      logger.setLevel("warn", false);
-    }
-    return logger;
+  if (root !== undefined) {
+    return root.log.getLogger(name);
   }
   return console;
-}
-
-IpfsSaver.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return false;
-  }
 }
 
 IpfsSaver.prototype.save = async function(text, method, callback, options) {
@@ -121,7 +111,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         // Request to unpin if applicable
         if ($tw.utils.getIpfsUnpin()
           && ipfsProtocol === ipfsKeyword
-          && window.unpin.indexOf(cid) == -1
+          && root.unpin.indexOf(cid) == -1
         ) {
           unpin.push(cid);
           this.getLogger().info(
@@ -191,7 +181,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       if (
         $tw.utils.getIpfsUnpin()
         && ipnsContent !== null
-        && window.unpin.indexOf(ipnsContent) == -1
+        && root.unpin.indexOf(ipnsContent) == -1
       ) {
         unpin.push(ipnsContent);
         this.getLogger().info(
@@ -233,7 +223,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       if (
         $tw.utils.getIpfsUnpin()
         && ensContent !== null
-        && window.unpin.indexOf(ensContent) == -1
+        && root.unpin.indexOf(ensContent) == -1
       ) {
         unpin.push(ensContent);
         this.getLogger().info(
@@ -289,9 +279,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         // Remove from unpin
         if (ipfsProtocol === ipnsKeyword) {
           // Discard unpin
-          var index = window.unpin.indexOf(ipnsContent);
+          var index = root.unpin.indexOf(ipnsContent);
           if (index !== -1) {
-            window.unpin.splice(index, 1);
+            root.unpin.splice(index, 1);
           } else {
             index = unpin.indexOf(ipnsContent);
             if (index !== -1) {
@@ -299,7 +289,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
             }
           }
           // Log
-          if (index !== -1 && this.isVerbose()) {
+          if (index !== -1) {
             this.getLogger().info(
               "Discard request to unpin IPNS wiki: /"
               + ipfsKeyword
@@ -331,9 +321,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
         // Discard unpin
-        var index = window.unpin.indexOf(ensContent);
+        var index = root.unpin.indexOf(ensContent);
         if (index !== -1) {
-          window.unpin.splice(index, 1);
+          root.unpin.splice(index, 1);
         } else {
           index = unpin.indexOf(ensContent);
           if (index !== -1) {
@@ -341,7 +331,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           }
         }
         // Log
-        if (index !== -1 && this.isVerbose()) {
+        if (index !== -1) {
           this.getLogger().info(
             "Discard request to unpin ENS wiki: /"
             + ipfsKeyword
@@ -360,15 +350,15 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Unpin
     if ($tw.utils.getIpfsUnpin()) {
       // Process global unpin
-      for (var i = 0; i < window.unpin.length; i++) {
-        var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, window.unpin[i]);
+      for (var i = 0; i < root.unpin.length; i++) {
+        var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, root.unpin[i]);
         // Log and continue
         if (error != null)  {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
         }
       }
-      window.unpin = [];
+      root.unpin = [];
       // Process local unpin
       for (var i = 0; i < unpin.length; i++) {
         var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin[i]);
@@ -386,7 +376,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Next
     if (nextWiki !== document.URL) {
-      window.location.assign(nextWiki);
+      root.location.assign(nextWiki);
     }
 
   } catch (error) {
