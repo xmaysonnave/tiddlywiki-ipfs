@@ -512,7 +512,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
         size: null
       };
     }
-   this.getLogger().info(
+    this.getLogger().info(
       "Successfully added "
       + size
       + " bytes to "

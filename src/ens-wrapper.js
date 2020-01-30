@@ -37,14 +37,20 @@ EnsWrapper.prototype.getLogger = function() {
 
 EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, account) {
   try {
-    const { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
-    if (decoded !== undefined && decoded !== null && protocol !== undefined && protocol !== null)  {
-      this.getLogger().info(
-        "Successfully fetched ENS domain content: /"
-        + protocol
-        + "/"
-        + decoded
-      );
+    var { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
+    if (decoded !== null && protocol !== null)  {
+      // Convert CidV0 to CidV1
+      try {
+        decoded = this.ipfsLibrary.cidV0ToCidV1(decoded);
+      } catch (error) {
+        return {
+          error: error,
+          decoded: null,
+          protocol: null
+        };
+      }
+      // Success
+      this.getLogger().info("Successfully fetched ENS domain content...");
       return {
         error: null,
         decoded: decoded,
@@ -71,6 +77,7 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
   try {
     const cidv0 = this.ipfsLibrary.cidV1ToCidV0(cid);
     await this.ensLibrary.setContenthash(domain, cidv0, web3Provider, account);
+    // Success
     this.getLogger().info("Successfully set ENS domain content...");
     return {
       error: null

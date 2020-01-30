@@ -376,15 +376,6 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   // decode content hash
   var { decoded, protocol } = this.decodeContenthash(content[0]);
 
-  // Convert CidV0 to CidV1
-  try {
-    decoded = this.ipfsLibrary.cidV0ToCidV1(decoded);
-  } catch (error) {
-    this.getLogger().error(error);
-    $tw.utils.alert(name, error.message);
-    return false;
-  }
-
   return {
     decoded: decoded,
     protocol: protocol

@@ -22,6 +22,9 @@ const root = (typeof self === 'object' && self.self === self && self)
   || (typeof global === 'object' && global.global === global && global)
   || this;
 
+
+const cidAnalyser = "https://cid.ipfs.io/#";
+
 const name = "ipfs-library";
 
 var IpfsLibrary = function() {};
@@ -121,17 +124,26 @@ IpfsLibrary.prototype.isCid = function(cid) {
 
 IpfsLibrary.prototype.cidV1ToCidV0 = function(cidv1) {
   var cidv0 = new CID(cidv1);
+  if (cidv0.codec !== "dag-pb") {
+    throw new Error("This 'cid' is not 'dag-pb' encoded: " + cidAnalyser + cidv0);
+  }
   if (cidv0.version === 1) {
-    if (cidv0.codec !== "dag-pb") {
-      throw new Error("CidV1 is not 'dag-pb' encoded: " + cidv1);
-    }
     cidv0 = cidv0.toV0().toString();
     // Log
     this.getLogger().info(
       "Converted: "
-      + "\n cidv1 (Base32): https://cid.ipfs.io/#"
+      + "\n 'cidv1' (Base32): "
+      + cidAnalyser
       + cidv1
-      + "\n to cidv0 (Base58): https://cid.ipfs.io/#"
+      + "\n to cidv0 (Base58): "
+      + cidAnalyser
+      + cidv0
+    );
+  } else {
+    // Log
+    this.getLogger().info(
+      "'cidv0' (Base58): "
+      + cidAnalyser
       + cidv0
     );
   }
@@ -140,16 +152,25 @@ IpfsLibrary.prototype.cidV1ToCidV0 = function(cidv1) {
 
 IpfsLibrary.prototype.cidV0ToCidV1 = function(cidv0) {
   var cidv1 = new CID(cidv0);
+  if (cidv1.codec !== "dag-pb") {
+    throw new Error("This 'cid' is not 'dag-pb' encoded: " + cidAnalyser + cidv1);
+  }
   if (cidv1.version === 0) {
-    if (cidv1.codec !== "dag-pb") {
-      throw new Error("CidV0 is not 'dag-pb' encoded: " + cidv1);
-    }
     cidv1 = cidv1.toV1().toString();
     this.getLogger().info(
       "Converted: "
-      + "\n cidv0 (Base58): https://cid.ipfs.io/#"
+      + "\n 'cidv0' (Base58): "
+      + cidAnalyser
       + cidv0
-      + "\n to cidv1 (Base32): https://cid.ipfs.io/#"
+      + "\n to 'cidv1' (Base32): "
+      + cidAnalyser
+      + cidv1
+    );
+  } else {
+    // Log
+    this.getLogger().info(
+      "'cidv1' (Base32): "
+      + cidAnalyser
       + cidv1
     );
   }
@@ -262,23 +283,20 @@ IpfsLibrary.prototype.add = async function(client, content) {
     // Process
     var buffer = Buffer.from(content);
     this.getLogger().info("Processing IPFS add...");
-    // https://github.com/ipfs/go-ipfs/issues/5683
-    // chunker: "size-262144"
+    // 1 - https://github.com/ipfs/go-ipfs/issues/5683
+    // default chunker: "size-262144"
     // chunker: "rabin-262144-524288-1048576"
-    // Check https://cids.ipfs.io, result[0].hash should have a 'dag-pb' multicodec
+    // 2 - TODO: small content generates a wrong cid when cidVersion: 1 is set:
+    // Not a 'dag-pb' but a 'raw' multicodec instead
+    // We generate a V0 and convert it to a V1
     const result = await client.add(buffer, {
-      // cidVersion: 1,
       cidVersion: 0,
       hashAlg: "sha2-256",
       chunker: "rabin-262144-524288-1048576",
       pin: false
     });
     if (result !== undefined && result !== null && Array.isArray(result) && result.length > 0) {
-      // return {
-      //   hash: result[0].hash,
-      //   size: result[0].size
-      // };
-      // Convert V0 to V1
+      // Check
       const cidv1 = this.cidV0ToCidV1(result[0].hash);
       return {
         hash: cidv1,
