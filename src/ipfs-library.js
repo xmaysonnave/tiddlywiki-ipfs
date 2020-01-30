@@ -135,7 +135,7 @@ IpfsLibrary.prototype.cidV1ToCidV0 = function(cidv1) {
       + "\n 'cidv1' (Base32): "
       + cidAnalyser
       + cidv1
-      + "\n to cidv0 (Base58): "
+      + "\n to 'cidv0' (Base58): "
       + cidAnalyser
       + cidv0
     );
