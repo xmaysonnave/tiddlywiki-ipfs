@@ -136,7 +136,12 @@ We recommend [nvm](https://github.com/nvm-sh/nvm) for its flexibility.
 ##### Setup
 <a name="developer-nodejs-setup"/>
 
-Follow the [nvm installation tutorial](https://github.com/nvm-sh/nvm#installation-and-update).
+Follow the [nvm installation and update tutorial](https://github.com/nvm-sh/nvm#installation-and-update):
+
+Current installation and update script:
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
+```
 
 As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
 ```
@@ -169,32 +174,32 @@ load-nvmrc
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 ```
-v10.17.0
+v10.18.1
 ```
 
 Install the recommended version.
 ```
-nvm install v10.17.0
+nvm install v10.18.1
 ```
 
 Check:
 ```
 node -v
-v10.17.0
+v10.18.1
 ```
 
 We update npm to use the latest:
 ```
 npm install -g npm@latest
 npm -v
-6.13.4
+6.13.7
 ```
 
 At this stage your global environment should look like this:
 ```
 npm -g ls --depth=0
-/home/user/.nvm/versions/node/v10.17.0/lib
-└── npm@6.13.4
+/home/user/.nvm/versions/node/v10.18.1/lib
+└── npm@6.13.7
 ```
 
 #### Repository install

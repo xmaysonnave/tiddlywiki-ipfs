@@ -1,13 +1,12 @@
 /*\
-title: $:/plugins/ipfs/ipfs-module.js
+title: $:/plugins/ipfs/ipfs-loader.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: library
 
-IpfsModule
+IpfsLoader
 
 \*/
-
 
 (function(){
 
@@ -15,56 +14,20 @@ IpfsModule
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
-const name = "ipfs-module";
+const name = "ipfs-loader";
 
-var IpfsModule = function() {};
+var IpfsLoader = function() {};
 
-IpfsModule.prototype.isVerbose = function() {
-  try {
-    return $tw.utils.getIpfsVerbose();
-  } catch (error) {
-    return true;
-  }
-}
-
-IpfsModule.prototype.getLogger = function(name) {
-  var logger = null;
-  // Retrieve
-  if (root !== undefined && root.log !== undefined) {
-    if (name == undefined || name == null || name.trim() === "") {
-      logger = root.log;
-    } else {
-      logger = root.log.getLogger(name);
-    }
-  } else {
-    logger = console;
-  }
-  return logger;
-}
-
-IpfsModule.prototype.updateLoggers = function(level) {
-  root.log.setLevel(level, false);
-  const loggers = root.log.getLoggers();
-  for (var property in loggers) {
-    if (Object.prototype.hasOwnProperty.call(loggers, property)) {
-      const logger = root.log.getLogger(property);
-      logger.setLevel(level, false);
-    }
-  }
+IpfsLoader.prototype.getLogger = function() {
+  return log.getLogger(name);
 }
 
 // https://www.srihash.org/
 // https://github.com/liriliri/eruda
-IpfsModule.prototype.loadErudaLibrary = async function() {
+IpfsLoader.prototype.loadErudaLibrary = async function() {
   if (typeof root.eruda === "undefined") {
     await this.loadLibrary(
       "ErudaLibrary",
@@ -76,7 +39,7 @@ IpfsModule.prototype.loadErudaLibrary = async function() {
 
 // https://www.srihash.org/
 // https://github.com/ethers-io/ethers.js/
-IpfsModule.prototype.loadEtherJsLibrary = async function() {
+IpfsLoader.prototype.loadEtherJsLibrary = async function() {
   if (typeof root.ethers === "undefined") {
     return await this.loadLibrary(
       "EtherJsLibrary",
@@ -89,7 +52,7 @@ IpfsModule.prototype.loadEtherJsLibrary = async function() {
 
 // https://www.srihash.org/
 // https://github.com/ipfs/js-ipfs-http-client
-IpfsModule.prototype.loadIpfsHttpLibrary = async function() {
+IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
   if (typeof root.IpfsHttpClient === "undefined") {
     await this.loadLibrary(
       "IpfsHttpLibrary",
@@ -102,7 +65,7 @@ IpfsModule.prototype.loadIpfsHttpLibrary = async function() {
 }
 
 // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
-IpfsModule.prototype.loadLibrary = async function(id, url, sri, module) {
+IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
   const self = this;
   return new Promise((resolve, reject) => {
     try {
@@ -152,6 +115,6 @@ IpfsModule.prototype.loadLibrary = async function(id, url, sri, module) {
   });
 };
 
-exports.IpfsModule = IpfsModule;
+exports.IpfsLoader = IpfsLoader;
 
 })();

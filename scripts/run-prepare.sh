@@ -17,6 +17,10 @@ cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
 mkdir -p ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
 cp -R ./node_modules/loglevel/lib/loglevel.js ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
 cp -R ./node_modules/loglevel/LICENSE-MIT ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
+# window-or-global
+mkdir -p ./build/plugins/ipfs/files/window-or-global > /dev/null 2>&1
+cp -R ./node_modules/window-or-global/lib/index.js ./build/plugins/ipfs/files/window-or-global > /dev/null 2>&1
+cp -R ./node_modules/window-or-global/LICENSE ./build/plugins/ipfs/files/window-or-global > /dev/null 2>&1
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # generate build number

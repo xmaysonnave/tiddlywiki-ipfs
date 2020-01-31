@@ -48,14 +48,7 @@ wikiparser
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
 const name = "ipfs-wikiparser";
 
@@ -105,10 +98,7 @@ var WikiParser = function(type,text,options) {
 };
 
 WikiParser.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return log.getLogger(name);
 }
 
 /*

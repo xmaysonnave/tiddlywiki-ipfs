@@ -35,10 +35,7 @@ var IpfsWrapper = function() {
 }
 
 IpfsWrapper.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return root.log.getLogger(name);
 }
 
 IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {

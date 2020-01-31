@@ -27,7 +27,6 @@ const root = (typeof self === 'object' && self.self === self && self)
   || (typeof global === 'object' && global.global === global && global)
   || this;
 
-
 const cidAnalyser = "https://cid.ipfs.io/#";
 
 const name = "ipfs-library";
@@ -35,10 +34,7 @@ const name = "ipfs-library";
 var IpfsLibrary = function() {};
 
 IpfsLibrary.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return root.log.getLogger(name);
 }
 
 IpfsLibrary.prototype.parseUrl = function(uri) {
@@ -250,7 +246,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
     throw new Error("Undefined IPFS API URL...");
   }
   // Load IpfsHttpClient
-  await root.ipfsModule.loadIpfsHttpLibrary();
+  await root.ipfsLoader.loadIpfsHttpLibrary();
   // Getting
   try {
     const { httpClient } = providers;

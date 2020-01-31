@@ -14,14 +14,7 @@ utils
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
 /*
  * Retrieve ipfs saver priority with default value if applicable
@@ -50,7 +43,7 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      const logger = root.log.getLogger();
+      const logger = log.getLogger("ipfs-default");
       logger.error(error);
       $tw.utils.alert("ipfs-default", error.message);
       priority = -1;

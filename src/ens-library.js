@@ -26,8 +26,6 @@ const root = (typeof self === 'object' && self.self === self && self)
   || (typeof global === 'object' && global.global === global && global)
   || this;
 
-const name = "ens-library";
-
 var EnsLibrary = function() {
   // https://docs.ens.domains/ens-deployments
   // https://github.com/ensdomains/ui/blob/master/src/ens.js
@@ -52,10 +50,7 @@ var EnsLibrary = function() {
 };
 
 EnsLibrary.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return root.log.getLogger(name);
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
@@ -166,7 +161,7 @@ EnsLibrary.prototype.getProvider = function() {
 
 EnsLibrary.prototype.getWeb3Provider = async function() {
   // Load ethers
-  await root.ipfsModule.loadEtherJsLibrary();
+  await root.ipfsLoader.loadEtherJsLibrary();
   // Retrieve provider
   const provider = this.getProvider();
   // Enable provider

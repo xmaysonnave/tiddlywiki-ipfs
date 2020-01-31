@@ -14,22 +14,14 @@ Startup initialisation
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
-
 const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
 const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
-const IpfsModule = require("$:/plugins/ipfs/ipfs-module.js").IpfsModule;
+const IpfsLoader = require("$:/plugins/ipfs/ipfs-loader.js").IpfsLoader;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
@@ -46,12 +38,13 @@ exports.startup = async function() {
       "The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed"
     );
   }
-  // Module
-  const ipfsModule = new IpfsModule();
-  root.ipfsModule = ipfsModule;
+  // Dynamic library loader
+  const ipfsLoader = new IpfsLoader();
+  root.ipfsLoader = ipfsLoader;
+  // Logger
   root.log = log;
   // Init Logger and populate root with log property
-  const logger = ipfsModule.getLogger(name);
+  const logger = log.getLogger(name);
   const verboseMsg = "IPFS with TiddlyWiki is verbose...";
   if ($tw.utils.getIpfsVerbose()) {
     logger.setLevel("trace", false);

@@ -14,14 +14,8 @@ IpfsAction
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
@@ -44,10 +38,7 @@ var IpfsAction = function() {
 };
 
 IpfsAction.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return log.getLogger(name);
 }
 
 IpfsAction.prototype.init = function() {
@@ -969,7 +960,7 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
 IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
   // Load mobile console if applicable
   if (typeof root.eruda === "undefined") {
-    await root.ipfsModule.loadErudaLibrary();
+    await root.ipfsLoader.loadErudaLibrary();
     const eruda = document.createElement("div");
     root.document.body.appendChild(eruda);
     root.eruda.init({

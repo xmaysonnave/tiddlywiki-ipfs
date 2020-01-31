@@ -14,14 +14,8 @@ IpfsSaver
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
@@ -48,10 +42,7 @@ var IpfsSaver = function(wiki) {
 }
 
 IpfsSaver.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return log.getLogger(name);
 }
 
 IpfsSaver.prototype.save = async function(text, method, callback, options) {

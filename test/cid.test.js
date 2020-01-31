@@ -5,13 +5,10 @@ const log = require("loglevel");
 const root = require("window-or-global");
 
 const IpfsLibrary = require("../build/plugins/ipfs/ipfs-library.js").IpfsLibrary;
-const IpfsModule = require("../build/plugins/ipfs/ipfs-module.js").IpfsModule;
 
 beforeAll(() => {
-  const ipfsModule = new IpfsModule();
-  root.ipfsModule = ipfsModule;
   root.log = log;
-  ipfsModule.getLogger().setLevel("warn", false);
+  log.setLevel("warn", false);
 });
 
 describe("CID", () => {

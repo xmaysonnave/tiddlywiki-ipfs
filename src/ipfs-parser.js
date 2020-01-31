@@ -16,14 +16,7 @@ utils
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
 exports.httpGetToUint8Array = async function(url) {
   const xhr = new XMLHttpRequest();
@@ -35,7 +28,7 @@ exports.httpGetToUint8Array = async function(url) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const logger = root.log.getLogger("ipfs-parser");
+          const logger = log.getLogger("ipfs-parser");
           logger.info(
             "Loaded: "
             + url

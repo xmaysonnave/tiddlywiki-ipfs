@@ -14,14 +14,8 @@ IpfsTiddler
 /*global $tw: false */
 "use strict";
 
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root = (typeof self === 'object' && self.self === self && self)
-  || (typeof global === 'object' && global.global === global && global)
-  || this;
+const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
@@ -40,10 +34,7 @@ var IpfsTiddler = function() {
 };
 
 IpfsTiddler.prototype.getLogger = function() {
-  if (root !== undefined) {
-    return root.log.getLogger(name);
-  }
-  return console;
+  return log.getLogger(name);
 }
 
 IpfsTiddler.prototype.init = function() {
@@ -88,13 +79,13 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   // process verbose
   const verbose = changes["$:/ipfs/saver/verbose"];
   if (verbose !== undefined && verbose.modified) {
-    if (root.ipfsModule.isVerbose()) {
-      root.ipfsModule.updateLoggers("trace");
+    if (this.isVerbose()) {
+      this.updateLoggers("trace");
       this.getLogger().info("IPFS with TiddlyWiki is verbose...");
     } else {
       this.getLogger().setLevel("info", false);
       this.getLogger().info("IPFS with TiddlyWiki is not verbose...");
-      root.ipfsModule.updateLoggers("warn");
+      this.updateLoggers("warn");
     }
   }
   // process unpin
@@ -130,6 +121,25 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
           });
         }
       }
+    }
+  }
+}
+
+IpfsTiddler.prototype.isVerbose = function() {
+  try {
+    return $tw.utils.getIpfsVerbose();
+  } catch (error) {
+    return true;
+  }
+}
+
+IpfsTiddler.prototype.updateLoggers = function(level) {
+  log.setLevel(level, false);
+  const loggers = log.getLoggers();
+  for (var property in loggers) {
+    if (Object.prototype.hasOwnProperty.call(loggers, property)) {
+      const logger = log.getLogger(property);
+      logger.setLevel(level, false);
     }
   }
 }
