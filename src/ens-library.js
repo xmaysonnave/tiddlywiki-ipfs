@@ -26,6 +26,8 @@ const root = (typeof self === 'object' && self.self === self && self)
   || (typeof global === 'object' && global.global === global && global)
   || this;
 
+const name = "ens-library"
+
 var EnsLibrary = function() {
   // https://docs.ens.domains/ens-deployments
   // https://github.com/ensdomains/ui/blob/master/src/ens.js

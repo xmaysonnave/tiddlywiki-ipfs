@@ -20,12 +20,12 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <table>
 <tbody>
 <tr>
-<td width="95%"><<lingo Verbose/Description>></td>
-<td width="5%"><$checkbox tiddler="$:/ipfs/saver/verbose" field="text" checked="yes" unchecked="no" default="yes"/></td>
+<td width="90%"><<lingo Verbose/Description>></td>
+<td width="10%"><$checkbox tiddler="$:/ipfs/saver/verbose" field="text" checked="yes" unchecked="no" default="yes"/></td>
 </tr>
 <tr>
-<td width="95%"><<lingo Unpin/Description>></td>
-<td width="5%"><$checkbox tiddler="$:/ipfs/saver/unpin" field="text" checked="yes" unchecked="no" default="no"/></td>
+<td width="90%"><<lingo Unpin/Description>></td>
+<td width="10%"><$checkbox tiddler="$:/ipfs/saver/unpin" field="text" checked="yes" unchecked="no" default="no"/></td>
 </tr>
 </tbody>
 </table>

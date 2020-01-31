@@ -16,6 +16,8 @@ utils
 
 const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
+const ipfsDefaultName = "ipfs-default";
+
 /*
  * Retrieve ipfs saver priority with default value if applicable
  */
@@ -43,9 +45,9 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      const logger = log.getLogger("ipfs-default");
+      const logger = log.getLogger(ipfsDefaultName);
       logger.error(error);
-      $tw.utils.alert("ipfs-default", error.message);
+      $tw.utils.alert(ipfsDefaultName, error.message);
       priority = -1;
     }
   }

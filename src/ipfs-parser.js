@@ -18,6 +18,8 @@ utils
 
 const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
+const ipfsParserName = "ipfs-parser";
+
 exports.httpGetToUint8Array = async function(url) {
   const xhr = new XMLHttpRequest();
   xhr.responseType = "arraybuffer";
@@ -28,7 +30,7 @@ exports.httpGetToUint8Array = async function(url) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const logger = log.getLogger("ipfs-parser");
+          const logger = log.getLogger(ipfsParserName);
           logger.info(
             "Loaded: "
             + url
