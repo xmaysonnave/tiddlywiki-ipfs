@@ -17,9 +17,8 @@ IpfsTiddler
 const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
+const IpfsUri = require("$:/plugins/ipfs/ipfs-uri.js").IpfsUri;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-
-const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
 
 const ipfsKeyword = "ipfs";
 
@@ -27,7 +26,7 @@ const name = "ipfs-tiddler";
 
 var IpfsTiddler = function() {
   this.once = false;
-  this.ipfsLibrary = new IpfsLibrary();
+  this.ipfsUri = new IpfsUri();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
@@ -150,21 +149,28 @@ IpfsTiddler.prototype.handleDeleteTiddler = function(tiddler) {
   if (uri == undefined || uri == null || uri.trim() === "") {
     return tiddler;
   }
-  // Decode
-  const { pathname } = this.ipfsLibrary.parseUrl(uri.trim());
-  const { cid } = this.ipfsLibrary.decodeCid(pathname);
-  // Store old cid as it needs to be unpined when the wiki is saved if applicable
-  if ($tw.utils.getIpfsUnpin()
-    && cid !== null
-    && root.unpin.indexOf(cid) == -1
-  ) {
-    root.unpin.push(cid);
-    this.getLogger().info(
-      "Request to unpin: /"
-      + ipfsKeyword
-      + "/"
-      + cid
-    );
+  try {
+    // Decode
+    const parsed = this.ipfsUri.getUrl(uri.trim());
+    if (parsed.pathname === "/") {
+      return tiddler;
+    }
+    const { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
+    // Store old cid as it needs to be unpined when the wiki is saved if applicable
+    if ($tw.utils.getIpfsUnpin()
+      && cid !== null
+      && root.unpin.indexOf(cid) == -1
+    ) {
+      root.unpin.push(cid);
+      this.getLogger().info(
+        "Request to unpin:"
+        + "\n "
+        + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid)
+      );
+    }
+  } catch (error) {
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
   }
   return tiddler;
 }
@@ -388,64 +394,72 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       // _canonical_uri attribute has been updated
       } else {
 
-        // Unable to decide whether or not the content is encrypted
-        var { pathname } = this.ipfsLibrary.parseUrl(canonical_uri);
-        var { cid } = this.ipfsLibrary.decodeCid(pathname);
-        // IPFS resource
-        if (cid !== null) {
-          addTags = ["$:/isAttachment", "$:/isIpfs"];
-          removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isEncrypted"];
-        } else {
-          addTags = ["$:/isAttachment"];
-          removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isEncrypted", "$:/isIpfs"];
-        }
-
-        // Update Tiddler
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          addTags: addTags,
-          removeTags: removeTags,
-          fields: [
-            { key: "text", value: "" }
-          ]
-        });
-
-        if (cid !== null) {
-          const index = root.unpin.indexOf(cid);
-          if (index !== -1) {
-            root.unpin.splice(index, 1);
-            this.getLogger().info(
-              "Discard request to unpin: /"
-              + ipfsKeyword
-              + "/"
-              + cid
-            );
+        try {
+          // Unable to decide whether or not the content is encrypted
+          const parsed = this.ipfsUri.getUrl(canonical_uri);
+          // Decode CID
+          var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
+          // IPFS resource
+          if (cid !== null) {
+            addTags = ["$:/isAttachment", "$:/isIpfs"];
+            removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isEncrypted"];
+          } else {
+            addTags = ["$:/isAttachment"];
+            removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isEncrypted", "$:/isIpfs"];
           }
+          // Update Tiddler
+          updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            addTags: addTags,
+            removeTags: removeTags,
+            fields: [
+              { key: "text", value: "" }
+            ]
+          });
+          if (cid !== null) {
+            const index = root.unpin.indexOf(cid);
+            if (index !== -1) {
+              root.unpin.splice(index, 1);
+              this.getLogger().info(
+                "Discard request to unpin:"
+                + "\n "
+                + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid)
+              );
+            }
+          }
+          $tw.utils.alert(name,
+            "Embedded remote attachment..."
+            + "<br/>Unable to decide if the imported attachment is encrypted or not..."
+            + "<br/>Consider the <<tag-pill '$:/isEncrypted'>> tag..."
+          );
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+          return oldTiddler;
         }
-
-        $tw.utils.alert(name,
-          "Embedded remote attachment..."
-          + "<br/>Unable to decide if the imported attachment is encrypted or not..."
-          + "<br/>Consider the <<tag-pill '$:/isEncrypted'>> tag..."
-        );
 
       }
 
       // Process previous canonical_uri if any
       if (old_canonical_uri !== null) {
-        const { pathname: oldPathname } = this.ipfsLibrary.parseUrl(old_canonical_uri);
-        const { cid: oldCid } = this.ipfsLibrary.decodeCid(oldPathname);
-        if ($tw.utils.getIpfsUnpin()
-          && oldCid !== null
-          && root.unpin.indexOf(oldCid) == -1
-        ) {
-          root.unpin.push(oldCid);
-          this.getLogger().info(
-            "Request to unpin: /"
-            + ipfsKeyword
-            + "/"
-            + oldCid
-          );
+        try {
+          const oldUri = this.ipfsUri.getUrl(old_canonical_uri);
+          const { cid: oldCid } = this.ipfsWrapper.decodeCid(oldUri.pathname);
+          if ($tw.utils.getIpfsUnpin()
+            && oldCid !== null
+            && root.unpin.indexOf(oldCid) == -1
+          ) {
+            root.unpin.push(oldCid);
+            this.getLogger().info(
+              "Request to unpin:"
+              + "\n "
+              + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + oldCid)
+            );
+          }
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+          return oldTiddler;
         }
       }
 
@@ -461,7 +475,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       if (canonical_uri == null) {
 
         this.getLogger().info("Embedding Tiddler...");
-
         // Update Tiddler
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
@@ -471,26 +484,31 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       // _canonical_uri attribute has been updated
       } else {
 
-        var { pathname } = this.ipfsLibrary.parseUrl(canonical_uri);
-        var { cid } = this.ipfsLibrary.decodeCid(pathname);
-        // IPFS resource
-        if (cid !== null) {
-          addTags = ["$:/isImported", "$:/isIpfs"];
-          removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isExported"];
-        } else {
-          addTags = ["$:/isImported"];
-          removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isExported", "$:/isIpfs"];
+        try {
+          const parsed = this.ipfsUri.getUrl(canonical_uri);
+          var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
+          // IPFS resource
+          if (cid !== null) {
+            addTags = ["$:/isImported", "$:/isIpfs"];
+            removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isExported"];
+          } else {
+            addTags = ["$:/isImported"];
+            removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isExported", "$:/isIpfs"];
+          }
+          // Update Tiddler
+          updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            addTags: addTags,
+            removeTags: removeTags,
+            fields: [
+              { key: "text", value: "" }
+            ]
+          });
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+          return oldTiddler;
         }
-
-        // Update Tiddler
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          addTags: addTags,
-          removeTags: removeTags,
-          fields: [
-            { key: "text", value: "" }
-          ]
-        });
 
       }
 
@@ -517,7 +535,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         } else {
           removeTags = ["$:/isExported"];
         }
-
         // Update Tiddler
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: updatedTiddler,
@@ -527,52 +544,60 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       // _ipfs_uri attribute has been updated
       } else {
 
-        // New _ipfs_uri
-        var { pathname } = this.ipfsLibrary.parseUrl(ipfs_uri);
-        var { cid } = this.ipfsLibrary.decodeCid(pathname);
-        // IPFS resource
-        if (cid !== null) {
-          addTags = ["$:/isExported", "$:/isIpfs"];
-        } else {
-          addTags = ["$:/isExported"];
-        }
-
-        // Update Tiddler
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          addTags: addTags
-        });
-
-        if (cid !== null) {
-          const index = root.unpin.indexOf(cid);
-          if (index !== -1) {
-            root.unpin.splice(index, 1);
-            this.getLogger().info(
-              "Discard request to unpin: /"
-              + ipfsKeyword
-              + "/"
-              + cid
-            );
+        try {
+          // New _ipfs_uri
+          const parsed = this.ipfsUri.getUrl(ipfs_uri);
+          var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
+          // IPFS resource
+          if (cid !== null) {
+            addTags = ["$:/isExported", "$:/isIpfs"];
+          } else {
+            addTags = ["$:/isExported"];
           }
+          // Update Tiddler
+          updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: updatedTiddler,
+            addTags: addTags
+          });
+          if (cid !== null) {
+            const index = root.unpin.indexOf(cid);
+            if (index !== -1) {
+              root.unpin.splice(index, 1);
+              this.getLogger().info(
+                "Discard request to unpin:"
+                + "\n "
+                + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid)
+              );
+            }
+          }
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+          return oldTiddler;
         }
 
       }
 
       // Process previous ipfs_uri if any
       if (old_ipfs_uri !== null) {
-        const { pathname: oldPathname } = this.ipfsLibrary.parseUrl(old_ipfs_uri);
-        const { cid: oldCid } = this.ipfsLibrary.decodeCid(oldPathname);
-        if ($tw.utils.getIpfsUnpin()
-          && oldCid !== null
-          && root.unpin.indexOf(oldCid) == -1
-        ) {
-          root.unpin.push(oldCid);
-          this.getLogger().info(
-            "Request to unpin: /"
-            + ipfsKeyword
-            + "/"
-            + oldCid
-          );
+        try {
+          const oldIpfsUri = this.ipfsUri.getUrl(old_ipfs_uri);
+          const { cid: oldCid } = this.ipfsWrapper.decodeCid(oldIpfsUri.pathname);
+          if ($tw.utils.getIpfsUnpin()
+            && oldCid !== null
+            && root.unpin.indexOf(oldCid) == -1
+          ) {
+            root.unpin.push(oldCid);
+            this.getLogger().info(
+              "Request to unpin:"
+              + "\n "
+              + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + oldCid)
+            );
+          }
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+          return oldTiddler;
         }
       }
 
@@ -584,6 +609,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
   if (updatedTiddler == null) {
     updatedTiddler = new $tw.Tiddler(tiddler);
   }
+
   // Update
   $tw.wiki.addTiddler(updatedTiddler);
   return updatedTiddler;

@@ -32,39 +32,25 @@ EnsWrapper.prototype.getLogger = function() {
 
 EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, account) {
   try {
-    var { decoded, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
-    if (decoded !== null && protocol !== null)  {
+    var { content, protocol } = await this.ensLibrary.getContenthash(domain, web3Provider, account);
+    if (content !== null && protocol !== null)  {
       // Convert CidV0 to CidV1
-      try {
-        decoded = this.ipfsLibrary.cidV0ToCidV1(decoded);
-      } catch (error) {
-        return {
-          error: error,
-          decoded: null,
-          protocol: null
-        };
-      }
+      content = this.ipfsLibrary.cidV0ToCidV1(content);
       // Success
       this.getLogger().info("Successfully fetched ENS domain content...");
       return {
-        error: null,
-        decoded: decoded,
+        content: content,
         protocol: protocol
       };
     }
     this.getLogger().warn("Unassigned ENS domain content...");
     return {
-      error: null,
-      decoded: null,
-      protocol: null
+      content: null,
+      content: null
     };
   } catch (error) {
     this.getLogger().error(error);
-    return {
-      error: new Error("Unable to fetch ENS domain content..."),
-      decoded: null,
-      protocol: null
-    };
+    throw new Error("Unable to fetch ENS domain content...");
   }
 }
 
@@ -74,13 +60,9 @@ EnsWrapper.prototype.setContenthash = async function(domain, cid, web3Provider, 
     await this.ensLibrary.setContenthash(domain, cidv0, web3Provider, account);
     // Success
     this.getLogger().info("Successfully set ENS domain content...");
-    return {
-      error: null
-    };
   } catch (error) {
-    return {
-      error: error
-    };
+    this.getLogger().error(error);
+    throw new Error("Unable to set ENS domain content...");
   }
 }
 
@@ -92,17 +74,12 @@ EnsWrapper.prototype.getWeb3Provider = async function() {
       + account
     );
     return {
-      error: null,
       web3Provider: web3Provider,
       account: account
     };
   } catch (error) {
     this.getLogger().error(error);
-    return {
-      error: new Error("Unable to fetch current Ethereum account..."),
-      web3Provider: null,
-      account: null
-    };
+    throw new Error("Unable to fetch current Ethereum account...");
   }
 }
 

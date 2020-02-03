@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.2.10-dev.200131404",
+  "version": "v0.2.10-dev.200203520",
   "description": "IPFS with TiddlyWiki",
   "main": "src/ipfs-saver.js",
   "directories": {
@@ -45,7 +45,7 @@
     "cids": "^0.7.3",
     "content-hash": "^2.5.2",
     "ipfs-provider": "git+https://github.com/xmaysonnave/ipfs-provider.git#v0.2.9",
-    "url": "^0.11.0"
+    "whatwg-url": "^8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

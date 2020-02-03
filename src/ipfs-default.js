@@ -89,7 +89,7 @@ exports.getIpfsDefaultProtocol = function() {
 /*
  * Retrieve ipfs saver api url with default value if applicable
  */
-exports.getIpfsApiUrl = function() {
+exports.getIpfsSaverApiUrl = function() {
   var api = null;
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/api/default");
   if (tiddler !== undefined && tiddler !== null) {
@@ -123,7 +123,7 @@ exports.getIpfsDefaultApiUrl = function() {
 /*
  * Retrieve ipfs saver gateway url with default value if applicable
  */
-exports.getIpfsGatewayUrl = function() {
+exports.getIpfsSaverGatewayUrl = function() {
   var gateway = null;
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default");
   if (tiddler !== undefined && tiddler !== null) {

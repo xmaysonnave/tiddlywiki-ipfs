@@ -10,6 +10,7 @@ EnsLibrary
 
 import CID  from "cids";
 import contentHash from "content-hash";
+import { URL } from "whatwg-url";
 
 (function(){
 
@@ -53,6 +54,37 @@ var EnsLibrary = function() {
 
 EnsLibrary.prototype.getLogger = function() {
   return root.log.getLogger(name);
+}
+
+/**
+ * url.href;
+ * url.origin
+ * url.protocol;
+ * url.username;
+ * url.password;
+ * url.host;
+ * url.hostname;
+ * url.port;
+ * url.pathname;
+ * url.search;
+ * url.hash;
+ * https://jsdom.github.io/whatwg-url/
+ * https://url.spec.whatwg.org/
+ */
+EnsLibrary.prototype.getDocumentUrl = function() {
+  return new URL(root.location.href);
+}
+
+EnsLibrary.prototype.getIpfsApiUrl = function() {
+  return new URL($tw.utils.getIpfsSaverApiUrl());
+}
+
+EnsLibrary.prototype.getIpfsGatewayUrl = function() {
+  return new URL($tw.utils.getIpfsSaverGatewayUrl());
+}
+
+EnsLibrary.prototype.getUrl = function(url, baseUrl) {
+  return new URL(url, baseUrl);
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
@@ -361,7 +393,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   const result = await web3Provider.call({ from: account, to: resolverAddress, data: data });
   if (result == undefined || result == null || result === "0x") {
     return {
-      decoded: null,
+      content: null,
       protocol: null
     }
   }
@@ -370,7 +402,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   var content = root.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
   if (content == undefined || content == null || Array.isArray(content) === false || content[0] === "0x") {
     return {
-      decoded: null,
+      content: null,
       protocol: null
     }
   }
@@ -379,7 +411,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   var { decoded, protocol } = this.decodeContenthash(content[0]);
 
   return {
-    decoded: decoded,
+    content: decoded,
     protocol: protocol
   };
 

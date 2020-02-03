@@ -17,10 +17,9 @@ IpfsSaver
 const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
-const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-
-const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
+const IpfsUri = require("$:/plugins/ipfs/ipfs-uri.js").IpfsUri;
+const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const fileProtocol = "file:";
 const ensKeyword = "ens";
@@ -36,9 +35,9 @@ var IpfsSaver = function(wiki) {
   this.wiki = wiki;
   this.apiUrl = null;
   this.ipfsProvider = null;
-  this.ipfsWrapper = new IpfsWrapper();
   this.ensWrapper = new EnsWrapper();
-  this.ipfsLibrary = new IpfsLibrary();
+  this.ipfsUri = new IpfsUri();
+  this.ipfsWrapper = new IpfsWrapper();
 }
 
 IpfsSaver.prototype.getLogger = function() {
@@ -70,36 +69,20 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     var options = options || {};
 
     // Process document URL
-    const {
-      protocol: wikiProtocol,
-      pathname: wikiPathname,
-      search: wikiSearch,
-      fragment: wikiFragment
-    } = this.ipfsLibrary.parseUrl(document.URL);
+    const wiki = this.ipfsUri.getDocumentUrl();
 
     // Retrieve Gateway URL
-    const gatewayUrl = $tw.utils.getIpfsGatewayUrl();
-    // Check
-    if (gatewayUrl == null) {
-      callback("Undefined IPFS Gateway URL...");
-      return false;
-    }
-
-    // Process Gateway URL
-    const {
-      protocol: gatewayProtocol,
-      host: gatewayHost
-    } = this.ipfsLibrary.parseUrl(gatewayUrl);
+    const gateway = this.ipfsUri.getIpfsGatewayUrl();
 
     // Next host
-    const nextHost = gatewayProtocol
+    const nextHost = gateway.protocol
     + "//"
-    + gatewayHost
+    + gateway.host
 
     // URL Analysis
-    if (wikiProtocol !== fileProtocol) {
+    if (wiki.protocol !== fileProtocol) {
       // Decode pathname
-      var { protocol, cid } = this.ipfsLibrary.decodeCid(wikiPathname);
+      var { protocol, cid } = this.ipfsWrapper.decodeCid(wiki.pathname);
       // Check
       if (protocol != null && cid != null) {
         // Store current protocol
@@ -111,21 +94,16 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         ) {
           unpin.push(cid);
           this.getLogger().info(
-            "Request to unpin IPFS wiki: /"
-            + ipfsKeyword
-            + "/"
-            + cid
+            "Request to unpin IPFS wiki:"
+            + "\n "
+            + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid)
           );
         }
       }
     }
 
     // IPFS client
-    var { error, ipfs } = await this.ipfsWrapper.getIpfsClient();
-    if (error != null)  {
-      callback(error.message);
-      return false;
-    }
+    var { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
 
     // IPNS Analysis
     if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
@@ -133,25 +111,29 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       // Resolve current IPNS
       if (ipfsProtocol === ipnsKeyword) {
         this.getLogger().info("Processing current IPNS key...");
-        var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, cid);
-        if (error != null)  {
+        try {
+          var { ipnsKey, ipnsName } = await this.ipfsWrapper.fetchIpns(ipfs, cid);
+          ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+        } catch (error) {
           // Log and continue
-          this.getLogger().error(error.message);
-          // Fallback
+          if (ipnsName == null || ipnsKey == null) {
+            this.getLogger().error(error.message);
+          } else {
+            this.getLogger().warning(error.message);
+          }
+          $tw.utils.alert(name, error.message);
+          // Fallback to default
           if (ipnsName === null && ipnsKey === null && $tw.utils.getIpfsProtocol() === ipnsKeyword) {
             ipnsName = $tw.utils.getIpfsIpnsName();
             ipnsKey = $tw.utils.getIpfsIpnsKey();
             this.getLogger().info("Processing default IPNS...");
-            var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
-            if (error != null) {
-              if (ipnsName !== null && ipnsKey !== null) {
-                this.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              } else {
-                // Unable to resolve default
-                callback(error.message);
-                return false;
-              }
+            var { ipnsKey, ipnsName } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+            try {
+              ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+            } catch (error) {
+              // Log and continue
+              this.getLogger().warning(error.message);
+              $tw.utils.alert(error.message);
             }
           }
         }
@@ -160,16 +142,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         ipnsName = $tw.utils.getIpfsIpnsName();
         ipnsKey = $tw.utils.getIpfsIpnsKey();
         this.getLogger().info("Processing default IPNS name and IPNS key...");
-        var { error, ipnsName, ipnsKey, resolved: ipnsContent } = await this.ipfsWrapper.resolveIpns(ipfs, ipnsKey, ipnsName);
-        if (error != null) {
-          if (ipnsName !== null && ipnsKey !== null) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          } else {
-            // Unable to resolve default
-            callback(error.message);
-            return false;
-          }
+        var { ipnsKey, ipnsName } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+        try {
+          ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+        } catch (error) {
+          // Log and continue
+          this.getLogger().warning(error.message);
+          $tw.utils.alert(error.message);
         }
       }
 
@@ -181,10 +160,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       ) {
         unpin.push(ipnsContent);
         this.getLogger().info(
-          "Request to unpin IPNS wiki: /"
-          + ipfsKeyword
-          + "/"
-          + ipnsContent
+          "Request to unpin IPNS wiki:"
+          + "\n "
+          + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + ipnsContent)
         );
       }
 
@@ -192,44 +170,30 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // ENS Analysis
     if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-
       // Getting default ens domain
       ensDomain = $tw.utils.getIpfsEnsDomain();
       // Check
       if (ensDomain == null) {
-        callback("Undefined ENS wiki...");
+        callback("Undefined ENS domain...");
         return false;
       }
-
       // Retrieve a Web3 provider
-      var { error, web3Provider, account } = await this.ensWrapper.getWeb3Provider();
-      if (error != null)  {
-        callback(error.message);
-        return false;
-      }
-
+      var { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
       // Fetch ENS domain content
-      var { error, decoded: ensContent } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
-      if (error != null)  {
-        callback(error.message);
-        return false;
-      }
-
+      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
       // Store to unpin previous if any
       if (
         $tw.utils.getIpfsUnpin()
-        && ensContent !== null
-        && root.unpin.indexOf(ensContent) == -1
+        && content !== null
+        && root.unpin.indexOf(content) == -1
       ) {
         unpin.push(ensContent);
         this.getLogger().info(
-          "Request to unpin ENS wiki: /"
-          + ipfsKeyword
-          + "/"
-          + ensContent
+          "Request to unpin ENS domain content:"
+          + "\n "
+          + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + content)
         );
       }
-
     }
 
     // Upload  current document
@@ -240,11 +204,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     );
 
     // Add
-    var { error, added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
-    if (error != null)  {
-      callback(error.message);
-      return false;
-    }
+    const { added } = await this.ipfsWrapper.addToIpfs(ipfs, text);
 
     // Default next
     nextWiki = nextHost
@@ -252,12 +212,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       + ipfsKeyword
       + "/"
       + added
-      + `/${wikiSearch || ''}${wikiFragment || ''}`;
+      + `/${wiki.search || ''}${wiki.hash || ''}`;
 
     // Pin, if failure log and continue
-    var { error } = await this.ipfsWrapper.pinToIpfs(ipfs, added);
-    if (error != null)  {
-      this.getLogger().error(error);
+    try {
+      await this.ipfsWrapper.pinToIpfs(ipfs, added);
+    } catch (error)  {
+      this.getLogger().warning(error);
       $tw.utils.alert(name, error.message);
     }
 
@@ -267,11 +228,19 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         "Publishing IPNS wiki: "
         + ipnsName
       );
-      var { error } = await this.ipfsWrapper.publishToIpns(ipfs, ipnsName, added);
-      if (error != null)  {
+      try {
+        await this.ipfsWrapper.publishToIpns(ipfs, ipnsName, added);
+        // IPNS next
+        nextWiki = nextHost
+        + "/"
+        + ipnsKeyword
+        + "/"
+        + ipnsKey
+        + `/${wiki.search || ''}${wiki.hash || ''}`;
+      } catch (error)  {
         // Log and continue
-        this.getLogger().error(error);
-        $tw.utils.alert(name, "Unable to publish IPNS wiki...");
+        this.getLogger().warning(error);
+        $tw.utils.alert(name, error.message);
         // Remove from unpin
         if (ipfsProtocol === ipnsKeyword) {
           // Discard unpin
@@ -287,21 +256,12 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
           // Log
           if (index !== -1) {
             this.getLogger().info(
-              "Discard request to unpin IPNS wiki: /"
-              + ipfsKeyword
-              + "/"
-              + ipnsContent
+              "Discard request to unpin IPNS wiki:"
+              + "\n "
+              + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + ipnsContent)
             );
           }
         }
-      } else {
-        // IPNS next
-        nextWiki = nextHost
-        + "/"
-        + ipnsKeyword
-        + "/"
-        + ipnsKey
-        + `/${wikiSearch || ''}${wikiFragment || ''}`;
       }
     }
 
@@ -311,8 +271,13 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         "Publishing ENS wiki: "
         + ensDomain
       );
-      var { error } = await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
-      if (error != null)  {
+      try {
+        await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
+        // ENS next
+        nextWiki = "https://"
+          + ensDomain
+          + `/${wiki.search || ''}${wiki.hash || ''}`;
+      } catch (error)  {
         // Log and continue
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
@@ -329,17 +294,11 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         // Log
         if (index !== -1) {
           this.getLogger().info(
-            "Discard request to unpin ENS wiki: /"
-            + ipfsKeyword
-            + "/"
-            + ensContent
+            "Discard request to unpin ENS domain content:"
+            + "\n "
+            + this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + ensContent)
           );
         }
-      } else {
-        // ENS next
-        nextWiki = "https://"
-          + ensDomain
-          + `/${wikiSearch || ''}${wikiFragment || ''}`;
       }
     }
 
@@ -347,35 +306,41 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     if ($tw.utils.getIpfsUnpin()) {
       // Process global unpin
       for (var i = 0; i < root.unpin.length; i++) {
-        var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, root.unpin[i]);
-        // Log and continue
-        if (error != null)  {
-          this.getLogger().error(error);
+        try {
+          await this.ipfsWrapper.unpinFromIpfs(ipfs, root.unpin[i]);
+        } catch (error)  {
+          // Log and continue
+          this.getLogger().warning(error);
           $tw.utils.alert(name, error.message);
         }
       }
       root.unpin = [];
       // Process local unpin
       for (var i = 0; i < unpin.length; i++) {
-        var { error } = await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin[i]);
-        // Log and continue
-        if (error != null)  {
-          this.getLogger().error(error);
+        try {
+          await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin[i]);
+        } catch (error)  {
+          // Log and continue
+          this.getLogger().warning(error);
           $tw.utils.alert(name, error.message);
         }
       }
       unpin = [];
     }
 
+    // Retrieve Gateway URL
+    nextWiki = this.ipfsUri.getUrl(nextWiki);
+
     // Done
     callback(null);
 
     // Next
-    if (nextWiki !== document.URL) {
-      root.location.assign(nextWiki);
+    if (nextWiki.href !== wiki.href) {
+      root.location.assign(nextWiki.href);
     }
 
   } catch (error) {
+    this.getLogger().error(error);
     callback(error.message);
     return false;
   }

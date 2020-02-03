@@ -31,8 +31,8 @@ IpfsLoader.prototype.loadErudaLibrary = async function() {
   if (typeof root.eruda === "undefined") {
     await this.loadLibrary(
       "ErudaLibrary",
-      "https://cdn.jsdelivr.net/npm/eruda@2.0.2/eruda.min.js",
-      "sha384-GLqmQCByhqGAIgMwKsNaIgNZgaNZel7Moqd2mEoeQWUXUVBth0Yo3Nt6QiWiG9+w"
+      "https://cdn.jsdelivr.net/npm/eruda@2.1.0/eruda.min.js",
+      "sha384-L90fb4ZBjGGC8PcjNiWVB1Fxj2qeKuHN+Ddno15fJwwBuvaZoLM4ZNuQtQRWBgsM"
     );
   }
 }
@@ -69,8 +69,8 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
   const self = this;
   return new Promise((resolve, reject) => {
     try {
-      if (document.getElementById(id) == null) {
-        const script = document.createElement("script");
+      if (root.document.getElementById(id) == null) {
+        const script = root.document.createElement("script");
         // Cleanup function
         const cleanup = () => {
           delete root[id];
@@ -93,7 +93,7 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
           script.integrity = sri;
         }
         script.crossOrigin = "anonymous";
-        document.head.appendChild(script);
+        root.document.head.appendChild(script);
         script.onload = () => {
           resolve(root[id]);
           cleanup();

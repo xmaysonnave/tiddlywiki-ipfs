@@ -10,7 +10,6 @@ IpfsLibrary
 
 import CID  from "cids";
 import { getIpfs, providers } from "ipfs-provider";
-import url from "url";
 
 (function(){
 
@@ -35,25 +34,6 @@ var IpfsLibrary = function() {};
 
 IpfsLibrary.prototype.getLogger = function() {
   return root.log.getLogger(name);
-}
-
-IpfsLibrary.prototype.parseUrl = function(uri) {
-  // Check
-  if (uri == undefined || uri == null || uri.trim() === "") {
-    throw new Error("Undefined URL...");
-  }
-  const urlData = url.parse(uri.trim());
-  return {
-      href: urlData.href,
-      protocol: urlData.protocol,
-      host: urlData.host,
-      auth: urlData.auth,
-      hostname: urlData.hostname,
-      port: urlData.port,
-      pathname: urlData.pathname,
-      search: urlData.search,
-      fragment: urlData.hash
-  };
 }
 
 IpfsLibrary.prototype.decodeCid = function(pathname) {
@@ -192,12 +172,8 @@ IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
   } catch (error) {
     // IPFS Companion failed
   }
-  // IPFS HTTP client
-  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
-    apiUrl = $tw.utils.getIpfsApiUrl();
-  }
   // Check
-  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
+  if (apiUrl == null) {
     throw new Error("Undefined IPFS API URL...");
   }
   try {
@@ -237,12 +213,8 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 
 // ipfs-http-client
 IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
-  // API URL
-  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
-    apiUrl = $tw.utils.getIpfsApiUrl();
-  }
   // Check
-  if (apiUrl == undefined || apiUrl == null || apiUrl.trim() === "") {
+  if (apiUrl == undefined || apiUrl == null) {
     throw new Error("Undefined IPFS API URL...");
   }
   // Load IpfsHttpClient
