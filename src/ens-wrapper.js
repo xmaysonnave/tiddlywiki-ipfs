@@ -14,7 +14,7 @@ EnsWrapper
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const EnsLibrary = require("./ens-library.js").EnsLibrary;
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
@@ -27,7 +27,7 @@ var EnsWrapper = function() {
 }
 
 EnsWrapper.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 EnsWrapper.prototype.getContenthash = async function(domain, web3Provider, account) {

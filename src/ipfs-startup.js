@@ -26,7 +26,7 @@ const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSa
 const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
 exports.platforms = ["browser"];
-exports.after = ["startup"];
+exports.after = ["load-modules"];
 exports.synchronous = true;
 
 exports.startup = async function() {

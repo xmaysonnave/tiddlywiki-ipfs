@@ -8,6 +8,8 @@ IpfsUri
 
 \*/
 
+import { URL } from "whatwg-url";
+
 (function(){
 
 /*jslint node: true, browser: true */
@@ -23,13 +25,9 @@ const root = (typeof self === 'object' && self.self === self && self)
   || (typeof global === 'object' && global.global === global && global)
   || this;
 
-const EnsLibrary = require("./ens-library.js").EnsLibrary;
-
 const name = "ipfs-uri";
 
-var IpfsUri = function() {
-  this.ensLibrary = new EnsLibrary();
-}
+var IpfsUri = function() {}
 
 IpfsUri.prototype.getLogger = function() {
   return root.log.getLogger(name);
@@ -52,7 +50,7 @@ IpfsUri.prototype.getLogger = function() {
  */
 IpfsUri.prototype.getDocumentUrl = function() {
   try {
-    return this.ensLibrary.getDocumentUrl();
+    return new URL(root.location.href);
   } catch (error) {
     this.getLogger().error(error);
   }
@@ -61,69 +59,81 @@ IpfsUri.prototype.getDocumentUrl = function() {
 
 IpfsUri.prototype.getIpfsApiUrl = function() {
   try {
-    return this.ensLibrary.getIpfsApiUrl();
+    return new URL($tw.utils.getIpfsSaverApiUrl());
   } catch (error) {
     this.getLogger().error(error);
   }
   throw new Error("Invalid IPFS API URL...");
 }
 
+IpfsUri.prototype.getSafeIpfsApiUrl = function() {
+  // Parse api URL
+  var api = null;
+  try {
+    api = this.getIpfsApiUrl();
+  } catch (error) {
+    // Fallback to default
+    api = this.getDefaultIpfsApiUrl();
+  }
+  return api;
+}
+
+IpfsUri.prototype.getDefaultIpfsApiUrl = function() {
+  return new URL("https://ipfs.infura.io:5001");
+}
+
 IpfsUri.prototype.getIpfsGatewayUrl = function() {
   try {
-    return this.ensLibrary.getIpfsGatewayUrl();
+    return new URL($tw.utils.getIpfsSaverGatewayUrl());
   } catch (error) {
     this.getLogger().error(error);
   }
   throw new Error("Invalid IPFS Gateway URL...");
 }
 
+IpfsUri.prototype.getSafeIpfsGatewayUrl = function() {
+  // Parse gateway URL
+  var gateway = null;
+  try {
+    gateway = this.getIpfsGatewayUrl();
+  } catch (error) {
+    // Fallback to default
+    gateway = this.getDefaultIpfsGatewayUrl();
+  }
+  return gateway;
+}
+
+IpfsUri.prototype.getDefaultIpfsGatewayUrl = function() {
+  return new URL("https://ipfs.infura.io");
+}
+
 IpfsUri.prototype.getUrl = function(url, baseUrl) {
   try {
-    return this.ensLibrary.getUrl(url, baseUrl);
+    return new URL(url, baseUrl);
   } catch (error) {
     this.getLogger().error(error);
   }
   throw new Error("Invalid URL...");
 }
 
-IpfsUri.prototype.getBaseUrl = function() {
-  // Parse document URL
-  const document = this.getDocumentUrl();
-  // Parse default gateway URL
-  const gateway = this.getIpfsGatewayUrl();
-  // base URL
-  var base = document;
-  if (document.protocol === "file:") {
-    base = gateway;
-  }
-  return base;
-}
-
-IpfsUri.prototype.normalizeUrl = function(url) {
+IpfsUri.prototype.normalizeGatewayUrl = function(url) {
   // Parse
   var parsed = null;
   try {
-    parsed = this.ensLibrary.getUrl(url);
+    parsed = new URL(url);
   } catch (error) {
     parsed = null;
   }
-  // Attempt to build an URL with a Base URL
+  // Attempt to parse an URL with a Base URL
   if (parsed == null) {
-    const base = this.getBaseUrl();
-    // Parse
-    try {
-      parsed = this.ensLibrary.getUrl(url, base);
-    } catch (error) {
-      this.getLogger(error);
-      throw new Error("Invalid URL...");
-    }
+    parsed = this.getUrl(url, this.getSafeIpfsGatewayUrl());
   }
   // Remove .link from .eth.link
   if (parsed.hostname.endsWith(".eth.link")) {
-    parsed.hostname = parsed.hostname.substring(0, ".link");
+    parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
   }
   // TODO: Resolve .eth
-  if (parsed.hostname.endsWith(".eth.link")) {
+  if (parsed.hostname.endsWith(".eth")) {
   }
   return parsed;
 }

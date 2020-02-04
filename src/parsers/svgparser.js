@@ -48,7 +48,7 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const name = "ipfs-svgparser";
 
@@ -98,7 +98,7 @@ var SvgParser = function(type,text,options) {
 };
 
 SvgParser.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 exports["image/svg+xml"] = SvgParser;

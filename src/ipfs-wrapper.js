@@ -220,10 +220,11 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
     var found = false;
     if (keys !== null && keys !== undefined && Array.isArray(keys)) {
       this.getLogger().info(
-        "Fetch IPNS key: "
-        + ipnsKey
-        + " and IPNS name: "
+        "Fetch IPNS name: "
         + ipnsName
+        + " and IPNS key:"
+        + "\n "
+        + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + ipnsKey)
       );
       for (var index = 0; index < keys.length; index++) {
         if (keys[index].id === ipnsKey && keys[index].name === ipnsName) {
@@ -257,15 +258,17 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
       throw new Error("Unknown IPNS name...");
     }
     this.getLogger().info(
-      "Successfully fetched IPNS key: "
-      + ipnsKey
+      "Successfully fetched IPNS key:"
+      + "\n "
+      + this.ipfsUri.normalizeGatewayUrl(ipnsKeyword + ipnsKey)
     );
   } else {
     var found = false;
     if (keys !== null && keys !== undefined && Array.isArray(keys)) {
       this.getLogger().info(
         "Fetch IPNS key: "
-        + ipnsKey
+        + "\n "
+        + this.ipfsUri.normalizeGatewayUrl(ipnsKeyword + ipnsKey)
       );
       for (var index = 0; index < keys.length; index++) {
         if (keys[index].id === ipnsKey) {
@@ -293,7 +296,7 @@ IpfsWrapper.prototype.fetchIpns = async function(ipfs, ipnsKey, ipnsName) {
 
 IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, name) {
   const err = new Error(
-    "Failed to generate IPNS key named: "
+    "Failed to generate IPNS key with IPNS name: "
     + name
   );
   try {
@@ -302,8 +305,9 @@ IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, name) {
       throw err;
     }
     this.getLogger().info(
-      "Successfully generated IPNS key: "
-      + key
+      "Successfully generated IPNS key:"
+      + "\n "
+      + this.ipfsUri.normalizeGatewayUrl(ipnsKeyword + key)
     );
     return key;
   } catch (error) {
@@ -314,7 +318,7 @@ IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, name) {
 
 IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, name) {
   const err = new Error(
-    "Failed to remove IPNS name and IPNS key named: "
+    "Failed to remove IPNS key and IPNS name: "
     + name
   );
   try {
@@ -325,8 +329,9 @@ IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, name) {
     this.getLogger().info(
       "Successfully removed IPNS name: "
       + name
-      + " and IPNS key: "
-      + key
+      + " and IPNS key:"
+      + "\n "
+      + this.ipfsUri.normalizeGatewayUrl(ipnsKeyword + key)
     );
     return key;
   } catch (error) {
@@ -380,9 +385,9 @@ IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
 
 IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
   const err = new Error(
-    "Failed to fetch: "
-    + ipfsKeyword
-    + cid
+    "Failed to fetch:"
+    + "\n "
+    + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
   );
   try {
     const fetched = await this.ipfsLibrary.cat(ipfs, ipfsKeyword + cid);
@@ -392,7 +397,7 @@ IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
     this.getLogger().info(
       "Successfully fetched:"
       + "\n "
-      + this.ipfsUri.normalizeUrl(ipfsKeyword + cid)
+      + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
     );
     return fetched;
   } catch (error) {
@@ -414,7 +419,7 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
       + size
       + " bytes:"
       + "\n "
-      + this.ipfsUri.normalizeUrl(ipfsKeyword + hash)
+      + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + hash)
     );
     return {
       added: hash,
@@ -429,8 +434,9 @@ IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
 IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, key) {
   // Resolve
   const err = new Error(
-    "Failed to resolve IPNS key: "
-    + key
+    "Failed to resolve IPNS key:"
+    + "\n "
+    + this.ipfsUri.normalizeGatewayUrl(ipnsKeyword + key)
   );
   try {
     const resolved = await this.ipfsLibrary.resolve(ipfs, ipnsKeyword + key);
@@ -440,8 +446,9 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, key) {
     // Resolve cid
     const { cid } = await this.ipfsLibrary.decodeCid(resolved);
     this.getLogger().info(
-      "Successfully resolved IPNS key: "
-      + resolved
+      "Successfully resolved IPNS key:"
+      + "\n "
+      + this.ipfsUri.normalizeGatewayUrl(resolved)
     );
     return cid;
   } catch (error) {
@@ -453,9 +460,9 @@ IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, key) {
 IpfsWrapper.prototype.publishToIpns = async function(ipfs, name, cid) {
   // Publish
   const err = new Error(
-    "Failed to publish: "
-    + ipfsKeyword
-    + cid
+    "Failed to publish:"
+    + "\n "
+    + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
   );
   try {
     const published = await this.ipfsLibrary.publish(ipfs, name, ipfsKeyword + cid);
@@ -465,7 +472,7 @@ IpfsWrapper.prototype.publishToIpns = async function(ipfs, name, cid) {
     this.getLogger().info(
       "Successfully published:"
       + "\n "
-      + this.ipfsUri.normalizeUrl(ipfsKeyword + cid)
+      + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
     );
     return published;
   } catch (error) {
@@ -477,9 +484,9 @@ IpfsWrapper.prototype.publishToIpns = async function(ipfs, name, cid) {
 IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
   // Unpin
   const err = new Error(
-    "Failed to pin: "
-    + ipfsKeyword
-    + cid
+    "Failed to pin:"
+    + "\n "
+    + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
   );
   try {
     const pinned = await this.ipfsLibrary.pin(ipfs, ipfsKeyword + cid);
@@ -489,7 +496,7 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
     this.getLogger().info(
       "Successfully pinned:"
       + "\n "
-      + this.ipfsUri.normalizeUrl(ipfsKeyword + cid)
+      + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
     );
     return pinned;
   } catch (error) {
@@ -501,9 +508,9 @@ IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
 IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
   // Unpin
   const err = new Error(
-    "Failed to unpin: "
-    + ipfsKeyword
-    + cid
+    "Failed to unpin:"
+    + "\n "
+    + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
   );
   try {
     const unpinned = await this.ipfsLibrary.unpin(ipfs, ipfsKeyword + cid);
@@ -513,7 +520,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
     this.getLogger().info(
       "Successfully unpinned:"
       + "\n "
-      + this.ipfsUri.normalizeUrl(ipfsKeyword + cid)
+      + this.ipfsUri.normalizeGatewayUrl(ipfsKeyword + cid)
     );
     return unpinned;
   } catch (error) {

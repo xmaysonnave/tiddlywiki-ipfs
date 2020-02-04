@@ -48,17 +48,17 @@ The audio parser parses an audio tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const name = "ipfs-audioparser";
 
 var AudioParser = function(type,text,options) {
-  let self = this;
-  let uri = options._canonical_uri;
-  let tiddler = options.tiddler;
-  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
-  let value = "data:" + type + ";base64,";
-  let element = {
+  var self = this;
+  var uri = options._canonical_uri;
+  var tiddler = options.tiddler;
+  var isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
+  var value = "data:" + type + ";base64,";
+  var element = {
     type: "element",
     tag: "audio",
     attributes: {
@@ -91,7 +91,7 @@ var AudioParser = function(type,text,options) {
 }
 
 AudioParser.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 exports["audio/ogg"] = AudioParser;

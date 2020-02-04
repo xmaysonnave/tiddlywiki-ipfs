@@ -214,7 +214,7 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 // ipfs-http-client
 IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
   // Check
-  if (apiUrl == undefined || apiUrl == null) {
+  if (apiUrl == undefined || apiUrl == null || apiUrl.toString().trim() === "") {
     throw new Error("Undefined IPFS API URL...");
   }
   // Load IpfsHttpClient
@@ -222,17 +222,17 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
   // Getting
   try {
     const { httpClient } = providers;
-    this.getLogger().info("Processing connection to IPFS API URL: " + apiUrl);
+    this.getLogger().info("Processing connection to IPFS API URL: " + apiUrl.toString());
     const { ipfs, provider } = await getIpfs({
       providers: [
         httpClient({
-          apiAddress: apiUrl
+          apiAddress: apiUrl.toString()
         })
       ]
     });
     return {
       ipfs: ipfs,
-      provider: provider + ", " + apiUrl
+      provider: provider + ", " + apiUrl.toString()
     };
   } catch (error) {
     this.getLogger().error(error);

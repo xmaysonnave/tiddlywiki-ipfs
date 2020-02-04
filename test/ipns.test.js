@@ -6,6 +6,8 @@ const root = require("window-or-global");
 
 const IpfsWrapper = require("../build/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
+const gateway = "https://ipfs.infura.io";
+
 const resolvedTiddly = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau";
 
 const decodedCid = {
@@ -142,7 +144,7 @@ describe("IPNS key", () => {
     try {
       await ipfsWrapper.resolveIpnsKey(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
     } catch (error) {
-      expect(error.message).toBe("Failed to resolve IPNS key: " + "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
+      expect(error.message).toBe("Failed to resolve IPNS key:\n " + gateway + "/ipns/QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
     }
   });
 

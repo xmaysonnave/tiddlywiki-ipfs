@@ -48,7 +48,7 @@ The video parser parses a video tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const name = "ipfs-videoparser";
 
@@ -91,7 +91,7 @@ var VideoParser = function(type,text,options) {
 };
 
 VideoParser.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 exports["video/ogg"] = VideoParser;

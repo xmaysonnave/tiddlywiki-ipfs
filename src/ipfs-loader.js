@@ -14,7 +14,6 @@ IpfsLoader
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const name = "ipfs-loader";
@@ -22,7 +21,7 @@ const name = "ipfs-loader";
 var IpfsLoader = function() {};
 
 IpfsLoader.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 // https://www.srihash.org/
@@ -32,7 +31,8 @@ IpfsLoader.prototype.loadErudaLibrary = async function() {
     await this.loadLibrary(
       "ErudaLibrary",
       "https://cdn.jsdelivr.net/npm/eruda@2.1.0/eruda.min.js",
-      "sha384-L90fb4ZBjGGC8PcjNiWVB1Fxj2qeKuHN+Ddno15fJwwBuvaZoLM4ZNuQtQRWBgsM"
+      "sha384-L90fb4ZBjGGC8PcjNiWVB1Fxj2qeKuHN+Ddno15fJwwBuvaZoLM4ZNuQtQRWBgsM",
+      true
     );
   }
 }

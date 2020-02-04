@@ -1,4 +1,6 @@
 #!/bin/bash
+# cleanup
+rm -f -R ./build > /dev/null 2>&1
 # plugin directory
 mkdir -p ./build/plugins/ipfs/files > /dev/null 2>&1
 # wiki directory

@@ -10,7 +10,6 @@ EnsLibrary
 
 import CID  from "cids";
 import contentHash from "content-hash";
-import { URL } from "whatwg-url";
 
 (function(){
 
@@ -54,37 +53,6 @@ var EnsLibrary = function() {
 
 EnsLibrary.prototype.getLogger = function() {
   return root.log.getLogger(name);
-}
-
-/**
- * url.href;
- * url.origin
- * url.protocol;
- * url.username;
- * url.password;
- * url.host;
- * url.hostname;
- * url.port;
- * url.pathname;
- * url.search;
- * url.hash;
- * https://jsdom.github.io/whatwg-url/
- * https://url.spec.whatwg.org/
- */
-EnsLibrary.prototype.getDocumentUrl = function() {
-  return new URL(root.location.href);
-}
-
-EnsLibrary.prototype.getIpfsApiUrl = function() {
-  return new URL($tw.utils.getIpfsSaverApiUrl());
-}
-
-EnsLibrary.prototype.getIpfsGatewayUrl = function() {
-  return new URL($tw.utils.getIpfsSaverGatewayUrl());
-}
-
-EnsLibrary.prototype.getUrl = function(url, baseUrl) {
-  return new URL(url, baseUrl);
 }
 
 // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js

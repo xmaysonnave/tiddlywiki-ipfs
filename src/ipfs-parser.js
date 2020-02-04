@@ -16,12 +16,15 @@ utils
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
+
+const IpfsUri = require("./ipfs-uri.js").IpfsUri;
 
 const ipfsParserName = "ipfs-parser";
 
 exports.httpGetToUint8Array = async function(url) {
   const xhr = new XMLHttpRequest();
+  const ipfsUri = new IpfsUri();
   xhr.responseType = "arraybuffer";
   return new Promise(function(resolve, reject) {
     xhr.onreadystatechange = function() {
@@ -30,7 +33,7 @@ exports.httpGetToUint8Array = async function(url) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const logger = log.getLogger(ipfsParserName);
+          const logger = root.log.getLogger(ipfsParserName);
           logger.info(
             "Loaded: "
             + url
@@ -45,6 +48,7 @@ exports.httpGetToUint8Array = async function(url) {
       reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest") + " " + url));
     };
     try {
+      url = ipfsUri.normalizeGatewayUrl(url);
       xhr.open("get", url, true);
       xhr.send();
     } catch (error) {
@@ -56,9 +60,9 @@ exports.httpGetToUint8Array = async function(url) {
 /*
  * Load and decrypt to Base64
  */
-exports.loadAndDecryptToBase64 = function(uri) {
+exports.loadAndDecryptToBase64 = function(url) {
   return new Promise( async (resolve, reject) => {
-    $tw.utils.httpGetToUint8Array(uri)
+    $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
       if (array instanceof Uint8Array && array.length > 0) {
         $tw.utils.decryptUint8ArrayToBase64(array)
@@ -104,10 +108,10 @@ exports.decryptUint8ArrayToBase64 = async function(array) {
 /*
  * Load and decrypt to UTF-8
  */
-exports.loadAndDecryptToUtf8 = function(uri) {
+exports.loadAndDecryptToUtf8 = function(url) {
   return new Promise( async (resolve, reject) => {
     // Decrypt
-    $tw.utils.httpGetToUint8Array(uri)
+    $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
       if (array instanceof Uint8Array && array.length > 0) {
         $tw.utils.decryptUint8ArrayToUtf8(array)
@@ -128,9 +132,9 @@ exports.loadAndDecryptToUtf8 = function(uri) {
 /*
  * Load to UTF-8
  */
-exports.loadToUtf8 = function(uri) {
+exports.loadToUtf8 = function(url) {
   return new Promise( async (resolve, reject) => {
-    $tw.utils.httpGetToUint8Array(uri)
+    $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
       const data = $tw.utils.Utf8ArrayToStr(array);
       resolve(data);

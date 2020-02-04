@@ -6,6 +6,12 @@ npx browserify \
 || exit 1
 
 npx browserify \
+  src/ipfs-uri.js \
+  -s IpfsUri \
+  -o build/plugins/ipfs/ipfs-uri.js \
+|| exit 1
+
+npx browserify \
   src/ens-library.js \
   -s EnsLibrary \
   -o build/plugins/ipfs/ens-library.js \

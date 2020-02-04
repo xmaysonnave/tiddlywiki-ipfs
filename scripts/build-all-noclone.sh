@@ -1,7 +1,4 @@
 #!/bin/bash
-# cleanup
-rm -f -R ./build > /dev/null 2>&1
-
 ./scripts/run-prepare.sh || exit 1
 
 ./scripts/run-browserify.sh || exit 1

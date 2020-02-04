@@ -48,7 +48,7 @@ The PDF parser embeds a PDF viewer
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const name = "ipfs-pdfparser";
 
@@ -87,7 +87,7 @@ var PdfParser = function(type,text,options) {
 };
 
 PdfParser.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 exports["application/pdf"] = PdfParser;

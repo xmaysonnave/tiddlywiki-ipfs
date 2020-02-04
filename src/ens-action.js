@@ -14,11 +14,11 @@ EnsAction
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-const IpfsUri = require("$:/plugins/ipfs/ipfs-uri.js").IpfsUri;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
+const IpfsUri = require("./ipfs-uri.js").IpfsUri;
 
 const fileProtocol = "file:";
 const ipnsKeyword = "ipns";
@@ -34,7 +34,7 @@ var EnsAction = function() {
 };
 
 EnsAction.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 EnsAction.prototype.init = function() {
@@ -81,7 +81,7 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
     }
 
     // Retrieve Gateway URL
-    const gateway = this.ipfsUri.getIpfsGatewayUrl();
+    const gateway = this.ipfsUri.getSafeIpfsGatewayUrl();
 
     this.getLogger().info(
       "ENS domain: "
@@ -187,7 +187,7 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
         await this.ipfsWrapper.unpinFromIpfs(ipfs, content);
       } catch (error)  {
         // Log and continue
-        this.getLogger().warning(error);
+        this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
       }
     }

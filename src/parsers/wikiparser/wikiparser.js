@@ -48,7 +48,7 @@ wikiparser
 /*global $tw: false */
 "use strict";
 
-const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
+const root = require("$:/plugins/ipfs/window-or-global/index.js");
 
 const name = "ipfs-wikiparser";
 
@@ -98,7 +98,7 @@ var WikiParser = function(type,text,options) {
 };
 
 WikiParser.prototype.getLogger = function() {
-  return log.getLogger(name);
+  return root.log.getLogger(name);
 }
 
 /*

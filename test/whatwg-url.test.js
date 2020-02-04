@@ -20,7 +20,7 @@
 const log = require("loglevel");
 const root = require("window-or-global");
 
-const EnsLibrary = require("../build/plugins/ipfs/ens-library.js").EnsLibrary;
+const IpfsUri = require("../build/plugins/ipfs/ipfs-uri.js").IpfsUri;
 
 const invalid = "Wrong URL...";
 const baseFile = "file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html";
@@ -36,22 +36,22 @@ beforeAll(() => {
 describe("WHATWG-URL", () => {
 
   it("Undefined URL", () => {
-    const ensLibrary = new EnsLibrary();
+    const ipfsUri = new IpfsUri();
     expect(() => {
-      ensLibrary.getUrl();
+      ipfsUri.getUrl();
     }).toThrow();
   });
 
   it("Invalid URL", () => {
-    const ensLibrary = new EnsLibrary();
+    const ipfsUri = new IpfsUri();
     expect(() => {
-      ensLibrary.getUrl(invalid);
+      ipfsUri.getUrl(invalid);
     }).toThrow();
   });
 
   it("File protocol URL", () => {
-    const ensLibrary = new EnsLibrary();
-    const parsed = ensLibrary.getUrl(baseHttp);
+    const ipfsUri = new IpfsUri();
+    const parsed = ipfsUri.getUrl(baseHttp);
     expect(
       parsed.protocol === "https:"
       && parsed.origin === baseHttp
@@ -63,8 +63,8 @@ describe("WHATWG-URL", () => {
   });
 
   it("File protocol URL", () => {
-    const ensLibrary = new EnsLibrary();
-    const parsed = ensLibrary.getUrl(baseFile);
+    const ipfsUri = new IpfsUri();
+    const parsed = ipfsUri.getUrl(baseFile);
     expect(
       parsed.protocol === "file:"
       && parsed.origin === "null"
@@ -74,8 +74,8 @@ describe("WHATWG-URL", () => {
   });
 
   it("Useless base HTTP URL", () => {
-    const ensLibrary = new EnsLibrary();
-    const parsed = ensLibrary.getUrl(absolute, baseHttp);
+    const ipfsUri = new IpfsUri();
+    const parsed = ipfsUri.getUrl(absolute, baseHttp);
     expect(
       parsed.protocol === "https:"
       && parsed.hostname === "bluelightav.eth"
@@ -84,8 +84,8 @@ describe("WHATWG-URL", () => {
   });
 
   it("Relative URL", () => {
-    const ensLibrary = new EnsLibrary();
-    const parsed = ensLibrary.getUrl(relative, baseHttp);
+    const ipfsUri = new IpfsUri();
+    const parsed = ipfsUri.getUrl(relative, baseHttp);
     expect(
       parsed.href === baseHttp + relative
     ).toBeTruthy();
