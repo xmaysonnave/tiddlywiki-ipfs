@@ -14,8 +14,6 @@ utils
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const ipfsDefaultName = "ipfs-default";
 
 /*
@@ -45,7 +43,7 @@ exports.getIpfsPriority = function() {
     try {
       priority = parseInt(priority);
     } catch (error) {
-      const logger = root.log.getLogger(ipfsDefaultName);
+      const logger = window.log.getLogger(ipfsDefaultName);
       logger.error(error);
       $tw.utils.alert(ipfsDefaultName, error.message);
       priority = -1;

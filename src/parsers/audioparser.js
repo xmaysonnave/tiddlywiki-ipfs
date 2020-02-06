@@ -48,8 +48,6 @@ The audio parser parses an audio tiddler into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const name = "ipfs-audioparser";
 
 var AudioParser = function(type,text,options) {
@@ -66,9 +64,13 @@ var AudioParser = function(type,text,options) {
       style: { type: "string", value: "width: 100%; object-fit: contain" }
     }
   };
+  // Normalize
+  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    uri = $tw.ipfs.normalizeUrl(uri).toString();
+  }
   // Decrypt or not external resource
   if (uri && isEncrypted) {
-    $tw.utils.loadAndDecryptToBase64(uri)
+    $tw.utils.loadAndDecryptToBase64(uri.toString())
     .then( (base64) => {
       element.attributes.src = { type: "string", value: value + base64 };
       self.tree = [element];
@@ -81,7 +83,11 @@ var AudioParser = function(type,text,options) {
     });
   } else {
     if (uri) {
-      element.attributes.src = { type: "string", value: uri} ;
+      this.getLogger().info(
+        "Loading: "
+        + uri
+      );
+      element.attributes.src = { type: "string", value: uri.toString()} ;
     } else if (text) {
       element.attributes.src = { type: "string", value: value + text} ;
     }
@@ -91,7 +97,10 @@ var AudioParser = function(type,text,options) {
 }
 
 AudioParser.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  if (window.log) {
+    return window.log.getLogger(name);
+  }
+  return console;
 }
 
 exports["audio/ogg"] = AudioParser;

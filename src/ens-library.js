@@ -163,7 +163,9 @@ EnsLibrary.prototype.getProvider = function() {
 
 EnsLibrary.prototype.getWeb3Provider = async function() {
   // Load ethers
-  await root.ipfsLoader.loadEtherJsLibrary();
+  if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    await $tw.ipfs.getLoader().loadEtherJsLibrary();
+  }
   // Retrieve provider
   const provider = this.getProvider();
   // Enable provider

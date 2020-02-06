@@ -48,8 +48,6 @@ The PDF parser embeds a PDF viewer
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const name = "ipfs-pdfparser";
 
 var PdfParser = function(type,text,options) {
@@ -63,6 +61,10 @@ var PdfParser = function(type,text,options) {
     tag: "embed",
     attributes: {}
   };
+  // Normalize
+  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    uri = $tw.ipfs.normalizeUrl(uri).toString();
+  }
   if (uri && isEncrypted) {
     $tw.utils.loadAndDecryptToBase64(uri)
     .then( (base64) => {
@@ -77,6 +79,10 @@ var PdfParser = function(type,text,options) {
     });
   } else {
     if (uri) {
+      this.getLogger().info(
+        "Loading: "
+        + uri
+      );
       element.attributes.src = { type: "string", value: uri };
     } else if (text) {
       element.attributes.src = { type: "string", value: value + text };
@@ -87,7 +93,10 @@ var PdfParser = function(type,text,options) {
 };
 
 PdfParser.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  if (window.log) {
+    return window.log.getLogger(name);
+  }
+  return console;
 }
 
 exports["application/pdf"] = PdfParser;

@@ -16,15 +16,10 @@ utils
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
-const IpfsUri = require("./ipfs-uri.js").IpfsUri;
-
 const ipfsParserName = "ipfs-parser";
 
 exports.httpGetToUint8Array = async function(url) {
   const xhr = new XMLHttpRequest();
-  const ipfsUri = new IpfsUri();
   xhr.responseType = "arraybuffer";
   return new Promise(function(resolve, reject) {
     xhr.onreadystatechange = function() {
@@ -33,12 +28,12 @@ exports.httpGetToUint8Array = async function(url) {
           reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
         } else {
           const array = new Uint8Array(this.response);
-          const logger = root.log.getLogger(ipfsParserName);
+          const logger = window.log.getLogger(ipfsParserName);
           logger.info(
-            "Loaded: "
-            + url
-            + " with HTTP status: "
+            "Loaded with HTTP status: "
             + xhr.status
+            + "\n "
+            + url
           );
           resolve(array);
         }
@@ -48,7 +43,6 @@ exports.httpGetToUint8Array = async function(url) {
       reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest") + " " + url));
     };
     try {
-      url = ipfsUri.normalizeGatewayUrl(url);
       xhr.open("get", url, true);
       xhr.send();
     } catch (error) {
@@ -106,38 +100,34 @@ exports.decryptUint8ArrayToBase64 = async function(array) {
 };
 
 /*
- * Load and decrypt to UTF-8
- */
-exports.loadAndDecryptToUtf8 = function(url) {
-  return new Promise( async (resolve, reject) => {
-    // Decrypt
-    $tw.utils.httpGetToUint8Array(url)
-    .then( (array) => {
-      if (array instanceof Uint8Array && array.length > 0) {
-        $tw.utils.decryptUint8ArrayToUtf8(array)
-        .then( (data) => {
-          resolve(data);
-        })
-        .catch( (error) => {
-          reject(error);
-        });
-      }
-    })
-    .catch( (error) => {
-      reject(error);
-    });
-  });
-};
-
-/*
  * Load to UTF-8
  */
 exports.loadToUtf8 = function(url) {
   return new Promise( async (resolve, reject) => {
     $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
-      const data = $tw.utils.Utf8ArrayToStr(array);
-      resolve(data);
+      if (array instanceof Uint8Array && array.length > 0) {
+        // Decrypt
+        if ($tw.utils.isUtf8ArrayEncrypted(array)) {
+          $tw.utils.decryptUint8ArrayToUtf8(array)
+          .then( (data) => {
+            resolve({
+              data: data,
+              encrypted: true
+            });
+          })
+          .catch( (error) => {
+            reject(error);
+          });
+        } else {
+          resolve({
+            data: $tw.utils.Utf8ArrayToStr(array),
+            encrypted: false
+          });
+        }
+      } else {
+        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+      }
     })
     .catch( (error) => {
       reject(error);
@@ -191,6 +181,22 @@ exports.decryptFromPasswordPrompt = async function(encrypted) {
       }
     });
   });
+}
+
+exports.isUtf8ArrayEncrypted = function(content) {
+  const standford = $tw.utils.StringToUint8Array("{\"iv\":\"");
+  if (content instanceof Uint8Array && content.length > 0) {
+    var encrypted = false;
+    for (var i = 0; i < content.length && i < standford.length; i++) {
+      if (content[i] == standford[i]) {
+        encrypted = true;
+      }
+      if (encrypted == false) {
+        break;
+      }
+    }
+  }
+  return encrypted;
 }
 
 })();

@@ -116,7 +116,17 @@ IpfsUri.prototype.getUrl = function(url, baseUrl) {
   throw new Error("Invalid URL...");
 }
 
-IpfsUri.prototype.normalizeGatewayUrl = function(url) {
+IpfsUri.prototype.getBaseUrl = function() {
+  // Origin
+  var base = this.getDocumentUrl();
+  // Fallback to the Gateway
+  if (base.protocol === "file:") {
+    base = this.getSafeIpfsGatewayUrl();
+  }
+  return base;
+}
+
+IpfsUri.prototype.normalizeUrl = function(url, base) {
   // Parse
   var parsed = null;
   try {
@@ -124,9 +134,9 @@ IpfsUri.prototype.normalizeGatewayUrl = function(url) {
   } catch (error) {
     parsed = null;
   }
-  // Attempt to parse an URL with a Base URL
+  // Invalid URL, try to parse with a Base URL
   if (parsed == null) {
-    parsed = this.getUrl(url, this.getSafeIpfsGatewayUrl());
+    parsed = this.getUrl(url, base !== undefined && base !== null ? base : this.getBaseUrl());
   }
   // Remove .link from .eth.link
   if (parsed.hostname.endsWith(".eth.link")) {

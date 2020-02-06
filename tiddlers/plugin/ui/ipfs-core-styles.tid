@@ -14,13 +14,3 @@ type: text/css
   width: 1em;
   height: 1em;
 }
-
-.tc-page-container-wrapper {
-  resize:both;
-  overflow:auto;
-}
-
-.tc-page-container-wrapper {
-  resize:both;
-  overflow:auto;
-}

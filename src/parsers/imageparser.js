@@ -48,8 +48,6 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const name = "ipfs-imageparser";
 
 var ImageParser = function(type,text,options) {
@@ -63,6 +61,10 @@ var ImageParser = function(type,text,options) {
     tag: "img",
     attributes: {}
   };
+  // Normalize
+  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    uri = $tw.ipfs.normalizeUrl(uri).toString();
+  }
   // Decrypt or not external resource
   if (uri && isEncrypted) {
     $tw.utils.loadAndDecryptToBase64(uri)
@@ -78,6 +80,10 @@ var ImageParser = function(type,text,options) {
     });
   } else {
     if (uri) {
+      this.getLogger().info(
+        "Loading: "
+        + uri
+      );
       element.attributes.src = { type: "string", value: uri };
     } else if (text) {
       element.attributes.src = { type: "string", value: value + text };
@@ -88,7 +94,10 @@ var ImageParser = function(type,text,options) {
 };
 
 ImageParser.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  if (window.log) {
+    return window.log.getLogger(name);
+  }
+  return console;
 }
 
 exports["image/jpg"] = ImageParser;

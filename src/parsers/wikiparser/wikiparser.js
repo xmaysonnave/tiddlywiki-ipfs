@@ -48,15 +48,18 @@ wikiparser
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const name = "ipfs-wikiparser";
 
 var WikiParser = function(type,text,options) {
   this.wiki = options.wiki;
+  var uri = options._canonical_uri;
+  // Normalize
+  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    uri = $tw.ipfs.normalizeUrl(uri).toString();
+  }
   // Check for an externally linked tiddler
-  if($tw.browser && (text || "") === "" && options._canonical_uri) {
-    this.loadRemoteTiddlers(options.tiddler, options._canonical_uri);
+  if($tw.browser && (text || "") === "" && uri) {
+    this.loadRemoteTiddlers(options.tiddler, uri);
     text = $tw.language.getRawString("LazyLoadingWarning");
   }
   // Initialise the classes if we don't have them already
@@ -98,46 +101,37 @@ var WikiParser = function(type,text,options) {
 };
 
 WikiParser.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  if (window.log) {
+    return window.log.getLogger(name);
+  }
+  return console;
 }
 
 /*
 */
 WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
   let self = this;
-  if (tiddler.hasTag("$:/isEncrypted")) {
-    $tw.utils.loadAndDecryptToUtf8(uri)
-    .then( (data) => {
-      self.importTiddlers(tiddler, uri, data);
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  } else {
-    $tw.utils.loadToUtf8(uri)
-    .then( (data) => {
-      self.importTiddlers(tiddler, uri, data);
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  }
+  $tw.utils.loadToUtf8(uri)
+  .then( (loaded) => {
+    self.importTiddlers(tiddler, uri, loaded.data, loaded.encrypted);
+  })
+  .catch( (error) => {
+    self.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
+  });
 };
 
-WikiParser.prototype.importTiddlers = function(tiddler, uri, data) {
+WikiParser.prototype.importTiddlers = function(tiddler, uri, data, encrypted) {
   const importedTiddlers = this.wiki.deserializeTiddlers(".tid",data,this.wiki.getCreationFields());
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
     const text = importedTiddler["text"];
+    // Warning
     if (text == undefined || text == null || text.trim() === "") {
       importedTiddler["text"] = $tw.language.getRawString("EmptyTidddler");;
     }
+    // Import
     $tw.wiki.addTiddler(importedTiddler);
   });
-  if (importedTiddlers) {
-    this.wiki.addTiddlers(importedTiddlers);
-  }
 }
 
 /*

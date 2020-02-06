@@ -14,11 +14,8 @@ EnsAction
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-const IpfsUri = require("./ipfs-uri.js").IpfsUri;
 
 const fileProtocol = "file:";
 const ipnsKeyword = "ipns";
@@ -30,11 +27,10 @@ var EnsAction = function() {
   this.once = false;
   this.ensWrapper = new EnsWrapper();
   this.ipfsWrapper = new IpfsWrapper();
-  this.ipfsUri = new IpfsUri();
 };
 
 EnsAction.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  return window.log.getLogger(name);
 }
 
 EnsAction.prototype.init = function() {
@@ -80,9 +76,6 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
       return false;
     }
 
-    // Retrieve Gateway URL
-    const gateway = this.ipfsUri.getSafeIpfsGatewayUrl();
-
     this.getLogger().info(
       "ENS domain: "
       + ensDomain
@@ -95,14 +88,8 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
     const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
     // Emtpy content
     if (content !== null) {
-      const url = gateway.protocol
-        + "//"
-        + gateway.host
-        + "/"
-        + ipfsKeyword
-        + "/"
-        + content;
-      window.open(url, "_blank", "noopener");
+      const parsed = $tw.ipfs.normalizeUrl("/" + ipfsKeyword + "/" + content);
+      window.open(parsed.href, "_blank", "noopener");
     }
 
   } catch (error) {
@@ -120,7 +107,7 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
   try {
 
     // Process document URL
-    const wiki = this.ipfsUri.getDocumentUrl();
+    const wiki = $tw.ipfs.getDocumentUrl();
 
     // Check
     if (wiki.protocol === fileProtocol) {
@@ -142,11 +129,11 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
     }
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Resolve IPNS key if applicable
     if (protocol === ipnsKeyword) {
-      const { ipnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, cid);
+      const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
       cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     }
 

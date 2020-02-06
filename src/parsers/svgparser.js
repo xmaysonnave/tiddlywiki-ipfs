@@ -48,27 +48,31 @@ The image parser parses an image into an embeddable HTML element
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const name = "ipfs-svgparser";
 
 var SvgParser = function(type,text,options) {
-  let self = this;
-  let uri = options._canonical_uri;
-  let tiddler = options.tiddler;
-  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
-  let value = "data:image/svg+xml,";
-  let element = {
+  const self = this;
+  const value = "data:image/svg+xml,";
+  const element = {
     type: "element",
     tag: "img",
     attributes: {}
   };
-  // Decrypt or not external resource
-  if (uri && isEncrypted) {
-    $tw.utils.loadAndDecryptToUtf8(uri)
-    .then( (data) => {
-      element.attributes.src = { type: "string", value: value + encodeURIComponent(data) };
+  var uri = options._canonical_uri;
+  var tiddler = options.tiddler;
+  // Normalize
+  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    uri = $tw.ipfs.normalizeUrl(uri).toString();
+  }
+  // Load external resource
+  if (uri) {
+    $tw.utils.loadToUtf8(uri)
+    .then( (loaded) => {
+      // Load data
+      element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
+      // Assign
       self.tree = [element];
+      // Refresh
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
     })
@@ -77,28 +81,17 @@ var SvgParser = function(type,text,options) {
       $tw.utils.alert(name, error.message);
     });
   } else {
-    if (uri) {
-      $tw.utils.loadToUtf8(uri)
-      .then( (data) => {
-        element.attributes.src = { type: "string", value: value + encodeURIComponent(data) };
-        self.tree = [element];
-        const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-        $tw.rootWidget.refresh(changedTiddlers);
-      })
-      .catch( (error) => {
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      });
-    } else if (text) {
-      element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
-    }
+    element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
   }
   // Return the parsed tree
   this.tree = [element];
 };
 
 SvgParser.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  if (window.log) {
+    return window.log.getLogger(name);
+  }
+  return console;
 }
 
 exports["image/svg+xml"] = SvgParser;

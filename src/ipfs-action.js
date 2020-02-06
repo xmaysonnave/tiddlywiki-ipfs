@@ -14,11 +14,8 @@ IpfsAction
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-const IpfsUri = require("./ipfs-uri.js").IpfsUri;
 
 const fileProtocol = "file:";
 const ipfsKeyword = "ipfs";
@@ -28,15 +25,15 @@ const name = "ipfs-action";
 
 var IpfsAction = function() {
   this.once = false;
+  this.console = false;
   this.ensWrapper = new EnsWrapper();
-  this.ipfsUri = new IpfsUri();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipnsName = $tw.utils.getIpfsIpnsName();
   this.ipnsKey = $tw.utils.getIpfsIpnsKey();
 };
 
 IpfsAction.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  return window.log.getLogger(name);
 }
 
 IpfsAction.prototype.init = function() {
@@ -91,7 +88,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
 
     var unpin = [];
     var fields = [];
-    var ipfsUri = null;
+    var tid = null;
     var ipnsKey = null;
     var ipnsName = null;
     var ipnsContent = null;
@@ -130,10 +127,10 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     }
 
     // Retrieve fields
-    ipfsUri = tiddler.getFieldString("_tid_uri");
+    tid = tiddler.getFieldString("_tid_uri");
     // Check
-    if (ipfsUri == undefined || ipfsUri == null || ipfsUri.trim() === "") {
-      ipfsUri = null;
+    if (tid == undefined || tid == null || tid.trim() === "") {
+      tid = null;
     }
     ipnsName = tiddler.getFieldString("_ipns_name");
     // Check
@@ -152,12 +149,12 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     }
 
     // IPFS client
-    var { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    var { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Unpin current
-    if (ipfsUri !== null) {
+    if (tid !== null) {
       // Decode
-      const parsed = this.ipfsUri.normalizeGatewayUrl(ipfsUri);
+      const parsed = $tw.ipfs.normalizeUrl(tid);
       if (parsed.pathname === "/") {
         $tw.utils.alert(name, "Unknown pathname...");
         return false;
@@ -165,13 +162,13 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       const { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
       if ($tw.utils.getIpfsUnpin()
         && cid !== null
-        && root.unpin.indexOf(cid) == -1
+        && window.unpin.indexOf(cid) == -1
       ) {
         unpin.push(cid);
         this.getLogger().info(
           "Request to unpin IPFS Tiddler:"
           + "\n "
-          + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + cid)
+          + parsed.pathname
         );
       }
     }
@@ -179,7 +176,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     // Analyse IPNS
     if (ipnsName !== null || ipnsKey !== null) {
       this.getLogger().info("Processing IPNS Tiddler...");
-      var { ipnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+      var { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
       try {
         ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       } catch (error) {
@@ -191,13 +188,16 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       if (
         $tw.utils.getIpfsUnpin()
         && ipnsContent !== null
-        && root.unpin.indexOf(ipnsContent) == -1
+        && window.unpin.indexOf(ipnsContent) == -1
       ) {
         unpin.push(ipnsContent);
         this.getLogger().info(
           "Request to unpin IPNS Tiddler:"
           + "\n "
-          + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + ipnsContent)
+          + "/"
+          + ipfsKeyword
+          + "/"
+          + ipnsContent
         );
       }
     }
@@ -212,13 +212,16 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       if (
         $tw.utils.getIpfsUnpin()
         && content !== null
-        && root.unpin.indexOf(content) == -1
+        && window.unpin.indexOf(content) == -1
       ) {
         unpin.push(content);
         this.getLogger().info(
           "Request to unpin ENS domain content:"
           + "\n "
-          + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + content)
+          + "/"
+          + ipfsKeyword
+          + "/"
+          + content
         );
       }
     }
@@ -271,7 +274,10 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
           this.getLogger().info(
             "Discard request to unpin IPNS Tiddler:"
             + "\n "
-            + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + ipnsContent)
+            + "/"
+            + ipfsKeyword
+            + "/"
+            + ipnsContent
           );
         }
       }
@@ -300,7 +306,10 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
           this.getLogger().info(
             "Discard request to unpin ENS domain content:"
             + "\n "
-            + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + ensContent)
+            + "/"
+            + ipfsKeyword
+            + "/"
+            + ensContent
           );
         }
       }
@@ -399,7 +408,7 @@ IpfsAction.prototype.handlePublishToIpfs = async function(event) {
   try {
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     this.getLogger().info(
       "Uploading attachment: "
@@ -475,10 +484,10 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
         return false;
       }
       // decode _canonical_uri
-      parsed = this.ipfsUri.normalizeGatewayUrl(uri);
+      parsed = $tw.ipfs.normalizeUrl(uri);
     } else {
       // decode document URL
-      parsed = this.ipfsUri.getDocumentUrl();
+      parsed = $tw.ipfs.getDocumentUrl();
     }
 
     // Check
@@ -505,11 +514,11 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
     }
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Resolve ipns key if applicable
     if (protocol === ipnsKeyword) {
-      const { ipnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, cid);
+      const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
       try {
         cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       } catch (error) {
@@ -523,18 +532,24 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
     this.getLogger().info(
       "Pinning:"
       + "\n "
-      + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + cid)
+      + "/"
+      + ipfsKeyword
+      + "/"
+      + cid
     );
 
     await this.ipfsWrapper.pinToIpfs(ipfs, cid);
 
-    const index = root.unpin.indexOf(cid);
+    const index = window.unpin.indexOf(cid);
     if ($tw.utils.getIpfsUnpin() && index !== -1) {
-      root.unpin.splice(index, 1);
+      window.unpin.splice(index, 1);
       this.getLogger().info(
         "Discard request to unpin:"
         + "\n "
-        + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + cid)
+        + "/"
+        + ipfsKeyword
+        + "/"
+        + cid
       );
     }
 
@@ -569,11 +584,11 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
         $tw.utils.alert(name, "This Tiddler is not an external resource...");
         return false;
       }
-      // decode _canonical_uri
-      parsed = this.ipfsUri.normalizeGatewayUrl();
+      // parse _canonical_uri
+      parsed = $tw.ipfs.normalizeUrl(uri);
     } else {
-      // decode document URL
-      parsed = this.ipfsUri.getDocumentUrl();
+      // parse document URL
+      parsed = $tw.ipfs.getDocumentUrl();
     }
 
     // Check
@@ -600,25 +615,28 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
     }
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Resolve IPNS key if applicable
     if (protocol === ipnsKeyword) {
-      const { ipnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, cid);
+      const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
       cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     }
 
     this.getLogger().info(
       "Unpinning:"
       + "\n "
-      + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + cid)
+      + "/"
+      + ipfsKeyword
+      + "/"
+      + cid
     );
 
     await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
 
-    const index = root.unpin.indexOf(cid);
-    if ($tw.utils.getIpfsUnpin() && root.unpin.indexOf(cid) !== -1) {
-      root.unpin.splice(index, 1);
+    const index = window.unpin.indexOf(cid);
+    if ($tw.utils.getIpfsUnpin() && window.unpin.indexOf(cid) !== -1) {
+      window.unpin.splice(index, 1);
     }
 
   } catch (error) {
@@ -649,7 +667,7 @@ IpfsAction.prototype.handleRenameIpnsName = async function(event) {
   try {
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Rename IPNS name
     const { key } = await this.ipfsWrapper.renameIpnsName(ipfs, this.ipnsName, ipnsName);
@@ -657,12 +675,15 @@ IpfsAction.prototype.handleRenameIpnsName = async function(event) {
     // Update Tiddler
     const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
     if (tiddler !== undefined) {
-      $tw.utils.updateTiddler({
+      const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [
           { key: "text", value: key }
         ]
       });
+      if (updatedTiddler !== null) {
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
     }
 
     // Successfully renamed
@@ -693,7 +714,7 @@ IpfsAction.prototype.handleGenerateIpnsKey = async function(event) {
   try {
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Generate IPNS key
     const key = await this.ipfsWrapper.generateIpnsKey(ipfs, ipnsName);
@@ -701,12 +722,15 @@ IpfsAction.prototype.handleGenerateIpnsKey = async function(event) {
     // Update Tiddler
     const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
     if (tiddler !== undefined) {
-      $tw.utils.updateTiddler({
+      const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [
           { key: "text", value: key }
         ]
       });
+      if (updatedTiddler !== null) {
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
     }
 
     // Successfully generated
@@ -738,10 +762,10 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
   try {
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Resolve CID,
-    var { ipnsKey, ipnsName } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+    var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
     const resolved = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
 
     // Unpin previous
@@ -749,7 +773,10 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
       this.getLogger().info(
         "Request to unpin:"
         + "\n "
-        + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + resolved)
+        + "/"
+        + ipfsKeyword
+        + "/"
+        + resolved
       );
       try {
         await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
@@ -766,21 +793,27 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
     // Update Tiddlers
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
     if (tiddler !== undefined) {
-      $tw.utils.updateTiddler({
+      const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [
           { key: "text", value: "" }
         ]
       });
+      if (updatedTiddler !== null) {
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
     }
     tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
     if (tiddler !== undefined && $tw.utils.getIpfsIpnsKey() !== null) {
-      $tw.utils.updateTiddler({
+      const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [
           { key: "text", value: "" }
         ]
       });
+      if (updatedTiddler !== null) {
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
     }
 
     // Successfully removed
@@ -812,20 +845,23 @@ IpfsAction.prototype.handleFetchIpnsKey = async function(event) {
   try {
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Fetch
-    const { ipnsKey: resolvedIpnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+    const { ipnsKey: resolvedIpnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
 
     // Update Tiddler
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
     if (tiddler !== undefined && this.ipnsKey !== resolvedIpnsKey) {
-      $tw.utils.updateTiddler({
+      const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [
           { key: "text", value: resolvedIpnsKey }
         ]
       });
+      if (updatedTiddler !== null) {
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
       this.ipnsKey = resolvedIpnsKey;
     }
     this.ipnsName = ipnsName;
@@ -854,14 +890,11 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
       return false;
     }
 
-    // Retrieve Gateway URL
-    const gateway = this.ipfsUri.getSafeIpfsGatewayUrl();
-
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Resolve CID
-    var { ipnsKey, ipnsName } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+    var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
     const resolved = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
 
     // Update Tiddler
@@ -878,15 +911,9 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
     this.ipnsName = ipnsName;
 
     if (resolved !== null) {
-      // Resolved IPFS URL
-      const url = gateway.protocol
-        + "//"
-        + gateway.host
-        + "/"
-        + ipfsKeyword
-        + "/"
-        + resolved;
-      root.open(url, "_blank", "noopener");
+      // Build URL
+      const parsed = $tw.ipfs.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
+      window.open(parsed.href, "_blank", "noopener");
     }
 
   } catch (error) {
@@ -901,29 +928,40 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
 
 IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
   // Load mobile console if applicable
-  if (typeof root.eruda === "undefined") {
-    await root.ipfsLoader.loadErudaLibrary();
-    const eruda = root.document.createElement("div");
-    root.document.body.appendChild(eruda);
-    root.eruda.init({
+  if (typeof window.eruda === "undefined") {
+    if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+      await $tw.ipfs.getLoader().loadErudaLibrary();
+    }
+  }
+  if (this.console == false) {
+    const eruda = window.document.createElement("div");
+    window.document.body.appendChild(eruda);
+    window.eruda.init({
       container: eruda,
       tool: ["console"],
-      useShadowDom: true,
-      autoScale: true
+      useShadowDom: false
     });
     // Preserve user preference if any, default is 80
-    if (root.eruda.get().config.get("displaySize") === 80) {
-      root.eruda.get().config.set("displaySize", 40);
+    if (window.eruda.get().config.get("displaySize") === 80) {
+      window.eruda.get().config.set("displaySize", 40);
     }
     // Preserve user preference if any, default is 0.95
-    if (root.eruda.get().config.get("transparency") === 0.95) {
-      root.eruda.get().config.set("transparency", 1);
+    if (window.eruda.get().config.get("transparency") === 0.95) {
+      window.eruda.get().config.set("transparency", 1);
     }
-    this.getLogger().log("Mobile console has been loaded...");
+    // Remove the button
+    const buttons = document.getElementsByClassName("eruda-entry-btn");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].remove();
+    }
+    // Show
+    window.eruda.show();
+    window.eruda.show("console");
+    this.console = true;
   } else {
-    root.eruda.destroy();
-    delete root.eruda;
-    this.getLogger().log("Mobile console has been unloaded...");
+    window.eruda.show("hide");
+    window.eruda.destroy();
+    this.console = false;
   }
 }
 
@@ -932,7 +970,7 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
   try {
 
     // Process document URL
-    const wiki = this.ipfsUri.getDocumentUrl();
+    const wiki = $tw.ipfs.getDocumentUrl();
 
     // Check
     if (wiki.protocol === fileProtocol) {
@@ -958,7 +996,7 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
     }
 
     // IPFS client
-    const { ipfs } = await this.ipfsWrapper.getIpfsClient(this.ipfsUri.getIpfsApiUrl());
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // Default IPNS key and IPNS name
     var ipnsKey = $tw.utils.getIpfsIpnsKey();
@@ -979,13 +1017,13 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
       }
       // Resolve current IPNS key
       this.getLogger().info("Processing current IPNS...");
-      const { ipnsKey: currentIpnsKey } = await this.ipfsWrapper.fetchIpns(ipfs, cid);
+      const { ipnsKey: currentIpnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
       cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, currentIpnsKey);
     }
 
     // Resolve default IPNS key and IPNS name
     this.getLogger().info("Processing default IPNS...");
-    var { ipnsKey, ipnsName } = await this.ipfsWrapper.fetchIpns(ipfs, ipnsKey, ipnsName);
+    var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
     try {
       resolved = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     } catch (error) {
@@ -1012,7 +1050,10 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
       this.getLogger().info(
         "Request to unpin IPNS wiki:"
         + "\n "
-        + this.ipfsUri.normalizeGatewayUrl("/" + ipfsKeyword + "/" + resolved)
+        + "/"
+        + ipfsKeyword
+        + "/"
+        + resolved
       );
       try {
         await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);

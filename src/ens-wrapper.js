@@ -14,7 +14,14 @@ EnsWrapper
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
+/**
+ * https://github.com/purposeindustries/window-or-global
+ * The MIT License (MIT) Copyright (c) Purpose Industries
+ * version: 1.0.1
+ */
+const root = (typeof self === 'object' && self.self === self && self)
+  || (typeof global === 'object' && global.global === global && global)
+  || this;
 
 const EnsLibrary = require("./ens-library.js").EnsLibrary;
 const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;

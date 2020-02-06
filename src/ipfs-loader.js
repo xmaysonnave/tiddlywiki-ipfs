@@ -14,20 +14,18 @@ IpfsLoader
 /*global $tw: false */
 "use strict";
 
-const root = require("$:/plugins/ipfs/window-or-global/index.js");
-
 const name = "ipfs-loader";
 
 var IpfsLoader = function() {};
 
 IpfsLoader.prototype.getLogger = function() {
-  return root.log.getLogger(name);
+  return window.log.getLogger(name);
 }
 
 // https://www.srihash.org/
 // https://github.com/liriliri/eruda
 IpfsLoader.prototype.loadErudaLibrary = async function() {
-  if (typeof root.eruda === "undefined") {
+  if (typeof window.eruda === "undefined") {
     await this.loadLibrary(
       "ErudaLibrary",
       "https://cdn.jsdelivr.net/npm/eruda@2.1.0/eruda.min.js",
@@ -40,7 +38,7 @@ IpfsLoader.prototype.loadErudaLibrary = async function() {
 // https://www.srihash.org/
 // https://github.com/ethers-io/ethers.js/
 IpfsLoader.prototype.loadEtherJsLibrary = async function() {
-  if (typeof root.ethers === "undefined") {
+  if (typeof window.ethers === "undefined") {
     return await this.loadLibrary(
       "EtherJsLibrary",
       "https://cdn.jsdelivr.net/npm/ethers@4.0.44/dist/ethers.min.js",
@@ -53,14 +51,14 @@ IpfsLoader.prototype.loadEtherJsLibrary = async function() {
 // https://www.srihash.org/
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
-  if (typeof root.IpfsHttpClient === "undefined") {
+  if (typeof window.IpfsHttpClient === "undefined") {
     await this.loadLibrary(
       "IpfsHttpLibrary",
       "https://cdn.jsdelivr.net/npm/ipfs-http-client@41.0.1/dist/index.min.js",
       "sha384-FhotltYqd3Ahyy0tJkqdR0dTReYsWEk0NQpF+TAxMPl15GmLtZhZijk1j/Uq7Xsh",
       true
     );
-    root.httpClient = root.IpfsHttpClient;
+    window.httpClient = window.IpfsHttpClient;
   }
 }
 
@@ -69,11 +67,11 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
   const self = this;
   return new Promise((resolve, reject) => {
     try {
-      if (root.document.getElementById(id) == null) {
-        const script = root.document.createElement("script");
+      if (window.document.getElementById(id) == null) {
+        const script = window.document.createElement("script");
         // Cleanup function
         const cleanup = () => {
-          delete root[id];
+          delete window[id];
           script.onerror = null;
           script.onload = null;
           script.remove();
@@ -93,9 +91,9 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
           script.integrity = sri;
         }
         script.crossOrigin = "anonymous";
-        root.document.head.appendChild(script);
+        window.document.head.appendChild(script);
         script.onload = () => {
-          resolve(root[id]);
+          resolve(window[id]);
           cleanup();
           self.getLogger(name).info(
             "Loaded: "
@@ -107,7 +105,7 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
           cleanup();
         }
       } else {
-        return resolve(root[id]);
+        return resolve(window[id]);
       }
     } catch (error) {
       reject(error);

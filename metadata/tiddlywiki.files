@@ -1,32 +1,18 @@
 {
-	"tiddlers": [
-		{
-			"file": "loglevel/loglevel.js",
-			"fields": {
-				"type": "application/javascript",
-				"title": "$:/plugins/ipfs/loglevel/loglevel.js",
-				"module-type": "library"
-			}
-		},{
-			"file": "loglevel/LICENSE-MIT",
-			"fields": {
-				"type": "text/plain",
-				"title": "$:/plugins/ipfs/loglevel/license"
-			}
-		},{
-			"file": "window-or-global/index.js",
-			"fields": {
-				"type": "application/javascript",
-				"title": "$:/plugins/ipfs/window-or-global/index.js",
-				"module-type": "library"
-			}
-		},{
-			"file": "window-or-global/LICENSE",
-			"fields": {
-				"type": "text/plain",
-				"title": "$:/plugins/ipfs/window-or-global/license"
-			}
-		}
-
-	]
+  "tiddlers": [
+    {
+      "file": "loglevel/loglevel.js",
+      "fields": {
+        "type": "application/javascript",
+        "title": "$:/plugins/ipfs/loglevel/loglevel.js",
+        "module-type": "library"
+      }
+    },{
+      "file": "loglevel/LICENSE-MIT",
+      "fields": {
+        "type": "text/plain",
+        "title": "$:/plugins/ipfs/loglevel/license"
+      }
+    }
+  ]
 }
