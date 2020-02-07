@@ -932,8 +932,6 @@ IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
     if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
       await $tw.ipfs.getLoader().loadErudaLibrary();
     }
-  }
-  if (this.console == false) {
     const eruda = window.document.createElement("div");
     window.document.body.appendChild(eruda);
     window.eruda.init({
@@ -941,6 +939,8 @@ IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
       tool: ["console"],
       useShadowDom: false
     });
+    // Inherit font
+    eruda.style.fontFamily = "inherit";
     // Preserve user preference if any, default is 80
     if (window.eruda.get().config.get("displaySize") === 80) {
       window.eruda.get().config.set("displaySize", 40);
@@ -954,13 +954,15 @@ IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
     for (var i = 0; i < buttons.length; i++) {
       buttons[i].remove();
     }
+  }
+  if (this.console == false) {
     // Show
     window.eruda.show();
     window.eruda.show("console");
     this.console = true;
   } else {
-    window.eruda.show("hide");
-    window.eruda.destroy();
+    window.eruda.hide();
+    // window.eruda.destroy();
     this.console = false;
   }
 }
