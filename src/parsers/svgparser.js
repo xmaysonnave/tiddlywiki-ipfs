@@ -72,9 +72,9 @@ var SvgParser = function(type,text,options) {
       element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
       // Assign
       self.tree = [element];
-      // Refresh
-      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-      $tw.rootWidget.refresh(changedTiddlers);
+      // Dispatch
+      const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+      $tw.rootWidget.refresh(parsedTiddler);
     })
     .catch( (error) => {
       self.getLogger().error(error);

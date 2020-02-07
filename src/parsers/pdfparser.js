@@ -68,10 +68,13 @@ var PdfParser = function(type,text,options) {
   if (uri) {
     $tw.utils.loadToBase64(uri)
     .then( (loaded) => {
+      // Load data
       element.attributes.src = { type: "string", value: value + loaded.data };
+      // Assign
       self.tree = [element];
-      const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-      $tw.rootWidget.refresh(changedTiddlers);
+      // Dispatch
+      const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+      $tw.rootWidget.refresh(parsedTiddler);
     })
     .catch( (error) => {
       self.getLogger().error(error);

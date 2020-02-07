@@ -26,9 +26,6 @@ exports.params = [
  */
 exports.run = function(uri) {
   // Check
-  if (uri == undefined || uri == null || uri.trim() === "") {
-    return "_canonical_uri";
-  }
   const title = this.getVariable("currentTiddler");
   if (title == undefined || title == null || title.trim() === "") {
     return "";
@@ -37,6 +34,11 @@ exports.run = function(uri) {
   if (tiddler == undefined || tiddler == null) {
     return "";
   }
+  // Default to '_canonical_uri'
+  if (uri == undefined || uri == null || uri.trim() === "") {
+    uri = "_canonical_uri";
+  }
+  // Check
   const field = tiddler.getFieldString(uri);
   if (field == undefined || field == null || field.trim() === "") {
     return "";
@@ -44,9 +46,5 @@ exports.run = function(uri) {
   // Process
   return $tw.ipfs.normalizeUrl(field);
 };
-
-exports.getLogger = function() {
-  return window.log.getLogger(name);
-}
 
 })();

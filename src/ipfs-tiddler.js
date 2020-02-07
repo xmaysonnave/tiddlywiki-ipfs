@@ -165,24 +165,25 @@ IpfsTiddler.prototype.handleFileImport = function(tiddler) {
 
 IpfsTiddler.prototype.handleRefreshTiddler = function(event) {
   const title = event.tiddlerTitle;
-  if (title !== undefined && title !== null) {
-    // current tiddler
-    const tiddler = $tw.wiki.getTiddler(title);
-    if (tiddler == undefined || tiddler == null) {
-      $tw.utils.alert(name, "Unknown tiddler: " + title);
-      return false;
-    }
-    // _canonical_uri
-    var uri = tiddler.getFieldString("_canonical_uri");
-    // Default
-    if (uri == undefined || uri == null || uri.trim() === "") {
-      return false;
-    }
-    // Refresh
-    $tw.wiki.clearCache(title);
-    const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
-    $tw.rootWidget.refresh(changedTiddlers);
+  if (title == undefined || title == null || title.trim() === "") {
+    return false;
   }
+  // current tiddler
+  const tiddler = $tw.wiki.getTiddler(title);
+  if (tiddler == undefined || tiddler == null) {
+    $tw.utils.alert(name, "Unknown tiddler: " + title);
+    return false;
+  }
+  // _canonical_uri
+  var uri = tiddler.getFieldString("_canonical_uri");
+  // Default
+  if (uri == undefined || uri == null || uri.trim() === "") {
+    return false;
+  }
+  // Refresh
+  $tw.wiki.clearCache(title);
+  const changedTiddler = $tw.utils.getChangedTiddler(title);
+  $tw.rootWidget.refresh(changedTiddler);
   return true;
 }
 

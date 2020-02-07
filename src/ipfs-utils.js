@@ -173,13 +173,31 @@ exports.alert = function(callee, text) {
 
 }
 
-exports.getChangedTiddlers = function(tiddler) {
-  const title = tiddler.getFieldString("title");
-  const changedTiddlers = Object.create(null);
-  if (title !== undefined && title !== null) {
-    changedTiddlers[title] = Object.create(null);
+exports.getChangedTiddler = function(object, options) {
+  options = options || Object.create(null);
+  const changedTiddler = Object.create(null);
+  // Check
+  if (object == undefined || object == null) {
+    return changedTiddler;
   }
-  return changedTiddlers;
+  if (object instanceof $tw.Tiddler == false && typeof object !== "string") {
+    return changedTiddler;
+  }
+  // Retrieve title
+  var title = null;
+  if (typeof object === "string") {
+    title = object;
+  }
+  if (object instanceof $tw.Tiddler) {
+    title = object.getFieldString("title");
+  }
+  // Check
+  if (title == undefined || title == null || title.trim() === "") {
+    return changedTiddler;
+  }
+  // Process
+  changedTiddler[title] = options;
+  return changedTiddler;
 }
 
 exports.updateTiddler = function(updates) {

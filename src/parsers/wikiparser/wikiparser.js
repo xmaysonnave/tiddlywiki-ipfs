@@ -113,7 +113,7 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
   let self = this;
   $tw.utils.loadToUtf8(uri)
   .then( (loaded) => {
-    self.importTiddlers(tiddler, uri, loaded.data);
+    self.importTiddlers(tiddler, uri, loaded);
   })
   .catch( (error) => {
     self.getLogger().error(error);
@@ -121,8 +121,8 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
   });
 };
 
-WikiParser.prototype.importTiddlers = function(tiddler, uri, data) {
-  const importedTiddlers = this.wiki.deserializeTiddlers(".tid",data,this.wiki.getCreationFields());
+WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
+  const importedTiddlers = this.wiki.deserializeTiddlers(".tid",loaded.data,this.wiki.getCreationFields());
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
     const text = importedTiddler["text"];
     // Warning
