@@ -52,22 +52,32 @@ exports.httpGetToUint8Array = async function(url) {
 };
 
 /*
- * Load and decrypt to Base64
+ * Load to Base64
  */
-exports.loadAndDecryptToBase64 = function(url) {
+exports.loadToBase64 = function(url) {
   return new Promise( async (resolve, reject) => {
     $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
-      if (array instanceof Uint8Array && array.length > 0) {
+      if (array instanceof Uint8Array == false || array.length == 0) {
+        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+      }
+      // Decrypt
+      if ($tw.utils.isUtf8ArrayEncrypted(array)) {
         $tw.utils.decryptUint8ArrayToBase64(array)
         .then( (base64) => {
-          resolve(base64);
+          resolve({
+            data: base64,
+            decrypted : true
+          });
         })
         .catch( (error) => {
           reject(error);
         });
       } else {
-        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+        resolve({
+          data: $tw.utils.Uint8ArrayToBase64(array),
+          decrypted : false
+        });
       }
     })
     .catch( (error) => {
@@ -77,7 +87,42 @@ exports.loadAndDecryptToBase64 = function(url) {
 };
 
 /*
- * Decrypt Uint8Array to Base64
+ * Load to UTF-8
+ */
+exports.loadToUtf8 = function(url) {
+  return new Promise( async (resolve, reject) => {
+    $tw.utils.httpGetToUint8Array(url)
+    .then( (array) => {
+      if (array instanceof Uint8Array == false || array.length == 0) {
+        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+      }
+      // Decrypt
+      if ($tw.utils.isUtf8ArrayEncrypted(array)) {
+        $tw.utils.decryptUint8ArrayToUtf8(array)
+        .then( (data) => {
+          resolve({
+            data: data,
+            decrypted: true
+          });
+        })
+        .catch( (error) => {
+          reject(error);
+        });
+      } else {
+        resolve({
+          data: $tw.utils.Utf8ArrayToStr(array),
+          decrypted : false
+        });
+      }
+    })
+    .catch( (error) => {
+      reject(error);
+    });
+  });
+};
+
+/*
+ * Decrypt Uint8 Array to Base64 String
  */
 exports.decryptUint8ArrayToBase64 = async function(array) {
   return new Promise( async (resolve, reject) => {
@@ -100,41 +145,8 @@ exports.decryptUint8ArrayToBase64 = async function(array) {
 };
 
 /*
- * Load to UTF-8
+ * Decrypt Uint8 Array to UTF-8 String
  */
-exports.loadToUtf8 = function(url) {
-  return new Promise( async (resolve, reject) => {
-    $tw.utils.httpGetToUint8Array(url)
-    .then( (array) => {
-      if (array instanceof Uint8Array && array.length > 0) {
-        // Decrypt
-        if ($tw.utils.isUtf8ArrayEncrypted(array)) {
-          $tw.utils.decryptUint8ArrayToUtf8(array)
-          .then( (data) => {
-            resolve({
-              data: data,
-              encrypted: true
-            });
-          })
-          .catch( (error) => {
-            reject(error);
-          });
-        } else {
-          resolve({
-            data: $tw.utils.Utf8ArrayToStr(array),
-            encrypted: false
-          });
-        }
-      } else {
-        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
-      }
-    })
-    .catch( (error) => {
-      reject(error);
-    });
-  });
-};
-
 exports.decryptUint8ArrayToUtf8 = async function(array) {
   return new Promise( async (resolve, reject) => {
     const encrypted = $tw.utils.Utf8ArrayToStr(array);
@@ -184,16 +196,19 @@ exports.decryptFromPasswordPrompt = async function(encrypted) {
 }
 
 exports.isUtf8ArrayEncrypted = function(content) {
+  // Check
+  if (content instanceof Uint8Array == false || content.length == 0) {
+    return false;
+  }
+  // Process
   const standford = $tw.utils.StringToUint8Array("{\"iv\":\"");
-  if (content instanceof Uint8Array && content.length > 0) {
-    var encrypted = false;
-    for (var i = 0; i < content.length && i < standford.length; i++) {
-      if (content[i] == standford[i]) {
-        encrypted = true;
-      }
-      if (encrypted == false) {
-        break;
-      }
+  var encrypted = false;
+  for (var i = 0; i < content.length && i < standford.length; i++) {
+    if (content[i] == standford[i]) {
+      encrypted = true;
+    } else {
+      encrypted = false;
+      break;
     }
   }
   return encrypted;

@@ -239,7 +239,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
   // Retrieve old tiddler _tid_uri and _canonical_uri if any
   var old_canonical_uri = null;
   var old_tid_uri = null;
-  var old_encrypted_tag = false;
   const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title);
   if (oldTiddler !== undefined && oldTiddler !== null) {
     // Retrieve oldTiddler _canonical_uri if any
@@ -256,26 +255,11 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     } else {
       old_tid_uri = null;
     }
-    // Retrieve old_encrypted_tag
-    old_encrypted_tag = oldTiddler.hasTag("$:/isEncrypted");
   }
 
   // Nothing to do
   if (canonical_uri == old_canonical_uri && tid_uri == old_tid_uri) {
     updatedTiddler = new $tw.Tiddler(tiddler);
-    // Force Refresh
-    if (canonical_uri !== null) {
-      if (
-        (tiddler.hasTag("$:/isEncrypted") && old_encrypted_tag == false)
-        || (tiddler.hasTag("$:/isEncrypted") == false && old_encrypted_tag)
-      )
-      updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: tiddler,
-        fields: [
-          { key: "text", value: "" }
-        ]
-      });
-    }
     $tw.wiki.addTiddler(updatedTiddler);
     return updatedTiddler;
   }
@@ -296,31 +280,15 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
 
         // Load
         try {
-          content = await $tw.utils.httpGetToUint8Array(old_canonical_uri);
+          if (info.encoding === "base64") {
+            content = await $tw.utils.loadToBase64(old_canonical_uri);
+          } else {
+            content = await $tw.utils.loadToUtf8(old_canonical_uri);
+          }
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
           return oldTiddler;
-        }
-        // Decrypt if necessary
-        if (tiddler.hasTag("$:/isEncrypted")) {
-          try {
-            if (info.encoding === "base64") {
-              content = await $tw.utils.decryptUint8ArrayToBase64(content);
-            } else {
-              content = await $tw.utils.decryptUint8ArrayToUtf8(content);
-            }
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-            return oldTiddler;
-          }
-        } else {
-          if (info.encoding === "base64") {
-            content = $tw.utils.Uint8ArrayToBase64(content);
-          } else {
-            content = $tw.utils.Utf8ArrayToStr(content);
-          }
         }
 
         this.getLogger().info(
@@ -375,11 +343,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
               );
             }
           }
-          $tw.utils.alert(name,
-            "Embedded remote attachment..."
-            + "<br/>Unable to decide if the imported attachment is encrypted or not..."
-            + "<br/>Consider the <<tag-pill '$:/isEncrypted'>> tag..."
-          );
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);

@@ -51,12 +51,9 @@ The video parser parses a video tiddler into an embeddable HTML element
 const name = "ipfs-videoparser";
 
 var VideoParser = function(type,text,options) {
-  let self = this;
-  let uri = options._canonical_uri;
-  let tiddler = options.tiddler;
-  let isEncrypted = tiddler !== undefined ? tiddler.hasTag("$:/isEncrypted") : false;
-  let value = "data:" + type + ";base64,";
-  let element = {
+  const self = this;
+  const value = "data:" + type + ";base64,";
+  const element = {
     type: "element",
     tag: "video",
     attributes: {
@@ -64,15 +61,17 @@ var VideoParser = function(type,text,options) {
       style: {type: "string", value: "width: 100%; object-fit: contain"}
     }
   };
+  const tiddler = options.tiddler;
+  var uri = options._canonical_uri;
   // Normalize
   if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
     uri = $tw.ipfs.normalizeUrl(uri).toString();
   }
-  // Decrypt or not external resource
-  if (uri && isEncrypted) {
-    $tw.utils.loadAndDecryptToBase64(uri)
-    .then( (base64) => {
-      element.attributes.src = { type: "string", value: value + base64 };
+  // Load external resource
+  if (uri) {
+    $tw.utils.loadToBase64(uri)
+    .then( (loaded) => {
+      element.attributes.src = { type: "string", value: value + loaded.data };
       self.tree = [element];
       const changedTiddlers = $tw.utils.getChangedTiddlers(tiddler);
       $tw.rootWidget.refresh(changedTiddlers);
@@ -81,16 +80,8 @@ var VideoParser = function(type,text,options) {
       self.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     });
-  } else {
-    if (uri) {
-      this.getLogger().info(
-        "Loading: "
-        + uri
-      );
-      element.attributes.src = { type: "string", value: uri };
-    } else if (text) {
-      element.attributes.src = { type: "string", value: value + text };
-    }
+  } else if (text) {
+    element.attributes.src = { type: "string", value: value + text };
   }
   // Return the parsed tree
   this.tree = [element];

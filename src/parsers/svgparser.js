@@ -58,8 +58,8 @@ var SvgParser = function(type,text,options) {
     tag: "img",
     attributes: {}
   };
+  const tiddler = options.tiddler;
   var uri = options._canonical_uri;
-  var tiddler = options.tiddler;
   // Normalize
   if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
     uri = $tw.ipfs.normalizeUrl(uri).toString();
