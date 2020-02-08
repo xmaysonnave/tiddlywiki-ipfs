@@ -17,7 +17,6 @@ Startup initialisation
 const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
 const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
-const IpfsController = require("$:/plugins/ipfs/ipfs-controller.js").IpfsController;
 const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
@@ -44,8 +43,6 @@ exports.startup = async function() {
   SaverHandler.prototype.saveWiki = IpfsSaverHandler.prototype.saveWiki;
   SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
   SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
-  // Unpin
-  window.unpin = [];
   // Missing Media Types
   $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
   $tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
@@ -53,8 +50,6 @@ exports.startup = async function() {
   $tw.utils.registerFileType("video/ogg","base64",[".ogm",".ogv",".ogg"]);
   $tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
   $tw.utils.registerFileType("video/webm","base64",".webm");
-  // Init Controller
-  $tw.ipfs = new IpfsController();
   // Listener
   this.ensAction = new EnsAction();
   this.ipfsAction = new IpfsAction();

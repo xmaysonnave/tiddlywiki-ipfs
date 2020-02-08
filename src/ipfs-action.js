@@ -86,7 +86,6 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
 
     const title = event.tiddlerTitle;
 
-    var unpin = [];
     var fields = [];
     var tid = null;
     var ipnsKey = null;
@@ -151,7 +150,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     // IPFS client
     var { ipfs } = await $tw.ipfs.getIpfsClient();
 
-    // Unpin current
+    // Unpin
     if (tid !== null) {
       // Decode
       const parsed = $tw.ipfs.normalizeUrl(tid);
@@ -160,16 +159,9 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         return false;
       }
       const { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-      if ($tw.utils.getIpfsUnpin()
-        && cid !== null
-        && window.unpin.indexOf(cid) == -1
-      ) {
-        unpin.push(cid);
-        this.getLogger().info(
-          "Request to unpin IPFS Tiddler:"
-          + "\n "
-          + parsed.pathname
-        );
+      // Request to unpin
+      if ($tw.utils.getIpfsUnpin() && cid !== null) {
+        $tw.ipfs.requestToUnpin(cid);
       }
     }
 
@@ -184,21 +176,9 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         this.getLogger().warn(error);
         ipnsContent = null;
       }
-      // Store to unpin previous if any
-      if (
-        $tw.utils.getIpfsUnpin()
-        && ipnsContent !== null
-        && window.unpin.indexOf(ipnsContent) == -1
-      ) {
-        unpin.push(ipnsContent);
-        this.getLogger().info(
-          "Request to unpin IPNS Tiddler:"
-          + "\n "
-          + "/"
-          + ipfsKeyword
-          + "/"
-          + ipnsContent
-        );
+      // Request to unpin
+      if ($tw.utils.getIpfsUnpin() && ipnsContent !== null) {
+        $tw.ipfs.requestToUnpin(ipnsContent);
       }
     }
 
@@ -208,21 +188,9 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       var { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
       // Fetch ENS domain content
       const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
-      // Store to unpin previous if any
-      if (
-        $tw.utils.getIpfsUnpin()
-        && content !== null
-        && window.unpin.indexOf(content) == -1
-      ) {
-        unpin.push(content);
-        this.getLogger().info(
-          "Request to unpin ENS domain content:"
-          + "\n "
-          + "/"
-          + ipfsKeyword
-          + "/"
-          + content
-        );
+      // Request to unpin
+      if ($tw.utils.getIpfsUnpin() && content !== null) {
+        $tw.ipfs.requestToUnpin(ipnsContent);
       }
     }
 
@@ -264,22 +232,8 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         // Log and continue
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
-        // Remove from unpin
-        const index = unpin.indexOf(ipnsContent);
-        if (index !== -1) {
-          unpin.splice(index, 1);
-        }
-        // Log
-        if (index !== -1) {
-          this.getLogger().info(
-            "Discard request to unpin IPNS Tiddler:"
-            + "\n "
-            + "/"
-            + ipfsKeyword
-            + "/"
-            + ipnsContent
-          );
-        }
+        // Discard unpin request
+        $tw.ipfs.discardRequestToUpin(ipnsContent);
       }
     }
 
@@ -296,43 +250,15 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         // Log and continue
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
-        // Discard unpin
-        const index = unpin.indexOf(ensContent);
-        if (index !== -1) {
-          unpin.splice(index, 1);
-        }
-        // Log
-        if (index !== -1) {
-          this.getLogger().info(
-            "Discard request to unpin ENS domain content:"
-            + "\n "
-            + "/"
-            + ipfsKeyword
-            + "/"
-            + ensContent
-          );
-        }
+        // Discard unpin request
+        $tw.ipfs.discardRequestToUpin(ensContent);
       }
-    }
-
-    // Unpin
-    if ($tw.utils.getIpfsUnpin()) {
-      for (var i = 0; i < unpin.length; i++) {
-        try {
-          await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin[i]);
-        } catch (error)  {
-          // Log and continue
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-      unpin = [];
     }
 
     // Update Tiddler
     var addTags = [];
     if ($tw.crypto.hasPassword()) {
-      addTags = ["$:/isEncrypted", "$:/isExported", "$:/isIpfs"];
+      addTags = ["$:/isExported", "$:/isIpfs"];
     } else {
       addTags = ["$:/isExported", "$:/isIpfs"];
     }
@@ -430,7 +356,7 @@ IpfsAction.prototype.handlePublishToIpfs = async function(event) {
     var addTags = [];
     var removeTags = [];
     if ($tw.crypto.hasPassword()) {
-      addTags = ["$:/isAttachment", "$:/isEncrypted", "$:/isIpfs"];
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
       removeTags = ["$:/isEmbedded"];
     } else {
       addTags = ["$:/isAttachment", "$:/isIpfs"];
@@ -469,9 +395,10 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
     var parsed = null;
     var cid = null;
 
+    // Tiddler
     if (event.param !== undefined && event.param !== null) {
       const title = event.tiddlerTitle;
-      // current tiddler
+      // Current tiddler
       const tiddler = $tw.wiki.getTiddler(title);
       if (tiddler == undefined || tiddler == null) {
         $tw.utils.alert(name, "Unknown tiddler: " + title);
@@ -480,13 +407,14 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
       // Process if _canonical_uri is set
       const uri = tiddler.getFieldString("_canonical_uri");
       if (uri == undefined || uri == null || uri.trim() === "") {
-        $tw.utils.alert(name, "This Tiddler is not an external resource...");
+        $tw.utils.alert(name, "This Tiddler is not imported from IPFS...");
         return false;
       }
-      // decode _canonical_uri
+      // Decode _canonical_uri
       parsed = $tw.ipfs.normalizeUrl(uri);
+    // Document
     } else {
-      // decode document URL
+      // Decode document URL
       parsed = $tw.ipfs.getDocumentUrl();
     }
 
@@ -538,20 +466,10 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
       + cid
     );
 
+    // Pin
     await this.ipfsWrapper.pinToIpfs(ipfs, cid);
-
-    const index = window.unpin.indexOf(cid);
-    if ($tw.utils.getIpfsUnpin() && index !== -1) {
-      window.unpin.splice(index, 1);
-      this.getLogger().info(
-        "Discard request to unpin:"
-        + "\n "
-        + "/"
-        + ipfsKeyword
-        + "/"
-        + cid
-      );
-    }
+    // Remove unpin request
+    $tw.ipfs.removeFromUnpin(cid);
 
   } catch (error) {
     this.getLogger().error(error);
@@ -570,6 +488,7 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
     var parsed = null;
     var cid = null;
 
+    // Tiddler
     if (event.param !== undefined && event.param !== null) {
       const title = event.tiddlerTitle;
       // current tiddler
@@ -581,13 +500,14 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
       // Process if _canonical_uri is set
       const uri = tiddler.getFieldString("_canonical_uri");
       if (uri == undefined || uri == null || uri.trim() === "") {
-        $tw.utils.alert(name, "This Tiddler is not an external resource...");
+        $tw.utils.alert(name, "This Tiddler is not imported from IPFS...");
         return false;
       }
-      // parse _canonical_uri
+      // Parse _canonical_uri
       parsed = $tw.ipfs.normalizeUrl(uri);
+    // Document
     } else {
-      // parse document URL
+      // Parse document URL
       parsed = $tw.ipfs.getDocumentUrl();
     }
 
@@ -632,12 +552,10 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
       + cid
     );
 
+    // Unpin
     await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
-
-    const index = window.unpin.indexOf(cid);
-    if ($tw.utils.getIpfsUnpin() && window.unpin.indexOf(cid) !== -1) {
-      window.unpin.splice(index, 1);
-    }
+    // Remove unpin request
+    $tw.ipfs.removeFromUnpin(cid);
 
   } catch (error) {
     this.getLogger().error(error);
@@ -770,16 +688,9 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
 
     // Unpin previous
     if ($tw.utils.getIpfsUnpin() && resolved != null) {
-      this.getLogger().info(
-        "Request to unpin:"
-        + "\n "
-        + "/"
-        + ipfsKeyword
-        + "/"
-        + resolved
-      );
       try {
         await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
+        $tw.ipfs.discardRequestToUpin(resolved);
       } catch (error)  {
         // Log and continue
         this.getLogger().warn(error);
@@ -980,7 +891,7 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
       return false;
     }
     if (wiki.pathname === "/") {
-      $tw.utils.alert(name, "Unknown pathname...");
+      $tw.utils.alert(name, "Unknown IPFS identifier...");
       return false;
     }
 
@@ -1049,16 +960,9 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
 
     // Unpin previous
     if ($tw.utils.getIpfsUnpin() && resolved != null) {
-      this.getLogger().info(
-        "Request to unpin IPNS wiki:"
-        + "\n "
-        + "/"
-        + ipfsKeyword
-        + "/"
-        + resolved
-      );
       try {
         await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
+        $tw.ipfs.discardRequestToUpin(resolved);
       } catch (error)  {
         // Log and continue
         this.getLogger().warn(error);

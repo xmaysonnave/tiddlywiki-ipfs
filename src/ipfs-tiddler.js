@@ -56,35 +56,7 @@ IpfsTiddler.prototype.init = function() {
 }
 
 IpfsTiddler.prototype.handleChangeEvent = function(changes) {
-  // process priority
-  const priority = changes["$:/ipfs/saver/priority/default"];
-  if (priority !== undefined && priority.modified) {
-    // Update IPFS saver
-    $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-    this.getLogger().info(
-      "Updated IPFS Saver priority: "
-      + $tw.utils.getIpfsPriority()
-    );
-  }
-  // process verbose
-  const verbose = changes["$:/ipfs/saver/verbose"];
-  if (verbose !== undefined && verbose.modified) {
-    if ($tw.utils.getIpfsVerbose()) {
-      this.updateLoggers("info");
-    } else {
-      this.updateLoggers("warn");
-    }
-  }
-  // process unpin
-  const unpin = changes["$:/ipfs/saver/unpin"];
-  if (unpin !== undefined && unpin.modified) {
-    if ($tw.utils.getIpfsUnpin()) {
-      this.getLogger().info("IPFS with TiddlyWiki will unpin previous content...");
-    } else {
-      this.getLogger().info("IPFS with TiddlyWiki will not unpin previous content...");
-    }
-  }
-  // process IPNS name
+  // IPNS name preference
   const name = changes["$:/ipfs/saver/ipns/name"];
   if (name !== undefined && name.modified) {
     const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
@@ -100,6 +72,50 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
           $tw.wiki.addTiddler(updatedTiddler);
         }
       }
+    }
+  }
+  // Policy preference
+  const policy = changes["$:/ipfs/saver/policy"];
+  if (policy !== undefined && policy.modified) {
+    const base = $tw.ipfs.getBaseUrl();
+    if ($tw.utils.getIpfsUrlPolicy() === "host") {
+      this.getLogger().info(
+        "Host Relative URL: "
+        + base.href
+      );
+    } else {
+      this.getLogger().info(
+        "Gateway Relative URL: "
+        + base.href
+      );
+    }
+  }
+  // Priority preference
+  const priority = changes["$:/ipfs/saver/priority/default"];
+  if (priority !== undefined && priority.modified) {
+    // Update saver priority
+    $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
+    this.getLogger().info(
+      "Updated IPFS Saver priority: "
+      + $tw.utils.getIpfsPriority()
+    );
+  }
+  // Unpin preference
+  const unpin = changes["$:/ipfs/saver/unpin"];
+  if (unpin !== undefined && unpin.modified) {
+    if ($tw.utils.getIpfsUnpin()) {
+      this.getLogger().info("Unpin previous IPFS content...");
+    } else {
+      this.getLogger().info("Do not unpin previous IPFS content...");
+    }
+  }
+  // Verbose preference
+  const verbose = changes["$:/ipfs/saver/verbose"];
+  if (verbose !== undefined && verbose.modified) {
+    if ($tw.utils.getIpfsVerbose()) {
+      this.updateLoggers("info");
+    } else {
+      this.updateLoggers("warn");
     }
   }
 }
@@ -128,17 +144,9 @@ IpfsTiddler.prototype.handleDeleteTiddler = function(tiddler) {
       return tiddler;
     }
     const { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-    // Store old cid as it needs to be unpined when the wiki is saved if applicable
-    if ($tw.utils.getIpfsUnpin()
-      && cid !== null
-      && window.unpin.indexOf(cid) == -1
-    ) {
-      window.unpin.push(cid);
-      this.getLogger().info(
-        "Request to unpin:"
-        + "\n "
-        + parsed.pathname
-      );
+    // Request to unpin
+    if ($tw.utils.getIpfsUnpin() && cid !== null) {
+      $tw.ipfs.requestToUnpin(cid);
     }
   } catch (error) {
     this.getLogger().error(error);
@@ -302,7 +310,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
           addTags: ["$:/isAttachment", "$:/isEmbedded"],
-          removeTags: ["$:/isEncrypted", "$:/isImported", "$:/isIpfs"],
+          removeTags: ["$:/isImported", "$:/isIpfs"],
           fields: [
             { key: "text", value: content }
           ]
@@ -319,10 +327,10 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           // IPFS resource
           if (cid !== null) {
             addTags = ["$:/isAttachment", "$:/isIpfs"];
-            removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isEncrypted"];
+            removeTags = ["$:/isEmbedded", "$:/isImported"];
           } else {
             addTags = ["$:/isAttachment"];
-            removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isEncrypted", "$:/isIpfs"];
+            removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isIpfs"];
           }
           // Update Tiddler
           updatedTiddler = $tw.utils.updateTiddler({
@@ -334,15 +342,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
             ]
           });
           if (cid !== null) {
-            const index = window.unpin.indexOf(cid);
-            if (index !== -1) {
-              window.unpin.splice(index, 1);
-              this.getLogger().info(
-                "Discard request to unpin:"
-                + "\n "
-                + parsed.pathname
-              );
-            }
+            // Discard unpin request
+            $tw.ipfs.discardRequestToUpin(cid);
           }
         } catch (error) {
           this.getLogger().error(error);
@@ -357,16 +358,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         try {
           const parsed = $tw.ipfs.normalizeUrl(old_canonical_uri);
           const { cid: oldCid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-          if ($tw.utils.getIpfsUnpin()
-            && oldCid !== null
-            && window.unpin.indexOf(oldCid) == -1
-          ) {
-            window.unpin.push(oldCid);
-            this.getLogger().info(
-              "Request to unpin:"
-              + "\n "
-              + parsed.pathname
-            );
+          if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
+            $tw.ipfs.requestToUnpin(oldCid);
           }
         } catch (error) {
           this.getLogger().error(error);
@@ -390,7 +383,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         // Update Tiddler
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isEncrypted", "$:/isImported", "$:/isIpfs"]
+          removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isImported", "$:/isIpfs"]
         });
 
       // _canonical_uri attribute has been updated
@@ -472,15 +465,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
             addTags: addTags
           });
           if (cid !== null) {
-            const index = window.unpin.indexOf(cid);
-            if (index !== -1) {
-              window.unpin.splice(index, 1);
-              this.getLogger().info(
-                "Discard request to unpin:"
-                + "\n "
-                + parsed.pathname
-              );
-            }
+            // Discard unpin request
+            $tw.ipfs.discardRequestToUpin(cid);
           }
         } catch (error) {
           this.getLogger().error(error);
@@ -495,16 +481,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
         try {
           const parsed = $tw.ipfs.normalizeUrl(old_tid_uri);
           const { cid: oldCid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-          if ($tw.utils.getIpfsUnpin()
-            && oldCid !== null
-            && window.unpin.indexOf(oldCid) == -1
-          ) {
-            window.unpin.push(oldCid);
-            this.getLogger().info(
-              "Request to unpin:"
-              + "\n "
-              + parsed.pathname
-            );
+          if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
+            $tw.ipfs.requestToUnpin(oldCid);
           }
         } catch (error) {
           this.getLogger().error(error);

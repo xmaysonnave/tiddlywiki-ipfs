@@ -16,6 +16,7 @@ IpfsSaver
 
 const log = require("$:/plugins/ipfs/loglevel/loglevel.js");
 
+const IpfsController = require("$:/plugins/ipfs/ipfs-controller.js").IpfsController;
 const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
@@ -33,6 +34,7 @@ var IpfsSaver = function(wiki) {
   this.wiki = wiki;
   this.apiUrl = null;
   this.ipfsProvider = null;
+  $tw.ipfs = new IpfsController();
   this.ensWrapper = new EnsWrapper();
   this.ipfsWrapper = new IpfsWrapper();
   // ipfs-saver starts before ipfs-startup
@@ -46,10 +48,24 @@ var IpfsSaver = function(wiki) {
     }
   }
   const logger = window.log.getLogger(name);
+  // Log saver priority
   logger.info(
     "ipfs-saver is starting with priority: "
     + $tw.utils.getIpfsPriority()
   );
+  // Log url policy
+  const base = $tw.ipfs.getBaseUrl();
+  if ($tw.utils.getIpfsUrlPolicy() === "host") {
+    this.getLogger().info(
+      "Host Relative URL: "
+      + base.href
+    );
+  } else {
+    this.getLogger().info(
+      "Gateway Relative URL: "
+      + base.href
+    );
+  }
 }
 
 IpfsSaver.prototype.getLogger = function() {
@@ -75,7 +91,6 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     var ensContent = null;
     var web3Provider = null;
     var account = null;
-    var unpin = [];
     var options = options || {};
 
     // Process document URL
@@ -101,20 +116,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       if (protocol != null && cid != null) {
         // Store current protocol
         ipfsProtocol = protocol;
-        // Request to unpin if applicable
-        if ($tw.utils.getIpfsUnpin()
-          && ipfsProtocol === ipfsKeyword
-          && window.unpin.indexOf(cid) == -1
-        ) {
-          unpin.push(cid);
-          this.getLogger().info(
-            "Request to unpin IPFS wiki:"
-            + "\n "
-            + "/"
-            + ipfsKeyword
-            + "/"
-            + cid
-          );
+        // Request to unpin
+        if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
+          $tw.ipfs.requestToUnpin(cid);
         }
       }
     }
@@ -166,21 +170,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         }
       }
 
-      // Store to unpin previous if any
-      if (
-        $tw.utils.getIpfsUnpin()
-        && ipnsContent !== null
-        && window.unpin.indexOf(ipnsContent) == -1
-      ) {
-        unpin.push(ipnsContent);
-        this.getLogger().info(
-          "Request to unpin IPNS wiki:"
-          + "\n "
-          + "/"
-          + ipfsKeyword
-          + "/"
-          + ipnsContent
-        );
+      // Request to unpin
+      if ($tw.utils.getIpfsUnpin() && ipnsContent !== null) {
+        $tw.ipfs.requestToUnpin(ipnsContent);
       }
 
     }
@@ -198,21 +190,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
       var { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
       // Fetch ENS domain content
       const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
-      // Store to unpin previous if any
-      if (
-        $tw.utils.getIpfsUnpin()
-        && content !== null
-        && window.unpin.indexOf(content) == -1
-      ) {
-        unpin.push(ensContent);
-        this.getLogger().info(
-          "Request to unpin ENS domain content:"
-          + "\n "
-          + "/"
-          + ipfsKeyword
-          + "/"
-          + content
-        );
+      // Request to unpin
+      if ($tw.utils.getIpfsUnpin() && content !== null) {
+        $tw.ipfs.requestToUnpin(content);
       }
     }
 
@@ -257,29 +237,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         // Log and continue
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
-        // Remove from unpin
+        // Discard unpin request
         if (ipfsProtocol === ipnsKeyword) {
-          // Discard unpin
-          var index = window.unpin.indexOf(ipnsContent);
-          if (index !== -1) {
-            window.unpin.splice(index, 1);
-          } else {
-            index = unpin.indexOf(ipnsContent);
-            if (index !== -1) {
-              unpin.splice(index, 1);
-            }
-          }
-          // Log
-          if (index !== -1) {
-            this.getLogger().info(
-              "Discard request to unpin IPNS wiki:"
-              + "\n "
-              + "/"
-              + ipfsKeyword
-              + "/"
-              + ipnsContent
-            );
-          }
+          $tw.ipfs.discardRequestToUpin(ipnsContent);
         }
       }
     }
@@ -299,54 +259,27 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         // Log and continue
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
-        // Discard unpin
-        var index = window.unpin.indexOf(ensContent);
-        if (index !== -1) {
-          window.unpin.splice(index, 1);
-        } else {
-          index = unpin.indexOf(ensContent);
-          if (index !== -1) {
-            unpin.splice(index, 1);
-          }
-        }
-        // Log
-        if (index !== -1) {
-          this.getLogger().info(
-            "Discard request to unpin ENS domain content:"
-            + "\n "
-            + "/"
-            + ipfsKeyword
-            + "/"
-            + ensContent
-          );
+        // Discard unpin request
+        if (ipfsProtocol === ipnsKeyword) {
+          $tw.ipfs.discardRequestToUpin(ensContent);
         }
       }
     }
 
     // Unpin
     if ($tw.utils.getIpfsUnpin()) {
-      // Process global unpin
-      for (var i = 0; i < window.unpin.length; i++) {
+      for (var i = 0; i < $tw.ipfs.unpin.length; i++) {
         try {
-          await this.ipfsWrapper.unpinFromIpfs(ipfs, window.unpin[i]);
+          const unpin = $tw.ipfs.unpin[i];
+          await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin);
+          // Remove unpin request
+          $tw.ipfs.removeFromUnpin(unpin);
         } catch (error)  {
           // Log and continue
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
         }
       }
-      window.unpin = [];
-      // Process local unpin
-      for (var i = 0; i < unpin.length; i++) {
-        try {
-          await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin[i]);
-        } catch (error)  {
-          // Log and continue
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-      unpin = [];
     }
 
     // Done

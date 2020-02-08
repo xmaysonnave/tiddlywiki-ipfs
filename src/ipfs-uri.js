@@ -123,6 +123,8 @@ IpfsUri.prototype.getBaseUrl = function() {
   if (base.protocol === "file:") {
     base = this.getSafeIpfsGatewayUrl();
   }
+  // Build a base URL
+  base = new URL(base.protocol + "//" + base.host);
   return base;
 }
 

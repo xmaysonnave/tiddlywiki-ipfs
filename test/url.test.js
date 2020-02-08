@@ -111,9 +111,29 @@ describe("URL", () => {
 
 });
 
+describe("Base URL", () => {
+
+  it("Host", () => {
+    const ipfsUri = new IpfsUri();
+    ipfsUri.getDocumentUrl = jest.fn();
+    ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
+    const base = ipfsUri.getBaseUrl();
+    expect(base.href === "https://ipfs.bluelightav.org/").toBeTruthy();
+  });
+
+  it("Fallback to default Gateway", () => {
+    const ipfsUri = new IpfsUri();
+    ipfsUri.getDocumentUrl = jest.fn();
+    ipfsUri.getDocumentUrl.mockReturnValueOnce(local);
+    const base = ipfsUri.getBaseUrl();
+    expect(base.href === gateway.href).toBeTruthy();
+  });
+
+});
+
 describe("Normalize Gateway URL", () => {
 
-  it("Relative. Fallback to Document URL...", () => {
+  it("Relative. Fallback to Host...", () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
@@ -121,7 +141,7 @@ describe("Normalize Gateway URL", () => {
     expect(parsed.href === remote.protocol + "//" + remote.hostname + relative).toBeTruthy();
   });
 
-  it("Relative. Fallback to default Gateway URL...", () => {
+  it("Relative. Fallback to default Gateway...", () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(local);

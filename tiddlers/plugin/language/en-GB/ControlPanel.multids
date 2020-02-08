@@ -18,14 +18,17 @@ Saving/IpfsService/Global: Global
 Saving/IpfsService/Verbose/Description: Verbose
 Saving/IpfsService/Unpin/Description: Unpin previous content
 Saving/IpfsService/Wait/Description: Wait
+Saving/IpfsService/Policy: Relative URL Policy
+Saving/IpfsService/Policy/Host/Description: Host
+Saving/IpfsService/Policy/Gateway/Description: Gateway
 Saving/IpfsService/Protocol: Protocol
 Saving/IpfsService/Protocol/Ens/Description: ENS
 Saving/IpfsService/Protocol/Ipfs/Description: IPFS
 Saving/IpfsService/Protocol/Ipns/Description: IPNS
-Saving/IpfsService/Policy: Policy
-Saving/IpfsService/Policy/Default/Description: Default IPFS Provider
-Saving/IpfsService/Policy/Window/Description: IPFS Companion
-Saving/IpfsService/Policy/HTTP/Description: HTTP Client
+Saving/IpfsService/Provider: IPFS Provider
+Saving/IpfsService/Provider/Default/Description: Default
+Saving/IpfsService/Provider/Window/Description: IPFS Companion
+Saving/IpfsService/Provider/HTTP/Description: HTTP Client
 
 Basics/Version/Prompt: ~TiddlyWiki:
 

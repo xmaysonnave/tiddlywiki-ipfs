@@ -32,9 +32,14 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 ''<<lingo Policy>>''
 
-<$radio tiddler="$:/ipfs/saver/policy" value="default"><<lingo Policy/Default/Description>></$radio>
-<$radio tiddler="$:/ipfs/saver/policy" value="window"><<lingo Policy/Window/Description>></$radio>
-<$radio tiddler="$:/ipfs/saver/policy" value="http"><<lingo Policy/HTTP/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/policy" value="host"><<lingo Policy/Host/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/policy" value="gateway"><<lingo Policy/Gateway/Description>></$radio>
+
+''<<lingo Provider>>''
+
+<$radio tiddler="$:/ipfs/saver/provider" value="default"><<lingo Provider/Default/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/provider" value="window"><<lingo Provider/Window/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/provider" value="http"><<lingo Provider/HTTP/Description>></$radio>
 
 ''<<lingo Protocol>>''
 

@@ -171,10 +171,10 @@ IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
   const err = new Error("Failed to get an IPFS provider...");
   try {
     var policy = { ipfs: null, provider: null };
-    const ipfsPolicy = $tw.utils.getIpfsPolicy();
-     if (ipfsPolicy === "window") {
+    const ipfsProvider = $tw.utils.getIpfsProvider();
+     if (ipfsProvider === "window") {
       policy = await this.ipfsLibrary.getWindowIpfs();
-    } else if (ipfsPolicy === "http") {
+    } else if (ipfsProvider === "http") {
       policy = await this.ipfsLibrary.getHttpIpfs(apiUrl);
     } else  {
       policy  = await this.ipfsLibrary.getDefaultIpfs(apiUrl);
@@ -501,7 +501,7 @@ IpfsWrapper.prototype.publishToIpns = async function(ipfs, name, cid) {
 }
 
 IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
-  // Unpin
+  // Pin
   const pathname = "/" + ipfsKeyword + "/" + cid;
   const err = new Error(
     "Failed to pin:"

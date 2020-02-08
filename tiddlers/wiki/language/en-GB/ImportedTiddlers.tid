@@ -10,7 +10,6 @@ This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io
 The specialized [[Imported Tiddler]] displays the <<tag-pill "$:/isIpfs">>with the following tag status:
 </p>
 <ul>
-  <li><<tag "$:/isEncrypted">></li>
   <li><<tag-pill "$:/isIpfs">></li>
 </ul>
 <p>

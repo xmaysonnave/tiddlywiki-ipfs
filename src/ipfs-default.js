@@ -238,9 +238,9 @@ exports.getIpfsUnpin = function() {
 }
 
 /*
- * Retrieve ipfs saver policy with default value if applicable
+ * Retrieve ipfs saver url policy with default value if applicable
  */
-exports.getIpfsPolicy = function() {
+exports.getIpfsUrlPolicy = function() {
   var policy = null;
   var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/policy");
   if (tiddler !== undefined && tiddler !== null) {
@@ -259,6 +259,31 @@ exports.getIpfsPolicy = function() {
  * Default Policy
  */
 exports.getIpfsDefaultPolicy = function() {
+  return "host";
+}
+
+/*
+ * Retrieve ipfs saver provider with default value if applicable
+ */
+exports.getIpfsProvider = function() {
+  var provider = null;
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/provider");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
+      provider = text.trim();
+    }
+  }
+  if (provider === null) {
+    provider = $tw.utils.getIpfsDefaultProvider();
+  }
+  return provider;
+}
+
+/*
+ * Default Provider
+ */
+exports.getIpfsDefaultProvider = function() {
   return "http";
 }
 

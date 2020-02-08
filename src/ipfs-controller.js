@@ -25,7 +25,47 @@ var IpfsController = function() {
   this.ipfsUri = new IpfsUri();
   this.ipfsWrapper = new IpfsWrapper();
   this.ipfsClients = new Map();
+  this.unpin = [];
 };
+
+IpfsController.prototype.requestToUnpin = async function(cid) {
+  if (this.addToUnpin(cid)) {
+    this.getLogger().info(
+      "Request to unpin:"
+      + "\n "
+      + "/ipfs/"
+      + cid
+    );
+  }
+}
+
+IpfsController.prototype.addToUnpin = async function(cid) {
+  if (this.unpin.indexOf(cid) === -1) {
+    this.unpin.push(cid);
+    return true;
+  }
+  return false;
+}
+
+IpfsController.prototype.discardRequestToUnpin = async function(cid) {
+  if (this.removeFromUnpin(cid)) {
+    this.getLogger().info(
+      "Discard request to unpin:"
+      + "\n "
+      + "/ipfs/"
+      + cid
+    );
+  }
+}
+
+IpfsController.prototype.removeFromUnpin = async function(cid) {
+  var index = this.unpin.indexOf(cid);
+  if (index !== -1) {
+    this.unpin.splice(index, 1);
+    return true;
+  }
+  return false;
+}
 
 IpfsController.prototype.getLogger = function() {
   return window.log.getLogger(name);
@@ -39,12 +79,16 @@ IpfsController.prototype.getUrl = function(url) {
   return this.ipfsUri.getUrl(url);
 }
 
-IpfsController.prototype.normalizeUrl = function(url) {
-  return this.ipfsUri.normalizeUrl(url, this.ipfsUri.getBaseUrl());
+IpfsController.prototype.getBaseUrl = function() {
+  var base = this.getIpfsGatewayUrl();
+  if ($tw.utils.getIpfsUrlPolicy() === "host") {
+   base = this.ipfsUri.getBaseUrl();
+  }
+  return base;
 }
 
-IpfsController.prototype.normalizeGatewayUrl = function(url) {
-  return this.ipfsUri.normalizeUrl(url, this.getIpfGatewayUrl());
+IpfsController.prototype.normalizeUrl = function(url) {
+  return this.ipfsUri.normalizeUrl(url, this.getBaseUrl());
 }
 
 IpfsController.prototype.getDocumentUrl = function() {
