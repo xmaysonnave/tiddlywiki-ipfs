@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.2.10-dev.200208395",
+  "version": "v0.2.10-dev.200208463",
   "description": "IPFS with TiddlyWiki",
   "main": "src/ipfs-saver.js",
   "directories": {

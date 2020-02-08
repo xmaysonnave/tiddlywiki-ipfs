@@ -33,7 +33,7 @@ The plugin eases URL selections through drop-down lists.
 <ul>
   <li>Clone an existing <b>API URL</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default API URL|$:/ipfs/saver/api/default]] text if applicable</li>
+  <li>Update the [[Default API URL|$:/ipfs/saver/api]] text if applicable</li>
 </ul>
 <h4>Gateway URL</h4>
 <p>
@@ -44,5 +44,5 @@ The plugin eases URL selections through drop-down lists.
 <ul>
   <li>Clone an existing <b>Gateway URL</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default Gateway URL|$:/ipfs/saver/gateway/default]] if applicable</li>
+  <li>Update the [[Default Gateway URL|$:/ipfs/saver/gateway]] if applicable</li>
 </ul>

@@ -5,7 +5,7 @@ type: text/vnd.tiddlywiki
 <h2>~HowTo Pin ~TiddlyWiki to IPFS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/page/pin]]
 <p>
-The <b>pin to IPFS</b> action pins the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api/default]].
+The <b>pin to IPFS</b> action pins the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api]].
 </p>
 <p>
 A dialog box will be displayed at the end of the process with a success or failure message.

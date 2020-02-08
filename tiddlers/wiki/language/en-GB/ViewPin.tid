@@ -5,7 +5,7 @@ type: text/vnd.tiddlywiki
 <h2>~HowTo Pin External Resource to IPFS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/view/pin]]
 <p>
-The <b>pin to IPFS</b> action pins the current Tiddler <b>_canonical_uri</b> field using the [[Default API URL|$:/ipfs/saver/api/default]].
+The <b>pin to IPFS</b> action pins the current Tiddler <b>_canonical_uri</b> field using the [[Default API URL|$:/ipfs/saver/api]].
 </p>
 <p>
 A dialog box will be displayed at the end of the process with a success or failure message.

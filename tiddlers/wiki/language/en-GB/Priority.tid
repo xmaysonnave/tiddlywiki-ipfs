@@ -28,5 +28,5 @@ The plugin eases the <b>Priority</b> selection with a drop-down list.
 <ul>
   <li>Clone an existing <b>Priority</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Default Priority Tiddler|$:/ipfs/saver/priority/default]] text if applicable</li>
+  <li>Update the [[Saver Priority Tiddler|$:/ipfs/saver/priority]] text if applicable</li>
 </ul>

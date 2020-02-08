@@ -7,7 +7,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 ''<<lingo Priority>>''
 
-<$select tiddler="$:/ipfs/saver/priority/default" class="tc-edit-texteditor">
+<$select tiddler="$:/ipfs/saver/priority" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/priority]!has[draft.of]]">
 <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>
@@ -30,11 +30,6 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 </tbody>
 </table>
 
-''<<lingo Policy>>''
-
-<$radio tiddler="$:/ipfs/saver/policy" value="host"><<lingo Policy/Host/Description>></$radio>
-<$radio tiddler="$:/ipfs/saver/policy" value="gateway"><<lingo Policy/Gateway/Description>></$radio>
-
 ''<<lingo Provider>>''
 
 <$radio tiddler="$:/ipfs/saver/provider" value="default"><<lingo Provider/Default/Description>></$radio>
@@ -47,6 +42,11 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <$radio tiddler="$:/ipfs/saver/protocol" value="ipfs"><<lingo Protocol/Ipfs/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/protocol" value="ipns"><<lingo Protocol/Ipns/Description>></$radio>
 
+''<<lingo Policy>>''
+
+<$radio tiddler="$:/ipfs/saver/policy" value="host"><<lingo Policy/Host/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/policy" value="gateway"><<lingo Policy/Gateway/Description>></$radio>
+
 ''<<lingo Url>>''
 
 <table>
@@ -54,7 +54,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tr>
 <td width="20%"><<lingo ApiUrl>></td>
 <td width="80%">
-<$select tiddler="$:/ipfs/saver/api/default" class="tc-edit-texteditor">
+<$select tiddler="$:/ipfs/saver/api" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]]">
 <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>
@@ -64,7 +64,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tr>
 <td width="20%"><<lingo GatewayUrl>></td>
 <td width="80%">
-<$select tiddler="$:/ipfs/saver/gateway/default" class="tc-edit-texteditor">
+<$select tiddler="$:/ipfs/saver/gateway" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]]">
 <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>

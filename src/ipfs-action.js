@@ -873,7 +873,6 @@ IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
     this.console = true;
   } else {
     window.eruda.hide();
-    // window.eruda.destroy();
     this.console = false;
   }
 }

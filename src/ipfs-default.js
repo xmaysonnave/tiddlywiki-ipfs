@@ -21,7 +21,7 @@ const ipfsDefaultName = "ipfs-default";
  */
 exports.getIpfsPriority = function() {
   var priority = null;
-  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/priority/default");
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/priority");
   if (tiddler !== undefined && tiddler !== null) {
     const text = tiddler.getFieldString("text");
     if (text !== undefined && text !== null && text.trim() !== "") {
@@ -89,7 +89,7 @@ exports.getIpfsDefaultProtocol = function() {
  */
 exports.getIpfsSaverApiUrl = function() {
   var api = null;
-  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/api/default");
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/api");
   if (tiddler !== undefined && tiddler !== null) {
     const text =tiddler.getFieldString("text");
     if (text !== undefined && text !== null && text.trim() !== "") {
@@ -123,7 +123,7 @@ exports.getIpfsDefaultApiUrl = function() {
  */
 exports.getIpfsSaverGatewayUrl = function() {
   var gateway = null;
-  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/gateway/default");
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/gateway");
   if (tiddler !== undefined && tiddler !== null) {
     const text = tiddler.getFieldString("text");
     if (text !== undefined && text !== null && text.trim() !== "") {

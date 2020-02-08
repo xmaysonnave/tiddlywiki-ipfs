@@ -56,6 +56,17 @@ IpfsTiddler.prototype.init = function() {
 }
 
 IpfsTiddler.prototype.handleChangeEvent = function(changes) {
+  // Gateway preference
+  const gateway = changes["$:/ipfs/saver/gateway"];
+  if (gateway !== undefined && gateway.modified) {
+    const base = $tw.ipfs.getBaseUrl();
+    if ($tw.utils.getIpfsUrlPolicy() === "gateway") {
+      this.getLogger().info(
+        "Gateway Relative URL: "
+        + base.href
+      );
+    }
+  }
   // IPNS name preference
   const name = changes["$:/ipfs/saver/ipns/name"];
   if (name !== undefined && name.modified) {
@@ -91,7 +102,7 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
     }
   }
   // Priority preference
-  const priority = changes["$:/ipfs/saver/priority/default"];
+  const priority = changes["$:/ipfs/saver/priority"];
   if (priority !== undefined && priority.modified) {
     // Update saver priority
     $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
@@ -180,12 +191,6 @@ IpfsTiddler.prototype.handleRefreshTiddler = function(event) {
   const tiddler = $tw.wiki.getTiddler(title);
   if (tiddler == undefined || tiddler == null) {
     $tw.utils.alert(name, "Unknown tiddler: " + title);
-    return false;
-  }
-  // _canonical_uri
-  var uri = tiddler.getFieldString("_canonical_uri");
-  // Default
-  if (uri == undefined || uri == null || uri.trim() === "") {
     return false;
   }
   // Refresh
