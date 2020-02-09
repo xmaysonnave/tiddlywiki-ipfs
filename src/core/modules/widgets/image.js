@@ -85,48 +85,56 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
   this.execute();
   // Create element
   // Determine what type of image it is
-	var tiddler = this.wiki.getTiddler(this.imageSource);
-	// Create default element
-	var domNode = this.document.createElement("img");
+  var tiddler = this.wiki.getTiddler(this.imageSource);
+  // Create default element
+  var domNode = this.document.createElement("img");
   const self = this;
   if(!tiddler) {
     // The source isn't the title of a tiddler, so we'll assume it's a URL
-		domNode.setAttribute(
+    domNode.setAttribute(
       "src",
       this.getVariable("tv-get-export-image-link",{params: [{name: "src",value: this.imageSource}],defaultValue: this.imageSource})
     );
   } else {
     // Check if it is an image tiddler
     if(this.wiki.isImageTiddler(this.imageSource)) {
-      var type = tiddler.fields.type,
-        text = tiddler.fields.text,
-        _canonical_uri = tiddler.fields._canonical_uri;
+      var type = tiddler.fields.type;
+      var text = tiddler.fields.text;
+      var _canonical_uri = tiddler.fields._canonical_uri;
       // If the tiddler has body text then it doesn't need to be lazily loaded
       if(text) {
         // Render the appropriate element for the image type
         switch(type) {
           case "application/pdf":
-						domNode = this.document.createElement("embed");
-						domNode.setAttribute("src", "data:application/pdf;base64," + text);
+            domNode = this.document.createElement("embed");
+            domNode.setAttribute("src", "data:application/pdf;base64," + text);
             break;
           case "image/svg+xml":
-						domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(text));
+            domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(text));
             break;
           default:
-						domNode.setAttribute("src", "data:" + type + ";base64," + text);
+            domNode.setAttribute("src", "data:" + type + ";base64," + text);
             break;
         }
       } else if(_canonical_uri) {
         // Normalize
-        if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
-          _canonical_uri = $tw.ipfs.normalizeUrl(_canonical_uri).toString();
+        var uri = _canonical_uri;
+        try {
+          uri = $tw.ipfs.normalizeUrl(uri);
+        } catch (error) {
+          // Fallback
+          uri = _canonical_uri
+          // Log and continue
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
+        // Process
         switch(type) {
           case "application/pdf":
-						domNode = this.document.createElement("embed");
-            $tw.utils.loadToBase64(_canonical_uri)
+            domNode = this.document.createElement("embed");
+            $tw.utils.loadToBase64(uri)
             .then( (loaded) => {
-							domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
+              domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
             })
             .catch( (error) => {
               self.getLogger().error(error);
@@ -134,9 +142,9 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
             });
             break;
           case "image/svg+xml":
-            $tw.utils.loadToUtf8(_canonical_uri)
+            $tw.utils.loadToUtf8(uri)
             .then( (loaded) => {
-							domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
+              domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
             })
             .catch( (error) => {
               self.getLogger().error(error);
@@ -144,9 +152,9 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
             });
             break;
           default:
-            $tw.utils.loadToBase64(_canonical_uri)
+            $tw.utils.loadToBase64(uri)
             .then( (loaded) => {
-							domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
+              domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
             })
             .catch( (error) => {
               self.getLogger().error(error);
@@ -160,7 +168,7 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
         domNode.setAttribute("src","");
       }
     }
-	}
+  }
   // Assign the attributes
   if(this.imageClass) {
     domNode.setAttribute("class",this.imageClass);

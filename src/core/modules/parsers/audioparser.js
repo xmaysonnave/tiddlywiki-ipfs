@@ -63,19 +63,25 @@ var AudioParser = function(type,text,options) {
   };
   const tiddler = options.tiddler;
   var uri = options._canonical_uri;
-  // Normalize
-  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
-    uri = $tw.ipfs.normalizeUrl(uri).toString();
-  }
   // Load external resource
   if (uri) {
-    $tw.utils.loadToBase64(uri.toString())
+    try {
+      uri = $tw.ipfs.normalizeUrl(uri);
+    } catch (error) {
+      // Fallback
+      uri = options._canonical_uri;
+      // Log and continue
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
+    }
+    // Load
+    $tw.utils.loadToBase64(uri)
     .then( (loaded) => {
-      // Load data
+      // Loaded data
       element.attributes.src = { type: "string", value: value + loaded.data };
       // Assign
       self.tree = [element];
-      // Dispatch
+      // Refresh
       const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
       $tw.rootWidget.refresh(parsedTiddler);
     })

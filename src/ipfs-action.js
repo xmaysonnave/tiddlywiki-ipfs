@@ -468,6 +468,7 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
 
     // Pin
     await this.ipfsWrapper.pinToIpfs(ipfs, cid);
+
     // Remove unpin request
     $tw.ipfs.removeFromUnpin(cid);
 
@@ -554,6 +555,7 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
 
     // Unpin
     await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
+    
     // Remove unpin request
     $tw.ipfs.removeFromUnpin(cid);
 

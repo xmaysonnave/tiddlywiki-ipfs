@@ -52,14 +52,9 @@ const name = "ipfs-wikiparser";
 
 var WikiParser = function(type,text,options) {
   this.wiki = options.wiki;
-  var uri = options._canonical_uri;
-  // Normalize
-  if (uri && $tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
-    uri = $tw.ipfs.normalizeUrl(uri).toString();
-  }
   // Check for an externally linked tiddler
-  if($tw.browser && (text || "") === "" && uri) {
-    this.loadRemoteTiddlers(options.tiddler, uri);
+  if($tw.browser && (text || "") === "" && options._canonical_uri) {
+    this.loadRemoteTiddlers(options.tiddler, options._canonical_uri);
     text = $tw.language.getRawString("LazyLoadingWarning");
   }
   // Initialise the classes if we don't have them already
@@ -110,10 +105,22 @@ WikiParser.prototype.getLogger = function() {
 /*
 */
 WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
-  let self = this;
-  $tw.utils.loadToUtf8(uri)
+  const self = this;
+  // Normalize
+  var _uri = uri;
+  try {
+    _uri = $tw.ipfs.normalizeUrl(_uri);
+  } catch (error) {
+    // Fallback
+    _uri = uri;
+    // Log and continue
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
+  }
+  // Load
+  $tw.utils.loadToUtf8(_uri)
   .then( (loaded) => {
-    self.importTiddlers(tiddler, uri, loaded);
+    self.importTiddlers(tiddler, _uri, loaded);
   })
   .catch( (error) => {
     self.getLogger().error(error);

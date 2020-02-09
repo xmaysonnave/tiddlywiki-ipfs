@@ -67,46 +67,50 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
   const self = this;
   return new Promise((resolve, reject) => {
     try {
-      if (window.document.getElementById(id) == null) {
-        const script = window.document.createElement("script");
-        // Cleanup function
-        const cleanup = () => {
-          delete window[id];
-          script.onerror = null;
-          script.onload = null;
-          script.remove();
-          URL.revokeObjectURL(script.src);
-          script.src = "";
-        };
-        if (module == undefined) {
-          script.type = "text/javascript";
-        } else {
-          script.type = "module";
-        }
-        script.id = id;
-        script.async = false;
-        script.defer = "defer";
-        script.src = url;
-        if (sri) {
-          script.integrity = sri;
-        }
-        script.crossOrigin = "anonymous";
-        window.document.head.appendChild(script);
-        script.onload = () => {
-          resolve(window[id]);
-          cleanup();
-          self.getLogger(name).info(
-            "Loaded: "
-            + url
-          );
-        }
-        script.onerror = () => {
-          reject(new Error("Failed to load: " + url));
-          cleanup();
-        }
-      } else {
+      // Loaded
+      if (window.document.getElementById(id) !== null) {
         return resolve(window[id]);
       }
+      // Process
+      const script = window.document.createElement("script");
+      // Functions
+      const cleanup = () => {
+        delete window[id];
+        script.onerror = null;
+        script.onload = null;
+        script.remove();
+        URL.revokeObjectURL(script.src);
+        script.src = "";
+      };
+      script.onload = () => {
+        resolve(window[id]);
+        cleanup();
+        self.getLogger(name).info(
+          "Loaded: "
+          + url
+        );
+      }
+      script.onerror = () => {
+        reject(new Error("Failed to load: " + url));
+        cleanup();
+      }
+      // Attributes
+      if (module == undefined) {
+        script.type = "text/javascript";
+      } else {
+        script.type = "module";
+      }
+      script.id = id;
+      script.async = false;
+      script.defer = "defer";
+      if (sri) {
+        script.integrity = sri;
+      }
+      script.crossOrigin = "anonymous";
+      // URL
+      script.src = url.toString();
+      // Append
+      window.document.head.appendChild(script);
     } catch (error) {
       reject(error);
     }
