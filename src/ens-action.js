@@ -19,7 +19,6 @@ const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const fileProtocol = "file:";
 const ipnsKeyword = "ipns";
-const ipfsKeyword = "ipfs";
 
 const name = "ens-action"
 
@@ -42,24 +41,24 @@ EnsAction.prototype.init = function() {
   $tw.rootWidget.addEventListener("tm-open-ens-manager", function(event) {
     return self.handleOpenEnsManager(event);
   });
-  $tw.rootWidget.addEventListener("tm-resolve-ens-and-open", function(event) {
-    return self.handleResolveEnsAndOpen(event);
+  $tw.rootWidget.addEventListener("tm-resolve-ens-and-open", async function(event) {
+    return await self.handleResolveEnsAndOpen(event);
   });
-  $tw.rootWidget.addEventListener("tm-publish-to-ens", function(event) {
-    return self.handlePublishToEns(event);
+  $tw.rootWidget.addEventListener("tm-publish-to-ens", async function(event) {
+    return await self.handlePublishToEns(event);
   });
   // Init once
   this.once = true;
 }
 
-EnsAction.prototype.handleOpenEnsManager = async function(event) {
+EnsAction.prototype.handleOpenEnsManager = function(event) {
   // Retrieve ENS domain
   const ensDomain = $tw.utils.getIpfsEnsDomain();
   // Check
   if (ensDomain == null) {
     window.open("https://app.ens.domains", "_blank", "noopener");
   } else {
-    await window.open("https://app.ens.domains/name/" + ensDomain, "_blank", "noopener");
+    window.open("https://app.ens.domains/name/" + ensDomain, "_blank", "noopener");
   }
   return true;
 }
@@ -81,15 +80,9 @@ EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
       + ensDomain
     );
 
-    // Retrieve a WEB3 provider
-    const { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
-
-    // Fetch ENS domain content
-    const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
-    // Emtpy content
-    if (content !== null) {
-      const parsed = $tw.ipfs.normalizeUrl("/" + ipfsKeyword + "/" + content);
-      window.open(parsed.href, "_blank", "noopener");
+    const parsed = await $tw.ipfs.resolveENS(ensDomain);
+    if (parsed !== null) {
+      window.open(parsed.toString(), "_blank", "noopener");
     }
 
   } catch (error) {
@@ -151,10 +144,10 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
     );
 
     // Retrieve a WEB3 provider
-    const { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
+    const { web3, account } = await $tw.ipfs.getWeb3Provider();
 
     // Fetch ENS domain content
-    const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+    const { content } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
     // Nothing to publish
     if (content !== null && content === cid) {
       $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
@@ -166,7 +159,7 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
       + ensDomain
     );
 
-    await this.ensWrapper.setContenthash(ensDomain, cid, web3Provider, account);
+    await this.ensWrapper.setContenthash(ensDomain, cid, web3, account);
 
     // Unpin if applicable
     if ($tw.utils.getIpfsUnpin() && content !== null) {

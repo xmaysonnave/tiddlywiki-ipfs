@@ -62,28 +62,22 @@ var SvgParser = function(type,text,options) {
   var uri = options._canonical_uri;
   // Load external resource
   if (uri) {
-    try {
-      uri = $tw.ipfs.normalizeUrl(uri);
-    } catch (error) {
-      // Fallback
-      uri = options._canonical_uri;
-      // Log and continue
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    }
-    // Load
-    $tw.utils.loadToUtf8(uri)
-    .then( (loaded) => {
-      // Loaded data
-      element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
-      // Assign
-      self.tree = [element];
-      // Refresh
-      const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-      $tw.rootWidget.refresh(parsedTiddler);
+    $tw.ipfs.normalizeIpfsUrl(uri)
+    .then( (uri) => {
+      // Load
+      $tw.utils.loadToUtf8(uri)
+      .then( (loaded) => {
+        element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
+        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+        $tw.rootWidget.refresh(parsedTiddler);
+      })
+      .catch( (error) => {
+        self.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+      });
     })
     .catch( (error) => {
-      self.getLogger().error(error);
+      this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     });
   } else {

@@ -29,27 +29,32 @@ const root = (typeof self === 'object' && self.self === self && self)
 const name = "ens-library"
 
 var EnsLibrary = function() {
+  this.network = {
+    1: "Ethereum Main Network: 'Mainnet', chainId: '1'",
+    3: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'",
+    4: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'",
+    5: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'",
+    42: "Ethereum Test Network (PoA): 'Kovan', chainId: '42'",
+    61: "Ethereum Classic Main Network, chainId: '61'",
+    62: "Ethereum Classic Test Network: 'Morden', chainId: '62'"
+  };
   // https://docs.ens.domains/ens-deployments
   // https://github.com/ensdomains/ui/blob/master/src/ens.js
-  this.registries = {
-    1: {
-      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      network: "Ethereum Main Network: 'Mainnet', chainId: '1'"
-    },
-    3: {
-      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      network: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'"
-    },
-    4: {
-      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      network: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'"
-    },
-    5: {
-      address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      network: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'"
-    }
+  this.registry = {
+    1: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+    3: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+    4: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+    5: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
   };
 };
+
+EnsLibrary.prototype.getNetwork = function() {
+  return this.network;
+}
+
+EnsLibrary.prototype.getENSRegistry = function() {
+  return this.registry;
+}
 
 EnsLibrary.prototype.getLogger = function() {
   return root.log.getLogger(name);
@@ -125,7 +130,7 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
     } catch (error) {
       // EIP 1193 userRejectedRequest error
       if (error.code === 4001) {
-        throw new Error("Rejected connection request...");
+        throw new Error("User rejected request...");
       }
       throw new Error(error.message);
     }
@@ -144,69 +149,76 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
   return accounts[0];
 }
 
-EnsLibrary.prototype.getProvider = function() {
-  var provider = null;
-  // Check if an Ethereum provider is available
-  if (typeof root.ethereum !== "undefined") {
-    provider = root.ethereum;
-    this.getLogger().info("Ethereum provider: 'root.ethereum'...");
-  }
-  if (provider == null && root.web3 !== undefined && root.web3.currentProvider !== undefined) {
-    provider = root.web3.currentProvider;
-    this.getLogger().info("Ethereum provider: 'root.web3.currentProvider'...");
-  }
-  if (provider == null) {
-    throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
-  }
-  return provider;
-}
-
-EnsLibrary.prototype.getWeb3Provider = async function() {
+EnsLibrary.prototype.getProvider = async function() {
   // Load ethers
   if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
     await $tw.ipfs.getLoader().loadEtherJsLibrary();
   }
-  // Retrieve provider
-  const provider = this.getProvider();
+  // Retrieve an available provider
+  var provider = null;
+  if (typeof root.ethereum !== "undefined") {
+    provider = root.ethereum;
+    this.getLogger().info("Ethereum provider: 'window.ethereum'...");
+  }
+  if (provider == null && root.web3 !== undefined && root.web3.currentProvider !== undefined) {
+    provider = root.web3.currentProvider;
+    this.getLogger().info("Ethereum provider: 'window.web3.currentProvider'...");
+  }
+  if (provider == null) {
+    throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
+  }
+  // https://metamask.github.io/metamask-docs/API_Reference/Ethereum_Provider#ethereum.autorefreshonnetworkchange
+  provider.autoRefreshOnNetworkChange = false;
+  return provider;
+}
+
+EnsLibrary.prototype.getWeb3Provider = async function(provider) {
   // Enable provider
   // https://github.com/ethers-io/ethers.js/issues/433
   const account = await this.enableProvider(provider);
   // Instantiate Web3Provider
-  const web3Provider = new root.ethers.providers.Web3Provider(provider);
+  const web3 = new root.ethers.providers.Web3Provider(provider);
+  // Retrieve current network
+  const network = await web3.getNetwork();
   return {
-    web3Provider: web3Provider,
-    account: account
+    account: account,
+    chainId: network.chainId,
+    web3: web3
   }
 }
 
-EnsLibrary.prototype.getRegistryAddress = async function(web3Provider) {
+EnsLibrary.prototype.getRegistry = async function(web3) {
   // Check
-  if (web3Provider == undefined || web3Provider == null) {
-    throw new Error("Undefined web3 provider...");
+  if (web3 == undefined || web3 == null) {
+    throw new Error("Undefined Web3 provider...");
   }
-  const network = await web3Provider.getNetwork();
-  // Retrieve Ethereum ENS Registry address
-  var registry;
+  // Retrieve network
+  const network = await web3.getNetwork();
+  // Retrieve an Ethereum ENS Registry address
+  var registry = null;
   try {
-    registry = this.registries[network.chainId];
+    registry = this.registry[network.chainId];
   } catch (error) {
     this.getLogger().error(error);
-    throw new Error("Unsupported Ethereum network: " + network.chainid);
   }
-  this.getLogger().info(registry.network);
+  if (registry == undefined || registry == null) {
+    throw new Error("Unsupported Ethereum network: " + network.chainId);
+  }
+  // Log
+  this.getLogger().info(this.network[network.chainId]);
   // Return registry address
-  return registry.address;
+  return registry;
 }
 
-EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, registryAddress, node) {
+EnsLibrary.prototype.getResolver = async function(web3, account, registry, node) {
   // Check
-  if (web3Provider == undefined || web3Provider == null) {
-    throw new Error("Undefined web3 provider...");
+  if (web3 == undefined || web3 == null) {
+    throw new Error("Undefined Web3 provider...");
   }
   if (account == undefined || account == null || account.trim() === "") {
     throw new Error("Undefined Ethereum account...");
   }
-  if (registryAddress == undefined || registryAddress == null || registryAddress.trim() === "") {
+  if (registry == undefined || registry == null || registry.trim() === "") {
     throw new Error("Undefined ENS registry address...");
   }
   if (node == undefined || node == null || node.trim() === "") {
@@ -216,7 +228,7 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
   const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
   const iface = new root.ethers.utils.Interface(abi)
   const data = iface.functions.resolver.encode([node]);
-  const result = await web3Provider.call({ from: account, to: registryAddress, data: data });
+  const result = await web3.call({ from: account, to: registry, data: data });
   if (result == undefined || result == null || result === "0x") {
     return null;
   }
@@ -232,10 +244,10 @@ EnsLibrary.prototype.getResolverAddress = async function(web3Provider, account, 
 }
 
 // https://eips.ethereum.org/EIPS/eip-165
-EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address) {
+EnsLibrary.prototype.checkEip165 = async function(web3, account, address) {
   // Check
-  if (web3Provider == undefined || web3Provider == null) {
-    throw new Error("Undefined web3 provider...");
+  if (web3 == undefined || web3 == null) {
+    throw new Error("Undefined Web3 provider...");
   }
   if (account == undefined || account == null || account.trim() === "") {
     throw new Error("Undefined Ethereum account...");
@@ -247,7 +259,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
   var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
   var iface = new root.ethers.utils.Interface(abi)
   var data = iface.functions.supportsInterface.encode(["0x01ffc9a7"]);
-  var result = await web3Provider.call({ from: account, to: address, data: data });
+  var result = await web3.call({ from: account, to: address, data: data });
   if (result == undefined || result == null || result === "0x") {
     return false;
   }
@@ -263,7 +275,7 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
   }
   // false when interfaceID is 0xffffffff
   var data = iface.functions.supportsInterface.encode( ["0xffffffff"]);
-  var result = await web3Provider.call({ from: account, to: address, data: data });
+  var result = await web3.call({ from: account, to: address, data: data });
   if (result == undefined || result == null || result === "0x") {
     return false;
   }
@@ -282,10 +294,10 @@ EnsLibrary.prototype.checkEip165 = async function(web3Provider, account, address
 }
 
 // https://eips.ethereum.org/EIPS/eip-1577
-EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, address) {
+EnsLibrary.prototype.checkEip1577 = async function(web3, account, address) {
   // check
-  if (web3Provider == undefined || web3Provider == null) {
-    throw new Error("Undefined web3 provider...");
+  if (web3 == undefined || web3 == null) {
+    throw new Error("Undefined Web3 provider...");
   }
   if (account == undefined || account == null || account.trim() === "") {
     throw new Error("Undefined Ethereum account...");
@@ -297,7 +309,7 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
   var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
   var iface = new root.ethers.utils.Interface(abi)
   var data = iface.functions.supportsInterface.encode(["0xbc1c58d1"]);
-  var result = await web3Provider.call({ from: account, to: address, data: data });
+  var result = await web3.call({ from: account, to: address, data: data });
   if (result == undefined || result == null || result === "0x") {
     return false;
   }
@@ -314,43 +326,53 @@ EnsLibrary.prototype.checkEip1577 = async function(web3Provider, account, addres
   // return
   return true;}
 
-EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, account) {
+EnsLibrary.prototype.getContenthash = async function(domain, web3, account) {
 
   if (domain == undefined || domain == null) {
     throw new Error("Undefined ENS domain...");
   }
 
   // Retrieve web3 provider
-  if (web3Provider == undefined || account == undefined) {
-    var { web3Provider, account } = await this.getWeb3Provider();
+  if (web3 == undefined || account == undefined) {
+    var { web3, account } = await this.getWeb3Provider();
   }
 
   // Resolve domain as namehash
   const domainHash = root.ethers.utils.namehash(domain);
 
   // Fetch ens registry address
-  const registryAddress = await this.getRegistryAddress(web3Provider);
+  const registry = await this.getRegistry(web3);
+
+  // Log
+  this.getLogger().info(
+    "ENS registry:"
+    + "\n "
+    + registry
+  );
 
   // Fetch resolver address
-  var resolverAddress = await this.getResolverAddress(web3Provider, account, registryAddress, domainHash);
+  var resolver = await this.getResolver(web3, account, registry, domainHash);
 
   // Check
-  if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
+  if (resolver == null || /^0x0+$/.test(resolver) == true) {
     throw new Error("Undefined ENS domain resolver...");
   }
+
+  // Log
   this.getLogger().info(
-    "ENS domain resolver: "
-    + resolverAddress
+    "ENS domain resolver:"
+    + "\n "
+    + resolver
   );
 
   // Check if resolver is EIP165
-  const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
+  const eip165 = await this.checkEip165(web3, account, resolver);
   if (eip165 == false) {
     throw new Error("ENS domain resolver do not conform to EIP165...");
   }
 
   // Check if resolver is EIP1577
-  const eip1577 = await this.checkEip1577(web3Provider, account, resolverAddress);
+  const eip1577 = await this.checkEip1577(web3, account, resolver);
   if (eip1577 == false) {
     throw new Error("ENS domain resolver do not conform to EIP1577...");
   }
@@ -360,7 +382,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
   const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
   const iface = new root.ethers.utils.Interface(abi)
   const data = iface.functions.contenthash.encode([domainHash]);
-  const result = await web3Provider.call({ from: account, to: resolverAddress, data: data });
+  const result = await web3.call({ from: account, to: resolver, data: data });
   if (result == undefined || result == null || result === "0x") {
     return {
       content: null,
@@ -387,7 +409,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3Provider, accou
 
 }
 
-EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, account) {
+EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account) {
 
   if (domain == undefined || domain == null) {
     throw new Error("Undefined ENS domain...");
@@ -398,37 +420,46 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
   }
 
   // Retrieve web3 provider
-  if (web3Provider == undefined || account == undefined) {
-    var { web3Provider, account } = await this.getWeb3Provider();
+  if (web3 == undefined || account == undefined) {
+    var { web3, account } = await this.getWeb3Provider();
   }
 
   // Resolve domain as namehash
   const domainHash = root.ethers.utils.namehash(domain);
 
   // Fetch ens registry address
-  const registryAddress = await this.getRegistryAddress(web3Provider);
+  const registry = await this.getRegistry(web3);
+
+  // Log
+  this.getLogger().info(
+    "ENS registry:"
+    + "\n "
+    + registry
+  );
 
   // Fetch resolver address
-  var resolverAddress = await this.getResolverAddress(web3Provider, account, registryAddress, domainHash);
+  var resolver = await this.getResolver(web3, account, registry, domainHash);
 
   // Check
-  if (resolverAddress == null || /^0x0+$/.test(resolverAddress) == true) {
+  if (resolver == null || /^0x0+$/.test(resolver) == true) {
     throw new Error("Undefined ENS resolver...");
   }
 
+  // Log
   this.getLogger().info(
-    "ENS resolver address: "
-    + resolverAddress
+    "ENS domain resolver:"
+    + "\n "
+    + resolver
   );
 
   // Check if resolver is EIP165
-  const eip165 = await this.checkEip165(web3Provider, account, resolverAddress);
+  const eip165 = await this.checkEip165(web3, account, resolver);
   if (eip165 == false) {
     throw new Error("ENS resolver do not conform to EIP165...");
   }
 
   // Check if resolver is EIP1577
-  const eip1577 = await this.checkEip1577(web3Provider, account, resolverAddress);
+  const eip1577 = await this.checkEip1577(web3, account, resolver);
   if (eip1577 == false) {
     throw new Error("ENS resolver do not conform to EIP1577...");
   }
@@ -442,10 +473,11 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3Provider, 
     const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.functions.setContenthash.encode([domainHash, encoded]);
-    const signer = web3Provider.getSigner();
-    const tx = await signer.sendTransaction({ to: resolverAddress, data: data });
+    const signer = web3.getSigner();
+    const tx = await signer.sendTransaction({ to: resolver, data: data });
     this.getLogger().info(
-      "Processing Transaction: "
+      "Processing Transaction:"
+      + "\n "
       + tx.hash
     );
     // Wait for transaction completion

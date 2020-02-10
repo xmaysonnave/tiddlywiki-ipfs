@@ -8,7 +8,7 @@ const { URL } = require("whatwg-url");
 const IpfsUri = require("../build/plugins/ipfs/ipfs-uri.js").IpfsUri;
 
 const local = new URL("file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html");
-const remote = new URL("https://ipfs.bluelightav.org/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
+const remote = new URL("https://ipfs.infura.io/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
 const api = new URL("https://ipfs.infura.io:5001/");
 const gateway = new URL("https://ipfs.infura.io/");
 const eth = new URL("https://bluelightav.eth/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
@@ -26,13 +26,13 @@ describe("API URL", () => {
   it("Valid Default", () => {
     const ipfsUri = new IpfsUri();
     const parsed = ipfsUri.getDefaultIpfsApiUrl();
-    expect(parsed.href === api.href).toBeTruthy();
+    expect(parsed.toString() === api.toString()).toBeTruthy();
   });
 
   it("Valid Safe", () => {
     const ipfsUri = new IpfsUri();
-    const parsed = ipfsUri.getSafeIpfsApiUrl();
-    expect(parsed.href === api.href).toBeTruthy();
+    const parsed = ipfsUri.getIpfsApiUrl();
+    expect(parsed.toString() === api.toString()).toBeTruthy();
   });
 
   it("Invalid", () => {
@@ -53,7 +53,7 @@ describe("Document URL", () => {
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
     const parsed = ipfsUri.getDocumentUrl();
-    expect(parsed.href === remote.href).toBeTruthy();
+    expect(parsed.toString() === remote.toString()).toBeTruthy();
   });
 
   it("Invalid", () => {
@@ -72,13 +72,13 @@ describe("Gateway URL", () => {
   it("Valid Default", () => {
     const ipfsUri = new IpfsUri();
     const parsed = ipfsUri.getDefaultIpfsGatewayUrl();
-    expect(parsed.href === gateway.href).toBeTruthy();
+    expect(parsed.toString() === gateway.toString()).toBeTruthy();
   });
 
   it("Valid Safe", () => {
     const ipfsUri = new IpfsUri();
-    const parsed = ipfsUri.getSafeIpfsGatewayUrl();
-    expect(parsed.href === gateway.href).toBeTruthy();
+    const parsed = ipfsUri.getIpfsGatewayUrl();
+    expect(parsed.toString()=== gateway.toString()).toBeTruthy();
   });
 
   it("Invalid", () => {
@@ -97,7 +97,7 @@ describe("URL", () => {
   it("Valid", () => {
     const ipfsUri = new IpfsUri();
     const parsed = ipfsUri.getUrl(api);
-    expect(parsed.href === api.href).toBeTruthy();
+    expect(parsed.toString() === api.toString()).toBeTruthy();
   });
 
   it("Invalid", () => {
@@ -117,44 +117,44 @@ describe("Base URL", () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const base = ipfsUri.getBaseUrl();
-    expect(base.href === "https://ipfs.bluelightav.org/").toBeTruthy();
+    const base = ipfsUri.getIpfsBaseUrl();
+    expect(base.toString() === "https://ipfs.infura.io/").toBeTruthy();
   });
 
   it("Fallback to default Gateway", () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(local);
-    const base = ipfsUri.getBaseUrl();
-    expect(base.href === gateway.href).toBeTruthy();
+    const base = ipfsUri.getIpfsBaseUrl();
+    expect(base.toString() === gateway.toString()).toBeTruthy();
   });
 
 });
 
 describe("Normalize Gateway URL", () => {
 
-  it("Relative. Fallback to Host...", () => {
+  it("Relative. Fallback to Host...", async () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const parsed  = ipfsUri.normalizeUrl(relative);
-    expect(parsed.href === remote.protocol + "//" + remote.hostname + relative).toBeTruthy();
+    const parsed  = await ipfsUri.normalizeUrl(relative);
+    expect(parsed.toString() === remote.protocol + "//" + remote.hostname + relative).toBeTruthy();
   });
 
-  it("Relative. Fallback to default Gateway...", () => {
+  it("Relative. Fallback to default Gateway...", async () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(local);
-    const parsed  = ipfsUri.normalizeUrl(relative);
-    expect(parsed.href === gateway.protocol + "//" + gateway.hostname + relative).toBeTruthy();
+    const parsed  = await ipfsUri.normalizeUrl(relative);
+    expect(parsed.toString() === gateway.protocol + "//" + gateway.hostname + relative).toBeTruthy();
   });
 
-  it("Remove dot link...", () => {
+  it("Remove dot link...", async () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const parsed = ipfsUri.normalizeUrl(ethLink);
-    expect(parsed.href === eth.href).toBeTruthy();
+    const parsed = await ipfsUri.normalizeUrl(ethLink);
+    expect(parsed.toString() === eth.toString()).toBeTruthy();
   });
 
 });

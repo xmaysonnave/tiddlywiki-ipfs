@@ -119,49 +119,47 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
       } else if(_canonical_uri) {
         // Normalize
         var uri = _canonical_uri;
-        try {
-          uri = $tw.ipfs.normalizeUrl(uri);
-        } catch (error) {
-          // Fallback
-          uri = _canonical_uri
-          // Log and continue
+        $tw.ipfs.normalizeIpfsUrl(uri)
+        .then( (uri) => {
+          // Process
+          switch(type) {
+            case "application/pdf":
+              domNode = this.document.createElement("embed");
+              $tw.utils.loadToBase64(uri)
+              .then( (loaded) => {
+                domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
+              })
+              .catch( (error) => {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              });
+              break;
+            case "image/svg+xml":
+              $tw.utils.loadToUtf8(uri)
+              .then( (loaded) => {
+                domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
+              })
+              .catch( (error) => {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              });
+              break;
+            default:
+              $tw.utils.loadToBase64(uri)
+              .then( (loaded) => {
+                domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
+              })
+              .catch( (error) => {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              });
+              break;
+          }
+        })
+        .catch( (error) => {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
-        }
-        // Process
-        switch(type) {
-          case "application/pdf":
-            domNode = this.document.createElement("embed");
-            $tw.utils.loadToBase64(uri)
-            .then( (loaded) => {
-              domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
-            })
-            .catch( (error) => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-            break;
-          case "image/svg+xml":
-            $tw.utils.loadToUtf8(uri)
-            .then( (loaded) => {
-              domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
-            })
-            .catch( (error) => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-            break;
-          default:
-            $tw.utils.loadToBase64(uri)
-            .then( (loaded) => {
-              domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
-            })
-            .catch( (error) => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-            break;
-        }
+        });
       } else {
         // Just trigger loading of the tiddler
         this.wiki.getTiddlerText(this.imageSource);

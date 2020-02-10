@@ -31,15 +31,19 @@ const name = "ipfs-saver";
  * Select the appropriate saver module and set it up
  */
 var IpfsSaver = function(wiki) {
+  // ipfs-saver starts before ipfs-startup
+  // We initialize here
   this.wiki = wiki;
   this.apiUrl = null;
   this.ipfsProvider = null;
+  // Controller
   $tw.ipfs = new IpfsController();
+  // Wrapper
   this.ensWrapper = new EnsWrapper();
   this.ipfsWrapper = new IpfsWrapper();
-  // ipfs-saver starts before ipfs-startup
-  // loglevel is initialized here
+  // Loglevel
   if (window.log == undefined || window.log == null) {
+    // Init
     window.log = log;
     if ($tw.utils.getIpfsVerbose()) {
       log.setLevel("info", false);
@@ -54,16 +58,18 @@ var IpfsSaver = function(wiki) {
     + $tw.utils.getIpfsPriority()
   );
   // Log url policy
-  const base = $tw.ipfs.getBaseUrl();
+  const base = $tw.ipfs.getIpfsBaseUrl();
   if ($tw.utils.getIpfsUrlPolicy() === "host") {
-    this.getLogger().info(
-      "Host Relative URL: "
-      + base.href
+    logger.info(
+      "Host Relative URL:"
+      + "\n "
+      + base.toString()
     );
   } else {
-    this.getLogger().info(
-      "Gateway Relative URL: "
-      + base.href
+    logger.info(
+      "Gateway Relative URL:"
+      + "\n "
+      + base.toString()
     );
   }
 }
@@ -89,21 +95,21 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     var cid = null;
     var ensDomain = null;
     var ensContent = null;
-    var web3Provider = null;
+    var web3 = null;
     var account = null;
     var options = options || {};
 
     // Process document URL
     const wiki = $tw.ipfs.getDocumentUrl();
 
-    // Retrieve Gateway URL
-    const gateway = $tw.ipfs.getIpfsGatewayUrl();
+    // Retrieve base URL
+    const base = $tw.ipfs.getIpfsBaseUrl();
 
     // Next
     const nextWiki = $tw.ipfs.getUrl(wiki);
-    nextWiki.protocol = gateway.protocol;
-    nextWiki.hostname = gateway.hostname;
-    nextWiki.port = gateway.port;
+    nextWiki.protocol = base.protocol;
+    nextWiki.hostname = base.hostname;
+    nextWiki.port = base.port;
 
     // IPFS client
     const { ipfs } = await $tw.ipfs.getIpfsClient();
@@ -187,9 +193,9 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         return false;
       }
       // Retrieve a Web3 provider
-      var { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
+      var { web3, account } = await $tw.ipfs.getWeb3Provider();
       // Fetch ENS domain content
-      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
       // Request to unpin
       if ($tw.utils.getIpfsUnpin() && content !== null) {
         $tw.ipfs.requestToUnpin(content);
@@ -227,7 +233,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         + ipnsName
       );
       try {
-        await this.ipfsWrapper.publishToIpns(ipfs, ipnsName, added);
+        await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
         // IPNS next
         nextWiki.pathname = "/"
         + ipnsKeyword
@@ -251,7 +257,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         + ensDomain
       );
       try {
-        await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
+        await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
         // ENS next
         nextWiki.protocol = "https:"
         nextWiki.host = ensDomain;
@@ -286,8 +292,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     callback(null);
 
     // Next
-    if (nextWiki.href !== wiki.href) {
-      window.location.assign(nextWiki.href);
+    if (nextWiki.toString() !== wiki.toString()) {
+      window.location.assign(nextWiki.toString());
     }
 
   } catch (error) {

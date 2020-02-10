@@ -61,21 +61,8 @@ IpfsUri.prototype.getIpfsApiUrl = function() {
   try {
     return new URL($tw.utils.getIpfsSaverApiUrl());
   } catch (error) {
-    this.getLogger().error(error);
+    return this.getDefaultIpfsApiUrl();
   }
-  throw new Error("Invalid IPFS API URL...");
-}
-
-IpfsUri.prototype.getSafeIpfsApiUrl = function() {
-  // Parse api URL
-  var api = null;
-  try {
-    api = this.getIpfsApiUrl();
-  } catch (error) {
-    // Fallback to default
-    api = this.getDefaultIpfsApiUrl();
-  }
-  return api;
 }
 
 IpfsUri.prototype.getDefaultIpfsApiUrl = function() {
@@ -86,21 +73,8 @@ IpfsUri.prototype.getIpfsGatewayUrl = function() {
   try {
     return new URL($tw.utils.getIpfsSaverGatewayUrl());
   } catch (error) {
-    this.getLogger().error(error);
+    return this.getDefaultIpfsGatewayUrl();
   }
-  throw new Error("Invalid IPFS Gateway URL...");
-}
-
-IpfsUri.prototype.getSafeIpfsGatewayUrl = function() {
-  // Parse gateway URL
-  var gateway = null;
-  try {
-    gateway = this.getIpfsGatewayUrl();
-  } catch (error) {
-    // Fallback to default
-    gateway = this.getDefaultIpfsGatewayUrl();
-  }
-  return gateway;
 }
 
 IpfsUri.prototype.getDefaultIpfsGatewayUrl = function() {
@@ -116,19 +90,22 @@ IpfsUri.prototype.getUrl = function(url, baseUrl) {
   throw new Error("Invalid URL...");
 }
 
-IpfsUri.prototype.getBaseUrl = function() {
-  // Origin
-  var base = this.getDocumentUrl();
-  // Fallback to the Gateway
-  if (base.protocol === "file:") {
-    base = this.getSafeIpfsGatewayUrl();
+IpfsUri.prototype.getIpfsBaseUrl = function() {
+  var base = this.getIpfsGatewayUrl();
+  try {
+    if ($tw.utils.getIpfsUrlPolicy() === "host") {
+      base = this.getDocumentUrl();
+      if (base.protocol === "file:") {
+        base = this.getIpfsGatewayUrl();
+      }
+    }
+  } catch (error) {
+    base = this.getIpfsGatewayUrl();
   }
-  // Build a base URL
-  base = new URL(base.protocol + "//" + base.host);
-  return base;
+  return new URL(base.protocol + "//" + base.host);
 }
 
-IpfsUri.prototype.normalizeUrl = function(url, base) {
+IpfsUri.prototype.normalizeUrl = async function(url, base) {
   // Parse
   var parsed = null;
   try {
@@ -138,14 +115,19 @@ IpfsUri.prototype.normalizeUrl = function(url, base) {
   }
   // Invalid URL, try to parse with a Base URL
   if (parsed == null) {
-    parsed = this.getUrl(url, base !== undefined && base !== null ? base : this.getBaseUrl());
+    parsed = this.getUrl(url, base !== undefined && base !== null ? base : this.getIpfsBaseUrl());
   }
   // Remove .link from .eth.link
   if (parsed.hostname.endsWith(".eth.link")) {
     parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
   }
-  // TODO: Resolve .eth
+  // Resolve .eth
   if (parsed.hostname.endsWith(".eth")) {
+    try {
+      parsed = await $tw.ipfs.resolveENS(parsed.hostname);
+    } catch (error) {
+      this.getLogger().error(error);
+    }
   }
   return parsed;
 }

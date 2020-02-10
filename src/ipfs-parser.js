@@ -32,8 +32,9 @@ exports.httpGetToUint8Array = async function(url) {
           const array = new Uint8Array(this.response);
           const logger = window.log.getLogger(ipfsParserName);
           logger.info(
-            "Loaded with HTTP status: "
+            "["
             + xhr.status
+            + "] Loaded:"
             + "\n "
             + url
           );

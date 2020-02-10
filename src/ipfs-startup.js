@@ -25,12 +25,14 @@ exports.after = ["load-modules"];
 exports.synchronous = true;
 
 exports.startup = async function() {
+
   // Logger name
   const name = "ipfs-startup";
   // loglevel is initialized in ipfs-saver
   const logger = window.log.getLogger(name);
   // ipfs-saver starts before ipfs-startup
-  logger.info("ipfs-startup is starting...");
+  logger.info("ipfs is starting up...");
+
   // Requirement
   if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
     $tw.utils.alert(
@@ -38,11 +40,13 @@ exports.startup = async function() {
       "The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed"
     );
   }
+
   // Update SaverHandler
   SaverHandler.prototype.initSavers = IpfsSaverHandler.prototype.initSavers;
   SaverHandler.prototype.saveWiki = IpfsSaverHandler.prototype.saveWiki;
   SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
   SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
+
   // Missing Media Types
   $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
   $tw.utils.registerFileType("image/jpeg","base64",".jpeg",{flags:["image"]});
@@ -50,10 +54,12 @@ exports.startup = async function() {
   $tw.utils.registerFileType("video/ogg","base64",[".ogm",".ogv",".ogg"]);
   $tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
   $tw.utils.registerFileType("video/webm","base64",".webm");
+
   // Listener
   this.ensAction = new EnsAction();
   this.ipfsAction = new IpfsAction();
   this.ipfsTiddler = new IpfsTiddler();
+
   // Init event listeners
   this.ensAction.init();
   this.ipfsAction.init();

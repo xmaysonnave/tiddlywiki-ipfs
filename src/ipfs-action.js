@@ -43,38 +43,38 @@ IpfsAction.prototype.init = function() {
   }
   const self = this;
   // Widget
-  $tw.rootWidget.addEventListener("tm-export-to-ipfs", function(event) {
-    return self.handleExportToIpfs(event);
+  $tw.rootWidget.addEventListener("tm-export-to-ipfs", async function(event) {
+    return await self.handleExportToIpfs(event);
   });
-  $tw.rootWidget.addEventListener("tm-fetch-ipns-key", function(event) {
-    return self.handleFetchIpnsKey(event);
+  $tw.rootWidget.addEventListener("tm-fetch-ipns-key", async function(event) {
+    return await self.handleFetchIpnsKey(event);
   });
-  $tw.rootWidget.addEventListener("tm-generate-ipns-key", function(event) {
-    return self.handleGenerateIpnsKey(event);
+  $tw.rootWidget.addEventListener("tm-generate-ipns-key", async function(event) {
+    return await self.handleGenerateIpnsKey(event);
   });
-  $tw.rootWidget.addEventListener("tm-ipfs-pin", function(event) {
-    return self.handleIpfsPin(event);
+  $tw.rootWidget.addEventListener("tm-ipfs-pin", async function(event) {
+    return await self.handleIpfsPin(event);
   });
-  $tw.rootWidget.addEventListener("tm-ipfs-unpin", function(event) {
-    return self.handleIpfsUnpin(event);
+  $tw.rootWidget.addEventListener("tm-ipfs-unpin", async function(event) {
+    return await self.handleIpfsUnpin(event);
   });
-  $tw.rootWidget.addEventListener("tm-mobile-console", function(event) {
-    return self.handleMobileConsole(event);
+  $tw.rootWidget.addEventListener("tm-mobile-console", async function(event) {
+    return await self.handleMobileConsole(event);
   });
-  $tw.rootWidget.addEventListener("tm-publish-to-ipfs", function(event) {
-    return self.handlePublishToIpfs(event);
+  $tw.rootWidget.addEventListener("tm-publish-to-ipfs", async function(event) {
+    return await self.handlePublishToIpfs(event);
   });
-  $tw.rootWidget.addEventListener("tm-publish-to-ipns", function(event) {
-    return self.handlePublishToIpns(event);
+  $tw.rootWidget.addEventListener("tm-publish-to-ipns", async function(event) {
+    return await self.handlePublishToIpns(event);
   });
-  $tw.rootWidget.addEventListener("tm-remove-ipns-key", function(event) {
-    return self.handleRemoveIpnsKey(event);
+  $tw.rootWidget.addEventListener("tm-remove-ipns-key", async function(event) {
+    return await self.handleRemoveIpnsKey(event);
   });
-  $tw.rootWidget.addEventListener("tm-rename-ipns-name", function(event) {
-    return self.handleRenameIpnsName(event);
+  $tw.rootWidget.addEventListener("tm-rename-ipns-name", async function(event) {
+    return await self.handleRenameIpnsName(event);
   });
-  $tw.rootWidget.addEventListener("tm-resolve-ipns-key-and-open", function(event) {
-    return self.handleResolveIpnsKeyAndOpen(event);
+  $tw.rootWidget.addEventListener("tm-resolve-ipns-key-and-open", async function(event) {
+    return await self.handleResolveIpnsKeyAndOpen(event);
   });
   // Init once
   this.once = true;
@@ -91,7 +91,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     var ipnsKey = null;
     var ipnsName = null;
     var ipnsContent = null;
-    var web3Provider = null;
+    var web3 = null;
     var ipfs = null;
     var account = null;
     var ensDomain = null;
@@ -153,7 +153,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     // Unpin
     if (tid !== null) {
       // Decode
-      const parsed = $tw.ipfs.normalizeUrl(tid);
+      const parsed = await $tw.ipfs.normalizeIpfsUrl(tid);
       if (parsed.pathname === "/") {
         $tw.utils.alert(name, "Unknown pathname...");
         return false;
@@ -185,9 +185,9 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     // Analyse ENS
     if (ensDomain !== null) {
       // Retrieve a Web3 provider
-      var { web3Provider, account } = await this.ensWrapper.getWeb3Provider();
+      var { web3, account } = await $tw.ipfs.getWeb3Provider();
       // Fetch ENS domain content
-      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3Provider, account);
+      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
       // Request to unpin
       if ($tw.utils.getIpfsUnpin() && content !== null) {
         $tw.ipfs.requestToUnpin(ipnsContent);
@@ -226,7 +226,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         + ipnsName
       );
       try {
-        await this.ipfsWrapper.publishToIpns(ipfs, ipnsName, added);
+        await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
         fields.push( { key: "_tid_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
       } catch (error)  {
         // Log and continue
@@ -244,7 +244,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         + ensDomain
       );
       try {
-        await this.ensWrapper.setContenthash(ensDomain, added, web3Provider, account);
+        await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
         fields.push( { key: "_tid_uri", value: "https://" + ensDomain } );
       } catch (error) {
         // Log and continue
@@ -287,51 +287,51 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
 
 IpfsAction.prototype.handlePublishToIpfs = async function(event) {
 
-  const title = event.tiddlerTitle;
-
-  // Load tiddler
-  const tiddler = $tw.wiki.getTiddler(title);
-  if (tiddler == undefined || tiddler == null) {
-    $tw.utils.alert(name, "Unknown Tiddler...");
-    return false;
-  }
-
-  // Type
-  var type = tiddler.getFieldString("type");
-  // Default
-  if (type == undefined || type == null || type.trim() === "") {
-    type = "text/vnd.tiddlywiki";
-  }
-
-  // Content Type
-  const info = $tw.config.contentTypeInfo[type];
-  // Check
-  if (info == undefined || info == null)  {
-    $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
-    return false;
-  }
-
-  // Check
-  if (info.encoding !== "base64" && type !== "image/svg+xml")  {
-    $tw.utils.alert(name, "This Tiddler do not contain any attachment...");
-    return false;
-  }
-
-  // Do not process if _canonical_uri is set
-  const canonical_uri = tiddler.getFieldString("_canonical_uri");
-  if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-    $tw.utils.alert(name, "Attachment is already published...");
-    return false;
-  }
-
-  // Getting content
-  const content = this.ipfsWrapper.getTiddlerContent(tiddler);
-  // Check
-  if (content == null) {
-    return false;
-  }
-
   try {
+
+    const title = event.tiddlerTitle;
+
+    // Load tiddler
+    const tiddler = $tw.wiki.getTiddler(title);
+    if (tiddler == undefined || tiddler == null) {
+      $tw.utils.alert(name, "Unknown Tiddler...");
+      return false;
+    }
+
+    // Type
+    var type = tiddler.getFieldString("type");
+    // Default
+    if (type == undefined || type == null || type.trim() === "") {
+      type = "text/vnd.tiddlywiki";
+    }
+
+    // Content Type
+    const info = $tw.config.contentTypeInfo[type];
+    // Check
+    if (info == undefined || info == null)  {
+      $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
+      return false;
+    }
+
+    // Check
+    if (info.encoding !== "base64" && type !== "image/svg+xml")  {
+      $tw.utils.alert(name, "This Tiddler do not contain any attachment...");
+      return false;
+    }
+
+    // Do not process if _canonical_uri is set
+    const canonical_uri = tiddler.getFieldString("_canonical_uri");
+    if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
+      $tw.utils.alert(name, "Attachment is already published...");
+      return false;
+    }
+
+    // Getting content
+    const content = this.ipfsWrapper.getTiddlerContent(tiddler);
+    // Check
+    if (content == null) {
+      return false;
+    }
 
     // IPFS client
     const { ipfs } = await $tw.ipfs.getIpfsClient();
@@ -411,11 +411,11 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
         return false;
       }
       // Decode _canonical_uri
-      parsed = $tw.ipfs.normalizeUrl(uri);
+      parsed = await $tw.ipfs.normalizeIpfsUrl(uri);
     // Document
     } else {
       // Decode document URL
-      parsed = $tw.ipfs.getDocumentUrl();
+      parsed = await $tw.ipfs.getDocumentUrl();
     }
 
     // Check
@@ -460,10 +460,7 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
     this.getLogger().info(
       "Pinning:"
       + "\n "
-      + "/"
-      + ipfsKeyword
-      + "/"
-      + cid
+      + parsed.toString()
     );
 
     // Pin
@@ -505,11 +502,11 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
         return false;
       }
       // Parse _canonical_uri
-      parsed = $tw.ipfs.normalizeUrl(uri);
+      parsed = await $tw.ipfs.normalizeIpfsUrl(uri);
     // Document
     } else {
       // Parse document URL
-      parsed = $tw.ipfs.getDocumentUrl();
+      parsed = await $tw.ipfs.getDocumentUrl();
     }
 
     // Check
@@ -547,15 +544,12 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
     this.getLogger().info(
       "Unpinning:"
       + "\n "
-      + "/"
-      + ipfsKeyword
-      + "/"
-      + cid
+      + parsed.toString()
     );
 
     // Unpin
     await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
-    
+
     // Remove unpin request
     $tw.ipfs.removeFromUnpin(cid);
 
@@ -571,20 +565,20 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
 
 IpfsAction.prototype.handleRenameIpnsName = async function(event) {
 
-  // Retrieve default IPNS name
-  var ipnsName = $tw.utils.getIpfsIpnsName();
-
-  // Check
-  if (ipnsName == null) {
-    $tw.utils.alert(name, "Undefined IPNS name....");
-    return false;
-  }
-  if (this.ipnsName == null || this.ipnsName === ipnsName) {
-    $tw.utils.alert(name, "Nothing to rename....");
-    return false;
-  }
-
   try {
+
+    // Retrieve default IPNS name
+    var ipnsName = $tw.utils.getIpfsIpnsName();
+
+    // Check
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
+    if (this.ipnsName == null || this.ipnsName === ipnsName) {
+      $tw.utils.alert(name, "Nothing to rename....");
+      return false;
+    }
 
     // IPFS client
     const { ipfs } = await $tw.ipfs.getIpfsClient();
@@ -622,16 +616,16 @@ IpfsAction.prototype.handleRenameIpnsName = async function(event) {
 
 IpfsAction.prototype.handleGenerateIpnsKey = async function(event) {
 
-  // Retrieve default IPNS name
-  var ipnsName = $tw.utils.getIpfsIpnsName();
-
-  // Check
-  if (ipnsName == null) {
-    $tw.utils.alert(name, "Undefined IPNS name....");
-    return false;
-  }
-
   try {
+
+    // Retrieve default IPNS name
+    var ipnsName = $tw.utils.getIpfsIpnsName();
+
+    // Check
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
 
     // IPFS client
     const { ipfs } = await $tw.ipfs.getIpfsClient();
@@ -669,17 +663,17 @@ IpfsAction.prototype.handleGenerateIpnsKey = async function(event) {
 
 IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
 
-  // Retrieve default IPNS name
-  var ipnsName = $tw.utils.getIpfsIpnsName();
-  var ipnsKey = $tw.utils.getIpfsIpnsKey();
-
-  // Check
-  if (ipnsName == null) {
-    $tw.utils.alert(name, "Undefined IPNS name....");
-    return false;
-  }
-
   try {
+
+    // Retrieve default IPNS name
+    var ipnsName = $tw.utils.getIpfsIpnsName();
+    var ipnsKey = $tw.utils.getIpfsIpnsKey();
+
+    // Check
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
 
     // IPFS client
     const { ipfs } = await $tw.ipfs.getIpfsClient();
@@ -701,7 +695,7 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
     }
 
     // Remove IPNS key
-    await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName);
+    await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsKey, ipnsName);
 
     // Update Tiddlers
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
@@ -745,17 +739,17 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
 
 IpfsAction.prototype.handleFetchIpnsKey = async function(event) {
 
-  // Retrieve default IPNS name
-  var ipnsName = $tw.utils.getIpfsIpnsName();
-  var ipnsKey = $tw.utils.getIpfsIpnsKey();
-
-  // Check
-  if (ipnsName == null) {
-    $tw.utils.alert(name, "Undefined IPNS name....");
-    return false;
-  }
-
   try {
+
+    // Retrieve default IPNS name
+    var ipnsName = $tw.utils.getIpfsIpnsName();
+    var ipnsKey = $tw.utils.getIpfsIpnsKey();
+
+    // Check
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
 
     // IPFS client
     const { ipfs } = await $tw.ipfs.getIpfsClient();
@@ -825,8 +819,8 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
 
     if (resolved !== null) {
       // Build URL
-      const parsed = $tw.ipfs.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
-      window.open(parsed.href, "_blank", "noopener");
+      const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
+      window.open(parsed.toString(), "_blank", "noopener");
     }
 
   } catch (error) {
@@ -845,7 +839,7 @@ IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
     if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
       await $tw.ipfs.getLoader().loadErudaLibrary();
     }
-    const eruda = window.document.createElement("div");
+    let eruda = window.document.createElement("div");
     window.document.body.appendChild(eruda);
     window.eruda.init({
       container: eruda,
@@ -867,6 +861,8 @@ IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
     for (var i = 0; i < buttons.length; i++) {
       buttons[i].remove();
     }
+    // The first output line is eaten...
+    this.getLogger().info("Mobile console has been loaded...");
   }
   if (this.console == false) {
     // Show
@@ -957,7 +953,7 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
       + ipnsName
     );
 
-    await this.ipfsWrapper.publishToIpns(ipfs, ipnsName, cid);
+    await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
 
     // Unpin previous
     if ($tw.utils.getIpfsUnpin() && resolved != null) {

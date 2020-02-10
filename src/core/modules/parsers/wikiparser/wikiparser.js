@@ -107,23 +107,20 @@ WikiParser.prototype.getLogger = function() {
 WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
   const self = this;
   // Normalize
-  var _uri = uri;
-  try {
-    _uri = $tw.ipfs.normalizeUrl(_uri);
-  } catch (error) {
-    // Fallback
-    _uri = uri;
-    // Log and continue
-    this.getLogger().error(error);
-    $tw.utils.alert(name, error.message);
-  }
-  // Load
-  $tw.utils.loadToUtf8(_uri)
-  .then( (loaded) => {
-    self.importTiddlers(tiddler, _uri, loaded);
+  $tw.ipfs.normalizeIpfsUrl(uri)
+  .then( (uri) => {
+    // Load
+    $tw.utils.loadToUtf8(uri)
+    .then( (loaded) => {
+      self.importTiddlers(tiddler, uri, loaded.data);
+    })
+    .catch( (error) => {
+      self.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
+    });
   })
   .catch( (error) => {
-    self.getLogger().error(error);
+    this.getLogger().error(error);
     $tw.utils.alert(name, error.message);
   });
 };

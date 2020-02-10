@@ -28,8 +28,8 @@ IpfsLoader.prototype.loadErudaLibrary = async function() {
   if (typeof window.eruda === "undefined") {
     await this.loadLibrary(
       "ErudaLibrary",
-      "https://cdn.jsdelivr.net/npm/eruda@2.1.0/eruda.min.js",
-      "sha384-L90fb4ZBjGGC8PcjNiWVB1Fxj2qeKuHN+Ddno15fJwwBuvaZoLM4ZNuQtQRWBgsM",
+      "https://cdn.jsdelivr.net/npm/eruda@2.2.0/eruda.min.js",
+      "sha384-sve9vKF7rVhGjHytBsbmmRhVEQTzx4c/spMUeDLEhhCcG0iDy3MsPmfcntLvxdAr",
       true
     );
   }
@@ -85,10 +85,19 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
       script.onload = () => {
         resolve(window[id]);
         cleanup();
-        self.getLogger(name).info(
-          "Loaded: "
-          + url
-        );
+        if (module == undefined) {
+          self.getLogger(name).info(
+            "Loaded Script:"
+            + "\n "
+            + url
+          );
+        } else {
+          self.getLogger(name).info(
+            "Loaded Module:"
+            + "\n "
+            + url
+          );
+        }
       }
       script.onerror = () => {
         reject(new Error("Failed to load: " + url));

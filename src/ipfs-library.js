@@ -113,17 +113,20 @@ IpfsLibrary.prototype.cidV1ToCidV0 = function(cidv1) {
     // Log
     this.getLogger().info(
       "Converted: "
-      + "\n 'cidv1' (Base32): "
+      + "\n 'cidv1' (Base32):"
+      + "\n  "
       + cidAnalyser
       + cidv1
-      + "\n to 'cidv0' (Base58): "
+      + "\n to 'cidv0' (Base58):"
+      + "\n  "
       + cidAnalyser
       + cidv0
     );
   } else {
     // Log
     this.getLogger().info(
-      "'cidv0' (Base58): "
+      "'cidv0' (Base58):"
+      + "\n "
       + cidAnalyser
       + cidv0
     );
@@ -140,10 +143,12 @@ IpfsLibrary.prototype.cidV0ToCidV1 = function(cidv0) {
     cidv1 = cidv1.toV1().toString();
     this.getLogger().info(
       "Converted: "
-      + "\n 'cidv0' (Base58): "
+      + "\n 'cidv0' (Base58):"
+      + "\n  "
       + cidAnalyser
       + cidv0
-      + "\n to 'cidv1' (Base32): "
+      + "\n to 'cidv1' (Base32):"
+      + "\n  "
       + cidAnalyser
       + cidv1
     );
@@ -151,6 +156,7 @@ IpfsLibrary.prototype.cidV0ToCidV1 = function(cidv0) {
     // Log
     this.getLogger().info(
       "'cidv1' (Base32): "
+      + "\n "
       + cidAnalyser
       + cidv1
     );
@@ -172,14 +178,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
   } catch (error) {
     // IPFS Companion failed
   }
-  // Check
-  if (apiUrl == undefined || apiUrl == null || apiUrl.toString().trim() === "") {
-    throw new Error("Undefined IPFS API URL...");
-  }
   // Load IpfsHttpClient
-  if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
-    await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
-  }
   try {
     const { ipfs, provider } = await this.getHttpIpfs(apiUrl);
     if (ipfs !== null) {
@@ -221,6 +220,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
   if (apiUrl == undefined || apiUrl == null || apiUrl.toString().trim() === "") {
     throw new Error("Undefined IPFS API URL...");
   }
+  apiUrl = apiUrl.toString().trim();
   // Load IpfsHttpClient
   if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
     await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
@@ -228,17 +228,21 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
   // Getting
   try {
     const { httpClient } = providers;
-    this.getLogger().info("Processing connection to IPFS API URL: " + apiUrl);
+    this.getLogger().info(
+      "Processing connection to IPFS API URL:"
+      + "\n "
+      + apiUrl
+    );
     const { ipfs, provider } = await getIpfs({
       providers: [
         httpClient({
-          apiAddress: apiUrl.toString()
+          apiAddress: apiUrl
         })
       ]
     });
     return {
       ipfs: ipfs,
-      provider: provider + ", " + apiUrl.toString()
+      provider: provider + ", " + apiUrl
     };
   } catch (error) {
     this.getLogger().error(error);

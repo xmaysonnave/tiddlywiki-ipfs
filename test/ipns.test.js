@@ -7,6 +7,8 @@ const { URL } = require("whatwg-url");
 
 const IpfsWrapper = require("../build/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
+const base = new URL("https://ipfs.infura.io/");
+
 const resolvedTiddly = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau";
 
 const decodedCid = {
@@ -138,16 +140,15 @@ describe("IPNS key", () => {
   });
 
   it("Unassigned IPNS key.", async () => {
-    const origin = new URL("https://ipfs.infura.io/");
-    const url = new URL("/ipns/QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf", origin);
+    const url = new URL("/ipns/QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf", base);
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsUri.getDocumentUrl = jest.fn();
-    ipfsWrapper.ipfsUri.getDocumentUrl.mockReturnValueOnce(origin);
+    ipfsWrapper.ipfsUri.getDocumentUrl.mockReturnValueOnce(base);
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     try {
       await ipfsWrapper.resolveIpnsKey(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
     } catch (error) {
-      expect(error.message).toBe("Failed to resolve IPNS key:\n " + url.pathname);
+      expect(error.message).toBe("Failed to resolve IPNS key:\n " + url.toString());
     }
   });
 

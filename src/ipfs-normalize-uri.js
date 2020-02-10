@@ -24,7 +24,7 @@ exports.params = [
 /*
  * Run the macro
  */
-exports.run = function(uri) {
+exports.run = async function(uri) {
   // Check
   const title = this.getVariable("currentTiddler");
   if (title == undefined || title == null || title.trim() === "") {
@@ -44,7 +44,8 @@ exports.run = function(uri) {
     return "";
   }
   // Process
-  return $tw.ipfs.normalizeUrl(field);
+  const parsed = await $tw.ipfs.normalizeIpfsUrl(field);
+  return parsed.toString();
 };
 
 })();
