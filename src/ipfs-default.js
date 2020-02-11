@@ -16,6 +16,20 @@ utils
 
 const ipfsDefaultName = "ipfs-default";
 
+exports.getPreferredSaver = function() {
+  var preferred = null;
+  var tiddler = $tw.wiki.getTiddler("$:/core/saver/preferred-saver");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
+      preferred = text.trim();
+    }
+  }
+  if (priority !== null) {
+  }
+  return preferred;
+}
+
 /*
  * Retrieve ipfs saver priority with default value if applicable
  */

@@ -31,16 +31,9 @@ const name = "ipfs-saver";
  * Select the appropriate saver module and set it up
  */
 var IpfsSaver = function(wiki) {
-  // ipfs-saver starts before ipfs-startup
-  // We initialize here
   this.wiki = wiki;
   this.apiUrl = null;
   this.ipfsProvider = null;
-  // Controller
-  $tw.ipfs = new IpfsController();
-  // Wrapper
-  this.ensWrapper = new EnsWrapper();
-  this.ipfsWrapper = new IpfsWrapper();
   // Loglevel
   if (window.log == undefined || window.log == null) {
     // Init
@@ -51,6 +44,12 @@ var IpfsSaver = function(wiki) {
       log.setLevel("warn", false);
     }
   }
+  // Controller
+  $tw.ipfs = new IpfsController();
+  // Wrapper
+  this.ensWrapper = new EnsWrapper();
+  this.ipfsWrapper = new IpfsWrapper();
+  // Logger
   const logger = window.log.getLogger(name);
   // Log saver priority
   logger.info(

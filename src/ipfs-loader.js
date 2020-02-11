@@ -85,15 +85,15 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
       script.onload = () => {
         resolve(window[id]);
         cleanup();
-        if (module == undefined) {
+        if (module) {
           self.getLogger(name).info(
-            "Loaded Script:"
+            "Loaded Module:"
             + "\n "
             + url
           );
         } else {
           self.getLogger(name).info(
-            "Loaded Module:"
+            "Loaded Script:"
             + "\n "
             + url
           );
@@ -104,10 +104,10 @@ IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
         cleanup();
       }
       // Attributes
-      if (module == undefined) {
-        script.type = "text/javascript";
-      } else {
+      if (module) {
         script.type = "module";
+      } else {
+        script.type = "text/javascript";
       }
       script.id = id;
       script.async = false;

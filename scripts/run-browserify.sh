@@ -1,14 +1,14 @@
 #!/bin/bash
 npx browserify \
-  src/ipfs-library.js \
-  -s IpfsLibrary \
-  -o build/plugins/ipfs/ipfs-library.js \
-|| exit 1
-
-npx browserify \
   src/ipfs-uri.js \
   -s IpfsUri \
   -o build/plugins/ipfs/ipfs-uri.js \
+|| exit 1
+
+npx browserify \
+  src/ipfs-library.js \
+  -s IpfsLibrary \
+  -o build/plugins/ipfs/ipfs-library.js \
 || exit 1
 
 npx browserify \

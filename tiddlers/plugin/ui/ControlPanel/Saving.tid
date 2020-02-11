@@ -1,0 +1,17 @@
+title: $:/core/ui/ControlPanel/Saving
+tags: $:/tags/ControlPanel
+caption: {{$:/language/ControlPanel/Saving/Caption}}
+
+{{$:/language/ControlPanel/Saving/Hint}}
+
+''{{$:/language/ControlPanel/PreferredSaver/Caption}}''
+
+<$select tiddler="$:/core/saver/preferred-saver">
+<$list filter="[all[tiddlers+shadows]module-type[saver]]">
+<option value=<<currentTiddler>>><$view field="title"/></option>
+</$list>
+</$select>
+
+<div class="tc-control-panel">
+<<tabs "[all[shadows+tiddlers]tag[$:/tags/ControlPanel/Saving]!has[draft.of]]" "$:/core/ui/ControlPanel/Saving/General">>
+</div>

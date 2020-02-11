@@ -34,9 +34,14 @@ var EnsLibrary = function() {
     3: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'",
     4: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'",
     5: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'",
-    42: "Ethereum Test Network (PoA): 'Kovan', chainId: '42'",
-    61: "Ethereum Classic Main Network, chainId: '61'",
-    62: "Ethereum Classic Test Network: 'Morden', chainId: '62'"
+    42: "Ethereum Test Network (PoA): 'Kovan', chainId: '42'"
+  };
+  this.etherscan = {
+    1: "https://etherscan.io",
+    3: "https://ropsten.etherscan.io",
+    4: "https://rinkeby.etherscan.io",
+    5: "https://goerli.etherscan.io",
+    42: "https://kovan.etherscan.io"
   };
   // https://docs.ens.domains/ens-deployments
   // https://github.com/ensdomains/ui/blob/master/src/ens.js
@@ -207,7 +212,10 @@ EnsLibrary.prototype.getRegistry = async function(web3) {
   // Log
   this.getLogger().info(this.network[network.chainId]);
   // Return registry address
-  return registry;
+  return {
+    chainId: network.chainId,
+    registry: registry
+  }
 }
 
 EnsLibrary.prototype.getResolver = async function(web3, account, registry, node) {
@@ -341,13 +349,13 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3, account) {
   const domainHash = root.ethers.utils.namehash(domain);
 
   // Fetch ens registry address
-  const registry = await this.getRegistry(web3);
+  const { chainId, registry } = await this.getRegistry(web3);
 
   // Log
   this.getLogger().info(
     "ENS registry:"
     + "\n "
-    + registry
+    + this.etherscan[chainId] + "/address/" + registry
   );
 
   // Fetch resolver address
@@ -362,7 +370,7 @@ EnsLibrary.prototype.getContenthash = async function(domain, web3, account) {
   this.getLogger().info(
     "ENS domain resolver:"
     + "\n "
-    + resolver
+    + this.etherscan[chainId] + "/address/" + resolver
   );
 
   // Check if resolver is EIP165
@@ -428,13 +436,13 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account)
   const domainHash = root.ethers.utils.namehash(domain);
 
   // Fetch ens registry address
-  const registry = await this.getRegistry(web3);
+  const { chainId, registry } = await this.getRegistry(web3);
 
   // Log
   this.getLogger().info(
     "ENS registry:"
     + "\n "
-    + registry
+    + this.etherscan[chainId] + "/address/" + registry
   );
 
   // Fetch resolver address
@@ -449,7 +457,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account)
   this.getLogger().info(
     "ENS domain resolver:"
     + "\n "
-    + resolver
+    + this.etherscan[chainId] + "/address/" + resolver
   );
 
   // Check if resolver is EIP165
@@ -478,7 +486,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account)
     this.getLogger().info(
       "Processing Transaction:"
       + "\n "
-      + tx.hash
+      + this.etherscan[chainId] + "/tx/" + tx.hash
     );
     // Wait for transaction completion
     await tx.wait();

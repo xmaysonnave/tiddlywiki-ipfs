@@ -14,24 +14,18 @@ Startup initialisation
 /*global $tw: false */
 "use strict";
 
-const SaverHandler = require("$:/core/modules/saver-handler.js").SaverHandler;
 const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
 const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
-const IpfsSaverHandler = require("$:/plugins/ipfs/ipfs-saver-handler.js").IpfsSaverHandler;
 const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
 exports.platforms = ["browser"];
-exports.after = ["load-modules"];
+exports.after = ["startup"];
 exports.synchronous = true;
 
 exports.startup = async function() {
 
   // Logger name
   const name = "ipfs-startup";
-  // loglevel is initialized in ipfs-saver
-  const logger = window.log.getLogger(name);
-  // ipfs-saver starts before ipfs-startup
-  logger.info("ipfs is starting up...");
 
   // Requirement
   if($tw.wiki.getTiddler("$:/plugins/bimlas/locator") == undefined) {
@@ -40,12 +34,6 @@ exports.startup = async function() {
       "The plugin [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]] requires the [ext[Locator plugin by bimlas|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]] to be installed"
     );
   }
-
-  // Update SaverHandler
-  SaverHandler.prototype.initSavers = IpfsSaverHandler.prototype.initSavers;
-  SaverHandler.prototype.saveWiki = IpfsSaverHandler.prototype.saveWiki;
-  SaverHandler.prototype.sortSavers = IpfsSaverHandler.prototype.sortSavers;
-  SaverHandler.prototype.updateSaver = IpfsSaverHandler.prototype.updateSaver;
 
   // Missing Media Types
   $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
@@ -64,6 +52,11 @@ exports.startup = async function() {
   this.ensAction.init();
   this.ipfsAction.init();
   this.ipfsTiddler.init();
+
+  // Log
+  const logger = window.log.getLogger(name);
+  logger.info("ipfs is starting up...");
+
 };
 
 })();

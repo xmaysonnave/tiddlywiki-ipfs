@@ -81,9 +81,9 @@ IpfsUri.prototype.getDefaultIpfsGatewayUrl = function() {
   return new URL("https://ipfs.infura.io");
 }
 
-IpfsUri.prototype.getUrl = function(url, baseUrl) {
+IpfsUri.prototype.getUrl = function(url, base) {
   try {
-    return new URL(url, baseUrl);
+    return new URL(url, base);
   } catch (error) {
     this.getLogger().error(error);
   }

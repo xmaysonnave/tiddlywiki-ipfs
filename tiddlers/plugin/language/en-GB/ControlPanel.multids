@@ -33,3 +33,5 @@ Saving/IpfsService/Provider/HTTP/Description: HTTP Client
 Basics/Version/Prompt: ~TiddlyWiki:
 
 Ipfs/Version/Prompt: IPFS:
+
+PreferredSaver/Caption: Preferred Saver

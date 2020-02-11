@@ -207,13 +207,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
 
   var updatedTiddler = null;
 
-  // Check
-  if (tiddler == undefined || tiddler == null) {
-    updatedTiddler = new $tw.Tiddler(tiddler);
-    $tw.wiki.addTiddler(updatedTiddler);
-    return updatedTiddler;
-  }
-
   // Type
   var type = tiddler.getFieldString("type");
   // Default
@@ -452,14 +445,6 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     if (tid_uri !== old_tid_uri) {
 
       updatedTiddler = updatedTiddler !== null ? updatedTiddler : tiddler;
-
-      // Retrieve tiddler _canonical_uri if any
-      canonical_uri = updatedTiddler.getFieldString("_canonical_uri");
-      if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-        canonical_uri = canonical_uri.trim();
-      } else {
-        canonical_uri = null;
-      }
 
       // _tid_uri attribute has been removed
       if (tid_uri == null) {
