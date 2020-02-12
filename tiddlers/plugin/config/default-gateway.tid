@@ -1,3 +1,4 @@
 title: $:/ipfs/saver/gateway
 tags: $:/ipfs/core
-text:  $:/ipfs/saver/gateway/https/ipfs.infura.io
+
+$:/ipfs/saver/gateway/https/ipfs.infura.io

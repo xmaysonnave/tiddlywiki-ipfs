@@ -51,11 +51,8 @@ var IpfsSaver = function(wiki) {
   this.ipfsWrapper = new IpfsWrapper();
   // Logger
   const logger = window.log.getLogger(name);
-  // Log saver priority
-  logger.info(
-    "ipfs-saver is starting with priority: "
-    + $tw.utils.getIpfsPriority()
-  );
+  // Log
+  logger.info("ipfs-saver is starting up...");
   // Log url policy
   const base = $tw.ipfs.getIpfsBaseUrl();
   if ($tw.utils.getIpfsUrlPolicy() === "host") {
@@ -310,7 +307,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
  */
 IpfsSaver.prototype.info = {
   name: "ipfs",
-  priority: 3000,
+  priority: 3100,
   capabilities: ["save"]
 };
 

@@ -55,7 +55,7 @@ exports.startup = async function() {
 
   // Log
   const logger = window.log.getLogger(name);
-  logger.info("ipfs is starting up...");
+  logger.info("ipfs-startup is starting up...");
 
 };
 

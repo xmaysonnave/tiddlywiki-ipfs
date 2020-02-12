@@ -110,7 +110,7 @@ IpfsController.prototype.getIpfsClient = async function() {
   const apiUrl = this.getIpfsApiUrl();
   // Retrieve an existing HTTP Client
   const client  = this.ipfsClients.get(apiUrl.toString());
-  if (client !== undefined) {
+  if (client !== undefined && client !== null) {
     // Log
     this.getLogger().info(
       "Reuse IPFS provider:"
@@ -164,13 +164,16 @@ IpfsController.prototype.getEthereumProvider = async function() {
 
 IpfsController.prototype.networkChanged = function(chainId) {
   if (this.chainId !== chainId) {
-    var network = this.ensWrapper.getNetwork();
+    const network = this.ensWrapper.getNetwork();
     try {
-      network = network[chainId];
-      this.account = null;
       this.chainId = chainId;
+      this.account = null;
       this.web3 = null;
-      this.getLogger().info(network);
+      this.getLogger().info(
+        "Changed Ethereum network:"
+        + "\n "
+        + network[chainId]
+      );
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, "Unknown Ethereum network: " + chainId);
@@ -181,10 +184,11 @@ IpfsController.prototype.networkChanged = function(chainId) {
 IpfsController.prototype.accountChanged = function(accounts) {
   if (this.account !== accounts[0]) {
     this.account = accounts[0];
+    const etherscan = this.ensWrapper.getEtherscanRegistry();
     this.getLogger().info(
-      "Current Ethereum account:"
+      "Changed Ethereum account:"
       + "\n "
-      + this.account
+      + etherscan[this.chainId] + "/address/" + this.account
     );
   }
 }
@@ -192,6 +196,7 @@ IpfsController.prototype.accountChanged = function(accounts) {
 IpfsController.prototype.getWeb3Provider = async function() {
   const provider = await this.getEthereumProvider();
   const network = this.ensWrapper.getNetwork();
+  const etherscan = this.ensWrapper.getEtherscanRegistry();
   if (this.web3 == null) {
     const { account, chainId, web3 } = await this.ensWrapper.getWeb3Provider(provider);
     this.account = account;
@@ -203,7 +208,7 @@ IpfsController.prototype.getWeb3Provider = async function() {
       + "\n network: "
       + network[this.chainId]
       + "\n account: "
-      + this.account
+      + etherscan[this.chainId] + "/address/" + this.account
     );
   } else {
     // Log
@@ -212,7 +217,7 @@ IpfsController.prototype.getWeb3Provider = async function() {
       + "\n network: "
       + network[this.chainId]
       + "\n account: "
-      + this.account
+      + etherscan[this.chainId] + "/address/" + this.account
     );
   }
   return {

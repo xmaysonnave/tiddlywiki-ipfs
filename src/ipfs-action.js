@@ -836,8 +836,11 @@ IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
 IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
   // Load mobile console if applicable
   if (typeof window.eruda === "undefined") {
-    if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+    try {
+      // Try to load eruda
       await $tw.ipfs.getLoader().loadErudaLibrary();
+    } catch (error) {
+      this.getLogger().error(error);
     }
     let eruda = window.document.createElement("div");
     window.document.body.appendChild(eruda);

@@ -221,9 +221,11 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
     throw new Error("Undefined IPFS API URL...");
   }
   apiUrl = apiUrl.toString().trim();
-  // Load IpfsHttpClient
-  if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+  try {
+    // Try to load IpfsHttpClient
     await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
+  } catch (error) {
+    this.getLogger().error(error);
   }
   // Getting
   try {

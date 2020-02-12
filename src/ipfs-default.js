@@ -16,63 +16,6 @@ utils
 
 const ipfsDefaultName = "ipfs-default";
 
-exports.getPreferredSaver = function() {
-  var preferred = null;
-  var tiddler = $tw.wiki.getTiddler("$:/core/saver/preferred-saver");
-  if (tiddler !== undefined && tiddler !== null) {
-    const text = tiddler.getFieldString("text");
-    if (text !== undefined && text !== null && text.trim() !== "") {
-      preferred = text.trim();
-    }
-  }
-  if (priority !== null) {
-  }
-  return preferred;
-}
-
-/*
- * Retrieve ipfs saver priority with default value if applicable
- */
-exports.getIpfsPriority = function() {
-  var priority = null;
-  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/priority");
-  if (tiddler !== undefined && tiddler !== null) {
-    const text = tiddler.getFieldString("text");
-    if (text !== undefined && text !== null && text.trim() !== "") {
-      priority = text.trim();
-    }
-  }
-  if (priority !== null) {
-    tiddler = $tw.wiki.getTiddler(priority);
-    if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString("text");
-      if (text !== undefined && text !== null && text.trim() !== "") {
-        priority = text.trim();
-      }
-    }
-  }
-  if (priority === null) {
-    priority = $tw.utils.getIpfsDefaultPriority();
-  } else {
-    try {
-      priority = parseInt(priority);
-    } catch (error) {
-      const logger = window.log.getLogger(ipfsDefaultName);
-      logger.error(error);
-      $tw.utils.alert(ipfsDefaultName, error.message);
-      priority = -1;
-    }
-  }
-  return priority;
-}
-
-/*
- * Default Priority
- */
-exports.getIpfsDefaultPriority = function() {
-  return 3100;
-}
-
 /*
  * Retrieve ipfs saver protocol with default value if applicable
  */

@@ -53,6 +53,10 @@ var EnsLibrary = function() {
   };
 };
 
+EnsLibrary.prototype.getEtherscanRegistry = function() {
+  return this.etherscan;
+}
+
 EnsLibrary.prototype.getNetwork = function() {
   return this.network;
 }
@@ -155,9 +159,11 @@ EnsLibrary.prototype.enableProvider = async function(provider) {
 }
 
 EnsLibrary.prototype.getProvider = async function() {
-  // Load ethers
-  if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null) {
+  try {
+    // Try to load ethers
     await $tw.ipfs.getLoader().loadEtherJsLibrary();
+  } catch (error) {
+    this.getLogger().error(error);
   }
   // Retrieve an available provider
   var provider = null;
@@ -209,8 +215,6 @@ EnsLibrary.prototype.getRegistry = async function(web3) {
   if (registry == undefined || registry == null) {
     throw new Error("Unsupported Ethereum network: " + network.chainId);
   }
-  // Log
-  this.getLogger().info(this.network[network.chainId]);
   // Return registry address
   return {
     chainId: network.chainId,

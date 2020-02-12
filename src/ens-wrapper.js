@@ -102,12 +102,15 @@ EnsWrapper.prototype.getWeb3Provider = async function(provider) {
 EnsWrapper.prototype.getProvider = async function() {
   try {
     const provider = await this.ensLibrary.getProvider();
-    this.getLogger().info("Successfully found an Ethereum provider...");
     return provider;
   } catch (error) {
     this.getLogger().error(error);
     throw new Error("Unable to find an Ethereum provider...");
   }
+}
+
+EnsWrapper.prototype.getEtherscanRegistry = function() {
+  return this.ensLibrary.getEtherscanRegistry();
 }
 
 EnsWrapper.prototype.getNetwork = function() {

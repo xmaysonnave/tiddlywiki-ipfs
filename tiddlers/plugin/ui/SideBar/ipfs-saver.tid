@@ -5,14 +5,6 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 \define lingo-base() $:/language/ControlPanel/Saving/IpfsService/
 \define service-name() Ipfs
 
-''<<lingo Priority>>''
-
-<$select tiddler="$:/ipfs/saver/priority" class="tc-edit-texteditor">
-<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/priority]!has[draft.of]]">
-<option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
-</$list>
-</$select>
-
 <<lingo Description>>
 
 ''<<lingo Global>>''
@@ -54,7 +46,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tr>
 <td width="20%"><<lingo ApiUrl>></td>
 <td width="80%">
-<$select tiddler="$:/ipfs/saver/api" class="tc-edit-texteditor">
+<$select tiddler="$:/ipfs/saver/api" default="$:/ipfs/saver/api/https/ipfs.infura.io/5001" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]]">
 <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>
@@ -64,7 +56,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tr>
 <td width="20%"><<lingo GatewayUrl>></td>
 <td width="80%">
-<$select tiddler="$:/ipfs/saver/gateway" class="tc-edit-texteditor">
+<$select tiddler="$:/ipfs/saver/gateway" default="$:/ipfs/saver/gateway/https/ipfs.infura.io" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]]">
 <option value=<<currentTiddler>>><$transclude field="text"><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>

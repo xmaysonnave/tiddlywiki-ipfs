@@ -104,16 +104,6 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
       );
     }
   }
-  // Priority preference
-  const priority = changes["$:/ipfs/saver/priority"];
-  if (priority !== undefined && priority.modified) {
-    // Update saver priority
-    $tw.saverHandler.updateSaver("ipfs", $tw.utils.getIpfsPriority());
-    this.getLogger().info(
-      "Updated IPFS Saver priority: "
-      + $tw.utils.getIpfsPriority()
-    );
-  }
   // Unpin preference
   const unpin = changes["$:/ipfs/saver/unpin"];
   if (unpin !== undefined && unpin.modified) {
