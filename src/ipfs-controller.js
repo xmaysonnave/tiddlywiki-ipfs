@@ -82,7 +82,7 @@ IpfsController.prototype.getLoader = function() {
 }
 
 IpfsController.prototype.getUrl = function(url, base) {
-  return this.ipfsUri.getUrl(url, base);
+  return this.ipfsUri.getUrl(url, base ? base : this.getIpfsBaseUrl());
 }
 
 IpfsController.prototype.getIpfsBaseUrl = function() {

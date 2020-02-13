@@ -186,8 +186,20 @@ IpfsTiddler.prototype.handleRefreshTiddler = function(event) {
     $tw.utils.alert(name, "Unknown tiddler: " + title);
     return false;
   }
-  // Refresh
+  // Empty the 'text' field from _canonical_uri Tiddler holder
+  const canonical_uri = tiddler.getFieldString("title");
+  if (canonical_uri !== undefined && canonical_uri !== null) {
+    const updatedTiddler = $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: "" }
+      ]
+    });
+    $tw.wiki.addTiddler(updatedTiddler);
+  }
+  // Empty cache
   $tw.wiki.clearCache(title);
+  // Refresh
   const changedTiddler = $tw.utils.getChangedTiddler(title);
   $tw.rootWidget.refresh(changedTiddler);
   return true;

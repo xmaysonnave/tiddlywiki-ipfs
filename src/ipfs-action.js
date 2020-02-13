@@ -80,22 +80,11 @@ IpfsAction.prototype.init = function() {
   this.once = true;
 }
 
-IpfsAction.prototype.handleExportToIpfs = async function(event) {
+IpfsAction.prototype.handlePublishToIpfs = async function(event) {
 
   try {
 
     const title = event.tiddlerTitle;
-
-    var fields = [];
-    var tid = null;
-    var ipnsKey = null;
-    var ipnsName = null;
-    var ipnsContent = null;
-    var web3 = null;
-    var ipfs = null;
-    var account = null;
-    var ensDomain = null;
-    var ensContent = null;
 
     // Load tiddler
     const tiddler = $tw.wiki.getTiddler(title);
@@ -120,96 +109,36 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     }
 
     // Check
-    if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki")  {
-      $tw.utils.alert(name, "Unsupported Tiddler Content Type...\nLook at the documentation...");
+    if (info.encoding !== "base64" && type !== "image/svg+xml")  {
+      $tw.utils.alert(name, "This Tiddler do not contain any attachment...");
       return false;
     }
 
-    // Retrieve fields
-    tid = tiddler.getFieldString("_tid_uri");
-    // Check
-    if (tid == undefined || tid == null || tid.trim() === "") {
-      tid = null;
-    }
-    ipnsName = tiddler.getFieldString("_ipns_name");
-    // Check
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
-      ipnsName = null;
-    }
-    ipnsKey = tiddler.getFieldString("_ipns_key");
-    // Check
-    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
-      ipnsKey = null;
-    }
-    ensDomain = tiddler.getFieldString("_ens_domain");
-    // Check
-    if (ensDomain == undefined || ensDomain == null || ensDomain.trim() === "") {
-      ensDomain = null;
-    }
-
-    // IPFS client
-    var { ipfs } = await $tw.ipfs.getIpfsClient();
-
-    // Unpin
-    if (tid !== null) {
-      // Decode
-      const parsed = await $tw.ipfs.normalizeIpfsUrl(tid);
-      if (parsed.pathname === "/") {
-        $tw.utils.alert(name, "Unknown pathname...");
-        return false;
-      }
-      const { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-      // Request to unpin
-      if ($tw.utils.getIpfsUnpin() && cid !== null) {
-        $tw.ipfs.requestToUnpin(cid);
-      }
-    }
-
-    // Analyse IPNS
-    if (ipnsName !== null || ipnsKey !== null) {
-      this.getLogger().info("Processing IPNS Tiddler...");
-      var { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
-      try {
-        ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
-      } catch (error) {
-        // Log and continue
-        this.getLogger().warn(error);
-        ipnsContent = null;
-      }
-      // Request to unpin
-      if ($tw.utils.getIpfsUnpin() && ipnsContent !== null) {
-        $tw.ipfs.requestToUnpin(ipnsContent);
-      }
-    }
-
-    // Analyse ENS
-    if (ensDomain !== null) {
-      // Retrieve a Web3 provider
-      var { web3, account } = await $tw.ipfs.getWeb3Provider();
-      // Fetch ENS domain content
-      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
-      // Request to unpin
-      if ($tw.utils.getIpfsUnpin() && content !== null) {
-        $tw.ipfs.requestToUnpin(ipnsContent);
-      }
+    // Do not process if _canonical_uri is set
+    const canonical_uri = tiddler.getFieldString("_canonical_uri");
+    if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
+      $tw.utils.alert(name, "Attachment is already published...");
+      return false;
     }
 
     // Getting content
-    const content = this.ipfsWrapper.getTiddlerAsTid(tiddler);
+    const content = this.ipfsWrapper.getTiddlerContent(tiddler);
     // Check
     if (content == null) {
       return false;
     }
 
+    // IPFS client
+    const { ipfs } = await $tw.ipfs.getIpfsClient();
+
     this.getLogger().info(
-      "Uploading Tiddler: "
+      "Uploading attachment: "
       + content.length
       + " bytes"
     );
 
     // Add
     const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
-    fields.push( { key: "_tid_uri", value: "/" + ipfsKeyword + "/" + added } );
 
     // Pin, if failure log and continue
     try {
@@ -219,56 +148,25 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       $tw.utils.alert(name, error.message);
     }
 
-    // Publish to IPNS
-    if (ipnsName !== null && ipnsKey !== null) {
-      this.getLogger().info(
-        "Publishing IPNS Tiddler: "
-        + ipnsName
-      );
-      try {
-        await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
-        fields.push( { key: "_tid_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
-      } catch (error)  {
-        // Log and continue
-        this.getLogger().warn(error);
-        $tw.utils.alert(name, error.message);
-        // Discard unpin request
-        $tw.ipfs.discardRequestToUpin(ipnsContent);
-      }
-    }
-
-    // Publish to ENS
-    if (ensDomain !== null) {
-      this.getLogger().info(
-        "Publishing ENS domain content: "
-        + ensDomain
-      );
-      try {
-        await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
-        fields.push( { key: "_tid_uri", value: "https://" + ensDomain } );
-      } catch (error) {
-        // Log and continue
-        this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-        // Discard unpin request
-        $tw.ipfs.discardRequestToUpin(ensContent);
-      }
-    }
-
-    // Update Tiddler
     var addTags = [];
+    var removeTags = [];
     if ($tw.crypto.hasPassword()) {
-      addTags = ["$:/isExported", "$:/isIpfs"];
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
+      removeTags = ["$:/isEmbedded"];
     } else {
-      addTags = ["$:/isExported", "$:/isIpfs"];
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
+      removeTags = ["$:/isEmbedded"];
     }
     // Update
     const updatedTiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,
       addTags: addTags,
-      fields: fields
+      removeTags: removeTags,
+      fields: [
+        { key: "text", value: "" },
+        { key: "_canonical_uri", value: "/" + ipfsKeyword + "/" + added }
+      ]
     });
-
     if (updatedTiddler !== null) {
       $tw.wiki.addTiddler(updatedTiddler);
     } else {

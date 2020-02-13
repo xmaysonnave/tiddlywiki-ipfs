@@ -173,8 +173,8 @@ exports.alert = function(callee, text) {
 
 }
 
-exports.getChangedTiddler = function(object, options) {
-  options = options || Object.create(null);
+exports.getChangedTiddler = function(object) {
+  // Holder
   const changedTiddler = Object.create(null);
   // Check
   if (object == undefined || object == null) {
@@ -192,11 +192,12 @@ exports.getChangedTiddler = function(object, options) {
     title = object.getFieldString("title");
   }
   // Check
-  if (title == undefined || title == null || title.trim() === "") {
+  if (title == undefined || title == null) {
     return changedTiddler;
   }
-  // Process
-  changedTiddler[title] = options;
+  // Process title
+  changedTiddler[title] = Object.create(null);
+  // Done
   return changedTiddler;
 }
 

@@ -106,7 +106,7 @@ IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
 
 }
 
-IpfsWrapper.prototype.getTiddlerAsTid = function(tiddler) {
+IpfsWrapper.prototype.exportTiddler = function(tiddler, json) {
 
   // Check
   if (tiddler == undefined || tiddler == null) {
@@ -135,34 +135,52 @@ IpfsWrapper.prototype.getTiddlerAsTid = function(tiddler) {
     return null;
   }
 
-  // Export Tiddler as tid
-  const options = {
-    downloadType: "text/plain",
-    method: "download",
-    template: "$:/core/templates/exporters/TidFile",
-    variables: {
-      exportFilter: "[[" + tiddler.fields.title + "]]"
-    }
-  };
-  var tid = $tw.wiki.renderTiddler(
-    "text/plain",
-    "$:/core/templates/exporters/TidFile",
-    options
-  );
+  var content = null;
+  if (json) {
+    // Export Tiddler as JSON
+    const options = {
+      downloadType: "text/plain",
+      method: "download",
+      template: "$:/core/templates/exporters/JsonFile",
+      variables: {
+        exportFilter: "[[" + tiddler.fields.title + "]]"
+      }
+    };
+    content = $tw.wiki.renderTiddler(
+      "text/plain",
+      "$:/core/templates/exporters/JsonFile",
+      options
+    );
+  } else {
+    // Export Tiddler as tid
+    const options = {
+      downloadType: "text/plain",
+      method: "download",
+      template: "$:/core/templates/exporters/TidFile",
+      variables: {
+        exportFilter: "[[" + tiddler.fields.title + "]]"
+      }
+    };
+    content = $tw.wiki.renderTiddler(
+      "text/plain",
+      "$:/core/templates/exporters/TidFile",
+      options
+    );
+  }
 
   try {
     // Encrypt
     if ($tw.crypto.hasPassword()) {
-      tid = $tw.crypto.encrypt(tid, $tw.crypto.currentPassword);
+      content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
     }
-    tid = $tw.utils.StringToUint8Array(tid);
+    content = $tw.utils.StringToUint8Array(content);
   } catch (error) {
     this.getLogger().error(error);
     $tw.utils.alert(name, "Failed to encrypt content...");
     return null;
   };
 
-  return tid;
+  return content;
 
 }
 

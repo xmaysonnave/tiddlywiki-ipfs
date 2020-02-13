@@ -1,4 +1,4 @@
-title: $:/core/ui/EditTemplate/body
+title: $:/ipfs/ui/EditTemplate/body
 tags: $:/tags/EditTemplate
 
 \define lingo-base() $:/language/EditTemplate/Body/
@@ -11,7 +11,7 @@ $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 
 <<lingo External/Hint>>
 
-<a href=<<ipfs-normalize-uri uri:"_canonical_uri">> target="_blank" rel="noreferrer noopener"><$text text={{!!_canonical_uri}}/></a>
+<$ipfslink field="_canonical_uri" value={{!!_canonical_uri}} tiddler=<<currentTiddler>>/>
 
 <$edit-text field="_canonical_uri" class="tc-edit-fields" tabindex={{$:/config/EditTabIndex}}></$edit-text>
 

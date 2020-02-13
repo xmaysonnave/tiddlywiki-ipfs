@@ -212,7 +212,6 @@ SaverHandler.prototype.saveWiki = function(options) {
     return true;
   }
 
-	// Call the highest priority saver that supports this method until the first one succeed
 	// Call the highest priority saver that supports this method
 	for(var t=this.savers.length-1; t>=0; t--) {
 		var saver = this.savers[t].module;

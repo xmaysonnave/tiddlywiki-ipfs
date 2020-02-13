@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/parsers/wikiparser/wikiparser.js
+title: $:/plugins/ipfs/modules/parsers/wikiparser/wikiparser.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: parser
@@ -102,15 +102,27 @@ WikiParser.prototype.getLogger = function() {
   return console;
 }
 
+WikiParser.prototype.isJSON = function(content) {
+  if (content !== undefined && content !== null && typeof content === 'string'){
+    try {
+      JSON.parse(content);
+      return true;
+    } catch(erro){
+      // Ignore
+    }
+  }
+  return false;
+}
+
 /*
 */
 WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
   const self = this;
   // Normalize
   $tw.ipfs.normalizeIpfsUrl(uri)
-  .then( (uri) => {
+  .then( (normalized_uri) => {
     // Load
-    $tw.utils.loadToUtf8(uri)
+    $tw.utils.loadToUtf8(normalized_uri)
     .then( (loaded) => {
       self.importTiddlers(tiddler, uri, loaded.data);
     })
@@ -126,15 +138,44 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
 };
 
 WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
-  const importedTiddlers = this.wiki.deserializeTiddlers(".tid",loaded.data,this.wiki.getCreationFields());
+  var importedTiddlers = null;
+  if (this.isJSON(loaded)) {
+    importedTiddlers = this.wiki.deserializeTiddlers(".json",loaded,this.wiki.getCreationFields());
+  } else {
+    importedTiddlers = this.wiki.deserializeTiddlers(".tid",loaded,this.wiki.getCreationFields());
+  }
+  let addTags = (tiddler.fields.tags || []).slice(0);
+  let title = tiddler.getFieldString("title");
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
     const text = importedTiddler["text"];
+    // Root URI
+    const canonical_uri = importedTiddler["_canonical_uri"];
+    if (canonical_uri !== undefined && canonical_uri !== null) {
+      importedTiddler["_root_uri"] = canonical_uri;
+    } else {
+      importedTiddler["_canonical_uri"] = uri;
+    }
+    // Tags
+    var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
+    for (var i = 0; i < addTags.length; i++) {
+      const tag = addTags[i];
+      if (importedTags.includes(tag) == false) {
+        importedTags = importedTags + " " + tag;
+      }
+    }
+    importedTiddler["tags"] = importedTags;
+    // Title
+    if (importedTiddler["title"] !== title) {
+      importedTiddler["_imported_title"] = importedTiddler["title"];
+    }
+    importedTiddler["title"] = title;
     // Warning
     if (text == undefined || text == null || text.trim() === "") {
       importedTiddler["text"] = $tw.language.getRawString("EmptyTidddler");;
     }
-    // Import
+    // Add
     $tw.wiki.addTiddler(importedTiddler);
+
   });
 }
 
