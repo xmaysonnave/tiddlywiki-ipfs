@@ -68,51 +68,69 @@ IpfsLinkWidget.prototype.render = function(parent,nextSibling) {
   this.computeAttributes();
   // Execute our logic
   this.execute();
-  // Render the link
-  this.renderLink(parent, nextSibling);
+  // Analyse field
+  var linkify = false;
+  var field = this.getAttribute("field");
+  if (field !== undefined || field !== null || field.trim() !== "") {
+    const tiddler = $tw.wiki.getTiddler("$:/plugins/ipfs/ipfslink/fields");
+    if (tiddler !== undefined && tiddler !== null) {
+      const links = tiddler.getFieldList("list");
+      for (var i = 0; i < links.length; i++) {
+        if (links[i] === field.trim()) {
+          linkify = true;
+        }
+      }
+    }
+  }
+  if (linkify) {
+    this.renderLink(parent, nextSibling);
+  } else {
+    this.renderText(parent, nextSibling);
+  }
 };
 
 /*
 Render this widget into the DOM
 */
 IpfsLinkWidget.prototype.renderLink = function(parent,nextSibling) {
-  var domNode = null;
   // Only fields suffixed with '_uri' are redndered as links...
-  if (this.uri) {
-    domNode = this.document.createElement("a");
-		domNode.setAttribute("href", this.value);
-    // Add a click event handler
-    $tw.utils.addEventListeners(domNode,[
-      {name: "click", handlerObject: this, handlerMethod: "handleClickEvent"}
-    ]);
-    // Assign classes
-    const classes = [];
-    if (this.classes) {
-      classes.push(this.classes);
-    }
-    if (classes.length > 0) {
-      domNode.setAttribute("class",classes.join(" "));
-    }
-    if (this["aria-label"]) {
-      domNode.setAttribute("aria-label",this["aria-label"]);
-    }
-    parent.insertBefore(domNode,nextSibling);
-    this.renderChildren(domNode,null);
-    this.domNodes.push(domNode);
-  } else {
-    var text = this.field;
-    text = text.replace(/\r/mg,"");
-    domNode = this.document.createTextNode(text);
-    parent.insertBefore(domNode,nextSibling);
-    this.domNodes.push(domNode);
+  const domNode = this.document.createElement("a");
+  domNode.setAttribute("href", this.value);
+  // Add a click event handler
+  $tw.utils.addEventListeners(domNode,[
+    {name: "click", handlerObject: this, handlerMethod: "handleClickEvent"}
+  ]);
+  // Assign classes
+  const classes = [];
+  if (this.classes) {
+    classes.push(this.classes);
   }
+  if (classes.length > 0) {
+    domNode.setAttribute("class",classes.join(" "));
+  }
+  if (this["aria-label"]) {
+    domNode.setAttribute("aria-label",this["aria-label"]);
+  }
+  parent.insertBefore(domNode,nextSibling);
+  this.renderChildren(domNode,null);
+  this.domNodes.push(domNode);
+};
+
+/*
+Render this widget into the DOM
+*/
+IpfsLinkWidget.prototype.renderText = function(parent,nextSibling) {
+  const domNode = this.document.createElement("span");
+  parent.insertBefore(domNode,nextSibling);
+  this.renderChildren(domNode,null);
+  this.domNodes.push(domNode);
 };
 
 IpfsLinkWidget.prototype.handleClickEvent = function(event) {
   const self = this;
   $tw.ipfs.normalizeIpfsUrl(this.value)
   .then( (normalized_uri) => {
-    window.open(normalized_uri, self.target, self.rel);
+    window.open(normalized_uri.href, self.target, self.rel);
   })
   .catch( (error) => {
     this.getLogger().error(error);
@@ -128,23 +146,19 @@ Compute the internal state of the widget
 */
 IpfsLinkWidget.prototype.execute = function() {
   // Pick up our attributes
-  this.value = this.getAttribute("value");
-  this.tiddler = this.getAttribute("tiddler");
+  this.caption = this.getAttribute("caption");
   this.field = this.getAttribute("field");
-  if (this.field.endsWith("_uri")) {
-    this.uri = true;
-  }
+  this.tiddler = this.getAttribute("tiddler");
+  this.value = this.getAttribute("value");
   const tiddler = $tw.wiki.getTiddler(this.tiddler);
   if (this.value == undefined) {
     this.value = tiddler.getFieldString(this.field);
-  } else {
-    this.field = this.value;
   }
   this.target = this.getAttribute("target") || "_blank";
   this.rel = this.getAttribute("rel") || "noopener";
   this["aria-label"] = this.getAttribute("aria-label");
   this.classes = this.getAttribute("class") || "tc-ipfs-link-external";
-  this.makeChildWidgets([{type: "text", text: this.field}]);
+  this.makeChildWidgets([{type: "text", text: this.caption}]);
 };
 
 /*
@@ -152,7 +166,12 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
 */
 IpfsLinkWidget.prototype.refresh = function(changedTiddlers) {
   var changedAttributes = this.computeAttributes();
-  if (changedAttributes.value || changedTiddlers[this.value] || changedAttributes["aria-label"]) {
+  if (changedAttributes.value
+    || changedTiddlers[this.value]
+    || changedAttributes.caption
+    || changedTiddlers[this.caption]
+    || changedAttributes["aria-label"]
+  ) {
     this.refreshSelf();
     return true;
   }

@@ -1,0 +1,3 @@
+title: $:/plugins/ipfs/ipfslink/fields
+tags: $:/ipfs/core
+list: _canonical_uri _encrypted_uri _exported_uri _imported_uri _license_uri _source_uri

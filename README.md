@@ -174,18 +174,18 @@ load-nvmrc
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 ```
-v10.18.1
+v10.19.0
 ```
 
 Install the recommended version.
 ```
-nvm install v10.18.1
+nvm install v10.19.0
 ```
 
 Check:
 ```
 node -v
-v10.18.1
+v10.19.0
 ```
 
 We update npm to use the latest:
@@ -198,7 +198,7 @@ npm -v
 At this stage your global environment should look like this:
 ```
 npm -g ls --depth=0
-/home/user/.nvm/versions/node/v10.18.1/lib
+/home/user/.nvm/versions/node/v10.19.0/lib
 └── npm@6.13.7
 ```
 

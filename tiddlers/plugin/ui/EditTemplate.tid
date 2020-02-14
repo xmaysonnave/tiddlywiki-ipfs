@@ -13,7 +13,7 @@ title: $:/core/ui/EditTemplate
 <$vars storyTiddler=<<currentTiddler>> newTagNameTiddler=<<qualify "$:/temp/NewTagName">> newFieldNameTiddler=<<qualify "$:/temp/NewFieldName">> newFieldValueTiddler=<<qualify "$:/temp/NewFieldValue">>>
 <$keyboard key="((cancel-edit-tiddler))" message="tm-cancel-tiddler">
 <$keyboard key="((save-tiddler))" actions=<<save-tiddler-actions>>>
-<$list filter="[all[shadows+tiddlers]tag[$:/tags/EditTemplate]!has[draft.of]]-[[$:/core/ui/EditTemplate/body]]-[[$:/core/ui/EditTemplate/fields]]" variable="listItem">
+<$list filter="[all[shadows+tiddlers]list[$:/tags/EditTemplate]!has[draft.of]]" variable="listItem">
 <$set name="tv-config-toolbar-class" filter="[<tv-config-toolbar-class>] [<listItem>encodeuricomponent[]addprefix[tc-btn-]]">
 <$transclude tiddler=<<listItem>>/>
 </$set>

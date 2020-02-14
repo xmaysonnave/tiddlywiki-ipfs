@@ -5,46 +5,26 @@ tags: $:/tags/EditTemplate
 \define config-visibility-title()
 $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 \end
+
 <$list filter="[all[current]has[_canonical_uri]]">
-
-<div class="tc-message-box">
-
-<<lingo External/Hint>>
-
-<$ipfslink field="_canonical_uri" value={{!!_canonical_uri}} tiddler=<<currentTiddler>>/>
-
-<$edit-text field="_canonical_uri" class="tc-edit-fields" tabindex={{$:/config/EditTabIndex}}></$edit-text>
-
-</div>
-
+  <div class="tc-message-box">
+    <<lingo External/Hint>>
+    <p><$ipfslink caption={{!!_canonical_uri}} field="_canonical_uri" value={{!!_canonical_uri}} tiddler=<<currentTiddler>>/></p>
+  </div>
 </$list>
 
 <$list filter="[all[current]!has[_canonical_uri]]">
-
-<$reveal state="$:/state/showeditpreview" type="match" text="yes">
-
-<div class="tc-tiddler-preview">
-
-<$transclude tiddler="$:/core/ui/EditTemplate/body/editor" mode="inline"/>
-
-<div class="tc-tiddler-preview-preview">
-
-<$transclude tiddler={{$:/state/editpreviewtype}} mode="inline">
-
-<$transclude tiddler="$:/core/ui/EditTemplate/body/preview/output" mode="inline"/>
-
-</$transclude>
-
-</div>
-
-</div>
-
-</$reveal>
-
-<$reveal state="$:/state/showeditpreview" type="nomatch" text="yes">
-
-<$transclude tiddler="$:/core/ui/EditTemplate/body/editor" mode="inline"/>
-
-</$reveal>
-
+  <$reveal state="$:/state/showeditpreview" type="match" text="yes">
+    <div class="tc-tiddler-preview">
+      <$transclude tiddler="$:/core/ui/EditTemplate/body/editor" mode="inline"/>
+      <div class="tc-tiddler-preview-preview">
+        <$transclude tiddler={{$:/state/editpreviewtype}} mode="inline">
+          <$transclude tiddler="$:/core/ui/EditTemplate/body/preview/output" mode="inline"/>
+        </$transclude>
+      </div>
+    </div>
+  </$reveal>
+  <$reveal state="$:/state/showeditpreview" type="nomatch" text="yes">
+    <$transclude tiddler="$:/core/ui/EditTemplate/body/editor" mode="inline"/>
+  </$reveal>
 </$list>

@@ -27,6 +27,10 @@ const root = (typeof self === 'object' && self.self === self && self)
 
 const name = "ipfs-uri";
 
+const defaultApiUrl = new URL("https://ipfs.infura.io:5001");
+
+const defaultGatewayUrl = new URL("https://ipfs.infura.io");
+
 var IpfsUri = function() {}
 
 IpfsUri.prototype.getLogger = function() {
@@ -66,7 +70,7 @@ IpfsUri.prototype.getIpfsApiUrl = function() {
 }
 
 IpfsUri.prototype.getDefaultIpfsApiUrl = function() {
-  return new URL("https://ipfs.infura.io:5001");
+  return defaultApiUrl;
 }
 
 IpfsUri.prototype.getIpfsGatewayUrl = function() {
@@ -78,7 +82,7 @@ IpfsUri.prototype.getIpfsGatewayUrl = function() {
 }
 
 IpfsUri.prototype.getDefaultIpfsGatewayUrl = function() {
-  return new URL("https://ipfs.infura.io");
+  return defaultGatewayUrl;
 }
 
 IpfsUri.prototype.getUrl = function(url, base) {

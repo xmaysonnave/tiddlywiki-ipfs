@@ -1,7 +1,7 @@
 created: 20200205040051030
 modified: 20200205040053586
-source: https://github.com/ipfs/logo/blob/master/vector/ipfs-logo-vector-ice-text.svg
-license: https://github.com/ipfs/logo/blob/master/LICENSE
+_source_uri: https://github.com/ipfs/logo/blob/master/vector/ipfs-logo-vector-ice-text.svg
+_license_uri: https://github.com/ipfs/logo/blob/master/LICENSE
 tags: $:/isAttachment $:/isEmbedded
 title: $:/ipfs/logo/vector/ice/text
 type: image/svg+xml

@@ -170,7 +170,7 @@ IpfsController.prototype.networkChanged = function(chainId) {
       this.account = null;
       this.web3 = null;
       this.getLogger().info(
-        "Changed Ethereum network:"
+        "Current Ethereum network:"
         + "\n "
         + network[chainId]
       );
@@ -186,7 +186,7 @@ IpfsController.prototype.accountChanged = function(accounts) {
     this.account = accounts[0];
     const etherscan = this.ensWrapper.getEtherscanRegistry();
     this.getLogger().info(
-      "Changed Ethereum account:"
+      "Current Ethereum account:"
       + "\n "
       + etherscan[this.chainId] + "/address/" + this.account
     );
@@ -197,29 +197,22 @@ IpfsController.prototype.getWeb3Provider = async function() {
   const provider = await this.getEthereumProvider();
   const network = this.ensWrapper.getNetwork();
   const etherscan = this.ensWrapper.getEtherscanRegistry();
+  const info = "Reuse WEB3 provider:";
   if (this.web3 == null) {
     const { account, chainId, web3 } = await this.ensWrapper.getWeb3Provider(provider);
     this.account = account;
     this.chainId = chainId;
     this.web3 = web3;
-    // Log
-    this.getLogger().info(
-      "New WEB3 provider: "
-      + "\n network: "
-      + network[this.chainId]
-      + "\n account: "
-      + etherscan[this.chainId] + "/address/" + this.account
-    );
-  } else {
-    // Log
-    this.getLogger().info(
-      "Reuse WEB3 provider: "
-      + "\n network: "
-      + network[this.chainId]
-      + "\n account: "
-      + etherscan[this.chainId] + "/address/" + this.account
-    );
+    info = "New WEB3 provider:";
   }
+  // Log
+  this.getLogger().info(
+    info
+    + "\n network: "
+    + network[this.chainId]
+    + "\n account: "
+    + etherscan[this.chainId] + "/address/" + this.account
+  );
   return {
     account: this.account,
     chainId: this.chainId,
@@ -231,9 +224,9 @@ IpfsController.prototype.resolveENS = async function(ensDomain) {
   // Retrieve a WEB3 provider
   const { web3, account } = await this.getWeb3Provider();
   // Fetch ENS domain content
-  const { content } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
-  if (content !== null) {
-    const parsed = $tw.ipfs.normalizeIpfsUrl("/ipfs/" + content);
+  const { content, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
+  if (content !== null && protocol !== null) {
+    const parsed = $tw.ipfs.normalizeIpfsUrl("/" + protocol + "/" + content);
     return parsed;
   }
   // Empty content

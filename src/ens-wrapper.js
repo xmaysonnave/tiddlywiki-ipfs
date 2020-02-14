@@ -41,12 +41,14 @@ EnsWrapper.prototype.getLogger = function() {
 
 EnsWrapper.prototype.getContenthash = async function(domain, web3, account) {
   try {
+    // Retrieve
     var { content, protocol } = await this.ensLibrary.getContenthash(domain, web3, account);
     if (content !== null && protocol !== null)  {
       // Convert CidV0 to CidV1
       content = this.ipfsLibrary.cidV0ToCidV1(content);
-      // Success
+      // Normalize
       const url = await this.ipfsUri.normalizeUrl("/" + protocol + "/" + content);
+      // Success
       this.getLogger().info(
         "Successfully fetched ENS domain content:"
         + "\n "
@@ -60,7 +62,7 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3, account) {
     this.getLogger().warn("Unassigned ENS domain content...");
     return {
       content: null,
-      content: null
+      protocol: null
     };
   } catch (error) {
     this.getLogger().error(error);
@@ -70,10 +72,13 @@ EnsWrapper.prototype.getContenthash = async function(domain, web3, account) {
 
 EnsWrapper.prototype.setContenthash = async function(domain, cid, web3, account) {
   try {
+    // Convert CidV1 to CidV0
     const cidv0 = this.ipfsLibrary.cidV1ToCidV0(cid);
+    // Set
     await this.ensLibrary.setContenthash(domain, cidv0, web3, account);
-    // Success
+    // Normalize
     const url = await this.ipfsUri.normalizeUrl("/ipfs/" + cidv0);
+    // Success
     this.getLogger().info(
       "Successfully set ENS domain content:"
       + "\n "
