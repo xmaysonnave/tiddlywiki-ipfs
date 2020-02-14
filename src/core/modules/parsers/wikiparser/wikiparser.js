@@ -140,36 +140,44 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
 WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
   var importedTiddlers = null;
   if (this.isJSON(loaded)) {
-    importedTiddlers = this.wiki.deserializeTiddlers(".json",loaded,this.wiki.getCreationFields());
+    importedTiddlers = this.wiki.deserializeTiddlers(".json", loaded, this.wiki.getCreationFields());
   } else {
-    importedTiddlers = this.wiki.deserializeTiddlers(".tid",loaded,this.wiki.getCreationFields());
+    importedTiddlers = this.wiki.deserializeTiddlers(".tid", loaded, this.wiki.getCreationFields());
   }
-  let addTags = (tiddler.fields.tags || []).slice(0);
+  let tiddlerTags = (tiddler.fields.tags || []).slice(0);
   let title = tiddler.getFieldString("title");
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
-    const text = importedTiddler["text"];
-    // Root URI
-    const canonical_uri = importedTiddler["_canonical_uri"];
-    if (canonical_uri !== undefined && canonical_uri !== null) {
-      importedTiddler["_root_uri"] = canonical_uri;
-    } else {
-      importedTiddler["_canonical_uri"] = uri;
-    }
-    // Tags
+    // Merge Tiddler tags with imported tags
     var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
-    for (var i = 0; i < addTags.length; i++) {
-      const tag = addTags[i];
+    for (var i = 0; i < tiddlerTags.length; i++) {
+      const tag = tiddlerTags[i];
       if (importedTags.includes(tag) == false) {
         importedTags = importedTags + " " + tag;
       }
     }
     importedTiddler["tags"] = importedTags;
+    // Merge Tiddler fields with imported fields
+    $tw.utils.each(tiddler.fields, function(field, name) {
+      if (name !== "text" && name !== "title" && name !== "tags") {
+        if (importedTiddler[name] == undefined) {
+          importedTiddler[name] = tiddler.getFieldString(name);
+        }
+      }
+    });
     // Title
     if (importedTiddler["title"] !== title) {
       importedTiddler["_imported_title"] = importedTiddler["title"];
     }
     importedTiddler["title"] = title;
+    // Root URI
+    const canonical_uri = importedTiddler["_canonical_uri"];
+    if (canonical_uri !== undefined && canonical_uri !== null) {
+      importedTiddler["_root_uri"] = uri;
+    } else {
+      importedTiddler["_canonical_uri"] = uri;
+    }
     // Warning
+    const text = importedTiddler["text"];
     if (text == undefined || text == null || text.trim() === "") {
       importedTiddler["text"] = $tw.language.getRawString("EmptyTidddler");;
     }

@@ -95,7 +95,15 @@ Render this widget into the DOM
 IpfsLinkWidget.prototype.renderLink = function(parent,nextSibling) {
   // Only fields suffixed with '_uri' are redndered as links...
   const domNode = this.document.createElement("a");
-  domNode.setAttribute("href", this.value);
+  // Normalize
+  $tw.ipfs.normalizeIpfsUrl(this.value)
+  .then( (normalized_uri) => {
+    domNode.setAttribute("href", normalized_uri.href);
+  })
+  .catch( (error) => {
+    this.getLogger().error(error);
+    $tw.utils.alert(name, error.message);
+  });
   // Add a click event handler
   $tw.utils.addEventListeners(domNode,[
     {name: "click", handlerObject: this, handlerMethod: "handleClickEvent"}
@@ -171,6 +179,7 @@ IpfsLinkWidget.prototype.refresh = function(changedTiddlers) {
     || changedAttributes.caption
     || changedTiddlers[this.caption]
     || changedAttributes["aria-label"]
+    || changedTiddlers["$:/ipfs/saver/policy"]
   ) {
     this.refreshSelf();
     return true;

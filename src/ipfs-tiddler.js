@@ -187,8 +187,8 @@ IpfsTiddler.prototype.handleRefreshTiddler = function(event) {
     return false;
   }
   // Empty the 'text' field from _canonical_uri Tiddler holder
-  const canonical_uri = tiddler.getFieldString("title");
-  if (canonical_uri !== undefined && canonical_uri !== null) {
+  const canonical_uri = tiddler.getFieldString("_canonical_uri");
+  if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
     const updatedTiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,
       fields: [
