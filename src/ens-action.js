@@ -18,6 +18,7 @@ const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
 const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
 const fileProtocol = "file:";
+const ipfsKeyword = "ipfs";
 const ipnsKeyword = "ipns";
 
 const name = "ens-action"
@@ -44,7 +45,7 @@ EnsAction.prototype.init = function() {
   $tw.rootWidget.addEventListener("tm-resolve-ens-and-open", async function(event) {
     return await self.handleResolveEnsAndOpen(event);
   });
-  $tw.rootWidget.addEventListener("tm-publish-to-ens", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ens-publish", async function(event) {
     return await self.handlePublishToEns(event);
   });
   // Init once
@@ -130,18 +131,13 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
       cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     }
 
-    // Getting default ENS domain
+    // Getting the default ENS domain
     const ensDomain = $tw.utils.getIpfsEnsDomain();
     // Check
     if (ensDomain == null) {
       $tw.utils.alert(name, "Undefined ENS domain...");
       return false;
     }
-
-    this.getLogger().info(
-      "ENS domain: "
-      + ensDomain
-    );
 
     // Retrieve a WEB3 provider
     const { web3, account } = await $tw.ipfs.getWeb3Provider();
@@ -154,8 +150,18 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
       return false;
     }
 
+    const parsed = $tw.ipfs.normalizeIpfsUrl(
+      "/"
+      + ipfsKeyword
+      + "/"
+      + cid
+    );
     this.getLogger().info(
-      "Publishing ENS domain: "
+      "Publishing wiki:"
+      + "\n "
+      + parsed.href
+      + "\n to ENS domain: "
+      + "https://"
       + ensDomain
     );
 

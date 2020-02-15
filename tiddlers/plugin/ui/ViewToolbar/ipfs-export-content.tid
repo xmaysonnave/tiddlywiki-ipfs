@@ -1,0 +1,17 @@
+title: $:/core/ui/Buttons/ipfs/export/content
+tags: $:/ipfs/core $:/tags/ViewToolbar
+caption: {{$:/core/images/excise}} {{$:/language/Buttons/Ipfs/Export/Content/Caption}}
+description: {{$:/language/Buttons/Ipfs/Export/Content/Hint}}
+
+\whitespace trim
+<$button message="tm-ipfs-export-content" param=<<currentTiddler>> tooltip={{$:/language/Buttons/Ipfs/Export/Content/Hint}} aria-label={{$:/language/Buttons/Ipfs/Export/Content/Caption}} class=<<tv-config-toolbar-class>>>
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/excise}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text">
+<$text text=" "/>
+<$text text={{$:/language/Buttons/Ipfs/Export/Content/Caption}}/>
+</span>
+</$list>
+</$button>

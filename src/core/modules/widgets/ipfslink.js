@@ -98,11 +98,15 @@ IpfsLinkWidget.prototype.renderLink = function(parent,nextSibling) {
   // Normalize
   $tw.ipfs.normalizeIpfsUrl(this.value)
   .then( (normalized_uri) => {
+    // Process
     domNode.setAttribute("href", normalized_uri.href);
   })
   .catch( (error) => {
+    // Log
     this.getLogger().error(error);
     $tw.utils.alert(name, error.message);
+    // Fallback
+    domNode.setAttribute("href", this.value);
   });
   // Add a click event handler
   $tw.utils.addEventListeners(domNode,[
@@ -136,13 +140,18 @@ IpfsLinkWidget.prototype.renderText = function(parent,nextSibling) {
 
 IpfsLinkWidget.prototype.handleClickEvent = function(event) {
   const self = this;
+  // Normalize
   $tw.ipfs.normalizeIpfsUrl(this.value)
   .then( (normalized_uri) => {
+    // Process
     window.open(normalized_uri.href, self.target, self.rel);
   })
   .catch( (error) => {
+    // Log
     this.getLogger().error(error);
     $tw.utils.alert(name, error.message);
+    // Fallback
+    window.open(this.value, self.target, self.rel);
   });
   event.preventDefault();
   event.stopPropagation();
@@ -174,10 +183,12 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
 */
 IpfsLinkWidget.prototype.refresh = function(changedTiddlers) {
   var changedAttributes = this.computeAttributes();
-  if (changedAttributes.value
-    || changedTiddlers[this.value]
-    || changedAttributes.caption
+  if (changedAttributes.caption
     || changedTiddlers[this.caption]
+    || changedAttributes.field
+    || changedTiddlers[this.field]
+    || changedAttributes.value
+    || changedTiddlers[this.value]
     || changedAttributes["aria-label"]
     || changedTiddlers["$:/ipfs/saver/policy"]
   ) {

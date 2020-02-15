@@ -240,17 +240,17 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     canonical_uri = null;
   }
 
-  // Retrieve tiddler _exported_uri if any
-  var exported_uri = tiddler.getFieldString("_exported_uri");
-  if (exported_uri !== undefined && exported_uri !== null && exported_uri.trim() !== "") {
-    exported_uri = exported_uri.trim();
+  // Retrieve tiddler _backup_uri if any
+  var backup_uri = tiddler.getFieldString("_backup_uri");
+  if (backup_uri !== undefined && backup_uri !== null && backup_uri.trim() !== "") {
+    backup_uri = backup_uri.trim();
   } else {
-    exported_uri = null;
+    backup_uri = null;
   }
 
-  // Retrieve old tiddler _exported_uri and _canonical_uri if any
+  // Retrieve old tiddler _backup_uri and _canonical_uri if any
   var old_canonical_uri = null;
-  var old_exported_uri = null;
+  var old_backup_uri = null;
   const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title);
   if (oldTiddler !== undefined && oldTiddler !== null) {
     // Retrieve oldTiddler _canonical_uri if any
@@ -260,17 +260,17 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     } else {
       old_canonical_uri = null;
     }
-    // Retrieve oldTiddler _exported_uri if any
-    old_exported_uri = oldTiddler.getFieldString("_exported_uri");
-    if (old_exported_uri !== undefined && old_exported_uri !== null && old_exported_uri.trim() !== "") {
-      old_exported_uri = old_exported_uri.trim();
+    // Retrieve oldTiddler _backup_uri if any
+    old_backup_uri = oldTiddler.getFieldString("_backup_uri");
+    if (old_backup_uri !== undefined && old_backup_uri !== null && old_backup_uri.trim() !== "") {
+      old_backup_uri = old_backup_uri.trim();
     } else {
-      old_exported_uri = null;
+      old_backup_uri = null;
     }
   }
 
   // Nothing to do
-  if (canonical_uri == old_canonical_uri && exported_uri == old_exported_uri) {
+  if (canonical_uri == old_canonical_uri && backup_uri == old_backup_uri) {
     updatedTiddler = new $tw.Tiddler(tiddler);
     $tw.wiki.addTiddler(updatedTiddler);
     return updatedTiddler;
@@ -344,9 +344,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
               { key: "text", value: "" }
             ]
           });
-          if (cid !== null) {
-            // Discard unpin request
-            $tw.ipfs.discardRequestToUpin(cid);
+          // Discard unpin request
+          if ($tw.utils.getIpfsUnpin() && cid !== null) {
+            $tw.ipfs.discardRequestToUnpin(cid);
           }
           this.getLogger().info(
             "Updated remote attachment:"
@@ -444,15 +444,15 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     }
 
     // Process if any update
-    if (exported_uri !== old_exported_uri) {
+    if (backup_uri !== old_backup_uri) {
 
       updatedTiddler = updatedTiddler !== null ? updatedTiddler : tiddler;
 
-      // _exported_uri attribute has been removed
-      if (exported_uri == null) {
+      // _backup_uri attribute has been removed
+      if (backup_uri == null) {
 
         try {
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_exported_uri);
+          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_backup_uri);
           var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
           if (cid !== null) {
             removeTags = ["$:/isExported", "$:/isIpfs"];
@@ -475,12 +475,12 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           return oldTiddler;
         }
 
-      // _exported_uri attribute has been updated
+      // _backup_uri attribute has been updated
       } else {
 
         try {
-          // New _exported_uri
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(exported_uri);
+          // New _backup_uri
+          const parsed = await $tw.ipfs.normalizeIpfsUrl(backup_uri);
           var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
           // IPFS resource
           if (cid !== null) {
@@ -493,9 +493,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
             tiddler: updatedTiddler,
             addTags: addTags
           });
-          if (cid !== null) {
-            // Discard unpin request
-            $tw.ipfs.discardRequestToUpin(cid);
+          // Discard unpin request
+          if ($tw.utils.getIpfsUnpin() && cid !== null) {
+            $tw.ipfs.discardRequestToUnpin(cid);
           }
           this.getLogger().info(
             "Updated exported Tiddler:"
@@ -510,10 +510,10 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
 
       }
 
-      // Process previous exported_uri if any
-      if (old_exported_uri !== null) {
+      // Process previous backup_uri if any
+      if (old_backup_uri !== null) {
         try {
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_exported_uri);
+          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_backup_uri);
           const { cid: oldCid } = this.ipfsWrapper.decodeCid(parsed.pathname);
           if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
             $tw.ipfs.requestToUnpin(oldCid);

@@ -1,17 +1,17 @@
 title: $:/core/ui/Buttons/ipfs/tiddler/unpin
 tags: $:/ipfs/core $:/tags/ViewToolbar
-caption: {{$:/core/images/chevron-down}} {{$:/language/Buttons/IpfsTiddlerUnpin/Caption}}
-description: {{$:/language/Buttons/IpfsTiddlerUnpin/Hint}}
+caption: {{$:/core/images/chevron-down}} {{$:/language/Buttons/Ipfs/Tiddler/Unpin/Caption}}
+description: {{$:/language/Buttons/Ipfs/Tiddler/Unpin/Hint}}
 
 \whitespace trim
-<$button message="tm-ipfs-unpin" param=<<currentTiddler>> tooltip={{$:/language/Buttons/IpfsTiddlerUnpin/Hint}} aria-label={{$:/language/Buttons/IpfsTiddlerUnpin/Caption}} class=<<tv-config-toolbar-class>>>
+<$button message="tm-ipfs-unpin" param=<<currentTiddler>> tooltip={{$:/language/Buttons/Ipfs/Tiddler/Unpin/Hint}} aria-label={{$:/language/Buttons/Ipfs/Tiddler/Unpin/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
 {{$:/core/images/chevron-down}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text">
 <$text text=" "/>
-<$text text={{$:/language/Buttons/IpfsTiddlerUnpin/Caption}}/>
+<$text text={{$:/language/Buttons/Ipfs/Tiddler/Unpin/Caption}}/>
 </span>
 </$list>
 </$button>

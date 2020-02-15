@@ -1,8 +1,9 @@
 title: $:/config/ViewToolbarButtons/Visibility/$:/
 tags: $:/ipfs/core
 
-core/ui/Buttons/export/ipfs: hide
+core/ui/Buttons/ipfs/export: hide
+core/ui/Buttons/ipfs/export/content: hide
 core/ui/Buttons/ipfs/refresh: hide
 core/ui/Buttons/ipfs/tiddler/pin: hide
 core/ui/Buttons/ipfs/tiddler/unpin: hide
-core/ui/Buttons/publish/ipfs: hide
+core/ui/Buttons/ipfs/publish: hide

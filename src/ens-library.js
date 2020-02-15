@@ -480,25 +480,21 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account)
   const { encoded } = this.encodeContenthash("ipfs://" + cid);
 
   // Set Contenthash
-  try {
-    this.getLogger().info("Processing ENS domain content...");
-    const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
-    const iface = new root.ethers.utils.Interface(abi)
-    const data = iface.functions.setContenthash.encode([domainHash, encoded]);
-    const signer = web3.getSigner();
-    const tx = await signer.sendTransaction({ to: resolver, data: data });
-    this.getLogger().info(
-      "Processing Transaction:"
-      + "\n "
-      + this.etherscan[chainId] + "/tx/" + tx.hash
-    );
-    // Wait for transaction completion
-    await tx.wait();
-    this.getLogger().info("Processed ENS domain content...");
-  } catch (error) {
-    this.getLogger().error(error);
-    throw new Error("Unable to set ENS domain content...");
-  }
+  this.getLogger().info("Processing ENS domain content...");
+  const abi = [{ name: "setContenthash", type: "function", inputs: [{ type: "bytes32" }, { type: "bytes" }] }];
+  const iface = new root.ethers.utils.Interface(abi)
+  const data = iface.functions.setContenthash.encode([domainHash, encoded]);
+  const signer = web3.getSigner();
+  const tx = await signer.sendTransaction({ to: resolver, data: data });
+  this.getLogger().info(
+    "Processing Transaction:"
+    + "\n "
+    + this.etherscan[chainId] + "/tx/" + tx.hash
+  );
+  
+  // Wait for transaction completion
+  await tx.wait();
+  this.getLogger().info("Processed ENS domain content...");
 
   return;
 

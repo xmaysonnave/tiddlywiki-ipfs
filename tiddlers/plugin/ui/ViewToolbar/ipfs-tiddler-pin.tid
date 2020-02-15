@@ -1,17 +1,17 @@
 title: $:/core/ui/Buttons/ipfs/tiddler/pin
 tags: $:/ipfs/core $:/tags/ViewToolbar
-caption: {{$:/core/images/chevron-up}} {{$:/language/Buttons/IpfsTiddlerPin/Caption}}
-description: {{$:/language/Buttons/IpfsTiddlerPin/Hint}}
+caption: {{$:/core/images/chevron-up}} {{$:/language/Buttons/Ipfs/Tiddler/Pin/Caption}}
+description: {{$:/language/Buttons/Ipfs/Tiddler/Pin/Hint}}
 
 \whitespace trim
-<$button message="tm-ipfs-pin" param=<<currentTiddler>> tooltip={{$:/language/Buttons/IpfsTiddlerPin/Hint}} aria-label={{$:/language/Buttons/IpfsTiddlerPin/Caption}} class=<<tv-config-toolbar-class>>>
+<$button message="tm-ipfs-pin" param=<<currentTiddler>> tooltip={{$:/language/Buttons/Ipfs/Tiddler/Pin/Hint}} aria-label={{$:/language/Buttons/Ipfs/Tiddler/Pin/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
 {{$:/core/images/chevron-up}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text">
 <$text text=" "/>
-<$text text={{$:/language/Buttons/IpfsTiddlerPin/Caption}}/>
+<$text text={{$:/language/Buttons/Ipfs/Tiddler/Pin/Caption}}/>
 </span>
 </$list>
 </$button>

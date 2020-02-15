@@ -1,8 +1,11 @@
 title: $:/language/Buttons/
 tags: $:/ipfs/core
 
-ExportToIpfs/Caption: export to IPFS
-ExportToIpfs/Hint: Export this tiddler to IPFS
+Ipfs/Export/Caption: export to IPFS
+Ipfs/Export/Hint: Export this tiddler to IPFS
+
+Ipfs/Export/Content/Caption: export content to IPFS
+Ipfs/Export/Content/Hint: Export this tiddler content to IPFS
 
 FetchIpnsKey/Caption: fetch
 FetchIpnsKey/Hint: Fetch IPNS key
@@ -13,35 +16,35 @@ GenerateIpnsKey/Hint: Generate IPNS key
 Ipfs/Refresh/Caption: refresh
 Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
 
-IpfsPin/Caption: pin to IPFS
-IpfsPin/Hint: Pin this wiki to IPFS
+Ipfs/Pin/Caption: pin to IPFS
+Ipfs/Pin/Hint: Pin this wiki to IPFS
 
-IpfsTiddlerPin/Caption: pin to IPFS
-IpfsTiddlerPin/Hint: Pin this tiddler to IPFS
+Ipfs/Tiddler/Pin/Caption: pin to IPFS
+Ipfs/Tiddler/Pin/Hint: Pin this tiddler to IPFS
 
-IpfsTiddlerUnpin/Caption: unpin from IPFS
-IpfsTiddlerUnpin/Hint: Unpin this tiddler from IPFS
+Ipfs/Tiddler/Unpin/Caption: unpin from IPFS
+Ipfs/Tiddler/Unpin/Hint: Unpin this tiddler from IPFS
 
-IpfsUnpin/Caption: unpin from IPFS
-IpfsUnpin/Hint: Unpin this wiki from IPFS
+Ipfs/Unpin/Caption: unpin from IPFS
+Ipfs/Unpin/Hint: Unpin this wiki from IPFS
 
-MobileConsole/Caption: mobile console
-MobileConsole/Hint: Load/Unload Mobile Console
+Console/Mobile/Caption: mobile console
+Console/Mobile/Hint: Load/Unload Mobile Console
 
 OpenEnsManager/Caption: open
 OpenEnsManager/Hint: Open ENS Domain Manager
 
-PublishToEns/Caption: publish to ENS
-PublishToEns/Hint: Publish this wiki to ENS
+Ens/Publish/Caption: publish to ENS
+Ens/Publish/Hint: Publish this wiki to ENS
 
-PublishToIpfs/Caption: publish to IPFS
-PublishToIpfs/Hint: Publish this attachment to IPFS
+Ipfs/Publish/Caption: publish to IPFS
+Ipfs/Publish/Hint: Publish this attachment to IPFS
 
 ResolveEnsAndOpen/Caption: resolve and open
 ResolveEnsAndOpen/Hint: Open resolved ENS Domain content
 
-PublishToIpns/Caption: publish to IPNS
-PublishToIpns/Hint: Publish this wiki to IPNS
+Ipns/Publish/Caption: publish to IPNS
+Ipns/Publish/Hint: Publish this wiki to IPNS
 
 RemoveIpnsKey/Caption: remove
 RemoveIpnsKey/Hint: Remove IPNS name and IPNS key

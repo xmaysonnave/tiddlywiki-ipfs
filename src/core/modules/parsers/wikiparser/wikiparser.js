@@ -50,6 +50,13 @@ wikiparser
 
 const name = "ipfs-wikiparser";
 
+/*
+ * $:/core/modules/server/routes/get-tiddler.js
+ */
+const knownFields = [
+  "bag", "created", "creator", "modified", "modifier", "permissions", "recipe", "revision", "tags", "text", "title", "type", "uri"
+];
+
 var WikiParser = function(type,text,options) {
   this.wiki = options.wiki;
   // Check for an externally linked tiddler
@@ -147,6 +154,28 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
   let tiddlerTags = (tiddler.fields.tags || []).slice(0);
   let title = tiddler.getFieldString("title");
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
+    // Merge Tiddler fields with imported fields
+    // $:/core/modules/server/routes/get-tiddler.js
+    $tw.utils.each(tiddler.fields, function(field, name) {
+      var value = tiddler.getFieldString(name);
+      if (knownFields.indexOf(name) !== -1) {
+        // Backup
+        if (importedTiddler[name] !== value) {
+          importedTiddler["_imported_" + name] = importedTiddler[name];
+        }
+        importedTiddler[name] = value;
+      } else {
+        importedTiddler.fields = importedTiddler.fields || {};
+        // Backup
+        if (importedTiddler.fields[name] !== value) {
+          importedTiddler["_imported_" + name] = importedTiddler.fields[name];
+        }
+        importedTiddler.fields[name] = value;
+      }
+    });
+    importedTiddler.revision = $tw.wiki.getChangeCount(title);
+    importedTiddler.bag = "default";
+    importedTiddler.type = importedTiddler.type || "text/vnd.tiddlywiki";
     // Merge Tiddler tags with imported tags
     var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
     for (var i = 0; i < tiddlerTags.length; i++) {
@@ -156,24 +185,14 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
       }
     }
     importedTiddler["tags"] = importedTags;
-    // Merge Tiddler fields with imported fields
-    $tw.utils.each(tiddler.fields, function(field, name) {
-      if (name !== "text" && name !== "title" && name !== "tags") {
-        if (importedTiddler[name] == undefined) {
-          importedTiddler[name] = tiddler.getFieldString(name);
-        }
-      }
-    });
     // Title
     if (importedTiddler["title"] !== title) {
       importedTiddler["_imported_title"] = importedTiddler["title"];
     }
     importedTiddler["title"] = title;
-    // Root URI
+    // Canonical URI
     const canonical_uri = importedTiddler["_canonical_uri"];
-    if (canonical_uri !== undefined && canonical_uri !== null) {
-      importedTiddler["_root_uri"] = uri;
-    } else {
+    if (canonical_uri == undefined || canonical_uri == null) {
       importedTiddler["_canonical_uri"] = uri;
     }
     // Warning
@@ -183,7 +202,6 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
     }
     // Add
     $tw.wiki.addTiddler(importedTiddler);
-
   });
 }
 

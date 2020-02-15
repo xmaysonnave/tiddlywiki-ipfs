@@ -46,15 +46,17 @@ IpfsController.prototype.requestToUnpin = async function(cid) {
 }
 
 IpfsController.prototype.addToUnpin = async function(cid) {
-  if (this.unpin.indexOf(cid) === -1) {
-    this.unpin.push(cid);
-    return true;
+  if (cid !== undefined && cid !== null) {
+    if (this.unpin.indexOf(cid) === -1) {
+      this.unpin.push(cid);
+      return true;
+    }
   }
   return false;
 }
 
 IpfsController.prototype.discardRequestToUnpin = async function(cid) {
-  if (this.removeFromUnpin(cid)) {
+  if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
     const url = await this.normalizeIpfsUrl("/ipfs/" + cid);
     this.getLogger().info(
       "Discard request to unpin:"
@@ -65,10 +67,12 @@ IpfsController.prototype.discardRequestToUnpin = async function(cid) {
 }
 
 IpfsController.prototype.removeFromUnpin = async function(cid) {
-  var index = this.unpin.indexOf(cid);
-  if (index !== -1) {
-    this.unpin.splice(index, 1);
-    return true;
+  if (cid !== undefined && cid !== null) {
+    var index = this.unpin.indexOf(cid);
+    if (index !== -1) {
+      this.unpin.splice(index, 1);
+      return true;
+    }
   }
   return false;
 }
@@ -103,6 +107,14 @@ IpfsController.prototype.getIpfsApiUrl = function() {
 
 IpfsController.prototype.getIpfsGatewayUrl = function() {
   return this.ipfsUri.getIpfsGatewayUrl();
+}
+
+IpfsController.prototype.decodeCid = function(pathname) {
+  return this.ipfsWrapper.decodeCid(pathname);
+}
+
+IpfsController.prototype.getIpnsIdentifiers = function(ipfs, ipnsKey, ipnsName) {
+  return this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
 }
 
 IpfsController.prototype.getIpfsClient = async function() {
@@ -197,7 +209,7 @@ IpfsController.prototype.getWeb3Provider = async function() {
   const provider = await this.getEthereumProvider();
   const network = this.ensWrapper.getNetwork();
   const etherscan = this.ensWrapper.getEtherscanRegistry();
-  const info = "Reuse WEB3 provider:";
+  var info = "Reuse WEB3 provider:";
   if (this.web3 == null) {
     const { account, chainId, web3 } = await this.ensWrapper.getWeb3Provider(provider);
     this.account = account;

@@ -240,16 +240,26 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
         // Discard unpin request
-        if (ipfsProtocol === ipnsKeyword) {
-          $tw.ipfs.discardRequestToUpin(ipnsContent);
+        if (ipfsProtocol === ipnsKeyword && $tw.utils.getIpfsUnpin() && ipnsContent !== null) {
+          $tw.ipfs.discardRequestToUnpin(ipnsContent);
         }
       }
     }
 
     // Publish to ENS
     if ($tw.utils.getIpfsProtocol() === ensKeyword) {
+      const parsed = $tw.ipfs.normalizeIpfsUrl(
+        "/"
+        + ipfsKeyword
+        + "/"
+        + added
+      );
       this.getLogger().info(
-        "Publishing ENS wiki: "
+        "Publishing wiki:"
+        + "\n "
+        + parsed.href
+        + "\n to ENS domain: "
+        + "https://"
         + ensDomain
       );
       try {
@@ -262,8 +272,8 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
         // Discard unpin request
-        if (ipfsProtocol === ipnsKeyword) {
-          $tw.ipfs.discardRequestToUpin(ensContent);
+        if (ipfsProtocol === ipnsKeyword && $tw.utils.getIpfsUnpin() && ensContent !== null) {
+          $tw.ipfs.discardRequestToUnpin(ensContent);
         }
       }
     }

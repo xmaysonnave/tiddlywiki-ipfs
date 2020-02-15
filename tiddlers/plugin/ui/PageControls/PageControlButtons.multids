@@ -5,7 +5,7 @@ core/ui/Buttons/encryption: show
 core/ui/Buttons/home: show
 core/ui/Buttons/ipfs/pin: hide
 core/ui/Buttons/ipfs/unpin: hide
-core/ui/Buttons/ipfs/console: show
+core/ui/Buttons/ipfs/console/mobile: show
 core/ui/Buttons/more-page-actions: show
-core/ui/Buttons/publish/ens: hide
-core/ui/Buttons/publish/ipns: hide
+core/ui/Buttons/ens/publish: hide
+core/ui/Buttons/ipns/publish: hide
