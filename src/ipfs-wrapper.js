@@ -106,13 +106,67 @@ IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
 
 }
 
-IpfsWrapper.prototype.exportTiddler = function(tiddler, json) {
+IpfsWrapper.prototype.isJSON = function(content) {
+  if (content !== undefined && content !== null && typeof content === 'string'){
+    try {
+      JSON.parse(content);
+      return true;
+    } catch(erro){
+      // Ignore
+    }
+  }
+  return false;
+}
+
+/*
+* imported tiddler supersed hosting tiddler
+*/
+IpfsWrapper.prototype.loadTiddlers = async function(tiddler, uri) {
+  // Normalize
+  const normalized_uri = await $tw.ipfs.normalizeIpfsUrl(uri);
+  // Load
+  var importedTiddlers = null;
+  const content = await $tw.utils.loadToUtf8(normalized_uri);
+  if (this.isJSON(content.data)) {
+    importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
+  } else {
+    importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
+  }
+  // Iterate
+  var current = null;
+  var title = tiddler.getFieldString("title");
+  $tw.utils.each(importedTiddlers, function(importedTiddler) {
+    // Root
+    if (current == null) {
+      current = tiddler;
+    } else {
+      current = $tw.wiki.getTiddler(importedTiddler["title"]);
+    }
+    // Root
+    if (current === tiddler) {
+      const canonical_uri = importedTiddler["_canonical_uri"];
+      if (canonical_uri == undefined || canonical_uri == null) {
+        importedTiddler["_canonical_uri"] = uri;
+      }
+      importedTiddler["_imported_root_uri"] = uri;
+    } else {
+      // Imported
+      importedTiddler["_imported"] = title;
+      importedTiddler["_imported_uri"] = uri;
+    }
+  });
+  return importedTiddlers;
+}
+
+IpfsWrapper.prototype.exportTiddler = function(tiddler, content) {
 
   // Check
   if (tiddler == undefined || tiddler == null) {
     $tw.utils.alert(name, "Unknown Tiddler...");
     return null;
   }
+
+  const title = tiddler.getFieldString("title");
 
   // Type
   var type = tiddler.getFieldString("type");
@@ -129,15 +183,28 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, json) {
     return null;
   }
 
+  // Filter
+  var exportFilter = "[[" + tiddler.fields.title + "]]";
+  if (content) {
+    const titles = this.transcludeContent(title);
+    // Process transcluded content
+    for (var i = 0; i < titles.length; i++) {
+      if (exportFilter.includes(titles[i]) == false) {
+        exportFilter = exportFilter + " [[" + titles[i] + "]]"
+      }
+    }
+  }
+
   var content = null;
-  if (json) {
-    // Export Tiddler as JSON
+
+  if ($tw.utils.getIpfsExport() === "json") {
+    // Export
     const options = {
       downloadType: "text/plain",
       method: "download",
       template: "$:/core/templates/exporters/JsonFile",
       variables: {
-        exportFilter: "[[" + tiddler.fields.title + "]]"
+        exportFilter: exportFilter
       }
     };
     content = $tw.wiki.renderTiddler(
@@ -145,14 +212,33 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, json) {
       "$:/core/templates/exporters/JsonFile",
       options
     );
+
+  } else if ($tw.utils.getIpfsExport() === "html") {
+
+    // Export Tiddler as Static River
+    const options = {
+      downloadType: "text/plain",
+      method: "download",
+      template: "$:/core/templates/exporters/StaticRiver",
+      variables: {
+        exportFilter: exportFilter
+      }
+    };
+    content = $tw.wiki.renderTiddler(
+      "text/plain",
+      "$:/core/templates/exporters/StaticRiver",
+      options
+    );
+
   } else {
+
     // Export Tiddler as tid
     const options = {
       downloadType: "text/plain",
       method: "download",
       template: "$:/core/templates/exporters/TidFile",
       variables: {
-        exportFilter: "[[" + tiddler.fields.title + "]]"
+        exportFilter: exportFilter
       }
     };
     content = $tw.wiki.renderTiddler(
@@ -160,6 +246,7 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, json) {
       "$:/core/templates/exporters/TidFile",
       options
     );
+
   }
 
   try {
@@ -176,6 +263,40 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, json) {
 
   return content;
 
+}
+
+IpfsWrapper.prototype.transcludeContent = function(title) {
+  var tiddlers = [];
+  // Build a transclude widget
+  var transclude = $tw.wiki.makeTranscludeWidget(title);
+  // Build a fake document element
+  const container = $tw.fakeDocument.createElement("div");
+  // Transclude
+  transclude.render(container, null);
+  // Process children
+  this.locateTiddlers(transclude, tiddlers);
+  // Return
+  return tiddlers;
+}
+
+IpfsWrapper.prototype.locateTiddlers = function(transclude, tiddlers) {
+  // Children lookup
+  for (var i = 0; i < transclude.children.length; i++) {
+    // Current child
+    const child = transclude.children[i];
+    if (child.variables !== undefined && child.variables !== null) {
+      // Locate Tiddler
+      const name = "currentTiddler";
+      const current = child.variables[name];
+      if (current !== undefined && current !== null && current.value !== undefined && current.value !== null) {
+        if (tiddlers.indexOf(current.value) === -1) {
+          tiddlers.push(current.value);
+        }
+      }
+    }
+    // Process children
+    this.locateTiddlers(child, tiddlers);
+  }
 }
 
 IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {

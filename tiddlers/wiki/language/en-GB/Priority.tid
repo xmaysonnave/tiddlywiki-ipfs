@@ -21,12 +21,12 @@ In case you install a saver who supersedes <b>IPFS with ~TiddlyWiki</b> select t
 The plugin eases the <b>Priority</b> selection with a drop-down list.
 </p>
 <p>
-<<list-tagged-draggable tag:"$:/ipfs/saver/priority">>
+<<list-tagged-draggable tag:"$:/core/saver/preferred-saver">>
 <p>
   To enhance the <b>Priority</b> selection list:
 </p>
 <ul>
   <li>Clone an existing <b>Priority</b> Tiddler</li>
   <li>Update the cloned Tiddler's title and text</li>
-  <li>Update the [[Saver Priority Tiddler|$:/ipfs/saver/priority]] text if applicable</li>
+  <li>Update the [[Saver Priority Tiddler|$:/core/saver/preferred-saver]] text if applicable</li>
 </ul>

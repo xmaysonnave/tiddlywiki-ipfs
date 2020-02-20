@@ -17,6 +17,31 @@ utils
 const ipfsDefaultName = "ipfs-default";
 
 /*
+ * Retrieve ipfs saver export protocol with default value if applicable
+ */
+exports.getIpfsExport = function() {
+  var output = null;
+  var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/export");
+  if (tiddler !== undefined && tiddler !== null) {
+    const text = tiddler.getFieldString("text");
+    if (text !== undefined && text !== null && text.trim() !== "") {
+      output = text.trim();
+    }
+  }
+  if (output === null) {
+    output = $tw.utils.getIpfsDefaultExport();
+  }
+  return output;
+}
+
+/*
+ * Default Export
+ */
+exports.getIpfsDefaultExport = function() {
+  return "json";
+}
+
+/*
  * Retrieve ipfs saver protocol with default value if applicable
  */
 exports.getIpfsProtocol = function() {

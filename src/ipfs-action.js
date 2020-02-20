@@ -44,15 +44,15 @@ IpfsAction.prototype.init = function() {
   const self = this;
   // Widget
   $tw.rootWidget.addEventListener("tm-ipfs-export", async function(event) {
-    return await self.handleExportToIpfs(event);
+    return await self.handleExportToIpfs(event, false);
   });
   $tw.rootWidget.addEventListener("tm-ipfs-export-content", async function(event) {
-    return await self.handleExportContentToIpfs(event);
+    return await self.handleExportToIpfs(event, true);
   });
-  $tw.rootWidget.addEventListener("tm-fetch-ipns-key", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ipns-fetch", async function(event) {
     return await self.handleFetchIpnsKey(event);
   });
-  $tw.rootWidget.addEventListener("tm-generate-ipns-key", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ipns-generate", async function(event) {
     return await self.handleGenerateIpnsKey(event);
   });
   $tw.rootWidget.addEventListener("tm-ipfs-pin", async function(event) {
@@ -64,56 +64,34 @@ IpfsAction.prototype.init = function() {
   $tw.rootWidget.addEventListener("tm-console-mobile", async function(event) {
     return await self.handleMobileConsole(event);
   });
-  $tw.rootWidget.addEventListener("tm-ipfs-publish", async function(event) {
-    return await self.handlePublishToIpfs(event);
+  $tw.rootWidget.addEventListener("tm-ipfs-export-attachment", async function(event) {
+    return await self.handleExportAttachmentToIpfs(event);
   });
   $tw.rootWidget.addEventListener("tm-ipns-publish", async function(event) {
     return await self.handlePublishToIpns(event);
   });
-  $tw.rootWidget.addEventListener("tm-remove-ipns-key", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ipns-remove", async function(event) {
     return await self.handleRemoveIpnsKey(event);
   });
-  $tw.rootWidget.addEventListener("tm-rename-ipns-name", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ipns-rename", async function(event) {
     return await self.handleRenameIpnsName(event);
   });
-  $tw.rootWidget.addEventListener("tm-resolve-ipns-key-and-open", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ipns-resolve-and-open", async function(event) {
     return await self.handleResolveIpnsKeyAndOpen(event);
   });
   // Init once
   this.once = true;
 }
 
-IpfsAction.prototype.handleExportContentToIpfs = async function(event) {
-
-  try {
-
-    const title = event.tiddlerTitle;
-
-    // Load tiddler
-    const tiddler = $tw.wiki.getTiddler(title);
-    if (tiddler == undefined || tiddler == null) {
-      $tw.utils.alert(name, "Unknown Tiddler...");
-      return false;
-    }
-
-  } catch (error) {
-    this.getLogger().error(error);
-    $tw.utils.alert(name, error.message);
-    return false;
-  }
-
-  return true;
-
-}
-
-IpfsAction.prototype.handleExportToIpfs = async function(event) {
+IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
 
   try {
 
     const title = event.tiddlerTitle;
 
     var fields = [];
-    var backup_uri = null;
+    var tiddler_uri = null;
+    var tiddler_content_uri = null;
     var ipnsKey = null;
     var ipnsName = null;
     var ipnsContent = null;
@@ -143,13 +121,21 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       return false;
     }
 
-    // Retrieve fields
-    backup_uri = tiddler.getFieldString("_backup_uri");
     // Check
-    if (backup_uri == undefined || backup_uri == null || backup_uri.trim() === "") {
-      backup_uri = null;
+    if (child) {
+      tiddler_content_uri = tiddler.getFieldString("_tiddler_content_uri");
+      if (tiddler_content_uri == undefined || tiddler_content_uri == null || tiddler_content_uri.trim() === "") {
+        tiddler_content_uri = null;
+      } else {
+        tiddler_content_uri = tiddler_content_uri.trim();
+      }
     } else {
-      backup_uri = backup_uri.trim();
+      tiddler_uri = tiddler.getFieldString("_tiddler_uri");
+      if (tiddler_uri == undefined || tiddler_uri == null || tiddler_uri.trim() === "") {
+        tiddler_uri = null;
+      } else {
+        tiddler_uri = tiddler_uri.trim();
+      }
     }
     ipnsName = tiddler.getFieldString("_ipns_name");
     // Check
@@ -177,14 +163,28 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     var { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // URL Analysis
-    if (backup_uri !== null && backup_uri.protocol !== fileProtocol) {
-      // Decode pathname
-      var { protocol, cid } = this.ipfsWrapper.decodeCid(backup_uri.pathname);
-      // Check
-      if (protocol != null && cid != null) {
-        // Request to unpin
-        if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
-          $tw.ipfs.requestToUnpin(cid);
+    if (child) {
+      if (tiddler_content_uri !== null && tiddler_content_uri.protocol !== fileProtocol) {
+        // Decode pathname
+        var { protocol, cid } = this.ipfsWrapper.decodeCid(tiddler_content_uri.pathname);
+        // Check
+        if (protocol != null && cid != null) {
+          // Request to unpin
+          if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
+            $tw.ipfs.requestToUnpin(cid);
+          }
+        }
+      }
+    } else {
+      if (tiddler_uri !== null && tiddler_uri.protocol !== fileProtocol) {
+        // Decode pathname
+        var { protocol, cid } = this.ipfsWrapper.decodeCid(tiddler_uri.pathname);
+        // Check
+        if (protocol != null && cid != null) {
+          // Request to unpin
+          if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
+            $tw.ipfs.requestToUnpin(cid);
+          }
         }
       }
     }
@@ -219,7 +219,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
     }
 
     // Getting content
-    const content = this.ipfsWrapper.exportTiddler(tiddler, true);
+    const content = this.ipfsWrapper.exportTiddler(tiddler, child);
 
     // Check
     if (content == null) {
@@ -234,7 +234,11 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
 
     // Add
     const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
-    fields.push( { key: "_backup_uri", value: "/" + ipfsKeyword + "/" + added } );
+    if (child) {
+      fields.push( { key: "_tiddler_content_uri", value: "/" + ipfsKeyword + "/" + added } );
+    } else {
+      fields.push( { key: "_tiddler_uri", value: "/" + ipfsKeyword + "/" + added } );
+    }
 
     // Pin, if failure log and continue
     try {
@@ -253,7 +257,11 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       );
       try {
         await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
-        fields.push( { key: "_backup_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
+        if (child) {
+          fields.push( { key: "_tiddler_content_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
+        } else {
+          fields.push( { key: "_tiddler_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
+        }
       } catch (error)  {
         // Log and continue
         this.getLogger().warn(error);
@@ -274,7 +282,11 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
         const { web3, account } = await $tw.ipfs.getWeb3Provider();
         // Set ENS domain content
         await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
-        fields.push( { key: "_backup_uri", value: "https://" + ensDomain } );
+        if (child) {
+          fields.push( { key: "_tiddler_content_uri", value: "https://" + ensDomain } );
+        } else {
+          fields.push( { key: "_tiddler_uri", value: "https://" + ensDomain } );
+        }
       } catch (error) {
         // Log and continue
         this.getLogger().error(error);
@@ -284,17 +296,8 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
       }
     }
 
-    // Update Tiddler
-    var addTags = [];
-    if ($tw.crypto.hasPassword()) {
-      addTags = ["$:/isExported", "$:/isIpfs"];
-    } else {
-      addTags = ["$:/isExported", "$:/isIpfs"];
-    }
-    // Update
-    const updatedTiddler = $tw.utils.updateTiddler({
+    var updatedTiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,
-      addTags: addTags,
       fields: fields
     });
 
@@ -314,7 +317,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event) {
 
 }
 
-IpfsAction.prototype.handlePublishToIpfs = async function(event) {
+IpfsAction.prototype.handleExportAttachmentToIpfs = async function(event) {
 
   try {
 

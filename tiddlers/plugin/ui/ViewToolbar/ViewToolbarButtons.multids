@@ -3,7 +3,7 @@ tags: $:/ipfs/core
 
 core/ui/Buttons/ipfs/export: hide
 core/ui/Buttons/ipfs/export/content: hide
+core/ui/Buttons/ipfs/export/attachment: hide
 core/ui/Buttons/ipfs/refresh: hide
 core/ui/Buttons/ipfs/tiddler/pin: hide
 core/ui/Buttons/ipfs/tiddler/unpin: hide
-core/ui/Buttons/ipfs/publish: hide

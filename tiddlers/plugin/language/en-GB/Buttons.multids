@@ -4,14 +4,17 @@ tags: $:/ipfs/core
 Ipfs/Export/Caption: export to IPFS
 Ipfs/Export/Hint: Export this tiddler to IPFS
 
+Ipfs/Export/Attachment/Caption: export attachment to IPFS
+Ipfs/Export/Attachment/Hint: Export attachment to IPFS
+
 Ipfs/Export/Content/Caption: export content to IPFS
 Ipfs/Export/Content/Hint: Export this tiddler content to IPFS
 
-FetchIpnsKey/Caption: fetch
-FetchIpnsKey/Hint: Fetch IPNS key
+Ipns/Fetch/Caption: fetch from IPNS
+Ipns/Fetch/Hint: Fetch IPNS key
 
-GenerateIpnsKey/Caption: generate
-GenerateIpnsKey/Hint: Generate IPNS key
+Ipns/Generate/Caption: generate IPNS
+Ipns/Generate/Hint: Generate IPNS key
 
 Ipfs/Refresh/Caption: refresh
 Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
@@ -31,26 +34,23 @@ Ipfs/Unpin/Hint: Unpin this wiki from IPFS
 Console/Mobile/Caption: mobile console
 Console/Mobile/Hint: Load/Unload Mobile Console
 
-OpenEnsManager/Caption: open
-OpenEnsManager/Hint: Open ENS Domain Manager
+Ens/Manager/Open/Caption: open ENS Manager
+Ens/Manager/OpenHint: Open ENS Domain Manager
 
-Ens/Publish/Caption: publish to ENS
-Ens/Publish/Hint: Publish this wiki to ENS
+Ens/Publish/Caption: publish ENS Domain content
+Ens/Publish/Hint: Publish this wiki as ENS Domain content
 
-Ipfs/Publish/Caption: publish to IPFS
-Ipfs/Publish/Hint: Publish this attachment to IPFS
-
-ResolveEnsAndOpen/Caption: resolve and open
-ResolveEnsAndOpen/Hint: Open resolved ENS Domain content
+Ens/Resolve/And/Open/Caption: open ENS Domain content
+Ens/Resolve/And/Open/Hint: Open resolved ENS Domain content
 
 Ipns/Publish/Caption: publish to IPNS
 Ipns/Publish/Hint: Publish this wiki to IPNS
 
-RemoveIpnsKey/Caption: remove
-RemoveIpnsKey/Hint: Remove IPNS name and IPNS key
+Ipns/Remove/Caption: remove
+Ipns/Remove/Hint: Remove IPNS name and IPNS key
 
-RenameIpnsName/Caption: rename
-RenameIpnsName/Hint: Rename IPNS name
+Ipns/Rename/Caption: rename
+Ipns/Rename/Hint: Rename IPNS name
 
-ResolveIpnsKeyAndOpen/Caption: resolve and open
-ResolveIpnsKeyAndOpen/Hint: Open resolved IPNS key
+Ipns/Resolve/And/Open/Caption: resolve and open
+Ipns/Resolve/And/Open/Hint: Open resolved IPNS key

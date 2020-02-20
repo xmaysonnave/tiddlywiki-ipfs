@@ -63,9 +63,9 @@ var SvgParser = function(type,text,options) {
   // Load external resource
   if (uri) {
     $tw.ipfs.normalizeIpfsUrl(uri)
-    .then( (uri) => {
+    .then( (normalized_uri) => {
       // Load
-      $tw.utils.loadToUtf8(uri)
+      $tw.utils.loadToUtf8(normalized_uri)
       .then( (loaded) => {
         element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
         const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);

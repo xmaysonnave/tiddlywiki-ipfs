@@ -248,7 +248,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
 
     // Publish to ENS
     if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-      const parsed = $tw.ipfs.normalizeIpfsUrl(
+      const parsed = await $tw.ipfs.normalizeIpfsUrl(
         "/"
         + ipfsKeyword
         + "/"

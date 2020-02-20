@@ -1,3 +1,3 @@
 title: $:/plugins/ipfs/ipfslink/fields
 tags: $:/ipfs/core
-list: uri url href _canonical_uri _personal_uri _shared_uri _team_uri _backup_uri _license_uri _source_uri
+list: href license source src uri url _canonical_uri _tiddler_uri _tiddler_content_uri _attachment_uri _personal_uri _private_uri _shared_uri _team_uri _imported_uri _imported_root_uri _exported_uri _license_uri _source_uri

@@ -238,7 +238,7 @@ IpfsController.prototype.resolveENS = async function(ensDomain) {
   // Fetch ENS domain content
   const { content, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
   if (content !== null && protocol !== null) {
-    const parsed = $tw.ipfs.normalizeIpfsUrl("/" + protocol + "/" + content);
+    const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + protocol + "/" + content);
     return parsed;
   }
   // Empty content

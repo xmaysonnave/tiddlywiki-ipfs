@@ -208,6 +208,7 @@ exports.updateTiddler = function(updates) {
   }
   // Prepare updates
   const fields = $tw.wiki.getModificationFields();
+  // Tags
   fields.tags = (updates.tiddler.fields.tags || []).slice(0);
   // Process add tags
   if (updates.addTags !== undefined && updates.addTags !== null && Array.isArray(updates.addTags)) {

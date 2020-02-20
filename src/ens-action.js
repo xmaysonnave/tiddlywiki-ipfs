@@ -39,10 +39,10 @@ EnsAction.prototype.init = function() {
     return;
   }
   const self = this;
-  $tw.rootWidget.addEventListener("tm-open-ens-manager", function(event) {
+  $tw.rootWidget.addEventListener("tm-ens-manager-open", function(event) {
     return self.handleOpenEnsManager(event);
   });
-  $tw.rootWidget.addEventListener("tm-resolve-ens-and-open", async function(event) {
+  $tw.rootWidget.addEventListener("tm-ens-resolve-and-open", async function(event) {
     return await self.handleResolveEnsAndOpen(event);
   });
   $tw.rootWidget.addEventListener("tm-ens-publish", async function(event) {
@@ -150,7 +150,7 @@ EnsAction.prototype.handlePublishToEns = async function(event) {
       return false;
     }
 
-    const parsed = $tw.ipfs.normalizeIpfsUrl(
+    const parsed = await $tw.ipfs.normalizeIpfsUrl(
       "/"
       + ipfsKeyword
       + "/"
