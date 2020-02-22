@@ -3,7 +3,7 @@ title: $:/plugins/ipfs/modules/widgets/ipfslink.js
 type: application/javascript
 module-type: widget
 
-Link widget
+Ipfs Link widget
 
 \*/
 
@@ -78,21 +78,27 @@ IpfsLinkWidget.prototype.render = function(parent,nextSibling) {
       for (var i = 0; i < links.length; i++) {
         if (links[i] === field.trim()) {
           linkify = true;
+          break;
         }
       }
     }
   }
   if (linkify) {
-    this.renderLink(parent, nextSibling);
+    this.renderExternalLink(parent, nextSibling);
   } else {
-    this.renderText(parent, nextSibling);
+    const tiddler = $tw.wiki.getTiddler(this.value);
+    if (tiddler !== undefined && tiddler !== null) {
+      this.renderTiddlerLink(parent, nextSibling);
+    } else {
+      this.renderText(parent, nextSibling);
+    }
   }
 };
 
 /*
 Render this widget into the DOM
 */
-IpfsLinkWidget.prototype.renderLink = function(parent,nextSibling) {
+IpfsLinkWidget.prototype.renderExternalLink = function(parent,nextSibling) {
   // Only fields suffixed with '_uri' are redndered as links...
   const domNode = this.document.createElement("a");
   // Normalize
@@ -110,7 +116,7 @@ IpfsLinkWidget.prototype.renderLink = function(parent,nextSibling) {
   });
   // Add a click event handler
   $tw.utils.addEventListeners(domNode,[
-    {name: "click", handlerObject: this, handlerMethod: "handleClickEvent"}
+    {name: "click", handlerObject: this, handlerMethod: "handleExternalClickEvent"}
   ]);
   // Assign classes
   const classes = [];
@@ -131,6 +137,99 @@ IpfsLinkWidget.prototype.renderLink = function(parent,nextSibling) {
 /*
 Render this widget into the DOM
 */
+IpfsLinkWidget.prototype.renderTiddlerLink = function(parent,nextSibling) {
+  var self = this;
+  // Sanitise the specified tag
+  var tag = this.linkTag;
+  if($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
+    tag = "a";
+  }
+  // Create our element
+  var domNode = this.document.createElement(tag);
+  // Assign classes
+  var classes = [];
+  if(this.overrideClasses === undefined) {
+    classes.push("tc-tiddlylink");
+    if(this.isShadow) {
+      classes.push("tc-tiddlylink-shadow");
+    }
+    if(this.isMissing && !this.isShadow) {
+      classes.push("tc-tiddlylink-missing");
+    } else {
+      if(!this.isMissing) {
+        classes.push("tc-tiddlylink-resolves");
+      }
+    }
+    if(this.linkClasses) {
+      classes.push(this.linkClasses);
+    }
+  } else if(this.overrideClasses !== "") {
+    classes.push(this.overrideClasses)
+  }
+  if(classes.length > 0) {
+    domNode.setAttribute("class",classes.join(" "));
+  }
+  // Set an href
+  var wikilinkTransformFilter = this.getVariable("tv-filter-export-link"),
+    wikiLinkText;
+  if(wikilinkTransformFilter) {
+    // Use the filter to construct the href
+    wikiLinkText = this.wiki.filterTiddlers(wikilinkTransformFilter,this,function(iterator) {
+      iterator(self.wiki.getTiddler(self.value),self.value)
+    })[0];
+  } else {
+    // Expand the tv-wikilink-template variable to construct the href
+    var wikiLinkTemplateMacro = this.getVariable("tv-wikilink-template"),
+      wikiLinkTemplate = wikiLinkTemplateMacro ? wikiLinkTemplateMacro.trim() : "#$uri_encoded$";
+    wikiLinkText = $tw.utils.replaceString(wikiLinkTemplate,"$uri_encoded$",encodeURIComponent(this.value));
+    wikiLinkText = $tw.utils.replaceString(wikiLinkText,"$uri_doubleencoded$",encodeURIComponent(encodeURIComponent(this.value)));
+  }
+  // Override with the value of tv-get-export-link if defined
+  wikiLinkText = this.getVariable("tv-get-export-link",{params: [{name: "to",value: this.value}],defaultValue: wikiLinkText});
+  if(tag === "a") {
+    domNode.setAttribute("href",wikiLinkText);
+  }
+  // Set the tabindex
+  if(this.tabIndex) {
+    domNode.setAttribute("tabindex",this.tabIndex);
+  }
+  // Set the tooltip
+  // HACK: Performance issues with re-parsing the tooltip prevent us defaulting the tooltip to "<$transclude field='tooltip'><$transclude field='title'/></$transclude>"
+  var tooltipWikiText = this.tooltip || this.getVariable("tv-wikilink-tooltip");
+  if(tooltipWikiText) {
+    var tooltipText = this.wiki.renderText("text/plain","text/vnd.tiddlywiki",tooltipWikiText,{
+        parseAsInline: true,
+        variables: {
+          currentTiddler: this.value
+        },
+        parentWidget: this
+      });
+    domNode.setAttribute("title",tooltipText);
+  }
+  if(this["aria-label"]) {
+    domNode.setAttribute("aria-label",this["aria-label"]);
+  }
+  // Add a click event handler
+  $tw.utils.addEventListeners(domNode,[
+    {name: "click", handlerObject: this, handlerMethod: "handleTiddlerClickEvent"}
+  ]);
+  // Make the link draggable if required
+  if(this.draggable === "yes") {
+    $tw.utils.makeDraggable({
+      domNode: domNode,
+      dragTiddlerFn: function() {return self.value;},
+      widget: this
+    });
+  }
+  // Insert the link into the DOM and render any children
+  parent.insertBefore(domNode,nextSibling);
+  this.renderChildren(domNode,null);
+  this.domNodes.push(domNode);
+};
+
+/*
+Render this widget into the DOM
+*/
 IpfsLinkWidget.prototype.renderText = function(parent,nextSibling) {
   const domNode = this.document.createElement("span");
   parent.insertBefore(domNode,nextSibling);
@@ -138,7 +237,7 @@ IpfsLinkWidget.prototype.renderText = function(parent,nextSibling) {
   this.domNodes.push(domNode);
 };
 
-IpfsLinkWidget.prototype.handleClickEvent = function(event) {
+IpfsLinkWidget.prototype.handleExternalClickEvent = function(event) {
   const self = this;
   // Normalize
   $tw.ipfs.normalizeIpfsUrl(this.value)
@@ -158,15 +257,50 @@ IpfsLinkWidget.prototype.handleClickEvent = function(event) {
   return false;
 };
 
+IpfsLinkWidget.prototype.handleTiddlerClickEvent = function(event) {
+	// Send the click on its way as a navigate event
+	var bounds = this.domNodes[0].getBoundingClientRect();
+	this.dispatchEvent({
+		type: "tm-navigate",
+		navigateTo: this.value,
+		navigateFromTitle: this.getVariable("storyTiddler"),
+		navigateFromNode: this,
+		navigateFromClientRect: { top: bounds.top, left: bounds.left, width: bounds.width, right: bounds.right, bottom: bounds.bottom, height: bounds.height
+		},
+		navigateSuppressNavigation: event.metaKey || event.ctrlKey || (event.button === 1),
+		metaKey: event.metaKey,
+		ctrlKey: event.ctrlKey,
+		altKey: event.altKey,
+		shiftKey: event.shiftKey
+	});
+	if(this.domNodes[0].hasAttribute("href")) {
+		event.preventDefault();
+	}
+	event.stopPropagation();
+	return false;
+};
+
+
 /*
 Compute the internal state of the widget
 */
 IpfsLinkWidget.prototype.execute = function() {
-  // Pick up our attributes
+  // Tiddler
+  this.tiddler = this.getAttribute("tiddler");
+	// Internal link
+	this.tooltip = this.getAttribute("tooltip");
+	this.overrideClasses = this.getAttribute("overrideClass");
+	this.tabIndex = this.getAttribute("tabindex");
+	this.draggable = this.getAttribute("draggable","yes");
+	// Determine the link characteristics
+	this.isMissing = !this.wiki.tiddlerExists(this.to);
+	this.isShadow = this.wiki.isShadowTiddler(this.to);
+	this.hideMissingLinks = (this.getVariable("tv-show-missing-links") || "yes") === "no";
+  // External link
   this.caption = this.getAttribute("caption");
   this.field = this.getAttribute("field");
-  this.tiddler = this.getAttribute("tiddler");
   this.value = this.getAttribute("value");
+	this.linkTag = this.getAttribute("tag","a");
   const tiddler = $tw.wiki.getTiddler(this.tiddler);
   if (this.value == undefined) {
     this.value = tiddler.getFieldString(this.field);
@@ -189,6 +323,9 @@ IpfsLinkWidget.prototype.refresh = function(changedTiddlers) {
     || changedTiddlers[this.field]
     || changedAttributes.value
     || changedTiddlers[this.value]
+    || changedAttributes.to
+    || changedTiddlers[this.to]
+    || changedAttributes.tooltip
     || changedAttributes["aria-label"]
     || changedTiddlers["$:/ipfs/saver/policy"]
   ) {

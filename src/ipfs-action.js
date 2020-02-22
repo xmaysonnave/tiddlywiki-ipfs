@@ -90,8 +90,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     const title = event.tiddlerTitle;
 
     var fields = [];
-    var tiddler_uri = null;
-    var tiddler_content_uri = null;
+    var export_uri = null;
     var ipnsKey = null;
     var ipnsName = null;
     var ipnsContent = null;
@@ -122,20 +121,11 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     }
 
     // Check
-    if (child) {
-      tiddler_content_uri = tiddler.getFieldString("_tiddler_content_uri");
-      if (tiddler_content_uri == undefined || tiddler_content_uri == null || tiddler_content_uri.trim() === "") {
-        tiddler_content_uri = null;
-      } else {
-        tiddler_content_uri = tiddler_content_uri.trim();
-      }
+    export_uri = tiddler.getFieldString("_export_uri");
+    if (export_uri == undefined || export_uri == null || export_uri.trim() === "") {
+      export_uri = null;
     } else {
-      tiddler_uri = tiddler.getFieldString("_tiddler_uri");
-      if (tiddler_uri == undefined || tiddler_uri == null || tiddler_uri.trim() === "") {
-        tiddler_uri = null;
-      } else {
-        tiddler_uri = tiddler_uri.trim();
-      }
+      export_uri = export_uri.trim();
     }
     ipnsName = tiddler.getFieldString("_ipns_name");
     // Check
@@ -163,28 +153,14 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     var { ipfs } = await $tw.ipfs.getIpfsClient();
 
     // URL Analysis
-    if (child) {
-      if (tiddler_content_uri !== null && tiddler_content_uri.protocol !== fileProtocol) {
-        // Decode pathname
-        var { protocol, cid } = this.ipfsWrapper.decodeCid(tiddler_content_uri.pathname);
-        // Check
-        if (protocol != null && cid != null) {
-          // Request to unpin
-          if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
-            $tw.ipfs.requestToUnpin(cid);
-          }
-        }
-      }
-    } else {
-      if (tiddler_uri !== null && tiddler_uri.protocol !== fileProtocol) {
-        // Decode pathname
-        var { protocol, cid } = this.ipfsWrapper.decodeCid(tiddler_uri.pathname);
-        // Check
-        if (protocol != null && cid != null) {
-          // Request to unpin
-          if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
-            $tw.ipfs.requestToUnpin(cid);
-          }
+    if (export_uri !== null && export_uri.protocol !== fileProtocol) {
+      // Decode pathname
+      var { protocol, cid } = this.ipfsWrapper.decodeCid(export_uri.pathname);
+      // Check
+      if (protocol != null && cid != null) {
+        // Request to unpin
+        if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
+          $tw.ipfs.requestToUnpin(cid);
         }
       }
     }
@@ -234,11 +210,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
 
     // Add
     const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
-    if (child) {
-      fields.push( { key: "_tiddler_content_uri", value: "/" + ipfsKeyword + "/" + added } );
-    } else {
-      fields.push( { key: "_tiddler_uri", value: "/" + ipfsKeyword + "/" + added } );
-    }
+    fields.push( { key: "_export_uri", value: "/" + ipfsKeyword + "/" + added } );
 
     // Pin, if failure log and continue
     try {
@@ -257,11 +229,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
       );
       try {
         await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
-        if (child) {
-          fields.push( { key: "_tiddler_content_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
-        } else {
-          fields.push( { key: "_tiddler_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
-        }
+        fields.push( { key: "_export_uri", value: "/" + ipnsKeyword + "/" + ipnsKey } );
       } catch (error)  {
         // Log and continue
         this.getLogger().warn(error);
@@ -282,11 +250,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
         const { web3, account } = await $tw.ipfs.getWeb3Provider();
         // Set ENS domain content
         await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
-        if (child) {
-          fields.push( { key: "_tiddler_content_uri", value: "https://" + ensDomain } );
-        } else {
-          fields.push( { key: "_tiddler_uri", value: "https://" + ensDomain } );
-        }
+        fields.push( { key: "_export_uri", value: "https://" + ensDomain } );
       } catch (error) {
         // Log and continue
         this.getLogger().error(error);

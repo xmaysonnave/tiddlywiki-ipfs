@@ -142,17 +142,16 @@ IpfsWrapper.prototype.loadTiddlers = async function(tiddler, uri) {
     } else {
       current = $tw.wiki.getTiddler(importedTiddler["title"]);
     }
-    // Root
-    if (current === tiddler) {
-      const canonical_uri = importedTiddler["_canonical_uri"];
-      if (canonical_uri == undefined || canonical_uri == null) {
-        importedTiddler["_canonical_uri"] = uri;
-      }
-      importedTiddler["_imported_root_uri"] = uri;
+    // canonical_uri
+    const canonical_uri = importedTiddler["_canonical_uri"];
+    if (canonical_uri == undefined || canonical_uri == null) {
+      importedTiddler["_canonical_uri"] = uri;
     } else {
-      // Imported
-      importedTiddler["_imported"] = title;
-      importedTiddler["_imported_uri"] = uri;
+      importedTiddler["_import_uri"] = uri;
+    }
+    // Non Root reference
+    if (current !== tiddler) {
+      importedTiddler["_import"] = title;
     }
   });
   return importedTiddlers;
@@ -186,11 +185,13 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, content) {
   // Filter
   var exportFilter = "[[" + tiddler.fields.title + "]]";
   if (content) {
-    const titles = this.transcludeContent(title);
-    // Process transcluded content
-    for (var i = 0; i < titles.length; i++) {
-      if (exportFilter.includes(titles[i]) == false) {
-        exportFilter = exportFilter + " [[" + titles[i] + "]]"
+    const linked = $tw.wiki.getTiddlerLinks(title);
+    const transcluded = this.transcludeContent(title);
+    const filtered = linked.concat(transcluded);
+    // Process filtered content
+    for (var i = 0; i < filtered.length; i++) {
+      if (exportFilter.includes(filtered[i]) == false) {
+        exportFilter = exportFilter + " [[" + filtered[i] + "]]"
       }
     }
   }
@@ -198,7 +199,8 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, content) {
   var content = null;
 
   if ($tw.utils.getIpfsExport() === "json") {
-    // Export
+
+    // Export as JSON
     const options = {
       downloadType: "text/plain",
       method: "download",
@@ -212,6 +214,7 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, content) {
       "$:/core/templates/exporters/JsonFile",
       options
     );
+
 
   } else if ($tw.utils.getIpfsExport() === "html") {
 

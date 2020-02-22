@@ -51,7 +51,7 @@ IpfsLoader.prototype.loadEtherJsLibrary = async function() {
 // https://www.srihash.org/
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
-  if (typeof window.IpfsHttpClient === "undefined") {
+  if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
     await this.loadLibrary(
       "IpfsHttpLibrary",
       "https://cdn.jsdelivr.net/npm/ipfs-http-client@41.0.1/dist/index.min.js",

@@ -202,20 +202,22 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
         }
       }
     }
-    // Root
-    if (current === tiddler) {
-      const canonical_uri = importedTiddler["_canonical_uri"];
-      if (canonical_uri == undefined || canonical_uri == null) {
-        importedTiddler["_canonical_uri"] = uri;
-      }
-      importedTiddler["_imported_root_uri"] = uri;
+    // canonical_uri
+    const canonical_uri = importedTiddler["_canonical_uri"];
+    if (canonical_uri == undefined || canonical_uri == null) {
+      importedTiddler["_canonical_uri"] = uri;
     } else {
-      // Imported
-      importedTiddler["_imported"] = title;
-      importedTiddler["_imported_uri"] = uri;
+      importedTiddler["_import_uri"] = uri;
     }
-    // Add
-    $tw.wiki.addTiddler(importedTiddler);
+    // Non Root reference
+    if (current !== tiddler) {
+      importedTiddler["_import"] = title;
+    }
+    // Don't import empty text otherwise endless loading loop...
+    const text = importedTiddler["text"];
+    if (text !== undefined && text !== null && text.trim() !== "") {
+      $tw.wiki.addTiddler(importedTiddler);
+    }
   });
 }
 
