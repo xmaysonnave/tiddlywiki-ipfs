@@ -150,21 +150,25 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
 * imported tiddler supersed hosting tiddler
 */
 WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
+
   var importedTiddlers = null;
   if (this.isJSON(loaded)) {
     importedTiddlers = $tw.wiki.deserializeTiddlers(".json", loaded, $tw.wiki.getCreationFields());
   } else {
     importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", loaded, $tw.wiki.getCreationFields());
   }
+
   var current = null;
   var title = tiddler.getFieldString("title");
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
+
     // Root
     if (current == null) {
       current = tiddler;
     } else {
       current = $tw.wiki.getTiddler(importedTiddler["title"]);
     }
+
     // Known Tiddler
     if (current !== undefined && current !== null) {
       var currentTags = (current.fields.tags || []).slice(0);
@@ -190,7 +194,7 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
       importedTiddler["tags"] = importedTags;
       // Title
       if (importedTiddler["title"] !== currentTitle) {
-        importedTiddler["_imported_title"] = importedTiddler["title"];
+        importedTiddler["imported-title"] = importedTiddler["title"];
       }
       importedTiddler["title"] = currentTitle;
       // Root
@@ -202,23 +206,25 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
         }
       }
     }
+
     // canonical_uri
     const canonical_uri = importedTiddler["_canonical_uri"];
     if (canonical_uri == undefined || canonical_uri == null) {
       importedTiddler["_canonical_uri"] = uri;
-    } else {
+    } else if (canonical_uri !== uri) {
       importedTiddler["_import_uri"] = uri;
     }
+
     // Non Root reference
     if (current !== tiddler) {
-      importedTiddler["_import"] = title;
+      importedTiddler["import"] = title;
     }
-    // Don't import empty text otherwise endless loading loop...
-    const text = importedTiddler["text"];
-    if (text !== undefined && text !== null && text.trim() !== "") {
-      $tw.wiki.addTiddler(importedTiddler);
-    }
+
+    // Update
+    $tw.wiki.addTiddler(importedTiddler);
+
   });
+
 }
 
 /*

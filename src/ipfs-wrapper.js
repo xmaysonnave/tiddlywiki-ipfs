@@ -146,12 +146,12 @@ IpfsWrapper.prototype.loadTiddlers = async function(tiddler, uri) {
     const canonical_uri = importedTiddler["_canonical_uri"];
     if (canonical_uri == undefined || canonical_uri == null) {
       importedTiddler["_canonical_uri"] = uri;
-    } else {
+    } else if (canonical_uri !== uri) {
       importedTiddler["_import_uri"] = uri;
     }
     // Non Root reference
     if (current !== tiddler) {
-      importedTiddler["_import"] = title;
+      importedTiddler["import"] = title;
     }
   });
   return importedTiddlers;
@@ -185,8 +185,20 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, content) {
   // Filter
   var exportFilter = "[[" + tiddler.fields.title + "]]";
   if (content) {
+    // Links
     const linked = $tw.wiki.getTiddlerLinks(title);
+    this.getLogger().info(
+      "Found "
+      + linked.length
+      + " Tiddler links."
+    );
+    // Transcluded
     const transcluded = this.transcludeContent(title);
+    this.getLogger().info(
+      "Found "
+      + linked.length
+      + " transcluded Tiddler references."
+    );
     const filtered = linked.concat(transcluded);
     // Process filtered content
     for (var i = 0; i < filtered.length; i++) {

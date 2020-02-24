@@ -202,7 +202,7 @@ IpfsTiddler.prototype.merge = function(tiddler, target) {
 
   // Title
   if (target["title"] !== currentTitle) {
-    fields.push({ key: "_imported_title", value: target["title"] });
+    fields.push({ key: "imported-title", value: target["title"] });
   }
 
   // Update Tiddler
@@ -220,17 +220,17 @@ IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
 
   // Tiddler
   if (tiddler == undefined || tiddler == null) {
-    return tiddler;
+    return false;
   }
 
   // current tiddler title
   const title = tiddler.getFieldString("title");
   if (title == undefined || title == null) {
-    return tiddler;
+    return false;
   }
 
   if (uri == undefined || uri == null) {
-    return tiddler;
+    return false;
   }
 
   // Load remote
@@ -238,18 +238,21 @@ IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
 
   // Search local
   var options = {
-    field: ["_import_uri"]
+    includeSystem: true,
+    field: ["_canonical_uri", "_import_uri"]
   }
   var local = $tw.wiki.getTiddlers(options);
 
   // Iterate over local to detect deleted
   for (var i = local.length - 1; i >= 0; i--) {
 
-    const innerTiddler = $tw.wiki.getTiddler(local[i]);
-    const innerTitle = innerTiddler.getFieldString("title");
+    const current = $tw.wiki.getTiddler(local[i]);
+
+    const currentTitle = current.getFieldString("title");
+    const currentImportedTitle = current.getFieldString("imported-title");
 
     // Filter out
-    if (innerTiddler.getFieldString("_import_uri") !== uri) {
+    if (current.getFieldString("_canonical_uri") !== uri && current.getFieldString("_import_uri") !== uri) {
       continue;
     }
 
@@ -257,7 +260,7 @@ IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
     var found = false;
     for (var j = 0; j < remotes.length ; j++) {
       const remote = remotes[j];
-      if (remote.title === innerTitle) {
+      if (remote.title === currentTitle || remote.title === currentImportedTitle) {
         found = true;
         break;
       }
@@ -265,7 +268,19 @@ IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
 
     // Not found
     if (found === false) {
-      $tw.wiki.deleteTiddler(local[i]);
+      // Cleanup Tiddler
+      const fields = [];
+      fields.push({ key: "_import_uri", value: undefined });
+      if (current.getFieldString("_canonical_uri") === uri) {
+        fields.push({ key: "_canonical_uri", value: undefined });
+      }
+      fields.push({ key: "import", value: undefined });
+      fields.push({ key: "imported-title", value: undefined });
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: current,
+        fields: fields
+      });
+      $tw.wiki.addTiddler(updatedTiddler);
     }
 
   }
@@ -276,10 +291,7 @@ IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
 
     // Current remote
     const remote = remotes[k];
-    // Filter out empty text
-    if (remote.text == undefined || remote.text == null || remote.text.trim() === "") {
-      continue;
-    }
+
     // Root
     if (current == null) {
       current = tiddler;
@@ -297,22 +309,18 @@ IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
 
     if (current !== null) {
       // Merge
-      const updatedTiddler = this.merge(current, remote);
+      const mergedTiddler = this.merge(current, remote);
       // Update
-      $tw.wiki.addTiddler(updatedTiddler);
-      // Return
-      return updatedTiddler;
+      $tw.wiki.addTiddler(mergedTiddler);
     }
 
   }
 
-  return tiddler;
+  return true;
 
 }
 
 IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
-
-  var imported_uri = null;
 
   // current tiddler title
   const title = event.tiddlerTitle;
@@ -332,28 +340,23 @@ IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
     // Manage import_uri
     var import_uri = tiddler.getFieldString("_import_uri");
     if (import_uri !== undefined && import_uri !== null && import_uri.trim() !== "") {
-      var updatedTiddler = await this.mergeImported(tiddler, import_uri);
-      updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: updatedTiddler,
-        fields: [
-          { key: "text", value: "" }
-        ]
-      });
-      $tw.wiki.addTiddler(updatedTiddler);
+      await this.mergeImported(tiddler, import_uri);
     } else {
       // Empty the 'text' field from _canonical_uri Tiddler holder
       var canonical_uri = tiddler.getFieldString("_canonical_uri");
       if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-        var updatedTiddler = await this.mergeImported(tiddler, canonical_uri);
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          fields: [
-            { key: "text", value: "" }
-          ]
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
+         await this.mergeImported(tiddler, canonical_uri);
       }
     }
+
+    // Empty text to force refresh
+    const updatedTiddler = $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      fields: [
+        { key: "text", value: "" }
+      ]
+    });
+    $tw.wiki.addTiddler(updatedTiddler);
 
     // Empty cache
     $tw.wiki.clearCache(title);
@@ -372,6 +375,56 @@ IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
 
   return true;
 
+}
+
+IpfsTiddler.prototype.cleanupTiddler = async function(tiddler, uri) {
+  // Cleanup previous
+  const parsed = await $tw.ipfs.normalizeIpfsUrl(uri);
+  // Search local
+  var options = {
+    includeSystem: true,
+    field: ["_canonical_uri", "_import_uri"]
+  }
+  var local = $tw.wiki.getTiddlers(options);
+  // Update
+  var updatedTiddler = tiddler;
+  // Iterate over local
+  var current = null;
+  for (var i = local.length - 1; i >= 0; i--) {
+    const fields = [];
+    if (current == null) {
+      current = tiddler;
+    } else {
+      current = $tw.wiki.getTiddler(local[i]);
+    }
+    // Filter out
+    if (current.getFieldString("_canonical_uri") !== uri && current.getFieldString("_import_uri") !== uri) {
+      continue;
+    }
+    // Cleanup Tiddler
+    if (current.getFieldString("_canonical_uri") === uri) {
+      fields.push({ key: "_canonical_uri", value: undefined });
+    }
+    fields.push({ key: "_import_uri", value: undefined });
+    fields.push({ key: "imported-title", value: undefined });
+    fields.push({ key: "import", value: undefined });
+    // Root
+    if (current === tiddler) {
+      updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: current,
+        removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isImported", "$:/isIpfs"],
+        fields: fields
+      });
+    // Children
+    } else {
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: current,
+        fields: fields
+      });
+      $tw.wiki.addTiddler(updatedTiddler);
+    }
+  }
+  return updatedTiddler;
 }
 
 IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
@@ -409,17 +462,17 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     canonical_uri = null;
   }
 
-  // Retrieve tiddler _export_uri if any
-  var export_uri = tiddler.getFieldString("_export_uri");
-  if (export_uri !== undefined && export_uri !== null && export_uri.trim() !== "") {
-    export_uri = export_uri.trim();
+  // Retrieve tiddler _import_uri if any
+  var import_uri = tiddler.getFieldString("_import_uri");
+  if (import_uri !== undefined && import_uri !== null && import_uri.trim() !== "") {
+    import_uri = import_uri.trim();
   } else {
-    export_uri = null;
+    import_uri = null;
   }
 
   // Retrieve old tiddler _export_uri and _canonical_uri if any
   var old_canonical_uri = null;
-  var old_export_uri = null;
+  var old_import_uri = null;
   const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title);
   if (oldTiddler !== undefined && oldTiddler !== null) {
     // Retrieve oldTiddler _canonical_uri if any
@@ -429,17 +482,17 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     } else {
       old_canonical_uri = null;
     }
-    // Retrieve oldTiddler _export_uri if any
-    old_export_uri = oldTiddler.getFieldString("_export_uri");
-    if (old_export_uri !== undefined && old_export_uri !== null && old_export_uri.trim() !== "") {
-      old_export_uri = old_export_uri.trim();
+    // Retrieve oldTiddler _import_uri if any
+    old_import_uri = oldTiddler.getFieldString("_import_uri");
+    if (old_import_uri !== undefined && old_import_uri !== null && old_import_uri.trim() !== "") {
+      old_import_uri = old_import_uri.trim();
     } else {
-      old_export_uri = null;
+      old_import_uri = null;
     }
   }
 
   // Nothing to do
-  if (canonical_uri == old_canonical_uri && export_uri == old_export_uri) {
+  if (canonical_uri == old_canonical_uri && import_uri == old_import_uri) {
     updatedTiddler = new $tw.Tiddler(tiddler);
     $tw.wiki.addTiddler(updatedTiddler);
     return updatedTiddler;
@@ -557,17 +610,8 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       if (canonical_uri == null) {
 
         try {
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_canonical_uri);
-          // Update Tiddler
-          updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: tiddler,
-            removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isImported", "$:/isIpfs"]
-          });
-          this.getLogger().info(
-            "Embeded remote Tiddler:"
-            + "\n "
-            + parsed.href
-          );
+          // Cleanup previous
+          updatedTiddler = await this.cleanupTiddler(tiddler, old_canonical_uri);
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
@@ -578,6 +622,9 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
       } else {
 
         try {
+          // Cleanup previous
+          updatedTiddler = await this.cleanupTiddler(tiddler, old_canonical_uri);
+          // Process
           const parsed = await $tw.ipfs.normalizeIpfsUrl(canonical_uri);
           var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
           // IPFS resource
@@ -588,20 +635,12 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
             addTags = ["$:/isImported"];
             removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
           }
-          // Update Tiddler
           updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: tiddler,
+            tiddler: updatedTiddler,
             addTags: addTags,
             removeTags: removeTags,
-            fields: [
-              { key: "text", value: "" }
-            ]
+            fields: [{ key: "text", value: "" }]
           });
-          this.getLogger().info(
-            "Updated remote Tiddler:"
-            + "\n "
-            + parsed.href
-          );
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
@@ -613,49 +652,32 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     }
 
     // Process if any update
-    if (export_uri !== old_export_uri) {
+    if (import_uri !== old_import_uri) {
 
       updatedTiddler = updatedTiddler !== null ? updatedTiddler : tiddler;
 
-      // _export_uri attribute has been removed
-      if (export_uri == null) {
+      // _import_uri attribute has been removed
+      if (import_uri == null) {
 
         try {
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_export_uri);
-          // Update Tiddler
-          updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: updatedTiddler
-          });
-          this.getLogger().info(
-            "Removed exported Tiddler:"
-            + "\n "
-            + parsed.href
-          );
+          // Cleanup previous
+          updatedTiddler = await this.cleanupTiddler(tiddler, old_import_uri);
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
           return oldTiddler;
         }
 
-      // _export_uri attribute has been updated
+      // _import_uri attribute has been updated
       } else {
 
         try {
-          // New _export_uri
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(export_uri);
-          // Update Tiddler
-          updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: updatedTiddler
-          });
+          // Cleanup previous
+          updatedTiddler = await this.cleanupTiddler(tiddler, old_import_uri);
           // Discard unpin request
           if ($tw.utils.getIpfsUnpin() && cid !== null) {
             $tw.ipfs.discardRequestToUnpin(cid);
           }
-          this.getLogger().info(
-            "Updated exported Tiddler:"
-            + "\n "
-            + parsed.href
-          );
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
@@ -664,10 +686,10 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
 
       }
 
-      // Process previous export_uri if any
-      if (old_export_uri !== null) {
+      // Process previous import_uri if any
+      if (old_import_uri !== null) {
         try {
-          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_export_uri);
+          const parsed = await $tw.ipfs.normalizeIpfsUrl(old_import_uri);
           const { cid: oldCid } = this.ipfsWrapper.decodeCid(parsed.pathname);
           if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
             $tw.ipfs.requestToUnpin(oldCid);
@@ -682,6 +704,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     }
 
   }
+
 
   // Check
   if (updatedTiddler == null) {
