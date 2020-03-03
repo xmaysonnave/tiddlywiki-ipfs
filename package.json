@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.2.10-dev.200224366",
+  "version": "v0.2.10-dev.200303402",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -48,14 +48,14 @@
     "whatwg-url": "^8.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.8.6",
     "@babel/plugin-transform-async-to-generator": "^7.8.3",
     "@babel/plugin-transform-regenerator": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/plugin-transform-spread": "^7.8.3",
-    "@babel/preset-env": "^7.8.4",
-    "acorn": "^7.1.0",
-    "babel-eslint": "^10.0.3",
+    "@babel/preset-env": "^7.8.6",
+    "acorn": "^7.1.1",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-add-module-exports": "^1.0.2",
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",

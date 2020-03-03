@@ -159,7 +159,6 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
   }
 
   var current = null;
-  var title = tiddler.getFieldString("title");
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
 
     // Root
@@ -211,13 +210,6 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
     const canonical_uri = importedTiddler["_canonical_uri"];
     if (canonical_uri == undefined || canonical_uri == null) {
       importedTiddler["_canonical_uri"] = uri;
-    } else if (canonical_uri !== uri) {
-      importedTiddler["_import_uri"] = uri;
-    }
-
-    // Non Root reference
-    if (current !== tiddler) {
-      importedTiddler["import"] = title;
     }
 
     // Update

@@ -280,17 +280,15 @@ IpfsLibrary.prototype.add = async function(client, content) {
       chunker: "rabin-262144-524288-1048576",
       pin: false
     });
-    if (result !== undefined && result !== null && Array.isArray(result) && result.length > 0) {
-      // Check
-      const cidv1 = this.cidV0ToCidV1(result[0].hash);
-      return {
-        hash: cidv1,
-        size: result[0].size
-      };
+    // Check
+    if (result == undefined || result == null || Array.isArray(result) === false || result.length === 0) {
+      throw new Error("IPFS client returned an unknown result...");
     }
+    // Convert
+    const cidv1 = this.cidV0ToCidV1(result[0].hash);
     return {
-      hash: null,
-      size: null
+      hash: cidv1,
+      size: result[0].size
     };
   }
   throw new Error("Undefined IPFS command add...");
@@ -311,6 +309,9 @@ IpfsLibrary.prototype.get = async function(client, cid) {
   if (client !== undefined && client.get !== undefined) {
     this.getLogger().info("Processing IPFS get...");
     const result = await client.get(cid.trim());
+    if (result == undefined || result == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return result;
   }
   throw new Error("Undefined IPFS get...");
@@ -331,6 +332,9 @@ IpfsLibrary.prototype.cat = async function(client, cid) {
   if (client !== undefined && client.cat !== undefined) {
     this.getLogger().info("Processing IPFS cat...");
     const result = await client.cat(cid.trim());
+    if (result == undefined || result == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return result;
   }
   throw new Error("Undefined IPFS cat...");
@@ -351,6 +355,9 @@ IpfsLibrary.prototype.pin = async function(client, cid) {
   if (client !== undefined && client.pin !== undefined && client.pin.add !== undefined) {
     this.getLogger().info("Processing IPFS pin add...");
     const result = await client.pin.add(cid.trim());
+    if (result == undefined || result == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return result;
   }
   throw new Error("Undefined IPFS pin add...");
@@ -371,6 +378,9 @@ IpfsLibrary.prototype.unpin = async function(client, cid) {
   if (client !== undefined && client.pin !== undefined && client.pin.rm !== undefined) {
     this.getLogger().info("Processing IPFS pin rm...");
     const result = await client.pin.rm(cid.trim());
+    if (result == undefined || result == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return result;
   }
   throw new Error("Undefined IPFS pin rm");
@@ -393,6 +403,9 @@ IpfsLibrary.prototype.publish = async function(client, name, cid) {
   if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
     this.getLogger().info("Processing IPNS name publish...");
     const result = await client.name.publish(cid.trim(), { key: name.trim() });
+    if (result == undefined || result == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return result;
   }
   throw new Error("Undefined IPNS name publish...");
@@ -414,6 +427,9 @@ IpfsLibrary.prototype.resolve = async function(client, id) {
     const resolved = await client.name.resolve(id.trim(), {
       recursive: true
     });
+    if (resolved == undefined || resolved == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return resolved;
   }
   throw new Error("Undefined IPNS name resolve...");
@@ -430,6 +446,9 @@ IpfsLibrary.prototype.getKeys = async function(client) {
   if (client !== undefined && client.key !== undefined && client.key.list !== undefined) {
     this.getLogger().info("Processing IPNS key list...");
     const result = await client.key.list();
+    if (result == undefined || result == null || Array.isArray(result) == false) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
     return result;
   }
   throw new Error("Undefined IPNS key list...");
@@ -455,10 +474,10 @@ IpfsLibrary.prototype.genKey = async function(client, name) {
       type: "rsa",
       size: 2048
     });
-    if (key !== undefined && key.id !== undefined && key.id !== null) {
-      return key.id;
+    if (key == undefined || key == null || key.id == undefined || key.id == null) {
+      throw new Error("IPFS client returned an unknown result...");
     }
-    return null;
+    return key.id;
   }
   throw new Error("Undefined IPNS key gen...");
 }
@@ -477,10 +496,10 @@ IpfsLibrary.prototype.rmKey = async function(client, name) {
   if (client !== undefined && client.key !== undefined && client.key.rm !== undefined) {
     this.getLogger().info("Processing IPNS key rm...");
     const key = await client.key.rm(name.trim());
-    if (key !== undefined && key.id !== undefined && key.id !== null) {
-      return key.id;
+    if (key == undefined || key == null || key.id == undefined || key.id == null) {
+      throw new Error("IPFS client returned an unknown result...");
     }
-    return null;
+    return key.id
   }
   throw new Error("Undefined IPNS key rm...");
 }
@@ -502,35 +521,30 @@ IpfsLibrary.prototype.renameKey = async function(client, oldName, newName) {
   if (client !== undefined && client.key !== undefined && client.key.rename !== undefined) {
     this.getLogger().info("Processing IPNS key rename...");
     const key = await client.key.rename(oldName.trim(), newName.trim());
-    if (key !== undefined) {
-      var id = null;
-      if (key.id !== undefined && key.id !== null) {
-        id = key.id;
-      }
-      var was = null;
-      if (key.was !== undefined && key.was !== null) {
-        was = key.was;
-      }
-      var now = null;
-      if (key.now !== undefined && key.now !== null) {
-        now = key.now;
-      }
-      var overwrite = null;
-      if (key.overwrite !== undefined && key.overwrite !== null) {
-        overwrite = key.overwrite;
-      }
-      return {
-        id: id,
-        was: was,
-        now: now,
-        overwrite: overwrite
-      };
+    if (key == undefined || key == null) {
+      throw new Error("IPFS client returned an unknown result...");
+    }
+    var id = null;
+    if (key.id !== undefined && key.id !== null) {
+      id = key.id;
+    }
+    var was = null;
+    if (key.was !== undefined && key.was !== null) {
+      was = key.was;
+    }
+    var now = null;
+    if (key.now !== undefined && key.now !== null) {
+      now = key.now;
+    }
+    var overwrite = null;
+    if (key.overwrite !== undefined && key.overwrite !== null) {
+      overwrite = key.overwrite;
     }
     return {
-      id: null,
-      was: null,
-      now: null,
-      overwrite: null
+      id: id,
+      was: was,
+      now: now,
+      overwrite: overwrite
     };
   }
   throw new Error("Undefined IPNS key rename...");

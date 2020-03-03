@@ -87,8 +87,6 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
 
   try {
 
-    const title = event.tiddlerTitle;
-
     var fields = [];
     var export_uri = null;
     var ipnsKey = null;
@@ -97,6 +95,10 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     var ipfs = null;
     var ensDomain = null;
     var ensContent = null;
+    var protocol = null;
+    var cid = null;
+
+    const title = event.tiddlerTitle;
 
     // Load tiddler
     const tiddler = $tw.wiki.getTiddler(title);
@@ -127,26 +129,14 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     } else {
       export_uri = export_uri.trim();
     }
-    ipnsName = tiddler.getFieldString("_ipns_name");
-    // Check
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
-      ipnsName = null;
-    } else {
-      ipnsName = ipnsName.trim();
-    }
-    ipnsKey = tiddler.getFieldString("_ipns_key");
-    // Check
-    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
-      ipnsKey = null;
-    } else {
-      ipnsKey = ipnsKey.trim();
-    }
-    ensDomain = tiddler.getFieldString("_ens_domain");
-    // Check
-    if (ensDomain == undefined || ensDomain == null || ensDomain.trim() === "") {
-      ensDomain = null;
-    } else {
-      ensDomain = ensDomain.trim();
+
+    try {
+      export_uri = $tw.ipfs.getUrl(export_uri);
+    } catch (error) {
+      // Log an continue
+      this.getLogger().warn(error);
+      $tw.utils.alert(name, error.message);
+      export_uri = null;
     }
 
     // IPFS client
@@ -158,7 +148,6 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
       var { protocol, cid } = this.ipfsWrapper.decodeCid(export_uri.pathname);
       // Check
       if (protocol != null && cid != null) {
-        // Request to unpin
         if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
           $tw.ipfs.requestToUnpin(cid);
         }
@@ -166,14 +155,14 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     }
 
     // Analyse IPNS
-    if (ipnsName !== null || ipnsKey !== null) {
-      this.getLogger().info("Processing IPNS Tiddler...");
-      var { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+    if (protocol == ipnsKeyword) {
+      var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
       try {
         ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       } catch (error) {
         // Log and continue
         this.getLogger().warn(error);
+        $tw.utils.alert(name, error.message);
         ipnsContent = null;
       }
       // Request to unpin
@@ -182,12 +171,12 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
       }
     }
 
-    // Analyse ENS
-    if (ensDomain !== null) {
+    // Analyse URI
+    if (export_uri.hostname.endsWith(".eth")) {
       // Retrieve a Web3 provider
       const { web3, account } = await $tw.ipfs.getWeb3Provider();
       // Fetch ENS domain content
-      var { content: ensContent } = await this.ensWrapper.getContenthash(ensDomain, web3, account);
+      var { content: ensContent } = await this.ensWrapper.getContenthash(export_uri.hostname, web3, account);
       // Request to unpin
       if ($tw.utils.getIpfsUnpin() && ensContent !== null) {
         $tw.ipfs.requestToUnpin(ensContent);
@@ -210,9 +199,9 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
 
     // Add
     const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
+    // Default
     fields.push( { key: "_export_uri", value: "/" + ipfsKeyword + "/" + added } );
 
-    // Pin, if failure log and continue
     try {
       await this.ipfsWrapper.pinToIpfs(ipfs, added);
     } catch (error)  {
@@ -222,7 +211,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
     }
 
     // Publish to IPNS
-    if (ipnsName !== null && ipnsKey !== null) {
+    if (protocol == ipnsKeyword) {
       this.getLogger().info(
         "Publishing IPNS Tiddler: "
         + ipnsName
@@ -235,12 +224,12 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
         // Discard unpin request
-        $tw.ipfs.discardRequestToUpin(ipnsContent);
+        $tw.ipfs.discardRequestToUnpin(ipnsContent);
       }
     }
 
     // Publish to ENS
-    if (ensDomain !== null) {
+    if (export_uri.hostname.endsWith(".eth")) {
       this.getLogger().info(
         "Publishing ENS domain content: "
         + ensDomain
@@ -249,14 +238,14 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
         // Retrieve a Web3 provider
         const { web3, account } = await $tw.ipfs.getWeb3Provider();
         // Set ENS domain content
-        await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
-        fields.push( { key: "_export_uri", value: "https://" + ensDomain } );
+        await this.ensWrapper.setContenthash(export_uri.hostname, added, web3, account);
+        fields.push( { key: "_export_uri", value: "https://" + export_uri.hostname } );
       } catch (error) {
         // Log and continue
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
         // Discard unpin request
-        $tw.ipfs.discardRequestToUpin(ensContent);
+        $tw.ipfs.discardRequestToUnpin(ensContent);
       }
     }
 
@@ -341,10 +330,10 @@ IpfsAction.prototype.handleExportAttachmentToIpfs = async function(event) {
     // Add
     const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
 
-    // Pin, if failure log and continue
     try {
       await this.ipfsWrapper.pinToIpfs(ipfs, added);
     } catch (error)  {
+      // Log an continue
       this.getLogger().warn(error);
       $tw.utils.alert(name, error.message);
     }
@@ -391,15 +380,17 @@ IpfsAction.prototype.handleIpfsPin = async function(event) {
     var parsed = null;
     var cid = null;
 
+    const title = event.tiddlerTitle;
+
+    // Load tiddler
+    const tiddler = $tw.wiki.getTiddler(title);
+    if (tiddler == undefined || tiddler == null) {
+      $tw.utils.alert(name, "Unknown tiddler: " + title);
+      return false;
+    }
+
     // Tiddler
     if (event.param !== undefined && event.param !== null) {
-      const title = event.tiddlerTitle;
-      // Current tiddler
-      const tiddler = $tw.wiki.getTiddler(title);
-      if (tiddler == undefined || tiddler == null) {
-        $tw.utils.alert(name, "Unknown tiddler: " + title);
-        return false;
-      }
       // Process if _canonical_uri is set
       const uri = tiddler.getFieldString("_canonical_uri");
       if (uri == undefined || uri == null || uri.trim() === "") {
@@ -475,26 +466,26 @@ IpfsAction.prototype.handleIpfsUnpin = async function(event) {
     var parsed = null;
     var cid = null;
 
+    const title = event.tiddlerTitle;
+
+    // Load tiddler
+    const tiddler = $tw.wiki.getTiddler(title);
+    if (tiddler == undefined || tiddler == null) {
+      $tw.utils.alert(name, "Unknown tiddler: " + title);
+      return false;
+    }
+
     // Tiddler
     if (event.param !== undefined && event.param !== null) {
-      const title = event.tiddlerTitle;
-      // current tiddler
-      const tiddler = $tw.wiki.getTiddler(title);
-      if (tiddler == undefined || tiddler == null) {
-        $tw.utils.alert(name, "Unknown tiddler: " + title);
-        return false;
-      }
       // Process if _canonical_uri is set
       const uri = tiddler.getFieldString("_canonical_uri");
       if (uri == undefined || uri == null || uri.trim() === "") {
         $tw.utils.alert(name, "This Tiddler is not imported from IPFS...");
         return false;
       }
-      // Parse _canonical_uri
       parsed = await $tw.ipfs.normalizeIpfsUrl(uri);
     // Document
     } else {
-      // Parse document URL
       parsed = await $tw.ipfs.getDocumentUrl();
     }
 
@@ -655,9 +646,9 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
   try {
 
     // Retrieve default IPNS name
+    var cid = null;
     var ipnsName = $tw.utils.getIpfsIpnsName();
     var ipnsKey = $tw.utils.getIpfsIpnsKey();
-    var cid = null;
 
     // Check
     if (ipnsName == null) {

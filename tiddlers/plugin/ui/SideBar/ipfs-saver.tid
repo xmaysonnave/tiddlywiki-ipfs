@@ -30,8 +30,8 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 ''<<lingo Export>>''
 
-<$radio tiddler="$:/ipfs/saver/export" value="html"><<lingo Export/Html/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/export" value="json"><<lingo Export/Json/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/export" value="static"><<lingo Export/Static/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/export" value="tid"><<lingo Export/Tid/Description>></$radio>
 
 ''<<lingo Protocol>>''

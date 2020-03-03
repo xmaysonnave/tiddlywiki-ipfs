@@ -41,8 +41,8 @@ IpfsLoader.prototype.loadEtherJsLibrary = async function() {
   if (typeof window.ethers === "undefined") {
     return await this.loadLibrary(
       "EtherJsLibrary",
-      "https://cdn.jsdelivr.net/npm/ethers@4.0.44/dist/ethers.min.js",
-      "sha384-OVtNQuuquwgl2WspNZSP1tVXyso/+dUUAU7tGnC1bV7vjXGwQN8RUG13biHCbHij",
+      "https://cdn.jsdelivr.net/npm/ethers@4.0.45/dist/ethers.min.js",
+      "sha384-BxarTKFrgqsLDUOaHdnRc2aPTsVEcI3C3oXX5GGKIxGujBbuI8VwE9+/lg0ZZ9z/",
       true
     );
   }

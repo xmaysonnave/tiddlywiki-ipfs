@@ -25,7 +25,7 @@ Saving/IpfsService/Protocol/Ens/Description: ENS
 Saving/IpfsService/Protocol/Ipfs/Description: IPFS
 Saving/IpfsService/Protocol/Ipns/Description: IPNS
 Saving/IpfsService/Export: Export
-Saving/IpfsService/Export/Html/Description: HTML
+Saving/IpfsService/Export/Static/Description: Static
 Saving/IpfsService/Export/Json/Description: JSON
 Saving/IpfsService/Export/Tid/Description: TID
 Saving/IpfsService/Provider: IPFS Provider
