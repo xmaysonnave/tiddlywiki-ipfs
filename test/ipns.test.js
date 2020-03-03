@@ -55,7 +55,7 @@ describe("IPNS", () => {
     try {
       await ipfsWrapper.getIpnsIdentifiers(null, "dummy", null);
     } catch (error) {
-      expect(error.message).toBe("Failed to fetch IPNS keys...");
+      expect(error.message).toBe("Unknown IPNS key...");
     }
   });
 
@@ -140,7 +140,7 @@ describe("IPNS key", () => {
   });
 
   it("Unassigned IPNS key.", async () => {
-    const url = new URL("/ipns/QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf", base);
+    const pathname = "/ipns/QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf";
     const ipfsWrapper = new IpfsWrapper();
     ipfsWrapper.ipfsUri.getDocumentUrl = jest.fn();
     ipfsWrapper.ipfsUri.getDocumentUrl.mockReturnValueOnce(base);
@@ -148,7 +148,7 @@ describe("IPNS key", () => {
     try {
       await ipfsWrapper.resolveIpnsKey(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
     } catch (error) {
-      expect(error.message).toBe("Failed to resolve IPNS key:\n " + url.toString());
+      expect(error.message).toBe("Failed to resolve IPNS key:\n " + pathname);
     }
   });
 
