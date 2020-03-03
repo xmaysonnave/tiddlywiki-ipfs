@@ -1,3 +1,4 @@
+
 /*\
 title: $:/plugins/ipfs/ipfs-uri.js
 type: application/javascript
@@ -8,7 +9,7 @@ IpfsUri
 
 \*/
 
-import { URL } from "whatwg-url";
+import { URL } from "universal-url";
 
 (function(){
 
@@ -50,6 +51,8 @@ IpfsUri.prototype.getLogger = function() {
  * url.search;
  * url.hash;
  * https://jsdom.github.io/whatwg-url/
+ * https://github.com/stevenvachon/universal-url
+ * https://github.com/stevenvachon/universal-url-lite
  * https://url.spec.whatwg.org/
  */
 IpfsUri.prototype.getDocumentUrl = function() {

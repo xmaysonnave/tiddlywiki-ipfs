@@ -19,6 +19,10 @@ cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
 mkdir -p ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
 cp -R ./node_modules/loglevel/lib/loglevel.js ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
 cp -R ./node_modules/loglevel/LICENSE-MIT ./build/plugins/ipfs/files/loglevel > /dev/null 2>&1
+# babel-polyfill
+mkdir -p ./build/plugins/ipfs/files/babel-polyfill > /dev/null 2>&1
+cp -R ./node_modules/@babel/polyfill/dist/polyfill.min.js ./build/plugins/ipfs/files/babel-polyfill > /dev/null 2>&1
+cp -R ./node_modules/@babel/polyfill/LICENSE ./build/plugins/ipfs/files/babel-polyfill > /dev/null 2>&1
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # generate build number

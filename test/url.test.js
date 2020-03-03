@@ -3,7 +3,7 @@
 
 const log = require("loglevel");
 const root = require("window-or-global");
-const { URL } = require("whatwg-url");
+const { URL } = require("universal-url");
 
 const IpfsUri = require("../build/plugins/ipfs/ipfs-uri.js").IpfsUri;
 

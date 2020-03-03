@@ -22,7 +22,7 @@ exports.platforms = ["browser"];
 exports.after = ["startup"];
 exports.synchronous = true;
 
-exports.startup = async function() {
+exports.startup = function() {
 
   // Logger name
   const name = "ipfs-startup";

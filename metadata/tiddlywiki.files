@@ -5,9 +5,11 @@
       "fields": {
         "type": "application/javascript",
         "title": "$:/plugins/ipfs/loglevel/loglevel.js",
+        "global-module": "true",
         "module-type": "library"
       }
-    },{
+    },
+    {
       "file": "loglevel/LICENSE-MIT",
       "fields": {
         "type": "text/plain",

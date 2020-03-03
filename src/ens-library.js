@@ -1,3 +1,4 @@
+
 /*\
 title: $:/plugins/ipfs/ens-library.js
 type: application/javascript
@@ -491,7 +492,7 @@ EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account)
     + "\n "
     + this.etherscan[chainId] + "/tx/" + tx.hash
   );
-  
+
   // Wait for transaction completion
   await tx.wait();
   this.getLogger().info("Processed ENS domain content...");

@@ -14,6 +14,8 @@
  * url.search;
  * url.hash;
  * https://jsdom.github.io/whatwg-url/
+ * https://github.com/stevenvachon/universal-url
+ * https://github.com/stevenvachon/universal-url-lite
  * https://url.spec.whatwg.org/
  */
 
@@ -67,7 +69,7 @@ describe("WHATWG-URL", () => {
     const parsed = ipfsUri.getUrl(baseFile);
     expect(
       parsed.protocol === "file:"
-      && parsed.origin === "null"
+      && parsed.origin === "file://"
       && parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html"
       && parsed.href === baseFile
     ).toBeTruthy();
