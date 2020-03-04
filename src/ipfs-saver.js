@@ -225,7 +225,7 @@ IpfsSaver.prototype.save = async function(text, method, callback, options) {
     // Publish to IPNS
     if (ipnsName !== null && (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword)) {
       this.getLogger().info(
-        "Publishing IPNS wiki: "
+        "Publishing IPNS name: "
         + ipnsName
       );
       try {

@@ -274,70 +274,29 @@ IpfsLibrary.prototype.add = async function(client, content) {
     // Not a 'dag-pb' but a 'raw' multicodec instead
     // We generate a V0 and convert it to a V1
     // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
-    const result = await client.add(buffer, {
+    const addSource = await client.add(buffer, {
       cidVersion: 0,
       hashAlg: "sha2-256",
       chunker: "rabin-262144-524288-1048576",
       pin: false
     });
+    // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
+    var lastResult = null;
+    for await (const added of addSource) {
+      lastResult = added;
+    }
     // Check
-    if (result == undefined || result == null || Array.isArray(result) === false || result.length === 0) {
+    if (lastResult == null || lastResult.path == undefined || lastResult.path == null) {
       throw new Error("IPFS client returned an unknown result...");
     }
     // Convert
-    const cidv1 = this.cidV0ToCidV1(result[0].hash);
+    const cidv1 = this.cidV0ToCidV1(lastResult.path);
     return {
       hash: cidv1,
-      size: result[0].size
+      size: lastResult.size
     };
   }
   throw new Error("Undefined IPFS command add...");
-}
-
-IpfsLibrary.prototype.get = async function(client, cid) {
-  if (client == undefined || client == null) {
-    throw new Error("Undefined IPFS provider...");
-  }
-  if (cid == undefined || cid == null || cid.trim() === "") {
-    throw new Error("Undefined IPFS identifier...");
-  }
-  // Window IPFS policy
-  if (client.enable) {
-    client = await client.enable({commands: ["get"]});
-  }
-  // Process
-  if (client !== undefined && client.get !== undefined) {
-    this.getLogger().info("Processing IPFS get...");
-    const result = await client.get(cid.trim());
-    if (result == undefined || result == null) {
-      throw new Error("IPFS client returned an unknown result...");
-    }
-    return result;
-  }
-  throw new Error("Undefined IPFS get...");
-}
-
-IpfsLibrary.prototype.cat = async function(client, cid) {
-  if (client == undefined || client == null) {
-    throw new Error("Undefined IPFS provider...");
-  }
-  if (cid == undefined || cid == null || cid.trim() === "") {
-    throw new Error("Undefined IPFS identifier...");
-  }
-  // Window IPFS policy
-  if (client.enable) {
-    client = await client.enable({commands: ["cat"]});
-  }
-  // Process
-  if (client !== undefined && client.cat !== undefined) {
-    this.getLogger().info("Processing IPFS cat...");
-    const result = await client.cat(cid.trim());
-    if (result == undefined || result == null) {
-      throw new Error("IPFS client returned an unknown result...");
-    }
-    return result;
-  }
-  throw new Error("Undefined IPFS cat...");
 }
 
 IpfsLibrary.prototype.pin = async function(client, cid) {
@@ -424,13 +383,18 @@ IpfsLibrary.prototype.resolve = async function(client, id) {
   }
   if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
     this.getLogger().info("Processing IPNS name resolve...");
-    const resolved = await client.name.resolve(id.trim(), {
+    const resolvedSource = await client.name.resolve(id.trim(), {
       recursive: true
     });
-    if (resolved == undefined || resolved == null) {
+    // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
+    var lastResult = null;
+    for await (const resolved of resolvedSource) {
+      lastResult = resolved;
+    }
+    if (lastResult == null || lastResult == undefined || lastResult.trim() === "") {
       throw new Error("IPFS client returned an unknown result...");
     }
-    return resolved;
+    return lastResult;
   }
   throw new Error("Undefined IPNS name resolve...");
 }

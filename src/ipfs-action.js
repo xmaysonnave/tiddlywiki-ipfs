@@ -945,7 +945,7 @@ IpfsAction.prototype.handlePublishToIpns = async function(event) {
     }
 
     this.getLogger().info(
-      "Publishing IPNS wiki: "
+      "Publishing IPNS name: "
       + ipnsName
     );
 
