@@ -1,10 +1,13 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.2.10-dev.200303497",
+  "version": "v0.2.10-dev.200304319",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
     "test": "test"
+  },
+  "browser": {
+    "universal-url": "universal-url-lite"
   },
   "browserify": {
     "transform": [

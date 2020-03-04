@@ -3,6 +3,7 @@ npx browserify \
   src/ipfs-uri.js \
   -s IpfsUri \
   -o build/plugins/ipfs/ipfs-uri.js \
+  --noparse="$PWD/node_modules/universal-url-lite/lite.js" \
 || exit 1
 
 npx browserify \
