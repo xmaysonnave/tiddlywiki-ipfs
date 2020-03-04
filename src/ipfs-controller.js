@@ -118,10 +118,36 @@ IpfsController.prototype.getIpnsIdentifiers = function(ipfs, ipnsKey, ipnsName) 
 }
 
 IpfsController.prototype.getIpfsClient = async function() {
+  // Provider
+  const ipfsProvider = $tw.utils.getIpfsProvider();
+  // IPFS companion
+  if (ipfsProvider === "window") {
+    const client = await this.ipfsWrapper.getWindowIpfsClient();
+    return {
+      ipfs: client.ipfs,
+      provider: client.provider
+    }
+  }
+  // Default, try IPFS companion
+  if (ipfsProvider === "default") {
+    try {
+      const client = await this.ipfsWrapper.getWindowIpfsClient();
+      return {
+        ipfs: client.ipfs,
+        provider: client.provider
+      }
+    } catch (error) {
+      // Ignore, fallback to HTTP
+    }
+  }
   // Current API URL
   const apiUrl = this.getIpfsApiUrl();
-  // Retrieve an existing HTTP Client
-  const client  = this.ipfsClients.get(apiUrl.toString());
+  // Check
+  if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
+    throw new Error("Undefined IPFS API URL...");
+  }
+  // HTTP Client
+  const client  = this.ipfsClients.get(apiUrl.href);
   if (client !== undefined && client !== null) {
     // Log
     this.getLogger().info(
@@ -135,14 +161,12 @@ IpfsController.prototype.getIpfsClient = async function() {
       provider: client.provider
     }
   }
-  // Build a new HTTP client or retrieve IPFS Companion
-  const policy = await this.ipfsWrapper.getIpfsClient(apiUrl.toString());
+  // Build a new HTTP client
+  const policy = await this.ipfsWrapper.getHttpIpfsClient(apiUrl);
   const ipfs = policy.ipfs;
   const provider = policy.provider;
-  // Store if applicable
-  if (apiUrl !== undefined && apiUrl !== null && apiUrl.toString().trim() !== "") {
-    this.ipfsClients.set(apiUrl.toString(), { ipfs, provider } );
-  }
+  // Store
+  this.ipfsClients.set(apiUrl.href, { ipfs, provider } );
   // Log
   this.getLogger().info(
     "New IPFS provider:"

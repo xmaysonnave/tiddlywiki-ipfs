@@ -295,11 +295,36 @@ IpfsWrapper.prototype.locateTiddlers = function(transclude, tiddlers) {
   }
 }
 
+IpfsWrapper.prototype.getWindowIpfsClient = async function() {
+  // IPFS Companion
+  try {
+    const policy = await this.ipfsLibrary.getWindowIpfs();
+    if (policy !== null && policy.ipfs !== null && policy.provider !== null)  {
+      return policy;
+    }
+  } catch (error) {
+    this.getLogger().error(error);
+  }
+  throw new Error("Failed to retrieve IPFS Companion...");
+}
+
+IpfsWrapper.prototype.getHttpIpfsClient = async function(apiUrl) {
+  // HTTP Client
+  try {
+    const policy = await this.ipfsLibrary.getHttpIpfs(apiUrl);
+    if (policy !== null && policy.ipfs !== null && policy.provider !== null)  {
+      return policy;
+    }
+  } catch (error) {
+    this.getLogger().error(error);
+  }
+  throw new Error("Failed to retrieve an IPFS HTTP provider...");
+}
+
 IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
   // IPFS client
-  const err = new Error("Failed to get an IPFS provider...");
   try {
-    var policy = { ipfs: null, provider: null };
+    var policy = null;
     const ipfsProvider = $tw.utils.getIpfsProvider();
      if (ipfsProvider === "window") {
       policy = await this.ipfsLibrary.getWindowIpfs();
@@ -308,18 +333,13 @@ IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
     } else  {
       policy  = await this.ipfsLibrary.getDefaultIpfs(apiUrl);
     }
-    // Return if undefined
-    if (policy.ipfs == null || policy.provider == null)  {
-      throw err;
+    if (policy !== null && policy.ipfs !== null && policy.provider !== null)  {
+      return policy;
     }
-    // Done
-    return policy;
   } catch (error) {
-    if (error !== err) {
-      this.getLogger().error(error);
-    }
+    this.getLogger().error(error);
   }
-  throw err;
+  throw new Error("Failed to retrieve an IPFS provider...");
 }
 
 IpfsWrapper.prototype.getIpnsIdentifiers = async function(ipfs, ipnsKey, ipnsName) {

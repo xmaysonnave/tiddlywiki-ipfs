@@ -167,10 +167,6 @@ IpfsLibrary.prototype.cidV0ToCidV1 = function(cidv0) {
 
 // Default
 IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
-  // Check
-  if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
-    throw new Error("Undefined IPFS API URL...");
-  }
   // IPFS Companion first
   try {
     const { ipfs, provider } = await this.getWindowIpfs();
@@ -182,6 +178,10 @@ IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
     }
   } catch (error) {
     // IPFS Companion failed
+  }
+  // Check
+  if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
+    throw new Error("Undefined IPFS API URL...");
   }
   // Load IpfsHttpClient
   try {
@@ -195,12 +195,11 @@ IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
   } catch (error) {
     // IPFS HTTP client failed
   }
-  throw new Error("Unable to reach IPFS Companion and IPFS API URL...");
+  throw new Error("Unable to retrieve IPFS Companion and IPFS API URL...");
 }
 
-// window.enable
+// IPFS companion
 IpfsLibrary.prototype.getWindowIpfs = async function() {
-  // Getting
   try {
     const { windowIpfs } = providers;
     this.getLogger().info("Processing connection to IPFS Companion...");
@@ -215,8 +214,8 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
     };
   } catch (error) {
     this.getLogger().error(error);
-    throw new Error("Unreachable IPFS Companion...");
   }
+  throw new Error("Unreachable IPFS Companion...");
 }
 
 // ipfs-http-client
@@ -226,18 +225,14 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
     throw new Error("Undefined IPFS API URL...");
   }
   try {
-    // Try to load IpfsHttpClient
+    // Load IpfsHttpClient
     await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
-  } catch (error) {
-    this.getLogger().error(error);
-  }
-  // Getting
-  try {
+    // Instantiate client
     const { httpClient } = providers;
     this.getLogger().info(
       "Processing connection to IPFS API URL:"
       + "\n "
-      + apiUrl
+      + apiUrl.href
     );
     const { ipfs, provider } = await getIpfs({
       providers: [
@@ -252,8 +247,8 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
     };
   } catch (error) {
     this.getLogger().error(error);
-    throw new Error("Unreachable IPFS API URL...");
   }
+  throw new Error("Unreachable IPFS API URL...");
 }
 
 IpfsLibrary.prototype.add = async function(client, content) {
@@ -278,6 +273,7 @@ IpfsLibrary.prototype.add = async function(client, content) {
     // 2 - TODO: small content generates a wrong cid when cidVersion: 1 is set:
     // Not a 'dag-pb' but a 'raw' multicodec instead
     // We generate a V0 and convert it to a V1
+    // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
     const result = await client.add(buffer, {
       cidVersion: 0,
       hashAlg: "sha2-256",
