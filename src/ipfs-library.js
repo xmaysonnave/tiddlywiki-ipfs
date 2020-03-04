@@ -167,6 +167,10 @@ IpfsLibrary.prototype.cidV0ToCidV1 = function(cidv0) {
 
 // Default
 IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
+  // Check
+  if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
+    throw new Error("Undefined IPFS API URL...");
+  }
   // IPFS Companion first
   try {
     const { ipfs, provider } = await this.getWindowIpfs();
@@ -191,7 +195,7 @@ IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
   } catch (error) {
     // IPFS HTTP client failed
   }
-  throw new Error("Unreachable IPFS Companion and IPFS API URL...");
+  throw new Error("Unable to reach IPFS Companion and IPFS API URL...");
 }
 
 // window.enable
@@ -218,10 +222,9 @@ IpfsLibrary.prototype.getWindowIpfs = async function() {
 // ipfs-http-client
 IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
   // Check
-  if (apiUrl == undefined || apiUrl == null || apiUrl.toString().trim() === "") {
+  if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
     throw new Error("Undefined IPFS API URL...");
   }
-  apiUrl = apiUrl.toString().trim();
   try {
     // Try to load IpfsHttpClient
     await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
@@ -239,13 +242,13 @@ IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
     const { ipfs, provider } = await getIpfs({
       providers: [
         httpClient({
-          apiAddress: apiUrl
+          apiAddress: apiUrl.href
         })
       ]
     });
     return {
       ipfs: ipfs,
-      provider: provider + ", " + apiUrl
+      provider: provider + ", " + apiUrl.href
     };
   } catch (error) {
     this.getLogger().error(error);
