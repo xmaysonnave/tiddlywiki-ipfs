@@ -192,14 +192,14 @@ We update npm to use the latest:
 ```
 npm install -g npm@latest
 npm -v
-6.13.7
+6.14.2
 ```
 
 At this stage your global environment should look like this:
 ```
 npm -g ls --depth=0
 /home/user/.nvm/versions/node/v10.19.0/lib
-└── npm@6.13.7
+└── npm@6.14.2
 ```
 
 #### Repository install
