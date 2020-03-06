@@ -509,15 +509,12 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
           var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
           // IPFS resource
           if (cid !== null) {
-            addTags = ["$:/isImported", "$:/isIpfs"];
             removeTags = ["$:/isAttachment", "$:/isEmbedded"];
           } else {
-            addTags = ["$:/isImported"];
             removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
           }
           updatedTiddler = $tw.utils.updateTiddler({
             tiddler: updatedTiddler,
-            addTags: addTags,
             removeTags: removeTags,
             fields: [{ key: "text", value: "" }]
           });

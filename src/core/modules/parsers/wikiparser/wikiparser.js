@@ -151,53 +151,58 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
 */
 WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
 
+  var head = tiddler;
   var importedTiddlers = null;
   if (this.isJSON(loaded)) {
     importedTiddlers = $tw.wiki.deserializeTiddlers(".json", loaded, $tw.wiki.getCreationFields());
   } else {
     importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", loaded, $tw.wiki.getCreationFields());
   }
+  // IPFS tag
+  const { cid } = $tw.ipfs.decodeCid(uri);
 
-  var current = null;
   $tw.utils.each(importedTiddlers, function(importedTiddler) {
 
+    var importedTags = importedTiddler["tags"] !== undefined ? importedTiddler["tags"] : "";
+
+    var known = null;
+
     // Root
-    if (current == null) {
-      current = tiddler;
+    if (head !== null) {
+      known = head;
+    // Children
     } else {
-      current = $tw.wiki.getTiddler(importedTiddler["title"]);
+      known = $tw.wiki.getTiddler(importedTiddler["title"]);
     }
 
-    // Known Tiddler
-    if (current !== undefined && current !== null) {
-      var currentTags = (current.fields.tags || []).slice(0);
-      var currentTitle = current.getFieldString("title");
+    // Merge known Tiddler
+    if (known !== undefined && known !== null) {
+      var currentTags = (known.fields.tags || []).slice(0);
+      var currentTitle = known.getFieldString("title");
       // Merge Tiddler fields with imported fields
       // $:/core/modules/server/routes/get-tiddler.js
-      $tw.utils.each(current.fields, function(field, name) {
+      $tw.utils.each(known.fields, function(field, name) {
         // field is an array value, we use the string instead
-        var value = current.getFieldString(name);
-        // Not a reserve keyword and do not exist
+        var value = known.getFieldString(name);
+        // Not a reserved keyword and do not exist
         if (knownFields.indexOf(name) == -1 && (importedTiddler[name] == undefined || importedTiddler[name] == null)) {
           importedTiddler[name] = value;
         }
       });
       // Merge imported tags with current tags
-      var importedTags = importedTiddler["tags"] == undefined ? "" : importedTiddler["tags"];
       for (var i = 0; i < currentTags.length; i++) {
         const tag = currentTags[i];
         if (importedTags.includes(tag) == false) {
           importedTags = importedTags + " " + tag;
         }
       }
-      importedTiddler["tags"] = importedTags;
       // Title
       if (importedTiddler["title"] !== currentTitle) {
         importedTiddler["imported-title"] = importedTiddler["title"];
       }
       importedTiddler["title"] = currentTitle;
       // Root
-      if (current === tiddler) {
+      if (head === tiddler) {
         // Temporary warning text
         const text = importedTiddler["text"];
         if (text == undefined || text == null || text.trim() === "") {
@@ -205,6 +210,19 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
         }
       }
     }
+
+    // IPFS tag
+    if (cid !== null) {
+      if (importedTags.includes("$:/isIpfs") == false) {
+        importedTags = importedTags + " $:/isIpfs";
+      }
+    }
+    // Imported tag
+    if (importedTags.includes("$:/isImported") == false) {
+      importedTags = importedTags + " $:/isImported";
+    }
+    // Processed tags
+    importedTiddler["tags"] = importedTags;
 
     // canonical_uri
     const canonical_uri = importedTiddler["_canonical_uri"];
@@ -214,6 +232,9 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
 
     // Update
     $tw.wiki.addTiddler(importedTiddler);
+
+    // Processed
+    head = null;
 
   });
 

@@ -33,12 +33,12 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 * * [IPFS with TiddlyWiki](https://bluelightav.eth) on "Mainnet: Ethereum Main Network"
 * * [IPFS with TiddlyWiki Development](https://bluelightav.eth) on "Ropsten (PoW) or Rinkeby (PoA): Ethereum Test Network"
 * * [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
-* * [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#Documentation)
+* * [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
 
 * With a non capable ENS browser:
 * * [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 * * [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
-* * [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#Documentation)
+* * [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
 
 * Required TiddlyWiki Plugin
 * * [TiddlyWiki Locator Plugin](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)

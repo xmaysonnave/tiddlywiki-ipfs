@@ -1,0 +1,11 @@
+title: IPFS Documentation
+tags: $:/ipfs/documentation TableOfContents
+type: text/vnd.tiddlywiki
+
+<p>
+This [ext[TiddlyWiki|https://tiddlywiki.com/]] uses the [ext[IPFS with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/]] plugin.
+</p>
+<p>
+To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
+</p>
+<<locator-view baseTitle:"IPFS Documentation">>

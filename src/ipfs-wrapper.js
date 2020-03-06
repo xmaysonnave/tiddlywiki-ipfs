@@ -183,7 +183,7 @@ IpfsWrapper.prototype.exportTiddler = function(tiddler, content) {
     const filtered = linked.concat(transcluded);
     // Process filtered content
     for (var i = 0; i < filtered.length; i++) {
-      if (exportFilter.includes(filtered[i]) == false) {
+      if (exportFilter.includes("[[" + filtered[i] + "]]") == false) {
         exportFilter = exportFilter + " [[" + filtered[i] + "]]"
       }
     }

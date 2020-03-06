@@ -1,5 +1,0 @@
-title: Imported Tiddler
-tags: $:/ipfs/core Explorer
-type: text/vnd.tiddlywiki
-
-<<locator-view baseTitle:"$:/isIpfs" finalFilter:"+[!is[system]]+[!tag[$:/isAttachment]]" tagFilter:"+[sort[color]]">>

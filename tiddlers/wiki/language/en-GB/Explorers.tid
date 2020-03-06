@@ -1,5 +1,5 @@
 title: Explorers
-tags: $:/ipfs/documentation Documentation
+tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
-<<locator-view baseTitle:"Explorers" finalFilter:"+[!is[system]]" tagFilter:"+[sort[color]]">>
+<<locator-view baseTitle:"Explorers" fieldOfRelationship:"parent">>
