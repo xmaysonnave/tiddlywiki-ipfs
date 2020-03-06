@@ -1,0 +1,17 @@
+{
+	"description": "Empty edition",
+	"plugins": [
+	],
+	"themes": [
+		"tiddlywiki/vanilla",
+		"tiddlywiki/snowwhite"
+	],
+	"build": {
+		"empty": [
+			"--rendertiddler",
+			"$:/core/save/all",
+			"empty.html",
+			"text/plain"
+		]
+	}
+}
