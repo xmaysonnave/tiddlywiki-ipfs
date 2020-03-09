@@ -22,12 +22,28 @@ See the <b>~TiddlyWiki</b> [[Getting Started|https://tiddlywiki.com/#GettingStar
 <br/>
 See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
 </p>
+<p>
+  <b>Community</b>
+</p>
 <ul>
-  <li>[ext[TiddlyWiki Forum|https://groups.google.com/forum/#!forum/tiddlywiki]]</li>
-  <li>[ext[TiddlyWikiDev Forum|https://groups.google.com/forum/#!forum/tiddlywikidev]]</li>
-  <li>[ext[TiddlyWiki Public Chat|https://gitter.im/TiddlyWiki/public]]</li>
-  <li>[ext[TiddlyWiki Developer and Geeks Chat|https://gitter.im/TiddlyWiki/developers-and-geeks]]</li>
-  <li>[ext[TiddlyWiki Servers and Savers Chat|https://gitter.im/TiddlyWiki/servers-and-savers]]</li>
+  <li><b>~TiddlyWiki</b>:
+    <ul>
+      <li>[ext[Discord|https://discord.gg/7TEuTvk]]</li>
+      <li>Gitter:
+        <ul>
+          <li>[ext[TiddlyWiki Public|https://gitter.im/TiddlyWiki/public]]</li>
+          <li>[ext[TiddlyWiki Developer and Geeks|https://gitter.im/TiddlyWiki/developers-and-geeks]]</li>
+          <li>[ext[TiddlyWiki Servers and Savers|https://gitter.im/TiddlyWiki/servers-and-savers]]</li>
+        </ul>
+      </li>
+      <li>Google Groups:
+        <ul>
+          <li>[ext[TiddlyWiki|https://groups.google.com/forum/#!forum/tiddlywiki]]</li>
+          <li>[ext[TiddlyWikiDev|https://groups.google.com/forum/#!forum/tiddlywikidev]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li>[ext[IPFS Forum|https://discuss.ipfs.io/]]</li>
 </ul>
 

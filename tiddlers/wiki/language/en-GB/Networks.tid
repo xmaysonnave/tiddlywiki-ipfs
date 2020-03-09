@@ -8,7 +8,6 @@ You can check the IPFS network with the following tools:
 <ul>
 <li>[ext[Infura Status|https://status.infura.io]]</li>
 <li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
-<li>[ext[IPFS Public Gateway Status|https://gateway.ipfs.io/ipfs/QmV8dDdfXEiEznLNesKynBpEvhipLUv5HjWYEUpDB7buHZ/]]</li>
 </ul>
 <p>
 And their respective [ext[GitHub|https://github.com/]] repositories:
@@ -16,5 +15,4 @@ And their respective [ext[GitHub|https://github.com/]] repositories:
 <ul>
 <li>[ext[Infura|https://github.com/INFURA/]]</li>
 <li>[ext[IPFS Public Gateway Checker|https://github.com/ipfs/public-gateway-checker/]]</li>
-<li>[ext[IPFS Gateway Status Checker|https://github.com/fooock/ipfs-gateway-checker/]]</li>
 </ul>

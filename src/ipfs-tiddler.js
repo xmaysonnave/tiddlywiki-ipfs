@@ -80,9 +80,7 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
             { key: "text", value: "" }
           ]
         });
-        if (updatedTiddler !== null) {
-          $tw.wiki.addTiddler(updatedTiddler);
-        }
+        $tw.wiki.addTiddler(updatedTiddler);
       }
     }
   }
@@ -202,7 +200,7 @@ IpfsTiddler.prototype.merge = function(tiddler, target) {
 
   // Title
   if (target["title"] !== currentTitle) {
-    fields.push({ key: "imported-title", value: target["title"] });
+    fields.push({ key: "_imported_title", value: target["title"] });
   }
 
   // Update Tiddler
@@ -514,7 +512,7 @@ IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
             removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
           }
           updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: updatedTiddler,
+            tiddler: tiddler,
             removeTags: removeTags,
             fields: [{ key: "text", value: "" }]
           });

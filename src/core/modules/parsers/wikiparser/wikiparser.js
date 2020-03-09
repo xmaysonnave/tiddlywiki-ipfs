@@ -110,7 +110,7 @@ WikiParser.prototype.getLogger = function() {
 }
 
 WikiParser.prototype.isJSON = function(content) {
-  if (content !== undefined && content !== null && typeof content === 'string'){
+  if (content !== undefined && content !== null && typeof content === 'string') {
     try {
       JSON.parse(content);
       return true;
@@ -170,6 +170,18 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
     // Root
     if (head !== null) {
       known = head;
+      // Title
+      const headTitle = known.getFieldString("title");
+      const importedTitle = importedTiddler["title"];
+      if (importedTitle !== headTitle) {
+        importedTiddler["title"] = headTitle;
+        importedTiddler["_imported_title"] = importedTitle;
+      }
+      // Temporary warning text
+      const text = importedTiddler["text"];
+      if (text == undefined || text == null || text.trim() === "") {
+        importedTiddler["text"] = $tw.language.getRawString("EmptyTidddler");
+      }
     // Children
     } else {
       known = $tw.wiki.getTiddler(importedTiddler["title"]);
@@ -177,8 +189,8 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
 
     // Merge known Tiddler
     if (known !== undefined && known !== null) {
+
       var currentTags = (known.fields.tags || []).slice(0);
-      var currentTitle = known.getFieldString("title");
       // Merge Tiddler fields with imported fields
       // $:/core/modules/server/routes/get-tiddler.js
       $tw.utils.each(known.fields, function(field, name) {
@@ -194,19 +206,6 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
         const tag = currentTags[i];
         if (importedTags.includes(tag) == false) {
           importedTags = importedTags + " " + tag;
-        }
-      }
-      // Title
-      if (importedTiddler["title"] !== currentTitle) {
-        importedTiddler["imported-title"] = importedTiddler["title"];
-      }
-      importedTiddler["title"] = currentTitle;
-      // Root
-      if (head === tiddler) {
-        // Temporary warning text
-        const text = importedTiddler["text"];
-        if (text == undefined || text == null || text.trim() === "") {
-          importedTiddler["text"] = $tw.language.getRawString("EmptyTidddler");
         }
       }
     }
@@ -233,7 +232,7 @@ WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
     // Update
     $tw.wiki.addTiddler(importedTiddler);
 
-    // Processed
+    // Root has been processed
     head = null;
 
   });

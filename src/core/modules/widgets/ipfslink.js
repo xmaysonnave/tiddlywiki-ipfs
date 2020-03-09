@@ -99,7 +99,6 @@ IpfsLinkWidget.prototype.render = function(parent,nextSibling) {
 Render this widget into the DOM
 */
 IpfsLinkWidget.prototype.renderExternalLink = function(parent,nextSibling) {
-  // Only fields suffixed with '_uri' are redndered as links...
   const domNode = this.document.createElement("a");
   // Normalize
   $tw.ipfs.normalizeIpfsUrl(this.value)
@@ -327,6 +326,7 @@ IpfsLinkWidget.prototype.refresh = function(changedTiddlers) {
     || changedTiddlers[this.to]
     || changedAttributes.tooltip
     || changedAttributes["aria-label"]
+    || changedTiddlers["$:/ipfs/saver/gateway"]
     || changedTiddlers["$:/ipfs/saver/policy"]
   ) {
     this.refreshSelf();

@@ -253,12 +253,7 @@ IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
       tiddler: tiddler,
       fields: fields
     });
-
-    if (updatedTiddler !== null) {
-      $tw.wiki.addTiddler(updatedTiddler);
-    } else {
-      return false;
-    }
+    $tw.wiki.addTiddler(updatedTiddler);
 
   } catch (error) {
     this.getLogger().error(error);
@@ -357,11 +352,7 @@ IpfsAction.prototype.handleExportAttachmentToIpfs = async function(event) {
         { key: "_canonical_uri", value: "/" + ipfsKeyword + "/" + added }
       ]
     });
-    if (updatedTiddler !== null) {
-      $tw.wiki.addTiddler(updatedTiddler);
-    } else {
-      return false;
-    }
+    $tw.wiki.addTiddler(updatedTiddler);
 
   } catch (error) {
     this.getLogger().error(error);
@@ -575,9 +566,7 @@ IpfsAction.prototype.handleRenameIpnsName = async function(event) {
           { key: "text", value: key }
         ]
       });
-      if (updatedTiddler !== null) {
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
+      $tw.wiki.addTiddler(updatedTiddler);
     }
 
     // Successfully renamed
@@ -622,9 +611,7 @@ IpfsAction.prototype.handleGenerateIpnsKey = async function(event) {
           { key: "text", value: key }
         ]
       });
-      if (updatedTiddler !== null) {
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
+      $tw.wiki.addTiddler(updatedTiddler);
     }
 
     // Successfully generated
@@ -693,9 +680,7 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
           { key: "text", value: "" }
         ]
       });
-      if (updatedTiddler !== null) {
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
+      $tw.wiki.addTiddler(updatedTiddler);
     }
     tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
     if (tiddler !== undefined && $tw.utils.getIpfsIpnsKey() !== null) {
@@ -705,9 +690,7 @@ IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
           { key: "text", value: "" }
         ]
       });
-      if (updatedTiddler !== null) {
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
+      $tw.wiki.addTiddler(updatedTiddler);
     }
 
     // Successfully removed
@@ -753,9 +736,7 @@ IpfsAction.prototype.handleFetchIpnsKey = async function(event) {
           { key: "text", value: resolvedIpnsKey }
         ]
       });
-      if (updatedTiddler !== null) {
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
+      $tw.wiki.addTiddler(updatedTiddler);
       this.ipnsKey = resolvedIpnsKey;
     }
     this.ipnsName = ipnsName;
