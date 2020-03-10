@@ -55,15 +55,15 @@ var IpfsSaver = function(wiki) {
   logger.info("ipfs-saver is starting up...");
   // Log url policy
   const base = $tw.ipfs.getIpfsBaseUrl();
-  if ($tw.utils.getIpfsUrlPolicy() === "host") {
+  if ($tw.utils.getIpfsUrlPolicy() === "origin") {
     logger.info(
-      "Host Relative URL:"
+      "Origin base URL:"
       + "\n "
       + base.toString()
     );
   } else {
     logger.info(
-      "Gateway Relative URL:"
+      "Gateway base URL:"
       + "\n "
       + base.toString()
     );

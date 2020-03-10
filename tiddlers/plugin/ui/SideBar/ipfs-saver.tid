@@ -42,7 +42,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 ''<<lingo Policy>>''
 
-<$radio tiddler="$:/ipfs/saver/policy" value="host"><<lingo Policy/Host/Description>></$radio>
+<$radio tiddler="$:/ipfs/saver/policy" value="origin"><<lingo Policy/Origin/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/policy" value="gateway"><<lingo Policy/Gateway/Description>></$radio>
 
 ''<<lingo Url>>''

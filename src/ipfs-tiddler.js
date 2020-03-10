@@ -88,15 +88,15 @@ IpfsTiddler.prototype.handleChangeEvent = function(changes) {
   const policy = changes["$:/ipfs/saver/policy"];
   if (policy !== undefined && policy.modified) {
     const base = $tw.ipfs.getIpfsBaseUrl();
-    if ($tw.utils.getIpfsUrlPolicy() === "host") {
+    if ($tw.utils.getIpfsUrlPolicy() === "origin") {
       this.getLogger().info(
-        "Host Relative URL:"
+        "Origin base URL:"
         + "\n "
         + base.toString()
       );
     } else {
       this.getLogger().info(
-        "Gateway Relative URL:"
+        "Gateway base URL:"
         + "\n "
         + base.toString()
       );

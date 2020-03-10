@@ -241,7 +241,7 @@ exports.getIpfsUrlPolicy = function() {
  * Default Policy
  */
 exports.getIpfsDefaultPolicy = function() {
-  return "host";
+  return "origin";
 }
 
 /*

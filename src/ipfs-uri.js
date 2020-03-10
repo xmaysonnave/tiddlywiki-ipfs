@@ -100,7 +100,7 @@ IpfsUri.prototype.getUrl = function(url, base) {
 IpfsUri.prototype.getIpfsBaseUrl = function() {
   var base = this.getIpfsGatewayUrl();
   try {
-    if ($tw.utils.getIpfsUrlPolicy() === "host") {
+    if ($tw.utils.getIpfsUrlPolicy() === "origin") {
       base = this.getDocumentUrl();
       if (base.protocol === "file:") {
         base = this.getIpfsGatewayUrl();

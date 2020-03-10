@@ -113,7 +113,7 @@ describe("URL", () => {
 
 describe("Base URL", () => {
 
-  it("Host", () => {
+  it("Origin", () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
@@ -133,7 +133,7 @@ describe("Base URL", () => {
 
 describe("Normalize Gateway URL", () => {
 
-  it("Relative. Fallback to Host...", async () => {
+  it("Relative. Fallback to Origin...", async () => {
     const ipfsUri = new IpfsUri();
     ipfsUri.getDocumentUrl = jest.fn();
     ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);

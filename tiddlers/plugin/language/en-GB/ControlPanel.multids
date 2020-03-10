@@ -18,7 +18,7 @@ Saving/IpfsService/Verbose/Description: Verbose
 Saving/IpfsService/Unpin/Description: Unpin previous content
 Saving/IpfsService/Wait/Description: Wait
 Saving/IpfsService/Policy: Relative URL Policy
-Saving/IpfsService/Policy/Host/Description: Host
+Saving/IpfsService/Policy/Origin/Description: Origin
 Saving/IpfsService/Policy/Gateway/Description: Gateway
 Saving/IpfsService/Protocol: Protocol
 Saving/IpfsService/Protocol/Ens/Description: ENS
