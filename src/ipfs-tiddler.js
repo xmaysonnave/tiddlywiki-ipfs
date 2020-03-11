@@ -285,21 +285,18 @@ IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
 
     var canonical_uri = tiddler.getFieldString("_canonical_uri");
     // Nothing to do
-    if (canonical_uri == undefined || canonical_uri == null || canonical_uri.trim() === "") {
-      return true;
+    if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
+      // Import and merge
+      await this.mergeImported(tiddler, canonical_uri);
+      // Empty text to force refresh
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [
+          { key: "text", value: "" }
+        ]
+      });
+      $tw.wiki.addTiddler(updatedTiddler);
     }
-
-    // Import and merge
-    await this.mergeImported(tiddler, canonical_uri);
-
-    // Empty text to force refresh
-    const updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: tiddler,
-      fields: [
-        { key: "text", value: "" }
-      ]
-    });
-    $tw.wiki.addTiddler(updatedTiddler);
 
     // Empty cache
     $tw.wiki.clearCache(title);
