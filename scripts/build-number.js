@@ -27,7 +27,7 @@ console.log("Current: " + sourcePackage + " version: " + infoProject.version);
 
 // Generate new version if applicable
 if (validate(version) == false) {
-  version = generate(version)
+  version = generate( { version: version, versionSeparator: '-' } );
 }
 console.log("Generated version: " + version);
 

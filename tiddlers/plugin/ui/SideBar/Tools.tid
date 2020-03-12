@@ -7,7 +7,7 @@ caption: {{$:/language/SideBar/Tools/Caption}}
 $:/config/PageControlButtons/Visibility/$(listItem)$
 \end
 
-<<lingo Basics/Version/Prompt>> <<version>>, <<lingo Ipfs/Version/Prompt>> <<ipfs-version>>
+<<lingo Basics/Version/Prompt>> <b><<version>></b>, <<lingo Ipfs/Version/Prompt>> <b><<ipfs-version>></b>
 
 <$set name="tv-config-toolbar-icons" value="yes">
 

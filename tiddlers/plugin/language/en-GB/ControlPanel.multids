@@ -33,8 +33,13 @@ Saving/IpfsService/Provider/Default/Description: Default
 Saving/IpfsService/Provider/Window/Description: IPFS Companion
 Saving/IpfsService/Provider/HTTP/Description: HTTP Client
 
-Basics/Version/Prompt: ~TiddlyWiki:
+Basics/Version/Prompt: <b>~TiddlyWiki</b>:
 
-Ipfs/Version/Prompt: IPFS:
+Ipfs/Version/Prompt: <b>IPFS</b>:
 
 PreferredSaver/Caption: Preferred Saver
+
+Appearance/Hint: Ways to customise the appearance of your <b>~TiddlyWiki</b>.
+Info/Hint: Information about this <b>~TiddlyWiki</b>
+Saving/Hint: Settings used for saving the entire <b>~TiddlyWiki</b> as a single file via a saver module.
+Settings/Hint: These settings let you customise the behaviour of <b>~TiddlyWiki</b>.

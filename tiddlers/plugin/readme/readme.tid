@@ -6,10 +6,10 @@ type: text/vnd.tiddlywiki
 
 Features:
 
-* Persist over IPFS saved <b>~TiddlyWiki's</b> and file attachments
-* Publish IPNS Names when <b>~TiddlyWiki</b> is saved
-* Interact with Ethereum wallets
-* Publish [ext[ENS domain resolver content|https://app.ens.domains]] over [ext[Ethereum|https://www.ethereum.org]]
+* Persist over [ext[IPFS|https://ipfs.io/]] saved <b>~TiddlyWiki's</b> and file attachments
+* Publish IPNS Names when <b>~TiddlyWiki</b> are saved
+* Interact with Ethereum wallets [ext[Metamask|https://metamask.io]] or [ext[Frame|https://frame.sh]]
+* Publish to [ext[ENS|https://ens.domains]]
 
 Supported Browsers:
 
@@ -41,7 +41,7 @@ Resources:
 !! With a capable ENS browser:
 
 * [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
-* [ext[IPFS with TiddlyWiki Development|https://bluelightav.eth]] on "Ropsten (~PoW) or Rinkeby (~PoA): Ethereum Test Network"
+* <$ipfslink caption="IPFS with TiddlyWiki Development" field="uri" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/> on "[ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network"
 * [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
 * [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#IPFS%20Documentation]]
 

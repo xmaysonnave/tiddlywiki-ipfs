@@ -5,10 +5,10 @@
 
 This plugin provides the following features:
 
-* Persist over IPFS saved `TiddlyWiki's` and file attachments
+* Persist over [IPFS](https://ipfs.io/) saved `TiddlyWiki's` and file attachments
 * Publish IPNS Names when `TiddlyWiki's` are saved
 * Interact with Ethereum wallets [Metamask](https://metamask.io) or [Frame](https://frame.sh)
-* Publish [ENS domain resolver content](https://app.ens.domains) over [Ethereum](https://www.ethereum.org)
+* Publish to [ENS](https://ens.domains)
 
 According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
@@ -29,19 +29,19 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 ## Using ```IPFS with TiddlyWiki```:
 <a name="using-ipfs-with-tiddlywiki"/>
 
-* With a capable ENS browser:
-* * [IPFS with TiddlyWiki](https://bluelightav.eth) on "Mainnet: Ethereum Main Network"
-* * [IPFS with TiddlyWiki Development](https://bluelightav.eth) on "Ropsten (PoW) or Rinkeby (PoA): Ethereum Test Network"
+* With a capable [ENS](https://ens.domains/) browser:
+* * [IPFS with TiddlyWiki](https://bluelightav.eth)
 * * [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
 * * [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
 
-* With a non capable ENS browser:
+* With a non capable [ENS](https://ens.domains/) browser:
 * * [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 * * [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
 * * [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
 
-* Required TiddlyWiki Plugin
+* Recommended TiddlyWiki Plugins:
 * * [TiddlyWiki Locator Plugin](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
+* * [TiddlyWiki Relink](https://flibbles.github.io/tw5-relink/)
 
 ### Getting Started
 <a name="getting-started"/>
@@ -59,10 +59,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
 
-* To resolve https://bluelightav.eth you need an ENS browser:
+* To resolve https://bluelightav.eth you need an [ENS](https://ens.domains/) browser:
 * * [Metamask](https://metamask.io)
 
-* To use ENS you need an Ethereum wallet:
+* To use [ENS](https://ens.domains/) you need an Ethereum wallet:
 * * [Metamask](https://metamask.io)
 * * [Frame](https://frame.sh)
 
@@ -76,7 +76,7 @@ Remarks:
 
 https://bluelightav.eth.link requires [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion) to be fully resolved as an IPNS identifier.
 
-If you don't need or don't want to interact with ENS or install [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/) https://bluelightav.eth.link is enough to interact with IPFS.
+If you don't need or don't want to interact with [ENS](https://ens.domains/) or install [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/) https://bluelightav.eth.link is enough to interact with IPFS.
 
 #### Run a local IPFS node with IPFS Desktop
 <a name="ipfs-desktop"/>

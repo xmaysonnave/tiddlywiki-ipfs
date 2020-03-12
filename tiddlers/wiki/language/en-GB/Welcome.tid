@@ -1,0 +1,66 @@
+title: Welcome
+tags: bluelightav.eth TableOfContents
+type: text/vnd.tiddlywiki
+
+<p>
+Welcome to <b>IPFS with ~TiddlyWiki</b>.
+</p>
+<p>
+[ext[Blue Light|https://wiki.bluelightav.org]] is glad to provide this [ext[Open Source|https://spdx.org/licenses/GPL-3.0-or-later.html]] <b>~TiddlyWiki</b> plugin.
+</p>
+<p>
+  <b>IPFS with ~TiddlyWiki</b>
+</p>
+<ul>
+  <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
+  <li><$ipfslink caption="IPFS with TiddlyWiki Development" field="uri" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/> on "[ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network"</li>
+</ul>
+<p>
+  <b>~TiddlyWiki</b>
+</p>
+<ul>
+  <li>[ext[TiddlyWiki|https://tiddlywiki.com]]</li>
+  <li>[ext[TiddlyWiki5 GitHub|https://github.com/Jermolene/TiddlyWiki5/]]</li>
+</ul>
+<p>
+See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
+</p>
+<p>
+  <b>Community</b>
+</p>
+<ul>
+  <li><b>IPFS</b>:
+    <ul>
+      <li><b>Forum</b>:
+        <ul>
+          <li>[ext[Discussion and Support Forums|https://discuss.ipfs.io/]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><b>~TiddlyWiki</b>:
+    <ul>
+      <li><b>[ext[Discord|https://discordapp.com/]]</b>:
+        <ul>
+          <li>[ext[TiddlyWiki 5|https://discord.gg/7TEuTvk]]</li>
+        </ul>
+      </li>
+      <li><b>[ext[Gitter|https://gitter.im]]</b>:
+        <ul>
+          <li>[ext[TiddlyWiki Public|https://gitter.im/TiddlyWiki/public]]</li>
+          <li>[ext[TiddlyWiki Developer and Geeks|https://gitter.im/TiddlyWiki/developers-and-geeks]]</li>
+          <li>[ext[TiddlyWiki Servers and Savers|https://gitter.im/TiddlyWiki/servers-and-savers]]</li>
+        </ul>
+      </li>
+      <li><b>[ext[Google Groups|https://groups.google.com]]</b>:
+        <ul>
+          <li>[ext[TiddlyWiki|https://groups.google.com/forum/#!forum/tiddlywiki]]</li>
+          <li>[ext[TiddlyWikiDev|https://groups.google.com/forum/#!forum/tiddlywikidev]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p>
+See the [[control panel|$:/ControlPanel]] for more options.
+</p>

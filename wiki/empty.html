@@ -9361,7 +9361,7 @@ Error message and password prompt
 <div title="$:/isEncrypted">
 <pre>no</pre>
 </div>
-<div author="Xavier Maysonnave" core-version="&gt;=5.1.2" dependents="" description="IPFS with TiddlyWiki" license="GPL-3.0-or-later" list="readme changelog" plugin-type="plugin" source="https://github.com/xmaysonnave/tiddlywiki-ipfs" title="$:/plugins/ipfs" type="application/json" version="v0.2.10-dev.200311308">
+<div author="Xavier Maysonnave" core-version="&gt;=5.1.2" dependents="" description="IPFS with TiddlyWiki" license="GPL-3.0-or-later" list="readme changelog" plugin-type="plugin" source="https://github.com/xmaysonnave/tiddlywiki-ipfs" title="$:/plugins/ipfs" type="application/json" version="v0.3.0-200312335">
 <pre>{
     &quot;tiddlers&quot;: {
         &quot;$:/core/images/ens&quot;: {
@@ -9978,17 +9978,37 @@ Error message and password prompt
         &quot;$:/language/ControlPanel/Basics/Version/Prompt&quot;: {
             &quot;title&quot;: &quot;$:/language/ControlPanel/Basics/Version/Prompt&quot;,
             &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
-            &quot;text&quot;: &quot;~TiddlyWiki:&quot;
+            &quot;text&quot;: &quot;&lt;b&gt;~TiddlyWiki&lt;/b&gt;:&quot;
         },
         &quot;$:/language/ControlPanel/Ipfs/Version/Prompt&quot;: {
             &quot;title&quot;: &quot;$:/language/ControlPanel/Ipfs/Version/Prompt&quot;,
             &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
-            &quot;text&quot;: &quot;IPFS:&quot;
+            &quot;text&quot;: &quot;&lt;b&gt;IPFS&lt;/b&gt;:&quot;
         },
         &quot;$:/language/ControlPanel/PreferredSaver/Caption&quot;: {
             &quot;title&quot;: &quot;$:/language/ControlPanel/PreferredSaver/Caption&quot;,
             &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
             &quot;text&quot;: &quot;Preferred Saver&quot;
+        },
+        &quot;$:/language/ControlPanel/Appearance/Hint&quot;: {
+            &quot;title&quot;: &quot;$:/language/ControlPanel/Appearance/Hint&quot;,
+            &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
+            &quot;text&quot;: &quot;Ways to customise the appearance of your &lt;b&gt;~TiddlyWiki&lt;/b&gt;.&quot;
+        },
+        &quot;$:/language/ControlPanel/Info/Hint&quot;: {
+            &quot;title&quot;: &quot;$:/language/ControlPanel/Info/Hint&quot;,
+            &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
+            &quot;text&quot;: &quot;Information about this &lt;b&gt;~TiddlyWiki&lt;/b&gt;&quot;
+        },
+        &quot;$:/language/ControlPanel/Saving/Hint&quot;: {
+            &quot;title&quot;: &quot;$:/language/ControlPanel/Saving/Hint&quot;,
+            &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
+            &quot;text&quot;: &quot;Settings used for saving the entire &lt;b&gt;~TiddlyWiki&lt;/b&gt; as a single file via a saver module.&quot;
+        },
+        &quot;$:/language/ControlPanel/Settings/Hint&quot;: {
+            &quot;title&quot;: &quot;$:/language/ControlPanel/Settings/Hint&quot;,
+            &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
+            &quot;text&quot;: &quot;These settings let you customise the behaviour of &lt;b&gt;~TiddlyWiki&lt;/b&gt;.&quot;
         },
         &quot;$:/language/NetworkError/XMLHttpRequest&quot;: {
             &quot;title&quot;: &quot;$:/language/NetworkError/XMLHttpRequest&quot;,
@@ -10006,13 +10026,13 @@ Error message and password prompt
             &quot;title&quot;: &quot;$:/plugins/ipfs/changelog&quot;,
             &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
             &quot;type&quot;: &quot;text/vnd.tiddlywiki&quot;,
-            &quot;text&quot;: &quot;!! v0.2.10\n\n[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.9...v0.2.10]]\n\n!! v0.2.9\n\n[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.8...v0.2.9]]\n\n!! v0.2.8\n\n[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.7...v0.2.8]]\n\n...\n\n!! 0.2.2\n\n* First public release&quot;
+            &quot;text&quot;: &quot;!! v0.3.0\n\n[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.9...v0.3.0]]\n\n!! v0.2.9\n\n[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.8...v0.2.9]]\n\n!! v0.2.8\n\n[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.2.7...v0.2.8]]\n\n...\n\n!! 0.2.2\n\n* First public release&quot;
         },
         &quot;$:/plugins/ipfs/readme&quot;: {
             &quot;title&quot;: &quot;$:/plugins/ipfs/readme&quot;,
             &quot;tags&quot;: &quot;$:/ipfs/core&quot;,
             &quot;type&quot;: &quot;text/vnd.tiddlywiki&quot;,
-            &quot;text&quot;: &quot;!! IPFS with ~TiddlyWiki\n\nFeatures:\n\n* Persist over IPFS saved &lt;b&gt;~TiddlyWiki's&lt;/b&gt; and file attachments\n* Publish IPNS Names when &lt;b&gt;~TiddlyWiki&lt;/b&gt; is saved\n* Interact with Ethereum wallets\n* Publish [ext[ENS domain resolver content|https://app.ens.domains]] over [ext[Ethereum|https://www.ethereum.org]]\n\nSupported Browsers:\n\n* [ext[Firefox|https://www.mozilla.org]]\n* [ext[Chrome|https://www.google.com/chrome/]]\n* [ext[Chromium|https://www.chromium.org]]\n\nSupported Ethereum wallets:\n\n* [ext[Metamask|https://metamask.io]]\n* [ext[Frame|https://frame.sh]]\n\nSupported Mobile ĐApp browser:\n\n* [ext[Metamask|https://metamask.io]]\n\nSupported ENS Ethereum Networks\n\n* 'Mainnet': Ethereum Main Network\n* 'Ropsten': Ethereum Test Network (~PoW)\n* 'Rinkeby': Ethereum Test Network (~PoA)\n* 'Goerli': Ethereum Test Network (~PoA)\n\nResources:\n\n* https://github.com/xmaysonnave/tiddlywiki-ipfs/\n* https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md\n\n!! With a capable ENS browser:\n\n* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on \&quot;Mainnet: Ethereum Main Network\&quot;\n* [ext[IPFS with TiddlyWiki Development|https://bluelightav.eth]] on \&quot;Ropsten (~PoW) or Rinkeby (~PoA): Ethereum Test Network\&quot;\n* [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]\n* [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#IPFS%20Documentation]]\n\n!! With a non capable ENS browser:\n\n* [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link]]\n* [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]\n* [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth.link/#IPFS%20Documentation]]&quot;
+            &quot;text&quot;: &quot;!! IPFS with ~TiddlyWiki\n\nFeatures:\n\n* Persist over [ext[IPFS|https://ipfs.io/]] saved &lt;b&gt;~TiddlyWiki's&lt;/b&gt; and file attachments\n* Publish IPNS Names when &lt;b&gt;~TiddlyWiki&lt;/b&gt; are saved\n* Interact with Ethereum wallets [ext[Metamask|https://metamask.io]] or [ext[Frame|https://frame.sh]]\n* Publish to [ext[ENS|https://ens.domains]]\n\nSupported Browsers:\n\n* [ext[Firefox|https://www.mozilla.org]]\n* [ext[Chrome|https://www.google.com/chrome/]]\n* [ext[Chromium|https://www.chromium.org]]\n\nSupported Ethereum wallets:\n\n* [ext[Metamask|https://metamask.io]]\n* [ext[Frame|https://frame.sh]]\n\nSupported Mobile ĐApp browser:\n\n* [ext[Metamask|https://metamask.io]]\n\nSupported ENS Ethereum Networks\n\n* 'Mainnet': Ethereum Main Network\n* 'Ropsten': Ethereum Test Network (~PoW)\n* 'Rinkeby': Ethereum Test Network (~PoA)\n* 'Goerli': Ethereum Test Network (~PoA)\n\nResources:\n\n* https://github.com/xmaysonnave/tiddlywiki-ipfs/\n* https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md\n\n!! With a capable ENS browser:\n\n* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on \&quot;Mainnet: Ethereum Main Network\&quot;\n* &lt;$ipfslink caption=\&quot;IPFS with TiddlyWiki Development\&quot; field=\&quot;uri\&quot; value=\&quot;https://bluelightav.eth\&quot; tiddler=&lt;&lt;currentTiddler&gt;&gt;/&gt; on \&quot;[ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network\&quot;\n* [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]\n* [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#IPFS%20Documentation]]\n\n!! With a non capable ENS browser:\n\n* [ext[IPFS with TiddlyWiki|https://bluelightav.eth.link]]\n* [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]\n* [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth.link/#IPFS%20Documentation]]&quot;
         },
         &quot;$:/ipfs/saver/api/http/localhost/5001&quot;: {
             &quot;title&quot;: &quot;$:/ipfs/saver/api/http/localhost/5001&quot;,
@@ -10222,7 +10242,7 @@ Error message and password prompt
             &quot;title&quot;: &quot;$:/core/ui/SideBar/Tools&quot;,
             &quot;tags&quot;: &quot;$:/ipfs/core $:/tags/SideBar&quot;,
             &quot;caption&quot;: &quot;{{$:/language/SideBar/Tools/Caption}}&quot;,
-            &quot;text&quot;: &quot;\\define lingo-base() $:/language/ControlPanel/\n\\define config-title()\n$:/config/PageControlButtons/Visibility/$(listItem)$\n\\end\n\n&lt;&lt;lingo Basics/Version/Prompt&gt;&gt; &lt;&lt;version&gt;&gt;, &lt;&lt;lingo Ipfs/Version/Prompt&gt;&gt; &lt;&lt;ipfs-version&gt;&gt;\n\n&lt;$set name=\&quot;tv-config-toolbar-icons\&quot; value=\&quot;yes\&quot;&gt;\n\n&lt;$set name=\&quot;tv-config-toolbar-text\&quot; value=\&quot;yes\&quot;&gt;\n\n&lt;$set name=\&quot;tv-config-toolbar-class\&quot; value=\&quot;\&quot;&gt;\n\n&lt;$list filter=\&quot;[all[shadows+tiddlers]tag[$:/tags/PageControls]!has[draft.of]]\&quot; variable=\&quot;listItem\&quot;&gt;\n\n&lt;div style=\&quot;position:relative;\&quot; class={{{ [&lt;listItem&gt;encodeuricomponent[]addprefix[tc-btn-]] }}}&gt;\n\n&lt;$checkbox tiddler=&lt;&lt;config-title&gt;&gt; field=\&quot;text\&quot; checked=\&quot;show\&quot; unchecked=\&quot;hide\&quot; default=\&quot;show\&quot;/&gt; &lt;$transclude tiddler=&lt;&lt;listItem&gt;&gt;/&gt; &lt;i class=\&quot;tc-muted\&quot;&gt;&lt;$transclude tiddler=&lt;&lt;listItem&gt;&gt; field=\&quot;description\&quot;/&gt;&lt;/i&gt;\n\n&lt;/div&gt;\n\n&lt;/$list&gt;\n\n&lt;/$set&gt;\n\n&lt;/$set&gt;\n\n&lt;/$set&gt;&quot;
+            &quot;text&quot;: &quot;\\define lingo-base() $:/language/ControlPanel/\n\\define config-title()\n$:/config/PageControlButtons/Visibility/$(listItem)$\n\\end\n\n&lt;&lt;lingo Basics/Version/Prompt&gt;&gt; &lt;b&gt;&lt;&lt;version&gt;&gt;&lt;/b&gt;, &lt;&lt;lingo Ipfs/Version/Prompt&gt;&gt; &lt;b&gt;&lt;&lt;ipfs-version&gt;&gt;&lt;/b&gt;\n\n&lt;$set name=\&quot;tv-config-toolbar-icons\&quot; value=\&quot;yes\&quot;&gt;\n\n&lt;$set name=\&quot;tv-config-toolbar-text\&quot; value=\&quot;yes\&quot;&gt;\n\n&lt;$set name=\&quot;tv-config-toolbar-class\&quot; value=\&quot;\&quot;&gt;\n\n&lt;$list filter=\&quot;[all[shadows+tiddlers]tag[$:/tags/PageControls]!has[draft.of]]\&quot; variable=\&quot;listItem\&quot;&gt;\n\n&lt;div style=\&quot;position:relative;\&quot; class={{{ [&lt;listItem&gt;encodeuricomponent[]addprefix[tc-btn-]] }}}&gt;\n\n&lt;$checkbox tiddler=&lt;&lt;config-title&gt;&gt; field=\&quot;text\&quot; checked=\&quot;show\&quot; unchecked=\&quot;hide\&quot; default=\&quot;show\&quot;/&gt; &lt;$transclude tiddler=&lt;&lt;listItem&gt;&gt;/&gt; &lt;i class=\&quot;tc-muted\&quot;&gt;&lt;$transclude tiddler=&lt;&lt;listItem&gt;&gt; field=\&quot;description\&quot;/&gt;&lt;/i&gt;\n\n&lt;/div&gt;\n\n&lt;/$list&gt;\n\n&lt;/$set&gt;\n\n&lt;/$set&gt;\n\n&lt;/$set&gt;&quot;
         },
         &quot;$:/core/ui/ControlPanel/Saving/Ipfs&quot;: {
             &quot;title&quot;: &quot;$:/core/ui/ControlPanel/Saving/Ipfs&quot;,
