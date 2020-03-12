@@ -77,7 +77,7 @@ var ImageParser = function(type,text,options) {
       });
     })
     .catch( (error) => {
-      this.getLogger().error(error);
+      self.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     });
   } else if (text) {

@@ -36,12 +36,12 @@ var IpfsWrapper = function() {
   this.ipfsUri = new IpfsUri();
 }
 
-IpfsWrapper.prototype.decodeCid = function(pathname) {
-  return this.ipfsLibrary.decodeCid(pathname);
-}
-
 IpfsWrapper.prototype.getLogger = function() {
   return root.log.getLogger(name);
+}
+
+IpfsWrapper.prototype.decodeCid = function(pathname) {
+  return this.ipfsLibrary.decodeCid(pathname);
 }
 
 IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {

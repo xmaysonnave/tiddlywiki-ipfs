@@ -71,6 +71,13 @@ var ImageWidget = function(parseTreeNode,options) {
   this.initialise(parseTreeNode,options);
 };
 
+ImageWidget.prototype.getLogger = function() {
+  if (window.log) {
+    return window.log.getLogger(name);
+  }
+  return console;
+}
+
 /*
 Inherit from the base widget class
 */
@@ -80,6 +87,7 @@ ImageWidget.prototype = new Widget();
 Render this widget into the DOM
 */
 ImageWidget.prototype.render = function(parent,nextSibling) {
+  const self = this;
   this.parentDomNode = parent;
   this.computeAttributes();
   this.execute();
@@ -88,7 +96,6 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
   var tiddler = this.wiki.getTiddler(this.imageSource);
   // Create default element
   var domNode = this.document.createElement("img");
-  const self = this;
   if(!tiddler) {
     // The source isn't the title of a tiddler, so we'll assume it's a URL
     domNode.setAttribute(
@@ -157,7 +164,7 @@ ImageWidget.prototype.render = function(parent,nextSibling) {
           }
         })
         .catch( (error) => {
-          this.getLogger().error(error);
+          self.getLogger().error(error);
           $tw.utils.alert(name, error.message);
         });
       } else {
@@ -213,13 +220,6 @@ ImageWidget.prototype.refresh = function(changedTiddlers) {
     return false;
   }
 };
-
-ImageWidget.prototype.getLogger = function() {
-  if (window.log) {
-    return window.log.getLogger(name);
-  }
-  return console;
-}
 
 exports.image = ImageWidget;
 

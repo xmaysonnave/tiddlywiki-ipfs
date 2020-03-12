@@ -54,6 +54,10 @@ var EnsLibrary = function() {
   };
 };
 
+EnsLibrary.prototype.getLogger = function() {
+  return root.log.getLogger(name);
+}
+
 EnsLibrary.prototype.getEtherscanRegistry = function() {
   return this.etherscan;
 }

@@ -34,6 +34,10 @@ var IpfsController = function() {
   this.unpin = [];
 };
 
+IpfsController.prototype.getLogger = function() {
+  return window.log.getLogger(name);
+}
+
 IpfsController.prototype.requestToUnpin = async function(cid) {
   if (this.addToUnpin(cid)) {
     const url = await this.normalizeIpfsUrl("/ipfs/" + cid);
@@ -75,10 +79,6 @@ IpfsController.prototype.removeFromUnpin = async function(cid) {
     }
   }
   return false;
-}
-
-IpfsController.prototype.getLogger = function() {
-  return window.log.getLogger(name);
 }
 
 IpfsController.prototype.getLoader = function() {

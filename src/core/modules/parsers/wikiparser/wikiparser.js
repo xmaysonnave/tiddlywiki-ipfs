@@ -141,7 +141,7 @@ WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
     });
   })
   .catch( (error) => {
-    this.getLogger().error(error);
+    self.getLogger().error(error);
     $tw.utils.alert(name, error.message);
   });
 };

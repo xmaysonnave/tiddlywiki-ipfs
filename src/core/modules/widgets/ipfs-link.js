@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/modules/widgets/ipfslink.js
+title: $:/plugins/ipfs/modules/widgets/ipfs-link.js
 type: application/javascript
 module-type: widget
 
@@ -49,6 +49,8 @@ Ipfs Link widget
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 
+const name = "ipfs-link"
+
 var IpfsLinkWidget = function(parseTreeNode,options) {
   this.initialise(parseTreeNode,options);
 };
@@ -57,6 +59,10 @@ var IpfsLinkWidget = function(parseTreeNode,options) {
 Inherit from the base widget class
 */
 IpfsLinkWidget.prototype = new Widget();
+
+IpfsLinkWidget.prototype.getLogger = function() {
+  return window.log.getLogger(name);
+}
 
 /*
 Render this widget into the DOM
@@ -99,6 +105,7 @@ IpfsLinkWidget.prototype.render = function(parent,nextSibling) {
 Render this widget into the DOM
 */
 IpfsLinkWidget.prototype.renderExternalLink = function(parent,nextSibling) {
+  const self = this;
   const domNode = this.document.createElement("a");
   // Normalize
   $tw.ipfs.normalizeIpfsUrl(this.value)
@@ -108,10 +115,10 @@ IpfsLinkWidget.prototype.renderExternalLink = function(parent,nextSibling) {
   })
   .catch( (error) => {
     // Log
-    this.getLogger().error(error);
+    self.getLogger().error(error);
     $tw.utils.alert(name, error.message);
     // Fallback
-    domNode.setAttribute("href", this.value);
+    domNode.setAttribute("href", self.value);
   });
   // Add a click event handler
   $tw.utils.addEventListeners(domNode,[
@@ -246,7 +253,7 @@ IpfsLinkWidget.prototype.handleExternalClickEvent = function(event) {
   })
   .catch( (error) => {
     // Log
-    this.getLogger().error(error);
+    self.getLogger().error(error);
     $tw.utils.alert(name, error.message);
     // Fallback
     window.open(this.value, self.target, self.rel);
