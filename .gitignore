@@ -1,4 +1,5 @@
 node_modules/
 build/
 tw5-locator/
+tw5-relink/
 wget-log
