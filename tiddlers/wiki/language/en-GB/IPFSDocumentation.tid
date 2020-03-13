@@ -6,6 +6,6 @@ type: text/vnd.tiddlywiki
 This [ext[TiddlyWiki|https://tiddlywiki.com/]] uses the [ext[IPFS with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/]] plugin.
 </p>
 <p>
-To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
+This Tiddler requires The [ext[TiddlyWiki Locator|https://bimlas.gitlab.io/tw5-locator/tw5-locator.json]] plugin.
 </p>
 <<locator-view baseTitle:"IPFS Documentation">>

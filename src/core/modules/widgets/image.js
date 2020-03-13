@@ -71,17 +71,17 @@ var ImageWidget = function(parseTreeNode,options) {
   this.initialise(parseTreeNode,options);
 };
 
+/*
+Inherit from the base widget class
+*/
+ImageWidget.prototype = new Widget();
+
 ImageWidget.prototype.getLogger = function() {
   if (window.log) {
     return window.log.getLogger(name);
   }
   return console;
 }
-
-/*
-Inherit from the base widget class
-*/
-ImageWidget.prototype = new Widget();
 
 /*
 Render this widget into the DOM

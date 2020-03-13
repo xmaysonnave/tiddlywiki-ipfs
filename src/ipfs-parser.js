@@ -25,7 +25,7 @@ exports.httpGetToUint8Array = async function(url) {
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4 && xhr.status !== 0) {
         if (xhr.status >= 300) {
-          reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": " + xhr.status));
+          reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest")));
           return;
         }
         try {
@@ -45,7 +45,7 @@ exports.httpGetToUint8Array = async function(url) {
       }
     };
     xhr.onerror = function() {
-      reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest") + " " + url));
+      reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest")));
     };
     try {
       xhr.open("get", url.toString(), true);
@@ -63,8 +63,12 @@ exports.loadToBase64 = function(url) {
   return new Promise( async (resolve, reject) => {
     $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
-      if (array instanceof Uint8Array == false || array.length == 0) {
-        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+      // Empty
+      if (array.length == 0) {
+        resolve({
+          data: "",
+          decrypted : false
+        });
       }
       // Decrypt
       if ($tw.utils.isUtf8ArrayEncrypted(array)) {
@@ -98,8 +102,12 @@ exports.loadToUtf8 = function(url) {
   return new Promise( async (resolve, reject) => {
     $tw.utils.httpGetToUint8Array(url)
     .then( (array) => {
-      if (array instanceof Uint8Array == false || array.length == 0) {
-        reject(new Error($tw.language.getString("Error/XMLHttpRequest") + ": Empty Result..."));
+      // Empty
+      if (array.length == 0) {
+        resolve({
+          data: "",
+          decrypted : false
+        });
       }
       // Decrypt
       if ($tw.utils.isUtf8ArrayEncrypted(array)) {

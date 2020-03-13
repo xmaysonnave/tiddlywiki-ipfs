@@ -1,5 +1,5 @@
 title: $:/language/
 
-NetworkError/XMLHttpRequest: Error while loading:
+NetworkError/XMLHttpRequest: Network Error while loading.
 LazyLoadingWarning: <p>Trying to load external Tiddler content from:<p></p>''<$ipfslink caption={{!!_canonical_uri}} field="_canonical_uri" value={{!!_canonical_uri}} tiddler=<<currentTiddler>>/>''</p>
 EmptyTidddler: <p>An external Tiddler content has been loaded:</p><p>''<$ipfslink caption={{!!_canonical_uri}} field="_canonical_uri" value={{!!_canonical_uri}} tiddler=<<currentTiddler>>/>''</p><p>The imported Tiddler content is empty, possible reasons:</p><ul><li>The Tiddler Content Type doesn't match the type of the external content.</li>
