@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200316325",
+  "version": "v0.3.0-200316437",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -23,7 +23,7 @@
     "build-all-noclone": "./scripts/build-all-noclone.sh",
     "build-all": "./scripts/build-all.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
-    "pretty-quick-staged": "pretty-quick --verbose --staged --pattern '**/*.js'",
+    "pretty-quick": "pretty-quick --verbose --pattern '**/*.js'",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",

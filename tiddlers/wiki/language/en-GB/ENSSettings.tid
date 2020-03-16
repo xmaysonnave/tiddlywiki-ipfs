@@ -19,6 +19,11 @@ Rather than accessing a wiki with a complex to remember url:
 <q>
 ENS offers a secure & decentralised way to address resources both on and off the blockchain using simple, human-readable names:
 </q>
+<h3>Resolve ENS with IPFS with ~TiddlyWiki</h3>
+<p>
+<$ipfslink caption="https://bluelightav.eth" field="uri" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/>
+</p>
+<h3>Resolve ENS with a browser extension</h3>
 <p>
 [ext[https://bluelightav.eth]]
 </p>
@@ -46,11 +51,20 @@ On Mobile you need a supported Đapp browser:
 </ul>
 <p>
 On desktop, we recommend [ext[Metamask|https://metamask.io]] as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
-[ext[Frame|https://frame.sh]] add a little more complexity as it needs a native software on your platform plus a browser extension.
+</p>
+<p>
+[ext[Frame|https://frame.sh]] add a little more complexity as it needs a native software on your platform plus a browser extension and is unable to resolve <b>.eth</b> domain name.
 </p>
 <p>
 On mobile, we recommend [ext[Metamask|https://matamask.io]] as your first choice.
 </p>
+<p>
+New browser extensions are landing who also resolve <b>.eth</b> domain:
+</p>
+<ul>
+  <li>[ext[Almonit|https://github.com/almonit/almonit-plugin]]</li>
+  <li>[ext[Unstoppable Domain|https://github.com/unstoppabledomains/resolution-browser-extension]]</li>
+</ul>
 <p>
 See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
 </p>
@@ -75,6 +89,7 @@ While saving the plugin will:
   <li>Update the associated ENS domain resolver content with the new IPFS identifier on the Ethereum blockchain</li>
   <li>[[Unpin]] the previous version if this option is selected</li>
   <li>Redirect the current page to the ENS domain when the transaction is successfull</li>
+  <li>Redirect the current to IPFS if the ENS transaction do not succeed.</li>
 </ul>
 <p>
   To modify the default ENS domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].

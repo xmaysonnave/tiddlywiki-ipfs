@@ -227,8 +227,8 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 
 * build-all-noclone
 * build-all
-* build-tiddlywiki-ipfs-dev
-* build-tiddlywiki-ipfs
+* build-tiddlywiki
+* pretty-quick
 * run-build-number
 * run-browserify
 * run-prepare-clone
@@ -239,7 +239,13 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 Use the `build-all` script to build ```IPFS with TiddlyWiki``` and the `wiki` directory will contain two runnable wikis:
 
 * index.html (production)
-* dev.html (non-minified)
+* empty.html (production)
+
+Use the `test` script to build and run the tests.
+
+This repository is integrated with Travis CI:
+
+* https://travis-ci.com/github/xmaysonnave/tiddlywiki-ipfs
 
 #### Running TiddlyWiki
 <a name="developer-running"/>

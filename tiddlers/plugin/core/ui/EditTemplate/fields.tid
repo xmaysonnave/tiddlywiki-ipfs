@@ -1,4 +1,4 @@
-title: $:/ipfs/ui/EditTemplate/fields
+title: $:/core/ui/EditTemplate/fields
 tags: $:/tags/EditTemplate
 
 \define lingo-base() $:/language/EditTemplate/
