@@ -1,0 +1,4 @@
+title: $:/core/saver/preferred
+tags: $:/ipfs/core
+
+$:/plugins/ipfs/ipfs-saver.js

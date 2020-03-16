@@ -6,7 +6,7 @@ caption: {{$:/language/ControlPanel/Saving/Caption}}
 
 ''{{$:/language/ControlPanel/PreferredSaver/Caption}}''
 
-<$select tiddler="$:/core/saver/preferred-saver">
+<$select tiddler="$:/core/saver/preferred">
 <$list filter="[all[tiddlers+shadows]module-type[saver]]">
 <option value=<<currentTiddler>>><$view field="title"/></option>
 </$list>

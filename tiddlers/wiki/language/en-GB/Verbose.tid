@@ -5,9 +5,16 @@ type: text/vnd.tiddlywiki
 <h2>Verbose Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/verbose]]
 <p>
-The plugin will display common errors through dialog boxes.
+The plugin displays common errors through dialog boxes.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/image/error]]
+<p>
+Errors are always detailed in the [[Console]]. Useful when you need to fill a bug report.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/image/error/console]]
+<p>
+Processing content over [[IPFS|IPFS Settings]] could be a lengthy process.
 </p>
 <p>
-Processing content over [[IPFS|IPFS Settings]] is a lengthy process.
 Every logical step gives a detailed output to the [[Console]].
 </p>
