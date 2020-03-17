@@ -24,7 +24,6 @@
   },
   "rules": {
     "linebreak-style": 0,
-    "comma-dangle": 1,
     "arrow-parens": [
       "off"
     ],
