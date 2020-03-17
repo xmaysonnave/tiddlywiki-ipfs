@@ -27,6 +27,7 @@ ENS offers a secure & decentralised way to address resources both on and off the
 <p>
 [ext[https://bluelightav.eth]]
 </p>
+<h3>Browsers</h3>
 <p>
 To use the ENS feature your environment needs the Ethereum knowledge.
 <p>
@@ -38,36 +39,36 @@ On Desktop you need a supported browser:
 <li>[ext[Chrome|https://www.google.com/chrome/]]</li>
 <li>[ext[Chromium|https://www.chromium.org]]</li>
 </ul>
+<h3>Browser extensions</h3>
+<p>
 With one of the following supported Ethereum browser extension:
+</p>
 <ul>
 <li>[ext[Metamask|https://metamask.io]]</li>
 <li>[ext[Frame|https://frame.sh]]</li>
 </ul>
+<p>
+New browser extensions are landing who resolve <b>.eth</b> domain:
+</p>
+<ul>
+  <li>[ext[Almonit|https://github.com/almonit/almonit-plugin]]</li>
+  <li>[ext[Unstoppable Domain|https://github.com/unstoppabledomains/resolution-browser-extension]]</li>
+</ul>
+<h3>Mobile</h3>
 <p>
 On Mobile you need a supported Đapp browser:
 </p>
 <ul>
 <li>[ext[Metamask|https://metamask.io]]</li>
 </ul>
+<h3>Desktop</h3>
 <p>
-On desktop, we recommend [ext[Metamask|https://metamask.io]] as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
+We recommend [ext[Metamask|https://metamask.io]] as your first choice as the extension is able to resolve the <b>.eth</b> domain name.
 </p>
 <p>
 [ext[Frame|https://frame.sh]] add a little more complexity as it needs a native software on your platform plus a browser extension and is unable to resolve <b>.eth</b> domain name.
 </p>
-<p>
-On mobile, we recommend [ext[Metamask|https://matamask.io]] as your first choice.
-</p>
-<p>
-New browser extensions are landing who also resolve <b>.eth</b> domain:
-</p>
-<ul>
-  <li>[ext[Almonit|https://github.com/almonit/almonit-plugin]]</li>
-  <li>[ext[Unstoppable Domain|https://github.com/unstoppabledomains/resolution-browser-extension]]</li>
-</ul>
-<p>
-See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
-</p>
+<h3>Publishing</h3>
 <p>
 To publish to ENS while saving:
 </p>
@@ -88,23 +89,36 @@ While saving the plugin will:
   <li>Interact with your Ethereum wallet</li>
   <li>Update the associated ENS domain resolver content with the new IPFS identifier on the Ethereum blockchain</li>
   <li>[[Unpin]] the previous version if this option is selected</li>
-  <li>Redirect the current page to the ENS domain when the transaction is successfull</li>
-  <li>Redirect the current to IPFS if the ENS transaction do not succeed.</li>
+  <li>Redirect to the ENS domain when the transaction is successfull</li>
+  <li>Or redirect to the IPFS saved wiki if the ENS transaction do not succeed.</li>
 </ul>
 <p>
-  To modify the default ENS domain, edit and modify the following Tiddler [[$:/ipfs/saver/ens/domain]].
+The default ENS domain is stored in the following Tiddler [[$:/ipfs/saver/ens/domain]].
 </p>
-<h2>Supported ENS Ethereum Networks</h2>
+<h3>Supported ENS Ethereum Networks</h3>
 <ul>
   <li>'Mainnet': Ethereum Main Network</li>
 	<li>'Ropsten': Ethereum Test Network (~PoW)</li>
 	<li>'Rinkeby': Ethereum Test Network (~PoA)</li>
 	<li>'Goerli': Ethereum Test Network (~PoA)</li>
 </ul>
-<h2>Reference</h2>
+<h3>Reference</h3>
 <ul>
   <li>[ext[ENS|https://ens.domains]]</li>
   <li>[ext[ENS Application Manager|https://app.ens.domains]]</li>
   <li>[ext[ENS Documentation|https://docs.ens.domains]]</li>
   <li>[ext[Ethereum|https://www.ethereum.org]]</li>
 </ul>
+<h3>ENS Domain Manager</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ens/manager]]
+<p>
+This command opens the default <b>ENS Domain Manager</b>.
+</p>
+<h3>Resolve ENS Domain</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ens/resolve]]
+<p>
+This command resolves and opens the default <b>ENS Domain</b>.
+</p>
+<p>
+See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
+</p>

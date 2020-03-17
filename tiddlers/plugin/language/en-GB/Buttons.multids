@@ -35,7 +35,7 @@ Console/Mobile/Caption: mobile console
 Console/Mobile/Hint: Load/Unload Mobile Console
 
 Ens/Manager/Open/Caption: open ENS Manager
-Ens/Manager/OpenHint: Open ENS Domain Manager
+Ens/Manager/Open/Hint: Open ENS Domain Manager
 
 Ens/Publish/Caption: publish ENS Domain content
 Ens/Publish/Hint: Publish this wiki as ENS Domain content

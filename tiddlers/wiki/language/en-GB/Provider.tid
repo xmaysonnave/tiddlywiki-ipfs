@@ -16,16 +16,16 @@ type: text/vnd.tiddlywiki
 </p>
 <ul>
   <li>
-  <b>Default</b>
-  <ol>
-    <li>Try to use <b>IPFS Companion</b> if available otherwise fallback</li>
-    <li>Use the embedded <b>HTTP Client</b> provider</li>
-  </ol>
+    <b>Default</b>
+    <ol>
+      <li>Use the <b>IPFS Companion</b> provider if available otherwise fallback to <b>HTTP Client</b></li>
+      <li>Use the <b>HTTP Client</b> provider</li>
+    </ol>
   </li>
-  <li><b>IPFS Companion</b> only uses the <b>IPFS Companion</b> provider</li>
-  <li><b>HTTP Client</b> only uses the embedded <b>HTTP Client</b> provider</li>
+  <li>Use the <b>IPFS Companion</b> provider if available</li>
+  <li>Use the <b>HTTP Client</b> provider</li>
 </ul>
 <p>
-  When the [[Verbose]] property is selected, the console always shows which provider is used.
+  When the [[Verbose]] property is selected, the console shows which provider has been selected.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/provider/console]]

@@ -1,7 +1,15 @@
 {
   "parser": "babel-eslint",
-  "extends": ["plugin:flowtype/recommended", "prettier", "prettier/flowtype", "prettier/standard"],
-  "plugins": ["flowtype", "prettier"],
+  "extends": [
+    "plugin:flowtype/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/standard"
+  ],
+  "plugins": [
+    "flowtype",
+    "prettier"
+  ],
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {}
@@ -17,7 +25,9 @@
   "rules": {
     "linebreak-style": 0,
     "comma-dangle": 1,
-    "arrow-parens": ["off"],
+    "arrow-parens": [
+      "off"
+    ],
     "consistent-return": "off",
     "no-use-before-define": "off",
     "class-methods-use-this": "off",
@@ -36,7 +46,11 @@
     "react/no-multi-comp": "off",
     "no-param-reassign": "off",
     "no-restricted-syntax": "off",
-    "no-undef": ["error", { "typeof": false }],
+    "no-undef": [
+      "error", {
+        "typeof": false
+      }
+    ],
     "max-len": "off"
   }
 }

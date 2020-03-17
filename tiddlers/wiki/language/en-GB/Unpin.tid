@@ -14,7 +14,7 @@ type: text/vnd.tiddlywiki
   When you embed in your wiki a previously saved IPFS attachment, an <b>Unpin</b> request will be recorded and processed while saving.
 </p>
 <p>
-  Unpinning is not allowed with the [[API URL|IPFS Settings]] <b>ipfs.infura.io:5001</b>.
+  Unpinning is not allowed with the [[API URL|IPFS Server Settings]] <b>ipfs.infura.io:5001</b>.
 </p>
 <p>
   In some situations <b>Unpining</b> is an unwanted mechanism. If you [[Publish TiddlyWiki to IPNS]] an existing [[IPNS name|IPNS Settings]]

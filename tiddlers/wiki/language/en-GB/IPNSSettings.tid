@@ -12,7 +12,7 @@ To publish to IPNS while saving:
 </p>
 <ul>
 <li>The [[IPNS|Protocol]] protocol must be selected</li>
-<li>The <b>IPNS name</b> field must be filled or The <b>IPNS key</b> field must be filled</li>
+<li>The <b>IPNS name</b> field must be filled</li>
 </ul>
 <p>
 To publish without saving see [[Publish TiddlyWiki to IPNS]].
@@ -22,19 +22,42 @@ While saving the plugin will:
 </p>
 <ul>
   <li>Save the wiki over IPFS</li>
-  <li>Verify the <b>IPNS name</b> and <b>IPNS key</b> if both are filled</li>
-  <li>Resolve the <b>IPNS key</b> if only the <b>IPNS name</b> is filled</li>
-  <li>Resolve the <b>IPNS name</b> if only the <b>IPNS key</b> is filled</li>
+  <li>Resolve the current <b>IPNS name</b> and <b>IPNS key</b> if you come from an existing IPNS URL</li>
+  <li>Or resolve the default <b>IPNS name</b> and <b>IPNS key</b> if you come from the local filesystem or an IPFS URL</li>
   <li>Publish the <b>IPFS name</b> with the new IPFS identifier</li>
   <li>[[Unpin]] the previous IPFS content if this option is selected</li>
-  <li>Redirect the current page to your IPNS key according to your default gateway</li>
+  <li>Redirect the current page to your IPNS key if successfully published</li>
+  <li>Or redirect to the IPFS saved wiki if the IPNS update do not succeed.</li>
 </ul>
 <p>
-This feature do not work with IPFS Companion or the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Settings]].
-<br/>
-IPNS name and IPNS key needs to be generated with a full IPFS server with the following [ext[Cli command|https://docs.ipfs.io/reference/api/cli/#ipfs-key-gen]].
+This feature do not work with IPFS Companion or the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]].
 </p>
 <ul>
-  <li>To modify the default IPNS name, edit and modify [[$:/ipfs/saver/ipns/name]]</li>
-  <li>To modify the default IPNS key, edit and modify [[$:/ipfs/saver/ipns/key]]</li>
+  <li>The default IPNS name is stored in the following Tiddler [[$:/ipfs/saver/ipns/name]]</li>
+  <li>The default IPNS key is store in the following Tiddler [[$:/ipfs/saver/ipns/key]]</li>
 </ul>
+<h3>Rename IPNS name</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/rename]]
+<p>
+This command rename the default <b>IPNS name</b>.
+</p>
+<h3>Generate IPNS key</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/generate]]
+<p>
+This command generates an <b>IPNS key</b> linked to a new <b>IPNS name</b>.
+</p>
+<h3>Remove IPNS Name and IPNS key</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/remove]]
+<p>
+This command removes an <b>IPNS name</b> and its linked <b>IPNS key</b>.
+</p>
+<h3>Fetch IPNS key</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/fetch]]
+<p>
+This command fetch the <b>IPNS key</b> linked to an <b>IPNS name</b>.
+</p>
+<h3>Open resolved IPNS key</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/resolve]]
+<p>
+This command resolves and opens an <b>IPNS key</b>.
+</p>

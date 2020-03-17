@@ -14,7 +14,7 @@ Exporting an embedded resource means exporting to IPFS a content from your wiki.
 Uploading to IPFS an attachment could be a slow process. It depends the attachment size and/or which server your are using.
 </p>
 <p>
-Use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Settings]] and the <b>https://ipfs.infura.io</b> [[Gateway URL|IPFS Settings]] and experiment with the following Tiddler:
+Use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]] and the <b>https://ipfs.infura.io</b> [[Gateway URL|IPFS Server Settings]] and experiment with the following Tiddler:
 </p>
 [[Embedded - The Little Prince]]
 <p>
@@ -22,8 +22,8 @@ Be sure to setup the [[Verbose]] property and watch the console displayed events
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/console]]
 <p>
-Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Settings]]  and the <b>https://gateway.ipfs.io</b> [[Gateway URL|IPFS Settings]].
-That way you upload your attachment on infura and retrieve it with another server.
+Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]]  and the <b>https://gateway.ipfs.io</b> [[Gateway URL|IPFS Server Settings]].
+That way you upload your attachment on infura and retrieve it through another server.
 It helps spreading your attachment on another IPFS server increasing its resilience.
 </p>
 <p>

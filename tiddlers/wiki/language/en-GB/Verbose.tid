@@ -13,7 +13,7 @@ Errors are always detailed in the [[Console]]. Useful when you need to fill a bu
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/error/console]]
 <p>
-Processing content over [[IPFS|IPFS Settings]] could be a lengthy process.
+Processing content over [[IPFS|IPFS Server Settings]] could be a lengthy process.
 </p>
 <p>
 Every logical step gives a detailed output to the [[Console]].
