@@ -240,8 +240,8 @@ Use the `build-all` or `test` scripts to build ```IPFS with TiddlyWiki```.
 
 The `wiki` directory will contain two runnable wikis:
 
-* [index.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
-* [empty.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
+* [index.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
+* [empty.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
 
 The `wiki` directory will also contain the plugin as a json file:
 
