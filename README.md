@@ -174,18 +174,18 @@ load-nvmrc
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 ```
-v10.19.0
+v12.16.1
 ```
 
 Install the recommended version.
 ```
-nvm install v10.19.0
+nvm install v12.16.1
 ```
 
 Check:
 ```
 node -v
-v10.19.0
+v12.16.1
 ```
 
 We update npm to use the latest:
