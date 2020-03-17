@@ -121,32 +121,26 @@ import { URL } from "universal-url";
     }
     // Invalid URL, try to parse with a Base URL
     if (parsed == null) {
-      parsed = this.getUrl(
-        url,
-        base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-      );
+      parsed = this.getUrl(url, base !== undefined && base !== null ? base : this.getIpfsBaseUrl());
     }
     // Remove .link from .eth.link
     if (parsed.hostname.endsWith(".eth.link")) {
-      parsed.hostname = parsed.hostname.substring(
-        0,
-        parsed.hostname.indexOf(".link")
-      );
+      parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
     }
     // Resolve .eth
     if (parsed.hostname.endsWith(".eth")) {
-      // To accomodate the tests
-      var tests = true;
+      // To accomodate jest
+      var jest = true;
       try {
-        // Dummy call
-        $tw.ipfs.getLogger();
-        // Good
-        tests = false;
+        if ($tw.browser) {
+          // It never happen as node raises an exception...
+          jest = false;
+        }
       } catch (error) {
         // Ignore
       }
-      // That way errors are triggered while tests are running...
-      if (tests === false) {
+      // Errors are triggered and tests are running...
+      if (jest === false) {
         parsed = await $tw.ipfs.resolveENS(parsed.hostname);
       }
     }
