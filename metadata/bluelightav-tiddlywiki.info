@@ -30,6 +30,13 @@
 			"$:/core/save/all",
 			"index.html",
 			"text/plain"
+		],
+		"plugin": [
+			"--render",
+			"$:/plugins/ipfs",
+			"tiddlywiki-ipfs-plugin.json",
+			"text/plain",
+			"$:/core/templates/json-tiddler"
 		]
 	}
 }

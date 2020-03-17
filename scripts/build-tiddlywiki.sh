@@ -2,6 +2,7 @@
 
 # metadata
 cp ./metadata/empty-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
+
 # build
 npx tiddlywiki build \
   --output wiki \
@@ -19,6 +20,7 @@ cp ./metadata/bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # tw5-relink
 cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
+
 # build
 npx tiddlywiki build \
   --output wiki \

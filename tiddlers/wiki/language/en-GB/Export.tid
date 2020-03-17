@@ -1,0 +1,15 @@
+title: Export
+tags: $:/ipfs/documentation Settings
+type: text/vnd.tiddlywiki
+
+<h2>Export Setting</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/export]]
+<p>
+The <b>Export</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> export your Tiddler over IPFS.
+</p>
+<h3>JSON</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/export/json]]
+<h3>Static</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/export/static]]
+<h3>TID</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/export/tid]]

@@ -5,7 +5,7 @@ type: text/vnd.tiddlywiki
 <h2>Unpin Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/unpin]]
 <p>
-  The <b>Unpin</b> checkbox when selected try to unpin previous content while saving.
+  The <b>Unpin</b> checkbox when selected try to unpin the previous content while saving.
 </p>
 <p>
   Each time you save your wiki or publish an [[IPNS|IPNS Settings]] Name, the previous content will be unpined.

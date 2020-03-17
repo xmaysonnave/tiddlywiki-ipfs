@@ -1,0 +1,17 @@
+title: Relative URL Policy
+tags: $:/ipfs/documentation Settings
+type: text/vnd.tiddlywiki
+
+<h2>Relative URL Policy Setting</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/settings/relative/url/policy]]
+<p>
+The <b>Relative URL Policy</b> setting controls the way relative URL are resolved.
+</p>
+<h3>Origin</h3>
+<p>
+Relative URL are resolved against their origin. If the origin is the file system, relative URL will be resolved against the [[Gateway URL|IPFS Server Settings]].
+</p>
+<h3>Gateway</h3>
+<p>
+Relative URL are resolved against the [[Gateway URL|IPFS Server Settings]].
+</p>
