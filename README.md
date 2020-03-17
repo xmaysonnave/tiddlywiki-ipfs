@@ -236,10 +236,16 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 * test
 * test-no-build
 
-Use the `build-all` script to build ```IPFS with TiddlyWiki``` and the `wiki` directory will contain two runnable wikis:
+Use the `build-all` or `test` scripts to build ```IPFS with TiddlyWiki```.
 
-* index.html (production)
-* empty.html (production)
+The `wiki` directory will contain two runnable wikis:
+
+* [index.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
+* [empty.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
+
+The `wiki` directory will also contain the plugin as a json file:
+
+* [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/tiddlywiki-ipfs-plugin.json)
 
 Use the `test` script to build and run the tests.
 
