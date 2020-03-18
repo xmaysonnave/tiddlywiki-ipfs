@@ -226,8 +226,10 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
 
 * build-all-noclone
-* build-all
+* build
 * build-tiddlywiki
+* eslint-check
+* lint
 * pretty-quick
 * run-build-number
 * run-browserify
@@ -236,18 +238,18 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 * test
 * test-no-build
 
-Use the `build-all` or `test` scripts to build ```IPFS with TiddlyWiki```.
+Use the `build` script to build ```IPFS with TiddlyWiki```.
 
 The `wiki` directory will contain two runnable wikis:
 
 * [index.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
 * [empty.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
 
-The `wiki` directory will also contain the plugin as a json file:
+and the plugin as a json file:
 
 * [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/tiddlywiki-ipfs-plugin.json)
 
-Use the `test` script to build and run the tests.
+Use the `test` script to run the tests.
 
 This repository is integrated with Travis CI:
 

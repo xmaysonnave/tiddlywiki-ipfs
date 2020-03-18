@@ -2,10 +2,10 @@ title: IPFS Documentation
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
-<p>
-This [ext[TiddlyWiki|https://tiddlywiki.com/]] uses the [ext[IPFS with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/]] plugin.
-</p>
-<p>
-This Tiddler requires The [ext[TiddlyWiki Locator|https://bimlas.gitlab.io/tw5-locator/tw5-locator.json]] plugin.
-</p>
+<h3>Requirements</h3>
+<ul>
+  <li>[ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]</li>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+</ul>
+<h3>IPFS Documentation</h3>
 <<locator-view baseTitle:"IPFS Documentation">>

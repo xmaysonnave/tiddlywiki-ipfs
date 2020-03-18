@@ -3,7 +3,7 @@ tags: $:/ipfs/documentation Page
 type: text/vnd.tiddlywiki
 
 <h2>~HowTo Publish ~TiddlyWiki to IPNS</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/publish/ipfs]]
+[img class="tc-image-documentation" [$:/ipfs/image/publish/ipns]]
 <p>
 The <b>publish to IPNS</b> action publishes the [[IPNS name|IPNS Settings]] with the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api]].
 </p>

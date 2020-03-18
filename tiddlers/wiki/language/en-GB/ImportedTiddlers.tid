@@ -2,20 +2,15 @@ title: Imported Tiddlers
 tags: $:/ipfs/documentation Explorers
 type: text/vnd.tiddlywiki
 
-<p>
-This wiki embeds the [ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/]] who provides a convenient <<tag "$:/isIpfs">>Tiddler explorer.
-</p>
-[img class="tc-image-documentation" [$:/ipfs/image/imported/tiddler]]
-<p>
-The specialized [[Imported Tiddler]] displays the <<tag-pill "$:/isIpfs">>with the following tag status:
-</p>
+<h3>Requirement</h3>
 <ul>
-  <li><<tag-pill "$:/isIpfs">></li>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
 </ul>
+<h3>IPFS Imported Tiddlers</h3>
+[img class="tc-image-documentation" [$:/ipfs/image/imported/tiddlers]]
 <p>
-The <b>IPFS with ~TiddlyWiki</b> plugin embeds the [[Imported Tiddler]] however you need to install the
-[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]].
+The specialized [[IPFS Imported Tiddlers]] displays the <<tag-pill "$:/isImported">>.
 </p>
 <p>
-The [[Imported Tiddler]] is available in the [[TableOfContents]].
+The [[IPFS Imported Tiddlers]] is available in the [[TableOfContents]].
 </p>
