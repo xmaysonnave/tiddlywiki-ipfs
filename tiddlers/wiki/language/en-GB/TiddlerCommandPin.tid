@@ -1,0 +1,13 @@
+title: Pin External Resource to IPFS
+tags: $:/ipfs/documentation [[Tiddler Commands]]
+type: text/vnd.tiddlywiki
+
+<h2>Pin External Resource to IPFS</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/view/pin]]
+<p>
+The <b>pin to IPFS</b> command pin the following Tiddler fields using the [[Default API URL|$:/ipfs/saver/api]]:
+</p>
+<ul>
+  <li>_canonical_uri</li>
+  <li>_export_uri</li>
+</ul>

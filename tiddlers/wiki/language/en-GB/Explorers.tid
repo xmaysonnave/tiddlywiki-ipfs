@@ -2,11 +2,11 @@ title: Explorers
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
-<h3>Requirement</h3>
+<h2>Requirement</h2>
 <ul>
   <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
 </ul>
-<h3>IPFS Explorers</h3>
+<h2>IPFS Explorers</h2>
 <<locator-view baseTitle:"Explorers">>
 <p>
 The [[IPFS Explorers]] is available in the [[TableOfContents]].

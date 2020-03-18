@@ -2,6 +2,11 @@ title: Settings
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
+<h2>Requirement</h2>
+<ul>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+</ul>
+<h2>Settings</h2>
 <p>
 The [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
 </p>

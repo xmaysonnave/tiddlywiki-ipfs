@@ -1,0 +1,10 @@
+title: Commands
+tags: $:/ipfs/documentation [[IPFS Documentation]]
+type: text/vnd.tiddlywiki
+
+<h2>Requirement</h2>
+<ul>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+</ul>
+<h2>Commands</h2>
+<<locator-view baseTitle:"Commands">>

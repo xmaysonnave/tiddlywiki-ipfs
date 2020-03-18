@@ -23,10 +23,10 @@ Ipfs/Pin/Caption: pin to IPFS
 Ipfs/Pin/Hint: Pin this wiki to IPFS
 
 Ipfs/Tiddler/Pin/Caption: pin to IPFS
-Ipfs/Tiddler/Pin/Hint: Pin this tiddler to IPFS
+Ipfs/Tiddler/Pin/Hint: Pin tiddler resources to IPFS
 
 Ipfs/Tiddler/Unpin/Caption: unpin from IPFS
-Ipfs/Tiddler/Unpin/Hint: Unpin this tiddler from IPFS
+Ipfs/Tiddler/Unpin/Hint: Unpin tiddler resources from IPFS
 
 Ipfs/Unpin/Caption: unpin from IPFS
 Ipfs/Unpin/Hint: Unpin this wiki from IPFS

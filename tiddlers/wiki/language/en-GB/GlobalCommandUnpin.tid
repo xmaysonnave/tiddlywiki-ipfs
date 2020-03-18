@@ -1,0 +1,12 @@
+title: Unpin TiddlyWiki from IPFS
+tags: $:/ipfs/documentation [[Global Commands]]
+type: text/vnd.tiddlywiki
+
+<h2>Unpin ~TiddlyWiki from IPFS</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/page/unpin]]
+<p>
+The <b>unpin from IPFS</b> action unpins the current wiki IPFS identifier using the [[Default API URL|$:/ipfs/saver/api]].
+</p>
+<p>
+A dialog box will be displayed at the end of the process with a success or failure message.
+</p>

@@ -1,0 +1,21 @@
+title: Refresh Tiddler from IPFS
+tags: $:/ipfs/documentation [[Tiddler Commands]]
+type: text/vnd.tiddlywiki
+
+<h2>Refresh Tiddler from IPFS</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/view/refresh]]
+<p>
+The <b>refresh</b> action reloads the current Tiddler from IPFS.
+</p>
+<p>
+It implements the following behaviour:
+</p>
+<ul>
+<li>Tags and Fields from External Tiddlers are merged.</li>
+<li>If the host Tiddler has an updated Title, the merge process will defined an <b>_imported_title</b> field.</li>
+<li>
+External attachments are reloaded.
+It is a useful behaviour when you declined to unencrypt an encrypted external resource.
+The unencrypt password dialog box will be displayed again.
+</li>
+</ul>

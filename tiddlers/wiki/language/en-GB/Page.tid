@@ -1,8 +1,0 @@
-title: Page
-tags: $:/ipfs/documentation Action
-type: text/vnd.tiddlywiki
-
-<h2>Page</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/page/toolbar]]
-
-<<locator-view baseTitle:"Page">>
