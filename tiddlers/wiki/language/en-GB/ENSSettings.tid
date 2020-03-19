@@ -21,7 +21,7 @@ ENS offers a secure & decentralised way to address resources both on and off the
 </q>
 <h3>Resolve ENS with IPFS with ~TiddlyWiki</h3>
 <p>
-<$ipfslink caption="https://bluelightav.eth" field="uri" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/>
+<$ipfslink caption="https://bluelightav.eth" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/>
 </p>
 <h3>Resolve ENS with a browser extension</h3>
 <p>

@@ -91,7 +91,7 @@ import { URL } from "universal-url";
     try {
       return new URL(url, base);
     } catch (error) {
-      this.getLogger().error(error);
+      // Ignore
     }
     throw new Error("Invalid URL...");
   };

@@ -465,9 +465,11 @@ IpfsWrapper
       const url = await this.ipfsUri.normalizeUrl(pathname);
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname);
       const { cid } = await this.ipfsLibrary.decodeCid(resolved);
-      const parsed = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
-      this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
-      return cid;
+      if (cid !== null) {
+        const parsed = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
+        this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
+        return cid;
+      }
     } catch (error) {
       this.getLogger().error(error);
     }
