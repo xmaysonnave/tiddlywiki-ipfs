@@ -109,6 +109,7 @@ Ipfs Link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderExternalLink = function(parent, nextSibling, uri) {
+    // Link
     const domNode = this.document.createElement("a");
     domNode.setAttribute("href", uri);
     // Add a click event handler
@@ -126,7 +127,9 @@ Ipfs Link widget
     if (this["aria-label"]) {
       domNode.setAttribute("aria-label", this["aria-label"]);
     }
+    // Insert the URL into the DOM and render any children
     parent.insertBefore(domNode, nextSibling);
+    // Process
     this.renderChildren(domNode, null);
     this.domNodes.push(domNode);
   };
@@ -229,6 +232,7 @@ Ipfs Link widget
     }
     // Insert the link into the DOM and render any children
     parent.insertBefore(domNode, nextSibling);
+    // Process
     this.renderChildren(domNode, null);
     this.domNodes.push(domNode);
   };
@@ -238,7 +242,9 @@ Ipfs Link widget
    */
   IpfsLinkWidget.prototype.renderText = function(parent, nextSibling) {
     const domNode = this.document.createElement("span");
+    // Insert the text into the DOM and render any children
     parent.insertBefore(domNode, nextSibling);
+    // Process
     this.renderChildren(domNode, null);
     this.domNodes.push(domNode);
   };
