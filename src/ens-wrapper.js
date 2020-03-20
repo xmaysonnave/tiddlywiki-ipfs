@@ -92,7 +92,7 @@ EnsWrapper
       };
     } catch (error) {
       this.getLogger().error(error);
-      throw new Error("Unable to fetch an Ethereum provider...");
+      throw new Error("Unable to retrieve an Ethereum provider...");
     }
   };
 
@@ -105,7 +105,7 @@ EnsWrapper
       };
     } catch (error) {
       this.getLogger().error(error);
-      throw new Error("Unable to fetch an Ethereum provider...");
+      throw new Error("Unable to retrieve an Ethereum provider...");
     }
   };
 
@@ -115,7 +115,7 @@ EnsWrapper
       return provider;
     } catch (error) {
       this.getLogger().error(error);
-      throw new Error("Unable to find an Ethereum provider...");
+      throw new Error("Unable to retrieve an Ethereum provider...");
     }
   };
 
