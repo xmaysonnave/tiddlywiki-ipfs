@@ -141,7 +141,7 @@ EnsAction
       }
 
       const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Publishing wiki:" + "\n " + parsed.href + "\n to ENS domain: " + "https://" + ensDomain);
+      this.getLogger().info("Publishing wiki:" + "\n " + parsed.href + "\n to ENS domain: " + ensDomain);
 
       await this.ensWrapper.setContenthash(ensDomain, cid, web3, account);
 

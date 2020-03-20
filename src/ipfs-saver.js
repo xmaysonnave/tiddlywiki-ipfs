@@ -223,7 +223,7 @@ IpfsSaver
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + added);
-        this.getLogger().info("Publishing wiki:" + "\n " + parsed.href + "\n to ENS domain: " + "https://" + ensDomain);
+        this.getLogger().info("Publishing wiki:" + "\n " + parsed.href + "\n to ENS domain: " + ensDomain);
         try {
           await this.ensWrapper.setContenthash(ensDomain, added, web3, account);
           // ENS next

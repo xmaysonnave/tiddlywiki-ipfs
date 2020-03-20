@@ -203,9 +203,9 @@ import contentHash from "content-hash";
     // Retrieve current network
     const network = await web3.getNetwork();
     return {
-      account: account,
+      web3: web3,
       chainId: network.chainId,
-      web3: web3
+      account: account
     };
   };
 
@@ -215,8 +215,8 @@ import contentHash from "content-hash";
     // Retrieve the current network
     const network = await web3.getNetwork();
     return {
-      chainId: network.chainId,
-      web3: web3
+      web3: web3,
+      chainId: network.chainId
     };
   };
 

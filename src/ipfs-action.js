@@ -84,7 +84,6 @@ IpfsAction
       var ipnsName = null;
       var ipnsContent = null;
       var ipfs = null;
-      var ensDomain = null;
       var ensContent = null;
       var protocol = null;
       var cid = null;
@@ -214,7 +213,7 @@ IpfsAction
 
       // Publish to ENS
       if (export_uri.hostname.endsWith(".eth")) {
-        this.getLogger().info("Publishing ENS domain content: " + ensDomain);
+        this.getLogger().info("Publishing ENS domain content: " + export_uri.hostname);
         try {
           // Retrieve a Web3 provider
           const { web3, account } = await $tw.ipfs.getWeb3Provider();

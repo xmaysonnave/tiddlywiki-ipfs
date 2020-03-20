@@ -75,7 +75,7 @@ EnsWrapper
       // Normalize
       const url = await this.ipfsUri.normalizeUrl("/ipfs/" + cidv0);
       // Success
-      this.getLogger().info("Successfully set ENS domain content:" + "\n " + url.href + "\n from: " + domain);
+      this.getLogger().info("Successfully set ENS domain content:" + "\n " + url.href + "\n to: " + domain);
     } catch (error) {
       this.getLogger().error(error);
       throw new Error("Unable to set ENS domain content...");
@@ -84,11 +84,11 @@ EnsWrapper
 
   EnsWrapper.prototype.getWeb3Provider = async function(provider) {
     try {
-      const { account, chainId, web3 } = await this.ensLibrary.getWeb3Provider(provider);
+      const { web3, chainId, account } = await this.ensLibrary.getWeb3Provider(provider);
       return {
-        account: account,
+        web3: web3,
         chainId: chainId,
-        web3: web3
+        account: account
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -100,8 +100,8 @@ EnsWrapper
     try {
       const { web3, chainId } = await this.ensLibrary.getEthersProvider(provider);
       return {
-        chainId: chainId,
-        web3: web3
+        web3: web3,
+        chainId: chainId
       };
     } catch (error) {
       this.getLogger().error(error);
