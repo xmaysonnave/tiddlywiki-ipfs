@@ -18,9 +18,6 @@ While publishing to ENS the plugin will:
   <li>[[Unpin]] the previous version if this option is selected</li>
 </ul>
 <p>
-A dialog box will be displayed at the end of the process with a success or failure message.
-</p>
-<p>
 When you use this action you will not be redirected to your ENS domain when the transaction will be completed.
 </p>
 <p>

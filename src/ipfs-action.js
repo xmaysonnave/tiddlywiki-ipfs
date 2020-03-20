@@ -165,9 +165,9 @@ IpfsAction
       // Analyse URI
       if (export_uri.hostname.endsWith(".eth")) {
         // Retrieve a Web3 provider
-        const { web3, account } = await $tw.ipfs.getWeb3Provider();
+        const { web3 } = await $tw.ipfs.getEthersProvider();
         // Fetch ENS domain content
-        var { content: ensContent } = await this.ensWrapper.getContenthash(export_uri.hostname, web3, account);
+        var { content: ensContent } = await this.ensWrapper.getContenthash(export_uri.hostname, web3);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ensContent !== null) {
           $tw.ipfs.requestToUnpin(ensContent);
