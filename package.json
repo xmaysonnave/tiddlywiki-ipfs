@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200320429",
+  "version": "v0.3.0-200321274",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -30,8 +30,7 @@
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "test": "./scripts/test.sh",
-    "test-no-build": "jest --verbose ./test"
+    "test": "./scripts/test.sh"
   },
   "repository": {
     "type": "git",
@@ -49,7 +48,7 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "@babel/runtime": "^7.8.7",
+    "@babel/runtime": "^7.9.0",
     "buffer": "^5.5.0",
     "cids": "^0.7.4",
     "content-hash": "^2.5.2",
@@ -58,9 +57,9 @@
     "universal-url-lite": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/plugin-transform-runtime": "^7.8.3",
-    "@babel/preset-env": "^7.8.7",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "acorn": "^7.1.1",
     "babel-eslint": "^10.1.0",
     "babelify": "^10.0.0",

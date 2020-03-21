@@ -27,8 +27,8 @@ IpfsLoader
     if (typeof window.eruda === "undefined") {
       await this.loadLibrary(
         "ErudaLibrary",
-        "https://cdn.jsdelivr.net/npm/eruda@2.2.0/eruda.min.js",
-        "sha384-sve9vKF7rVhGjHytBsbmmRhVEQTzx4c/spMUeDLEhhCcG0iDy3MsPmfcntLvxdAr",
+        "https://cdn.jsdelivr.net/npm/eruda@2.2.1/eruda.min.js",
+        "sha384-HmhzjvyY6GykZLnS/bLX/060WuwyrwFf1l0Oz9aBdh4hApJ5JjtfPb53SvRHjNMG",
         true
       );
     }

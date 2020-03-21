@@ -329,26 +329,34 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function(tiddler) {
-    // Process if _canonical_uri is set
-    const uri = tiddler.getFieldString("_canonical_uri");
-    if (uri == undefined || uri == null || uri.trim() === "") {
-      return tiddler;
-    }
-    try {
-      // Decode
-      const parsed = await $tw.ipfs.normalizeIpfsUrl(uri);
-      if (parsed.pathname === "/") {
-        return tiddler;
+    const self = this;
+    // Process fields
+    $tw.utils.each(tiddler.fields, async function(field, name) {
+      var uri = null;
+      var value = tiddler.getFieldString(name);
+      // Not a reserved keyword process
+      if (reservedFields.indexOf(name) == -1) {
+        // URI or not
+        try {
+          uri = await $tw.ipfs.normalizeIpfsUrl(value);
+        } catch (error) {
+          // Ignore
+        }
+        // Process
+        if (uri !== null) {
+          try {
+            const { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
+            // Request to unpin
+            if ($tw.utils.getIpfsUnpin() && cid !== null) {
+              $tw.ipfs.requestToUnpin(cid);
+            }
+          } catch (error) {
+            self.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          }
+        }
       }
-      const { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-      // Request to unpin
-      if ($tw.utils.getIpfsUnpin() && cid !== null) {
-        $tw.ipfs.requestToUnpin(cid);
-      }
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    }
+    });
     return tiddler;
   };
 
@@ -501,7 +509,9 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
-    var updatedTiddler = null;
+    const self = this;
+
+    var updatedTiddler = new $tw.Tiddler(tiddler);
 
     // Type
     var type = tiddler.getFieldString("type");
@@ -512,173 +522,178 @@ IpfsTiddler
 
     // Content Type
     const info = $tw.config.contentTypeInfo[type];
+
     // Check
     if (info == undefined || info == null) {
-      updatedTiddler = new $tw.Tiddler(tiddler);
+      const unknown = new Error("Unknown Tiddler type: " + type);
+      this.getLogger().error(unknown);
+      $tw.utils.alert(name, unknown.message);
       $tw.wiki.addTiddler(updatedTiddler);
       return updatedTiddler;
     }
 
-    // Check
-    if (info.encoding !== "base64" && type !== "image/svg+xml" && type !== "text/vnd.tiddlywiki") {
-      updatedTiddler = new $tw.Tiddler(tiddler);
-      $tw.wiki.addTiddler(updatedTiddler);
-      return updatedTiddler;
-    }
-
-    // Retrieve tiddler _canonical_uri if any
-    var canonical_uri = tiddler.getFieldString("_canonical_uri");
-    if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-      canonical_uri = canonical_uri.trim();
-    } else {
-      canonical_uri = null;
-    }
-
-    // Retrieve old tiddler _export_uri and _canonical_uri if any
-    var old_canonical_uri = null;
+    // Store oldTiddler
     const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title);
-    if (oldTiddler !== undefined && oldTiddler !== null) {
-      // Retrieve oldTiddler _canonical_uri if any
-      old_canonical_uri = oldTiddler.getFieldString("_canonical_uri");
-      if (old_canonical_uri !== undefined && old_canonical_uri !== null && old_canonical_uri.trim() !== "") {
-        old_canonical_uri = old_canonical_uri.trim();
-      } else {
-        old_canonical_uri = null;
-      }
-    }
 
-    // Nothing to do
-    if (canonical_uri == old_canonical_uri) {
-      updatedTiddler = new $tw.Tiddler(tiddler);
-      $tw.wiki.addTiddler(updatedTiddler);
-      return updatedTiddler;
-    }
-
-    var addTags = [];
-    var removeTags = [];
-
-    var content = tiddler.getFieldString("text");
-
-    // Attachment
-    if (info.encoding === "base64" || type === "image/svg+xml") {
-      // Process canonical_uri if any update
-      if (canonical_uri !== old_canonical_uri) {
-        // _canonical_uri attribute has been removed, embed
-        if (canonical_uri == null) {
-          // Load
+    // Process fields
+    $tw.utils.each(tiddler.fields, async function(field, name) {
+      // Not a reserved keyword process
+      if (reservedFields.indexOf(name) == -1) {
+        // cid
+        var cid = null;
+        // oldCid
+        var oldCid = null;
+        // Uri
+        var uri = null;
+        // oldUri
+        var oldUri = null;
+        // Value
+        var value = tiddler.getFieldString(name);
+        // oldValue
+        var oldValue = null;
+        if (oldTiddler !== undefined && oldTiddler !== null) {
+          oldValue = oldTiddler.getFieldString(name);
+        }
+        // Process if any update
+        if (value !== oldValue) {
+          // URI or not
           try {
-            const parsed = await $tw.ipfs.normalizeIpfsUrl(old_canonical_uri);
-            if (info.encoding === "base64") {
-              content = await $tw.utils.loadToBase64(parsed);
-            } else {
-              content = await $tw.utils.loadToUtf8(parsed);
-            }
-            // Update Tiddler
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: tiddler,
-              addTags: ["$:/isAttachment", "$:/isEmbedded"],
-              removeTags: ["$:/isImported", "$:/isIpfs"],
-              fields: [{ key: "text", value: content.data }]
-            });
-            this.getLogger().info("Embeded remote attachment: " + content.data.length + " bytes" + "\n " + parsed.href);
+            uri = await $tw.ipfs.normalizeIpfsUrl(value);
           } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-            return oldTiddler;
+            // Ignore
           }
-
-          // _canonical_uri attribute has been updated
-        } else {
           try {
-            const parsed = await $tw.ipfs.normalizeIpfsUrl(canonical_uri);
-            // Decode CID
-            var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-            // IPFS resource
-            if (cid !== null) {
-              addTags = ["$:/isAttachment", "$:/isIpfs"];
-              removeTags = ["$:/isEmbedded", "$:/isImported"];
-            } else {
-              addTags = ["$:/isAttachment"];
-              removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isIpfs"];
-            }
-            // Update Tiddler
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: tiddler,
-              addTags: addTags,
-              removeTags: removeTags,
-              fields: [{ key: "text", value: "" }]
-            });
-            // Discard unpin request
-            if ($tw.utils.getIpfsUnpin() && cid !== null) {
-              $tw.ipfs.discardRequestToUnpin(cid);
-            }
-            this.getLogger().info("Updated remote attachment:" + "\n " + parsed.href);
+            oldUri = await $tw.ipfs.normalizeIpfsUrl(oldValue);
           } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-            return oldTiddler;
+            // Ignore
+          }
+          // Cid
+          if (uri !== null) {
+            try {
+              var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
+            } catch (error) {
+              // Ignore
+            }
+          }
+          if (oldUri !== null) {
+            try {
+              var { oldCid } = this.ipfsWrapper.decodeCid(oldUri.pathname);
+            } catch (error) {
+              // Ignore
+            }
+          }
+          // Process if any update
+          if (uri !== oldUri) {
+            // Process _canonical_uri if any
+            if (name === "_canonical_uri") {
+              var addTags = [];
+              var removeTags = [];
+
+              var content = tiddler.getFieldString("text");
+
+              // Attachment
+              if (info.encoding === "base64" || type === "image/svg+xml") {
+                // _canonical_uri attribute has been removed, embed
+                if (uri == null) {
+                  // Load
+                  try {
+                    if (info.encoding === "base64") {
+                      content = await $tw.utils.loadToBase64(oldUri);
+                    } else {
+                      content = await $tw.utils.loadToUtf8(oldUri);
+                    }
+                    // Update Tiddler
+                    updatedTiddler = $tw.utils.updateTiddler({
+                      tiddler: updatedTiddler,
+                      addTags: ["$:/isAttachment", "$:/isEmbedded"],
+                      removeTags: ["$:/isImported", "$:/isIpfs"],
+                      fields: [{ key: "text", value: content.data }]
+                    });
+                    self.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + oldUri.href);
+                  } catch (error) {
+                    self.getLogger().error(error);
+                    $tw.utils.alert(name, error.message);
+                  }
+
+                  // _canonical_uri attribute has been updated
+                } else {
+                  // IPFS resource
+                  if (cid !== null) {
+                    addTags = ["$:/isAttachment", "$:/isIpfs"];
+                    removeTags = ["$:/isEmbedded", "$:/isImported"];
+                  } else {
+                    addTags = ["$:/isAttachment"];
+                    removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isIpfs"];
+                  }
+                  // Update Tiddler
+                  updatedTiddler = $tw.utils.updateTiddler({
+                    tiddler: updatedTiddler,
+                    addTags: addTags,
+                    removeTags: removeTags,
+                    fields: [{ key: "text", value: "" }]
+                  });
+                }
+
+                // Tiddler
+              } else {
+                // _canonical_uri attribute has been removed
+                if (uri == null) {
+                  // Cleanup previous
+                  updatedTiddler = $tw.utils.updateTiddler({
+                    tiddler: updatedTiddler,
+                    removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isImported", "$:/isIpfs"]
+                  });
+                  // _canonical_uri attribute has been updated
+                } else {
+                  // IPFS resource
+                  if (cid !== null) {
+                    removeTags = ["$:/isAttachment", "$:/isEmbedded"];
+                  } else {
+                    removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
+                  }
+                  updatedTiddler = $tw.utils.updateTiddler({
+                    tiddler: updatedTiddler,
+                    removeTags: removeTags,
+                    fields: [{ key: "text", value: "" }]
+                  });
+                }
+              }
+            }
+            // Process _export_uri if any
+            if (name === "_export_uri") {
+            }
+            // Process _import_uri if any
+            if (name === "_import_uri") {
+            }
+            // Attribute has been updated
+            if (uri !== null) {
+              try {
+                // Discard unpin request
+                if ($tw.utils.getIpfsUnpin() && cid !== null) {
+                  $tw.ipfs.discardRequestToUnpin(cid);
+                }
+                self.getLogger().info("Update attachment reference:" + "\n " + uri.href);
+              } catch (error) {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              }
+            }
+            // Process previous uri if any
+            if (oldUri !== null) {
+              try {
+                // Pin request
+                if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
+                  $tw.ipfs.requestToUnpin(oldCid);
+                }
+              } catch (error) {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              }
+            }
           }
         }
-
-        // Process previous canonical_uri if any
-        if (old_canonical_uri !== null) {
-          try {
-            const parsed = await $tw.ipfs.normalizeIpfsUrl(old_canonical_uri);
-            const { cid: oldCid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-            if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
-              $tw.ipfs.requestToUnpin(oldCid);
-            }
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-            return oldTiddler;
-          }
-        }
       }
-
-      // Tiddler
-    } else {
-      // Process if any update
-      if (canonical_uri !== old_canonical_uri) {
-        // _canonical_uri attribute has been removed
-        if (canonical_uri == null) {
-          try {
-            // Cleanup previous
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: tiddler,
-              removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isImported", "$:/isIpfs"]
-            });
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-            return oldTiddler;
-          }
-
-          // _canonical_uri attribute has been updated
-        } else {
-          try {
-            // Process
-            const parsed = await $tw.ipfs.normalizeIpfsUrl(canonical_uri);
-            var { cid } = this.ipfsWrapper.decodeCid(parsed.pathname);
-            // IPFS resource
-            if (cid !== null) {
-              removeTags = ["$:/isAttachment", "$:/isEmbedded"];
-            } else {
-              removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
-            }
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: tiddler,
-              removeTags: removeTags,
-              fields: [{ key: "text", value: "" }]
-            });
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-            return oldTiddler;
-          }
-        }
-      }
-    }
+    });
 
     // Check
     if (updatedTiddler == null) {
