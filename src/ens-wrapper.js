@@ -82,9 +82,9 @@ EnsWrapper
     }
   };
 
-  EnsWrapper.prototype.getWeb3Provider = async function(provider) {
+  EnsWrapper.prototype.getEnabledWeb3Provider = async function(provider) {
     try {
-      const { web3, chainId, account } = await this.ensLibrary.getWeb3Provider(provider);
+      const { web3, chainId, account } = await this.ensLibrary.getEnabledWeb3Provider(provider);
       return {
         web3: web3,
         chainId: chainId,
@@ -92,13 +92,13 @@ EnsWrapper
       };
     } catch (error) {
       this.getLogger().error(error);
-      throw new Error("Unable to retrieve an Ethereum provider...");
+      throw new Error("Unable to retrieve an enabled Ethereum provider...");
     }
   };
 
-  EnsWrapper.prototype.getEthersProvider = async function(provider) {
+  EnsWrapper.prototype.getWeb3Provider = async function(provider) {
     try {
-      const { web3, chainId } = await this.ensLibrary.getEthersProvider(provider);
+      const { web3, chainId } = await this.ensLibrary.getWeb3Provider(provider);
       return {
         web3: web3,
         chainId: chainId

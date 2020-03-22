@@ -130,7 +130,7 @@ EnsAction
       }
 
       // Retrieve a Web3 provider
-      const { web3, account } = await $tw.ipfs.getWeb3Provider();
+      const { web3, account } = await $tw.ipfs.getEnabledWeb3Provider();
 
       // Fetch ENS domain content
       const { content } = await this.ensWrapper.getContenthash(ensDomain, web3);

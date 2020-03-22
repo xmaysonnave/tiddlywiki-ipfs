@@ -175,8 +175,8 @@ IpfsSaver
           callback("Undefined ENS domain...");
           return false;
         }
-        // Retrieve a Web3 provider
-        var { web3, account } = await $tw.ipfs.getWeb3Provider();
+        // Retrieve an enabled Web3 provider
+        var { web3, account } = await $tw.ipfs.getEnabledWeb3Provider();
         // Fetch ENS domain content
         const { content } = await this.ensWrapper.getContenthash(ensDomain, web3);
         // Request to unpin

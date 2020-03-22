@@ -236,7 +236,6 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 * run-prepare-clone
 * run-prepare
 * test
-* test-no-build
 
 Use the `build` script to build ```IPFS with TiddlyWiki```.
 

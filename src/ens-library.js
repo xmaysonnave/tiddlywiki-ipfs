@@ -168,13 +168,7 @@ import contentHash from "content-hash";
   };
 
   EnsLibrary.prototype.getProvider = async function() {
-    try {
-      // Try to load ethers
-      await $tw.ipfs.getLoader().loadEtherJsLibrary();
-    } catch (error) {
-      this.getLogger().error(error);
-    }
-    // Retrieve an available provider
+    // Retrieve an available Ethereum provider
     var provider = null;
     if (typeof root.ethereum !== "undefined") {
       provider = root.ethereum;
@@ -191,10 +185,18 @@ import contentHash from "content-hash";
     if (provider.isMetaMask) {
       provider.autoRefreshOnNetworkChange = false;
     }
+    // return provider
     return provider;
   };
 
-  EnsLibrary.prototype.getWeb3Provider = async function(provider) {
+  EnsLibrary.prototype.getEnabledWeb3Provider = async function(provider) {
+    // Check
+    if (provider == undefined || provider == null) {
+      throw new Error("Undefined Ethereum provider...");
+    }
+    if (root.ethers == undefined || root.ethers == null) {
+      await this.loadEthers();
+    }
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
     const account = await this.enableProvider(provider);
@@ -209,7 +211,30 @@ import contentHash from "content-hash";
     };
   };
 
-  EnsLibrary.prototype.getEthersProvider = async function(provider) {
+  EnsLibrary.prototype.loadEthers = async function() {
+    if (root.ethers == undefined || root.ethers == null) {
+      try {
+        // Load ethers
+        await $tw.ipfs.getLoader().loadEtherJsLibrary();
+        if (root.ethers !== undefined && root.ethers !== null) {
+          return;
+        }
+      } catch (error) {
+        this.getLogger().error(error);
+      }
+      // Should not happen...
+      throw new Error("Unavailable Ethereum library...");
+    }
+  };
+
+  EnsLibrary.prototype.getWeb3Provider = async function(provider) {
+    // Check
+    if (provider == undefined || provider == null) {
+      throw new Error("Undefined Ethereum provider...");
+    }
+    if (root.ethers == undefined || root.ethers == null) {
+      await this.loadEthers();
+    }
     // Instantiate an ethers Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider);
     // Retrieve the current network
@@ -255,6 +280,9 @@ import contentHash from "content-hash";
     if (node == undefined || node == null || node.trim() === "") {
       throw new Error("Undefined ENS domain resolver...");
     }
+    if (root.ethers == undefined || root.ethers == null) {
+      await this.loadEthers();
+    }
     // Low level call
     const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
     const iface = new root.ethers.utils.Interface(abi);
@@ -282,6 +310,9 @@ import contentHash from "content-hash";
     }
     if (address == undefined || address == null || address.trim() === "") {
       throw new Error("Undefined Ethereum address...");
+    }
+    if (root.ethers == undefined || root.ethers == null) {
+      await this.loadEthers();
     }
     // true when interfaceID is 0x01ffc9a7
     var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
@@ -330,6 +361,9 @@ import contentHash from "content-hash";
     if (address == undefined || address == null || address.trim() === "") {
       throw new Error("Undefined Ethereum address...");
     }
+    if (root.ethers == undefined || root.ethers == null) {
+      await this.loadEthers();
+    }
     // contenthash, true when interfaceID is 0xbc1c58d1
     var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
     var iface = new root.ethers.utils.Interface(abi);
@@ -353,13 +387,16 @@ import contentHash from "content-hash";
   };
 
   EnsLibrary.prototype.getContenthash = async function(domain, web3) {
+    // check
     if (domain == undefined || domain == null) {
       throw new Error("Undefined ENS domain...");
     }
+    if (root.ethers == undefined || root.ethers == null) {
+      await this.loadEthers();
+    }
 
-    // Retrieve a web3 provider
     if (web3 == undefined) {
-      var { web3 } = await this.getEthersProvider();
+      var { web3 } = await this.getWeb3Provider();
     }
 
     // Resolve domain as namehash
@@ -426,17 +463,17 @@ import contentHash from "content-hash";
   };
 
   EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account) {
+    // check
     if (domain == undefined || domain == null) {
       throw new Error("Undefined ENS domain...");
     }
-
     if (cid == undefined || cid == null) {
       throw new Error("Undefined IPFS identifier...");
     }
 
-    // Retrieve a web3 provider
+    // Retrieve an enabled web3 provider
     if (web3 == undefined || account == undefined) {
-      var { web3, account } = await this.getWeb3Provider();
+      var { web3, account } = await this.getEnabledWeb3Provider();
     }
 
     // Resolve domain as namehash

@@ -94,10 +94,16 @@ Ipfs Link widget
         // External URL
       } else {
         this.renderText(parent, nextSibling);
-        $tw.ipfs.normalizeIpfsUrl(this.value).then(normalized_uri => {
-          self.removeChildDomNodes();
-          self.renderExternalLink(parent, nextSibling, normalized_uri.href);
-        });
+        $tw.ipfs
+          .normalizeIpfsUrl(this.value)
+          .then(normalized_uri => {
+            self.removeChildDomNodes();
+            self.renderExternalLink(parent, nextSibling, normalized_uri.href);
+          })
+          .catch(error => {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          });
       }
     }
   };

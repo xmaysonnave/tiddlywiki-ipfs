@@ -198,7 +198,7 @@ IpfsController
         this.getLogger().info("Current Ethereum network:" + "\n " + network[chainId]);
       } catch (error) {
         this.getLogger().error(error);
-        $tw.utils.alert(name, "Unknown Ethereum network: " + chainId);
+        $tw.utils.alert(name, error.message);
       }
     }
   };
@@ -210,14 +210,21 @@ IpfsController
       this.account = null;
       this.getLogger().info("Closing Ethereum provider...");
     } else if (this.account !== accounts[0]) {
-      if (this.web3 == null && this.chainId == null) {
-        const { web3, chainId } = await this.getEthersProvider();
-        this.web3 = web3;
-        this.chainId = chainId;
+      try {
+        if (this.web3 == null && this.chainId == null) {
+          const { web3, chainId } = await this.getWeb3Provider();
+          this.web3 = web3;
+          this.chainId = chainId;
+        }
+        this.account = accounts[0];
+        const etherscan = this.ensWrapper.getEtherscanRegistry();
+        this.getLogger().info(
+          "Current Ethereum account:" + "\n " + etherscan[this.chainId] + "/address/" + this.account
+        );
+      } catch (error) {
+        this.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
       }
-      this.account = accounts[0];
-      const etherscan = this.ensWrapper.getEtherscanRegistry();
-      this.getLogger().info("Current Ethereum account:" + "\n " + etherscan[this.chainId] + "/address/" + this.account);
     }
   };
 
@@ -228,13 +235,13 @@ IpfsController
     this.getLogger().info("Closing Ethereum provider:" + "\n " + "Reason: " + reason + "\n " + "Code: " + code);
   };
 
-  IpfsController.prototype.getWeb3Provider = async function() {
+  IpfsController.prototype.getEnabledWeb3Provider = async function() {
     const provider = await this.getEthereumProvider();
     const network = this.ensWrapper.getNetwork();
     const etherscan = this.ensWrapper.getEtherscanRegistry();
     var info = "Reuse Web3 provider:";
     if (this.account == null) {
-      const { web3, chainId, account } = await this.ensWrapper.getWeb3Provider(provider);
+      const { web3, chainId, account } = await this.ensWrapper.getEnabledWeb3Provider(provider);
       this.web3 = web3;
       this.chainId = chainId;
       this.account = account;
@@ -257,12 +264,12 @@ IpfsController
     };
   };
 
-  IpfsController.prototype.getEthersProvider = async function() {
+  IpfsController.prototype.getWeb3Provider = async function() {
     const provider = await this.getEthereumProvider();
     const network = this.ensWrapper.getNetwork();
     var info = "Reuse current Web3 provider:";
     if (this.web3 == null) {
-      const { web3, chainId } = await this.ensWrapper.getEthersProvider(provider);
+      const { web3, chainId } = await this.ensWrapper.getWeb3Provider(provider);
       this.web3 = web3;
       this.chainId = chainId;
       info = "New Web3 provider:";
@@ -277,7 +284,7 @@ IpfsController
 
   IpfsController.prototype.resolveENS = async function(ensDomain) {
     // Retrieve a Web3 provider
-    const { web3 } = await this.getEthersProvider();
+    const { web3 } = await this.getWeb3Provider();
     // Fetch ENS domain content
     const { content, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3);
     if (content !== null && protocol !== null) {

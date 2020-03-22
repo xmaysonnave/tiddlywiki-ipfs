@@ -164,7 +164,7 @@ IpfsAction
       // Analyse URI
       if (export_uri.hostname.endsWith(".eth")) {
         // Retrieve a Web3 provider
-        const { web3 } = await $tw.ipfs.getEthersProvider();
+        const { web3 } = await $tw.ipfs.getWeb3Provider();
         // Fetch ENS domain content
         var { content: ensContent } = await this.ensWrapper.getContenthash(export_uri.hostname, web3);
         // Request to unpin
@@ -215,8 +215,8 @@ IpfsAction
       if (export_uri.hostname.endsWith(".eth")) {
         this.getLogger().info("Publishing ENS domain content: " + export_uri.hostname);
         try {
-          // Retrieve a Web3 provider
-          const { web3, account } = await $tw.ipfs.getWeb3Provider();
+          // Retrieve an enabled Web3 provider
+          const { web3, account } = await $tw.ipfs.getEnabledWeb3Provider();
           // Set ENS domain content
           await this.ensWrapper.setContenthash(export_uri.hostname, added, web3, account);
           fields.push({ key: "_export_uri", value: "https://" + export_uri.hostname });

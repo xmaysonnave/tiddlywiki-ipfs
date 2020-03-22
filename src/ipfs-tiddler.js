@@ -59,13 +59,6 @@ IpfsTiddler
     $tw.wiki.addEventListener("change", function(changes) {
       return self.handleChangeEvent(changes);
     });
-    // Widget
-    $tw.rootWidget.addEventListener("tm-ipfs-pin", async function(event) {
-      return await self.handleIpfsPin(event);
-    });
-    $tw.rootWidget.addEventListener("tm-ipfs-unpin", async function(event) {
-      return await self.handleIpfsUnpin(event);
-    });
     // Hook
     $tw.hooks.addHook("th-deleting-tiddler", async function(tiddler) {
       return await self.handleDeleteTiddler(tiddler);
@@ -77,8 +70,14 @@ IpfsTiddler
       return await self.handleSaveTiddler(tiddler);
     });
     // Widget
+    $tw.rootWidget.addEventListener("tm-ipfs-pin", async function(event) {
+      return await self.handleIpfsPin(event);
+    });
     $tw.rootWidget.addEventListener("tm-refresh-tiddler", async function(event) {
       return await self.handleRefreshTiddler(event);
+    });
+    $tw.rootWidget.addEventListener("tm-ipfs-unpin", async function(event) {
+      return await self.handleIpfsUnpin(event);
     });
     // Init once
     this.once = true;
@@ -217,7 +216,7 @@ IpfsTiddler
         cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       }
 
-      this.getLogger().info("Pinning field: " + name + "\n " + uri.href);
+      this.getLogger().info("Pinning reference: " + name + "\n " + uri.href);
 
       // Pin
       await this.ipfsWrapper.pinToIpfs(ipfs, cid);
@@ -307,7 +306,7 @@ IpfsTiddler
         cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       }
 
-      this.getLogger().info("Unpinning field: " + name + "\n " + uri.href);
+      this.getLogger().info("Unpinning reference: " + name + "\n " + uri.href);
 
       // Unpin
       await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
@@ -634,7 +633,7 @@ IpfsTiddler
                   });
                 }
 
-                // Tiddler
+                // Others
               } else {
                 // _canonical_uri attribute has been removed
                 if (uri == null) {
@@ -665,19 +664,6 @@ IpfsTiddler
             // Process _import_uri if any
             if (name === "_import_uri") {
             }
-            // Attribute has been updated
-            if (uri !== null) {
-              try {
-                // Discard unpin request
-                if ($tw.utils.getIpfsUnpin() && cid !== null) {
-                  $tw.ipfs.discardRequestToUnpin(cid);
-                }
-                self.getLogger().info("Update attachment reference:" + "\n " + uri.href);
-              } catch (error) {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              }
-            }
             // Process previous uri if any
             if (oldUri !== null) {
               try {
@@ -685,6 +671,20 @@ IpfsTiddler
                 if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
                   $tw.ipfs.requestToUnpin(oldCid);
                 }
+                self.getLogger().info("Previous reference:" + name + "..." + "\n " + oldUri.href);
+              } catch (error) {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              }
+            }
+            // Current uri has been updated
+            if (uri !== null) {
+              try {
+                // Discard unpin request
+                if ($tw.utils.getIpfsUnpin() && cid !== null) {
+                  $tw.ipfs.discardRequestToUnpin(cid);
+                }
+                self.getLogger().info("Current reference:" + name + "..." + "\n " + uri.href);
               } catch (error) {
                 self.getLogger().error(error);
                 $tw.utils.alert(name, error.message);
