@@ -119,7 +119,7 @@ IpfsWrapper
   /*
    * imported tiddler supersed hosting tiddler
    */
-  IpfsWrapper.prototype.loadTiddlers = async function(tiddler, uri) {
+  IpfsWrapper.prototype.loadTiddlers = async function(uri) {
     // Normalize
     const normalized_uri = await $tw.ipfs.normalizeIpfsUrl(uri);
     // Load

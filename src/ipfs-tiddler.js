@@ -177,7 +177,7 @@ IpfsTiddler
         // Document
       } else {
         const parsed = await $tw.ipfs.getDocumentUrl();
-        await this.ipfsPin(parsed);
+        await this.ipfsPin("document", parsed);
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -267,7 +267,7 @@ IpfsTiddler
         // Document
       } else {
         const parsed = await $tw.ipfs.getDocumentUrl();
-        await this.ipfsUnpin(parsed);
+        await this.ipfsUnpin("document", parsed);
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -328,6 +328,7 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function(tiddler) {
+    // self
     const self = this;
     // Process fields
     $tw.utils.each(tiddler.fields, async function(field, name) {
@@ -431,34 +432,36 @@ IpfsTiddler
     }
 
     // Load remote
-    const remotes = await this.ipfsWrapper.loadTiddlers(tiddler, uri);
+    const remotes = await this.ipfsWrapper.loadTiddlers(uri);
 
     // Iterate over remote for new and update
-    var current = null;
-    for (var k = 0; k < remotes.length; k++) {
-      // Current remote
-      const remote = remotes[k];
+    if (remotes !== undefined && remotes !== null) {
+      var current = null;
+      for (var k = 0; k < remotes.length; k++) {
+        // Current remote
+        const remote = remotes[k];
 
-      // Root
-      if (current == null) {
-        current = tiddler;
-      } else {
-        current = $tw.wiki.getTiddler(remote.title);
-      }
+        // Root
+        if (current == null) {
+          current = tiddler;
+        } else {
+          current = $tw.wiki.getTiddler(remote.title);
+        }
 
-      // New
-      if (current == null) {
-        // New Tiddler
-        current = new $tw.Tiddler({
-          title: remote.title
-        });
-      }
+        // New
+        if (current == null) {
+          // New Tiddler
+          current = new $tw.Tiddler({
+            title: remote.title
+          });
+        }
 
-      if (current !== null) {
-        // Merge
-        const mergedTiddler = this.merge(current, remote);
-        // Update
-        $tw.wiki.addTiddler(mergedTiddler);
+        if (current !== null) {
+          // Merge
+          const mergedTiddler = this.merge(current, remote);
+          // Update
+          $tw.wiki.addTiddler(mergedTiddler);
+        }
       }
     }
 
@@ -466,6 +469,8 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
+    // self
+    const self = this;
     // current tiddler title
     const title = event.tiddlerTitle;
 
@@ -476,40 +481,65 @@ IpfsTiddler
       return false;
     }
 
-    try {
-      var canonical_uri = tiddler.getFieldString("_canonical_uri");
-      // Nothing to do
-      if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-        // Import and merge
-        await this.mergeImported(tiddler, canonical_uri);
-        // Empty text to force refresh
-        const updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: "" }]
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
+    // updated
+    var updatedTiddler = new $tw.Tiddler(tiddler);
+
+    // Count fields
+    var count = 0;
+    $tw.utils.each(tiddler.getFieldStrings(), function(value, fieldName) {
+      count += 1;
+    });
+
+    // Process fields
+    $tw.utils.each(tiddler.fields, async function(field, name) {
+      // Not a reserved keyword process
+      if (reservedFields.indexOf(name) == -1) {
+        // Uri
+        var uri = null;
+        // Value
+        var value = tiddler.getFieldString(name);
+        // Process if any update
+        if (value !== undefined && value !== null) {
+          // URI or not
+          try {
+            uri = await $tw.ipfs.normalizeIpfsUrl(value);
+          } catch (error) {
+            // Ignore
+          }
+          // Process if any update
+          if (uri !== undefined && uri !== null) {
+            // Process _canonical_uriif any
+            if (name === "_canonical_uri") {
+              // Import and merge
+              await this.mergeImported(tiddler, uri);
+              // Empty text to force refresh
+              const updatedTiddler = $tw.utils.updateTiddler({
+                tiddler: updatedTiddler,
+                fields: [{ key: "text", value: "" }]
+              });
+              $tw.wiki.addTiddler(updatedTiddler);
+            }
+          }
+        }
       }
 
-      // Empty cache
-      $tw.wiki.clearCache(title);
-
-      // Tiddler to be refreshed
-      const changedTiddler = $tw.utils.getChangedTiddler(title);
-
-      // Refresh
-      $tw.rootWidget.refresh(changedTiddler);
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-      return false;
-    }
+      // Empty cache once
+      if (--count == 0) {
+        $tw.wiki.clearCache(title);
+        // Tiddler to be refreshed
+        const changedTiddler = $tw.utils.getChangedTiddler(title);
+        // Refresh
+        $tw.rootWidget.refresh(changedTiddler);
+      }
+    });
 
     return true;
   };
 
   IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
+    // self
     const self = this;
-
+    // updated
     var updatedTiddler = new $tw.Tiddler(tiddler);
 
     // Type

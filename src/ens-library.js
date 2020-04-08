@@ -214,7 +214,7 @@ import contentHash from "content-hash";
   EnsLibrary.prototype.loadEthers = async function() {
     if (root.ethers == undefined || root.ethers == null) {
       try {
-        // Load ethers
+        // Load ethers with sri
         await $tw.ipfs.getLoader().loadEtherJsLibrary();
         if (root.ethers !== undefined && root.ethers !== null) {
           return;

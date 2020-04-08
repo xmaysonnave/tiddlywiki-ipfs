@@ -15,6 +15,15 @@ IpfsLoader
 
   const name = "ipfs-loader";
 
+  const eruda = "https://cdn.jsdelivr.net/npm/eruda@2.2.1/eruda.min.js";
+  const eruda_sri = "sha384-HmhzjvyY6GykZLnS/bLX/060WuwyrwFf1l0Oz9aBdh4hApJ5JjtfPb53SvRHjNMG";
+
+  const ethers = "https://cdn.jsdelivr.net/npm/ethers@4.0.46/dist/ethers.min.js";
+  const ethers_sri = "sha384-bjw8iFWKeuQECzXYvYmPXhtav8lsYy9YyJ+yhvwohfvs2mUXzTPktLSi5YsMgczG";
+
+  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@43.0.0/dist/index.min.js";
+  const ipfs_http_client_sri = "sha384-jWCfJ0+/JPg69Se8bAqLb1Vio7MAKeumVVODld0S43VIqSON7HzQgQQnhSiSPaPe";
+
   var IpfsLoader = function() {};
 
   IpfsLoader.prototype.getLogger = function() {
@@ -25,45 +34,61 @@ IpfsLoader
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function() {
     if (typeof window.eruda === "undefined") {
-      await this.loadLibrary(
-        "ErudaLibrary",
-        "https://cdn.jsdelivr.net/npm/eruda@2.2.1/eruda.min.js",
-        "sha384-HmhzjvyY6GykZLnS/bLX/060WuwyrwFf1l0Oz9aBdh4hApJ5JjtfPb53SvRHjNMG",
-        true
-      );
+      await this.loadLibrary("ErudaLibrary", eruda, eruda_sri, true);
     }
   };
 
   // https://www.srihash.org/
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function() {
+    const self = this;
     if (typeof window.ethers === "undefined") {
-      return await this.loadLibrary(
-        "EtherJsLibrary",
-        "https://cdn.jsdelivr.net/npm/ethers@4.0.46/dist/ethers.min.js",
-        "sha384-bjw8iFWKeuQECzXYvYmPXhtav8lsYy9YyJ+yhvwohfvs2mUXzTPktLSi5YsMgczG",
-        true
-      );
+      try {
+        await this.loadLibrary("EtherJsLibrary", ethers, ethers_sri, true);
+      } catch (error) {
+        if (typeof window.ethers === "undefined") {
+          import(ethers)
+            .then(module => {
+              window.ethers = module;
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        }
+      }
     }
   };
 
   // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
+    const self = this;
     if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
-      await this.loadLibrary(
-        "IpfsHttpLibrary",
-        "https://cdn.jsdelivr.net/npm/ipfs-http-client@42.0.0/dist/index.min.js",
-        "sha384-hKDlPpK3wIo1LK7HkujR9KvI1F12YCpl2YpXEYcG+i7iHK16x4BwBL3p8NsAWBnt",
-        true
-      );
-      window.httpClient = window.IpfsHttpClient;
+      try {
+        await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
+        window.httpClient = window.IpfsHttpClient;
+      } catch (error) {
+        if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
+          import(ipfs_http_client)
+            .then(module => {
+              window.IpfsHttpClient = module;
+              window.httpClient = window.IpfsHttpClient;
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        }
+      }
     }
   };
 
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
-  IpfsLoader.prototype.loadLibrary = async function(id, url, sri, module) {
+  IpfsLoader.prototype.loadLibrary = async function(id, url, sri, asModule) {
+    // self
     const self = this;
+    // promise
     return new Promise((resolve, reject) => {
       try {
         // Loaded
@@ -82,20 +107,20 @@ IpfsLoader
           script.src = "";
         };
         script.onload = () => {
-          resolve(window[id]);
-          cleanup();
-          if (module) {
+          if (asModule) {
             self.getLogger(name).info("Loaded Module:" + "\n " + url);
           } else {
             self.getLogger(name).info("Loaded Script:" + "\n " + url);
           }
+          resolve(window[id]);
+          cleanup();
         };
         script.onerror = () => {
           reject(new Error("Failed to load: " + url));
           cleanup();
         };
         // Attributes
-        if (module) {
+        if (asModule) {
           script.type = "module";
         } else {
           script.type = "text/javascript";
@@ -109,7 +134,7 @@ IpfsLoader
         script.crossOrigin = "anonymous";
         // URL
         script.src = url.toString();
-        // Append
+        // Load
         window.document.head.appendChild(script);
       } catch (error) {
         reject(error);

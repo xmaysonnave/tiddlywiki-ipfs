@@ -67,14 +67,14 @@ Ipfs Link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.render = function(parent, nextSibling) {
+    // self
+    const self = this;
     // Save the parent dom node
     this.parentDomNode = parent;
     // Compute our attributes
     this.computeAttributes();
     // Execute our logic
     this.execute();
-    // Analyse field
-    const self = this;
     // Tiddler link
     const tiddler = $tw.wiki.getTiddler(this.value);
     if (tiddler !== undefined && tiddler !== null) {
@@ -101,7 +101,7 @@ Ipfs Link widget
             self.renderExternalLink(parent, nextSibling, normalized_uri.href);
           })
           .catch(error => {
-            this.getLogger().error(error);
+            self.getLogger().error(error);
             $tw.utils.alert(name, error.message);
           });
       }
@@ -141,6 +141,7 @@ Ipfs Link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderTiddlerLink = function(parent, nextSibling) {
+    // self
     var self = this;
     // Sanitise the specified tag
     var tag = this.linkTag;
@@ -253,6 +254,7 @@ Ipfs Link widget
   };
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function(event) {
+    // self
     const self = this;
     // Normalize
     $tw.ipfs

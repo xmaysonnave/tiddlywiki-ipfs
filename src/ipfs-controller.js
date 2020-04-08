@@ -72,6 +72,28 @@ IpfsController
     return false;
   };
 
+  IpfsController.prototype.isJSON = function(content) {
+    if (content !== undefined && content !== null && typeof content === "string") {
+      try {
+        JSON.parse(content);
+        return true;
+      } catch (erro) {
+        // Ignore
+      }
+    }
+    return false;
+  };
+
+  IpfsController.prototype.load = function(loaded) {
+    var importedTiddlers = null;
+    if (this.isJSON(loaded)) {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", loaded, $tw.wiki.getCreationFields());
+    } else {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", loaded, $tw.wiki.getCreationFields());
+    }
+    return importedTiddlers;
+  };
+
   IpfsController.prototype.getLoader = function() {
     return this.loader;
   };
@@ -110,6 +132,11 @@ IpfsController
 
   IpfsController.prototype.getIpnsIdentifiers = function(ipfs, ipnsKey, ipnsName) {
     return this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+  };
+
+  IpfsController.prototype.loadTiddlers = async function(uri) {
+    const tiddlers = await this.ipfsWrapper.loadTiddlers(uri);
+    return tiddlers;
   };
 
   IpfsController.prototype.getIpfsClient = async function() {
