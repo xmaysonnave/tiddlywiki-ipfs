@@ -249,12 +249,17 @@ wikiparser
       // Processed tags
       importedTiddler["tags"] = importedTags;
 
-      // canonical_uri or import_uri
+      // canonical_uri
       const canonical_uri = importedTiddler["_canonical_uri"];
       if (canonical_uri == undefined || canonical_uri == null) {
         importedTiddler["_canonical_uri"] = uri;
+        // import_uri
       } else {
-        importedTiddler["_import_uri"] = uri;
+        const import_uri = importedTiddler["_import_uri"];
+        // Do not overwrite existing import_uri
+        if (import_uri == undefined || import_uri == null) {
+          importedTiddler["_import_uri"] = uri;
+        }
       }
 
       // Update

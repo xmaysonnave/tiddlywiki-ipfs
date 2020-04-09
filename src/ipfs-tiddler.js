@@ -508,8 +508,13 @@ IpfsTiddler
           }
           // Process if any update
           if (uri !== undefined && uri !== null) {
-            // Process _canonical_uriif any
+            // Process canonical_uri if any
             if (name === "_canonical_uri") {
+              // import_uri supersed canonical_uri
+              var import_uri = tiddler.getFieldString("_import_uri");
+              if (import_uri !== undefined && import_uri !== null) {
+                uri = import_uri;
+              }
               // Import and merge
               await this.mergeImported(tiddler, uri);
               // Empty text to force refresh
