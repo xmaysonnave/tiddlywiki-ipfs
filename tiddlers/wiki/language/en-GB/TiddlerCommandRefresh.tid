@@ -11,8 +11,7 @@ The <b>refresh</b> action reloads the current Tiddler from IPFS.
 It implements the following behaviour:
 </p>
 <ul>
-<li>Tags and Fields from External Tiddlers are merged.</li>
-<li>If the host Tiddler has an updated Title, the merge process will defined an <b>_imported_title</b> field.</li>
+<li>External Tiddlers are merged.</li>
 <li>
 External attachments are reloaded.
 It is a useful behaviour when you declined to unencrypt an encrypted external resource.

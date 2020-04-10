@@ -345,7 +345,7 @@ IpfsTiddler
         // Process
         if (uri !== null) {
           try {
-            const { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
+            const { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
             // Request to unpin
             if ($tw.utils.getIpfsUnpin() && cid !== null) {
               $tw.ipfs.requestToUnpin(cid);
@@ -379,7 +379,6 @@ IpfsTiddler
   IpfsTiddler.prototype.merge = function(tiddler, target) {
     // Merge
     const currentTags = (tiddler.fields.tags || []).slice(0);
-    const currentTitle = tiddler.getFieldString("title");
 
     // Merge Tiddler fields with remote fields
     // $:/core/modules/server/routes/get-tiddler.js
@@ -399,11 +398,6 @@ IpfsTiddler
       }
     }
     const addTags = importedTags;
-
-    // Title
-    if (target["title"] !== currentTitle) {
-      fields.push({ key: "_imported_title", value: target["title"] });
-    }
 
     // Update Tiddler
     const updatedTiddler = $tw.utils.updateTiddler({
@@ -431,7 +425,7 @@ IpfsTiddler
       return false;
     }
 
-    // Load remote
+    // Load remote if any
     const remotes = await this.ipfsWrapper.loadTiddlers(uri);
 
     // Iterate over remote for new and update
@@ -604,14 +598,14 @@ IpfsTiddler
           // Cid
           if (uri !== null) {
             try {
-              var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
+              var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
             } catch (error) {
               // Ignore
             }
           }
           if (oldUri !== null) {
             try {
-              var { oldCid } = this.ipfsWrapper.decodeCid(oldUri.pathname);
+              var { oldCid } = self.ipfsWrapper.decodeCid(oldUri.pathname);
             } catch (error) {
               // Ignore
             }
