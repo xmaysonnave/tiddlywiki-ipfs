@@ -410,19 +410,16 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
-    // Tiddler
+    // Check
     if (tiddler == undefined || tiddler == null) {
-      return false;
+      return tiddler;
     }
-
-    // current tiddler title
     const title = tiddler.getFieldString("title");
     if (title == undefined || title == null) {
-      return false;
+      return tiddler;
     }
-
     if (uri == undefined || uri == null) {
-      return false;
+      return tiddler;
     }
 
     // Load remote if any
@@ -435,7 +432,7 @@ IpfsTiddler
         // Current remote
         const remote = remotes[k];
 
-        // Root
+        // Head
         if (current == null) {
           current = tiddler;
         } else {
@@ -475,9 +472,6 @@ IpfsTiddler
       return false;
     }
 
-    // updated
-    var updatedTiddler = new $tw.Tiddler(tiddler);
-
     // Count fields
     var count = 0;
     $tw.utils.each(tiddler.getFieldStrings(), function(value, fieldName) {
@@ -510,9 +504,9 @@ IpfsTiddler
                 uri = import_uri;
               }
               // Import and merge
-              await this.mergeImported(tiddler, uri);
+              var updatedTiddler = await self.mergeImported(tiddler, uri);
               // Empty text to force refresh
-              const updatedTiddler = $tw.utils.updateTiddler({
+              updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,
                 fields: [{ key: "text", value: "" }]
               });

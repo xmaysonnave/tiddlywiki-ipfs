@@ -180,6 +180,7 @@ wikiparser
     var headTitle = null;
     var newHeadTitle = null;
     var importedTiddlers = null;
+    var processed = [];
     if (this.isJSON(loaded)) {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".json", loaded, $tw.wiki.getCreationFields());
     } else {
@@ -188,6 +189,7 @@ wikiparser
     // IPFS tag
     const { cid } = $tw.ipfs.decodeCid(uri);
 
+    // Process new and existing
     $tw.utils.each(importedTiddlers, function(importedTiddler) {
       var importedTags = importedTiddler["tags"] !== undefined ? importedTiddler["tags"] : "";
 
@@ -267,8 +269,30 @@ wikiparser
         $tw.wiki.renameTiddler(headTitle, newHeadTitle);
       }
 
+      // Store title to process deleted Tiddlers
+      processed.push(title);
+
       // Head has been processed
       head = null;
+    });
+
+    // Process Tiddlers to be deleted
+    $tw.wiki.forEachTiddler({ includeSystem: true }, function(title, tiddler) {
+      const canonical_uri = tiddler.getFieldString("_canonical_uri");
+      if (
+        canonical_uri !== undefined &&
+        canonical_uri !== null &&
+        canonical_uri === uri &&
+        processed.indexOf(title) === -1
+      ) {
+        $tw.wiki.deleteTiddler(title);
+        return;
+      }
+      const import_uri = tiddler.getFieldString("_import_uri");
+      if (import_uri !== undefined && import_uri !== null && import_uri === uri && processed.indexOf(title) === -1) {
+        $tw.wiki.deleteTiddler(title);
+        return;
+      }
     });
   };
 
