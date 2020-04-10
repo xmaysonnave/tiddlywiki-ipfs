@@ -167,10 +167,10 @@ IpfsWrapper
     if (child) {
       // Links
       const linked = $tw.wiki.getTiddlerLinks(title);
-      this.getLogger().info("Found " + linked.length + " Tiddler links.");
+      this.getLogger().info("Found " + linked.length + " Tiddler link(s).");
       // Transcluded
       const transcluded = this.transcludeContent(title);
-      this.getLogger().info("Found " + transcluded.length + " transcluded Tiddler references.");
+      this.getLogger().info("Found " + transcluded.length + " transcluded Tiddler reference(s).");
       const filtered = linked.concat(transcluded);
       // Process filtered content
       for (var i = 0; i < filtered.length; i++) {
@@ -183,16 +183,7 @@ IpfsWrapper
     var content = null;
 
     if (child || $tw.utils.getIpfsExport() === "json") {
-      // Export as JSON
-      const options = {
-        downloadType: "text/plain",
-        method: "download",
-        template: "$:/core/templates/exporters/JsonFile",
-        variables: {
-          exportFilter: exportFilter
-        }
-      };
-      content = $tw.wiki.renderTiddler("text/plain", "$:/core/templates/exporters/JsonFile", options);
+      content = $tw.wiki.getTiddlersAsJson(exportFilter);
     } else if ($tw.utils.getIpfsExport() === "static") {
       // Export Tiddler as Static River
       const options = {
