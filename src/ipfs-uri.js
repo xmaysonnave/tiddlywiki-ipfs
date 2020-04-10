@@ -121,7 +121,10 @@ import { URL } from "universal-url";
     }
     // Invalid URL, try to parse with a Base URL
     if (parsed == null) {
-      parsed = this.getUrl(url, base !== undefined && base !== null ? base : this.getIpfsBaseUrl());
+      base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl();
+      if (url !== undefined && url !== null) {
+        parsed = this.getUrl(url, base);
+      }
     }
     // Remove .link from .eth.link
     if (parsed.hostname.endsWith(".eth.link")) {

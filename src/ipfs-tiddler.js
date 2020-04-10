@@ -700,7 +700,7 @@ IpfsTiddler
                 if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
                   $tw.ipfs.requestToUnpin(oldCid);
                 }
-                self.getLogger().info("Previous reference:" + name + "..." + "\n " + oldUri.href);
+                self.getLogger().info("Previous reference: " + name + "..." + "\n " + oldUri.href);
               } catch (error) {
                 self.getLogger().error(error);
                 $tw.utils.alert(name, error.message);
@@ -713,7 +713,7 @@ IpfsTiddler
                 if ($tw.utils.getIpfsUnpin() && cid !== null) {
                   $tw.ipfs.discardRequestToUnpin(cid);
                 }
-                self.getLogger().info("Current reference:" + name + "..." + "\n " + uri.href);
+                self.getLogger().info("Current reference: " + name + "..." + "\n " + uri.href);
               } catch (error) {
                 self.getLogger().error(error);
                 $tw.utils.alert(name, error.message);
