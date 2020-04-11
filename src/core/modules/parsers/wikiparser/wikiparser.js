@@ -273,7 +273,11 @@ wikiparser
       processed.push(title);
 
       // Head has been processed
-      head = null;
+      if (head !== null) {
+        head = null;
+        headTitle = null;
+        newHeadTitle = null;
+      }
     });
 
     // Process Tiddlers to be deleted

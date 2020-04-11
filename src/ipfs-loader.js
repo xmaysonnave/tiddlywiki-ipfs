@@ -35,27 +35,19 @@ IpfsLoader
   IpfsLoader.prototype.loadErudaLibrary = async function() {
     if (typeof window.eruda === "undefined") {
       await this.loadLibrary("ErudaLibrary", eruda, eruda_sri, true);
+      if (typeof window.eruda !== "undefined") {
+        this.getLogger(name).info("Loaded ErudaLibrary:" + "\n " + eruda);
+      }
     }
   };
 
   // https://www.srihash.org/
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function() {
-    const self = this;
     if (typeof window.ethers === "undefined") {
-      try {
-        await this.loadLibrary("EtherJsLibrary", ethers, ethers_sri, true);
-      } catch (error) {
-        if (typeof window.ethers === "undefined") {
-          import(ethers)
-            .then(module => {
-              window.ethers = module;
-            })
-            .catch(error => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-        }
+      await this.loadLibrary("EtherJsLibrary", ethers, ethers_sri, true);
+      if (typeof window.ethers !== "undefined") {
+        this.getLogger(name).info("Loaded EtherJsLibrary:" + "\n " + ethers);
       }
     }
   };
@@ -63,29 +55,23 @@ IpfsLoader
   // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
-    const self = this;
     if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
-      try {
-        await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
+      await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
+      if (typeof window.httpClient !== "undefined") {
         window.httpClient = window.IpfsHttpClient;
-      } catch (error) {
-        if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
-          import(ipfs_http_client)
-            .then(module => {
-              window.IpfsHttpClient = module;
-              window.httpClient = window.IpfsHttpClient;
-            })
-            .catch(error => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-        }
+        this.getLogger(name).info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
       }
     }
   };
 
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
   IpfsLoader.prototype.loadLibrary = async function(id, url, sri, asModule) {
+    // if dynamic import is supported
+    try {
+      return new Function(`return import("${url}")`)();
+    } catch (err) {
+      // Ignore
+    }
     // self
     const self = this;
     // promise

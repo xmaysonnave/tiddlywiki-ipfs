@@ -195,7 +195,7 @@ import contentHash from "content-hash";
       throw new Error("Undefined Ethereum provider...");
     }
     if (root.ethers == undefined || root.ethers == null) {
-      await this.loadEthers();
+      await $tw.ipfs.loadEthers();
     }
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
@@ -211,29 +211,13 @@ import contentHash from "content-hash";
     };
   };
 
-  EnsLibrary.prototype.loadEthers = async function() {
-    if (root.ethers == undefined || root.ethers == null) {
-      try {
-        // Load ethers with sri
-        await $tw.ipfs.getLoader().loadEtherJsLibrary();
-        if (root.ethers !== undefined && root.ethers !== null) {
-          return;
-        }
-      } catch (error) {
-        this.getLogger().error(error);
-      }
-      // Should not happen...
-      throw new Error("Unavailable Ethereum library...");
-    }
-  };
-
   EnsLibrary.prototype.getWeb3Provider = async function(provider) {
     // Check
     if (provider == undefined || provider == null) {
       throw new Error("Undefined Ethereum provider...");
     }
     if (root.ethers == undefined || root.ethers == null) {
-      await this.loadEthers();
+      await $tw.ipfs.loadEthers();
     }
     // Instantiate an ethers Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider);
@@ -281,7 +265,7 @@ import contentHash from "content-hash";
       throw new Error("Undefined ENS domain resolver...");
     }
     if (root.ethers == undefined || root.ethers == null) {
-      await this.loadEthers();
+      await $tw.ipfs.loadEthers();
     }
     // Low level call
     const abi = [{ name: "resolver", type: "function", inputs: [{ type: "bytes32" }] }];
@@ -312,7 +296,7 @@ import contentHash from "content-hash";
       throw new Error("Undefined Ethereum address...");
     }
     if (root.ethers == undefined || root.ethers == null) {
-      await this.loadEthers();
+      await $tw.ipfs.loadEthers();
     }
     // true when interfaceID is 0x01ffc9a7
     var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
@@ -362,7 +346,7 @@ import contentHash from "content-hash";
       throw new Error("Undefined Ethereum address...");
     }
     if (root.ethers == undefined || root.ethers == null) {
-      await this.loadEthers();
+      await $tw.ipfs.loadEthers();
     }
     // contenthash, true when interfaceID is 0xbc1c58d1
     var abi = [{ name: "supportsInterface", type: "function", inputs: [{ type: "bytes4" }] }];
@@ -392,7 +376,7 @@ import contentHash from "content-hash";
       throw new Error("Undefined ENS domain...");
     }
     if (root.ethers == undefined || root.ethers == null) {
-      await this.loadEthers();
+      await $tw.ipfs.loadEthers();
     }
 
     if (web3 == undefined) {

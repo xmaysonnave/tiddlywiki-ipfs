@@ -294,7 +294,7 @@ IpfsController
   IpfsController.prototype.getWeb3Provider = async function() {
     const provider = await this.getEthereumProvider();
     const network = this.ensWrapper.getNetwork();
-    var info = "Reuse current Web3 provider:";
+    var info = "Reuse Web3 provider:";
     if (this.web3 == null) {
       const { web3, chainId } = await this.ensWrapper.getWeb3Provider(provider);
       this.web3 = web3;
@@ -320,6 +320,22 @@ IpfsController
     }
     // Empty content
     return null;
+  };
+
+  IpfsController.prototype.loadEthers = async function() {
+    if (window.ethers == undefined || window.ethers == null) {
+      try {
+        // Load ethers with sri
+        await this.getLoader().loadEtherJsLibrary();
+        if (window.ethers !== undefined && window.ethers !== null) {
+          return;
+        }
+      } catch (error) {
+        this.getLogger().error(error);
+      }
+      // Should not happen...
+      throw new Error("Unavailable Ethereum library...");
+    }
   };
 
   exports.IpfsController = IpfsController;
