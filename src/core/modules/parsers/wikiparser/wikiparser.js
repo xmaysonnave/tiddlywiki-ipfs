@@ -202,6 +202,10 @@ wikiparser
         // Title
         headTitle = current.getFieldString("title");
         if (title !== undefined && title !== null && title.trim() !== "" && title !== headTitle) {
+          const existing = $tw.wiki.getTiddler(title);
+          if (existing !== undefined && existing !== null) {
+            throw new Error("Imported Tiddler already exists: " + title);
+          }
           newHeadTitle = title;
         }
         // Children
