@@ -57,7 +57,7 @@ IpfsLoader
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
     if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
       await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
-      if (typeof window.httpClient !== "undefined") {
+      if (typeof window.IpfsHttpClient !== "undefined") {
         window.httpClient = window.IpfsHttpClient;
         this.getLogger(name).info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
       }
