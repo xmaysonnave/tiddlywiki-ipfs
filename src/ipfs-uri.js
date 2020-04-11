@@ -114,37 +114,39 @@ import { URL } from "universal-url";
   IpfsUri.prototype.normalizeUrl = async function(url, base) {
     // Parse
     var parsed = null;
-    try {
-      parsed = new URL(url);
-    } catch (error) {
-      parsed = null;
-    }
-    // Invalid URL, try to parse with a Base URL
-    if (parsed == null) {
-      base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl();
-      if (url !== undefined && url !== null) {
-        parsed = this.getUrl(url, base);
-      }
-    }
-    // Remove .link from .eth.link
-    if (parsed.hostname.endsWith(".eth.link")) {
-      parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
-    }
-    // Resolve .eth
-    if (parsed.hostname.endsWith(".eth")) {
-      // To accomodate jest
-      var jest = true;
+    if (url !== undefined && url !== null && url.toString().trim() !== "") {
       try {
-        if ($tw.browser) {
-          // It never happen as node raises an exception...
-          jest = false;
-        }
+        parsed = new URL(url);
       } catch (error) {
-        // Ignore
+        parsed = null;
       }
-      // Errors are triggered and tests are running...
-      if (jest === false) {
-        parsed = await $tw.ipfs.resolveENS(parsed.hostname);
+      // Invalid URL, try to parse with a Base URL
+      if (parsed == null) {
+        base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl();
+        if (url !== undefined && url !== null) {
+          parsed = this.getUrl(url, base);
+        }
+      }
+      // Remove .link from .eth.link
+      if (parsed.hostname.endsWith(".eth.link")) {
+        parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
+      }
+      // Resolve .eth
+      if (parsed.hostname.endsWith(".eth")) {
+        // To accomodate jest
+        var jest = true;
+        try {
+          if ($tw.browser) {
+            // It never happen as node raises an exception...
+            jest = false;
+          }
+        } catch (error) {
+          // Ignore
+        }
+        // Errors are triggered and tests are running...
+        if (jest === false) {
+          parsed = await $tw.ipfs.resolveENS(parsed.hostname);
+        }
       }
     }
     return parsed;

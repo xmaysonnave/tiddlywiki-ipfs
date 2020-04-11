@@ -573,7 +573,7 @@ IpfsAction
     // Load mobile console if applicable
     if (typeof window.eruda === "undefined") {
       try {
-        // Try to load eruda
+        // Load eruda
         await $tw.ipfs.getLoader().loadErudaLibrary();
       } catch (error) {
         this.getLogger().error(error);

@@ -322,21 +322,5 @@ IpfsController
     return null;
   };
 
-  IpfsController.prototype.loadEthers = async function() {
-    if (window.ethers == undefined || window.ethers == null) {
-      try {
-        // Load ethers with sri
-        await this.getLoader().loadEtherJsLibrary();
-        if (window.ethers !== undefined && window.ethers !== null) {
-          return;
-        }
-      } catch (error) {
-        this.getLogger().error(error);
-      }
-      // Should not happen...
-      throw new Error("Unavailable Ethereum library...");
-    }
-  };
-
   exports.IpfsController = IpfsController;
 })();
