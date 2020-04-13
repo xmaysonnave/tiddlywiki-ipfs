@@ -216,8 +216,7 @@ wikiparser
       // Merge tags and fields
       if (current !== undefined && current !== null) {
         // Add non existing Tiddler fields with imported fields
-        // $:/core/modules/server/routes/get-tiddler.js
-        $tw.utils.each(tiddler.fields, function(field, name) {
+        for (var name in tiddler.fields) {
           // field is an array of values, we use the string instead
           var value = tiddler.getFieldString(name);
           // Not a reserved keyword and do not exist
@@ -227,9 +226,9 @@ wikiparser
           ) {
             importedTiddler[name] = value;
           }
-        });
+        }
         // Merge tags
-        var tags = (tiddler.fields.tags || []).slice(0);
+        const tags = (tiddler.fields.tags || []).slice(0);
         // Merge imported tags with current tags
         for (var i = 0; i < tags.length; i++) {
           const tag = tags[i];

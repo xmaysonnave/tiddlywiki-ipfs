@@ -31,9 +31,7 @@ dirtyTracking: true if dirty tracking should be performed
     // Only do dirty tracking if required
     if ($tw.browser && this.dirtyTracking) {
       // Compile the dirty tiddler filter
-      this.filterFn = this.wiki.compileFilter(
-        this.wiki.getTiddlerText(this.titleSyncFilter)
-      );
+      this.filterFn = this.wiki.compileFilter(this.wiki.getTiddlerText(this.titleSyncFilter));
       // Count of changes that have not yet been saved
       var filteredChanges = self.filterFn.call(self.wiki, function(iterator) {
         $tw.utils.each(self.preloadDirty, function(title) {
@@ -55,10 +53,7 @@ dirtyTracking: true if dirty tracking should be performed
         self.numChanges += filteredChanges.length;
         self.updateDirtyStatus();
         // Do any autosave if one is pending and there's no more change events
-        if (
-          self.pendingAutoSave &&
-          self.wiki.getSizeOfTiddlerEventQueue() === 0
-        ) {
+        if (self.pendingAutoSave && self.wiki.getSizeOfTiddlerEventQueue() === 0) {
           // Check if we're dirty
           if (self.numChanges > 0) {
             self.saveWiki({
@@ -117,8 +112,7 @@ dirtyTracking: true if dirty tracking should be performed
 
   SaverHandler.prototype.titleSyncFilter = "$:/config/SaverFilter";
   SaverHandler.prototype.titleAutoSave = "$:/config/AutoSave";
-  SaverHandler.prototype.titleSavedNotification =
-    "$:/language/Notifications/Save/Done";
+  SaverHandler.prototype.titleSavedNotification = "$:/language/Notifications/Save/Done";
 
   /*
 Select the appropriate saver modules and set them up
@@ -172,19 +166,16 @@ Select the appropriate saver modules and set them up
 
   /*
 Save the wiki contents. Options are:
-  method: "save", "autosave" or "download"
-  template: the tiddler containing the template to save
-  downloadType: the content type for the saved file
+method: "save", "autosave" or "download"
+template: the tiddler containing the template to save
+downloadType: the content type for the saved file
 */
   SaverHandler.prototype.saveWiki = function(options) {
     options = options || {};
     var self = this,
       method = options.method || "save";
     // Ignore autosave if disabled
-    if (
-      method === "autosave" &&
-      this.wiki.getTiddlerText(this.titleAutoSave, "yes") !== "yes"
-    ) {
+    if (method === "autosave" && this.wiki.getTiddlerText(this.titleAutoSave, "yes") !== "yes") {
       return false;
     }
     var variables = options.variables || {},
@@ -193,9 +184,7 @@ Save the wiki contents. Options are:
       text = this.wiki.renderTiddler(downloadType, template, options),
       callback = function(err) {
         if (err) {
-          self.logger.alert(
-            $tw.language.getString("Error/WhileSaving") + ": " + err
-          );
+          self.logger.alert($tw.language.getString("Error/WhileSaving") + ": " + err);
         } else {
           // Clear the task queue if we're saving (rather than downloading)
           if (method !== "download") {
@@ -218,10 +207,7 @@ Save the wiki contents. Options are:
       }
     }
     // Process preferred
-    if (
-      preferred !== null &&
-      this.save(preferred, method, variables, text, callback)
-    ) {
+    if (preferred !== null && this.save(preferred, method, variables, text, callback)) {
       return true;
     }
 
@@ -252,25 +238,14 @@ Save the wiki contents. Options are:
     return saver;
   };
 
-  SaverHandler.prototype.save = function(
-    saver,
-    method,
-    variables,
-    text,
-    callback
-  ) {
+  SaverHandler.prototype.save = function(saver, method, variables, text, callback) {
     if (
       saver.info.capabilities.indexOf(method) !== -1 &&
       saver.save(text, method, callback, {
         variables: { filename: variables.filename }
       })
     ) {
-      this.logger.log(
-        "Saving wiki with method",
-        method,
-        "through saver",
-        saver.info.name
-      );
+      this.logger.log("Saving wiki with method", method, "through saver", saver.info.name);
       return true;
     }
     return false;

@@ -231,6 +231,7 @@ IpfsAction
 
       var updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
+        addTags: ["$:/isExported", "$:/isIpfs"],
         fields: fields
       });
       $tw.wiki.addTiddler(updatedTiddler);

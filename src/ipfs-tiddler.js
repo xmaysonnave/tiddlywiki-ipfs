@@ -563,8 +563,8 @@ IpfsTiddler
           continue;
         }
         // Process deleted value
-        var currentField = tiddler.fields[name];
-        if (currentField !== undefined && currentField !== null && tiddler.getFieldString(name).trim() !== "") {
+        const field = tiddler.fields[name];
+        if (field !== undefined && field !== null && tiddler.getFieldString(name).trim() !== "") {
           continue;
         }
         var cid = null;
@@ -575,37 +575,37 @@ IpfsTiddler
         } catch (error) {
           // Ignore
         }
+        if (uri !== null) {
+          try {
+            var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+          } catch (error) {
+            // Ignore
+          }
+        }
         // Process
         if (name === "_canonical_uri") {
-          var addTags = [];
-          var removeTags = [];
           var content = tiddler.getFieldString("text");
           // Attachment
           if (info.encoding === "base64" || type === "image/svg+xml") {
             // Embed
-            try {
-              if (info.encoding === "base64") {
-                content = await $tw.utils.loadToBase64(uri);
-              } else {
-                content = await $tw.utils.loadToUtf8(uri);
+            if (uri !== null) {
+              try {
+                if (info.encoding === "base64") {
+                  content = await $tw.utils.loadToBase64(uri);
+                } else {
+                  content = await $tw.utils.loadToUtf8(uri);
+                }
+                updatedTiddler = $tw.utils.updateTiddler({
+                  tiddler: updatedTiddler,
+                  addTags: ["$:/isAttachment", "$:/isEmbedded"],
+                  fields: [{ key: "text", value: content.data }]
+                });
+                this.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + uri.href);
+              } catch (error) {
+                this.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
               }
-              updatedTiddler = $tw.utils.updateTiddler({
-                tiddler: updatedTiddler,
-                addTags: ["$:/isAttachment", "$:/isEmbedded"],
-                removeTags: ["$:/isImported", "$:/isIpfs"],
-                fields: [{ key: "text", value: content.data }]
-              });
-              this.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + uri.href);
-            } catch (error) {
-              this.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
             }
-            // Others
-          } else {
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: updatedTiddler,
-              removeTags: ["$:/isAttachment", "$:/isEmbedded", "$:/isImported", "$:/isIpfs"]
-            });
           }
         }
         // Unpin
@@ -628,12 +628,19 @@ IpfsTiddler
       }
     }
 
+    // Special fields
+    var canonicalUri = null;
+    var importUri = null;
+    var canonicalUriCid = null;
+    var importUriCid = null;
+
     // Process new and updated fields
     for (var name in tiddler.fields) {
       // Not a reserved keyword
       if (reservedFields.indexOf(name) !== -1) {
         continue;
       }
+      // Process
       const value = tiddler.getFieldString(name);
       var cid = null;
       var oldCid = null;
@@ -643,105 +650,118 @@ IpfsTiddler
       if (oldTiddler !== undefined && oldTiddler !== null) {
         oldValue = oldTiddler.getFieldString(name);
       }
+      try {
+        uri = await $tw.ipfs.normalizeIpfsUrl(value);
+      } catch (error) {
+        // Ignore
+      }
+      if (uri !== null) {
+        try {
+          var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+        } catch (error) {
+          // Ignore
+        }
+      }
+      // Store
+      if (name === "_canonical_uri") {
+        canonicalUri = uri;
+        canonicalUriCid = cid;
+      }
+      if (name === "_import_uri") {
+        importUri = uri;
+        importUriCid = cid;
+      }
+      try {
+        oldUri = await $tw.ipfs.normalizeIpfsUrl(oldValue);
+      } catch (error) {
+        // Ignore
+      }
+      if (oldUri !== null) {
+        try {
+          var { oldCid } = self.ipfsWrapper.decodeCid(oldUri.pathname);
+        } catch (error) {
+          // Ignore
+        }
+      }
       // Process new or updated
-      if (value !== oldValue) {
-        try {
-          uri = await $tw.ipfs.normalizeIpfsUrl(value);
-        } catch (error) {
-          // Ignore
-        }
-        try {
-          oldUri = await $tw.ipfs.normalizeIpfsUrl(oldValue);
-        } catch (error) {
-          // Ignore
-        }
-        // Process if any update
-        if (uri !== oldUri) {
-          // Process _canonical_uri if any
-          if (name === "_canonical_uri") {
-            var addTags = [];
-            var removeTags = [];
-            var content = tiddler.getFieldString("text");
-            // Attachment
-            if (info.encoding === "base64" || type === "image/svg+xml") {
-              // Update
-              if (uri !== null) {
-                // IPFS resource
-                if (cid !== null) {
-                  addTags = ["$:/isAttachment", "$:/isIpfs"];
-                  removeTags = ["$:/isEmbedded", "$:/isImported"];
-                } else {
-                  addTags = ["$:/isAttachment"];
-                  removeTags = ["$:/isEmbedded", "$:/isImported", "$:/isIpfs"];
-                }
-                updatedTiddler = $tw.utils.updateTiddler({
-                  tiddler: updatedTiddler,
-                  addTags: addTags,
-                  removeTags: removeTags,
-                  fields: [{ key: "text", value: "" }]
-                });
-              }
-              // Others
-            } else {
-              // Update
-              if (uri !== null) {
-                // IPFS resource
-                if (cid !== null) {
-                  addTags = ["$:/isImported", "$:/isIpfs"];
-                  removeTags = ["$:/isAttachment", "$:/isEmbedded"];
-                } else {
-                  removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
-                }
-                updatedTiddler = $tw.utils.updateTiddler({
-                  tiddler: updatedTiddler,
-                  addTags: addTags,
-                  removeTags: removeTags,
-                  fields: [{ key: "text", value: "" }]
-                });
-              }
-            }
-          }
-          // Unpin
-          if (oldUri !== null) {
-            try {
-              var { oldCid } = self.ipfsWrapper.decodeCid(oldUri.pathname);
-            } catch (error) {
-              // Ignore
-            }
-            try {
-              // Unpin request
-              if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
-                $tw.ipfs.requestToUnpin(oldCid);
-              }
-            } catch (error) {
-              this.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            }
-          }
-          // Discard unpin
+      if (value === oldValue) {
+        continue;
+      }
+      // Process _canonical_uri if any
+      if (name === "_canonical_uri") {
+        var addTags = [];
+        var removeTags = [];
+        var content = tiddler.getFieldString("text");
+        // Attachment
+        if (info.encoding === "base64" || type === "image/svg+xml") {
+          // Update
           if (uri !== null) {
-            try {
-              var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
-            } catch (error) {
-              // Ignore
-            }
-            try {
-              if ($tw.utils.getIpfsUnpin() && cid !== null) {
-                $tw.ipfs.discardRequestToUnpin(cid);
-              }
-            } catch (error) {
-              this.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
+            // IPFS resource
+            if (cid !== null) {
+              addTags = ["$:/isAttachment", "$:/isIpfs"];
+              removeTags = ["$:/isEmbedded"];
+            } else {
+              addTags = ["$:/isAttachment"];
+              removeTags = ["$:/isEmbedded", "$:/isIpfs"];
             }
           }
+          // Others
+        } else {
+          // Update
+          if (uri !== null) {
+            // IPFS resource
+            if (cid !== null) {
+              addTags = ["$:/isImported", "$:/isIpfs"];
+              removeTags = ["$:/isAttachment", "$:/isEmbedded"];
+            } else {
+              addTags = ["$:/isImported"];
+              removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
+            }
+          }
+        }
+        updatedTiddler = $tw.utils.updateTiddler({
+          tiddler: updatedTiddler,
+          addTags: addTags,
+          removeTags: removeTags,
+          fields: [{ key: "text", value: "" }]
+        });
+      }
+      // Unpin
+      if (oldUri !== null) {
+        try {
+          // Unpin request
+          if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
+            $tw.ipfs.requestToUnpin(oldCid);
+          }
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        }
+      }
+      // Discard unpin
+      if (uri !== null) {
+        try {
+          if ($tw.utils.getIpfsUnpin() && cid !== null) {
+            $tw.ipfs.discardRequestToUnpin(cid);
+          }
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
       }
     }
 
-    // Check
-    if (updatedTiddler == null) {
-      updatedTiddler = new $tw.Tiddler(tiddler);
+    // Final tag cleanup
+    var removeTags = [];
+    if (canonicalUri == null && importUri == null) {
+      removeTags = ["$:/isImported", "$:/isIpfs"];
+    } else if (canonicalUriCid == null && importUriCid == null) {
+      removeTags = ["$:/isIpfs"];
     }
+    updatedTiddler = $tw.utils.updateTiddler({
+      tiddler: updatedTiddler,
+      removeTags: removeTags
+    });
 
     // Update
     $tw.wiki.addTiddler(updatedTiddler);
