@@ -123,9 +123,9 @@ Select the appropriate saver modules and set them up
     this.savers = [];
     const self = this;
     $tw.modules.forEachModuleOfType(moduleType, function(title, module) {
-      //if (module.canSave(self)) {
-      self.savers.push({ title: title, canSave: module.canSave(self), module: module.create(self.wiki) });
-      //}
+      if (module.canSave(self)) {
+        self.savers.push({ title: title, module: module.create(self.wiki) });
+      }
     });
     // Sort savers
     this.sortSavers();
@@ -212,8 +212,8 @@ downloadType: the content type for the saved file
     }
     // Process preferred if any
     for (var i = enabled.length - 1; i >= 0; i--) {
-      // Process canSave enabled
-      if (enabled[i].canSave && (await this.save(enabled[i].module, method, variables, text, callback))) {
+      // Process preferred saver
+      if (await this.save(enabled[i].module, method, variables, text, callback)) {
         // At least one preferred saver has been successfully processed
         preferredSuccess = true;
         // Remove processed element
@@ -228,8 +228,8 @@ downloadType: the content type for the saved file
 
     // Call the highest priority saver that supports this method
     for (var t = this.savers.length - 1; t >= 0; t--) {
-      // Ignore canSave == false or non successfully processed preferred
-      if (this.savers[t].canSave == false || enabled.includes(this.savers[t])) {
+      // Ignore non successfully processed preferred
+      if (enabled.includes(this.savers[t])) {
         continue;
       }
       // Process

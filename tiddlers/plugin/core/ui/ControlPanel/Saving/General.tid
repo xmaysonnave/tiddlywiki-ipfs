@@ -20,7 +20,7 @@ default="disable">
 
 <dl>
 <dt><<lingo PreferredSaver/Caption>></dt>
-<$list filter="[all[tiddlers+shadows]module-type[saver]]" variable="title">
+<$list filter="[savers[]]" variable="title">
 <dd><<ipfs-saver>></dd>
 </$list>
 </dl>
