@@ -21,5 +21,5 @@ If you're unable to reach any IPFS servers and want to save locally your wiki se
 The plugin eases the <b>Preferred Saver</b> selection with a drop-down list.
 </p>
 <p>
-  The selected value is stored in the [[Preferred Saver|$:/core/saver/preferred]] Tiddler.
+  The selected value is stored in the [[Preferred Saver|$:/config/PreferredSaver]] Tiddler.
 </p>

@@ -261,7 +261,7 @@ IpfsSaver
 
       // Next
       if (nextWiki.toString() !== wiki.toString()) {
-        window.location.assign(nextWiki.toString());
+        window.open(nextWiki.toString());
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -276,7 +276,7 @@ IpfsSaver
    * Information about this saver
    */
   IpfsSaver.prototype.info = {
-    name: "ipfs",
+    name: "Ipfs",
     priority: 3100,
     capabilities: ["save"]
   };

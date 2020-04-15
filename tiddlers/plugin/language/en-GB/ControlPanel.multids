@@ -37,7 +37,7 @@ Basics/Version/Prompt: <b>~TiddlyWiki</b>:
 
 Ipfs/Version/Prompt: <b>IPFS</b>:
 
-PreferredSaver/Caption: Preferred Saver
+Settings/PreferredSaver/Caption: Preferred Saver
 
 Appearance/Hint: Ways to customise the appearance of your <b>~TiddlyWiki</b>.
 Info/Hint: Information about this <b>~TiddlyWiki</b>
