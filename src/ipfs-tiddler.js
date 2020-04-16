@@ -530,7 +530,6 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
-    // updated
     var updatedTiddler = new $tw.Tiddler(tiddler);
 
     // Type
@@ -562,7 +561,6 @@ IpfsTiddler
         if (reservedFields.indexOf(name) !== -1) {
           continue;
         }
-        // Process deleted value
         const field = tiddler.fields[name];
         if (field !== undefined && field !== null && tiddler.getFieldString(name).trim() !== "") {
           continue;
@@ -577,7 +575,7 @@ IpfsTiddler
         }
         if (uri !== null) {
           try {
-            var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+            var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
           } catch (error) {
             // Ignore
           }
@@ -611,7 +609,7 @@ IpfsTiddler
         // Unpin
         if (uri !== null) {
           try {
-            var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+            var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
           } catch (error) {
             // Ignore
           }
@@ -630,9 +628,11 @@ IpfsTiddler
 
     // Special fields
     var canonicalUri = null;
+    var exportUri = null;
     var importUri = null;
-    var canonicalUriCid = null;
-    var importUriCid = null;
+    var canonicalCid = null;
+    var exportCid = null;
+    var importCid = null;
 
     // Process new and updated fields
     for (var name in tiddler.fields) {
@@ -657,7 +657,7 @@ IpfsTiddler
       }
       if (uri !== null) {
         try {
-          var { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+          var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
         } catch (error) {
           // Ignore
         }
@@ -665,11 +665,15 @@ IpfsTiddler
       // Store
       if (name === "_canonical_uri") {
         canonicalUri = uri;
-        canonicalUriCid = cid;
+        canonicalCid = cid;
       }
       if (name === "_import_uri") {
         importUri = uri;
-        importUriCid = cid;
+        importCid = cid;
+      }
+      if (name === "_export_uri") {
+        exportUri = uri;
+        exportCid = cid;
       }
       try {
         oldUri = await $tw.ipfs.normalizeIpfsUrl(oldValue);
@@ -678,7 +682,7 @@ IpfsTiddler
       }
       if (oldUri !== null) {
         try {
-          var { oldCid } = self.ipfsWrapper.decodeCid(oldUri.pathname);
+          var { oldCid } = this.ipfsWrapper.decodeCid(oldUri.pathname);
         } catch (error) {
           // Ignore
         }
@@ -687,22 +691,21 @@ IpfsTiddler
       if (value === oldValue) {
         continue;
       }
-      // Process _canonical_uri if any
-      if (name === "_canonical_uri") {
+      // Process _canonical_uri or _import_uri
+      if (name === "_canonical_uri" || name === "_import_uri") {
         var addTags = [];
         var removeTags = [];
-        var content = tiddler.getFieldString("text");
         // Attachment
         if (info.encoding === "base64" || type === "image/svg+xml") {
           // Update
           if (uri !== null) {
             // IPFS resource
             if (cid !== null) {
-              addTags = ["$:/isAttachment", "$:/isIpfs"];
+              addTags = ["$:/isAttachment"];
               removeTags = ["$:/isEmbedded"];
             } else {
               addTags = ["$:/isAttachment"];
-              removeTags = ["$:/isEmbedded", "$:/isIpfs"];
+              removeTags = ["$:/isEmbedded"];
             }
           }
           // Others
@@ -711,11 +714,11 @@ IpfsTiddler
           if (uri !== null) {
             // IPFS resource
             if (cid !== null) {
-              addTags = ["$:/isImported", "$:/isIpfs"];
+              addTags = ["$:/isImported"];
               removeTags = ["$:/isAttachment", "$:/isEmbedded"];
             } else {
               addTags = ["$:/isImported"];
-              removeTags = ["$:/isAttachment", "$:/isEmbedded", "$:/isIpfs"];
+              removeTags = ["$:/isAttachment", "$:/isEmbedded"];
             }
           }
         }
@@ -752,16 +755,30 @@ IpfsTiddler
     }
 
     // Final tag cleanup
+    var addTags = [];
     var removeTags = [];
     if (canonicalUri == null && importUri == null) {
-      removeTags = ["$:/isImported", "$:/isIpfs"];
-    } else if (canonicalUriCid == null && importUriCid == null) {
-      removeTags = ["$:/isIpfs"];
+      removeTags.push("$:/isImported");
+    } else {
+      addTags.push("$:/isImported");
     }
-    updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: updatedTiddler,
-      removeTags: removeTags
-    });
+    if (exportUri == null) {
+      removeTags.push("$:/isExported");
+    } else {
+      addTags.push("$:/isExported");
+    }
+    if (canonicalCid == null && exportCid == null && importCid == null) {
+      removeTags.push("$:/isIpfs");
+    } else {
+      addTags.push("$:/isIpfs");
+    }
+    if (addTags.length > 0 || removeTags.length > 0) {
+      updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: updatedTiddler,
+        addTags: addTags,
+        removeTags: removeTags
+      });
+    }
 
     // Update
     $tw.wiki.addTiddler(updatedTiddler);
