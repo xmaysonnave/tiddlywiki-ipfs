@@ -22,6 +22,6 @@ module-type: macro
    * Run the macro
    */
   exports.run = function(title) {
-    return $tw.saverHandler.locateSaver(title).module.info.name;
+    return $tw.saverHandler.getSaver(title).module.info.name;
   };
 })();

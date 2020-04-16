@@ -12,7 +12,7 @@ wikiparser
  * TiddlyWiki created by Jeremy Ruston, (jeremy [at] jermolene [dot] com)
  *
  * Copyright (c) 2004-2007, Jeremy Ruston
- * Copyright (c) 2007-2018, UnaMesa Association
+ * Copyright (c) 2007-2020, UnaMesa Association
  * Copyright (c) 2019-2020, Blue Light
  * All rights reserved.
  *

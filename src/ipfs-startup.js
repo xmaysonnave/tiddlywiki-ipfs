@@ -8,46 +8,39 @@ Startup initialisation
 
 \*/
 
-(function(){
+(function() {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  "use strict";
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
-"use strict";
+  const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
+  const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
+  const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
-const EnsAction = require("$:/plugins/ipfs/ens-action.js").EnsAction;
-const IpfsAction = require("$:/plugins/ipfs/ipfs-action.js").IpfsAction;
-const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
+  exports.platforms = ["browser"];
+  exports.after = ["startup"];
+  exports.synchronous = true;
 
-exports.platforms = ["browser"];
-exports.after = ["startup"];
-exports.synchronous = true;
+  exports.startup = function() {
+    // Logger name
+    const name = "ipfs-startup";
 
-exports.startup = function() {
+    // Missing Media Types
+    $tw.utils.registerFileType("audio/mpeg", "base64", ".mp2");
+    $tw.utils.registerFileType("video/quicktime", "base64", [".mov", ".qt"]);
 
-  // Logger name
-  const name = "ipfs-startup";
+    // Listener
+    this.ensAction = new EnsAction();
+    this.ipfsAction = new IpfsAction();
+    this.ipfsTiddler = new IpfsTiddler();
 
-  // Missing Media Types
-  $tw.utils.registerFileType("audio/mpeg","base64",".mp2");
-	$tw.utils.registerFileType("image/jpeg","base64",[".jpg",".jpeg"],{flags:["image"]});
-  $tw.utils.registerFileType("video/ogg","base64",[".ogm",".ogv",".ogg"]);
-  $tw.utils.registerFileType("video/quicktime","base64",[".mov",".qt"]);
-  $tw.utils.registerFileType("video/webm","base64",".webm");
+    // Init event listeners
+    this.ensAction.init();
+    this.ipfsAction.init();
+    this.ipfsTiddler.init();
 
-  // Listener
-  this.ensAction = new EnsAction();
-  this.ipfsAction = new IpfsAction();
-  this.ipfsTiddler = new IpfsTiddler();
-
-  // Init event listeners
-  this.ensAction.init();
-  this.ipfsAction.init();
-  this.ipfsTiddler.init();
-
-  // Log
-  const logger = window.log.getLogger(name);
-  logger.info("ipfs-startup is starting up...");
-
-};
-
+    // Log
+    const logger = window.log.getLogger(name);
+    logger.info("ipfs-startup is starting up...");
+  };
 })();
