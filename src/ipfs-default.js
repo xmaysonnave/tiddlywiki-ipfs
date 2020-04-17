@@ -240,7 +240,7 @@ utils
    * Default Policy
    */
   exports.getIpfsDefaultPolicy = function() {
-    return "origin";
+    return "gateway";
   };
 
   /*
