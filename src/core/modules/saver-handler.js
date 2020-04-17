@@ -132,22 +132,6 @@ Select the appropriate saver modules and set them up
   };
 
   /*
-   * Update a saver priority
-   */
-  SaverHandler.prototype.updateSaver = function(title, priority) {
-    if (priority !== undefined && title !== undefined) {
-      // Locate saver
-      const saver = this.getSaver(title);
-      if (saver != null) {
-        // Update saver priority info
-        saver.info.priority = priority;
-        // Sort savers
-        this.sortSavers();
-      }
-    }
-  };
-
-  /*
    * Sort the savers into priority order
    */
   SaverHandler.prototype.sortSavers = function() {
@@ -197,39 +181,24 @@ downloadType: the content type for the saved file
           }
         }
       };
-
-    // Prepare enabled preferred saver if any
-    var enabled = [];
-    var preferredSuccess = false;
-    for (var i in this.savers) {
-      const current = $tw.wiki.getTiddler("$:/config/PreferredSaver/" + this.savers[i].title);
-      if (current !== undefined && current !== null) {
-        const value = current.getFieldString("text");
-        if (value !== undefined && value !== null && value.trim() === "enable") {
-          enabled.push(this.savers[i]);
+    // Process preferred if any
+    var ignorePreferred = null;
+    const preferredSaver = $tw.wiki.getTiddler("$:/config/PreferredSaver");
+    if (preferredSaver !== null && preferredSaver !== undefined) {
+      const title = preferredSaver.getFieldString("text");
+      if (title !== null && title !== undefined && title.trim() !== "") {
+        ignorePreferred = title;
+        // Process preferred saver
+        if (await this.save(this.getSaver(title).module, method, variables, text, callback)) {
+          return true;
         }
       }
-    }
-    // Process preferred if any
-    for (var i = enabled.length - 1; i >= 0; i--) {
-      // Process preferred saver
-      if (await this.save(enabled[i].module, method, variables, text, callback)) {
-        // At least one preferred saver has been successfully processed
-        preferredSuccess = true;
-        // Remove processed element
-        enabled.length = i;
-      }
-    }
-
-    // At least one preferred saver has been successfully processed
-    if (preferredSuccess) {
-      return true;
     }
 
     // Call the highest priority saver that supports this method
     for (var t = this.savers.length - 1; t >= 0; t--) {
-      // Ignore non successfully processed preferred
-      if (enabled.includes(this.savers[t])) {
+      // Ignore failed preferred if any
+      if (this.savers[t].title === ignorePreferred) {
         continue;
       }
       // Process
@@ -240,12 +209,12 @@ downloadType: the content type for the saved file
     return false;
   };
 
-  SaverHandler.prototype.getSaver = function(name) {
+  SaverHandler.prototype.getSaver = function(title) {
     // Locate saver
     var saver = null;
     for (var i = 0; i < this.savers.length; i++) {
       const current = this.savers[i];
-      if (current.title === name) {
+      if (current.title === title) {
         saver = current;
         break;
       }

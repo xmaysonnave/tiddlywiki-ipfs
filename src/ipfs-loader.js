@@ -21,8 +21,8 @@ IpfsLoader
   const ethers = "https://cdn.jsdelivr.net/npm/ethers@4.0.46/dist/ethers.min.js";
   const ethers_sri = "sha384-bjw8iFWKeuQECzXYvYmPXhtav8lsYy9YyJ+yhvwohfvs2mUXzTPktLSi5YsMgczG";
 
-  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@43.0.1/dist/index.min.js";
-  const ipfs_http_client_sri = "sha384-NZLGXvSPD7sUhUV/fNUcUjQSsmvnXjgPE+2C8bXNvJ7FnVZCqiRoM6ds9ekwfNHJ";
+  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.0/dist/index.min.js";
+  const ipfs_http_client_sri = "sha384-ris+q6J23d31ehRco1HyHYfwUJz4S10N8218wcuw8IZLoM+Q1/TOYVVeDskhoSgM";
 
   var IpfsLoader = function() {};
 

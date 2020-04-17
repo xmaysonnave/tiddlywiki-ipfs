@@ -16,12 +16,12 @@ module-type: macro
    */
   exports.name = "ipfs-info-saver";
 
-  exports.params = [{ name: "title" }];
+  exports.params = [{ name: "tiddler" }];
 
   /*
    * Run the macro
    */
-  exports.run = function(title) {
-    return $tw.saverHandler.getSaver(title).module.info.name;
+  exports.run = function(tiddler) {
+    return $tw.saverHandler.getSaver(tiddler).module.info.name;
   };
 })();

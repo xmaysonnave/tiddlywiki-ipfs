@@ -261,7 +261,7 @@ IpfsSaver
 
       // Next
       if (nextWiki.toString() !== wiki.toString()) {
-        window.open(nextWiki.toString());
+        window.location.assign(nextWiki.toString());
       }
     } catch (error) {
       this.getLogger().error(error);

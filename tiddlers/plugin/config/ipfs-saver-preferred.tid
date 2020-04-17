@@ -1,4 +1,4 @@
-title: $:/config/PreferredSaver/$:/plugins/ipfs/ipfs-saver.js
+title: $:/config/PreferredSaver
 tags: $:/ipfs/core
 
-enable
+$:/plugins/ipfs/ipfs-saver.js
