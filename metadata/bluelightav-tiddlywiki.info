@@ -13,10 +13,9 @@
 		"tiddlywiki/codemirror-mode-markdown",
 		"tiddlywiki/codemirror-mode-xml",
 		"tiddlywiki/codemirror-search-replace",
-		"tiddlywiki/help",
+		"tiddlywiki/menubar",
 		"tiddlywiki/markdown",
-		"tiddlywiki/highlight",
-		"tiddlywiki/mobiledragdrop"
+		"tiddlywiki/highlight"
 	],
 	"includeWikis": [
 	],

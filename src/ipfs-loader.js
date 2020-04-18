@@ -15,8 +15,8 @@ IpfsLoader
 
   const name = "ipfs-loader";
 
-  const eruda = "https://cdn.jsdelivr.net/npm/eruda@2.2.1/eruda.min.js";
-  const eruda_sri = "sha384-HmhzjvyY6GykZLnS/bLX/060WuwyrwFf1l0Oz9aBdh4hApJ5JjtfPb53SvRHjNMG";
+  const eruda = "https://cdn.jsdelivr.net/npm/eruda@2.2.2/eruda.min.js";
+  const eruda_sri = "sha384-DpZY+q2987LFJTTg+f8oByjMwhVQSkHZCc9r0TEXBS23Ld5LrsULQFXMU+f04K4H";
 
   const ethers = "https://cdn.jsdelivr.net/npm/ethers@4.0.46/dist/ethers.min.js";
   const ethers_sri = "sha384-bjw8iFWKeuQECzXYvYmPXhtav8lsYy9YyJ+yhvwohfvs2mUXzTPktLSi5YsMgczG";
