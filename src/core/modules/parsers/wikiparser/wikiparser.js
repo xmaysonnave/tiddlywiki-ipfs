@@ -49,26 +49,6 @@ wikiparser
 
   const name = "ipfs-wikiparser";
 
-  /*
-   * $:/core/modules/server/routes/get-tiddler.js
-   */
-  const reservedFields = [
-    "bag",
-    "created",
-    "creator",
-    "modified",
-    "modifier",
-    "permissions",
-    "recipe",
-    "revision",
-    "tags",
-    "fields",
-    "list",
-    "text",
-    "title",
-    "type"
-  ];
-
   var WikiParser = function(type, text, options) {
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
@@ -215,25 +195,62 @@ wikiparser
 
       // Merge tags and fields
       if (current !== undefined && current !== null) {
-        // Add non existing Tiddler fields with imported fields
-        for (var name in tiddler.fields) {
+        var hasText = false;
+        // Merge
+        for (var name in current.fields) {
           // field is an array of values, we use the string instead
-          var value = tiddler.getFieldString(name);
-          // Not a reserved keyword and do not exist
-          if (
-            reservedFields.indexOf(name) === -1 &&
-            (importedTiddler[name] == undefined || importedTiddler[name] == null)
-          ) {
+          var value = current.getFieldString(name);
+          if (importedTiddler[name] == undefined || importedTiddler[name] == null) {
             importedTiddler[name] = value;
+          }
+          // Text
+          if (
+            name === "text" &&
+            importedTiddler["text"] !== undefined &&
+            importedTiddler["text"] !== null &&
+            importedTiddler["text"].length > 0
+          ) {
+            hasText = true;
+          }
+        }
+        // Process Text
+        if (hasText) {
+          importedTiddler["_canonical_uri"] = undefined;
+          importedTiddler["_import_uri"] = uri;
+        } else {
+          // canonical_uri
+          const canonical_uri = importedTiddler["_canonical_uri"];
+          if (canonical_uri == undefined || canonical_uri == null) {
+            importedTiddler["_canonical_uri"] = uri;
+            // import_uri
+          } else if (canonical_uri !== uri) {
+            const import_uri = importedTiddler["_import_uri"];
+            // Do not overwrite existing import_uri
+            if (import_uri == undefined || import_uri == null) {
+              importedTiddler["_import_uri"] = uri;
+            }
           }
         }
         // Merge tags
-        const tags = (tiddler.fields.tags || []).slice(0);
+        const tags = (current.fields.tags || []).slice(0);
         // Merge imported tags with current tags
         for (var i = 0; i < tags.length; i++) {
           const tag = tags[i];
           if (importedTags.includes(tag) == false) {
             importedTags = importedTags + " " + tag;
+          }
+        }
+      } else {
+        // canonical_uri
+        const canonical_uri = importedTiddler["_canonical_uri"];
+        if (canonical_uri == undefined || canonical_uri == null) {
+          importedTiddler["_canonical_uri"] = uri;
+          // import_uri
+        } else if (canonical_uri !== uri) {
+          const import_uri = importedTiddler["_import_uri"];
+          // Do not overwrite existing import_uri
+          if (import_uri == undefined || import_uri == null) {
+            importedTiddler["_import_uri"] = uri;
           }
         }
       }
@@ -250,19 +267,6 @@ wikiparser
       }
       // Processed tags
       importedTiddler["tags"] = importedTags;
-
-      // canonical_uri
-      const canonical_uri = importedTiddler["_canonical_uri"];
-      if (canonical_uri == undefined || canonical_uri == null) {
-        importedTiddler["_canonical_uri"] = uri;
-        // import_uri
-      } else if (canonical_uri !== uri) {
-        const import_uri = importedTiddler["_import_uri"];
-        // Do not overwrite existing import_uri
-        if (import_uri == undefined || import_uri == null) {
-          importedTiddler["_import_uri"] = uri;
-        }
-      }
 
       // Update current
       $tw.wiki.addTiddler(importedTiddler);

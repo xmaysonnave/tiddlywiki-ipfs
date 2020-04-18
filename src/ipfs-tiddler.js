@@ -561,10 +561,12 @@ IpfsTiddler
         if (reservedFields.indexOf(name) !== -1) {
           continue;
         }
+        // Discard updated
         const field = tiddler.fields[name];
         if (field !== undefined && field !== null && tiddler.getFieldString(name).trim() !== "") {
           continue;
         }
+        // Process
         var cid = null;
         var uri = null;
         const value = oldTiddler.getFieldString(name);
@@ -580,7 +582,6 @@ IpfsTiddler
             // Ignore
           }
         }
-        // Process
         if (name === "_canonical_uri") {
           var content = tiddler.getFieldString("text");
           // Attachment
@@ -675,6 +676,7 @@ IpfsTiddler
         exportUri = uri;
         exportCid = cid;
       }
+      // Previous values if any
       try {
         oldUri = await $tw.ipfs.normalizeIpfsUrl(oldValue);
       } catch (error) {
@@ -691,41 +693,10 @@ IpfsTiddler
       if (value === oldValue) {
         continue;
       }
-      // Process _canonical_uri or _import_uri
-      if (name === "_canonical_uri" || name === "_import_uri") {
-        var addTags = [];
-        var removeTags = [];
-        // Attachment
-        if (info.encoding === "base64" || type === "image/svg+xml") {
-          // Update
-          if (uri !== null) {
-            // IPFS resource
-            if (cid !== null) {
-              addTags = ["$:/isAttachment"];
-              removeTags = ["$:/isEmbedded"];
-            } else {
-              addTags = ["$:/isAttachment"];
-              removeTags = ["$:/isEmbedded"];
-            }
-          }
-          // Others
-        } else {
-          // Update
-          if (uri !== null) {
-            // IPFS resource
-            if (cid !== null) {
-              addTags = ["$:/isImported"];
-              removeTags = ["$:/isAttachment", "$:/isEmbedded"];
-            } else {
-              addTags = ["$:/isImported"];
-              removeTags = ["$:/isAttachment", "$:/isEmbedded"];
-            }
-          }
-        }
+      // Process _canonical_uri
+      if (name === "_canonical_uri") {
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: updatedTiddler,
-          addTags: addTags,
-          removeTags: removeTags,
           fields: [{ key: "text", value: "" }]
         });
       }
@@ -753,24 +724,85 @@ IpfsTiddler
         }
       }
     }
-
-    // Final tag cleanup
+    // Tag management
     var addTags = [];
     var removeTags = [];
-    if (canonicalUri == null && importUri == null) {
-      removeTags.push("$:/isImported");
-    } else {
-      addTags.push("$:/isImported");
-    }
-    if (exportUri == null) {
-      removeTags.push("$:/isExported");
-    } else {
-      addTags.push("$:/isExported");
+    if (canonicalUri == null && exportUri == null && importUri == null) {
+      removeTags.push("$:/isExported", "$:/isImported", "$:/isIpfs");
     }
     if (canonicalCid == null && exportCid == null && importCid == null) {
-      removeTags.push("$:/isIpfs");
+      if (removeTags.indexOf("$:/isIpfs") === -1) {
+        removeTags.push("$:/isIpfs");
+      }
     } else {
       addTags.push("$:/isIpfs");
+    }
+    if (canonicalUri !== null) {
+      // Attachment
+      if (info.encoding === "base64" || type === "image/svg+xml") {
+        if (addTags.indexOf("$:/isAttachment") === -1) {
+          addTags.push("$:/isAttachment");
+        }
+        if (removeTags.indexOf("$:/isEmbedded") === -1) {
+          removeTags.push("$:/isEmbedded");
+        }
+        if (importUri !== null) {
+          if (addTags.indexOf("$:/isImported") === -1) {
+            addTags.push("$:/isImported");
+          }
+        } else {
+          if (removeTags.indexOf("$:/isImported") === -1) {
+            removeTags.push("$:/isImported");
+          }
+        }
+        // Others
+      } else {
+        if (removeTags.indexOf("$:/isAttachment") === -1) {
+          removeTags.push("$:/isAttachment");
+        }
+        if (removeTags.indexOf("$:/isEmbedded") === -1) {
+          removeTags.push("$:/isEmbedded");
+        }
+        if (addTags.indexOf("$:/isImported") === -1) {
+          addTags.push("$:/isImported");
+        }
+      }
+    } else {
+      // Attachment
+      if (info.encoding === "base64" || type === "image/svg+xml") {
+        if (addTags.indexOf("$:/isAttachment") === -1) {
+          addTags.push("$:/isAttachment");
+        }
+        if (addTags.indexOf("$:/isEmbedded") === -1) {
+          addTags.push("$:/isEmbedded");
+        }
+        // Others
+      } else {
+        if (removeTags.indexOf("$:/isAttachment") === -1) {
+          removeTags.push("$:/isAttachment");
+        }
+        if (removeTags.indexOf("$:/isEmbedded") === -1) {
+          removeTags.push("$:/isEmbedded");
+        }
+      }
+      if (importUri !== null) {
+        if (addTags.indexOf("$:/isImported") === -1) {
+          addTags.push("$:/isImported");
+        }
+      } else {
+        if (removeTags.indexOf("$:/isImported") === -1) {
+          removeTags.push("$:/isImported");
+        }
+      }
+    }
+    if (exportUri !== null) {
+      if (addTags.indexOf("$:/isExported") === -1) {
+        addTags.push("$:/isExported");
+      }
+    } else {
+      if (removeTags.indexOf("$:/isExported") === -1) {
+        removeTags.push("$:/isExported");
+      }
     }
     if (addTags.length > 0 || removeTags.length > 0) {
       updatedTiddler = $tw.utils.updateTiddler({
