@@ -47,38 +47,6 @@ wikimethod
   /*global $tw: false */
   "use strict";
 
-  exports.getTiddlersAsJson = function(filter, spaces) {
-    var tiddlers = $tw.wiki.filterTiddlers(filter);
-    var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
-    var data = [];
-    for (var t = 0; t < tiddlers.length; t++) {
-      var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
-      if (tiddler) {
-        var fields = new Object();
-        for (var field in tiddler.fields) {
-          if (field === "_export_uri") {
-            continue;
-          }
-          if (field === "tags") {
-            var value = "";
-            var tags = (tiddler.fields.tags || []).slice(0);
-            for (var i = 0; i < tags.length; i++) {
-              const tag = tags[i];
-              if (tag !== "$:/isExported") {
-                value = value + " " + tag;
-              }
-            }
-            fields[field] = value;
-          } else {
-            fields[field] = tiddler.getFieldString(field);
-          }
-        }
-        data.push(fields);
-      }
-    }
-    return JSON.stringify(data, null, spaces);
-  };
-
   /*
    * Parse a block of text of a specified MIME type
    *  type: content type of text to be parsed

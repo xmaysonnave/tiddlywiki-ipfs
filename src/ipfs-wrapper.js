@@ -116,6 +116,65 @@ IpfsWrapper
     return false;
   };
 
+  IpfsWrapper.prototype.getTiddlersAsJson = async function(filter, spaces) {
+    var tiddlers = $tw.wiki.filterTiddlers(filter);
+    var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
+    var data = [];
+    for (var t = 0; t < tiddlers.length; t++) {
+      var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
+      if (tiddler) {
+        var hasCid = false;
+        var fields = new Object();
+        // Process fields
+        for (var field in tiddler.fields) {
+          if (field === "tags" || field === "_export_uri" || field === "_import_uri") {
+            continue;
+          }
+          var value = tiddler.getFieldString(field);
+          // Check cid once
+          if (hasCid == false) {
+            var uri = null;
+            var cid = null;
+            try {
+              uri = await $tw.ipfs.normalizeIpfsUrl(value);
+            } catch (error) {
+              // Ignore
+            }
+            if (uri !== null) {
+              try {
+                var { cid } = this.decodeCid(uri.pathname);
+              } catch (error) {
+                // Ignore
+              }
+            }
+            if (cid !== null) {
+              hasCid = true;
+            }
+          }
+          fields[field] = value;
+        }
+        // Process tags
+        for (var field in tiddler.fields) {
+          if (field !== "tags") {
+            continue;
+          }
+          var value = "";
+          var tags = (tiddler.fields.tags || []).slice(0);
+          for (var i = 0; i < tags.length; i++) {
+            const tag = tags[i];
+            if (tag === "$:/isExported" || tag === "$:/isImported" || (hasCid === false && tag === "$:/isIpfs")) {
+              continue;
+            }
+            value = value + " " + tag;
+          }
+          fields[field] = value;
+        }
+        data.push(fields);
+      }
+    }
+    return JSON.stringify(data, null, spaces);
+  };
+
   /*
    * imported tiddler supersed hosting tiddler
    */
@@ -136,7 +195,7 @@ IpfsWrapper
     return importedTiddlers;
   };
 
-  IpfsWrapper.prototype.exportTiddler = function(tiddler, child) {
+  IpfsWrapper.prototype.exportTiddler = async function(tiddler, child) {
     // Check
     if (tiddler == undefined || tiddler == null) {
       $tw.utils.alert(name, "Unknown Tiddler...");
@@ -183,7 +242,7 @@ IpfsWrapper
     var content = null;
 
     if (child || $tw.utils.getIpfsExport() === "json") {
-      content = $tw.wiki.getTiddlersAsJson(exportFilter);
+      content = await this.getTiddlersAsJson(exportFilter);
     } else if ($tw.utils.getIpfsExport() === "static") {
       // Export Tiddler as Static River
       const options = {

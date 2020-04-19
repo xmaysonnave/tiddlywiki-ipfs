@@ -174,7 +174,7 @@ IpfsAction
       }
 
       // Getting content
-      const content = this.ipfsWrapper.exportTiddler(tiddler, child);
+      const content = await this.ipfsWrapper.exportTiddler(tiddler, child);
 
       // Check
       if (content == null) {
