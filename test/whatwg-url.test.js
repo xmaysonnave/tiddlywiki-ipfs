@@ -22,7 +22,7 @@
 const log = require("loglevel");
 const root = require("window-or-global");
 
-const IpfsUri = require("../build/plugins/ipfs/ipfs-uri.js").IpfsUri;
+const IpfsUri = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsUri;
 
 const invalid = "Wrong URL...";
 const baseFile = "file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html";
@@ -36,61 +36,55 @@ beforeAll(() => {
 });
 
 describe("WHATWG-URL", () => {
-
   it("Undefined URL", () => {
-    const ipfsUri = new IpfsUri();
+    const ipfsUri = new IpfsUri.IpfsUri();
     expect(() => {
       ipfsUri.getUrl();
     }).toThrow();
   });
 
   it("Invalid URL", () => {
-    const ipfsUri = new IpfsUri();
+    const ipfsUri = new IpfsUri.IpfsUri();
     expect(() => {
       ipfsUri.getUrl(invalid);
     }).toThrow();
   });
 
   it("File protocol URL", () => {
-    const ipfsUri = new IpfsUri();
+    const ipfsUri = new IpfsUri.IpfsUri();
     const parsed = ipfsUri.getUrl(baseHttp);
     expect(
-      parsed.protocol === "https:"
-      && parsed.origin === baseHttp
-      && parsed.pathname === "/"
-      && parsed.search === ""
-      && parsed.hash === ""
-      && parsed.href === baseHttp + "/"
+      parsed.protocol === "https:" &&
+        parsed.origin === baseHttp &&
+        parsed.pathname === "/" &&
+        parsed.search === "" &&
+        parsed.hash === "" &&
+        parsed.href === baseHttp + "/"
     ).toBeTruthy();
   });
 
   it("File protocol URL", () => {
-    const ipfsUri = new IpfsUri();
+    const ipfsUri = new IpfsUri.IpfsUri();
     const parsed = ipfsUri.getUrl(baseFile);
     expect(
-      parsed.protocol === "file:"
-      && parsed.origin === "file://"
-      && parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html"
-      && parsed.href === baseFile
+      parsed.protocol === "file:" &&
+        parsed.origin === "file://" &&
+        parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html" &&
+        parsed.href === baseFile
     ).toBeTruthy();
   });
 
   it("Useless base HTTP URL", () => {
-    const ipfsUri = new IpfsUri();
+    const ipfsUri = new IpfsUri.IpfsUri();
     const parsed = ipfsUri.getUrl(absolute, baseHttp);
     expect(
-      parsed.protocol === "https:"
-      && parsed.hostname === "bluelightav.eth"
-      && parsed.href == absolute + "/"
+      parsed.protocol === "https:" && parsed.hostname === "bluelightav.eth" && parsed.href == absolute + "/"
     ).toBeTruthy();
   });
 
   it("Relative URL", () => {
-    const ipfsUri = new IpfsUri();
+    const ipfsUri = new IpfsUri.IpfsUri();
     const parsed = ipfsUri.getUrl(relative, baseHttp);
-    expect(
-      parsed.href === baseHttp + relative
-    ).toBeTruthy();
+    expect(parsed.href === baseHttp + relative).toBeTruthy();
   });
-
 });

@@ -23,16 +23,16 @@ EnsWrapper
     (typeof global === "object" && global.global === global && global) ||
     this;
 
-  const EnsLibrary = require("./ens-library.js").EnsLibrary;
-  const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
-  const IpfsUri = require("./ipfs-uri.js").IpfsUri;
+  const EnsLibrary = require("./ipfs-bundle.js").EnsLibrary;
+  const IpfsLibrary = require("./ipfs-bundle.js").IpfsLibrary;
+  const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
 
   const name = "ens-wrapper";
 
   var EnsWrapper = function() {
-    this.ensLibrary = new EnsLibrary();
-    this.ipfsLibrary = new IpfsLibrary();
-    this.ipfsUri = new IpfsUri();
+    this.ensLibrary = new EnsLibrary.EnsLibrary();
+    this.ipfsLibrary = new IpfsLibrary.IpfsLibrary();
+    this.ipfsUri = new IpfsUri.IpfsUri();
   };
 
   EnsWrapper.prototype.getLogger = function() {

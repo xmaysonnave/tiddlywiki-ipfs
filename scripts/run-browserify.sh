@@ -1,21 +1,10 @@
 #!/bin/bash
 npx browserify \
-  src/ipfs-uri.js \
-  -s IpfsUri \
-  -o build/plugins/ipfs/ipfs-uri.js \
+  src/ipfs-bundle.js \
+  -s IpfsBundle \
+  -o build/plugins/ipfs/ipfs-bundle.js \
   --noparse="$PWD/node_modules/universal-url-lite/lite.js" \
 || exit 1
 
-npx browserify \
-  src/ipfs-library.js \
-  -s IpfsLibrary \
-  -o build/plugins/ipfs/ipfs-library.js \
-|| exit 1
-
-npx browserify \
-  src/ens-library.js \
-  -s EnsLibrary \
-  -o build/plugins/ipfs/ens-library.js \
-|| exit 1
 
 exit 0

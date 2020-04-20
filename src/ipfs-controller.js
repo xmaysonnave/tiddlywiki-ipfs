@@ -16,7 +16,7 @@ IpfsController
   const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
   const IpfsLoader = require("$:/plugins/ipfs/ipfs-loader.js").IpfsLoader;
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-  const IpfsUri = require("./ipfs-uri.js").IpfsUri;
+  const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
 
   const name = "ipfs-controller";
 
@@ -27,7 +27,7 @@ IpfsController
     this.ethereum = null;
     this.ensWrapper = new EnsWrapper();
     this.loader = new IpfsLoader();
-    this.ipfsUri = new IpfsUri();
+    this.ipfsUri = new IpfsUri.IpfsUri();
     this.ipfsWrapper = new IpfsWrapper();
     this.ipfsClients = new Map();
     this.unpin = [];

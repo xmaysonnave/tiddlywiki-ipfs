@@ -23,8 +23,8 @@ IpfsWrapper
     (typeof global === "object" && global.global === global && global) ||
     this;
 
-  const IpfsLibrary = require("./ipfs-library.js").IpfsLibrary;
-  const IpfsUri = require("./ipfs-uri.js").IpfsUri;
+  const IpfsLibrary = require("./ipfs-bundle.js").IpfsLibrary;
+  const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
 
   const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
@@ -32,8 +32,8 @@ IpfsWrapper
   const name = "ipfs-wrapper";
 
   var IpfsWrapper = function() {
-    this.ipfsLibrary = new IpfsLibrary();
-    this.ipfsUri = new IpfsUri();
+    this.ipfsLibrary = new IpfsLibrary.IpfsLibrary();
+    this.ipfsUri = new IpfsUri.IpfsUri();
   };
 
   IpfsWrapper.prototype.getLogger = function() {
@@ -422,9 +422,13 @@ IpfsWrapper
       }
     }
 
-    // Log
-    const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
-    this.getLogger().info("Successfully Fetched IPNS name: " + ipnsName + "\n " + url.href);
+    // jest
+    try {
+      const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
+      this.getLogger().info("Successfully Fetched IPNS name: " + ipnsName + "\n " + url.href);
+    } catch (error) {
+      // Ignore
+    }
 
     return {
       ipnsKey: ipnsKey,
@@ -435,8 +439,13 @@ IpfsWrapper
   IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName);
-      const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + key);
-      this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url.href);
+      // jest
+      try {
+        const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + key);
+        this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url.href);
+      } catch (error) {
+        // Ignore
+      }
       return key;
     } catch (error) {
       this.getLogger().error(error);
@@ -483,9 +492,14 @@ IpfsWrapper
   IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
     const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
-      const url = await this.ipfsUri.normalizeUrl(pathname);
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname);
-      this.getLogger().info("Successfully fetched:" + "\n " + url.href);
+      // jest
+      try {
+        const url = await this.ipfsUri.normalizeUrl(pathname);
+        this.getLogger().info("Successfully fetched:" + "\n " + url.href);
+      } catch (error) {
+        // Ignore
+      }
       return fetched;
     } catch (error) {
       this.getLogger().error(error);
@@ -496,9 +510,14 @@ IpfsWrapper
   IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
     try {
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content);
-      const pathname = "/" + ipfsKeyword + "/" + hash;
-      const url = await this.ipfsUri.normalizeUrl(pathname);
-      this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
+      // jest
+      try {
+        const pathname = "/" + ipfsKeyword + "/" + hash;
+        const url = await this.ipfsUri.normalizeUrl(pathname);
+        this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
+      } catch (error) {
+        // Ignore
+      }
       return {
         added: hash,
         size: size
@@ -516,8 +535,13 @@ IpfsWrapper
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname);
       const { cid } = await this.ipfsLibrary.decodeCid(resolved);
       if (cid !== null) {
-        const parsed = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
-        this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
+        // jest
+        try {
+          const parsed = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
+          this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
+        } catch (error) {
+          // Ignore
+        }
         return cid;
       }
     } catch (error) {
@@ -531,12 +555,17 @@ IpfsWrapper
     const key = "/" + ipnsKeyword + "/" + ipnsKey;
     const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
-      const keyParsed = await this.ipfsUri.normalizeUrl(key);
-      const parsed = await this.ipfsUri.normalizeUrl(pathname);
       const published = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname);
-      this.getLogger().info(
-        "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + parsed.href
-      );
+      // jest
+      try {
+        const keyParsed = await this.ipfsUri.normalizeUrl(key);
+        const parsed = await this.ipfsUri.normalizeUrl(pathname);
+        this.getLogger().info(
+          "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + parsed.href
+        );
+      } catch (error) {
+        // Ignore
+      }
       return published;
     } catch (error) {
       this.getLogger().error(error);
@@ -547,9 +576,14 @@ IpfsWrapper
   IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
     const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
-      const url = await this.ipfsUri.normalizeUrl(pathname);
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname);
-      this.getLogger().info("Successfully pinned:" + "\n " + url.href);
+      // jest
+      try {
+        const url = await this.ipfsUri.normalizeUrl(pathname);
+        this.getLogger().info("Successfully pinned:" + "\n " + url.href);
+      } catch (error) {
+        // Ignore
+      }
       return pinned;
     } catch (error) {
       this.getLogger().error(error);
@@ -560,9 +594,14 @@ IpfsWrapper
   IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
     const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
-      const parsed = await this.ipfsUri.normalizeUrl(pathname);
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname);
-      this.getLogger().info("Successfully unpinned:" + "\n " + parsed.href);
+      // jest
+      try {
+        const parsed = await this.ipfsUri.normalizeUrl(pathname);
+        this.getLogger().info("Successfully unpinned:" + "\n " + parsed.href);
+      } catch (error) {
+        // Ignore
+      }
       return unpinned;
     } catch (error) {
       this.getLogger().error(error);
