@@ -42,65 +42,65 @@ The image parser parses an image into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function(){
+(function() {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  "use strict";
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
-"use strict";
+  var name = "ipfs-imageparser";
 
-const name = "ipfs-imageparser";
-
-var ImageParser = function(type,text,options) {
-  const self = this;
-  const value = "data:" + type + ";base64,";
-  const element = {
-    type: "element",
-    tag: "img",
-    attributes: {}
+  var ImageParser = function(type, text, options) {
+    var self = this;
+    var value = "data:" + type + ";base64,";
+    var element = {
+      type: "element",
+      tag: "img",
+      attributes: {}
+    };
+    var tiddler = options.tiddler;
+    var uri = options._canonical_uri;
+    // Load external resource
+    if (uri) {
+      $tw.ipfs
+        .normalizeIpfsUrl(uri)
+        .then(normalized_uri => {
+          // Load
+          $tw.utils
+            .loadToBase64(normalized_uri)
+            .then(loaded => {
+              element.attributes.src = { type: "string", value: value + loaded.data };
+              const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch(error => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (text) {
+      element.attributes.src = { type: "string", value: value + text };
+    }
+    // Return the parsed tree
+    this.tree = [element];
   };
-  const tiddler = options.tiddler;
-  var uri = options._canonical_uri;
-  // Load external resource
-  if (uri) {
-    $tw.ipfs.normalizeIpfsUrl(uri)
-    .then( (normalized_uri) => {
-      // Load
-      $tw.utils.loadToBase64(normalized_uri)
-      .then( (loaded) => {
-        element.attributes.src = { type: "string", value: value + loaded.data };
-        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-        $tw.rootWidget.refresh(parsedTiddler);
-      })
-      .catch( (error) => {
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      });
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  } else if (text) {
-    element.attributes.src = { type: "string", value: value + text };
-  }
-  // Return the parsed tree
-  this.tree = [element];
-};
 
-ImageParser.prototype.getLogger = function() {
-  if (window.log) {
-    return window.log.getLogger(name);
-  }
-  return console;
-}
+  ImageParser.prototype.getLogger = function() {
+    if (window.log) {
+      return window.log.getLogger(name);
+    }
+    return console;
+  };
 
-exports["image/jpg"] = ImageParser;
-exports["image/jpeg"] = ImageParser;
-exports["image/png"] = ImageParser;
-exports["image/gif"] = ImageParser;
-exports["image/webp"] = ImageParser;
-exports["image/heic"] = ImageParser;
-exports["image/heif"] = ImageParser;
-exports["image/x-icon"] = ImageParser;
-
+  exports["image/jpg"] = ImageParser;
+  exports["image/jpeg"] = ImageParser;
+  exports["image/png"] = ImageParser;
+  exports["image/gif"] = ImageParser;
+  exports["image/webp"] = ImageParser;
+  exports["image/heic"] = ImageParser;
+  exports["image/heif"] = ImageParser;
+  exports["image/x-icon"] = ImageParser;
 })();

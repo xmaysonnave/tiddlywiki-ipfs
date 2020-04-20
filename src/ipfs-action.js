@@ -578,8 +578,9 @@ IpfsAction
         await $tw.ipfs.getLoader().loadErudaLibrary();
       } catch (error) {
         this.getLogger().error(error);
+        throw new Error(error.message);
       }
-      let eruda = window.document.createElement("div");
+      const eruda = window.document.createElement("div");
       window.document.body.appendChild(eruda);
       window.eruda.init({
         container: eruda,

@@ -42,58 +42,58 @@ The PDF parser embeds a PDF viewer
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function(){
+(function() {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  "use strict";
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
-"use strict";
+  const name = "ipfs-pdfparser";
 
-const name = "ipfs-pdfparser";
-
-var PdfParser = function(type,text,options) {
-  const self = this;
-  const value = "data:application/pdf;base64,";
-  const element = {
-    type: "element",
-    tag: "embed",
-    attributes: {}
+  var PdfParser = function(type, text, options) {
+    var self = this;
+    var value = "data:application/pdf;base64,";
+    var element = {
+      type: "element",
+      tag: "embed",
+      attributes: {}
+    };
+    var tiddler = options.tiddler;
+    var uri = options._canonical_uri;
+    // Load external resource
+    if (uri) {
+      $tw.ipfs
+        .normalizeIpfsUrl(uri)
+        .then(normalized_uri => {
+          // Load
+          $tw.utils
+            .loadToBase64(normalized_uri)
+            .then(loaded => {
+              element.attributes.src = { type: "string", value: value + loaded.data };
+              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch(error => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (text) {
+      element.attributes.src = { type: "string", value: value + text };
+    }
+    // Return the parsed tree
+    this.tree = [element];
   };
-  const tiddler = options.tiddler;
-  var uri = options._canonical_uri;
-  // Load external resource
-  if (uri) {
-    $tw.ipfs.normalizeIpfsUrl(uri)
-    .then( (normalized_uri) => {
-      // Load
-      $tw.utils.loadToBase64(normalized_uri)
-      .then( (loaded) => {
-        element.attributes.src = { type: "string", value: value + loaded.data };
-        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-        $tw.rootWidget.refresh(parsedTiddler);
-      })
-      .catch( (error) => {
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      });
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  } else if (text) {
-    element.attributes.src = { type: "string", value: value + text };
-  }
-  // Return the parsed tree
-  this.tree = [element];
-};
 
-PdfParser.prototype.getLogger = function() {
-  if (window.log) {
-    return window.log.getLogger(name);
-  }
-  return console;
-}
+  PdfParser.prototype.getLogger = function() {
+    if (window.log) {
+      return window.log.getLogger(name);
+    }
+    return console;
+  };
 
-exports["application/pdf"] = PdfParser;
-
+  exports["application/pdf"] = PdfParser;
 })();

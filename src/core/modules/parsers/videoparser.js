@@ -42,64 +42,64 @@ The video parser parses a video tiddler into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function(){
+(function() {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  "use strict";
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
-"use strict";
+  const name = "ipfs-videoparser";
 
-const name = "ipfs-videoparser";
-
-var VideoParser = function(type,text,options) {
-  const self = this;
-  const value = "data:" + type + ";base64,";
-  const element = {
-    type: "element",
-    tag: "video",
-    attributes: {
-      controls: {type: "string", value: "controls"},
-      style: {type: "string", value: "width: 100%; object-fit: contain"}
+  var VideoParser = function(type, text, options) {
+    var self = this;
+    var value = "data:" + type + ";base64,";
+    var element = {
+      type: "element",
+      tag: "video",
+      attributes: {
+        controls: { type: "string", value: "controls" },
+        style: { type: "string", value: "width: 100%; object-fit: contain" }
+      }
+    };
+    var tiddler = options.tiddler;
+    var uri = options._canonical_uri;
+    // Load external resource
+    if (uri) {
+      $tw.ipfs
+        .normalizeIpfsUrl(uri)
+        .then(normalized_uri => {
+          // Load
+          $tw.utils
+            .loadToBase64(normalized_uri)
+            .then(loaded => {
+              element.attributes.src = { type: "string", value: value + loaded.data };
+              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch(error => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (text) {
+      element.attributes.src = { type: "string", value: value + text };
     }
+    // Return the parsed tree
+    this.tree = [element];
   };
-  const tiddler = options.tiddler;
-  var uri = options._canonical_uri;
-  // Load external resource
-  if (uri) {
-    $tw.ipfs.normalizeIpfsUrl(uri)
-    .then( (normalized_uri) => {
-      // Load
-      $tw.utils.loadToBase64(normalized_uri)
-      .then( (loaded) => {
-        element.attributes.src = { type: "string", value: value + loaded.data };
-        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-        $tw.rootWidget.refresh(parsedTiddler);
-      })
-      .catch( (error) => {
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      });
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  } else if (text) {
-    element.attributes.src = { type: "string", value: value + text };
-  }
-  // Return the parsed tree
-  this.tree = [element];
-};
 
-VideoParser.prototype.getLogger = function() {
-  if (window.log) {
-    return window.log.getLogger(name);
-  }
-  return console;
-}
+  VideoParser.prototype.getLogger = function() {
+    if (window.log) {
+      return window.log.getLogger(name);
+    }
+    return console;
+  };
 
-exports["video/ogg"] = VideoParser;
-exports["video/webm"] = VideoParser;
-exports["video/mp4"] = VideoParser;
-exports["video/quicktime"] = VideoParser;
-
+  exports["video/ogg"] = VideoParser;
+  exports["video/webm"] = VideoParser;
+  exports["video/mp4"] = VideoParser;
+  exports["video/quicktime"] = VideoParser;
 })();

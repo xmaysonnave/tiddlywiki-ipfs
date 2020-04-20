@@ -42,64 +42,64 @@ The audio parser parses an audio tiddler into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function(){
+(function() {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  "use strict";
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
-"use strict";
+  var name = "ipfs-audioparser";
 
-const name = "ipfs-audioparser";
-
-var AudioParser = function(type,text,options) {
-  const self = this;
-  const value = "data:" + type + ";base64,";
-  const element = {
-    type: "element",
-    tag: "audio",
-    attributes: {
-      controls: { type: "string", value: "controls" },
-      style: { type: "string", value: "width: 100%; object-fit: contain" }
+  var AudioParser = function(type, text, options) {
+    var self = this;
+    var value = "data:" + type + ";base64,";
+    var element = {
+      type: "element",
+      tag: "audio",
+      attributes: {
+        controls: { type: "string", value: "controls" },
+        style: { type: "string", value: "width: 100%; object-fit: contain" }
+      }
+    };
+    var tiddler = options.tiddler;
+    var uri = options._canonical_uri;
+    // Load external resource
+    if (uri) {
+      $tw.ipfs
+        .normalizeIpfsUrl(uri)
+        .then(normalized_uri => {
+          // Load
+          $tw.utils
+            .loadToBase64(normalized_uri)
+            .then(loaded => {
+              element.attributes.src = { type: "string", value: value + loaded.data };
+              const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch(error => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (text) {
+      element.attributes.src = { type: "string", value: value + text };
     }
+    // Return the parsed tree
+    this.tree = [element];
   };
-  const tiddler = options.tiddler;
-  var uri = options._canonical_uri;
-  // Load external resource
-  if (uri) {
-    $tw.ipfs.normalizeIpfsUrl(uri)
-    .then( (normalized_uri) => {
-      // Load
-      $tw.utils.loadToBase64(normalized_uri)
-      .then( (loaded) => {
-        element.attributes.src = { type: "string", value: value + loaded.data };
-        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-        $tw.rootWidget.refresh(parsedTiddler);
-      })
-      .catch( (error) => {
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      });
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  } else if (text) {
-    element.attributes.src = { type: "string", value: value + text} ;
-  }
-  // Return the parsed tree
-  this.tree = [element];
-}
 
-AudioParser.prototype.getLogger = function() {
-  if (window.log) {
-    return window.log.getLogger(name);
-  }
-  return console;
-}
+  AudioParser.prototype.getLogger = function() {
+    if (window.log) {
+      return window.log.getLogger(name);
+    }
+    return console;
+  };
 
-exports["audio/ogg"] = AudioParser;
-exports["audio/mpeg"] = AudioParser;
-exports["audio/mp3"] = AudioParser;
-exports["audio/mp4"] = AudioParser;
-
+  exports["audio/ogg"] = AudioParser;
+  exports["audio/mpeg"] = AudioParser;
+  exports["audio/mp3"] = AudioParser;
+  exports["audio/mp4"] = AudioParser;
 })();

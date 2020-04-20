@@ -42,58 +42,58 @@ The image parser parses an image into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function(){
+(function() {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  "use strict";
 
-/*jslint node: true, browser: true */
-/*global $tw: false */
-"use strict";
+  const name = "ipfs-svgparser";
 
-const name = "ipfs-svgparser";
-
-var SvgParser = function(type,text,options) {
-  const self = this;
-  const value = "data:image/svg+xml,";
-  const element = {
-    type: "element",
-    tag: "img",
-    attributes: {}
+  var SvgParser = function(type, text, options) {
+    var self = this;
+    var value = "data:image/svg+xml,";
+    var element = {
+      type: "element",
+      tag: "img",
+      attributes: {}
+    };
+    var tiddler = options.tiddler;
+    var uri = options._canonical_uri;
+    // Load external resource
+    if (uri) {
+      $tw.ipfs
+        .normalizeIpfsUrl(uri)
+        .then(normalized_uri => {
+          // Load
+          $tw.utils
+            .loadToUtf8(normalized_uri)
+            .then(loaded => {
+              element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
+              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            })
+            .catch(error => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch(error => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else {
+      element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
+    }
+    // Return the parsed tree
+    this.tree = [element];
   };
-  const tiddler = options.tiddler;
-  var uri = options._canonical_uri;
-  // Load external resource
-  if (uri) {
-    $tw.ipfs.normalizeIpfsUrl(uri)
-    .then( (normalized_uri) => {
-      // Load
-      $tw.utils.loadToUtf8(normalized_uri)
-      .then( (loaded) => {
-        element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
-        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-        $tw.rootWidget.refresh(parsedTiddler);
-      })
-      .catch( (error) => {
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      });
-    })
-    .catch( (error) => {
-      self.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    });
-  } else {
-    element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
-  }
-  // Return the parsed tree
-  this.tree = [element];
-};
 
-SvgParser.prototype.getLogger = function() {
-  if (window.log) {
-    return window.log.getLogger(name);
-  }
-  return console;
-}
+  SvgParser.prototype.getLogger = function() {
+    if (window.log) {
+      return window.log.getLogger(name);
+    }
+    return console;
+  };
 
-exports["image/svg+xml"] = SvgParser;
-
+  exports["image/svg+xml"] = SvgParser;
 })();

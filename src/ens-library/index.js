@@ -81,7 +81,8 @@ import contentHash from "content-hash";
 
   // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
   EnsLibrary.prototype.decodeContenthash = function(content) {
-    let decoded, protocol;
+    var decoded = null;
+    var protocol = null;
     if (content.error) {
       throw new Error(content.error);
     }
@@ -106,9 +107,9 @@ import contentHash from "content-hash";
 
   // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1577.md
   EnsLibrary.prototype.encodeContenthash = function(content) {
-    let type;
-    let text;
-    let encoded;
+    var type = null;
+    var text = null;
+    var encoded = null;
     if (!!content) {
       const matched = content.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) || content.match(/\/(ipfs)\/(.*)/);
       if (matched) {

@@ -121,7 +121,7 @@ Select the appropriate saver modules and set them up
     moduleType = moduleType || "saver";
     // Instantiate the available savers
     this.savers = [];
-    const self = this;
+    var self = this;
     $tw.modules.forEachModuleOfType(moduleType, function(title, module) {
       if (module.canSave(self)) {
         self.savers.push({ title: title, module: module.create(self.wiki) });
@@ -183,9 +183,9 @@ downloadType: the content type for the saved file
       };
     // Process preferred if any
     var ignorePreferred = null;
-    const preferredSaver = $tw.wiki.getTiddler("$:/config/PreferredSaver");
+    var preferredSaver = $tw.wiki.getTiddler("$:/config/PreferredSaver");
     if (preferredSaver !== null && preferredSaver !== undefined) {
-      const title = preferredSaver.getFieldString("text");
+      var title = preferredSaver.getFieldString("text");
       if (title !== null && title !== undefined && title.trim() !== "") {
         ignorePreferred = title;
         // Process preferred saver
@@ -213,7 +213,7 @@ downloadType: the content type for the saved file
     // Locate saver
     var saver = null;
     for (var i = 0; i < this.savers.length; i++) {
-      const current = this.savers[i];
+      var current = this.savers[i];
       if (current.title === title) {
         saver = current;
         break;

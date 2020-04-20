@@ -47,7 +47,7 @@ wikiparser
   /*global $tw: false */
   "use strict";
 
-  const name = "ipfs-wikiparser";
+  var name = "ipfs-wikiparser";
 
   var WikiParser = function(type, text, options) {
     this.wiki = options.wiki;
@@ -128,9 +128,9 @@ wikiparser
   /*
    */
   WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
-    const self = this;
-    const localTiddler = tiddler;
-    const localUri = uri;
+    var self = this;
+    var localTiddler = tiddler;
+    var localUri = uri;
     // Normalize
     $tw.ipfs
       .normalizeIpfsUrl(uri)
@@ -167,14 +167,14 @@ wikiparser
       importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", loaded, $tw.wiki.getCreationFields());
     }
     // IPFS tag
-    const { cid } = $tw.ipfs.decodeCid(uri);
+    var { cid } = $tw.ipfs.decodeCid(uri);
 
     // Process new and existing
     $tw.utils.each(importedTiddlers, function(importedTiddler) {
       var importedTags = importedTiddler["tags"] !== undefined ? importedTiddler["tags"] : "";
 
       var current = null;
-      const title = importedTiddler["title"];
+      var title = importedTiddler["title"];
 
       // Head
       if (head !== null) {
@@ -182,7 +182,7 @@ wikiparser
         // Title
         headTitle = current.getFieldString("title");
         if (title !== undefined && title !== null && title.trim() !== "" && title !== headTitle) {
-          const existing = $tw.wiki.getTiddler(title);
+          var existing = $tw.wiki.getTiddler(title);
           if (existing !== undefined && existing !== null) {
             throw new Error("Imported Tiddler already exists: " + title);
           }
@@ -219,12 +219,12 @@ wikiparser
           importedTiddler["_import_uri"] = uri;
         } else {
           // canonical_uri
-          const canonical_uri = importedTiddler["_canonical_uri"];
+          var canonical_uri = importedTiddler["_canonical_uri"];
           if (canonical_uri == undefined || canonical_uri == null) {
             importedTiddler["_canonical_uri"] = uri;
             // import_uri
           } else if (canonical_uri !== uri) {
-            const import_uri = importedTiddler["_import_uri"];
+            var import_uri = importedTiddler["_import_uri"];
             // Do not overwrite existing import_uri
             if (import_uri == undefined || import_uri == null) {
               importedTiddler["_import_uri"] = uri;
@@ -232,22 +232,22 @@ wikiparser
           }
         }
         // Merge tags
-        const tags = (current.fields.tags || []).slice(0);
+        var tags = (current.fields.tags || []).slice(0);
         // Merge imported tags with current tags
         for (var i = 0; i < tags.length; i++) {
-          const tag = tags[i];
+          var tag = tags[i];
           if (importedTags.includes(tag) == false) {
             importedTags = importedTags + " " + tag;
           }
         }
       } else {
         // canonical_uri
-        const canonical_uri = importedTiddler["_canonical_uri"];
+        var canonical_uri = importedTiddler["_canonical_uri"];
         if (canonical_uri == undefined || canonical_uri == null) {
           importedTiddler["_canonical_uri"] = uri;
           // import_uri
         } else if (canonical_uri !== uri) {
-          const import_uri = importedTiddler["_import_uri"];
+          var import_uri = importedTiddler["_import_uri"];
           // Do not overwrite existing import_uri
           if (import_uri == undefined || import_uri == null) {
             importedTiddler["_import_uri"] = uri;
@@ -289,7 +289,7 @@ wikiparser
 
     // Process Tiddlers to be deleted
     $tw.wiki.forEachTiddler({ includeSystem: true }, function(title, tiddler) {
-      const canonical_uri = tiddler.getFieldString("_canonical_uri");
+      var canonical_uri = tiddler.getFieldString("_canonical_uri");
       if (
         canonical_uri !== undefined &&
         canonical_uri !== null &&
@@ -299,7 +299,7 @@ wikiparser
         $tw.wiki.deleteTiddler(title);
         return;
       }
-      const import_uri = tiddler.getFieldString("_import_uri");
+      var import_uri = tiddler.getFieldString("_import_uri");
       if (import_uri !== undefined && import_uri !== null && import_uri === uri && processed.indexOf(title) === -1) {
         $tw.wiki.deleteTiddler(title);
         return;
