@@ -544,9 +544,9 @@ IpfsTiddler
 
     // Check
     if (info == undefined || info == null) {
-      const unknown = new Error("Unknown Tiddler type: " + type);
-      this.getLogger().error(unknown);
-      $tw.utils.alert(name, unknown.message);
+      const unknownType = new Error("Unknown Tiddler type: " + type);
+      this.getLogger().error(unknownType);
+      $tw.utils.alert(name, unknownType.message);
       $tw.wiki.addTiddler(updatedTiddler);
       return updatedTiddler;
     }
@@ -567,21 +567,8 @@ IpfsTiddler
           continue;
         }
         // Process
-        var cid = null;
-        var uri = null;
         const value = oldTiddler.getFieldString(name);
-        try {
-          uri = await $tw.ipfs.normalizeIpfsUrl(value);
-        } catch (error) {
-          // Ignore
-        }
-        if (uri !== null) {
-          try {
-            var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
-          } catch (error) {
-            // Ignore
-          }
-        }
+        var { uri, cid } = this.ipfsWrapper.decodeUrl(value);
         if (name === "_canonical_uri") {
           var content = tiddler.getFieldString("text");
           // Attachment
@@ -609,11 +596,6 @@ IpfsTiddler
         }
         // Unpin
         if (uri !== null) {
-          try {
-            var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
-          } catch (error) {
-            // Ignore
-          }
           try {
             // Unpin request
             if ($tw.utils.getIpfsUnpin() && cid !== null) {
@@ -643,26 +625,7 @@ IpfsTiddler
       }
       // Process
       const value = tiddler.getFieldString(name);
-      var cid = null;
-      var oldCid = null;
-      var uri = null;
-      var oldUri = null;
-      var oldValue = null;
-      if (oldTiddler !== undefined && oldTiddler !== null) {
-        oldValue = oldTiddler.getFieldString(name);
-      }
-      try {
-        uri = await $tw.ipfs.normalizeIpfsUrl(value);
-      } catch (error) {
-        // Ignore
-      }
-      if (uri !== null) {
-        try {
-          var { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
-        } catch (error) {
-          // Ignore
-        }
-      }
+      var { uri, cid } = this.ipfsWrapper.decodeUrl(value);
       // Store
       if (name === "_canonical_uri") {
         canonicalUri = uri;
@@ -676,19 +639,13 @@ IpfsTiddler
         exportUri = uri;
         exportCid = cid;
       }
+
       // Previous values if any
-      try {
-        oldUri = await $tw.ipfs.normalizeIpfsUrl(oldValue);
-      } catch (error) {
-        // Ignore
+      var oldValue = null;
+      if (oldTiddler !== undefined && oldTiddler !== null) {
+        oldValue = oldTiddler.getFieldString(name);
       }
-      if (oldUri !== null) {
-        try {
-          var { oldCid } = this.ipfsWrapper.decodeCid(oldUri.pathname);
-        } catch (error) {
-          // Ignore
-        }
-      }
+      var { oldUri, oldCid } = this.ipfsWrapper.decodeUrl(oldValue);
       // Process new or updated
       if (value === oldValue) {
         continue;

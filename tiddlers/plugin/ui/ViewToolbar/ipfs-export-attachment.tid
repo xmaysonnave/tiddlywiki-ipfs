@@ -1,4 +1,6 @@
 title: $:/core/ui/Buttons/ipfs/export/attachment
+created: 20200420094915385
+modified: 20200420094915385
 tags: $:/ipfs/core $:/tags/ViewToolbar
 caption: {{$:/core/images/ipfs}} {{$:/language/Buttons/Ipfs/Export/Attachment/Caption}}
 description: {{$:/language/Buttons/Ipfs/Export/Attachment/Hint}}

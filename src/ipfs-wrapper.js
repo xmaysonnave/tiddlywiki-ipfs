@@ -44,6 +44,28 @@ IpfsWrapper
     return this.ipfsLibrary.decodeCid(pathname);
   };
 
+  IpfsWrapper.prototype.decodeUrl = async function(value) {
+    var url = null;
+    var cid = null;
+    try {
+      url = await this.ipfsUri.normalizeUrl(value, this.ipfsUri.getIpfsBaseUrl());
+    } catch (error) {
+      // Ignore
+    }
+    if (url !== null) {
+      // Ipfs
+      try {
+        var { cid } = this.ipfsLibrary.decodeCid(url.pathname);
+      } catch (error) {
+        // Ignore
+      }
+    }
+    return {
+      url: url,
+      cid: cid
+    };
+  };
+
   IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
     // Check
     if (tiddler == undefined || tiddler == null) {
@@ -120,57 +142,55 @@ IpfsWrapper
     var tiddlers = $tw.wiki.filterTiddlers(filter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
     var data = [];
+    // Process Tiddlers
     for (var t = 0; t < tiddlers.length; t++) {
       var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
-      if (tiddler) {
-        var hasCid = false;
-        var fields = new Object();
-        // Process fields
-        for (var field in tiddler.fields) {
-          if (field === "tags" || field === "_export_uri" || field === "_import_uri") {
-            continue;
-          }
-          var value = tiddler.getFieldString(field);
-          // Check cid once
-          if (hasCid == false) {
-            var uri = null;
-            var cid = null;
-            try {
-              uri = await $tw.ipfs.normalizeIpfsUrl(value);
-            } catch (error) {
-              // Ignore
-            }
-            if (uri !== null) {
-              try {
-                var { cid } = this.decodeCid(uri.pathname);
-              } catch (error) {
-                // Ignore
-              }
-            }
-            if (cid !== null) {
-              hasCid = true;
-            }
-          }
-          fields[field] = value;
+      if (tiddler == undefined || tiddler == null) {
+        continue;
+      }
+      var isIpfs = false;
+      var fields = new Object();
+      // Process fields
+      for (var field in tiddler.fields) {
+        // Discard
+        if (field === "tags" || field === "_export_uri" || field === "_import_uri") {
+          continue;
         }
-        // Process tags
-        for (var field in tiddler.fields) {
-          if (field !== "tags") {
-            continue;
-          }
-          var value = "";
-          var tags = (tiddler.fields.tags || []).slice(0);
-          for (var i = 0; i < tags.length; i++) {
-            const tag = tags[i];
-            if (tag === "$:/isExported" || tag === "$:/isImported" || (hasCid === false && tag === "$:/isIpfs")) {
+        // Process value
+        const value = tiddler.getFieldString(field);
+        const { uri, cid } = this.decodeUrl(value);
+        // Discard canonical_uri if import_uri is set
+        if (uri !== null && field === "_canonical_uri") {
+          if (fields["_import_uri"] !== undefined && fields["_import_uri"] !== null) {
+            const { importUri } = this.decodeUrl(tiddler.getFieldString("_import_uri"));
+            if (importUri !== null) {
               continue;
             }
-            value = value + " " + tag;
           }
-          fields[field] = value;
         }
-        data.push(fields);
+        if (cid !== null) {
+          isIpfs = true;
+        }
+        // Store field
+        fields[field] = value;
       }
+      // Process tags
+      var tags = tiddler.fields["tags"];
+      if (tags !== undefined && tags !== null) {
+        var value = "";
+        for (var i = 0; i < tags.length; i++) {
+          const tag = tags[i];
+          // Discard
+          if (tag === "$:/isExported" || tag === "$:/isImported" || (isIpfs === false && tag === "$:/isIpfs")) {
+            continue;
+          }
+          value = value + " " + tag;
+        }
+        // Store tags
+        fields["tags"] = value;
+      }
+      // Store
+      data.push(fields);
     }
     return JSON.stringify(data, null, spaces);
   };

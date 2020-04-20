@@ -126,6 +126,10 @@ IpfsController
     return this.ipfsUri.getIpfsGatewayUrl();
   };
 
+  IpfsController.prototype.decodeUrl = function(value) {
+    return this.ipfsWrapper.decodeUrl(value);
+  };
+
   IpfsController.prototype.decodeCid = function(pathname) {
     return this.ipfsWrapper.decodeCid(pathname);
   };

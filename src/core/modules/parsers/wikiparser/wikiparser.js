@@ -118,7 +118,7 @@ wikiparser
       try {
         JSON.parse(content);
         return true;
-      } catch (erro) {
+      } catch (error) {
         // Ignore
       }
     }
@@ -176,6 +176,21 @@ wikiparser
       var current = null;
       var title = importedTiddler["title"];
 
+      // Type
+      var type = importedTiddler["type"];
+      // Default
+      if (type == undefined || type == null || type.trim() === "") {
+        type = "text/vnd.tiddlywiki";
+      }
+
+      // Content Type
+      const info = $tw.config.contentTypeInfo[type];
+
+      // Check
+      if (info == undefined || info == null) {
+        throw new Error("Unknown Tiddler type: " + type);
+      }
+
       // Head
       if (head !== null) {
         current = head;
@@ -195,40 +210,12 @@ wikiparser
 
       // Merge tags and fields
       if (current !== undefined && current !== null) {
-        var hasText = false;
         // Merge
         for (var name in current.fields) {
           // field is an array of values, we use the string instead
           var value = current.getFieldString(name);
           if (importedTiddler[name] == undefined || importedTiddler[name] == null) {
             importedTiddler[name] = value;
-          }
-          // Text
-          if (
-            name === "text" &&
-            importedTiddler["text"] !== undefined &&
-            importedTiddler["text"] !== null &&
-            importedTiddler["text"].length > 0
-          ) {
-            hasText = true;
-          }
-        }
-        // Process Text
-        if (hasText) {
-          importedTiddler["_canonical_uri"] = undefined;
-          importedTiddler["_import_uri"] = uri;
-        } else {
-          // canonical_uri
-          var canonical_uri = importedTiddler["_canonical_uri"];
-          if (canonical_uri == undefined || canonical_uri == null) {
-            importedTiddler["_canonical_uri"] = uri;
-            // import_uri
-          } else if (canonical_uri !== uri) {
-            var import_uri = importedTiddler["_import_uri"];
-            // Do not overwrite existing import_uri
-            if (import_uri == undefined || import_uri == null) {
-              importedTiddler["_import_uri"] = uri;
-            }
           }
         }
         // Merge tags
@@ -240,18 +227,18 @@ wikiparser
             importedTags = importedTags + " " + tag;
           }
         }
+      }
+
+      // canonical_uri
+      if (info.encoding === "base64" || type === "image/svg+xml") {
+        importedTiddler["_import_uri"] = uri;
       } else {
-        // canonical_uri
         var canonical_uri = importedTiddler["_canonical_uri"];
         if (canonical_uri == undefined || canonical_uri == null) {
           importedTiddler["_canonical_uri"] = uri;
           // import_uri
         } else if (canonical_uri !== uri) {
-          var import_uri = importedTiddler["_import_uri"];
-          // Do not overwrite existing import_uri
-          if (import_uri == undefined || import_uri == null) {
-            importedTiddler["_import_uri"] = uri;
-          }
+          importedTiddler["_import_uri"] = uri;
         }
       }
 

@@ -1,4 +1,6 @@
 title: $:/core/ui/Buttons/ens/publish
+created: 20200420094915385
+modified: 20200420094915385
 tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/ens}} {{$:/language/Buttons/Ens/Publish/Caption}}
 description: {{$:/language/Buttons/Ens/Publish/Hint}}

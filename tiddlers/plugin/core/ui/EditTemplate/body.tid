@@ -1,4 +1,6 @@
 title: $:/core/ui/EditTemplate/body
+created: 20200420094915385
+modified: 20200420094915385
 tags: $:/tags/EditTemplate
 
 \define lingo-base() $:/language/EditTemplate/Body/

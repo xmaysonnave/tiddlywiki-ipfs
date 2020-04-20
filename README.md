@@ -41,7 +41,6 @@ According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 * Recommended TiddlyWiki Plugins:
 * * [TiddlyWiki Locator Plugin](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
-* * [TiddlyWiki Relink](https://flibbles.github.io/tw5-relink/)
 
 ### Getting Started
 <a name="getting-started"/>
