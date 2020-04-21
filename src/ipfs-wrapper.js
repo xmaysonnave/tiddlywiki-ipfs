@@ -91,17 +91,17 @@ IpfsWrapper
       type = "text/vnd.tiddlywiki";
     }
 
-    // Content Type
+    // Content-Type
     const info = $tw.config.contentTypeInfo[type];
     // Check
     if (info == undefined || info == null) {
-      $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
+      $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
       return null;
     }
 
     // Check
     if (info.encoding !== "base64" && type !== "image/svg+xml") {
-      $tw.utils.alert(name, "Unsupported Tiddler Content Type...\nLook at the documentation...");
+      $tw.utils.alert(name, "Unsupported Tiddler Content-Type...\nLook at the documentation...");
       return null;
     }
 
@@ -156,9 +156,23 @@ IpfsWrapper
     // Process Tiddlers
     for (var t = 0; t < tiddlers.length; t++) {
       var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
+      // Check
       if (tiddler == undefined || tiddler == null) {
         continue;
       }
+      // Type
+      var type = tiddler.fields["type"];
+      // Default
+      if (type == undefined || type == null || type.trim() === "") {
+        type = "text/vnd.tiddlywiki";
+      }
+      // Content-Type
+      const info = $tw.config.contentTypeInfo[type];
+      // Check
+      if (info == undefined || info == null) {
+        throw new Error("Unknown Tiddler Content-Type: " + type);
+      }
+      // Process
       var isIpfs = false;
       var fields = new Object();
       // Process fields
@@ -170,14 +184,16 @@ IpfsWrapper
         // Process value
         const value = tiddler.getFieldString(field);
         const { uri, cid } = await this.decodeUrl(value);
-        // Discard canonical_uri if import_uri is not set
         if (uri !== null && field === "_canonical_uri") {
-          if (
-            tiddler.fields["_import_uri"] == undefined ||
-            tiddler.fields["_import_uri"] == null ||
-            tiddler.fields["_import_uri"].trim() === ""
-          ) {
-            continue;
+          if (info.encoding !== "base64" && type !== "image/svg+xml") {
+            // Discard canonical_uri if import_uri is not set
+            if (
+              tiddler.fields["_import_uri"] == undefined ||
+              tiddler.fields["_import_uri"] == null ||
+              tiddler.fields["_import_uri"].trim() === ""
+            ) {
+              continue;
+            }
           }
         }
         if (cid !== null) {
@@ -196,7 +212,7 @@ IpfsWrapper
           if (tag === "$:/isExported" || tag === "$:/isImported" || (isIpfs === false && tag === "$:/isIpfs")) {
             continue;
           }
-          value = value + " " + tag;
+          value = value + " [[" + tag + "]]";
         }
         // Store tags
         fields["tags"] = value;
@@ -243,11 +259,11 @@ IpfsWrapper
       type = "text/vnd.tiddlywiki";
     }
 
-    // Content Type
+    // Content-Type
     const info = $tw.config.contentTypeInfo[type];
     // Check
     if (info == undefined || info == null) {
-      $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
+      $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
       return null;
     }
 

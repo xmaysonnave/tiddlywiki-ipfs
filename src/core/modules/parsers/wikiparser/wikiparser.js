@@ -183,12 +183,11 @@ wikiparser
         type = "text/vnd.tiddlywiki";
       }
 
-      // Content Type
+      // Content-Type
       const info = $tw.config.contentTypeInfo[type];
-
       // Check
       if (info == undefined || info == null) {
-        throw new Error("Unknown Tiddler type: " + type);
+        throw new Error("Unknown Tiddler Content-Type: " + type);
       }
 
       // Head

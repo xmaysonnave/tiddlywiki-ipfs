@@ -539,14 +539,11 @@ IpfsTiddler
       type = "text/vnd.tiddlywiki";
     }
 
-    // Content Type
+    // Content-Type
     const info = $tw.config.contentTypeInfo[type];
-
     // Check
     if (info == undefined || info == null) {
-      const unknownType = new Error("Unknown Tiddler type: " + type);
-      this.getLogger().error(unknownType);
-      $tw.utils.alert(name, unknownType.message);
+      $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
       $tw.wiki.addTiddler(updatedTiddler);
       return updatedTiddler;
     }

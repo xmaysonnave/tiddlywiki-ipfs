@@ -104,11 +104,11 @@ IpfsAction
         type = "text/vnd.tiddlywiki";
       }
 
-      // Content Type
+      // Content-Type
       const info = $tw.config.contentTypeInfo[type];
       // Check
       if (info == undefined || info == null) {
-        $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
+        $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
         return false;
       }
 
@@ -262,11 +262,11 @@ IpfsAction
         type = "text/vnd.tiddlywiki";
       }
 
-      // Content Type
+      // Content-Type
       const info = $tw.config.contentTypeInfo[type];
       // Check
       if (info == undefined || info == null) {
-        $tw.utils.alert(name, "Unknown Tiddler Content Type: " + type);
+        $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
         return false;
       }
 

@@ -1,7 +1,7 @@
 title: IPFS Attachments
 created: 20200420094915385
 modified: 20200420094915385
-tags: [[IPFS Explorers]]
+tags: blueligtav.eth $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
 <<locator-view baseTitle:"$:/isAttachment">>
