@@ -568,7 +568,7 @@ IpfsTiddler
         }
         // Process
         const value = oldTiddler.getFieldString(name);
-        var { uri, cid } = this.ipfsWrapper.decodeUrl(value);
+        var { uri, cid } = await this.ipfsWrapper.decodeUrl(value);
         if (name === "_canonical_uri") {
           var content = tiddler.getFieldString("text");
           // Attachment
@@ -625,7 +625,7 @@ IpfsTiddler
       }
       // Process
       const value = tiddler.getFieldString(name);
-      var { uri, cid } = this.ipfsWrapper.decodeUrl(value);
+      const { uri, cid } = await this.ipfsWrapper.decodeUrl(value);
       // Store
       if (name === "_canonical_uri") {
         canonicalUri = uri;
@@ -645,7 +645,7 @@ IpfsTiddler
       if (oldTiddler !== undefined && oldTiddler !== null) {
         oldValue = oldTiddler.getFieldString(name);
       }
-      var { oldUri, oldCid } = this.ipfsWrapper.decodeUrl(oldValue);
+      const { uri: oldUri, cid: oldCid } = await this.ipfsWrapper.decodeUrl(oldValue);
       // Process new or updated
       if (value === oldValue) {
         continue;

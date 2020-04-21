@@ -45,23 +45,34 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.decodeUrl = async function(value) {
-    var url = null;
-    var cid = null;
+    // Check
+    var text = false;
     try {
-      url = await this.ipfsUri.normalizeUrl(value, this.ipfsUri.getIpfsBaseUrl());
+      this.ipfsUri.getUrl(value);
     } catch (error) {
-      // Ignore
+      if (value !== undefined && value !== null && value.startsWith("/") === false) {
+        text = true;
+      }
     }
-    if (url !== null) {
-      // Ipfs
+    var uri = null;
+    var cid = null;
+    if (text == false) {
       try {
-        var { cid } = this.ipfsLibrary.decodeCid(url.pathname);
+        uri = await this.ipfsUri.normalizeUrl(value, this.ipfsUri.getIpfsBaseUrl());
       } catch (error) {
         // Ignore
       }
+      if (uri !== null) {
+        // Ipfs
+        try {
+          var { cid } = this.ipfsLibrary.decodeCid(uri.pathname);
+        } catch (error) {
+          // Ignore
+        }
+      }
     }
     return {
-      url: url,
+      uri: uri,
       cid: cid
     };
   };
@@ -158,14 +169,15 @@ IpfsWrapper
         }
         // Process value
         const value = tiddler.getFieldString(field);
-        const { uri, cid } = this.decodeUrl(value);
-        // Discard canonical_uri if import_uri is set
+        const { uri, cid } = await this.decodeUrl(value);
+        // Discard canonical_uri if import_uri is not set
         if (uri !== null && field === "_canonical_uri") {
-          if (fields["_import_uri"] !== undefined && fields["_import_uri"] !== null) {
-            const { importUri } = this.decodeUrl(tiddler.getFieldString("_import_uri"));
-            if (importUri !== null) {
-              continue;
-            }
+          if (
+            tiddler.fields["_import_uri"] == undefined ||
+            tiddler.fields["_import_uri"] == null ||
+            tiddler.fields["_import_uri"].trim() === ""
+          ) {
+            continue;
           }
         }
         if (cid !== null) {

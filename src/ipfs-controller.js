@@ -77,7 +77,7 @@ IpfsController
       try {
         JSON.parse(content);
         return true;
-      } catch (erro) {
+      } catch (error) {
         // Ignore
       }
     }
@@ -126,8 +126,8 @@ IpfsController
     return this.ipfsUri.getIpfsGatewayUrl();
   };
 
-  IpfsController.prototype.decodeUrl = function(value) {
-    return this.ipfsWrapper.decodeUrl(value);
+  IpfsController.prototype.decodeUrl = async function(value) {
+    return await this.ipfsWrapper.decodeUrl(value);
   };
 
   IpfsController.prototype.decodeCid = function(pathname) {
@@ -139,8 +139,7 @@ IpfsController
   };
 
   IpfsController.prototype.loadTiddlers = async function(uri) {
-    const tiddlers = await this.ipfsWrapper.loadTiddlers(uri);
-    return tiddlers;
+    return await this.ipfsWrapper.loadTiddlers(uri);
   };
 
   IpfsController.prototype.getIpfsClient = async function() {
