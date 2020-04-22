@@ -149,17 +149,13 @@ IpfsWrapper
     return false;
   };
 
-  IpfsWrapper.prototype.getTiddlersAsJson = async function(filter, spaces) {
+  IpfsWrapper.prototype.exportTiddlersAsJson = async function(filter, spaces) {
     var tiddlers = $tw.wiki.filterTiddlers(filter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
     var data = [];
     // Process Tiddlers
     for (var t = 0; t < tiddlers.length; t++) {
       var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
-      // Check
-      if (tiddler == undefined || tiddler == null) {
-        continue;
-      }
       // Type
       var type = tiddler.fields["type"];
       // Default
@@ -182,17 +178,31 @@ IpfsWrapper
           continue;
         }
         // Process value
-        const value = tiddler.getFieldString(field);
-        const { uri, cid } = await this.decodeUrl(value);
+        const fieldValue = tiddler.getFieldString(field);
+        const { uri, cid } = await this.decodeUrl(fieldValue);
         if (uri !== null && field === "_canonical_uri") {
           if (info.encoding !== "base64" && type !== "image/svg+xml") {
-            // Discard canonical_uri if import_uri is not set
+            // Load Remote Tiddler
+            const importedTiddler = await this.getImportedTiddler(uri, tiddler.getFieldString("title"));
+            var timestamp = false;
+            // Compare timestamp
             if (
-              tiddler.fields["_import_uri"] == undefined ||
-              tiddler.fields["_import_uri"] == null ||
-              tiddler.fields["_import_uri"].trim() === ""
+              importedTiddler !== null &&
+              tiddler.getFieldString("created") === importedTiddler["created"] &&
+              tiddler.getFieldString("modified") === importedTiddler["modified"]
             ) {
-              continue;
+              timestamp = true;
+            }
+            // Keep _canonical_uri if timestamp
+            if (timestamp) {
+              // Discard canonical_uri if import_uri is not set
+              if (
+                tiddler.fields["_import_uri"] == undefined ||
+                tiddler.fields["_import_uri"] == null ||
+                tiddler.fields["_import_uri"].trim() === ""
+              ) {
+                continue;
+              }
             }
           }
         }
@@ -200,22 +210,22 @@ IpfsWrapper
           isIpfs = true;
         }
         // Store field
-        fields[field] = value;
+        fields[field] = fieldValue;
       }
       // Process tags
       var tags = tiddler.fields["tags"];
       if (tags !== undefined && tags !== null) {
-        var value = "";
+        var tagValues = "";
         for (var i = 0; i < tags.length; i++) {
           const tag = tags[i];
           // Discard
           if (tag === "$:/isExported" || tag === "$:/isImported" || (isIpfs === false && tag === "$:/isIpfs")) {
             continue;
           }
-          value = value + " [[" + tag + "]]";
+          tagValues = (tagValues.length === 0 ? "[[" : tagValues + " [[") + tag + "]]";
         }
         // Store tags
-        fields["tags"] = value;
+        fields["tags"] = tagValues;
       }
       // Store
       data.push(fields);
@@ -223,10 +233,7 @@ IpfsWrapper
     return JSON.stringify(data, null, spaces);
   };
 
-  /*
-   * imported tiddler supersed hosting tiddler
-   */
-  IpfsWrapper.prototype.loadTiddlers = async function(uri) {
+  IpfsWrapper.prototype.getImportedTiddlers = async function(uri) {
     // Normalize
     const normalized_uri = await $tw.ipfs.normalizeIpfsUrl(uri);
     // Load
@@ -237,10 +244,26 @@ IpfsWrapper
     } else {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
     }
-    $tw.utils.each(importedTiddlers, function(importedTiddler) {
-      importedTiddler["_canonical_uri"] = uri;
-    });
     return importedTiddlers;
+  };
+
+  IpfsWrapper.prototype.getImportedTiddler = async function(uri, title) {
+    // Normalize
+    const normalized_uri = await $tw.ipfs.normalizeIpfsUrl(uri);
+    // Load
+    var importedTiddlers = null;
+    const content = await $tw.utils.loadToUtf8(normalized_uri);
+    if (this.isJSON(content.data)) {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
+    } else {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
+    }
+    for (var i in importedTiddlers) {
+      if (title === importedTiddlers[i].title) {
+        return importedTiddlers[i];
+      }
+    }
+    return null;
   };
 
   IpfsWrapper.prototype.exportTiddler = async function(tiddler, child) {
@@ -290,7 +313,7 @@ IpfsWrapper
     var content = null;
 
     if (child || $tw.utils.getIpfsExport() === "json") {
-      content = await this.getTiddlersAsJson(exportFilter);
+      content = await this.exportTiddlersAsJson(exportFilter);
     } else if ($tw.utils.getIpfsExport() === "static") {
       // Export Tiddler as Static River
       const options = {

@@ -423,7 +423,7 @@ IpfsTiddler
     }
 
     // Load remote if any
-    const remotes = await this.ipfsWrapper.loadTiddlers(uri);
+    const remotes = await this.ipfsWrapper.getImportedTiddlers(uri);
 
     // Iterate over remote for new and update
     if (remotes !== undefined && remotes !== null) {

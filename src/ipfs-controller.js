@@ -126,8 +126,8 @@ IpfsController
     return this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
   };
 
-  IpfsController.prototype.loadTiddlers = async function(uri) {
-    return await this.ipfsWrapper.loadTiddlers(uri);
+  IpfsController.prototype.getImportedTiddlers = async function(uri) {
+    return await this.ipfsWrapper.getImportedTiddlers(uri);
   };
 
   IpfsController.prototype.isJSON = function(content) {
