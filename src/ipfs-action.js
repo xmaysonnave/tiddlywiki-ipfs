@@ -284,7 +284,7 @@ IpfsAction
       }
 
       // Getting content
-      const content = this.ipfsWrapper.getTiddlerContent(tiddler);
+      const content = this.ipfsWrapper.getAttachmentContent(tiddler);
       // Check
       if (content == null) {
         return false;

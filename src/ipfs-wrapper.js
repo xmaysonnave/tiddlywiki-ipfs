@@ -77,7 +77,7 @@ IpfsWrapper
     };
   };
 
-  IpfsWrapper.prototype.getTiddlerContent = function(tiddler) {
+  IpfsWrapper.prototype.getAttachmentContent = function(tiddler) {
     // Check
     if (tiddler == undefined || tiddler == null) {
       $tw.utils.alert(name, "Unknown Tiddler...");
