@@ -14,35 +14,35 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <table>
 <tbody>
 <tr>
-<td width="90%"><<lingo Verbose/Description>></td>
+<td width="90%">''<$link to="$:/ipfs/saver/verbose"><<lingo Verbose/Description>></$link>''</td>
 <td width="10%"><$checkbox tiddler="$:/ipfs/saver/verbose" field="text" checked="yes" unchecked="no" default="yes"/></td>
 </tr>
 <tr>
-<td width="90%"><<lingo Unpin/Description>></td>
+<td width="90%">''<$link to="$:/ipfs/saver/unpin"><<lingo Unpin/Description>></$link>''</td>
 <td width="10%"><$checkbox tiddler="$:/ipfs/saver/unpin" field="text" checked="yes" unchecked="no" default="no"/></td>
 </tr>
 </tbody>
 </table>
 
-''<<lingo Provider>>''
+''<$link to="$:/ipfs/saver/provider"><<lingo Provider>></$link>''
 
 <$radio tiddler="$:/ipfs/saver/provider" value="default"><<lingo Provider/Default/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/provider" value="window"><<lingo Provider/Window/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/provider" value="http"><<lingo Provider/HTTP/Description>></$radio>
 
-''<<lingo Export>>''
+''<$link to="$:/ipfs/saver/export"><<lingo Export>></$link>''
 
 <$radio tiddler="$:/ipfs/saver/export" value="json"><<lingo Export/Json/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/export" value="static"><<lingo Export/Static/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/export" value="tid"><<lingo Export/Tid/Description>></$radio>
 
-''<<lingo Protocol>>''
+''<$link to="$:/ipfs/saver/protocol"><<lingo Protocol>></$link>''
 
 <$radio tiddler="$:/ipfs/saver/protocol" value="ens"><<lingo Protocol/Ens/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/protocol" value="ipfs"><<lingo Protocol/Ipfs/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/protocol" value="ipns"><<lingo Protocol/Ipns/Description>></$radio>
 
-''<<lingo Policy>>''
+''<$link to="$:/ipfs/saver/policy"><<lingo Policy>></$link>''
 
 <$radio tiddler="$:/ipfs/saver/policy" value="origin"><<lingo Policy/Origin/Description>></$radio>
 <$radio tiddler="$:/ipfs/saver/policy" value="gateway"><<lingo Policy/Gateway/Description>></$radio>
@@ -52,7 +52,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <table>
 <tbody>
 <tr>
-<td width="20%"><<lingo ApiUrl>></td>
+<td width="20%">''<$link to="$:/ipfs/saver/api"><<lingo ApiUrl>></$link>''</td>
 <td width="80%">
 <$select tiddler="$:/ipfs/saver/api" default="$:/ipfs/saver/api/https/ipfs.infura.io/5001" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]]">
@@ -62,7 +62,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 </td>
 </tr>
 <tr>
-<td width="20%"><<lingo GatewayUrl>></td>
+<td width="20%">''<$link to="$:/ipfs/saver/gateway"><<lingo GatewayUrl>></$link>''</td>
 <td width="80%">
 <$select tiddler="$:/ipfs/saver/gateway" default="$:/ipfs/saver/gateway/https/ipfs.infura.io" class="tc-edit-texteditor">
 <$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]]">
@@ -79,7 +79,7 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <table>
 <tbody>
 <tr>
-<td width="20%"><<lingo EnsDomain>></td>
+<td width="20%">''<$link to="$:/ipfs/saver/ens/domain"><<lingo EnsDomain>></$link>''</td>
 <td width="80%"><$edit-text tiddler="$:/ipfs/saver/ens/domain" class="tc-edit-texteditor" default="" tag="input"/></td>
 </tr>
 </tbody>
@@ -117,11 +117,11 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <table>
 <tbody>
 <tr>
-<td width="20%"><<lingo IpnsName>></td>
+<td width="20%">''<$link to="$:/ipfs/saver/ipns/name"><<lingo IpnsName>></$link>''</td>
 <td width="80%"><$edit-text tiddler="$:/ipfs/saver/ipns/name" class="tc-edit-texteditor" default="" tag="input"/></td>
 </tr>
 <tr>
-<td width="20%"><<lingo IpnsKey>></td>
+<td width="20%">''<$link to="$:/ipfs/saver/ipns/key"><<lingo IpnsKey>></$link>''</td>
 <td width="80%"><$text text={{$:/ipfs/saver/ipns/key}} class="tc-edit-texteditor"/></td>
 </tr>
 </tbody>
