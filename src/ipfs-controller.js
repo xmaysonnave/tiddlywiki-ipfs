@@ -72,21 +72,9 @@ IpfsController
     return false;
   };
 
-  IpfsController.prototype.isJSON = function(content) {
-    if (content !== undefined && content !== null && typeof content === "string") {
-      try {
-        JSON.parse(content);
-        return true;
-      } catch (error) {
-        // Ignore
-      }
-    }
-    return false;
-  };
-
   IpfsController.prototype.load = function(loaded) {
     var importedTiddlers = null;
-    if (this.isJSON(loaded)) {
+    if (this.ipfsWrapper.isJSON(loaded)) {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".json", loaded, $tw.wiki.getCreationFields());
     } else {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", loaded, $tw.wiki.getCreationFields());

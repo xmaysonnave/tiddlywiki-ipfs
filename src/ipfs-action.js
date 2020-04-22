@@ -126,7 +126,6 @@ IpfsAction
         // Log an continue
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
-        export_uri = null;
       }
 
       // IPFS client
@@ -185,7 +184,7 @@ IpfsAction
 
       // Add
       const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
-      // Default
+      // Save
       fields.push({ key: "_export_uri", value: "/" + ipfsKeyword + "/" + added });
 
       try {
