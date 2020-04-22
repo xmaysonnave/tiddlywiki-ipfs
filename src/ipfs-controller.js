@@ -72,7 +72,7 @@ IpfsController
     return false;
   };
 
-  IpfsController.prototype.load = function(content) {
+  IpfsController.prototype.importTiddlers = function(content) {
     var importedTiddlers = null;
     if (this.ipfsWrapper.isJSON(content)) {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content, $tw.wiki.getCreationFields());
@@ -128,6 +128,10 @@ IpfsController
 
   IpfsController.prototype.loadTiddlers = async function(uri) {
     return await this.ipfsWrapper.loadTiddlers(uri);
+  };
+
+  IpfsController.prototype.isJSON = function(content) {
+    return this.ipfsWrapper.isJSON(content);
   };
 
   IpfsController.prototype.getIpfsClient = async function() {

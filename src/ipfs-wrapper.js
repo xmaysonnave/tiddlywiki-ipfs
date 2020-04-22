@@ -142,7 +142,7 @@ IpfsWrapper
       try {
         JSON.parse(content);
         return true;
-      } catch (erro) {
+      } catch (error) {
         // Ignore
       }
     }

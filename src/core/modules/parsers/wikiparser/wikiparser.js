@@ -113,18 +113,6 @@ wikiparser
     return console;
   };
 
-  WikiParser.prototype.isJSON = function(content) {
-    if (content !== undefined && content !== null && typeof content === "string") {
-      try {
-        JSON.parse(content);
-        return true;
-      } catch (error) {
-        // Ignore
-      }
-    }
-    return false;
-  };
-
   /*
    */
   WikiParser.prototype.loadRemoteTiddlers = function(tiddler, uri) {
@@ -161,7 +149,7 @@ wikiparser
     var newHeadTitle = null;
     var importedTiddlers = null;
     var processed = [];
-    if (this.isJSON(content)) {
+    if ($tw.ipfs.isJSON(content)) {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content, $tw.wiki.getCreationFields());
     } else {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content, $tw.wiki.getCreationFields());
