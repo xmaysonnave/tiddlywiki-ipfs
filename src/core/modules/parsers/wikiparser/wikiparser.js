@@ -155,16 +155,16 @@ wikiparser
   /*
    * imported tiddler supersed hosting tiddler
    */
-  WikiParser.prototype.importTiddlers = function(tiddler, uri, loaded) {
+  WikiParser.prototype.importTiddlers = function(tiddler, uri, content) {
     var head = tiddler;
     var headTitle = null;
     var newHeadTitle = null;
     var importedTiddlers = null;
     var processed = [];
-    if (this.isJSON(loaded)) {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", loaded, $tw.wiki.getCreationFields());
+    if (this.isJSON(content)) {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content, $tw.wiki.getCreationFields());
     } else {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", loaded, $tw.wiki.getCreationFields());
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content, $tw.wiki.getCreationFields());
     }
     // IPFS tag
     var { cid } = $tw.ipfs.decodeCid(uri);
