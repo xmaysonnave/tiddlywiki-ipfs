@@ -30,6 +30,7 @@ IpfsController
     this.ipfsUri = new IpfsUri.IpfsUri();
     this.ipfsWrapper = new IpfsWrapper();
     this.ipfsClients = new Map();
+    this.importedTiddlers = new Map();
     this.unpin = [];
   };
 
@@ -54,6 +55,29 @@ IpfsController
     return false;
   };
 
+  IpfsController.prototype.getContentType = function(tiddler) {
+    // Check
+    if (tiddler == undefined || tiddler == null) {
+      throw new Error("Unknown Tiddler...");
+    }
+    // Type
+    var type = tiddler.fields["type"];
+    // Default
+    if (type == undefined || type == null || type.trim() === "") {
+      type = "text/vnd.tiddlywiki";
+    }
+    // Content-Type
+    const info = $tw.config.contentTypeInfo[type];
+    // Check
+    if (info == undefined || info == null) {
+      throw new Error("Unknown Tiddler Content-Type: " + type);
+    }
+    return {
+      type: type,
+      info: info
+    };
+  };
+
   IpfsController.prototype.discardRequestToUnpin = async function(cid) {
     if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
       const url = await this.normalizeIpfsUrl("/ipfs/" + cid);
@@ -72,14 +96,64 @@ IpfsController
     return false;
   };
 
-  IpfsController.prototype.importTiddlers = function(content) {
-    var importedTiddlers = null;
-    if (this.ipfsWrapper.isJSON(content)) {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content, $tw.wiki.getCreationFields());
-    } else {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content, $tw.wiki.getCreationFields());
+  IpfsController.prototype.getImportedTiddlers = async function(uri) {
+    var cid = null;
+    // Normalize
+    const normalizedUri = await this.normalizeIpfsUrl(uri);
+    if (normalizedUri !== null) {
+      // Ipfs
+      try {
+        var { cid } = this.decodeCid(normalizedUri.pathname);
+      } catch (error) {
+        // Ignore
+      }
     }
-    return importedTiddlers;
+    // Retrieve cached immutable imported Tiddlers
+    var importedTiddlers = this.importedTiddlers.get(cid);
+    if (importedTiddlers !== undefined && importedTiddlers !== null) {
+      // Log
+      this.getLogger().info("Retrieved cached imported Tiddler(s):" + "\n " + cid);
+      return {
+        normalizedUri: normalizedUri,
+        importedTiddlers: importedTiddlers
+      };
+    }
+    // Load
+    const content = await $tw.utils.loadToUtf8(normalizedUri);
+    if (this.isJSON(content.data)) {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
+    } else {
+      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
+    }
+    // Cache immutable imported Tiddlers
+    if (cid != null) {
+      this.importedTiddlers.set(cid, importedTiddlers);
+    }
+    return {
+      cid: cid,
+      normalizedUri: normalizedUri,
+      importedTiddlers: importedTiddlers
+    };
+  };
+
+  IpfsController.prototype.getImportedTiddler = async function(uri, title) {
+    const { cid, normalizedUri, importedTiddlers } = await this.getImportedTiddlers(uri);
+    if (importedTiddlers !== undefined || importedTiddlers !== null) {
+      for (var i in importedTiddlers) {
+        if (title === importedTiddlers[i].title) {
+          return {
+            cid: cid,
+            normalizedUri: normalizedUri,
+            importedTiddler: importedTiddlers[i]
+          };
+        }
+      }
+    }
+    return {
+      cid: cid,
+      normalizedUri: normalizedUri,
+      importedTiddler: null
+    };
   };
 
   IpfsController.prototype.getLoader = function() {
@@ -126,12 +200,16 @@ IpfsController
     return this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
   };
 
-  IpfsController.prototype.getImportedTiddlers = async function(uri) {
-    return await this.ipfsWrapper.getImportedTiddlers(uri);
-  };
-
   IpfsController.prototype.isJSON = function(content) {
-    return this.ipfsWrapper.isJSON(content);
+    if (content !== undefined && content !== null && typeof content === "string") {
+      try {
+        JSON.parse(content);
+        return true;
+      } catch (error) {
+        // Ignore
+      }
+    }
+    return false;
   };
 
   IpfsController.prototype.getIpfsClient = async function() {

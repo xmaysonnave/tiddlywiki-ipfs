@@ -423,14 +423,14 @@ IpfsTiddler
     }
 
     // Load remote if any
-    const remotes = await this.ipfsWrapper.getImportedTiddlers(uri);
+    const { importedTiddlers } = await $tw.ipfs.getImportedTiddlers(uri);
 
     // Iterate over remote for new and update
-    if (remotes !== undefined && remotes !== null) {
+    if (importedTiddlers !== undefined && importedTiddlers !== null) {
       var current = null;
-      for (var k = 0; k < remotes.length; k++) {
+      for (var k = 0; k < importedTiddlers.length; k++) {
         // Current remote
-        const remote = remotes[k];
+        const remote = importedTiddlers[k];
 
         // Head
         if (current == null) {
@@ -531,19 +531,15 @@ IpfsTiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
     var updatedTiddler = new $tw.Tiddler(tiddler);
+    var type = null;
+    var info = null;
 
-    // Type
-    var type = tiddler.getFieldString("type");
-    // Default
-    if (type == undefined || type == null || type.trim() === "") {
-      type = "text/vnd.tiddlywiki";
-    }
-
-    // Content-Type
-    const info = $tw.config.contentTypeInfo[type];
-    // Check
-    if (info == undefined || info == null) {
-      $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
+    // Retrieve Content-Type
+    try {
+      var { type, info } = $tw.ipfs.getContentType(tiddler);
+    } catch (error) {
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
       $tw.wiki.addTiddler(updatedTiddler);
       return updatedTiddler;
     }

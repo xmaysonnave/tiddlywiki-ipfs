@@ -6,5 +6,4 @@ npx browserify \
   --noparse="$PWD/node_modules/universal-url-lite/lite.js" \
 || exit 1
 
-
 exit 0

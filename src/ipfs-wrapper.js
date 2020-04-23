@@ -78,24 +78,14 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.getAttachmentContent = function(tiddler) {
-    // Check
-    if (tiddler == undefined || tiddler == null) {
-      $tw.utils.alert(name, "Unknown Tiddler...");
-      return null;
-    }
-
-    // Type
-    var type = tiddler.getFieldString("type");
-    // Default
-    if (type == undefined || type == null || type.trim() === "") {
-      type = "text/vnd.tiddlywiki";
-    }
-
-    // Content-Type
-    const info = $tw.config.contentTypeInfo[type];
-    // Check
-    if (info == undefined || info == null) {
-      $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
+    var type = null;
+    var info = null;
+    // Retrieve Content-Type
+    try {
+      var { type, info } = $tw.ipfs.getContentType(tiddler);
+    } catch (error) {
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
       return null;
     }
 
@@ -137,80 +127,41 @@ IpfsWrapper
     return text;
   };
 
-  IpfsWrapper.prototype.isJSON = function(content) {
-    if (content !== undefined && content !== null && typeof content === "string") {
-      try {
-        JSON.parse(content);
-        return true;
-      } catch (error) {
-        // Ignore
-      }
-    }
-    return false;
-  };
-
   IpfsWrapper.prototype.exportTiddlersAsJson = async function(filter, spaces) {
     var tiddlers = $tw.wiki.filterTiddlers(filter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
     var data = [];
     // Process Tiddlers
     for (var t = 0; t < tiddlers.length; t++) {
+      // Load Tiddler
       var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
-      // Type
-      var type = tiddler.fields["type"];
-      // Default
-      if (type == undefined || type == null || type.trim() === "") {
-        type = "text/vnd.tiddlywiki";
-      }
-      // Content-Type
-      const info = $tw.config.contentTypeInfo[type];
-      // Check
-      if (info == undefined || info == null) {
-        throw new Error("Unknown Tiddler Content-Type: " + type);
-      }
+      // Retrieve Content-Type
+      const { type, info } = $tw.ipfs.getContentType(tiddler);
       // Process
       var isIpfs = false;
+      var purgeText = false;
       var fields = new Object();
       // Process fields
-      for (var field in tiddler.fields) {
+      for (var name in tiddler.fields) {
         // Discard
-        if (field === "tags" || field === "_export_uri" || field === "_import_uri") {
+        if (name === "tags" || name === "_export_uri") {
           continue;
         }
         // Process value
-        const fieldValue = tiddler.getFieldString(field);
+        const fieldValue = tiddler.getFieldString(name);
         const { uri, cid } = await this.decodeUrl(fieldValue);
-        if (uri !== null && field === "_canonical_uri") {
+        // Process canonical_uri
+        if (uri !== null && name === "_canonical_uri") {
           if (info.encoding !== "base64" && type !== "image/svg+xml") {
-            // Load Remote Tiddler
-            const importedTiddler = await this.getImportedTiddler(uri, tiddler.getFieldString("title"));
-            var timestamp = false;
-            // Compare timestamp
-            if (
-              importedTiddler !== null &&
-              tiddler.getFieldString("created") === importedTiddler["created"] &&
-              tiddler.getFieldString("modified") === importedTiddler["modified"]
-            ) {
-              timestamp = true;
-            }
-            // Keep _canonical_uri if timestamp
-            if (timestamp) {
-              // Discard canonical_uri if import_uri is not set
-              if (
-                tiddler.fields["_import_uri"] == undefined ||
-                tiddler.fields["_import_uri"] == null ||
-                tiddler.fields["_import_uri"].trim() === ""
-              ) {
-                continue;
-              }
-            }
+            // Always retrieve imported leaf text
+            purgeText = true;
           }
         }
         if (cid !== null) {
           isIpfs = true;
         }
         // Store field
-        fields[field] = fieldValue;
+        fields[name] = fieldValue;
       }
       // Process tags
       var tags = tiddler.fields["tags"];
@@ -227,68 +178,26 @@ IpfsWrapper
         // Store tags
         fields["tags"] = tagValues;
       }
+      // Purge text if necessary
+      if (purgeText) {
+        delete fields["text"];
+      }
       // Store
       data.push(fields);
     }
     return JSON.stringify(data, null, spaces);
   };
 
-  IpfsWrapper.prototype.getImportedTiddlers = async function(uri) {
-    // Normalize
-    const normalized_uri = await $tw.ipfs.normalizeIpfsUrl(uri);
-    // Load
-    var importedTiddlers = null;
-    const content = await $tw.utils.loadToUtf8(normalized_uri);
-    if (this.isJSON(content.data)) {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
-    } else {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
-    }
-    return importedTiddlers;
-  };
-
-  IpfsWrapper.prototype.getImportedTiddler = async function(uri, title) {
-    // Normalize
-    const normalized_uri = await $tw.ipfs.normalizeIpfsUrl(uri);
-    // Load
-    var importedTiddlers = null;
-    const content = await $tw.utils.loadToUtf8(normalized_uri);
-    if (this.isJSON(content.data)) {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
-    } else {
-      importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
-    }
-    for (var i in importedTiddlers) {
-      if (title === importedTiddlers[i].title) {
-        return importedTiddlers[i];
-      }
-    }
-    return null;
-  };
-
   IpfsWrapper.prototype.exportTiddler = async function(tiddler, child) {
     // Check
     if (tiddler == undefined || tiddler == null) {
-      $tw.utils.alert(name, "Unknown Tiddler...");
+      const error = new Error("Unknown Tiddler...");
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
       return null;
     }
 
     const title = tiddler.getFieldString("title");
-
-    // Type
-    var type = tiddler.getFieldString("type");
-    // Default
-    if (type == undefined || type == null || type.trim() === "") {
-      type = "text/vnd.tiddlywiki";
-    }
-
-    // Content-Type
-    const info = $tw.config.contentTypeInfo[type];
-    // Check
-    if (info == undefined || info == null) {
-      $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
-      return null;
-    }
 
     // Filter
     var exportFilter = "[[" + tiddler.fields.title + "]]";

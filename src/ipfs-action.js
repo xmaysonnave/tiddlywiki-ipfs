@@ -90,27 +90,7 @@ IpfsAction
 
       const title = event.tiddlerTitle;
 
-      // Load tiddler
       const tiddler = $tw.wiki.getTiddler(title);
-      if (tiddler == undefined || tiddler == null) {
-        $tw.utils.alert(name, "Unknown Tiddler...");
-        return false;
-      }
-
-      // Type
-      var type = tiddler.getFieldString("type");
-      // Default
-      if (type == undefined || type == null || type.trim() === "") {
-        type = "text/vnd.tiddlywiki";
-      }
-
-      // Content-Type
-      const info = $tw.config.contentTypeInfo[type];
-      // Check
-      if (info == undefined || info == null) {
-        $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
-        return false;
-      }
 
       // Check
       export_uri = tiddler.getFieldString("_export_uri");
@@ -249,25 +229,8 @@ IpfsAction
 
       // Load tiddler
       const tiddler = $tw.wiki.getTiddler(title);
-      if (tiddler == undefined || tiddler == null) {
-        $tw.utils.alert(name, "Unknown Tiddler...");
-        return false;
-      }
-
-      // Type
-      var type = tiddler.getFieldString("type");
-      // Default
-      if (type == undefined || type == null || type.trim() === "") {
-        type = "text/vnd.tiddlywiki";
-      }
-
-      // Content-Type
-      const info = $tw.config.contentTypeInfo[type];
-      // Check
-      if (info == undefined || info == null) {
-        $tw.utils.alert(name, "This Tiddler has an unknown Content-Type: " + type);
-        return false;
-      }
+      // Retrieve Content-Type
+      const { type, info } = $tw.ipfs.getContentType(tiddler);
 
       // Check
       if (info.encoding !== "base64" && type !== "image/svg+xml") {
