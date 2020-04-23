@@ -588,7 +588,7 @@ IpfsTiddler
           }
         }
         // Unpin
-        if (uri !== null) {
+        if (uri !== null && name === "_export_uri") {
           try {
             // Unpin request
             if ($tw.utils.getIpfsUnpin() && cid !== null) {
@@ -650,10 +650,9 @@ IpfsTiddler
           fields: [{ key: "text", value: "" }]
         });
       }
-      // Unpin
-      if (oldUri !== null) {
+      // Unpin request
+      if (oldUri !== null && name === "_export_uri") {
         try {
-          // Unpin request
           if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
             $tw.ipfs.requestToUnpin(oldCid);
           }
@@ -662,7 +661,7 @@ IpfsTiddler
           $tw.utils.alert(name, error.message);
         }
       }
-      // Discard unpin
+      // Discard unpin request
       if (uri !== null) {
         try {
           if ($tw.utils.getIpfsUnpin() && cid !== null) {
