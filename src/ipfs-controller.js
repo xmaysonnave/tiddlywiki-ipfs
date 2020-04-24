@@ -277,13 +277,13 @@ IpfsController
       }
     }
     // Current API URL
-    const apiUrl = this.getIpfsApiUrl();
+    const url = this.getIpfsApiUrl();
     // Check
-    if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
+    if (url == undefined || url == null || url.href === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     // HTTP Client
-    const client = this.ipfsClients.get(apiUrl.href);
+    const client = this.ipfsClients.get(url.href);
     if (client !== undefined && client !== null) {
       // Log
       this.getLogger().info("Reuse IPFS provider:" + "\n " + client.provider);
@@ -294,11 +294,11 @@ IpfsController
       };
     }
     // Build a new HTTP client
-    const policy = await this.ipfsWrapper.getHttpIpfsClient(apiUrl);
+    const policy = await this.ipfsWrapper.getHttpIpfsClient(url);
     const ipfs = policy.ipfs;
     const provider = policy.provider;
     // Store
-    this.ipfsClients.set(apiUrl.href, { ipfs, provider });
+    this.ipfsClients.set(url.href, { ipfs, provider });
     // Log
     this.getLogger().info("New IPFS provider:" + "\n " + policy.provider);
     // Done
