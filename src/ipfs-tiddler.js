@@ -21,21 +21,42 @@ IpfsTiddler
   const name = "ipfs-tiddler";
 
   /*
+   * https://tiddlywiki.com/#TiddlerFields
    * $:/core/modules/server/routes/get-tiddler.js
+   * TODO: expose it as Tiddler ??
    */
   const reservedFields = [
     "bag",
+    "caption",
+    "class",
+    "color",
+    "description",
     "created",
     "creator",
+    "fields",
+    "footer",
+    "hide-body",
+    "icon",
+    "_is_skinny",
+    "library",
+    "list",
+    "list-after",
+    "list-before",
     "modified",
     "modifier",
+    "name",
+    "plugin-priority",
+    "plugin-type",
     "permissions",
     "recipe",
     "revision",
+    // "source",
+    "subtitle",
     "tags",
-    "fields",
-    "list",
     "text",
+    // "url",
+    "throttle.refresh",
+    "toc-link",
     "title",
     "type"
   ];
