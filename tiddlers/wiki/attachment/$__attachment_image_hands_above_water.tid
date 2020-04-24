@@ -1,8 +1,8 @@
 _canonical_uri: https://images.pexels.com/photos/3353994/pexels-photo-3353994.jpeg
 created: 20191209044634920
 modified: 20191210044634920
-_source_uri: https://www.pexels.com/photo/hands-above-water-3353994/
-_license_uri: https://www.pexels.com/photo-license/
+source: https://www.pexels.com/photo/hands-above-water-3353994/
+license: https://www.pexels.com/photo-license/
 tags: $:/ipfs/documentation $:/isAttachment
 title: Attachment - Hands Above Water
 type: image/jpeg

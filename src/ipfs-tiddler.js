@@ -23,7 +23,7 @@ IpfsTiddler
   /*
    * $:/core/modules/server/routes/get-tiddler.js
    */
-  const ignoreFields = [
+  const reservedFields = [
     "bag",
     "created",
     "creator",
@@ -37,9 +37,7 @@ IpfsTiddler
     "list",
     "text",
     "title",
-    "type",
-    "_canonical_uri",
-    "_import_uri"
+    "type"
   ];
 
   var IpfsTiddler = function() {
@@ -155,8 +153,12 @@ IpfsTiddler
       if (event.param !== undefined && event.param !== null) {
         // Process fields
         for (var name in tiddler.fields) {
-          // Ignore fields
-          if (ignoreFields.indexOf(name) !== -1) {
+          // Reserved fields
+          if (reservedFields.indexOf(name) !== -1) {
+            continue;
+          }
+          // Technical fields
+          if (name === "_canonical_uri" || name == "_import_uri") {
             continue;
           }
           // Process
@@ -247,8 +249,12 @@ IpfsTiddler
       if (event.param !== undefined && event.param !== null) {
         // Process fields
         for (var name in tiddler.fields) {
-          // Ignore fields
-          if (ignoreFields.indexOf(name) !== -1) {
+          // Reserved fields
+          if (reservedFields.indexOf(name) !== -1) {
+            continue;
+          }
+          // Technical fields
+          if (name === "_canonical_uri" || name == "_import_uri") {
             continue;
           }
           // Process
@@ -338,8 +344,12 @@ IpfsTiddler
     const self = this;
     // Process fields
     for (var name in tiddler.fields) {
-      // Ignore fields
-      if (ignoreFields.indexOf(name) !== -1) {
+      // Reserved fields
+      if (reservedFields.indexOf(name) !== -1) {
+        continue;
+      }
+      // Technical fields
+      if (name === "_canonical_uri" || name == "_import_uri") {
         continue;
       }
       // Process
@@ -487,39 +497,39 @@ IpfsTiddler
     });
 
     // Process fields
-    $tw.utils.each(tiddler.fields, async function(field, name) {
+    for (var name in tiddler.fields) {
       // Not a reserved keyword process
-      if (reservedFields.indexOf(name) == -1) {
-        // Uri
-        var uri = null;
-        // Value
-        var value = tiddler.getFieldString(name);
+      if (reservedFields.indexOf(name) !== -1) {
+        continue;
+      }
+      // Process
+      var uri = null;
+      var value = tiddler.getFieldString(name);
+      // Process if any update
+      if (value !== undefined && value !== null) {
+        // URI or not
+        try {
+          uri = await $tw.ipfs.normalizeIpfsUrl(value);
+        } catch (error) {
+          // Ignore
+        }
         // Process if any update
-        if (value !== undefined && value !== null) {
-          // URI or not
-          try {
-            uri = await $tw.ipfs.normalizeIpfsUrl(value);
-          } catch (error) {
-            // Ignore
-          }
-          // Process if any update
-          if (uri !== undefined && uri !== null) {
-            // Process canonical_uri if any
-            if (name === "_canonical_uri") {
-              // import_uri supersed canonical_uri
-              var import_uri = tiddler.getFieldString("_import_uri");
-              if (import_uri !== undefined && import_uri !== null) {
-                uri = import_uri;
-              }
-              // Import and merge
-              var updatedTiddler = await self.mergeImported(tiddler, uri);
-              // Empty text to force refresh
-              updatedTiddler = $tw.utils.updateTiddler({
-                tiddler: updatedTiddler,
-                fields: [{ key: "text", value: "" }]
-              });
-              $tw.wiki.addTiddler(updatedTiddler);
+        if (uri !== undefined && uri !== null) {
+          // Process canonical_uri if any
+          if (name === "_canonical_uri") {
+            // import_uri supersed canonical_uri
+            var import_uri = tiddler.getFieldString("_import_uri");
+            if (import_uri !== undefined && import_uri !== null) {
+              uri = import_uri;
             }
+            // Import and merge
+            var updatedTiddler = await self.mergeImported(tiddler, uri);
+            // Empty text to force refresh
+            updatedTiddler = $tw.utils.updateTiddler({
+              tiddler: updatedTiddler,
+              fields: [{ key: "text", value: "" }]
+            });
+            $tw.wiki.addTiddler(updatedTiddler);
           }
         }
       }
@@ -532,7 +542,7 @@ IpfsTiddler
         // Refresh
         $tw.rootWidget.refresh(changedTiddler);
       }
-    });
+    }
 
     return true;
   };
