@@ -121,7 +121,7 @@ wikiparser
       var { cid, importedTiddlers } = await $tw.ipfs.getImportedTiddlers(uri);
       this.importTiddlers(tiddler, cid, uri, importedTiddlers);
     } catch (error) {
-      self.getLogger().error(error);
+      this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     }
   };
