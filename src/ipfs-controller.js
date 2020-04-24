@@ -112,7 +112,7 @@ IpfsController
     var importedTiddlers = this.importedTiddlers.get(cid);
     if (importedTiddlers !== undefined && importedTiddlers !== null) {
       // Log
-      this.getLogger().info("Retrieved cached imported Tiddler(s):" + "\n " + cid);
+      this.getLogger().info("Retrieved cached imported Tiddler(s):" + "\n " + normalizedUri.href);
       return {
         normalizedUri: normalizedUri,
         importedTiddlers: importedTiddlers
