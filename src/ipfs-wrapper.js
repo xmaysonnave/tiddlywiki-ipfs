@@ -538,7 +538,7 @@ IPFS Wrapper
       if (cid !== null) {
         // jest
         try {
-          const parsed = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
+          const parsed = await this.ipfsUri.normalizeUrl(resolved);
           this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
         } catch (error) {
           // Ignore
