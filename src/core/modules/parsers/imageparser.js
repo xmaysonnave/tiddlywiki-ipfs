@@ -60,9 +60,9 @@ The image parser parses an image into an embeddable HTML element
     var tiddler = options.tiddler;
     var uri = options._canonical_uri;
     // Load external resource
-    if (uri) {
+    if (uri !== undefined && uri !== null && uri.trim() !== "") {
       $tw.ipfs
-        .normalizeIpfsUrl(uri)
+        .normalizeIpfsUrl(uri.trim())
         .then(normalized_uri => {
           // Load
           $tw.utils

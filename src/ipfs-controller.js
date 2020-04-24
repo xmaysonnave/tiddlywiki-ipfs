@@ -42,9 +42,9 @@ IpfsController
   };
 
   IpfsController.prototype.requestToUnpin = async function(cid) {
-    if (this.addToUnpin(cid)) {
-      const url = await this.normalizeIpfsUrl("/ipfs/" + cid);
-      this.getLogger().info("Request to unpin:" + "\n " + url.toString());
+    if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
+      const url = await this.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
+      this.getLogger().info("Request to unpin:" + "\n " + url.href);
     }
   };
 
@@ -83,7 +83,7 @@ IpfsController
 
   IpfsController.prototype.discardRequestToUnpin = async function(cid) {
     if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
-      const url = await this.normalizeIpfsUrl("/ipfs/" + cid);
+      const url = await this.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Discard request to unpin:" + "\n " + url.href);
     }
   };
@@ -100,31 +100,45 @@ IpfsController
   };
 
   IpfsController.prototype.getImportedTiddlers = async function(uri) {
+    // Check
+    if (uri == undefined || uri == null) {
+      return {
+        cid: null,
+        normalizedUri: null,
+        importedTiddlers: null
+      };
+    }
+    // Process
     var cid = null;
     var protocol = null;
     // Normalize
     const normalizedUri = await this.normalizeIpfsUrl(uri);
-    if (normalizedUri !== null) {
-      // IPFS
-      try {
-        var { protocol, cid } = this.decodeCid(normalizedUri.pathname);
-      } catch (error) {
-        // Ignore
-      }
-      // IPNS
-      if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
-        // IPFS client
-        const { ipfs } = await $tw.ipfs.getIpfsClient();
-        const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
-        cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
-      }
+    // Check
+    if (normalizedUri == null) {
+      return {
+        cid: null,
+        normalizedUri: null,
+        importedTiddlers: null
+      };
+    }
+    // IPFS
+    try {
+      var { protocol, cid } = this.decodeCid(normalizedUri.pathname);
+    } catch (error) {
+      // Ignore
+    }
+    // IPNS
+    if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
+      // IPFS client
+      const { ipfs } = await $tw.ipfs.getIpfsClient();
+      const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+      cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     }
     // Retrieve cached immutable imported Tiddlers
     var importedTiddlers = this.importedTiddlers.get(cid);
     if (importedTiddlers !== undefined && importedTiddlers !== null) {
       // Log
-      const pathname = "/" + ipfsKeyword + "/" + cid;
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
       // Done
       return {
@@ -138,6 +152,14 @@ IpfsController
       importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
     } else {
       importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
+    }
+    // Check
+    if (importedTiddlers == undefined || importedTiddlers == null) {
+      return {
+        cid: cid, // IPFS cid
+        normalizedUri: normalizedUri,
+        importedTiddlers: null
+      };
     }
     // Cache immutable imported Tiddlers
     if (cid != null) {
@@ -159,6 +181,7 @@ IpfsController
     if (importedTiddlers !== undefined || importedTiddlers !== null) {
       for (var i in importedTiddlers) {
         if (title === importedTiddlers[i].title) {
+          // Done
           return {
             cid: cid,
             normalizedUri: normalizedUri,

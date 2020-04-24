@@ -82,9 +82,9 @@ IpfsAction
       var export_uri = null;
       var ipnsKey = null;
       var ipnsName = null;
-      var ipnsContent = null;
+      var ipnsCid = null;
       var ipfs = null;
-      var ensContent = null;
+      var ensCid = null;
       var protocol = null;
       var cid = null;
 
@@ -127,16 +127,16 @@ IpfsAction
       if (protocol == ipnsKeyword) {
         var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
         try {
-          ipnsContent = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+          ipnsCid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
-          ipnsContent = null;
+          ipnsCid = null;
         }
         // Request to unpin
-        if ($tw.utils.getIpfsUnpin() && ipnsContent !== null) {
-          $tw.ipfs.requestToUnpin(ipnsContent);
+        if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
+          $tw.ipfs.requestToUnpin(ipnsCid);
         }
       }
 
@@ -145,10 +145,10 @@ IpfsAction
         // Retrieve a Web3 provider
         const { web3 } = await $tw.ipfs.getWeb3Provider();
         // Fetch ENS domain content
-        var { content: ensContent } = await this.ensWrapper.getContenthash(export_uri.hostname, web3);
+        var { content: ensCid } = await this.ensWrapper.getContenthash(export_uri.hostname, web3);
         // Request to unpin
-        if ($tw.utils.getIpfsUnpin() && ensContent !== null) {
-          $tw.ipfs.requestToUnpin(ensContent);
+        if ($tw.utils.getIpfsUnpin() && ensCid !== null) {
+          $tw.ipfs.requestToUnpin(ensCid);
         }
       }
 
@@ -186,7 +186,7 @@ IpfsAction
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
           // Discard unpin request
-          $tw.ipfs.discardRequestToUnpin(ipnsContent);
+          $tw.ipfs.discardRequestToUnpin(ipnsCid);
         }
       }
 
@@ -204,7 +204,7 @@ IpfsAction
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
           // Discard unpin request
-          $tw.ipfs.discardRequestToUnpin(ensContent);
+          $tw.ipfs.discardRequestToUnpin(ensCid);
         }
       }
 

@@ -52,9 +52,13 @@ wikiparser
   var WikiParser = function(type, text, options) {
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
-    if ($tw.browser && (text || "") === "" && options._canonical_uri) {
-      this.loadRemoteTiddlers(options.tiddler, options._canonical_uri);
-      text = $tw.language.getRawString("LazyLoadingWarning");
+    if ($tw.browser && (text || "") === "") {
+      var uri = options._canonical_uri;
+      // Load external resource
+      if (uri !== undefined && uri !== null && uri.trim() !== "") {
+        this.loadRemoteTiddlers(options.tiddler, uri.trim());
+        text = $tw.language.getRawString("LazyLoadingWarning");
+      }
     }
     // Initialise the classes if we don't have them already
     if (!this.pragmaRuleClasses) {
@@ -119,7 +123,9 @@ wikiparser
     // Load
     try {
       var { cid, importedTiddlers } = await $tw.ipfs.getImportedTiddlers(uri);
-      this.importTiddlers(tiddler, cid, uri, importedTiddlers);
+      if (importedTiddlers !== undefined && importedTiddlers !== null) {
+        this.importTiddlers(tiddler, cid, uri, importedTiddlers);
+      }
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -208,10 +214,8 @@ wikiparser
       }
 
       // IPFS tag
-      if (cid !== null) {
-        if (importedTags.includes("$:/isIpfs") == false) {
-          importedTags = importedTags + " $:/isIpfs";
-        }
+      if (cid !== null && importedTags.includes("$:/isIpfs") == false) {
+        importedTags = importedTags + " $:/isIpfs";
       }
       // Imported tag
       if (importedTags.includes("$:/isImported") == false) {
