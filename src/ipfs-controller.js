@@ -125,7 +125,7 @@ IpfsController
       // Log
       const pathname = "/" + ipfsKeyword + "/" + cid;
       const url = await this.ipfsUri.normalizeUrl(pathname);
-      this.getLogger().info("Retrieved cached imported Tiddler(s):" + "\n " + url.href);
+      this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
       // Done
       return {
         normalizedUri: normalizedUri,
@@ -141,6 +141,10 @@ IpfsController
     }
     // Cache immutable imported Tiddlers
     if (cid != null) {
+      // Log
+      const pathname = "/" + ipfsKeyword + "/" + cid;
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info("Store cached imported Tiddler(s):" + "\n " + url.href);
       this.importedTiddlers.set(cid, importedTiddlers);
     }
     return {
