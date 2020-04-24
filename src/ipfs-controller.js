@@ -81,11 +81,11 @@ IpfsController
   IpfsController.prototype.discardRequestToUnpin = async function(cid) {
     if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
       const url = await this.normalizeIpfsUrl("/ipfs/" + cid);
-      this.getLogger().info("Discard request to unpin:" + "\n " + url.toString());
+      this.getLogger().info("Discard request to unpin:" + "\n " + url.href);
     }
   };
 
-  IpfsController.prototype.removeFromUnpin = async function(cid) {
+  IpfsController.prototype.removeFromUnpin = function(cid) {
     if (cid !== undefined && cid !== null) {
       var index = this.unpin.indexOf(cid);
       if (index !== -1) {
