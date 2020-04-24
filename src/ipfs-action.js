@@ -116,10 +116,8 @@ IpfsAction
         // Decode pathname
         var { protocol, cid } = this.ipfsWrapper.decodeCid(export_uri.pathname);
         // Check
-        if (protocol != null && cid != null) {
-          if ($tw.utils.getIpfsUnpin() && protocol === ipfsKeyword) {
-            $tw.ipfs.requestToUnpin(cid);
-          }
+        if ($tw.utils.getIpfsUnpin() && protocol != null && protocol === ipfsKeyword && cid != null) {
+          $tw.ipfs.requestToUnpin(cid);
         }
       }
 
@@ -132,7 +130,6 @@ IpfsAction
           // Log and continue
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
-          ipnsCid = null;
         }
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
@@ -178,9 +175,9 @@ IpfsAction
       // Publish to IPNS
       if (protocol == ipnsKeyword) {
         this.getLogger().info("Publishing IPNS Tiddler: " + ipnsName);
+        fields.push({ key: "_export_uri", value: "/" + ipnsKeyword + "/" + ipnsKey });
         try {
           await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
-          fields.push({ key: "_export_uri", value: "/" + ipnsKeyword + "/" + ipnsKey });
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
@@ -193,12 +190,12 @@ IpfsAction
       // Publish to ENS
       if (export_uri.hostname.endsWith(".eth")) {
         this.getLogger().info("Publishing ENS domain content: " + export_uri.hostname);
+        fields.push({ key: "_export_uri", value: "https://" + export_uri.hostname });
         try {
           // Retrieve an enabled Web3 provider
           const { web3, account } = await $tw.ipfs.getEnabledWeb3Provider();
           // Set ENS domain content
           await this.ensWrapper.setContenthash(export_uri.hostname, added, web3, account);
-          fields.push({ key: "_export_uri", value: "https://" + export_uri.hostname });
         } catch (error) {
           // Log and continue
           this.getLogger().error(error);
@@ -405,7 +402,7 @@ IpfsAction
         $tw.utils.alert(name, error.message);
       }
 
-      // Unpin previous
+      // Unpin
       if ($tw.utils.getIpfsUnpin() && cid != null) {
         try {
           await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
@@ -659,7 +656,7 @@ IpfsAction
 
       await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
 
-      // Unpin previous
+      // Unpin
       if ($tw.utils.getIpfsUnpin() && resolved != null) {
         try {
           await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);

@@ -113,14 +113,6 @@ IpfsController
     var protocol = null;
     // Normalize
     const normalizedUri = await this.normalizeIpfsUrl(uri);
-    // Check
-    if (normalizedUri == null) {
-      return {
-        cid: null,
-        normalizedUri: null,
-        importedTiddlers: null
-      };
-    }
     // IPFS
     try {
       var { protocol, cid } = this.decodeCid(normalizedUri.pathname);
