@@ -159,8 +159,6 @@ IpfsTiddler
 
   IpfsTiddler.prototype.handleIpfsPin = async function(event) {
     try {
-      const self = this;
-
       const title = event.tiddlerTitle;
 
       // Load tiddler
@@ -194,17 +192,17 @@ IpfsTiddler
           // Process
           if (uri !== null) {
             try {
-              await self.ipfsPin(name, uri);
+              await this.ipfsPin(name, uri);
             } catch (error) {
-              self.getLogger().error(error);
+              this.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             }
           }
         }
         // Document
       } else {
-        const parsed = await $tw.ipfs.getDocumentUrl();
-        await this.ipfsPin("document", parsed);
+        const url = await $tw.ipfs.getDocumentUrl();
+        await this.ipfsPin("document", url);
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -215,22 +213,22 @@ IpfsTiddler
     return true;
   };
 
-  IpfsTiddler.prototype.ipfsPin = async function(name, uri) {
+  IpfsTiddler.prototype.ipfsPin = async function(name, url) {
     // Check
-    if (uri == undefined || uri == null) {
-      throw new Error("Undefined URI...");
+    if (url == undefined || url == null) {
+      throw new Error("Undefined URL...");
     }
 
-    if (uri.protocol === fileProtocol) {
+    if (url.protocol === fileProtocol) {
       throw new Error("Unable to Pin a local filesystem resource...");
     }
 
-    if (uri.pathname === "/") {
+    if (url.pathname === "/") {
       throw new Error("Unknown pathname...");
     }
 
     // Extract and check URL IPFS protocol and cid
-    var { protocol, cid } = this.ipfsWrapper.decodeCid(uri.pathname);
+    var { protocol, cid } = this.ipfsWrapper.decodeCid(url.pathname);
 
     // Process if valid
     if (protocol !== null && cid !== null) {
@@ -243,7 +241,7 @@ IpfsTiddler
         cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       }
 
-      this.getLogger().info("Pinning reference: " + name + "\n " + uri.href);
+      this.getLogger().info("Pinning reference: " + name + "\n " + url.href);
 
       // Pin
       await this.ipfsWrapper.pinToIpfs(ipfs, cid);
@@ -255,8 +253,6 @@ IpfsTiddler
 
   IpfsTiddler.prototype.handleIpfsUnpin = async function(event) {
     try {
-      const self = this;
-
       const title = event.tiddlerTitle;
 
       // Load tiddler
@@ -290,17 +286,17 @@ IpfsTiddler
           // Process
           if (uri !== null) {
             try {
-              await self.ipfsUnpin(name, uri);
+              await this.ipfsUnpin(name, uri);
             } catch (error) {
-              self.getLogger().error(error);
+              this.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             }
           }
         }
         // Document
       } else {
-        const parsed = await $tw.ipfs.getDocumentUrl();
-        await this.ipfsUnpin("document", parsed);
+        const url = await $tw.ipfs.getDocumentUrl();
+        await this.ipfsUnpin("document", url);
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -311,22 +307,22 @@ IpfsTiddler
     return true;
   };
 
-  IpfsTiddler.prototype.ipfsUnpin = async function(name, uri) {
+  IpfsTiddler.prototype.ipfsUnpin = async function(name, url) {
     // Check
-    if (uri == undefined || uri == null) {
-      throw new Error("Undefined URI...");
+    if (url == undefined || url == null) {
+      throw new Error("Undefined URL...");
     }
 
-    if (uri.protocol === fileProtocol) {
+    if (url.protocol === fileProtocol) {
       throw new Error("Unable to Unpin a local filesystem resource...");
     }
 
-    if (uri.pathname === "/") {
+    if (url.pathname === "/") {
       throw new Error("Unknown pathname...");
     }
 
     // Extract and check URL IPFS protocol and cid
-    var { protocol, cid } = this.ipfsWrapper.decodeCid(uri.pathname);
+    var { protocol, cid } = this.ipfsWrapper.decodeCid(url.pathname);
 
     // Process if valid
     if (protocol !== null && cid !== null) {
@@ -339,7 +335,7 @@ IpfsTiddler
         cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       }
 
-      this.getLogger().info("Unpinning reference: " + name + "\n " + uri.href);
+      this.getLogger().info("Unpinning reference: " + name + "\n " + url.href);
 
       // Unpin
       await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
@@ -361,8 +357,6 @@ IpfsTiddler
   };
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function(tiddler) {
-    // self
-    const self = this;
     // Process fields
     for (var name in tiddler.fields) {
       // Reserved fields
@@ -385,13 +379,13 @@ IpfsTiddler
       // Process
       if (uri !== null) {
         try {
-          const { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+          const { cid } = this.ipfsWrapper.decodeCid(uri.pathname);
           // Request to unpin
           if ($tw.utils.getIpfsUnpin() && cid !== null) {
             $tw.ipfs.requestToUnpin(cid);
           }
         } catch (error) {
-          self.getLogger().error(error);
+          this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
         }
       }
@@ -415,92 +409,7 @@ IpfsTiddler
     return new $tw.Tiddler(tiddler, addition);
   };
 
-  IpfsTiddler.prototype.merge = function(tiddler, target) {
-    // Merge
-    const currentTags = (tiddler.fields.tags || []).slice(0);
-
-    // Merge Tiddler fields with remote fields
-    // $:/core/modules/server/routes/get-tiddler.js
-    const fields = [];
-
-    // Iterate over target properties
-    for (var properties in target) {
-      fields.push({ key: properties, value: target[properties] });
-    }
-
-    // Merge target tags with current tags
-    var importedTags = target["tags"] == undefined ? "" : target["tags"];
-    for (var i = 0; i < currentTags.length; i++) {
-      const tag = currentTags[i];
-      if (importedTags.includes(tag) == false) {
-        importedTags = importedTags + " " + tag;
-      }
-    }
-    const addTags = importedTags;
-
-    // Update Tiddler
-    const updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: tiddler,
-      addTags: addTags,
-      fields: fields
-    });
-
-    return updatedTiddler;
-  };
-
-  IpfsTiddler.prototype.mergeImported = async function(tiddler, uri) {
-    // Check
-    if (tiddler == undefined || tiddler == null) {
-      return tiddler;
-    }
-    const title = tiddler.getFieldString("title");
-    if (title == undefined || title == null) {
-      return tiddler;
-    }
-    if (uri == undefined || uri == null) {
-      return tiddler;
-    }
-
-    // Load remote if any
-    const { importedTiddlers } = await $tw.ipfs.getImportedTiddlers(uri);
-
-    // Iterate over remote for new and update
-    if (importedTiddlers !== undefined && importedTiddlers !== null) {
-      var current = null;
-      for (var k = 0; k < importedTiddlers.length; k++) {
-        // Current remote
-        const remote = importedTiddlers[k];
-
-        // Head
-        if (current == null) {
-          current = tiddler;
-        } else {
-          current = $tw.wiki.getTiddler(remote.title);
-        }
-
-        // New
-        if (current == null) {
-          // New Tiddler
-          current = new $tw.Tiddler({
-            title: remote.title
-          });
-        }
-
-        if (current !== null) {
-          // Merge
-          const mergedTiddler = this.merge(current, remote);
-          // Update
-          $tw.wiki.addTiddler(mergedTiddler);
-        }
-      }
-    }
-
-    return true;
-  };
-
   IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
-    // self
-    const self = this;
     // current tiddler title
     const title = event.tiddlerTitle;
 
@@ -511,22 +420,15 @@ IpfsTiddler
       return false;
     }
 
-    // Count fields
-    var count = 0;
-    $tw.utils.each(tiddler.getFieldStrings(), function(value, fieldName) {
-      count += 1;
-    });
-
     // Process fields
     for (var name in tiddler.fields) {
-      // Not a reserved keyword process
+      // Not a reserved keyword
       if (reservedFields.indexOf(name) !== -1) {
         continue;
       }
       // Process
       var uri = null;
       var value = tiddler.getFieldString(name);
-      // Process if any update
       if (value !== undefined && value !== null) {
         // URI or not
         try {
@@ -534,37 +436,18 @@ IpfsTiddler
         } catch (error) {
           // Ignore
         }
-        // Process if any update
-        if (uri !== undefined && uri !== null) {
-          // Process canonical_uri if any
-          if (name === "_canonical_uri") {
-            // import_uri supersed canonical_uri
-            var import_uri = tiddler.getFieldString("_import_uri");
-            if (import_uri !== undefined && import_uri !== null) {
-              uri = import_uri;
-            }
-            // Import and merge
-            var updatedTiddler = await self.mergeImported(tiddler, uri);
-            // Empty text to force refresh
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: updatedTiddler,
-              fields: [{ key: "text", value: "" }]
-            });
-            $tw.wiki.addTiddler(updatedTiddler);
-          }
+        // Process once
+        if (uri !== undefined && uri !== null && (name === "_canonical_uri" || name === "_import_uri")) {
+          // Empty text to force a refresh
+          const updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            fields: [{ key: "text", value: "" }]
+          });
+          $tw.wiki.addTiddler(updatedTiddler);
+          return true;
         }
       }
-
-      // Empty cache once
-      if (--count == 0) {
-        $tw.wiki.clearCache(title);
-        // Tiddler to be refreshed
-        const changedTiddler = $tw.utils.getChangedTiddler(title);
-        // Refresh
-        $tw.rootWidget.refresh(changedTiddler);
-      }
     }
-
     return true;
   };
 

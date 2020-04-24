@@ -18,6 +18,9 @@ IpfsController
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
   const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
 
+  const ipfsKeyword = "ipfs";
+  const ipnsKeyword = "ipns";
+
   const name = "ipfs-controller";
 
   var IpfsController = function() {
@@ -97,22 +100,33 @@ IpfsController
   };
 
   IpfsController.prototype.getImportedTiddlers = async function(uri) {
+    var protocol = null;
     var cid = null;
     // Normalize
     const normalizedUri = await this.normalizeIpfsUrl(uri);
     if (normalizedUri !== null) {
-      // Ipfs
+      // IPFS
       try {
-        var { cid } = this.decodeCid(normalizedUri.pathname);
+        var { protocol, cid } = this.decodeCid(normalizedUri.pathname);
       } catch (error) {
         // Ignore
+      }
+      // IPNS
+      if (protocol === ipnsKeyword) {
+        // IPFS client
+        const { ipfs } = await $tw.ipfs.getIpfsClient();
+        const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+        cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
       }
     }
     // Retrieve cached immutable imported Tiddlers
     var importedTiddlers = this.importedTiddlers.get(cid);
     if (importedTiddlers !== undefined && importedTiddlers !== null) {
       // Log
-      this.getLogger().info("Retrieved cached imported Tiddler(s):" + "\n " + normalizedUri.href);
+      const pathname = "/" + ipfsKeyword + "/" + cid;
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info("Retrieved cached imported Tiddler(s):" + "\n " + url.href);
+      // Done
       return {
         normalizedUri: normalizedUri,
         importedTiddlers: importedTiddlers
@@ -388,8 +402,8 @@ IpfsController
     // Fetch ENS domain content
     const { content, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3);
     if (content !== null && protocol !== null) {
-      const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + protocol + "/" + content);
-      return parsed;
+      const url = await $tw.ipfs.normalizeIpfsUrl("/" + protocol + "/" + content);
+      return url;
     }
     // Empty content
     return null;

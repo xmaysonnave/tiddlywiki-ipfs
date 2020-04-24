@@ -520,8 +520,8 @@ IpfsAction
 
       if (resolved !== null) {
         // Build URL
-        const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
-        window.open(parsed.toString(), "_blank", "noopener");
+        const url = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
+        window.open(url.href, "_blank", "noopener");
       }
     } catch (error) {
       this.getLogger().error(error);

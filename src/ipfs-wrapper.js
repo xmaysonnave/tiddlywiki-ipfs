@@ -539,9 +539,9 @@ IpfsWrapper
       // jest
       try {
         const keyParsed = await this.ipfsUri.normalizeUrl(key);
-        const parsed = await this.ipfsUri.normalizeUrl(pathname);
+        const url = await this.ipfsUri.normalizeUrl(pathname);
         this.getLogger().info(
-          "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + parsed.href
+          "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + url.href
         );
       } catch (error) {
         // Ignore
@@ -577,8 +577,8 @@ IpfsWrapper
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname);
       // jest
       try {
-        const parsed = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info("Successfully unpinned:" + "\n " + parsed.href);
+        const url = await this.ipfsUri.normalizeUrl(pathname);
+        this.getLogger().info("Successfully unpinned:" + "\n " + url.href);
       } catch (error) {
         // Ignore
       }

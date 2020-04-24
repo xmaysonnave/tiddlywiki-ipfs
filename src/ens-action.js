@@ -75,9 +75,9 @@ EnsAction
 
       this.getLogger().info("ENS domain: " + ensDomain);
 
-      const parsed = await $tw.ipfs.resolveENS(ensDomain);
-      if (parsed !== null) {
-        window.open(parsed.toString(), "_blank", "noopener");
+      const url = await $tw.ipfs.resolveENS(ensDomain);
+      if (url !== null) {
+        window.open(url.href, "_blank", "noopener");
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -140,8 +140,8 @@ EnsAction
         return false;
       }
 
-      const parsed = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Publishing wiki:" + "\n " + parsed.href + "\n to ENS domain: " + ensDomain);
+      const url = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
+      this.getLogger().info("Publishing wiki:" + "\n " + url.href + "\n to ENS domain: " + ensDomain);
 
       await this.ensWrapper.setContenthash(ensDomain, cid, web3, account);
 
