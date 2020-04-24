@@ -100,8 +100,8 @@ IpfsController
   };
 
   IpfsController.prototype.getImportedTiddlers = async function(uri) {
-    var protocol = null;
     var cid = null;
+    var protocol = null;
     // Normalize
     const normalizedUri = await this.normalizeIpfsUrl(uri);
     if (normalizedUri !== null) {
@@ -112,7 +112,7 @@ IpfsController
         // Ignore
       }
       // IPNS
-      if (protocol === ipnsKeyword) {
+      if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
         // IPFS client
         const { ipfs } = await $tw.ipfs.getIpfsClient();
         const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
@@ -144,7 +144,7 @@ IpfsController
       this.importedTiddlers.set(cid, importedTiddlers);
     }
     return {
-      cid: cid,
+      cid: cid, // IPFS cid
       normalizedUri: normalizedUri,
       importedTiddlers: importedTiddlers
     };
@@ -164,7 +164,7 @@ IpfsController
       }
     }
     return {
-      cid: cid,
+      cid: cid, // IPFS cid
       normalizedUri: normalizedUri,
       importedTiddler: null
     };

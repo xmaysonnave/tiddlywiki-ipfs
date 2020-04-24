@@ -54,8 +54,10 @@ IPFS Wrapper
         text = true;
       }
     }
+    // Process
     var uri = null;
     var cid = null;
+    var protocol = null;
     if (text == false) {
       try {
         uri = await this.ipfsUri.normalizeUrl(value, this.ipfsUri.getIpfsBaseUrl());
@@ -65,15 +67,22 @@ IPFS Wrapper
       if (uri !== null) {
         // IPFS
         try {
-          var { cid } = this.ipfsLibrary.decodeCid(uri.pathname);
+          var { protocol, cid } = this.ipfsLibrary.decodeCid(uri.pathname);
         } catch (error) {
           // Ignore
+        }
+        // IPNS
+        if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
+          // IPFS client
+          const { ipfs } = await $tw.ipfs.getIpfsClient();
+          const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+          cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
         }
       }
     }
     return {
-      uri: uri,
-      cid: cid
+      cid: cid, // IPFS cid
+      uri: uri // Normalized URI
     };
   };
 
