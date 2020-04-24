@@ -15,10 +15,15 @@ IpfsTiddler
 
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
+  const fileProtocol = "file:";
+  const ipnsKeyword = "ipns";
+
+  const name = "ipfs-tiddler";
+
   /*
    * $:/core/modules/server/routes/get-tiddler.js
    */
-  const reservedFields = [
+  const ignoreFields = [
     "bag",
     "created",
     "creator",
@@ -32,13 +37,10 @@ IpfsTiddler
     "list",
     "text",
     "title",
-    "type"
+    "type",
+    "_canonical_uri",
+    "_import_uri"
   ];
-
-  const fileProtocol = "file:";
-  const ipnsKeyword = "ipns";
-
-  const name = "ipfs-tiddler";
 
   var IpfsTiddler = function() {
     this.once = false;
@@ -152,28 +154,30 @@ IpfsTiddler
       // Tiddler
       if (event.param !== undefined && event.param !== null) {
         // Process fields
-        $tw.utils.each(tiddler.fields, async function(field, name) {
+        for (var name in tiddler.fields) {
+          // Ignore fields
+          if (ignoreFields.indexOf(name) !== -1) {
+            continue;
+          }
+          // Process
           var uri = null;
           var value = tiddler.getFieldString(name);
-          // Not a reserved keyword process
-          if (reservedFields.indexOf(name) == -1) {
-            // URI or not
+          // URI or not
+          try {
+            uri = await $tw.ipfs.normalizeIpfsUrl(value);
+          } catch (error) {
+            // Ignore
+          }
+          // Process
+          if (uri !== null) {
             try {
-              uri = await $tw.ipfs.normalizeIpfsUrl(value);
+              await self.ipfsPin(name, uri);
             } catch (error) {
-              // Ignore
-            }
-            // Process
-            if (uri !== null) {
-              try {
-                await self.ipfsPin(name, uri);
-              } catch (error) {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              }
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
             }
           }
-        });
+        }
         // Document
       } else {
         const parsed = await $tw.ipfs.getDocumentUrl();
@@ -242,28 +246,30 @@ IpfsTiddler
       // Tiddler
       if (event.param !== undefined && event.param !== null) {
         // Process fields
-        $tw.utils.each(tiddler.fields, async function(field, name) {
+        for (var name in tiddler.fields) {
+          // Ignore fields
+          if (ignoreFields.indexOf(name) !== -1) {
+            continue;
+          }
+          // Process
           var uri = null;
           var value = tiddler.getFieldString(name);
-          // Not a reserved keyword process
-          if (reservedFields.indexOf(name) == -1) {
-            // URI or not
+          // URI or not
+          try {
+            uri = await $tw.ipfs.normalizeIpfsUrl(value);
+          } catch (error) {
+            // Ignore
+          }
+          // Process
+          if (uri !== null) {
             try {
-              uri = await $tw.ipfs.normalizeIpfsUrl(value);
+              await self.ipfsUnpin(name, uri);
             } catch (error) {
-              // Ignore
-            }
-            // Process
-            if (uri !== null) {
-              try {
-                await self.ipfsUnpin(name, uri);
-              } catch (error) {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              }
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
             }
           }
-        });
+        }
         // Document
       } else {
         const parsed = await $tw.ipfs.getDocumentUrl();
@@ -331,32 +337,34 @@ IpfsTiddler
     // self
     const self = this;
     // Process fields
-    $tw.utils.each(tiddler.fields, async function(field, name) {
+    for (var name in tiddler.fields) {
+      // Ignore fields
+      if (ignoreFields.indexOf(name) !== -1) {
+        continue;
+      }
+      // Process
       var uri = null;
       var value = tiddler.getFieldString(name);
-      // Not a reserved keyword process
-      if (reservedFields.indexOf(name) == -1) {
-        // URI or not
+      // URI or not
+      try {
+        uri = await $tw.ipfs.normalizeIpfsUrl(value);
+      } catch (error) {
+        // Ignore
+      }
+      // Process
+      if (uri !== null) {
         try {
-          uri = await $tw.ipfs.normalizeIpfsUrl(value);
-        } catch (error) {
-          // Ignore
-        }
-        // Process
-        if (uri !== null) {
-          try {
-            const { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
-            // Request to unpin
-            if ($tw.utils.getIpfsUnpin() && cid !== null) {
-              $tw.ipfs.requestToUnpin(cid);
-            }
-          } catch (error) {
-            self.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
+          const { cid } = self.ipfsWrapper.decodeCid(uri.pathname);
+          // Request to unpin
+          if ($tw.utils.getIpfsUnpin() && cid !== null) {
+            $tw.ipfs.requestToUnpin(cid);
           }
+        } catch (error) {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
       }
-    });
+    }
     return tiddler;
   };
 
