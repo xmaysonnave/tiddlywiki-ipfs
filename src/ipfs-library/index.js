@@ -214,10 +214,9 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   // ipfs-http-client
-  IpfsLibrary.prototype.getHttpIpfs = async function(apiUrl) {
-    const self = this;
+  IpfsLibrary.prototype.getHttpIpfs = async function(url) {
     // Check
-    if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
+    if (url == undefined || url == null || url.href === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     try {
@@ -227,26 +226,26 @@ import { getIpfs, providers } from "ipfs-provider";
       }
       // Instantiate client
       const { httpClient } = providers;
-      self.getLogger().info("Processing connection to IPFS API URL:" + "\n " + apiUrl.href);
+      this.getLogger().info("Processing connection to IPFS API URL:" + "\n " + url.href);
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
-            apiAddress: apiUrl.href
+            apiAddress: url.href
           })
         ]
       });
       return {
         ipfs: ipfs,
-        provider: provider + ", " + apiUrl.href
+        provider: provider + ", " + url.href
       };
     } catch (error) {
-      self.getLogger().error(error);
+      this.getLogger().error(error);
     }
     throw new Error("Unreachable IPFS API URL...");
   };
 
   IpfsLibrary.prototype.add = async function(client, content) {
-    // check
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -295,6 +294,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.pin = async function(client, cid) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -318,6 +318,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.unpin = async function(client, cid) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -341,6 +342,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.publish = async function(client, name, cid) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -348,7 +350,7 @@ import { getIpfs, providers } from "ipfs-provider";
       throw new Error("Undefined IPNS name...");
     }
     if (cid == undefined || cid == null || cid.trim() === "") {
-      throw new Error("Undefined IPFS identifier...");
+      throw new Error("Undefined IPNS identifier...");
     }
     // Window IPFS policy
     if (client.enable) {
@@ -356,7 +358,7 @@ import { getIpfs, providers } from "ipfs-provider";
     }
     if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
       this.getLogger().info("Processing IPNS name publish...");
-      const result = await client.name.publish(cid.trim(), { key: name.trim() });
+      const result = await client.name.publish(cid, { key: name.trim() });
       if (result == undefined || result == null) {
         throw new Error("IPFS client returned an unknown result...");
       }
@@ -366,6 +368,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.resolve = async function(client, id) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -395,6 +398,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.getKeys = async function(client) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -417,6 +421,7 @@ import { getIpfs, providers } from "ipfs-provider";
   // https://github.com/ipfs/interface-js-ipfs-core/blob/master/SPEC/KEY.md#keygen
   // https://github.com/libp2p/js-libp2p-crypto/issues/145
   IpfsLibrary.prototype.genKey = async function(client, name) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -442,6 +447,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.rmKey = async function(client, name) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
@@ -464,6 +470,7 @@ import { getIpfs, providers } from "ipfs-provider";
   };
 
   IpfsLibrary.prototype.renameKey = async function(client, oldName, newName) {
+    // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }

@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: library
 
-IpfsTiddler
+IPFS Tiddler
 
 \*/
 

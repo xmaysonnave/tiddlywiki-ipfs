@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: saver
 
-IpfsSaver
+IPFS Saver
 
 \*/
 

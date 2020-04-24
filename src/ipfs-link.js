@@ -3,7 +3,7 @@ title: $:/plugins/ipfs/modules/widgets/ipfs-link.js
 type: application/javascript
 module-type: widget
 
-Ipfs Link widget
+IPFS Link widget
 
 \*/
 

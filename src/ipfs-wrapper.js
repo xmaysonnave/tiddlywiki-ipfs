@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: library
 
-IpfsWrapper
+IPFS Wrapper
 
 \*/
 
@@ -63,7 +63,7 @@ IpfsWrapper
         // Ignore
       }
       if (uri !== null) {
-        // Ipfs
+        // IPFS
         try {
           var { cid } = this.ipfsLibrary.decodeCid(uri.pathname);
         } catch (error) {
@@ -309,10 +309,10 @@ IpfsWrapper
     throw new Error("Failed to retrieve IPFS Companion...");
   };
 
-  IpfsWrapper.prototype.getHttpIpfsClient = async function(apiUrl) {
+  IpfsWrapper.prototype.getHttpIpfsClient = async function(url) {
     // HTTP Client
     try {
-      const policy = await this.ipfsLibrary.getHttpIpfs(apiUrl);
+      const policy = await this.ipfsLibrary.getHttpIpfs(url);
       if (policy !== null && policy.ipfs !== null && policy.provider !== null) {
         return policy;
       }
@@ -322,7 +322,7 @@ IpfsWrapper
     throw new Error("Failed to retrieve an IPFS HTTP provider...");
   };
 
-  IpfsWrapper.prototype.getIpfsClient = async function(apiUrl) {
+  IpfsWrapper.prototype.getIpfsClient = async function(url) {
     // IPFS client
     try {
       var policy = null;
@@ -330,9 +330,9 @@ IpfsWrapper
       if (ipfsProvider === "window") {
         policy = await this.ipfsLibrary.getWindowIpfs();
       } else if (ipfsProvider === "http") {
-        policy = await this.ipfsLibrary.getHttpIpfs(apiUrl);
+        policy = await this.ipfsLibrary.getHttpIpfs(url);
       } else {
-        policy = await this.ipfsLibrary.getDefaultIpfs(apiUrl);
+        policy = await this.ipfsLibrary.getDefaultIpfs(url);
       }
       if (policy !== null && policy.ipfs !== null && policy.provider !== null) {
         return policy;
@@ -345,11 +345,15 @@ IpfsWrapper
 
   IpfsWrapper.prototype.getIpnsIdentifiers = async function(ipfs, ipnsKey, ipnsName) {
     // Cleanup
-    if (ipnsKey == undefined || ipnsKey == null) {
+    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
       ipnsKey = null;
+    } else {
+      ipnsKey = ipnsKey.trim();
     }
-    if (ipnsName == undefined || ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       ipnsName = null;
+    } else {
+      ipnsName = ipnsName.trim();
     }
 
     // Check
@@ -470,7 +474,11 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
-    const pathname = "/" + ipfsKeyword + "/" + cid;
+    // Check
+    if (cid == undefined || cid == null || cid.trim() === "") {
+      throw new Error("Undefined IPNS identifier...");
+    }
+    const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname);
       // jest
@@ -509,7 +517,11 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, ipnsKey) {
-    const pathname = "/" + ipnsKeyword + "/" + ipnsKey;
+    // Check
+    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
+      throw new Error("Undefined IPNS key...");
+    }
+    const pathname = "/" + ipnsKeyword + "/" + ipnsKey.trim();
     try {
       const url = await this.ipfsUri.normalizeUrl(pathname);
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname);
@@ -531,10 +543,20 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.publishToIpns = async function(ipfs, ipnsKey, ipnsName, cid) {
-    // Publish
-    const key = "/" + ipnsKeyword + "/" + ipnsKey;
+    // Check
+    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
+      throw new Error("Undefined IPNS key...");
+    }
+    if (cid == undefined || cid == null || cid.trim() === "") {
+      throw new Error("Undefined IPNS identifier...");
+    }
+    // Convert cid
+    cid = this.ipfsLibrary.cidV1ToCidV0(cid.trim());
+    // Path
+    const key = "/" + ipnsKeyword + "/" + ipnsKey.trim();
     const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
+      // Publish
       const published = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname);
       // jest
       try {
@@ -554,7 +576,11 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
-    const pathname = "/" + ipfsKeyword + "/" + cid;
+    // Check
+    if (cid == undefined || cid == null || cid.trim() === "") {
+      throw new Error("Undefined IPNS identifier...");
+    }
+    const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname);
       // jest
@@ -572,7 +598,11 @@ IpfsWrapper
   };
 
   IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
-    const pathname = "/" + ipfsKeyword + "/" + cid;
+    // Check
+    if (cid == undefined || cid == null || cid.trim() === "") {
+      throw new Error("Undefined IPNS identifier...");
+    }
+    const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname);
       // jest
