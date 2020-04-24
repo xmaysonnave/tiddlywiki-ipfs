@@ -75,8 +75,8 @@ IPFS Wrapper
         if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
           // IPFS client
           const { ipfs } = await $tw.ipfs.getIpfsClient();
-          const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
-          cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+          const { ipnsKey } = await this.getIpnsIdentifiers(ipfs, cid);
+          cid = await this.resolveIpnsKey(ipfs, ipnsKey);
         }
       }
     }
