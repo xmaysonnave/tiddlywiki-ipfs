@@ -145,5 +145,5 @@ import { URL } from "universal-url";
     return parsed;
   };
 
-  exports.IpfsUri = IpfsUri;
+  module.exports = IpfsUri;
 })();

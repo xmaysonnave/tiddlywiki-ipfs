@@ -516,5 +516,5 @@ import { getIpfs, providers } from "ipfs-provider";
     throw new Error("Undefined IPNS key rename...");
   };
 
-  exports.IpfsLibrary = IpfsLibrary;
+  module.exports = IpfsLibrary;
 })();

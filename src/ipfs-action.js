@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: library
 
-IpfsAction
+IPFS Action
 
 \*/
 
@@ -415,7 +415,7 @@ IpfsAction
       }
 
       // Remove IPNS key
-      await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsKey, ipnsName);
+      await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName);
 
       // Update Tiddlers
       var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");

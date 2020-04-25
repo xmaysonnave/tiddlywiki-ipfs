@@ -4,6 +4,8 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
 
+IPFS info saver
+
 \*/
 
 (function() {

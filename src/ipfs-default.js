@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: utils
 
-utils
+IPFS Default
 
 \*/
 
@@ -13,7 +13,7 @@ utils
   /*global $tw: false */
   "use strict";
 
-  const ipfsDefaultName = "ipfs-default";
+  const name = "ipfs-default";
 
   /*
    * Retrieve ipfs saver export protocol with default value if applicable

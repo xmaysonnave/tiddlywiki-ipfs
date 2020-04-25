@@ -23,17 +23,14 @@ IPFS Wrapper
     (typeof global === "object" && global.global === global && global) ||
     this;
 
-  const IpfsLibrary = require("./ipfs-bundle.js").IpfsLibrary;
-  const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
-
   const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
 
   const name = "ipfs-wrapper";
 
   var IpfsWrapper = function() {
-    this.ipfsLibrary = new IpfsLibrary.IpfsLibrary();
-    this.ipfsUri = new IpfsUri.IpfsUri();
+    this.ipfsLibrary = root.ipfsBundle.ipfsLibrary;
+    this.ipfsUri = root.ipfsBundle.ipfsUri;
   };
 
   IpfsWrapper.prototype.getLogger = function() {
@@ -100,7 +97,7 @@ IPFS Wrapper
 
     // Check
     if (info.encoding !== "base64" && type !== "image/svg+xml") {
-      $tw.utils.alert(name, "Unsupported Tiddler Content-Type...\nLook at the documentation...");
+      $tw.utils.alert(name, "Unsupported Tiddler Content-Type...");
       return null;
     }
 
@@ -129,7 +126,7 @@ IPFS Wrapper
       }
     } catch (error) {
       this.getLogger().error(error);
-      $tw.utils.alert(name, "Failed to encrypt content...");
+      $tw.utils.alert(name, "Failed to encrypt Attachment content...");
       return null;
     }
 
@@ -443,10 +440,10 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to generate IPNS key with IPNS name: " + ipnsName);
+    throw new Error("Failed to generate and IPNS key...");
   };
 
-  IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, ipnsKey, ipnsName) {
+  IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, ipnsName) {
     try {
       const hash = await this.ipfsLibrary.rmKey(ipfs, ipnsName);
       this.getLogger().info("Successfully removed IPNS name: " + ipnsName);
@@ -454,7 +451,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to remove IPNS name: " + ipnsName + "\n " + "/" + ipnsKeyword + "/" + ipnsKey);
+    throw new Error("Failed to remove an IPNS Key...");
   };
 
   IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
@@ -468,7 +465,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to rename IPNS name: " + oldName + " with " + newName);
+    throw new Error("Failed to rename an IPNS name...");
   };
 
   IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
@@ -501,7 +498,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to fetch:" + "\n " + pathname);
+    throw new Error("Failed to fetch from IPFS...");
   };
 
   IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
@@ -522,7 +519,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to add content...");
+    throw new Error("Failed to add content to IPFS...");
   };
 
   IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, ipnsKey) {
@@ -548,7 +545,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to resolve IPNS key:" + "\n " + pathname);
+    throw new Error("Failed to resolve an IPNS key...");
   };
 
   IpfsWrapper.prototype.publishToIpns = async function(ipfs, ipnsKey, ipnsName, cid) {
@@ -581,7 +578,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to publish IPNS name: " + ipnsName + "\n " + key + "\n " + pathname);
+    throw new Error("Failed to publish an IPNS name...");
   };
 
   IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
@@ -603,7 +600,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to pin:" + "\n " + pathname);
+    throw new Error("Failed to pin to IPFS...");
   };
 
   IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
@@ -625,7 +622,7 @@ IPFS Wrapper
     } catch (error) {
       this.getLogger().error(error);
     }
-    throw new Error("Failed to unpin:" + "\n " + pathname);
+    throw new Error("Failed to unpin from IPFS...");
   };
 
   exports.IpfsWrapper = IpfsWrapper;

@@ -518,5 +518,5 @@ import contentHash from "content-hash";
     return;
   };
 
-  exports.EnsLibrary = EnsLibrary;
+  module.exports = EnsLibrary;
 })();

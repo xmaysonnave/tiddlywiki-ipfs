@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: library
 
-EnsWrapper
+ENS Wrapper
 
 \*/
 
@@ -23,16 +23,12 @@ EnsWrapper
     (typeof global === "object" && global.global === global && global) ||
     this;
 
-  const EnsLibrary = require("./ipfs-bundle.js").EnsLibrary;
-  const IpfsLibrary = require("./ipfs-bundle.js").IpfsLibrary;
-  const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
-
   const name = "ens-wrapper";
 
   var EnsWrapper = function() {
-    this.ensLibrary = new EnsLibrary.EnsLibrary();
-    this.ipfsLibrary = new IpfsLibrary.IpfsLibrary();
-    this.ipfsUri = new IpfsUri.IpfsUri();
+    this.ensLibrary = root.ipfsBundle.EnsLibrary;
+    this.ipfsLibrary = root.ipfsBundle.IpfsLibrary;
+    this.ipfsUri = root.ipfsBundle.IpfsUri;
   };
 
   EnsWrapper.prototype.getLogger = function() {

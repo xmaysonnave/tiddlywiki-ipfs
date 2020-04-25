@@ -1,8 +1,10 @@
 /*\
-title: $:/plugins/ipfs/macro/ipfs-version.js
+title: $:/plugins/ipfs/macro/ipfs-plugin-version.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
+
+IPFS plugin version
 
 \*/
 
@@ -14,7 +16,7 @@ module-type: macro
   /*
    * Information about this macro
    */
-  exports.name = "ipfs-version";
+  exports.name = "ipfs-plugin-version";
 
   exports.params = [];
 

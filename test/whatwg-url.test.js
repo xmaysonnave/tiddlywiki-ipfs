@@ -20,9 +20,17 @@
  */
 
 const log = require("loglevel");
-const root = require("window-or-global");
+const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 
-const IpfsUri = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsUri;
+/**
+ * https://github.com/purposeindustries/window-or-global
+ * The MIT License (MIT) Copyright (c) Purpose Industries
+ * version: 1.0.1
+ */
+const root =
+  (typeof self === "object" && self.self === self && self) ||
+  (typeof global === "object" && global.global === global && global) ||
+  this;
 
 const invalid = "Wrong URL...";
 const baseFile = "file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html";
@@ -32,26 +40,27 @@ const relative = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujd
 
 beforeAll(() => {
   root.log = log;
+  root.ipfsBundle = new IpfsBundle();
   log.setLevel("silent", false);
 });
 
 describe("WHATWG-URL", () => {
   it("Undefined URL", () => {
-    const ipfsUri = new IpfsUri.IpfsUri();
+    const ipfsUri = root.ipfsBundle.ipfsUri;
     expect(() => {
       ipfsUri.getUrl();
     }).toThrow();
   });
 
   it("Invalid URL", () => {
-    const ipfsUri = new IpfsUri.IpfsUri();
+    const ipfsUri = root.ipfsBundle.ipfsUri;
     expect(() => {
       ipfsUri.getUrl(invalid);
     }).toThrow();
   });
 
   it("File protocol URL", () => {
-    const ipfsUri = new IpfsUri.IpfsUri();
+    const ipfsUri = root.ipfsBundle.ipfsUri;
     const parsed = ipfsUri.getUrl(baseHttp);
     expect(
       parsed.protocol === "https:" &&
@@ -64,7 +73,7 @@ describe("WHATWG-URL", () => {
   });
 
   it("File protocol URL", () => {
-    const ipfsUri = new IpfsUri.IpfsUri();
+    const ipfsUri = root.ipfsBundle.ipfsUri;
     const parsed = ipfsUri.getUrl(baseFile);
     expect(
       parsed.protocol === "file:" &&
@@ -75,7 +84,7 @@ describe("WHATWG-URL", () => {
   });
 
   it("Useless base HTTP URL", () => {
-    const ipfsUri = new IpfsUri.IpfsUri();
+    const ipfsUri = root.ipfsBundle.ipfsUri;
     const parsed = ipfsUri.getUrl(absolute, baseHttp);
     expect(
       parsed.protocol === "https:" && parsed.hostname === "bluelightav.eth" && parsed.href == absolute + "/"
@@ -83,7 +92,7 @@ describe("WHATWG-URL", () => {
   });
 
   it("Relative URL", () => {
-    const ipfsUri = new IpfsUri.IpfsUri();
+    const ipfsUri = root.ipfsBundle.ipfsUri;
     const parsed = ipfsUri.getUrl(relative, baseHttp);
     expect(parsed.href === baseHttp + relative).toBeTruthy();
   });

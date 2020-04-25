@@ -53,11 +53,16 @@ wikiparser
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
     if ($tw.browser && (text || "") === "") {
-      var uri = options._canonical_uri;
-      // Load external resource
-      if (uri !== undefined && uri !== null && uri.trim() !== "") {
-        this.loadRemoteTiddlers(options.tiddler, uri.trim());
-        text = $tw.language.getRawString("LazyLoadingWarning");
+      if (options.tiddler !== undefined && options.tiddler !== null) {
+        var uri = options.tiddler.fields["_import_uri"];
+        if (uri == undefined || uri == null) {
+          uri = options.tiddler.fields["_canonical_uri"];
+        }
+        // Load external resource
+        if (uri !== undefined && uri !== null && uri.trim() !== "") {
+          this.loadRemoteTiddlers(options.tiddler, uri.trim());
+          text = $tw.language.getRawString("LazyLoadingWarning");
+        }
       }
     }
     // Initialise the classes if we don't have them already

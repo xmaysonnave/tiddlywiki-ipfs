@@ -17,6 +17,7 @@ IPFS Saver
 
   const IpfsController = require("$:/plugins/ipfs/ipfs-controller.js").IpfsController;
   const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
+  const IpfsBundle = require("$:/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
   const fileProtocol = "file:";
@@ -42,6 +43,11 @@ IPFS Saver
       } else {
         log.setLevel("warn", false);
       }
+    }
+    // IpfsBundle
+    if (window.ipfsBundle == undefined || window.ipfsBundle == null) {
+      // Init
+      window.ipfsBundle = new IpfsBundle();
     }
     // Controller
     $tw.ipfs = new IpfsController();

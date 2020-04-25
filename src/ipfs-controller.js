@@ -4,7 +4,7 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: library
 
-IpfsController
+IPFS Controller
 
 \*/
 
@@ -13,10 +13,19 @@ IpfsController
   /*global $tw: false */
   "use strict";
 
+  /**
+   * https://github.com/purposeindustries/window-or-global
+   * The MIT License (MIT) Copyright (c) Purpose Industries
+   * version: 1.0.1
+   */
+  const root =
+    (typeof self === "object" && self.self === self && self) ||
+    (typeof global === "object" && global.global === global && global) ||
+    this;
+
   const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
   const IpfsLoader = require("$:/plugins/ipfs/ipfs-loader.js").IpfsLoader;
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-  const IpfsUri = require("./ipfs-bundle.js").IpfsUri;
 
   const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
@@ -30,7 +39,7 @@ IpfsController
     this.ethereum = null;
     this.ensWrapper = new EnsWrapper();
     this.loader = new IpfsLoader();
-    this.ipfsUri = new IpfsUri.IpfsUri();
+    this.ipfsUri = root.ipfsBundle.ipfsUri;
     this.ipfsWrapper = new IpfsWrapper();
     this.ipfsClients = new Map();
     this.importedTiddlers = new Map();

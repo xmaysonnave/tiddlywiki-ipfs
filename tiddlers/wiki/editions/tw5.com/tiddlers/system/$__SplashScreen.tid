@@ -140,7 +140,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   Please wait while <b>{{$:/SiteTitle}}</b> is loading...
 </p>
 <p>
-  <b><<ipfs-version>></b>
+  <b><<ipfs-plugin-version>></b>
 </p>
 </div>
 
