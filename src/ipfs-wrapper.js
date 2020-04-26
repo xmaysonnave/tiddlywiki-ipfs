@@ -94,19 +94,16 @@ IPFS Wrapper
       $tw.utils.alert(name, error.message);
       return null;
     }
-
     // Check
     if (info.encoding !== "base64" && type !== "image/svg+xml") {
       $tw.utils.alert(name, "Unsupported Tiddler Content-Type...");
       return null;
     }
-
     // Retrieve content
     var text = tiddler.getFieldString("text");
     if (text == undefined || text == null || text.trim() === "") {
       return null;
     }
-
     try {
       // Encrypt
       if ($tw.crypto.hasPassword()) {
@@ -129,7 +126,6 @@ IPFS Wrapper
       $tw.utils.alert(name, "Failed to encrypt Attachment content...");
       return null;
     }
-
     return text;
   };
 
@@ -202,12 +198,9 @@ IPFS Wrapper
       $tw.utils.alert(name, error.message);
       return null;
     }
-
     const title = tiddler.getFieldString("title");
-
     // Filter
     var exportFilter = "[[" + tiddler.fields.title + "]]";
-
     // Child filters
     if (child) {
       // Links
@@ -224,9 +217,7 @@ IPFS Wrapper
         }
       }
     }
-
     var content = null;
-
     if (child || $tw.utils.getIpfsExport() === "json") {
       content = await this.exportTiddlersAsJson(exportFilter);
     } else if ($tw.utils.getIpfsExport() === "static") {
@@ -252,7 +243,6 @@ IPFS Wrapper
       };
       content = $tw.wiki.renderTiddler("text/plain", "$:/core/templates/exporters/TidFile", options);
     }
-
     try {
       // Encrypt
       if ($tw.crypto.hasPassword()) {
@@ -264,7 +254,6 @@ IPFS Wrapper
       $tw.utils.alert(name, "Failed to encrypt content...");
       return null;
     }
-
     return content;
   };
 
@@ -361,15 +350,12 @@ IPFS Wrapper
     } else {
       ipnsName = ipnsName.trim();
     }
-
     // Check
     if (ipnsKey == null && ipnsName == null) {
       throw new Error("Undefined IPNS key and IPNS name...");
     }
-
     // Load IPNS keys
     const keys = await this.getIpnsKeys(ipfs);
-
     // Fetch IPNS name and IPNS key
     if (ipnsName !== null && ipnsKey !== null) {
       var found = false;
@@ -411,15 +397,8 @@ IPFS Wrapper
         throw new Error("Unknown IPNS key...");
       }
     }
-
-    // jest
-    try {
-      const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
-      this.getLogger().info("Successfully Fetched IPNS name: " + ipnsName + "\n " + url.href);
-    } catch (error) {
-      // Ignore
-    }
-
+    const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
+    this.getLogger().info("Successfully Fetched IPNS name: " + ipnsName + "\n " + url.href);
     return {
       ipnsKey: ipnsKey,
       ipnsName: ipnsName
@@ -429,13 +408,8 @@ IPFS Wrapper
   IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName);
-      // jest
-      try {
-        const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + key);
-        this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url.href);
-      } catch (error) {
-        // Ignore
-      }
+      const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + key);
+      this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url.href);
       return key;
     } catch (error) {
       this.getLogger().error(error);
@@ -487,13 +461,8 @@ IPFS Wrapper
     const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname);
-      // jest
-      try {
-        const url = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info("Successfully fetched:" + "\n " + url.href);
-      } catch (error) {
-        // Ignore
-      }
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info("Successfully fetched:" + "\n " + url.href);
       return fetched;
     } catch (error) {
       this.getLogger().error(error);
@@ -504,14 +473,9 @@ IPFS Wrapper
   IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
     try {
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content);
-      // jest
-      try {
-        const pathname = "/" + ipfsKeyword + "/" + hash;
-        const url = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
-      } catch (error) {
-        // Ignore
-      }
+      const pathname = "/" + ipfsKeyword + "/" + hash;
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
       return {
         added: hash,
         size: size
@@ -533,13 +497,8 @@ IPFS Wrapper
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname);
       const { cid } = await this.ipfsLibrary.decodeCid(resolved);
       if (cid !== null) {
-        // jest
-        try {
-          const parsed = await this.ipfsUri.normalizeUrl(resolved);
-          this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
-        } catch (error) {
-          // Ignore
-        }
+        const parsed = await this.ipfsUri.normalizeUrl(resolved);
+        this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
         return cid;
       }
     } catch (error) {
@@ -564,16 +523,11 @@ IPFS Wrapper
     try {
       // Publish
       const published = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname);
-      // jest
-      try {
-        const keyParsed = await this.ipfsUri.normalizeUrl(key);
-        const url = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info(
-          "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + url.href
-        );
-      } catch (error) {
-        // Ignore
-      }
+      const keyParsed = await this.ipfsUri.normalizeUrl(key);
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info(
+        "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + url.href
+      );
       return published;
     } catch (error) {
       this.getLogger().error(error);
@@ -589,13 +543,8 @@ IPFS Wrapper
     const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname);
-      // jest
-      try {
-        const url = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info("Successfully pinned:" + "\n " + url.href);
-      } catch (error) {
-        // Ignore
-      }
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info("Successfully pinned:" + "\n " + url.href);
       return pinned;
     } catch (error) {
       this.getLogger().error(error);
@@ -611,13 +560,8 @@ IPFS Wrapper
     const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname);
-      // jest
-      try {
-        const url = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info("Successfully unpinned:" + "\n " + url.href);
-      } catch (error) {
-        // Ignore
-      }
+      const url = await this.ipfsUri.normalizeUrl(pathname);
+      this.getLogger().info("Successfully unpinned:" + "\n " + url.href);
       return unpinned;
     } catch (error) {
       this.getLogger().error(error);
