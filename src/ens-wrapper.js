@@ -26,9 +26,9 @@ ENS Wrapper
   const name = "ens-wrapper";
 
   var EnsWrapper = function() {
-    this.ensLibrary = root.ipfsBundle.EnsLibrary;
-    this.ipfsLibrary = root.ipfsBundle.IpfsLibrary;
-    this.ipfsUri = root.ipfsBundle.IpfsUri;
+    this.ensLibrary = root.ipfsBundle.ensLibrary;
+    this.ipfsLibrary = root.ipfsBundle.ipfsLibrary;
+    this.ipfsUri = root.ipfsBundle.ipfsUri;
   };
 
   EnsWrapper.prototype.getLogger = function() {
