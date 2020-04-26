@@ -1,20 +1,11 @@
 import CID from "cids";
 import { getIpfs, providers } from "ipfs-provider";
+import root from "window-or-global";
 
 (function() {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
-
-  /**
-   * https://github.com/purposeindustries/window-or-global
-   * The MIT License (MIT) Copyright (c) Purpose Industries
-   * version: 1.0.1
-   */
-  const root =
-    (typeof self === "object" && self.self === self && self) ||
-    (typeof global === "object" && global.global === global && global) ||
-    this;
 
   const cidAnalyser = "https://cid.ipfs.io/#";
 

@@ -1,20 +1,11 @@
 /* global jest, beforeAll, describe, it, expect */
 "use strict";
 
-const log = require("loglevel");
-const { URL } = require("universal-url");
 const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 const IpfsWrapper = require("../build/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root =
-  (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global) ||
-  this;
+const log = require("loglevel");
+const root = require("window-or-global");
+const { URL } = require("universal-url");
 
 const base = new URL("https://ipfs.infura.io/");
 

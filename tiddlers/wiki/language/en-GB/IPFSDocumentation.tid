@@ -7,6 +7,7 @@ type: text/vnd.tiddlywiki
 <h2>Requirements</h2>
 <ul>
   <li>[ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]</li>
+  <li><$ipfslink caption="IPFS with TiddlyWiki plugin" value="https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs" tiddler=<<currentTiddler>>/></li>
   <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
 </ul>
 <h2>IPFS Documentation</h2>

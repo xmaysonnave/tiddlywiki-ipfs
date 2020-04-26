@@ -19,18 +19,9 @@
  * https://url.spec.whatwg.org/
  */
 
-const log = require("loglevel");
 const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
-
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root =
-  (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global) ||
-  this;
+const log = require("loglevel");
+const root = require("window-or-global");
 
 const invalid = "Wrong URL...";
 const baseFile = "file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html";

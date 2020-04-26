@@ -1,19 +1,10 @@
 /* global jest, beforeAll, describe, it, expect */
 "use strict";
 
-const log = require("loglevel");
-const { URL } = require("universal-url");
 const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
-
-/**
- * https://github.com/purposeindustries/window-or-global
- * The MIT License (MIT) Copyright (c) Purpose Industries
- * version: 1.0.1
- */
-const root =
-  (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global) ||
-  this;
+const log = require("loglevel");
+const root = require("window-or-global");
+const { URL } = require("universal-url");
 
 const local = new URL("file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html");
 const remote = new URL("https://ipfs.infura.io/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
