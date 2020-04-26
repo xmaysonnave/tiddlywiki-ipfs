@@ -36,7 +36,7 @@ IPFS Library Loader
     if (typeof window.eruda === "undefined") {
       await this.loadLibrary("ErudaLibrary", eruda, eruda_sri, true);
       if (typeof window.eruda !== "undefined") {
-        this.getLogger(name).info("Loaded ErudaLibrary:" + "\n " + eruda);
+        this.getLogger().info("Loaded ErudaLibrary:" + "\n " + eruda);
       }
     }
   };
@@ -47,7 +47,7 @@ IPFS Library Loader
     if (typeof window.ethers === "undefined") {
       await this.loadLibrary("EtherJsLibrary", ethers, ethers_sri, true);
       if (typeof window.ethers !== "undefined") {
-        this.getLogger(name).info("Loaded EtherJsLibrary:" + "\n " + ethers);
+        this.getLogger().info("Loaded EtherJsLibrary:" + "\n " + ethers);
       }
     }
   };
@@ -55,76 +55,72 @@ IPFS Library Loader
   // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
-    if (typeof window.httpClient === "undefined" || typeof window.IpfsHttpClient === "undefined") {
-      await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
-      if (typeof window.IpfsHttpClient !== "undefined") {
+    if (typeof window.httpClient === "undefined") {
+      if (typeof window.IpfsHttpClient === "undefined") {
+        await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
         window.httpClient = window.IpfsHttpClient;
-        this.getLogger(name).info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
+        this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
       }
     }
   };
 
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
   IpfsLoader.prototype.loadLibrary = async function(id, url, sri, asModule) {
-    // if dynamic import is supported
+    // Dynamic import
     try {
-      return new Function(`return import("${url}")`)();
-    } catch (err) {
-      // Ignore
+      await import(`/${url}`);
+      return;
+    } catch (error) {
+      this.getLogger().error(error);
     }
-    // self
+    // Fallback
     const self = this;
-    // promise
     return new Promise((resolve, reject) => {
-      try {
-        // Loaded
-        if (window.document.getElementById(id) !== null) {
-          return resolve(window[id]);
-        }
-        // Process
-        const script = window.document.createElement("script");
-        // Functions
-        const cleanup = () => {
+      // Process
+      const script = window.document.createElement("script");
+      // Functions
+      const cleanup = () => {
+        try {
           delete window[id];
           script.onerror = null;
           script.onload = null;
           script.remove();
           URL.revokeObjectURL(script.src);
           script.src = "";
-        };
-        script.onload = () => {
-          if (asModule) {
-            self.getLogger(name).info("Loaded Module:" + "\n " + url);
-          } else {
-            self.getLogger(name).info("Loaded Script:" + "\n " + url);
-          }
-          resolve(window[id]);
-          cleanup();
-        };
-        script.onerror = () => {
-          reject(new Error("Failed to load: " + url));
-          cleanup();
-        };
-        // Attributes
+        } catch (error) {
+          this.getLogger().error(error);
+        }
+      };
+      script.onload = () => {
         if (asModule) {
-          script.type = "module";
+          self.getLogger(name).info("Loaded Module:" + "\n " + url);
         } else {
-          script.type = "text/javascript";
+          self.getLogger(name).info("Loaded Script:" + "\n " + url);
         }
-        script.id = id;
-        script.async = false;
-        script.defer = "defer";
-        if (sri) {
-          script.integrity = sri;
-        }
-        script.crossOrigin = "anonymous";
-        // URL
-        script.src = url.toString();
-        // Load
-        window.document.head.appendChild(script);
-      } catch (error) {
-        reject(error);
+        resolve(window[id]);
+        cleanup();
+      };
+      script.onerror = () => {
+        reject(new Error("Failed to load: " + url));
+        cleanup();
+      };
+      // Attributes
+      if (asModule) {
+        script.type = "module";
+      } else {
+        script.type = "text/javascript";
       }
+      script.id = id;
+      script.async = false;
+      script.defer = "defer";
+      if (sri) {
+        script.integrity = sri;
+      }
+      script.crossOrigin = "anonymous";
+      // URL
+      script.src = url.toString();
+      // Load
+      window.document.head.appendChild(script);
     });
   };
 
