@@ -4,7 +4,6 @@ import root from "window-or-global";
 
 (function() {
   /*jslint node: true, browser: true*/
-  /*global $tw: false*/
   "use strict";
 
   const name = "ens-library";
@@ -58,7 +57,7 @@ import root from "window-or-global";
     if (window.ethers == undefined || window.ethers == null) {
       try {
         // Load ethers
-        await $tw.ipfs.getLoader().loadEtherJsLibrary();
+        await window.ipfsBundle.ipfsLoader.loadEtherJsLibrary();
         if (window.ethers !== undefined && window.ethers !== null) {
           return;
         }

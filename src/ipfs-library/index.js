@@ -4,7 +4,6 @@ import root from "window-or-global";
 
 (function() {
   /*jslint node: true, browser: true */
-  /*global $tw: false */
   "use strict";
 
   const cidAnalyser = "https://cid.ipfs.io/#";
@@ -140,7 +139,7 @@ import root from "window-or-global";
     if (typeof root.IpfsHttpClient === "undefined") {
       try {
         // Load js-ipfs-http-client
-        await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
+        await window.ipfsBundle.ipfsLoader.loadIpfsHttpLibrary();
         if (typeof root.IpfsHttpClient !== "undefined") {
           return;
         }

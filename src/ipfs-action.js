@@ -534,7 +534,7 @@ IPFS Action
     if (typeof window.eruda === "undefined") {
       try {
         // Load eruda
-        await $tw.ipfs.getLoader().loadErudaLibrary();
+        await window.ipfsBundle.ipfsLoader.loadErudaLibrary();
       } catch (error) {
         this.getLogger().error(error);
         throw new Error(error.message);

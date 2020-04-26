@@ -10,6 +10,7 @@ IPFS Bundle
 
 import EnsLibrary from "./ens-library";
 import IpfsLibrary from "./ipfs-library";
+import IpfsLoader from "./ipfs-loader";
 import IpfsUri from "./ipfs-uri";
 
 (function() {
@@ -20,6 +21,7 @@ import IpfsUri from "./ipfs-uri";
   var IpfsBundle = function() {
     this.ensLibrary = new EnsLibrary();
     this.ipfsLibrary = new IpfsLibrary();
+    this.ipfsLoader = new IpfsLoader();
     this.ipfsUri = new IpfsUri();
   };
 

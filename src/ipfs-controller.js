@@ -24,7 +24,6 @@ IPFS Controller
     this;
 
   const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-  const IpfsLoader = require("$:/plugins/ipfs/ipfs-loader.js").IpfsLoader;
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
   const ipfsKeyword = "ipfs";
@@ -38,7 +37,6 @@ IPFS Controller
     this.account = null;
     this.ethereum = null;
     this.ensWrapper = new EnsWrapper();
-    this.loader = new IpfsLoader();
     this.ipfsUri = root.ipfsBundle.ipfsUri;
     this.ipfsWrapper = new IpfsWrapper();
     this.ipfsClients = new Map();
@@ -196,10 +194,6 @@ IPFS Controller
       normalizedUri: normalizedUri,
       importedTiddler: null
     };
-  };
-
-  IpfsController.prototype.getLoader = function() {
-    return this.loader;
   };
 
   IpfsController.prototype.getNoBaseUrl = function(url) {

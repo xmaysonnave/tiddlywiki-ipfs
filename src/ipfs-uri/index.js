@@ -3,7 +3,6 @@ import { URL } from "universal-url";
 
 (function() {
   /*jslint node: true, browser: true */
-  /*global $tw: false */
   "use strict";
 
   const name = "ipfs-uri";

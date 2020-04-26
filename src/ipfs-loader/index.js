@@ -1,16 +1,7 @@
-/*\
-title: $:/plugins/ipfs/ipfs-loader.js
-type: application/javascript
-tags: $:/ipfs/core
-module-type: library
-
-IPFS Library Loader
-
-\*/
+import root from "window-or-global";
 
 (function() {
   /*jslint node: true, browser: true */
-  /*global $tw: false */
   "use strict";
 
   const name = "ipfs-loader";
@@ -27,15 +18,15 @@ IPFS Library Loader
   var IpfsLoader = function() {};
 
   IpfsLoader.prototype.getLogger = function() {
-    return window.log.getLogger(name);
+    return root.log.getLogger(name);
   };
 
   // https://www.srihash.org/
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function() {
-    if (typeof window.eruda === "undefined") {
+    if (typeof root.eruda === "undefined") {
       await this.loadLibrary("ErudaLibrary", eruda, eruda_sri, true);
-      if (typeof window.eruda !== "undefined") {
+      if (typeof root.eruda !== "undefined") {
         this.getLogger().info("Loaded ErudaLibrary:" + "\n " + eruda);
       }
     }
@@ -44,9 +35,9 @@ IPFS Library Loader
   // https://www.srihash.org/
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function() {
-    if (typeof window.ethers === "undefined") {
+    if (typeof root.ethers === "undefined") {
       await this.loadLibrary("EtherJsLibrary", ethers, ethers_sri, true);
-      if (typeof window.ethers !== "undefined") {
+      if (typeof root.ethers !== "undefined") {
         this.getLogger().info("Loaded EtherJsLibrary:" + "\n " + ethers);
       }
     }
@@ -55,30 +46,41 @@ IPFS Library Loader
   // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
-    if (typeof window.IpfsHttpClient === "undefined") {
+    if (typeof root.IpfsHttpClient === "undefined") {
       await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
       this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
+    }
+  };
+
+  // https://gist.github.com/ebidel/3201b36f59f26525eb606663f7b487d0
+  IpfsLoader.prototype.supportDynamicImport = function() {
+    try {
+      new Function('import("")');
+      return true;
+    } catch (error) {
+      return false;
     }
   };
 
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
   IpfsLoader.prototype.loadLibrary = async function(id, url, sri, asModule) {
     // Dynamic import
-    try {
-      await import(`${url}`);
-      return;
-    } catch (error) {
-      this.getLogger().error(error);
+    if (this.supportDynamicImport()) {
+      try {
+        return new Function(`return import("${url}")`)();
+      } catch (error) {
+        // Ignore
+      }
     }
     // Fallback
     const self = this;
     return new Promise((resolve, reject) => {
       // Process
-      const script = window.document.createElement("script");
+      const script = root.document.createElement("script");
       // Functions
       const cleanup = () => {
         try {
-          delete window[id];
+          delete root[id];
           script.onerror = null;
           script.onload = null;
           script.remove();
@@ -94,7 +96,7 @@ IPFS Library Loader
         } else {
           self.getLogger(name).info("Loaded Script:" + "\n " + url);
         }
-        resolve(window[id]);
+        resolve(root[id]);
         cleanup();
       };
       script.onerror = () => {
@@ -117,9 +119,9 @@ IPFS Library Loader
       // URL
       script.src = url.toString();
       // Load
-      window.document.head.appendChild(script);
+      root.document.head.appendChild(script);
     });
   };
 
-  exports.IpfsLoader = IpfsLoader;
+  module.exports = IpfsLoader;
 })();

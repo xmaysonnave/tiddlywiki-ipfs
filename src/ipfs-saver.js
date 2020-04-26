@@ -248,7 +248,7 @@ IPFS Saver
 
       // Unpin
       if ($tw.utils.getIpfsUnpin()) {
-        for (var i = 0; i < $tw.ipfs.unpin.length; i++) {
+        for (var i = $tw.ipfs.unpin.length - 1; i >= 0; i--) {
           try {
             const unpin = $tw.ipfs.unpin[i];
             await this.ipfsWrapper.unpinFromIpfs(ipfs, unpin);

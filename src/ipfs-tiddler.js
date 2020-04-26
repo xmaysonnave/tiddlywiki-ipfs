@@ -158,31 +158,29 @@ IPFS Tiddler
   };
 
   IpfsTiddler.prototype.handleIpfsPin = async function(event) {
-    var success = null;
+    var success = false;
     try {
+      // Load tiddler
+      const title = event.tiddlerTitle;
+      const tiddler = $tw.wiki.getTiddler(title);
       // Tiddler
       if (event.param !== undefined && event.param !== null) {
-        // Load tiddler
-        const title = event.tiddlerTitle;
-        const tiddler = $tw.wiki.getTiddler(title);
-        // Retrieve Content-Type
-        const { type, info } = $tw.ipfs.getContentType(tiddler);
-        // Process
-        var name = null;
-        if (info.encoding === "base64" || type === "image/svg+xml") {
-          name = "_canonical_uri";
-        } else {
-          name = "_export_uri";
-        }
-        // Value
-        const value = tiddler.getFieldString(name);
-        if (value !== undefined && value !== null && value.trim() !== "") {
-          // URL or not
-          const url = await $tw.ipfs.normalizeIpfsUrl(value);
-          // Pin
-          if (url !== null) {
-            if (await this.ipfsPin(name, url)) {
-              success = "Successfully Pinned '" + name + "'...";
+        // Process fields
+        for (var name in tiddler.fields) {
+          // Reserved fields
+          if (reservedFields.indexOf(name) !== -1) {
+            continue;
+          }
+          // Value
+          const value = tiddler.getFieldString(name);
+          if (value !== undefined && value !== null && value.trim() !== "") {
+            // URL or not
+            const url = await $tw.ipfs.normalizeIpfsUrl(value);
+            // Pin
+            if (url !== null) {
+              if (await this.ipfsPin(name, url)) {
+                success = true;
+              }
             }
           }
         }
@@ -190,15 +188,15 @@ IPFS Tiddler
         // TiddlyWiki
         const url = await $tw.ipfs.getDocumentUrl();
         if (await this.ipfsPin("TiddlyWiki", url)) {
-          success = "Successfully Pinned '~TiddlyWiki'...";
+          success = true;
         }
       }
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     }
-    if (success !== null) {
-      $tw.utils.alert(name, success);
+    if (success) {
+      $tw.utils.alert(name, "Successfully Pinned...");
       return true;
     }
     return false;
@@ -238,31 +236,29 @@ IPFS Tiddler
   };
 
   IpfsTiddler.prototype.handleIpfsUnpin = async function(event) {
-    var success = null;
+    var success = false;
     try {
+      // Load tiddler
+      const title = event.tiddlerTitle;
+      const tiddler = $tw.wiki.getTiddler(title);
       // Tiddler
       if (event.param !== undefined && event.param !== null) {
-        // Load tiddler
-        const title = event.tiddlerTitle;
-        const tiddler = $tw.wiki.getTiddler(title);
-        // Retrieve Content-Type
-        const { type, info } = $tw.ipfs.getContentType(tiddler);
-        // Process
-        var name = null;
-        if (info.encoding === "base64" || type === "image/svg+xml") {
-          name = "_canonical_uri";
-        } else {
-          name = "_export_uri";
-        }
-        // Value
-        const value = tiddler.getFieldString(name);
-        if (value !== undefined && value !== null && value.trim() !== "") {
-          // URL or not
-          const url = await $tw.ipfs.normalizeIpfsUrl(value);
-          // Unpin
-          if (url !== undefined && url !== null) {
-            if (await this.ipfsUnpin(name, url)) {
-              success = "Successfully Unpinned '" + name + "'...";
+        // Process fields
+        for (var name in tiddler.fields) {
+          // Reserved fields
+          if (reservedFields.indexOf(name) !== -1) {
+            continue;
+          }
+          // Value
+          const value = tiddler.getFieldString(name);
+          if (value !== undefined && value !== null && value.trim() !== "") {
+            // URL or not
+            const url = await $tw.ipfs.normalizeIpfsUrl(value);
+            // Unpin
+            if (url !== null) {
+              if (await this.ipfsUnpin(name, url)) {
+                success = true;
+              }
             }
           }
         }
@@ -270,15 +266,15 @@ IPFS Tiddler
         // TiddlyWiki
         const url = await $tw.ipfs.getDocumentUrl();
         if (await this.ipfsUnpin("TiddlyWiki", url)) {
-          success = "Successfully Unpinned '~TiddlyWiki'...";
+          success = true;
         }
       }
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     }
-    if (success !== null) {
-      $tw.utils.alert(name, success);
+    if (success) {
+      $tw.utils.alert(name, "Successfully Unpinned...");
       return true;
     }
     return false;
