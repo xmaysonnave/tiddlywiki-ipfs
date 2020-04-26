@@ -68,7 +68,7 @@ IPFS Library Loader
   IpfsLoader.prototype.loadLibrary = async function(id, url, sri, asModule) {
     // Dynamic import
     try {
-      await import(`/${url}`);
+      await import(`${url}`);
       return;
     } catch (error) {
       this.getLogger().error(error);
