@@ -55,12 +55,9 @@ IPFS Library Loader
   // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
-    if (typeof window.httpClient === "undefined") {
-      if (typeof window.IpfsHttpClient === "undefined") {
-        await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
-        window.httpClient = window.IpfsHttpClient;
-        this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
-      }
+    if (typeof window.IpfsHttpClient === "undefined") {
+      await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
+      this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
     }
   };
 

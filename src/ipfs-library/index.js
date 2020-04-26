@@ -137,11 +137,11 @@ import root from "window-or-global";
 
   IpfsLibrary.prototype.loadIpfsHttpClient = async function() {
     const self = this;
-    if (typeof root.httpClient === "undefined" || typeof root.IpfsHttpClient === "undefined") {
+    if (typeof root.IpfsHttpClient === "undefined") {
       try {
         // Load js-ipfs-http-client
         await $tw.ipfs.getLoader().loadIpfsHttpLibrary();
-        if (typeof root.httpClient !== "undefined") {
+        if (typeof root.IpfsHttpClient !== "undefined") {
           return;
         }
       } catch (error) {
@@ -212,7 +212,7 @@ import root from "window-or-global";
     }
     try {
       // Load IpfsHttpClient
-      if (typeof root.httpClient === "undefined" || typeof root.IpfsHttpClient === "undefined") {
+      if (typeof root.IpfsHttpClient === "undefined") {
         await this.loadIpfsHttpClient();
       }
       // Instantiate client
