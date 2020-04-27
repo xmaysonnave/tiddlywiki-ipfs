@@ -200,10 +200,6 @@ IPFS Controller
     return this.ipfsUri.getUrl(url);
   };
 
-  IpfsController.prototype.getUrl = function(url, base) {
-    return this.ipfsUri.getUrl(url, base ? base : this.getIpfsBaseUrl());
-  };
-
   IpfsController.prototype.getIpfsBaseUrl = function() {
     return this.ipfsUri.getIpfsBaseUrl();
   };
@@ -226,6 +222,10 @@ IPFS Controller
 
   IpfsController.prototype.decodeUrl = async function(value) {
     return await this.ipfsWrapper.decodeUrl(value);
+  };
+
+  IpfsController.prototype.getUrl = function(url, base) {
+    return this.ipfsUri.getUrl(url, base ? base : this.getIpfsBaseUrl());
   };
 
   IpfsController.prototype.decodeCid = function(pathname) {

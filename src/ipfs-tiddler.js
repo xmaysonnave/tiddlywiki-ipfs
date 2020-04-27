@@ -196,7 +196,7 @@ IPFS Tiddler
       $tw.utils.alert(name, error.message);
     }
     if (success) {
-      $tw.utils.alert(name, "Successfully Pinned...");
+      $tw.notifier.display("Successfully Pinned...");
       return true;
     }
     return false;
@@ -274,7 +274,7 @@ IPFS Tiddler
       $tw.utils.alert(name, error.message);
     }
     if (success) {
-      $tw.utils.alert(name, "Successfully Unpinned...");
+      $tw.notifier.display("Successfully Unpinned...");
       return true;
     }
     return false;
@@ -470,16 +470,14 @@ IPFS Tiddler
             }
           }
           // Unpin
-          if (name === "_canonical_uri" || name === "_export_uri") {
-            try {
-              // Unpin request
-              if ($tw.utils.getIpfsUnpin() && cid !== null) {
-                $tw.ipfs.requestToUnpin(cid);
-              }
-            } catch (error) {
-              this.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
+          try {
+            // Unpin request
+            if ($tw.utils.getIpfsUnpin() && cid !== null) {
+              $tw.ipfs.requestToUnpin(cid);
             }
+          } catch (error) {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
           }
         }
       }
@@ -533,7 +531,7 @@ IPFS Tiddler
         });
       }
       // Unpin request
-      if (oldUri !== null && (name === "_canonical_uri" || name === "_export_uri")) {
+      if (oldUri !== null) {
         try {
           if ($tw.utils.getIpfsUnpin() && oldCid !== null) {
             $tw.ipfs.requestToUnpin(oldCid);

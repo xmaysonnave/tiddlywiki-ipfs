@@ -220,6 +220,7 @@ import root from "window-or-global";
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
+            timeout: "2m",
             apiAddress: url.href
           })
         ]

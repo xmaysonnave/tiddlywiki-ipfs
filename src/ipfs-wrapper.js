@@ -73,12 +73,18 @@ IPFS Wrapper
           // IPFS client
           const { ipfs } = await $tw.ipfs.getIpfsClient();
           const { ipnsKey } = await this.getIpnsIdentifiers(ipfs, cid);
-          cid = await this.resolveIpnsKey(ipfs, ipnsKey);
+          try {
+            cid = null;
+            cid = await this.resolveIpnsKey(ipfs, ipnsKey);
+          } catch (error) {
+            this.getLogger().warn(error);
+            $tw.utils.alert(name, error.message);
+          }
         }
       }
     }
     return {
-      cid: cid, // IPFS cid
+      cid: cid, // IPFS cid or null
       uri: uri // Normalized URI
     };
   };
@@ -141,7 +147,6 @@ IPFS Wrapper
       const { type, info } = $tw.ipfs.getContentType(tiddler);
       // Process
       var isIpfs = false;
-      var purgeText = false;
       var fields = new Object();
       // Process fields
       for (var name in tiddler.fields) {
@@ -151,14 +156,7 @@ IPFS Wrapper
         }
         // Process value
         const fieldValue = tiddler.getFieldString(name);
-        const { uri, cid } = await this.decodeUrl(fieldValue);
-        // Process canonical_uri
-        if (uri !== null && name === "_canonical_uri") {
-          if (info.encoding !== "base64" && type !== "image/svg+xml") {
-            // Always retrieve imported leaf text
-            purgeText = true;
-          }
-        }
+        const { cid } = await this.decodeUrl(fieldValue);
         if (cid !== null) {
           isIpfs = true;
         }
@@ -179,10 +177,6 @@ IPFS Wrapper
         }
         // Store tags
         fields["tags"] = tagValues;
-      }
-      // Purge text if necessary
-      if (purgeText) {
-        delete fields["text"];
       }
       // Store
       data.push(fields);
@@ -515,8 +509,6 @@ IPFS Wrapper
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPNS identifier...");
     }
-    // Convert cid
-    cid = this.ipfsLibrary.cidV1ToCidV0(cid.trim());
     // Path
     const key = "/" + ipnsKeyword + "/" + ipnsKey.trim();
     const pathname = "/" + ipfsKeyword + "/" + cid;
