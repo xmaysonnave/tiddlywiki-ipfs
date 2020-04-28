@@ -63,9 +63,9 @@ The video parser parses a video tiddler into an embeddable HTML element
     var tiddler = options.tiddler;
     var uri = options._canonical_uri;
     // Load external resource
-    if (uri !== undefined && uri !== null && uri.trim() !== "") {
+    if (uri !== undefined && uri !== null && uri.trim() != "") {
       $tw.ipfs
-        .normalizeIpfsUrl(uri.trim())
+        .normalizeIpfsUrl(uri)
         .then(normalized_uri => {
           // Load
           $tw.utils

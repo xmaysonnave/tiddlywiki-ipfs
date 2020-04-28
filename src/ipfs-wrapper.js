@@ -143,8 +143,6 @@ IPFS Wrapper
     for (var t = 0; t < tiddlers.length; t++) {
       // Load Tiddler
       var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
-      // Retrieve Content-Type
-      const { type, info } = $tw.ipfs.getContentType(tiddler);
       // Process
       var isIpfs = false;
       var fields = new Object();
@@ -192,6 +190,7 @@ IPFS Wrapper
       $tw.utils.alert(name, error.message);
       return null;
     }
+    // Title
     const title = tiddler.getFieldString("title");
     // Filter
     var exportFilter = "[[" + tiddler.fields.title + "]]";

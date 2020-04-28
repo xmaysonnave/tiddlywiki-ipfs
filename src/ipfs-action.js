@@ -149,7 +149,7 @@ IPFS Action
         }
       }
 
-      // Getting content
+      // Retrieve content
       const content = await this.ipfsWrapper.exportTiddler(tiddler, child);
 
       // Check

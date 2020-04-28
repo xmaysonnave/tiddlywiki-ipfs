@@ -73,7 +73,7 @@ IPFS Controller
     // Type
     var type = tiddler.fields["type"];
     // Default
-    if (type == undefined || type == null || type.trim() === "") {
+    if (type == undefined || type == null) {
       type = "text/vnd.tiddlywiki";
     }
     // Content-Type
@@ -108,7 +108,7 @@ IPFS Controller
 
   IpfsController.prototype.getImportedTiddlers = async function(uri) {
     // Check
-    if (uri == undefined || uri == null) {
+    if (uri == undefined || uri == null || uri.trim() === "") {
       return {
         cid: null,
         normalizedUri: null,
@@ -117,6 +117,7 @@ IPFS Controller
     }
     // Process
     var cid = null;
+    var importedTiddlers = null;
     var protocol = null;
     // Normalize
     const normalizedUri = await this.normalizeIpfsUrl(uri);
@@ -131,19 +132,22 @@ IPFS Controller
       // IPFS client
       const { ipfs } = await $tw.ipfs.getIpfsClient();
       const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+      cid = null;
       cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     }
     // Retrieve cached immutable imported Tiddlers
-    var importedTiddlers = this.importedTiddlers.get(cid);
-    if (importedTiddlers !== undefined && importedTiddlers !== null) {
-      // Log
-      const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
-      // Done
-      return {
-        normalizedUri: normalizedUri,
-        importedTiddlers: importedTiddlers
-      };
+    if (cid !== null) {
+      importedTiddlers = this.importedTiddlers.get(cid);
+      if (importedTiddlers !== undefined && importedTiddlers !== null) {
+        // Log
+        const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+        this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
+        // Done
+        return {
+          normalizedUri: normalizedUri,
+          importedTiddlers: importedTiddlers
+        };
+      }
     }
     // Load
     const content = await $tw.utils.loadToUtf8(normalizedUri);
@@ -194,6 +198,21 @@ IPFS Controller
       normalizedUri: normalizedUri,
       importedTiddler: null
     };
+  };
+
+  IpfsController.prototype.serializeTiddler = function(tiddler) {
+    // Check
+    if (tiddler == undefined || tiddler == null) {
+      throw new Error("Unknown Tiddler...");
+    }
+    const fields = new Object();
+    // Process fields
+    for (var name in tiddler.fields) {
+      const value = tiddler.getFieldString(name);
+      fields[name] = value;
+    }
+    // Done
+    return fields;
   };
 
   IpfsController.prototype.getNoBaseUrl = function(url) {

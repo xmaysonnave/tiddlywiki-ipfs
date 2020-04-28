@@ -51,16 +51,21 @@ wikiparser
 
   var WikiParser = function(type, text, options) {
     this.wiki = options.wiki;
+    var uri = options._canonical_uri;
     // Check for an externally linked tiddler
     if ($tw.browser && (text || "") === "") {
       if (options.tiddler !== undefined && options.tiddler !== null) {
-        var uri = options.tiddler.fields["_import_uri"];
+        // Serialize
+        var head = $tw.ipfs.serializeTiddler(options.tiddler);
+        // Load
+        var uri = head["_import_uri"];
         if (uri == undefined || uri == null) {
-          uri = options.tiddler.fields["_canonical_uri"];
+          uri = head["_canonical_uri"];
         }
-        // Load external resource
-        if (uri !== undefined && uri !== null && uri.trim() !== "") {
-          this.loadRemoteTiddlers(options.tiddler, uri.trim());
+        if (uri !== undefined && uri !== null && uri.trim() != "") {
+          // Async
+          this.loadRemoteTiddlers(options.tiddler, head, false);
+          // User message
           text = $tw.language.getRawString("LazyLoadingWarning");
         }
       }
@@ -122,102 +127,126 @@ wikiparser
     return console;
   };
 
-  /*
-   */
-  WikiParser.prototype.loadRemoteTiddlers = async function(tiddler, uri) {
-    // Load
-    try {
-      var { cid, importedTiddlers } = await $tw.ipfs.getImportedTiddlers(uri);
-      if (importedTiddlers !== undefined && importedTiddlers !== null) {
-        this.importTiddlers(tiddler, cid, uri, importedTiddlers);
+  WikiParser.prototype.loadRemoteTiddlers = async function(headTiddler, head, parent) {
+    var cid = null;
+    var importedTiddlers = null;
+    // Try
+    var importedUri = head["_import_uri"];
+    if (importedUri !== undefined && importedUri !== null) {
+      var { cid, importedTiddlers } = await this.loadImportedTiddlers(importedUri);
+      // Fallback
+      if (importedTiddlers == undefined || importedTiddlers == null) {
+        // Try
+        importedUri = head["_canonical_uri"];
+        if (importedUri !== undefined && importedUri !== null) {
+          var { cid, importedTiddlers } = await this.loadImportedTiddlers(importedUri);
+        }
       }
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
+    } else {
+      // Try
+      importedUri = head["_canonical_uri"];
+      if (importedUri !== undefined && importedUri !== null) {
+        var { cid, importedTiddlers } = await this.loadImportedTiddlers(importedUri);
+      }
+    }
+    // Import
+    if (importedTiddlers !== undefined && importedTiddlers !== null) {
+      try {
+        await this.importTiddlers(headTiddler, head, parent, importedUri, importedTiddlers, cid);
+      } catch (error) {
+        this.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+      }
     }
   };
 
-  /*
-   * imported tiddler supersed hosting tiddler
-   */
-  WikiParser.prototype.importTiddlers = function(tiddler, cid, uri, importedTiddlers) {
-    var head = tiddler;
-    var headTitle = null;
-    var newHeadTitle = null;
+  WikiParser.prototype.loadImportedTiddlers = async function(importedUri) {
+    var cid = null;
+    var importedTiddlers = null;
+    try {
+      var { cid, importedTiddlers } = await $tw.ipfs.getImportedTiddlers(importedUri);
+    } catch (error) {
+      this.getLogger().error(error);
+      $tw.utils.alert(name, "Unable to load imported Tiddler...");
+    }
+    return {
+      cid: cid,
+      importedTiddlers: importedTiddlers
+    };
+  };
+
+  WikiParser.prototype.importTiddlers = async function(headTiddler, head, parent, importedUri, importedTiddlers, cid) {
     var processed = [];
-
+    var self = this;
     // Process new and existing
-    $tw.utils.each(importedTiddlers, function(importedTiddler) {
-      var importedTags = importedTiddler["tags"] !== undefined ? importedTiddler["tags"] : "";
-
+    for (var i in importedTiddlers) {
+      var leaf = false;
       var current = null;
-      var title = importedTiddler["title"];
-
+      var currentTiddler = null;
+      var imported = importedTiddlers[i];
+      var importedTitle = imported["title"];
+      var importedTags = imported["tags"] !== undefined ? imported["tags"] : "";
       // Type
-      var type = importedTiddler["type"];
+      var type = imported["type"];
       // Default
-      if (type == undefined || type == null || type.trim() === "") {
+      if (type == undefined || type == null) {
         type = "text/vnd.tiddlywiki";
       }
-
       // Content-Type
       const info = $tw.config.contentTypeInfo[type];
       // Check
       if (info == undefined || info == null) {
         throw new Error("Unknown Tiddler Content-Type: " + type);
       }
-
       // Head
       if (head !== null) {
+        currentTiddler = headTiddler;
+        // Check
+        var duplicate = $tw.wiki.getTiddler(importedTitle);
+        if (duplicate !== currentTiddler) {
+          throw new Error("Target Tiddler already exists: " + importedTitle);
+        }
         current = head;
-        // Title
-        headTitle = current.getFieldString("title");
-        if (title !== undefined && title !== null && title.trim() !== "" && title !== headTitle) {
-          var existing = $tw.wiki.getTiddler(title);
-          if (existing !== undefined && existing !== null) {
-            throw new Error("Imported Tiddler already exists: " + title);
-          }
-          newHeadTitle = title;
-        }
-        // Children
       } else {
-        current = $tw.wiki.getTiddler(title);
-      }
-
-      // Merge tags and fields
-      if (current !== undefined && current !== null) {
-        // Merge
-        for (var name in current.fields) {
-          // field is an array of values, we use the string instead
-          var value = current.getFieldString(name);
-          if (importedTiddler[name] == undefined || importedTiddler[name] == null) {
-            importedTiddler[name] = value;
-          }
-        }
-        // Merge tags
-        var tags = (current.fields.tags || []).slice(0);
-        // Merge imported tags with current tags
-        for (var i = 0; i < tags.length; i++) {
-          var tag = tags[i];
-          if (importedTags.includes(tag) == false) {
-            importedTags = importedTags + " " + tag;
-          }
+        currentTiddler = $tw.wiki.getTiddler(importedTitle);
+        // Prepare new or update
+        if (currentTiddler == undefined || currentTiddler == null) {
+          current = new Object();
+        } else {
+          current = $tw.ipfs.serializeTiddler(currentTiddler);
         }
       }
-
-      // canonical_uri
-      if (info.encoding === "base64" || type === "image/svg+xml") {
-        importedTiddler["_import_uri"] = uri;
-      } else {
-        var canonical_uri = importedTiddler["_canonical_uri"];
-        if (canonical_uri == undefined || canonical_uri == null) {
-          importedTiddler["_canonical_uri"] = uri;
-          // import_uri
-        } else if (canonical_uri !== uri) {
-          importedTiddler["_import_uri"] = uri;
+      // Load until we reach the leaf
+      if (info.encoding !== "base64" && type !== "image/svg+xml") {
+        var uri = imported["_import_uri"];
+        if (uri == undefined || uri == null) {
+          uri = imported["_canonical_uri"];
+        }
+        if (uri !== undefined && uri !== null) {
+          await self.loadRemoteTiddlers(currentTiddler, imported, true);
+        } else {
+          leaf = true;
         }
       }
-
+      // Fields
+      for (var name in imported) {
+        // Discard
+        if (name === "tags" || name === "modified") {
+          continue;
+        }
+        // Add new fields and text
+        if (current[name] == undefined || current[name] == null || name == "text") {
+          current[name] = imported[name];
+        }
+      }
+      // Add new tags
+      var tags = (currentTiddler.fields.tags || []).slice(0);
+      for (var i = 0; i < tags.length; i++) {
+        var tag = tags[i];
+        if (importedTags.includes(tag) == false) {
+          importedTags = importedTags + " " + tag;
+        }
+      }
       // IPFS tag
       if (cid !== null && importedTags.includes("$:/isIpfs") == false) {
         importedTags = importedTags + " $:/isIpfs";
@@ -227,36 +256,43 @@ wikiparser
         importedTags = importedTags + " $:/isImported";
       }
       // Processed tags
-      importedTiddler["tags"] = importedTags;
-
-      // Update current
-      $tw.wiki.addTiddler(importedTiddler);
-
-      // Rename Head Tiddler if necessary
-      if (head !== null && newHeadTitle !== null) {
-        $tw.wiki.renameTiddler(headTitle, newHeadTitle);
+      current["tags"] = importedTags;
+      // Process URI
+      if (info.encoding === "base64" || type === "image/svg+xml") {
+        current["_import_uri"] = importedUri;
+      } else {
+        if (leaf) {
+          current["_canonical_uri"] = importedUri;
+        } else {
+          current["_canonical_uri"] = imported["_canonical_uri"];
+        }
+        if (current["_canonical_uri"] !== importedUri) {
+          current["_import_uri"] = importedUri;
+        }
       }
-
+      // Update
+      if (parent == false) {
+        $tw.wiki.addTiddler(current);
+      }
       // Store title to process deleted Tiddlers
-      processed.push(title);
-
+      processed.push(importedTitle);
       // Head has been processed
       if (head !== null) {
+        if (head["title"] !== imported["title"]) {
+          $tw.wiki.renameTiddler(head["title"], imported["title"]);
+        }
         head = null;
-        headTitle = null;
-        newHeadTitle = null;
       }
-    });
-
-    // Process Tiddlers to be deleted
+    }
+    // Process deleted
     $tw.wiki.forEachTiddler({ includeSystem: true }, function(title, tiddler) {
       var value = tiddler.getFieldString("_canonical_uri");
-      if (value !== undefined && value !== null && value === uri && processed.indexOf(title) === -1) {
+      if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
         $tw.wiki.deleteTiddler(title);
         return;
       }
       var value = tiddler.getFieldString("_import_uri");
-      if (value !== undefined && value !== null && value === uri && processed.indexOf(title) === -1) {
+      if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
         $tw.wiki.deleteTiddler(title);
         return;
       }
