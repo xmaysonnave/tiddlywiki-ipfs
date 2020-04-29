@@ -72,27 +72,15 @@ wikiparser
     }
     // Initialise the classes if we don't have them already
     if (!this.pragmaRuleClasses) {
-      WikiParser.prototype.pragmaRuleClasses = $tw.modules.createClassesFromModules(
-        "wikirule",
-        "pragma",
-        $tw.WikiRuleBase
-      );
+		WikiParser.prototype.pragmaRuleClasses = $tw.modules.createClassesFromModules("wikirule","pragma",$tw.WikiRuleBase);
       this.setupRules(WikiParser.prototype.pragmaRuleClasses, "$:/config/WikiParserRules/Pragmas/");
     }
     if (!this.blockRuleClasses) {
-      WikiParser.prototype.blockRuleClasses = $tw.modules.createClassesFromModules(
-        "wikirule",
-        "block",
-        $tw.WikiRuleBase
-      );
+		WikiParser.prototype.blockRuleClasses = $tw.modules.createClassesFromModules("wikirule","block",$tw.WikiRuleBase);
       this.setupRules(WikiParser.prototype.blockRuleClasses, "$:/config/WikiParserRules/Block/");
     }
     if (!this.inlineRuleClasses) {
-      WikiParser.prototype.inlineRuleClasses = $tw.modules.createClassesFromModules(
-        "wikirule",
-        "inline",
-        $tw.WikiRuleBase
-      );
+		WikiParser.prototype.inlineRuleClasses = $tw.modules.createClassesFromModules("wikirule","inline",$tw.WikiRuleBase);
       this.setupRules(WikiParser.prototype.inlineRuleClasses, "$:/config/WikiParserRules/Inline/");
     }
     // Save the parse text
@@ -341,7 +329,7 @@ Skip any whitespace at the current position. Options are:
 */
   WikiParser.prototype.skipWhitespace = function(options) {
     options = options || {};
-    var whitespaceRegExp = options.treatNewlinesAsNonWhitespace ? /([^\S\n]+)/gm : /(\s+)/gm;
+	var whitespaceRegExp = options.treatNewlinesAsNonWhitespace ? /([^\S\n]+)/mg : /(\s+)/mg;
     whitespaceRegExp.lastIndex = this.pos;
     var whitespaceMatch = whitespaceRegExp.exec(this.source);
     if (whitespaceMatch && whitespaceMatch.index === this.pos) {
@@ -407,9 +395,7 @@ Parse a block from the current position
   terminatorRegExpString: optional regular expression string that identifies the end of plain paragraphs. Must not include capturing parenthesis
 */
   WikiParser.prototype.parseBlock = function(terminatorRegExpString) {
-    var terminatorRegExp = terminatorRegExpString
-      ? new RegExp("(" + terminatorRegExpString + "|\\r?\\n\\r?\\n)", "mg")
-      : /(\r?\n\r?\n)/gm;
+	var terminatorRegExp = terminatorRegExpString ? new RegExp("(" + terminatorRegExpString + "|\\r?\\n\\r?\\n)","mg") : /(\r?\n\r?\n)/mg;
     this.skipWhitespace();
     if (this.pos >= this.sourceLength) {
       return [];
@@ -575,7 +561,7 @@ Push a text widget onto an array, respecting the configTrimWhiteSpace setting
 Parse zero or more class specifiers `.classname`
 */
   WikiParser.prototype.parseClasses = function() {
-    var classRegExp = /\.([^\s\.]+)/gm,
+	var classRegExp = /\.([^\s\.]+)/mg,
       classNames = [];
     classRegExp.lastIndex = this.pos;
     var match = classRegExp.exec(this.source);
