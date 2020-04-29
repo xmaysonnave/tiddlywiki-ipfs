@@ -201,12 +201,16 @@ wikiparser
       if (head !== null) {
         currentTiddler = headTiddler;
         // Check
-        var duplicate = $tw.wiki.getTiddler(importedTitle);
-        if (duplicate !== undefined && duplicate !== null && duplicate !== currentTiddler) {
-          $tw.utils.alert(name, "Target Tiddler already exists: [[" + importedTitle + "]]");
-          head = null;
-          parent = false;
-          continue;
+        if (importedTitle !== undefined && importedTitle !== null && importedTitle.trim() !== "") {
+          var duplicate = $tw.wiki.getTiddler(importedTitle);
+          if (duplicate !== undefined && duplicate !== null && duplicate !== currentTiddler) {
+            $tw.utils.alert(name, "Target Tiddler already exists: [[" + importedTitle + "]]");
+            head = null;
+            parent = false;
+            continue;
+          }
+        } else {
+          importedTitle = head["title"];
         }
         current = head;
       } else {
