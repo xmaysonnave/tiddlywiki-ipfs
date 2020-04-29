@@ -8,7 +8,7 @@ ENS Action
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -22,36 +22,36 @@ ENS Action
 
   const name = "ens-action";
 
-  var EnsAction = function() {
+  var EnsAction = function () {
     this.once = false;
     this.ensWrapper = new EnsWrapper();
     this.ipfsWrapper = new IpfsWrapper();
   };
 
-  EnsAction.prototype.getLogger = function() {
+  EnsAction.prototype.getLogger = function () {
     return window.log.getLogger(name);
   };
 
-  EnsAction.prototype.init = function() {
+  EnsAction.prototype.init = function () {
     // Init once
     if (this.once) {
       return;
     }
     const self = this;
-    $tw.rootWidget.addEventListener("tm-ens-manager-open", function(event) {
+    $tw.rootWidget.addEventListener("tm-ens-manager-open", function (event) {
       return self.handleOpenEnsManager(event);
     });
-    $tw.rootWidget.addEventListener("tm-ens-resolve-and-open", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ens-resolve-and-open", async function (event) {
       return await self.handleResolveEnsAndOpen(event);
     });
-    $tw.rootWidget.addEventListener("tm-ens-publish", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ens-publish", async function (event) {
       return await self.handlePublishToEns(event);
     });
     // Init once
     this.once = true;
   };
 
-  EnsAction.prototype.handleOpenEnsManager = function(event) {
+  EnsAction.prototype.handleOpenEnsManager = function (event) {
     // Retrieve ENS domain
     const ensDomain = $tw.utils.getIpfsEnsDomain();
     // Check
@@ -63,7 +63,7 @@ ENS Action
     return true;
   };
 
-  EnsAction.prototype.handleResolveEnsAndOpen = async function(event) {
+  EnsAction.prototype.handleResolveEnsAndOpen = async function (event) {
     try {
       // Getting default ENS domain
       const ensDomain = $tw.utils.getIpfsEnsDomain();
@@ -88,7 +88,7 @@ ENS Action
     return true;
   };
 
-  EnsAction.prototype.handlePublishToEns = async function(event) {
+  EnsAction.prototype.handlePublishToEns = async function (event) {
     try {
       // Process document URL
       const wiki = $tw.ipfs.getDocumentUrl();
@@ -118,7 +118,13 @@ ENS Action
       // Resolve IPNS key if applicable
       if (protocol === ipnsKeyword) {
         const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
-        cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+        try {
+          cid = null;
+          cid = await this.resolveIpnsKey(ipfs, ipnsKey);
+        } catch (error) {
+          this.getLogger().warn(error);
+          $tw.utils.alert(name, error.message);
+        }
       }
 
       // Getting the default ENS domain

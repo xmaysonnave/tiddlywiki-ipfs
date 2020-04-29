@@ -177,7 +177,6 @@ wikiparser
 
   WikiParser.prototype.importTiddlers = async function (headTiddler, head, parent, importedUri, importedTiddlers, cid) {
     var processed = [];
-    var self = this;
     // Process new and existing
     for (var i in importedTiddlers) {
       var leaf = false;
@@ -203,8 +202,11 @@ wikiparser
         currentTiddler = headTiddler;
         // Check
         var duplicate = $tw.wiki.getTiddler(importedTitle);
-        if (duplicate !== currentTiddler) {
-          throw new Error("Target Tiddler already exists: " + importedTitle);
+        if (duplicate !== undefined && duplicate !== null && duplicate !== currentTiddler) {
+          $tw.utils.alert(name, "Target Tiddler already exists: [[" + importedTitle + "]]");
+          head = null;
+          parent = false;
+          continue;
         }
         current = head;
       } else {
@@ -223,7 +225,7 @@ wikiparser
           uri = imported["_canonical_uri"];
         }
         if (uri !== undefined && uri !== null) {
-          await self.loadRemoteTiddlers(currentTiddler, imported, true);
+          await this.loadRemoteTiddlers(currentTiddler, imported, true);
         } else {
           leaf = true;
         }
@@ -239,7 +241,10 @@ wikiparser
           current[name] = imported[name];
         }
       }
-      // Add new tags
+      /*
+       * Add new tags
+       * We use currentTiddler to overcome complex tags analysis like [[IPFS Documentation]]
+       **/
       var tags = (currentTiddler.fields.tags || []).slice(0);
       for (var i = 0; i < tags.length; i++) {
         var tag = tags[i];
@@ -270,18 +275,19 @@ wikiparser
           current["_import_uri"] = importedUri;
         }
       }
-      // Update
       if (parent == false) {
+        // Update
         $tw.wiki.addTiddler(current);
+        // Store title to process deleted Tiddlers
+        processed.push(importedTitle);
       }
-      // Store title to process deleted Tiddlers
-      processed.push(importedTitle);
       // Head has been processed
       if (head !== null) {
-        if (head["title"] !== imported["title"]) {
-          $tw.wiki.renameTiddler(head["title"], imported["title"]);
+        if (head["title"] !== importedTitle) {
+          $tw.wiki.renameTiddler(head["title"], importedTitle);
         }
         head = null;
+        parent = false;
       }
     }
     // Process deleted

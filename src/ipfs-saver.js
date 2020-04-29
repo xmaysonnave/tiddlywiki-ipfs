@@ -8,7 +8,7 @@ IPFS Saver
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -30,7 +30,7 @@ IPFS Saver
   /*
    * Select the appropriate saver module and set it up
    */
-  var IpfsSaver = function(wiki) {
+  var IpfsSaver = function (wiki) {
     this.wiki = wiki;
     this.apiUrl = null;
     this.ipfsProvider = null;
@@ -67,11 +67,11 @@ IPFS Saver
     }
   };
 
-  IpfsSaver.prototype.getLogger = function() {
+  IpfsSaver.prototype.getLogger = function () {
     return window.log.getLogger(name);
   };
 
-  IpfsSaver.prototype.save = async function(text, method, callback, options) {
+  IpfsSaver.prototype.save = async function (text, method, callback, options) {
     // Is there anything to do
     if ($tw.saverHandler.isDirty() == false) {
       return false;
@@ -120,13 +120,13 @@ IPFS Saver
         }
       }
 
-      // IPNS Analysis
+      // IPNS
       if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
         // Resolve current IPNS
         if (ipfsProtocol === ipnsKeyword) {
           this.getLogger().info("Processing current IPNS key...");
+          var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
           try {
-            var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
             ipnsCid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
           } catch (error) {
             // Log and continue
@@ -156,8 +156,8 @@ IPFS Saver
           ipnsName = $tw.utils.getIpfsIpnsName();
           ipnsKey = $tw.utils.getIpfsIpnsKey();
           this.getLogger().info("Processing default IPNS name and IPNS key...");
+          var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
           try {
-            var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
             ipnsCid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
           } catch (error) {
             // Log and continue
@@ -211,19 +211,19 @@ IPFS Saver
       // Publish to IPNS
       if (ipnsName !== null && (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword)) {
         this.getLogger().info("Publishing IPNS name: " + ipnsName);
+        /*
+         * Publishing is failing as the server is behind a nat
+         * However the local server is getting the update ????
+         **/
         try {
           await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
-          // IPNS next
-          nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
-          // Discard unpin request
-          if (ipfsProtocol === ipnsKeyword && $tw.utils.getIpfsUnpin() && ipnsCid !== null) {
-            $tw.ipfs.discardRequestToUnpin(ipnsCid);
-          }
         }
+        // IPNS next
+        nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
       }
 
       // Publish to ENS
@@ -284,20 +284,20 @@ IPFS Saver
   IpfsSaver.prototype.info = {
     name: "Ipfs",
     priority: 3100,
-    capabilities: ["save"]
+    capabilities: ["save"],
   };
 
   /*
    * Static method that returns true if this saver is capable of working
    */
-  exports.canSave = function(wiki) {
+  exports.canSave = function (wiki) {
     return true;
   };
 
   /*
    * Create an instance of this saver
    */
-  exports.create = function(wiki) {
+  exports.create = function (wiki) {
     return new IpfsSaver(wiki);
   };
 })();

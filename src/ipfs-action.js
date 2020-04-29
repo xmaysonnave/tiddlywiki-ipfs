@@ -8,7 +8,7 @@ IPFS Action
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -22,7 +22,7 @@ IPFS Action
 
   const name = "ipfs-action";
 
-  var IpfsAction = function() {
+  var IpfsAction = function () {
     this.once = false;
     this.console = false;
     this.ensWrapper = new EnsWrapper();
@@ -31,52 +31,52 @@ IPFS Action
     this.ipnsKey = $tw.utils.getIpfsIpnsKey();
   };
 
-  IpfsAction.prototype.getLogger = function() {
+  IpfsAction.prototype.getLogger = function () {
     return window.log.getLogger(name);
   };
 
-  IpfsAction.prototype.init = function() {
+  IpfsAction.prototype.init = function () {
     // Init once
     if (this.once) {
       return;
     }
     const self = this;
     // Widget
-    $tw.rootWidget.addEventListener("tm-ipfs-export", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipfs-export", async function (event) {
       return await self.handleExportToIpfs(event, false);
     });
-    $tw.rootWidget.addEventListener("tm-ipfs-export-content", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipfs-export-content", async function (event) {
       return await self.handleExportToIpfs(event, true);
     });
-    $tw.rootWidget.addEventListener("tm-ipns-fetch", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipns-fetch", async function (event) {
       return await self.handleFetchIpnsKey(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipns-generate", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipns-generate", async function (event) {
       return await self.handleGenerateIpnsKey(event);
     });
-    $tw.rootWidget.addEventListener("tm-console-mobile", async function(event) {
+    $tw.rootWidget.addEventListener("tm-console-mobile", async function (event) {
       return await self.handleMobileConsole(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipfs-export-attachment", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipfs-export-attachment", async function (event) {
       return await self.handleExportAttachmentToIpfs(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipns-publish", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipns-publish", async function (event) {
       return await self.handlePublishToIpns(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipns-remove", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipns-remove", async function (event) {
       return await self.handleRemoveIpnsKey(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipns-rename", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipns-rename", async function (event) {
       return await self.handleRenameIpnsName(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipns-resolve-and-open", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipns-resolve-and-open", async function (event) {
       return await self.handleResolveIpnsKeyAndOpen(event);
     });
     // Init once
     this.once = true;
   };
 
-  IpfsAction.prototype.handleExportToIpfs = async function(event, child) {
+  IpfsAction.prototype.handleExportToIpfs = async function (event, child) {
     try {
       var fields = [];
       var export_uri = null;
@@ -176,14 +176,16 @@ IPFS Action
       if (protocol == ipnsKeyword) {
         this.getLogger().info("Publishing IPNS Tiddler: " + ipnsName);
         fields.push({ key: "_export_uri", value: "/" + ipnsKeyword + "/" + ipnsKey });
+        /*
+         * Publishing is failing as the server is behind a nat
+         * However the local server is getting the update ????
+         **/
         try {
           await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
-          // Discard unpin request
-          $tw.ipfs.discardRequestToUnpin(ipnsCid);
         }
       }
 
@@ -208,7 +210,7 @@ IPFS Action
       var updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         addTags: ["$:/isExported", "$:/isIpfs"],
-        fields: fields
+        fields: fields,
       });
       $tw.wiki.addTiddler(updatedTiddler);
     } catch (error) {
@@ -220,7 +222,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleExportAttachmentToIpfs = async function(event) {
+  IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
     try {
       const title = event.tiddlerTitle;
 
@@ -281,8 +283,8 @@ IPFS Action
         removeTags: removeTags,
         fields: [
           { key: "text", value: "" },
-          { key: "_canonical_uri", value: "/" + ipfsKeyword + "/" + added }
-        ]
+          { key: "_canonical_uri", value: "/" + ipfsKeyword + "/" + added },
+        ],
       });
       $tw.wiki.addTiddler(updatedTiddler);
     } catch (error) {
@@ -294,7 +296,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleRenameIpnsName = async function(event) {
+  IpfsAction.prototype.handleRenameIpnsName = async function (event) {
     try {
       // Retrieve default IPNS name
       var ipnsName = $tw.utils.getIpfsIpnsName();
@@ -320,7 +322,7 @@ IPFS Action
       if (tiddler !== undefined) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: key }]
+          fields: [{ key: "text", value: key }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
       }
@@ -337,7 +339,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleGenerateIpnsKey = async function(event) {
+  IpfsAction.prototype.handleGenerateIpnsKey = async function (event) {
     try {
       // Retrieve default IPNS name
       var ipnsName = $tw.utils.getIpfsIpnsName();
@@ -359,7 +361,7 @@ IPFS Action
       if (tiddler !== undefined) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: key }]
+          fields: [{ key: "text", value: key }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
       }
@@ -376,7 +378,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleRemoveIpnsKey = async function(event) {
+  IpfsAction.prototype.handleRemoveIpnsKey = async function (event) {
     try {
       // Retrieve default IPNS name
       var cid = null;
@@ -422,7 +424,7 @@ IPFS Action
       if (tiddler !== undefined) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: "" }]
+          fields: [{ key: "text", value: "" }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
       }
@@ -430,7 +432,7 @@ IPFS Action
       if (tiddler !== undefined && $tw.utils.getIpfsIpnsKey() !== null) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: "" }]
+          fields: [{ key: "text", value: "" }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
       }
@@ -447,7 +449,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleFetchIpnsKey = async function(event) {
+  IpfsAction.prototype.handleFetchIpnsKey = async function (event) {
     try {
       // Retrieve default IPNS name
       var ipnsName = $tw.utils.getIpfsIpnsName();
@@ -470,7 +472,7 @@ IPFS Action
       if (tiddler !== undefined && this.ipnsKey !== resolvedIpnsKey) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: resolvedIpnsKey }]
+          fields: [{ key: "text", value: resolvedIpnsKey }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
         this.ipnsKey = resolvedIpnsKey;
@@ -485,7 +487,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function(event) {
+  IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function (event) {
     try {
       // Retrieve default IPNS name
       var ipnsName = $tw.utils.getIpfsIpnsName();
@@ -509,7 +511,7 @@ IPFS Action
       if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
         $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: ipnsKey }]
+          fields: [{ key: "text", value: ipnsKey }],
         });
         this.ipnsKey = ipnsKey;
       }
@@ -529,7 +531,7 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.handleMobileConsole = async function(tiddler) {
+  IpfsAction.prototype.handleMobileConsole = async function (tiddler) {
     // Load mobile console if applicable
     if (typeof window.eruda === "undefined") {
       try {
@@ -544,7 +546,7 @@ IPFS Action
       window.eruda.init({
         container: eruda,
         tool: ["console"],
-        useShadowDom: false
+        useShadowDom: false,
       });
       // Inherit font
       eruda.style.fontFamily = "inherit";
@@ -575,7 +577,7 @@ IPFS Action
     }
   };
 
-  IpfsAction.prototype.handlePublishToIpns = async function(event) {
+  IpfsAction.prototype.handlePublishToIpns = async function (event) {
     try {
       // Process document URL
       const wiki = $tw.ipfs.getDocumentUrl();
@@ -627,6 +629,7 @@ IPFS Action
         this.getLogger().info("Processing current IPNS...");
         const { ipnsKey: currentIpnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
         try {
+          cid = null;
           cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, currentIpnsKey);
         } catch (error) {
           // Log and continue
@@ -654,7 +657,17 @@ IPFS Action
 
       this.getLogger().info("Publishing IPNS name: " + ipnsName);
 
-      await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
+      /*
+       * Publishing is failing as the server is behind a nat
+       * However the local server is getting the update ????
+       **/
+      try {
+        await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
+      } catch (error) {
+        // Log and continue
+        this.getLogger().warn(error);
+        $tw.utils.alert(name, error.message);
+      }
 
       // Unpin
       if ($tw.utils.getIpfsUnpin() && resolved != null) {

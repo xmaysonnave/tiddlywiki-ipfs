@@ -2,7 +2,7 @@ import CID from "cids";
 import { getIpfs, providers } from "ipfs-provider";
 import root from "window-or-global";
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   "use strict";
 
@@ -10,18 +10,21 @@ import root from "window-or-global";
 
   const name = "ipfs-library";
 
-  var IpfsLibrary = function() {};
+  /*
+   * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
+   **/
+  var IpfsLibrary = function () {};
 
-  IpfsLibrary.prototype.getLogger = function() {
+  IpfsLibrary.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
-  IpfsLibrary.prototype.decodeCid = function(pathname) {
+  IpfsLibrary.prototype.decodeCid = function (pathname) {
     // Check
     if (pathname == undefined || pathname == null || pathname.trim() === "" || pathname.trim() === "/") {
       return {
         protocol: null,
-        cid: null
+        cid: null,
       };
     }
     // Parse
@@ -50,31 +53,31 @@ import root from "window-or-global";
     if (protocol == null || cid == null) {
       return {
         protocol: null,
-        cid: null
+        cid: null,
       };
     }
     // Check protocol
     if (protocol !== "ipfs" && protocol !== "ipns") {
       return {
         protocol: null,
-        cid: null
+        cid: null,
       };
     }
     // Check
     if (this.isCid(cid) == false) {
       return {
         protocol: protocol,
-        cid: null
+        cid: null,
       };
     }
     // All good
     return {
       protocol: protocol,
-      cid: cid
+      cid: cid,
     };
   };
 
-  IpfsLibrary.prototype.isCid = function(cid) {
+  IpfsLibrary.prototype.isCid = function (cid) {
     try {
       const newCid = new CID(cid);
       return CID.isCID(newCid);
@@ -83,7 +86,7 @@ import root from "window-or-global";
     }
   };
 
-  IpfsLibrary.prototype.cidV1ToCidV0 = function(cidv1) {
+  IpfsLibrary.prototype.cidV1ToCidV0 = function (cidv1) {
     var cidv0 = new CID(cidv1);
     if (cidv0.codec !== "dag-pb") {
       throw new Error("This 'cid' is not 'dag-pb' encoded: " + cidAnalyser + cidv0);
@@ -109,7 +112,7 @@ import root from "window-or-global";
     return cidv0;
   };
 
-  IpfsLibrary.prototype.cidV0ToCidV1 = function(cidv0) {
+  IpfsLibrary.prototype.cidV0ToCidV1 = function (cidv0) {
     var cidv1 = new CID(cidv0);
     if (cidv1.codec !== "dag-pb") {
       throw new Error("This 'cid' is not 'dag-pb' encoded: " + cidAnalyser + cidv1);
@@ -134,7 +137,7 @@ import root from "window-or-global";
     return cidv1;
   };
 
-  IpfsLibrary.prototype.loadIpfsHttpClient = async function() {
+  IpfsLibrary.prototype.loadIpfsHttpClient = async function () {
     const self = this;
     if (typeof root.IpfsHttpClient === "undefined") {
       try {
@@ -152,14 +155,14 @@ import root from "window-or-global";
   };
 
   // Default
-  IpfsLibrary.prototype.getDefaultIpfs = async function(apiUrl) {
+  IpfsLibrary.prototype.getDefaultIpfs = async function (apiUrl) {
     // IPFS Companion first
     try {
       const { ipfs, provider } = await this.getWindowIpfs();
       if (ipfs !== null) {
         return {
           ipfs: ipfs,
-          provider: provider
+          provider: provider,
         };
       }
     } catch (error) {
@@ -175,7 +178,7 @@ import root from "window-or-global";
       if (ipfs !== null) {
         return {
           ipfs: ipfs,
-          provider: provider
+          provider: provider,
         };
       }
     } catch (error) {
@@ -185,17 +188,17 @@ import root from "window-or-global";
   };
 
   // IPFS companion
-  IpfsLibrary.prototype.getWindowIpfs = async function() {
+  IpfsLibrary.prototype.getWindowIpfs = async function () {
     const self = this;
     try {
       const { windowIpfs } = providers;
       this.getLogger().info("Processing connection to IPFS Companion...");
       const { ipfs, provider } = await getIpfs({
-        providers: [windowIpfs()]
+        providers: [windowIpfs()],
       });
       return {
         ipfs: ipfs,
-        provider: provider
+        provider: provider,
       };
     } catch (error) {
       self.getLogger().error(error);
@@ -204,7 +207,7 @@ import root from "window-or-global";
   };
 
   // ipfs-http-client
-  IpfsLibrary.prototype.getHttpIpfs = async function(url) {
+  IpfsLibrary.prototype.getHttpIpfs = async function (url) {
     // Check
     if (url == undefined || url == null || url.href === "") {
       throw new Error("Undefined IPFS API URL...");
@@ -221,13 +224,13 @@ import root from "window-or-global";
         providers: [
           httpClient({
             timeout: "2m",
-            apiAddress: url.href
-          })
-        ]
+            apiAddress: url.href,
+          }),
+        ],
       });
       return {
         ipfs: ipfs,
-        provider: provider + ", " + url.href
+        provider: provider + ", " + url.href,
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -235,7 +238,7 @@ import root from "window-or-global";
     throw new Error("Unreachable IPFS API URL...");
   };
 
-  IpfsLibrary.prototype.add = async function(client, content) {
+  IpfsLibrary.prototype.add = async function (client, content) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -263,7 +266,7 @@ import root from "window-or-global";
         cidVersion: 0,
         hashAlg: "sha2-256",
         chunker: "rabin-262144-524288-1048576",
-        pin: false
+        pin: false,
       });
       // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
       var lastResult = null;
@@ -278,13 +281,13 @@ import root from "window-or-global";
       const cidv1 = this.cidV0ToCidV1(lastResult.path);
       return {
         hash: cidv1,
-        size: lastResult.size
+        size: lastResult.size,
       };
     }
     throw new Error("Undefined IPFS command add...");
   };
 
-  IpfsLibrary.prototype.pin = async function(client, cid) {
+  IpfsLibrary.prototype.pin = async function (client, cid) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -308,7 +311,7 @@ import root from "window-or-global";
     throw new Error("Undefined IPFS pin add...");
   };
 
-  IpfsLibrary.prototype.unpin = async function(client, cid) {
+  IpfsLibrary.prototype.unpin = async function (client, cid) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -332,7 +335,7 @@ import root from "window-or-global";
     throw new Error("Undefined IPFS pin rm");
   };
 
-  IpfsLibrary.prototype.publish = async function(client, name, cid) {
+  IpfsLibrary.prototype.publish = async function (client, name, cid) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -349,7 +352,13 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
       this.getLogger().info("Processing IPNS name publish...");
-      const result = await client.name.publish(cid, { key: name.trim() });
+      var result = null;
+      try {
+        result = await client.name.publish(cid, { key: name.trim() });
+      } catch (error) {
+        // Log and continue
+        this.getLogger().warn(error);
+      }
       if (result == undefined || result == null) {
         throw new Error("IPFS client returned an unknown result...");
       }
@@ -358,7 +367,7 @@ import root from "window-or-global";
     throw new Error("Undefined IPNS name publish...");
   };
 
-  IpfsLibrary.prototype.resolve = async function(client, id) {
+  IpfsLibrary.prototype.resolve = async function (client, id) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -373,12 +382,17 @@ import root from "window-or-global";
     if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
       this.getLogger().info("Processing IPNS name resolve...");
       const resolvedSource = await client.name.resolve(id.trim(), {
-        recursive: true
+        recursive: true,
       });
       // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
       var lastResult = null;
-      for await (const resolved of resolvedSource) {
-        lastResult = resolved;
+      try {
+        for await (const resolved of resolvedSource) {
+          lastResult = resolved;
+        }
+      } catch (error) {
+        // Log and continue
+        this.getLogger().warn(error);
       }
       if (lastResult == null || lastResult == undefined || lastResult.trim() === "") {
         throw new Error("IPFS client returned an unknown result...");
@@ -388,7 +402,7 @@ import root from "window-or-global";
     throw new Error("Undefined IPNS name resolve...");
   };
 
-  IpfsLibrary.prototype.getKeys = async function(client) {
+  IpfsLibrary.prototype.getKeys = async function (client) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -411,7 +425,7 @@ import root from "window-or-global";
   // Only rsa is supported yet...
   // https://github.com/ipfs/interface-js-ipfs-core/blob/master/SPEC/KEY.md#keygen
   // https://github.com/libp2p/js-libp2p-crypto/issues/145
-  IpfsLibrary.prototype.genKey = async function(client, name) {
+  IpfsLibrary.prototype.genKey = async function (client, name) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -427,7 +441,7 @@ import root from "window-or-global";
       this.getLogger().info("Processing IPNS key gen...");
       const key = await client.key.gen(name.trim(), {
         type: "rsa",
-        size: 2048
+        size: 2048,
       });
       if (key == undefined || key == null || key.id == undefined || key.id == null) {
         throw new Error("IPFS client returned an unknown result...");
@@ -437,7 +451,7 @@ import root from "window-or-global";
     throw new Error("Undefined IPNS key gen...");
   };
 
-  IpfsLibrary.prototype.rmKey = async function(client, name) {
+  IpfsLibrary.prototype.rmKey = async function (client, name) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -460,7 +474,7 @@ import root from "window-or-global";
     throw new Error("Undefined IPNS key rm...");
   };
 
-  IpfsLibrary.prototype.renameKey = async function(client, oldName, newName) {
+  IpfsLibrary.prototype.renameKey = async function (client, oldName, newName) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
@@ -501,7 +515,7 @@ import root from "window-or-global";
         id: id,
         was: was,
         now: now,
-        overwrite: overwrite
+        overwrite: overwrite,
       };
     }
     throw new Error("Undefined IPNS key rename...");

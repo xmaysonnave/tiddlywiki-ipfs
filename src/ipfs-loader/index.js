@@ -1,6 +1,6 @@
 import root from "window-or-global";
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   "use strict";
 
@@ -12,18 +12,18 @@ import root from "window-or-global";
   const ethers = "https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js";
   const ethers_sri = "sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5";
 
-  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.0/dist/index.min.js";
-  const ipfs_http_client_sri = "sha384-ris+q6J23d31ehRco1HyHYfwUJz4S10N8218wcuw8IZLoM+Q1/TOYVVeDskhoSgM";
+  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.1/dist/index.min.js";
+  const ipfs_http_client_sri = "sha384-BE52P8MsMW2oBN52p6a4C8Iu++0/tYvGsSG2z4r5vdxUs4VBlc6+hHtzdKj8wrHn";
 
-  var IpfsLoader = function() {};
+  var IpfsLoader = function () {};
 
-  IpfsLoader.prototype.getLogger = function() {
+  IpfsLoader.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
   // https://www.srihash.org/
   // https://github.com/liriliri/eruda
-  IpfsLoader.prototype.loadErudaLibrary = async function() {
+  IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === "undefined") {
       await this.loadLibrary("ErudaLibrary", eruda, eruda_sri, true);
       if (typeof root.eruda !== "undefined") {
@@ -34,7 +34,7 @@ import root from "window-or-global";
 
   // https://www.srihash.org/
   // https://github.com/ethers-io/ethers.js/
-  IpfsLoader.prototype.loadEtherJsLibrary = async function() {
+  IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === "undefined") {
       await this.loadLibrary("EtherJsLibrary", ethers, ethers_sri, true);
       if (typeof root.ethers !== "undefined") {
@@ -45,7 +45,7 @@ import root from "window-or-global";
 
   // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
-  IpfsLoader.prototype.loadIpfsHttpLibrary = async function() {
+  IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
     if (typeof root.IpfsHttpClient === "undefined") {
       await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
       this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
@@ -53,7 +53,7 @@ import root from "window-or-global";
   };
 
   // https://gist.github.com/ebidel/3201b36f59f26525eb606663f7b487d0
-  IpfsLoader.prototype.supportDynamicImport = function() {
+  IpfsLoader.prototype.supportDynamicImport = function () {
     try {
       new Function('import("")');
       return true;
@@ -63,7 +63,7 @@ import root from "window-or-global";
   };
 
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
-  IpfsLoader.prototype.loadLibrary = async function(id, url, sri, asModule) {
+  IpfsLoader.prototype.loadLibrary = async function (id, url, sri, asModule) {
     // Dynamic import
     if (this.supportDynamicImport()) {
       try {
