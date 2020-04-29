@@ -50,7 +50,7 @@ describe("WHATWG-URL", () => {
     }).toThrow();
   });
 
-  it("File protocol URL", () => {
+  it("HTTPS protocol URL", () => {
     const ipfsUri = root.ipfsBundle.ipfsUri;
     const parsed = ipfsUri.getUrl(baseHttp);
     expect(
@@ -68,7 +68,7 @@ describe("WHATWG-URL", () => {
     const parsed = ipfsUri.getUrl(baseFile);
     expect(
       parsed.protocol === "file:" &&
-        parsed.origin === "file://" &&
+        parsed.origin === "null" &&
         parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html" &&
         parsed.href === baseFile
     ).toBeTruthy();
