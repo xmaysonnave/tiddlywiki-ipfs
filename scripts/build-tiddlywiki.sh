@@ -43,6 +43,7 @@ cd wiki
 npx gzipper ./empty.html
 npx gzipper ./index.html
 npx gzipper ./dev.html
+npx gzipper ./tiddlywiki-ipfs-plugin.json
 cd ..
 
 exit 0
