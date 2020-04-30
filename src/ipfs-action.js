@@ -686,7 +686,7 @@ IPFS Action
       return false;
     }
 
-    $tw.notifier.display("Successfully Published...");
+    $tw.utils.alert("Successfully Published...");
 
     return true;
   };

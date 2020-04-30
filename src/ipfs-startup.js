@@ -8,7 +8,7 @@ Startup initialisation
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -21,13 +21,14 @@ Startup initialisation
   exports.after = ["startup"];
   exports.synchronous = true;
 
-  exports.startup = function() {
+  exports.startup = function () {
     // Logger name
     const name = "ipfs-startup";
 
     // Missing Media Types
     $tw.utils.registerFileType("audio/mpeg", "base64", ".mp2");
     $tw.utils.registerFileType("video/quicktime", "base64", [".mov", ".qt"]);
+    $tw.utils.registerFileType("application/gzip", "base64", ".gz");
 
     // Listener
     this.ensAction = new EnsAction();

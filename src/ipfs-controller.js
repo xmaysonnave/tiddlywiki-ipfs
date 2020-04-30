@@ -8,7 +8,7 @@ IPFS Controller
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -31,7 +31,7 @@ IPFS Controller
 
   const name = "ipfs-controller";
 
-  var IpfsController = function() {
+  var IpfsController = function () {
     this.web3 = null;
     this.chainId = null;
     this.account = null;
@@ -44,18 +44,18 @@ IPFS Controller
     this.unpin = [];
   };
 
-  IpfsController.prototype.getLogger = function() {
+  IpfsController.prototype.getLogger = function () {
     return window.log.getLogger(name);
   };
 
-  IpfsController.prototype.requestToUnpin = async function(cid) {
+  IpfsController.prototype.requestToUnpin = async function (cid) {
     if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
       const url = await this.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Request to unpin:" + "\n " + url.href);
     }
   };
 
-  IpfsController.prototype.addToUnpin = async function(cid) {
+  IpfsController.prototype.addToUnpin = async function (cid) {
     if (cid !== undefined && cid !== null) {
       if (this.unpin.indexOf(cid) === -1) {
         this.unpin.push(cid);
@@ -65,7 +65,7 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.getContentType = function(tiddler) {
+  IpfsController.prototype.getContentType = function (tiddler) {
     // Check
     if (tiddler == undefined || tiddler == null) {
       throw new Error("Unknown Tiddler...");
@@ -84,18 +84,18 @@ IPFS Controller
     }
     return {
       type: type,
-      info: info
+      info: info,
     };
   };
 
-  IpfsController.prototype.discardRequestToUnpin = async function(cid) {
+  IpfsController.prototype.discardRequestToUnpin = async function (cid) {
     if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
       const url = await this.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Discard request to unpin:" + "\n " + url.href);
     }
   };
 
-  IpfsController.prototype.removeFromUnpin = function(cid) {
+  IpfsController.prototype.removeFromUnpin = function (cid) {
     if (cid !== undefined && cid !== null) {
       var index = this.unpin.indexOf(cid);
       if (index !== -1) {
@@ -106,13 +106,13 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.getImportedTiddlers = async function(uri) {
+  IpfsController.prototype.importTiddlers = async function (uri) {
     // Check
-    if (uri == undefined || uri == null || uri.trim() === "") {
+    if (uri == undefined || uri == null) {
       return {
         cid: null,
+        importedTiddlers: null,
         normalizedUri: null,
-        importedTiddlers: null
       };
     }
     // Process
@@ -132,20 +132,19 @@ IPFS Controller
       // IPFS client
       const { ipfs } = await $tw.ipfs.getIpfsClient();
       const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
-      cid = null;
       cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
     }
     // Retrieve cached immutable imported Tiddlers
     if (cid !== null) {
       importedTiddlers = this.importedTiddlers.get(cid);
       if (importedTiddlers !== undefined && importedTiddlers !== null) {
-        // Log
         const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
         this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
         // Done
         return {
+          cid,
+          importedTiddlers: importedTiddlers,
           normalizedUri: normalizedUri,
-          importedTiddlers: importedTiddlers
         };
       }
     }
@@ -160,27 +159,26 @@ IPFS Controller
     if (importedTiddlers == undefined || importedTiddlers == null) {
       return {
         cid: cid, // IPFS cid
+        importedTiddlers: null,
         normalizedUri: normalizedUri,
-        importedTiddlers: null
       };
     }
     // Cache immutable imported Tiddlers
     if (cid != null) {
-      // Log
+      this.importedTiddlers.set(cid, importedTiddlers);
       const pathname = "/" + ipfsKeyword + "/" + cid;
       const url = await this.ipfsUri.normalizeUrl(pathname);
-      this.getLogger().info("Store cached imported Tiddler(s):" + "\n " + url.href);
-      this.importedTiddlers.set(cid, importedTiddlers);
+      this.getLogger().info("Caching imported Tiddler(s):" + "\n " + url.href);
     }
     return {
       cid: cid, // IPFS cid
+      importedTiddlers: importedTiddlers,
       normalizedUri: normalizedUri,
-      importedTiddlers: importedTiddlers
     };
   };
 
-  IpfsController.prototype.getImportedTiddler = async function(uri, title) {
-    const { cid, normalizedUri, importedTiddlers } = await this.getImportedTiddlers(uri);
+  IpfsController.prototype.getImportedTiddler = async function (uri, title) {
+    const { cid, importedTiddlers, normalizedUri } = await this.importTiddlers(uri);
     if (importedTiddlers !== undefined || importedTiddlers !== null) {
       for (var i in importedTiddlers) {
         if (title === importedTiddlers[i].title) {
@@ -188,19 +186,19 @@ IPFS Controller
           return {
             cid: cid,
             normalizedUri: normalizedUri,
-            importedTiddler: importedTiddlers[i]
+            importedTiddler: importedTiddlers[i],
           };
         }
       }
     }
     return {
-      cid: cid, // IPFS cid
+      cid: cid,
+      importedTiddler: null,
       normalizedUri: normalizedUri,
-      importedTiddler: null
     };
   };
 
-  IpfsController.prototype.serializeTiddler = function(tiddler) {
+  IpfsController.prototype.serializeTiddler = function (tiddler) {
     // Check
     if (tiddler == undefined || tiddler == null) {
       throw new Error("Unknown Tiddler...");
@@ -215,47 +213,47 @@ IPFS Controller
     return fields;
   };
 
-  IpfsController.prototype.getNoBaseUrl = function(url) {
+  IpfsController.prototype.getNoBaseUrl = function (url) {
     return this.ipfsUri.getUrl(url);
   };
 
-  IpfsController.prototype.getIpfsBaseUrl = function() {
+  IpfsController.prototype.getIpfsBaseUrl = function () {
     return this.ipfsUri.getIpfsBaseUrl();
   };
 
-  IpfsController.prototype.normalizeIpfsUrl = async function(url) {
+  IpfsController.prototype.normalizeIpfsUrl = async function (url) {
     return await this.ipfsUri.normalizeUrl(url, this.getIpfsBaseUrl());
   };
 
-  IpfsController.prototype.getDocumentUrl = function() {
+  IpfsController.prototype.getDocumentUrl = function () {
     return this.ipfsUri.getDocumentUrl();
   };
 
-  IpfsController.prototype.getIpfsApiUrl = function() {
+  IpfsController.prototype.getIpfsApiUrl = function () {
     return this.ipfsUri.getIpfsApiUrl();
   };
 
-  IpfsController.prototype.getIpfsGatewayUrl = function() {
+  IpfsController.prototype.getIpfsGatewayUrl = function () {
     return this.ipfsUri.getIpfsGatewayUrl();
   };
 
-  IpfsController.prototype.decodeUrl = async function(value) {
+  IpfsController.prototype.decodeUrl = async function (value) {
     return await this.ipfsWrapper.decodeUrl(value);
   };
 
-  IpfsController.prototype.getUrl = function(url, base) {
+  IpfsController.prototype.getUrl = function (url, base) {
     return this.ipfsUri.getUrl(url, base ? base : this.getIpfsBaseUrl());
   };
 
-  IpfsController.prototype.decodeCid = function(pathname) {
+  IpfsController.prototype.decodeCid = function (pathname) {
     return this.ipfsWrapper.decodeCid(pathname);
   };
 
-  IpfsController.prototype.getIpnsIdentifiers = function(ipfs, ipnsKey, ipnsName) {
+  IpfsController.prototype.getIpnsIdentifiers = function (ipfs, ipnsKey, ipnsName) {
     return this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
   };
 
-  IpfsController.prototype.isJSON = function(content) {
+  IpfsController.prototype.isJSON = function (content) {
     if (content !== undefined && content !== null && typeof content === "string") {
       try {
         JSON.parse(content);
@@ -267,7 +265,7 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.getIpfsClient = async function() {
+  IpfsController.prototype.getIpfsClient = async function () {
     // Provider
     const ipfsProvider = $tw.utils.getIpfsProvider();
     // IPFS companion
@@ -275,7 +273,7 @@ IPFS Controller
       const client = await this.ipfsWrapper.getWindowIpfsClient();
       return {
         ipfs: client.ipfs,
-        provider: client.provider
+        provider: client.provider,
       };
     }
     // Default, try IPFS companion
@@ -284,7 +282,7 @@ IPFS Controller
         const client = await this.ipfsWrapper.getWindowIpfsClient();
         return {
           ipfs: client.ipfs,
-          provider: client.provider
+          provider: client.provider,
         };
       } catch (error) {
         // Ignore, fallback to HTTP
@@ -304,7 +302,7 @@ IPFS Controller
       // Done
       return {
         ipfs: client.ipfs,
-        provider: client.provider
+        provider: client.provider,
       };
     }
     // Build a new HTTP client
@@ -318,11 +316,11 @@ IPFS Controller
     // Done
     return {
       ipfs: ipfs,
-      provider: provider
+      provider: provider,
     };
   };
 
-  IpfsController.prototype.getEthereumProvider = async function() {
+  IpfsController.prototype.getEthereumProvider = async function () {
     if (this.ethereum == null) {
       const self = this;
       this.ethereum = await this.ensWrapper.getProvider();
@@ -343,7 +341,7 @@ IPFS Controller
     return this.ethereum;
   };
 
-  IpfsController.prototype.networkChanged = function(chainId) {
+  IpfsController.prototype.networkChanged = function (chainId) {
     if (this.chainId !== chainId) {
       const network = this.ensWrapper.getNetwork();
       try {
@@ -358,7 +356,7 @@ IPFS Controller
     }
   };
 
-  IpfsController.prototype.accountChanged = async function(accounts) {
+  IpfsController.prototype.accountChanged = async function (accounts) {
     if (accounts == undefined || accounts == null || Array.isArray(accounts) == false || accounts.length === 0) {
       this.web3 = null;
       this.chainId = null;
@@ -383,14 +381,14 @@ IPFS Controller
     }
   };
 
-  IpfsController.prototype.closeProvider = function(code, reason) {
+  IpfsController.prototype.closeProvider = function (code, reason) {
     this.web3 = null;
     this.chainId = null;
     this.account = null;
     this.getLogger().info("Closing Ethereum provider:" + "\n " + "Reason: " + reason + "\n " + "Code: " + code);
   };
 
-  IpfsController.prototype.getEnabledWeb3Provider = async function() {
+  IpfsController.prototype.getEnabledWeb3Provider = async function () {
     const provider = await this.getEthereumProvider();
     const network = this.ensWrapper.getNetwork();
     const etherscan = this.ensWrapper.getEtherscanRegistry();
@@ -415,11 +413,11 @@ IPFS Controller
     return {
       web3: this.web3,
       chainId: this.chainId,
-      account: this.account
+      account: this.account,
     };
   };
 
-  IpfsController.prototype.getWeb3Provider = async function() {
+  IpfsController.prototype.getWeb3Provider = async function () {
     const provider = await this.getEthereumProvider();
     const network = this.ensWrapper.getNetwork();
     var info = "Reuse Web3 provider:";
@@ -433,11 +431,11 @@ IPFS Controller
     this.getLogger().info(info + "\n network: " + network[this.chainId]);
     return {
       web3: this.web3,
-      chainId: this.chainId
+      chainId: this.chainId,
     };
   };
 
-  IpfsController.prototype.resolveENS = async function(ensDomain) {
+  IpfsController.prototype.resolveENS = async function (ensDomain) {
     // Retrieve a Web3 provider
     const { web3 } = await this.getWeb3Provider();
     // Fetch ENS domain content

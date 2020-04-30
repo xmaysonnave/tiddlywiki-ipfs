@@ -8,7 +8,7 @@ IPFS Tiddler
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -58,53 +58,53 @@ IPFS Tiddler
     "throttle.refresh",
     "toc-link",
     "title",
-    "type"
+    "type",
   ];
 
-  var IpfsTiddler = function() {
+  var IpfsTiddler = function () {
     this.once = false;
     this.ipfsWrapper = new IpfsWrapper();
   };
 
-  IpfsTiddler.prototype.getLogger = function() {
+  IpfsTiddler.prototype.getLogger = function () {
     return window.log.getLogger(name);
   };
 
-  IpfsTiddler.prototype.init = function() {
+  IpfsTiddler.prototype.init = function () {
     // Init once
     if (this.once) {
       return;
     }
     const self = this;
     // Wiki
-    $tw.wiki.addEventListener("change", function(changes) {
+    $tw.wiki.addEventListener("change", function (changes) {
       return self.handleChangeEvent(changes);
     });
     // Hook
-    $tw.hooks.addHook("th-deleting-tiddler", async function(tiddler) {
+    $tw.hooks.addHook("th-deleting-tiddler", async function (tiddler) {
       return await self.handleDeleteTiddler(tiddler);
     });
-    $tw.hooks.addHook("th-importing-tiddler", function(tiddler) {
+    $tw.hooks.addHook("th-importing-tiddler", function (tiddler) {
       return self.handleFileImport(tiddler);
     });
-    $tw.hooks.addHook("th-saving-tiddler", async function(tiddler) {
+    $tw.hooks.addHook("th-saving-tiddler", async function (tiddler) {
       return await self.handleSaveTiddler(tiddler);
     });
     // Widget
-    $tw.rootWidget.addEventListener("tm-ipfs-pin", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipfs-pin", async function (event) {
       return await self.handleIpfsPin(event);
     });
-    $tw.rootWidget.addEventListener("tm-refresh-tiddler", async function(event) {
+    $tw.rootWidget.addEventListener("tm-refresh-tiddler", async function (event) {
       return await self.handleRefreshTiddler(event);
     });
-    $tw.rootWidget.addEventListener("tm-ipfs-unpin", async function(event) {
+    $tw.rootWidget.addEventListener("tm-ipfs-unpin", async function (event) {
       return await self.handleIpfsUnpin(event);
     });
     // Init once
     this.once = true;
   };
 
-  IpfsTiddler.prototype.handleChangeEvent = function(changes) {
+  IpfsTiddler.prototype.handleChangeEvent = function (changes) {
     // Gateway preference
     const gateway = changes["$:/ipfs/saver/gateway"];
     if (gateway !== undefined && gateway.modified) {
@@ -121,7 +121,7 @@ IPFS Tiddler
         if ($tw.utils.getIpfsIpnsKey() !== null) {
           const updatedTiddler = $tw.utils.updateTiddler({
             tiddler: tiddler,
-            fields: [{ key: "text", value: "" }]
+            fields: [{ key: "text", value: "" }],
           });
           $tw.wiki.addTiddler(updatedTiddler);
         }
@@ -157,7 +157,7 @@ IPFS Tiddler
     }
   };
 
-  IpfsTiddler.prototype.handleIpfsPin = async function(event) {
+  IpfsTiddler.prototype.handleIpfsPin = async function (event) {
     var success = false;
     try {
       // Load tiddler
@@ -196,13 +196,13 @@ IPFS Tiddler
       $tw.utils.alert(name, error.message);
     }
     if (success) {
-      $tw.notifier.display("Successfully Pinned...");
+      $tw.utils.alert("Successfully Pinned...");
       return true;
     }
     return false;
   };
 
-  IpfsTiddler.prototype.ipfsPin = async function(name, url) {
+  IpfsTiddler.prototype.ipfsPin = async function (name, url) {
     // Check
     if (url == undefined || url == null) {
       throw new Error("Undefined URL...");
@@ -235,7 +235,7 @@ IPFS Tiddler
     return false;
   };
 
-  IpfsTiddler.prototype.handleIpfsUnpin = async function(event) {
+  IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
     var success = false;
     try {
       // Load tiddler
@@ -274,13 +274,13 @@ IPFS Tiddler
       $tw.utils.alert(name, error.message);
     }
     if (success) {
-      $tw.notifier.display("Successfully Unpinned...");
+      $tw.utils.alert("Successfully Unpinned...");
       return true;
     }
     return false;
   };
 
-  IpfsTiddler.prototype.ipfsUnpin = async function(name, url) {
+  IpfsTiddler.prototype.ipfsUnpin = async function (name, url) {
     // Check
     if (url == undefined || url == null) {
       throw new Error("Undefined URL...");
@@ -313,7 +313,7 @@ IPFS Tiddler
     return false;
   };
 
-  IpfsTiddler.prototype.updateLoggers = function(level) {
+  IpfsTiddler.prototype.updateLoggers = function (level) {
     window.log.setLevel(level, false);
     const loggers = window.log.getLoggers();
     for (var property in loggers) {
@@ -324,7 +324,7 @@ IPFS Tiddler
     }
   };
 
-  IpfsTiddler.prototype.handleDeleteTiddler = async function(tiddler) {
+  IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
       // Retrieve Content-Type
       const { type, info } = $tw.ipfs.getContentType(tiddler);
@@ -361,7 +361,7 @@ IPFS Tiddler
     return tiddler;
   };
 
-  IpfsTiddler.prototype.handleFileImport = function(tiddler) {
+  IpfsTiddler.prototype.handleFileImport = function (tiddler) {
     // Update tiddler
     const addition = $tw.wiki.getModificationFields();
     addition.title = tiddler.fields.title;
@@ -377,7 +377,7 @@ IPFS Tiddler
     return new $tw.Tiddler(tiddler, addition);
   };
 
-  IpfsTiddler.prototype.handleRefreshTiddler = async function(event) {
+  IpfsTiddler.prototype.handleRefreshTiddler = async function (event) {
     try {
       // Load tiddler
       const title = event.tiddlerTitle;
@@ -400,7 +400,7 @@ IPFS Tiddler
         // Empty text to force a refresh
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: "" }]
+          fields: [{ key: "text", value: "" }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
         return true;
@@ -413,7 +413,7 @@ IPFS Tiddler
     return true;
   };
 
-  IpfsTiddler.prototype.handleSaveTiddler = async function(tiddler) {
+  IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     var type = null;
     var info = null;
 
@@ -460,7 +460,7 @@ IPFS Tiddler
                 updatedTiddler = $tw.utils.updateTiddler({
                   tiddler: updatedTiddler,
                   addTags: ["$:/isAttachment", "$:/isEmbedded"],
-                  fields: [{ key: "text", value: content.data }]
+                  fields: [{ key: "text", value: content.data }],
                 });
                 this.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + url.href);
               } catch (error) {
@@ -527,7 +527,7 @@ IPFS Tiddler
       if (name === "_canonical_uri") {
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: updatedTiddler,
-          fields: [{ key: "text", value: "" }]
+          fields: [{ key: "text", value: "" }],
         });
       }
       // Unpin request
@@ -637,7 +637,7 @@ IPFS Tiddler
       updatedTiddler = $tw.utils.updateTiddler({
         tiddler: updatedTiddler,
         addTags: addTags,
-        removeTags: removeTags
+        removeTags: removeTags,
       });
     }
 
