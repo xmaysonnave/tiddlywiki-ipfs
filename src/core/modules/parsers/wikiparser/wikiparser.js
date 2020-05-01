@@ -125,7 +125,7 @@ wikiparser
     return console;
   };
 
-  WikiParser.prototype.getImportedTiddlers = async function (uri, title) {
+  WikiParser.prototype.getImportedTiddlers = async function (field, title, uri) {
     var cid = null;
     var importedTiddlers = null;
     var normalizedUri = null;
@@ -133,7 +133,16 @@ wikiparser
       var { cid, importedTiddlers, normalizedUri } = await $tw.ipfs.importTiddlers(uri);
     } catch (error) {
       this.getLogger().error(error);
-      $tw.utils.alert(name, "Failed to import Tiddler(s): [[" + title + "]]...");
+      $tw.utils.alert(
+        name,
+        'Failed to import : <a rel="noopener noreferrer" target="_blank" href="' +
+          uri +
+          '">' +
+          field +
+          "</a> from Imported Tiddler [[" +
+          title +
+          "]]..."
+      );
     }
     return {
       cid,
@@ -172,6 +181,7 @@ wikiparser
     // });
     if (added !== 0 || updated !== 0) {
       $tw.utils.alert(
+        name,
         "Successfully Imported and Merged. " + added + " Added Tiddlers(s), " + updated + " Updated Tiddlers(s)..."
       );
     }
@@ -208,17 +218,17 @@ wikiparser
     // Load Imported
     if (importUri !== undefined && importUri !== null) {
       uri = importUri;
-      var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers(uri, title);
+      var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers("_import_uri", title, uri);
       // Fallback
       if (importedTiddlers == null) {
         uri = canonicalUri;
         if (uri !== undefined && uri !== null) {
-          var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers(uri, title);
+          var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers("_canonical_uri", title, uri);
         }
       }
     } else if (canonicalUri !== undefined && canonicalUri !== null) {
       uri = canonicalUri;
-      var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers(uri, title);
+      var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers("_canonical_uri", title, uri);
     }
     // Process Imported
     if (importedTiddlers !== null) {
@@ -296,14 +306,14 @@ wikiparser
         this.processedImported.set(importedTitle, merged);
       }
       // Fields
-      for (var name in importedTiddler) {
+      for (var field in importedTiddler) {
         // Discard
-        if (name === "tags") {
+        if (field === "tags") {
           continue;
         }
         // Unknown from leaf to top, we keep the top modified field
-        if (merged[name] == undefined || merged[name] == null || name === "modified") {
-          merged[name] = importedTiddler[name];
+        if (merged[field] == undefined || merged[field] == null || field === "modified") {
+          merged[field] = importedTiddler[field];
         }
       }
       // Tags,

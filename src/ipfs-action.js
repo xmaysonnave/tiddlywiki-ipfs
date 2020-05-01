@@ -315,21 +315,21 @@ IPFS Action
       const { ipfs } = await $tw.ipfs.getIpfsClient();
 
       // Rename IPNS name
-      const { key } = await this.ipfsWrapper.renameIpnsName(ipfs, this.ipnsName, ipnsName);
+      const { ipnsKey } = await this.ipfsWrapper.renameIpnsName(ipfs, this.ipnsName, ipnsName);
 
       // Update Tiddler
       const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
       if (tiddler !== undefined) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
-          fields: [{ key: "text", value: key }],
+          fields: [{ key: "text", value: ipnsKey }],
         });
         $tw.wiki.addTiddler(updatedTiddler);
       }
 
       // Successfully renamed
       this.ipnsName = ipnsName;
-      this.ipnsKey = key;
+      this.ipnsKey = ipnsKey;
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -520,7 +520,7 @@ IPFS Action
       if (resolved !== null) {
         // Build URL
         const url = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
-        window.open(url.href, "_blank", "noopener");
+        window.open(url.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       this.getLogger().error(error);

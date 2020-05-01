@@ -175,7 +175,7 @@ downloadType: the content type for the saved file
             self.numChanges = 0;
             self.updateDirtyStatus();
           }
-          $tw.utils.alert(self.titleSavedNotification);
+          $tw.utils.alert("saver-handler", self.titleSavedNotification);
           if (options.callback) {
             options.callback();
           }

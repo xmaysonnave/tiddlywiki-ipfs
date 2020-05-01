@@ -8,7 +8,7 @@ IPFS Wrapper
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -28,20 +28,20 @@ IPFS Wrapper
 
   const name = "ipfs-wrapper";
 
-  var IpfsWrapper = function() {
+  var IpfsWrapper = function () {
     this.ipfsLibrary = root.ipfsBundle.ipfsLibrary;
     this.ipfsUri = root.ipfsBundle.ipfsUri;
   };
 
-  IpfsWrapper.prototype.getLogger = function() {
+  IpfsWrapper.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
-  IpfsWrapper.prototype.decodeCid = function(pathname) {
+  IpfsWrapper.prototype.decodeCid = function (pathname) {
     return this.ipfsLibrary.decodeCid(pathname);
   };
 
-  IpfsWrapper.prototype.decodeUrl = async function(value) {
+  IpfsWrapper.prototype.decodeUrl = async function (value) {
     // Check
     var text = false;
     try {
@@ -85,11 +85,11 @@ IPFS Wrapper
     }
     return {
       cid: cid, // IPFS cid or null
-      uri: uri // Normalized URI
+      uri: uri, // Normalized URI
     };
   };
 
-  IpfsWrapper.prototype.getAttachmentContent = function(tiddler) {
+  IpfsWrapper.prototype.getAttachmentContent = function (tiddler) {
     var type = null;
     var info = null;
     // Retrieve Content-Type
@@ -135,7 +135,7 @@ IPFS Wrapper
     return text;
   };
 
-  IpfsWrapper.prototype.exportTiddlersAsJson = async function(filter, spaces) {
+  IpfsWrapper.prototype.exportTiddlersAsJson = async function (filter, spaces) {
     var tiddlers = $tw.wiki.filterTiddlers(filter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
     var data = [];
@@ -147,19 +147,19 @@ IPFS Wrapper
       var isIpfs = false;
       var fields = new Object();
       // Process fields
-      for (var name in tiddler.fields) {
+      for (var field in tiddler.fields) {
         // Discard
-        if (name === "tags" || name === "_export_uri") {
+        if (field === "tags" || field === "_export_uri") {
           continue;
         }
         // Process value
-        const fieldValue = tiddler.getFieldString(name);
+        const fieldValue = tiddler.getFieldString(field);
         const { cid } = await this.decodeUrl(fieldValue);
         if (cid !== null) {
           isIpfs = true;
         }
         // Store field
-        fields[name] = fieldValue;
+        fields[field] = fieldValue;
       }
       // Process tags
       var tags = tiddler.fields["tags"];
@@ -182,7 +182,7 @@ IPFS Wrapper
     return JSON.stringify(data, null, spaces);
   };
 
-  IpfsWrapper.prototype.exportTiddler = async function(tiddler, child) {
+  IpfsWrapper.prototype.exportTiddler = async function (tiddler, child) {
     // Check
     if (tiddler == undefined || tiddler == null) {
       const error = new Error("Unknown Tiddler...");
@@ -220,8 +220,8 @@ IPFS Wrapper
         method: "download",
         template: "$:/core/templates/exporters/StaticRiver",
         variables: {
-          exportFilter: exportFilter
-        }
+          exportFilter: exportFilter,
+        },
       };
       content = $tw.wiki.renderTiddler("text/plain", "$:/core/templates/exporters/StaticRiver", options);
     } else {
@@ -231,8 +231,8 @@ IPFS Wrapper
         method: "download",
         template: "$:/core/templates/exporters/TidFile",
         variables: {
-          exportFilter: exportFilter
-        }
+          exportFilter: exportFilter,
+        },
       };
       content = $tw.wiki.renderTiddler("text/plain", "$:/core/templates/exporters/TidFile", options);
     }
@@ -250,7 +250,7 @@ IPFS Wrapper
     return content;
   };
 
-  IpfsWrapper.prototype.transcludeContent = function(title) {
+  IpfsWrapper.prototype.transcludeContent = function (title) {
     var tiddlers = [];
     // Build a transclude widget
     var transclude = $tw.wiki.makeTranscludeWidget(title);
@@ -264,15 +264,15 @@ IPFS Wrapper
     return tiddlers;
   };
 
-  IpfsWrapper.prototype.locateTiddlers = function(transclude, tiddlers) {
+  IpfsWrapper.prototype.locateTiddlers = function (transclude, tiddlers) {
     // Children lookup
     for (var i = 0; i < transclude.children.length; i++) {
       // Current child
       const child = transclude.children[i];
       if (child.variables !== undefined && child.variables !== null) {
         // Locate Tiddler
-        const name = "currentTiddler";
-        const current = child.variables[name];
+        const currentTiddler = "currentTiddler";
+        const current = child.variables[currentTiddler];
         if (current !== undefined && current !== null && current.value !== undefined && current.value !== null) {
           if (tiddlers.indexOf(current.value) === -1) {
             tiddlers.push(current.value);
@@ -284,7 +284,7 @@ IPFS Wrapper
     }
   };
 
-  IpfsWrapper.prototype.getWindowIpfsClient = async function() {
+  IpfsWrapper.prototype.getWindowIpfsClient = async function () {
     // IPFS Companion
     try {
       const policy = await this.ipfsLibrary.getWindowIpfs();
@@ -297,7 +297,7 @@ IPFS Wrapper
     throw new Error("Failed to retrieve IPFS Companion...");
   };
 
-  IpfsWrapper.prototype.getHttpIpfsClient = async function(url) {
+  IpfsWrapper.prototype.getHttpIpfsClient = async function (url) {
     // HTTP Client
     try {
       const policy = await this.ipfsLibrary.getHttpIpfs(url);
@@ -310,7 +310,7 @@ IPFS Wrapper
     throw new Error("Failed to retrieve an IPFS HTTP provider...");
   };
 
-  IpfsWrapper.prototype.getIpfsClient = async function(url) {
+  IpfsWrapper.prototype.getIpfsClient = async function (url) {
     // IPFS client
     try {
       var policy = null;
@@ -331,7 +331,7 @@ IPFS Wrapper
     throw new Error("Failed to retrieve an IPFS provider...");
   };
 
-  IpfsWrapper.prototype.getIpnsIdentifiers = async function(ipfs, ipnsKey, ipnsName) {
+  IpfsWrapper.prototype.getIpnsIdentifiers = async function (ipfs, ipnsKey, ipnsName) {
     // Cleanup
     if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
       ipnsKey = null;
@@ -394,11 +394,11 @@ IPFS Wrapper
     this.getLogger().info("Successfully Fetched IPNS name: " + ipnsName + "\n " + url.href);
     return {
       ipnsKey: ipnsKey,
-      ipnsName: ipnsName
+      ipnsName: ipnsName,
     };
   };
 
-  IpfsWrapper.prototype.generateIpnsKey = async function(ipfs, ipnsName) {
+  IpfsWrapper.prototype.generateIpnsKey = async function (ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName);
       const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + key);
@@ -410,7 +410,7 @@ IPFS Wrapper
     throw new Error("Failed to generate and IPNS key...");
   };
 
-  IpfsWrapper.prototype.removeIpnsKey = async function(ipfs, ipnsName) {
+  IpfsWrapper.prototype.removeIpnsKey = async function (ipfs, ipnsName) {
     try {
       const hash = await this.ipfsLibrary.rmKey(ipfs, ipnsName);
       this.getLogger().info("Successfully removed IPNS name: " + ipnsName);
@@ -421,13 +421,13 @@ IPFS Wrapper
     throw new Error("Failed to remove an IPNS Key...");
   };
 
-  IpfsWrapper.prototype.renameIpnsName = async function(ipfs, oldName, newName) {
+  IpfsWrapper.prototype.renameIpnsName = async function (ipfs, oldIpnsName, newIpnsName) {
     try {
-      const { id: key, was, now } = await this.ipfsLibrary.renameKey(ipfs, oldName, newName);
+      const { id: key, was, now } = await this.ipfsLibrary.renameKey(ipfs, oldIpnsName, newIpnsName);
       this.getLogger().info("Successfully renamed IPNS name: " + was + " with " + now);
       return {
-        key: key,
-        name: now
+        ipnsKey: key,
+        ipnsName: now,
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -435,7 +435,7 @@ IPFS Wrapper
     throw new Error("Failed to rename an IPNS name...");
   };
 
-  IpfsWrapper.prototype.getIpnsKeys = async function(ipfs) {
+  IpfsWrapper.prototype.getIpnsKeys = async function (ipfs) {
     try {
       const keys = await this.ipfsLibrary.getKeys(ipfs);
       this.getLogger().info("Successfully fetched IPNS keys...");
@@ -446,7 +446,7 @@ IPFS Wrapper
     throw new Error("Failed to fetch IPNS keys...");
   };
 
-  IpfsWrapper.prototype.fetchFromIpfs = async function(ipfs, cid) {
+  IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
     // Check
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPNS identifier...");
@@ -463,7 +463,7 @@ IPFS Wrapper
     throw new Error("Failed to fetch from IPFS...");
   };
 
-  IpfsWrapper.prototype.addToIpfs = async function(ipfs, content) {
+  IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
     try {
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content);
       const pathname = "/" + ipfsKeyword + "/" + hash;
@@ -471,7 +471,7 @@ IPFS Wrapper
       this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
       return {
         added: hash,
-        size: size
+        size: size,
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -479,7 +479,7 @@ IPFS Wrapper
     throw new Error("Failed to add content to IPFS...");
   };
 
-  IpfsWrapper.prototype.resolveIpnsKey = async function(ipfs, ipnsKey) {
+  IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
     // Check
     if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
       throw new Error("Undefined IPNS key...");
@@ -500,7 +500,7 @@ IPFS Wrapper
     throw new Error("Failed to resolve an IPNS key...");
   };
 
-  IpfsWrapper.prototype.publishToIpns = async function(ipfs, ipnsKey, ipnsName, cid) {
+  IpfsWrapper.prototype.publishToIpns = async function (ipfs, ipnsKey, ipnsName, cid) {
     // Check
     if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
       throw new Error("Undefined IPNS key...");
@@ -526,7 +526,7 @@ IPFS Wrapper
     throw new Error("Failed to publish an IPNS name...");
   };
 
-  IpfsWrapper.prototype.pinToIpfs = async function(ipfs, cid) {
+  IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
     // Check
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPNS identifier...");
@@ -543,7 +543,7 @@ IPFS Wrapper
     throw new Error("Failed to pin to IPFS...");
   };
 
-  IpfsWrapper.prototype.unpinFromIpfs = async function(ipfs, cid) {
+  IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
     // Check
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPNS identifier...");

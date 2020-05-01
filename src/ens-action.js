@@ -56,9 +56,9 @@ ENS Action
     const ensDomain = $tw.utils.getIpfsEnsDomain();
     // Check
     if (ensDomain == null) {
-      window.open("https://app.ens.domains", "_blank", "noopener");
+      window.open("https://app.ens.domains", "_blank", "noopener,noreferrer");
     } else {
-      window.open("https://app.ens.domains/name/" + ensDomain, "_blank", "noopener");
+      window.open("https://app.ens.domains/name/" + ensDomain, "_blank", "noopener,noreferrer");
     }
     return true;
   };
@@ -77,7 +77,7 @@ ENS Action
 
       const url = await $tw.ipfs.resolveENS(ensDomain);
       if (url !== null) {
-        window.open(url.href, "_blank", "noopener");
+        window.open(url.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       this.getLogger().error(error);

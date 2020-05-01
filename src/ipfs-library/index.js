@@ -335,12 +335,12 @@ import root from "window-or-global";
     throw new Error("Undefined IPFS pin rm");
   };
 
-  IpfsLibrary.prototype.publish = async function (client, name, cid) {
+  IpfsLibrary.prototype.publish = async function (client, ipnsName, cid) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
-    if (name == undefined || name == null || name.trim() === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       throw new Error("Undefined IPNS name...");
     }
     if (cid == undefined || cid == null || cid.trim() === "") {
@@ -354,7 +354,7 @@ import root from "window-or-global";
       this.getLogger().info("Processing IPNS name publish...");
       var result = null;
       try {
-        result = await client.name.publish(cid, { key: name.trim() });
+        result = await client.name.publish(cid, { key: ipnsName.trim() });
       } catch (error) {
         // Log and continue
         this.getLogger().warn(error);
@@ -425,12 +425,12 @@ import root from "window-or-global";
   // Only rsa is supported yet...
   // https://github.com/ipfs/interface-js-ipfs-core/blob/master/SPEC/KEY.md#keygen
   // https://github.com/libp2p/js-libp2p-crypto/issues/145
-  IpfsLibrary.prototype.genKey = async function (client, name) {
+  IpfsLibrary.prototype.genKey = async function (client, ipnsName) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
-    if (name == undefined || name == null || name.trim() === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       throw new Error("Undefined IPNS name...");
     }
     // Window IPFS policy
@@ -439,7 +439,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.key !== undefined && client.key.gen !== undefined) {
       this.getLogger().info("Processing IPNS key gen...");
-      const key = await client.key.gen(name.trim(), {
+      const key = await client.key.gen(ipnsName.trim(), {
         type: "rsa",
         size: 2048,
       });
@@ -451,12 +451,12 @@ import root from "window-or-global";
     throw new Error("Undefined IPNS key gen...");
   };
 
-  IpfsLibrary.prototype.rmKey = async function (client, name) {
+  IpfsLibrary.prototype.rmKey = async function (client, ipnsName) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
-    if (name == undefined || name == null || name.trim() === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       throw new Error("Undefined IPNS name...");
     }
     // Window IPFS policy
@@ -465,7 +465,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.key !== undefined && client.key.rm !== undefined) {
       this.getLogger().info("Processing IPNS key rm...");
-      const key = await client.key.rm(name.trim());
+      const key = await client.key.rm(ipnsName.trim());
       if (key == undefined || key == null || key.id == undefined || key.id == null) {
         throw new Error("IPFS client returned an unknown result...");
       }
@@ -474,15 +474,15 @@ import root from "window-or-global";
     throw new Error("Undefined IPNS key rm...");
   };
 
-  IpfsLibrary.prototype.renameKey = async function (client, oldName, newName) {
+  IpfsLibrary.prototype.renameKey = async function (client, oldIpnsName, newIpnsName) {
     // Check
     if (client == undefined || client == null) {
       throw new Error("Undefined IPFS provider...");
     }
-    if (oldName == undefined || oldName == null || oldName.trim() === "") {
+    if (oldIpnsName == undefined || oldIpnsName == null || oldIpnsName.trim() === "") {
       throw new Error("Undefined IPNS old name...");
     }
-    if (newName == undefined || newName == null || newName.trim() === "") {
+    if (newIpnsName == undefined || newIpnsName == null || newIpnsName.trim() === "") {
       throw new Error("Undefined IPNS nem name...");
     }
     // Window IPFS policy
@@ -491,7 +491,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.key !== undefined && client.key.rename !== undefined) {
       this.getLogger().info("Processing IPNS key rename...");
-      const key = await client.key.rename(oldName.trim(), newName.trim());
+      const key = await client.key.rename(oldIpnsName.trim(), newIpnsName.trim());
       if (key == undefined || key == null) {
         throw new Error("IPFS client returned an unknown result...");
       }

@@ -8,12 +8,12 @@ IPFS utils
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
 
-  exports.Base64ToUint8Array = function(base64) {
+  exports.Base64ToUint8Array = function (base64) {
     var raw = atob(base64);
     var ua = new Uint8Array(raw.length);
     for (var i = 0; i < raw.length; i++) {
@@ -22,7 +22,7 @@ IPFS utils
     return ua;
   };
 
-  exports.Uint8ArrayToBase64 = function(uint8) {
+  exports.Uint8ArrayToBase64 = function (uint8) {
     var CHUNK_SIZE = 0x8000; //arbitrary number
     var index = 0;
     var length = uint8.length;
@@ -37,13 +37,13 @@ IPFS utils
   };
 
   // String to uint array
-  exports.StringToUint8Array = function(string) {
+  exports.StringToUint8Array = function (string) {
     var escstr = encodeURIComponent(string);
-    var binstr = escstr.replace(/%([0-9A-F]{2})/g, function(match, p1) {
+    var binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
       return String.fromCharCode("0x" + p1);
     });
     var ua = new Uint8Array(binstr.length);
-    Array.prototype.forEach.call(binstr, function(ch, i) {
+    Array.prototype.forEach.call(binstr, function (ch, i) {
       ua[i] = ch.charCodeAt(0);
     });
     return ua;
@@ -59,7 +59,7 @@ IPFS utils
    * LastModified: Dec 25 1999
    * This library is free.  You can redistribute it and/or modify it.
    */
-  exports.Utf8ArrayToStr = function(array) {
+  exports.Utf8ArrayToStr = function (array) {
     var c, char2, char3;
     var out = "";
     var len = array.length;
@@ -131,19 +131,22 @@ IPFS utils
    * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    */
 
-  exports.alert = function(callee, text) {
+  /*
+   * from $:/core/modules/utils/logger.js
+   **/
+  exports.alert = function (callee, text) {
     if (typeof window === "undefined" || typeof window.navigator === "undefined") {
       return;
     }
-
     const ALERT_TAG = "$:/tags/Alert";
-
+    // Prepare the text of the alert
+    // var text = Array.prototype.join.call(arguments," ");
     // Check if there is an existing alert with the same text and the same component
-    var existingAlerts = $tw.wiki.getTiddlersWithTag("$:/tags/Alert");
-    var alertFields;
-    var existingCount;
-
-    $tw.utils.each(existingAlerts, function(title) {
+    var existingAlerts = $tw.wiki.getTiddlersWithTag(ALERT_TAG),
+      alertFields,
+      existingCount,
+      self = this;
+    $tw.utils.each(existingAlerts, function (title) {
       var tiddler = $tw.wiki.getTiddler(title);
       if (
         tiddler.fields.text === text &&
@@ -154,7 +157,6 @@ IPFS utils
         alertFields = $tw.utils.extend({}, tiddler.fields);
       }
     });
-
     if (alertFields) {
       existingCount = alertFields.count || 1;
     } else {
@@ -162,22 +164,21 @@ IPFS utils
         title: $tw.wiki.generateNewTitle("$:/temp/alerts/alert", { prefix: "" }),
         text: text,
         tags: [ALERT_TAG],
-        component: callee
+        component: callee,
       };
       existingCount = 0;
+      this.alertCount += 1;
     }
-
     alertFields.modified = new Date();
     if (++existingCount > 1) {
       alertFields.count = existingCount;
     } else {
       alertFields.count = undefined;
     }
-
     $tw.wiki.addTiddler(new $tw.Tiddler(alertFields));
   };
 
-  exports.getChangedTiddler = function(object) {
+  exports.getChangedTiddler = function (object) {
     // Holder
     const changedTiddler = Object.create(null);
     // Check
@@ -205,7 +206,7 @@ IPFS utils
     return changedTiddler;
   };
 
-  exports.updateTiddler = function(updates) {
+  exports.updateTiddler = function (updates) {
     // Is there anything to do
     if (updates == undefined || updates == null || updates.tiddler == undefined || updates.tiddler == null) {
       return null;
