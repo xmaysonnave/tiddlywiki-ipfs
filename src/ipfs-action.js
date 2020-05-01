@@ -469,7 +469,7 @@ IPFS Action
 
       // Update Tiddler
       var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined && this.ipnsKey !== resolvedIpnsKey) {
+      if (tiddler !== undefined) {
         const updatedTiddler = $tw.utils.updateTiddler({
           tiddler: tiddler,
           fields: [{ key: "text", value: resolvedIpnsKey }],

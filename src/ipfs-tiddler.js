@@ -113,20 +113,6 @@ IPFS Tiddler
         this.getLogger().info("Gateway Relative URL:" + "\n " + base.toString());
       }
     }
-    // IPNS name preference
-    const ipnsName = changes["$:/ipfs/saver/ipns/name"];
-    if (ipnsName !== undefined && ipnsName.modified) {
-      const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined) {
-        if ($tw.utils.getIpfsIpnsKey() !== null) {
-          const updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: tiddler,
-            fields: [{ key: "text", value: "" }],
-          });
-          $tw.wiki.addTiddler(updatedTiddler);
-        }
-      }
-    }
     // Policy preference
     const policy = changes["$:/ipfs/saver/policy"];
     if (policy !== undefined && policy.modified) {
