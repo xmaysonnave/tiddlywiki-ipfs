@@ -42,53 +42,54 @@ The image parser parses an image into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
 
   const name = "ipfs-svgparser";
 
-  var SvgParser = function(type, text, options) {
+  var SvgParser = function (type, text, options) {
     var self = this;
     var value = "data:image/svg+xml,";
     var element = {
       type: "element",
       tag: "img",
-      attributes: {}
+      attributes: {},
     };
-    var tiddler = options.tiddler;
-    var uri = options._canonical_uri;
-    // Load external resource
-    if (uri !== undefined && uri !== null && uri.trim() != "") {
-      $tw.ipfs
-        .normalizeIpfsUrl(uri)
-        .then(normalized_uri => {
-          // Load
-          $tw.utils
-            .loadToUtf8(normalized_uri)
-            .then(loaded => {
-              element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
-              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-              $tw.rootWidget.refresh(parsedTiddler);
-            })
-            .catch(error => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-        })
-        .catch(error => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
-    } else {
-      element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
+    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
+      var uri = options.tiddler.fields._canonical_uri;
+      // Load external attachment
+      if (uri !== undefined && uri !== null && uri.trim() != "") {
+        (async () => {
+          try {
+            await this.loadRemoteAttachment(element, options.tiddler, value, uri);
+          } catch (error) {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          }
+        })();
+      } else {
+        element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
+      }
     }
     // Return the parsed tree
     this.tree = [element];
   };
 
-  SvgParser.prototype.getLogger = function() {
+  SvgParser.prototype.loadRemoteAttachment = async function (element, tiddler, value, uri) {
+    var normalizedUri = await $tw.ipfs.normalizeIpfsUrl(uri);
+    if (normalizedUri !== null) {
+      var loaded = await $tw.utils.loadToUtf8(normalizedUri);
+      if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
+        element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
+        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+        $tw.rootWidget.refresh(parsedTiddler);
+      }
+    }
+  };
+
+  SvgParser.prototype.getLogger = function () {
     if (window.log) {
       return window.log.getLogger(name);
     }

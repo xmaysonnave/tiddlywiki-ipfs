@@ -52,14 +52,20 @@ wikiparser
   var WikiParser = function (type, text, options) {
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
-    if ($tw.browser && (text || "") === "" && options.tiddler) {
+    if ($tw.browser && (text || "") === "" && options.tiddler !== undefined && options.tiddler !== null) {
       var uri = options.tiddler.fields._import_uri;
       if (uri == undefined || uri == null) {
         uri = options.tiddler.fields._canonical_uri;
       }
-      if (uri !== undefined && uri !== null) {
-        this.loadRemoteTiddlers(options.tiddler);
-        text = $tw.language.getRawString("LazyLoadingWarning");
+      if (uri !== undefined && uri !== null && uri.trim() !== "") {
+        (async () => {
+          try {
+            await this.loadRemoteTiddlers(options.tiddler);
+          } catch (error) {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          }
+        })();
       }
     }
     // Initialise the classes if we don't have them already
@@ -127,7 +133,7 @@ wikiparser
       var { cid, importedTiddlers, normalizedUri } = await $tw.ipfs.importTiddlers(uri);
     } catch (error) {
       this.getLogger().error(error);
-      $tw.utils.alert(name, "Failed to import Tiddler(s):\n [[" + title + "]]");
+      $tw.utils.alert(name, "Failed to import Tiddler(s): [[" + title + "]]...");
     }
     return {
       cid,
@@ -137,10 +143,11 @@ wikiparser
   };
 
   WikiParser.prototype.loadRemoteTiddlers = async function (tiddler) {
+    this.host = tiddler;
+    this.processedImported = new Map();
     this.processedKeys = new Map();
     this.processedTitles = new Map();
-    this.processedImported = new Map();
-    this.host = tiddler;
+    this.root = null;
     var { added, updated } = await this.loadImportedRemoteTiddlers(
       tiddler.fields._canonical_uri,
       tiddler.fields._import_uri,
@@ -165,12 +172,31 @@ wikiparser
     // });
     if (added !== 0 || updated !== 0) {
       $tw.utils.alert(
-        "Successfully Imported and Merged. " + added + " Added Tiddlers(s), " + updated + " Updated Tiddlers(s)"
+        "Successfully Imported and Merged. " + added + " Added Tiddlers(s), " + updated + " Updated Tiddlers(s)..."
       );
     }
+    if (this.processedTitles.get(this.host.fields.title) == undefined) {
+      var updatedTiddler = new $tw.Tiddler(this.host);
+      if (this.root !== null) {
+        updatedTiddler = $tw.utils.updateTiddler({
+          tiddler: updatedTiddler,
+          fields: [{ key: "text", value: "Successfully Imported: [[" + this.root + "]]..." }],
+        });
+      } else {
+        updatedTiddler = $tw.utils.updateTiddler({
+          tiddler: updatedTiddler,
+          fields: [{ key: "text", value: "Successfully Imported..." }],
+        });
+      }
+      // Update
+      $tw.wiki.addTiddler(updatedTiddler);
+    }
+    // Cleanup
+    this.host = null;
+    this.processedImported = null;
     this.processedKeys = null;
     this.processedTitles = null;
-    this.processedImported = null;
+    this.root = null;
   };
 
   WikiParser.prototype.loadImportedRemoteTiddlers = async function (canonicalUri, importUri, title) {
@@ -231,12 +257,7 @@ wikiparser
       if (info == undefined || info == null) {
         $tw.utils.alert(
           name,
-          "Unknown Tiddler Content-Type:\n " +
-            type +
-            "\n Tiddler: " +
-            importedTitle +
-            "\n Uri:\n " +
-            importedNormalizedUri
+          "Unknown Tiddler Content-Type: " + type + ", Tiddler: " + importedTitle + ", Uri: " + importedNormalizedUri
         );
         continue;
       }
@@ -256,8 +277,12 @@ wikiparser
           importedUpdated += updated;
         }
       }
+      // Imported root
+      if (this.root == null) {
+        this.root = importedTitle;
+      }
       // Retrieve target host Tiddler
-      if (this.host !== undefined && this.host !== null && this.host.fields.title === importedTitle) {
+      if (this.host.fields.title === importedTitle) {
         currentTiddler = this.host;
       } else {
         currentTiddler = $tw.wiki.getTiddler(importedTitle);

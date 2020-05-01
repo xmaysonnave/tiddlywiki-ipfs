@@ -42,53 +42,53 @@ The PDF parser embeds a PDF viewer
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
 
   const name = "ipfs-pdfparser";
 
-  var PdfParser = function(type, text, options) {
-    var self = this;
+  var PdfParser = function (type, text, options) {
     var value = "data:application/pdf;base64,";
     var element = {
       type: "element",
       tag: "embed",
-      attributes: {}
+      attributes: {},
     };
-    var tiddler = options.tiddler;
-    var uri = options._canonical_uri;
-    // Load external resource
-    if (uri !== undefined && uri !== null && uri.trim() != "") {
-      $tw.ipfs
-        .normalizeIpfsUrl(uri)
-        .then(normalized_uri => {
-          // Load
-          $tw.utils
-            .loadToBase64(normalized_uri)
-            .then(loaded => {
-              element.attributes.src = { type: "string", value: value + loaded.data };
-              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-              $tw.rootWidget.refresh(parsedTiddler);
-            })
-            .catch(error => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
-        })
-        .catch(error => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
-    } else if (text) {
-      element.attributes.src = { type: "string", value: value + text };
+    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
+      var uri = options.tiddler.fields._canonical_uri;
+      // Load external attachment
+      if (uri !== undefined && uri !== null && uri.trim() != "") {
+        (async () => {
+          try {
+            await this.loadRemoteAttachment(element, options.tiddler, value, uri);
+          } catch (error) {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          }
+        })();
+      } else if (text) {
+        element.attributes.src = { type: "string", value: value + text };
+      }
     }
     // Return the parsed tree
     this.tree = [element];
   };
 
-  PdfParser.prototype.getLogger = function() {
+  PdfParser.prototype.loadRemoteAttachment = async function (element, tiddler, value, uri) {
+    var normalizedUri = await $tw.ipfs.normalizeIpfsUrl(uri);
+    if (normalizedUri !== null) {
+      var loaded = await $tw.utils.loadToBase64(normalizedUri);
+      if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
+        element.attributes.src = { type: "string", value: value + loaded.data };
+        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+        $tw.rootWidget.refresh(parsedTiddler);
+      }
+    }
+  };
+
+  PdfParser.prototype.getLogger = function () {
     if (window.log) {
       return window.log.getLogger(name);
     }
