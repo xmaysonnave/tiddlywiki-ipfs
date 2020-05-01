@@ -259,7 +259,9 @@ wikiparser
           name,
           "Unknown Tiddler Content-Type: " + type + ", Tiddler: " + importedTitle + ", Uri: " + importedNormalizedUri
         );
-        continue;
+        // Default
+        type = "text/vnd.tiddlywiki";
+        info = $tw.config.contentTypeInfo[type];
       }
       // Load until we reach the leaf
       if (info.encoding !== "base64" && type !== "image/svg+xml") {
@@ -304,8 +306,8 @@ wikiparser
           merged[name] = importedTiddler[name];
         }
       }
-      // Tags, we use the target tiddler to be sure to manege complex tags like:
-      // [[IPFS Documentation]]
+      // Tags,
+      // We use the target tiddler to manage complex tags like [[IPFS Documentation]]
       if (currentTiddler !== undefined && currentTiddler !== null) {
         var tags = (currentTiddler.fields.tags || []).slice(0);
         for (var i = 0; i < tags.length; i++) {

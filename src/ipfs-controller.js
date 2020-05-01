@@ -198,21 +198,6 @@ IPFS Controller
     };
   };
 
-  IpfsController.prototype.serializeTiddler = function (tiddler) {
-    // Check
-    if (tiddler == undefined || tiddler == null) {
-      throw new Error("Unknown Tiddler...");
-    }
-    const fields = new Object();
-    // Process fields
-    for (var name in tiddler.fields) {
-      const value = tiddler.getFieldString(name);
-      fields[name] = value;
-    }
-    // Done
-    return fields;
-  };
-
   IpfsController.prototype.getNoBaseUrl = function (url) {
     return this.ipfsUri.getUrl(url);
   };
