@@ -69,6 +69,7 @@ describe("WHATWG-URL", () => {
     expect(
       parsed.protocol === "file:" &&
         parsed.origin === "null" &&
+        parsed.host === "" &&
         parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html" &&
         parsed.href === baseFile
     ).toBeTruthy();

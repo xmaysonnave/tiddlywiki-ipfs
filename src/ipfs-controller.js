@@ -77,10 +77,24 @@ IPFS Controller
       type = "text/vnd.tiddlywiki";
     }
     // Content-Type
-    const info = $tw.config.contentTypeInfo[type];
+    var info = $tw.config.contentTypeInfo[type];
     // Check
     if (info == undefined || info == null) {
-      throw new Error("Unknown Tiddler Content-Type: " + type);
+      const url = this.getDocumentUrl();
+      url.hash = tiddler.fields.title;
+      $tw.utils.alert(
+        name,
+        "Unknown Content-Type: '" +
+          type +
+          "', default to: 'text/vnd.tiddlywiki', <a href='" +
+          url +
+          "'>" +
+          tiddler.fields.title +
+          "</a>"
+      );
+      // Default
+      type = "text/vnd.tiddlywiki";
+      info = $tw.config.contentTypeInfo[type];
     }
     return {
       type: type,
@@ -111,58 +125,60 @@ IPFS Controller
     var cid = null;
     var importedTiddlers = null;
     var normalizedUri = null;
-    if (uri !== undefined && uri !== null) {
-      var protocol = null;
-      normalizedUri = await this.normalizeIpfsUrl(uri);
-      // IPFS
-      try {
+    try {
+      if (uri !== undefined && uri !== null) {
+        var protocol = null;
+        normalizedUri = await this.normalizeIpfsUrl(uri);
+        // IPFS
         var { protocol, cid } = this.decodeCid(normalizedUri.pathname);
-      } catch (error) {
-        // Ignore
-      }
-      // IPNS
-      if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
-        // IPFS client
-        const { ipfs } = await $tw.ipfs.getIpfsClient();
-        const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
-        cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
-      }
-      // Retrieve cached immutable imported Tiddlers
-      if (cid !== null) {
-        importedTiddlers = this.importedTiddlers.get(cid);
-        if (importedTiddlers !== undefined && importedTiddlers !== null) {
-          const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
-          // Done
+        // IPNS
+        if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
+          // IPFS client
+          const { ipfs } = await $tw.ipfs.getIpfsClient();
+          const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+          cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+        }
+        // Retrieve cached immutable imported Tiddlers
+        if (cid !== null) {
+          importedTiddlers = this.importedTiddlers.get(cid);
+          if (importedTiddlers !== undefined && importedTiddlers !== null) {
+            const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+            this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
+            // Done
+            return {
+              cid,
+              importedTiddlers: importedTiddlers,
+              normalizedUri: normalizedUri,
+            };
+          }
+        }
+        // Load
+        const content = await $tw.utils.loadToUtf8(normalizedUri);
+        if (this.isJSON(content.data)) {
+          importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
+        } else {
+          importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
+        }
+        // Check
+        if (importedTiddlers == undefined || importedTiddlers == null) {
           return {
-            cid,
-            importedTiddlers: importedTiddlers,
+            cid: cid, // IPFS cid
+            importedTiddlers: null,
             normalizedUri: normalizedUri,
           };
         }
+        // Cache immutable imported Tiddlers
+        if (cid != null) {
+          this.importedTiddlers.set(cid, importedTiddlers);
+          const pathname = "/" + ipfsKeyword + "/" + cid;
+          const url = await this.ipfsUri.normalizeUrl(pathname);
+          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + url.href);
+        }
       }
-      // Load
-      const content = await $tw.utils.loadToUtf8(normalizedUri);
-      if (this.isJSON(content.data)) {
-        importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
-      } else {
-        importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
-      }
-      // Check
-      if (importedTiddlers == undefined || importedTiddlers == null) {
-        return {
-          cid: cid, // IPFS cid
-          importedTiddlers: null,
-          normalizedUri: normalizedUri,
-        };
-      }
-      // Cache immutable imported Tiddlers
-      if (cid != null) {
-        this.importedTiddlers.set(cid, importedTiddlers);
-        const pathname = "/" + ipfsKeyword + "/" + cid;
-        const url = await this.ipfsUri.normalizeUrl(pathname);
-        this.getLogger().info("Caching imported Tiddler(s):" + "\n " + url.href);
-      }
+    } catch (error) {
+      // Log and continue
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     }
     return {
       cid: cid, // IPFS cid

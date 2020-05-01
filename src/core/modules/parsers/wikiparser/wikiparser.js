@@ -129,19 +129,17 @@ wikiparser
     var cid = null;
     var importedTiddlers = null;
     var normalizedUri = null;
-    try {
-      var { cid, importedTiddlers, normalizedUri } = await $tw.ipfs.importTiddlers(uri);
-    } catch (error) {
-      this.getLogger().error(error);
+    var { cid, importedTiddlers, normalizedUri } = await $tw.ipfs.importTiddlers(uri);
+    if (importedTiddlers == null) {
       $tw.utils.alert(
         name,
         'Failed to import : <a rel="noopener noreferrer" target="_blank" href="' +
-          uri +
+          normalizedUri +
           '">' +
           field +
           "</a> from Imported Tiddler [[" +
           title +
-          "]]..."
+          "]]"
       );
     }
     return {
@@ -179,23 +177,25 @@ wikiparser
     //     return;
     //   }
     // });
-    if (added !== 0 || updated !== 0) {
-      $tw.utils.alert(
-        name,
-        "Successfully Imported and Merged. " + added + " Added Tiddlers(s), " + updated + " Updated Tiddlers(s)..."
-      );
+    if (this.processedImported.size > 0) {
+      $tw.utils.alert(name, "Successfully Added: " + added + ", Updated: " + updated + " Tiddlers...");
     }
     if (this.processedTitles.get(this.host.fields.title) == undefined) {
       var updatedTiddler = new $tw.Tiddler(this.host);
       if (this.root !== null) {
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: updatedTiddler,
-          fields: [{ key: "text", value: "Successfully Imported: [[" + this.root + "]]..." }],
+          fields: [{ key: "text", value: "Successfully Imported Tiddlers: [[" + this.root + "]]..." }],
+        });
+      } else if (this.processedImported.size === 0) {
+        updatedTiddler = $tw.utils.updateTiddler({
+          tiddler: updatedTiddler,
+          fields: [{ key: "text", value: "No Tiddlers have been Imported..." }],
         });
       } else {
         updatedTiddler = $tw.utils.updateTiddler({
           tiddler: updatedTiddler,
-          fields: [{ key: "text", value: "Successfully Imported..." }],
+          fields: [{ key: "text", value: "Successfully Imported Tiddlers..." }],
         });
       }
       // Update
@@ -254,6 +254,10 @@ wikiparser
       var currentTiddler = null;
       var importedTiddler = importedTiddlers[i];
       var importedTitle = importedTiddler["title"];
+      // Check
+      if (importedTitle == undefined || importedTitle == null || importedTitle.trim() === "") {
+        continue;
+      }
       var importedTags = importedTiddler["tags"] !== undefined ? importedTiddler["tags"] : "";
       // Type
       var type = importedTiddler["type"];
@@ -267,7 +271,13 @@ wikiparser
       if (info == undefined || info == null) {
         $tw.utils.alert(
           name,
-          "Unknown Tiddler Content-Type: " + type + ", Tiddler: " + importedTitle + ", Uri: " + importedNormalizedUri
+          "Unknown Content-Type: '" +
+            type +
+            "', default to: 'text/vnd.tiddlywiki', <a rel='noopener noreferrer' target='_blank' href='" +
+            importedNormalizedUri +
+            "'>" +
+            importedTitle +
+            "</a>"
         );
         // Default
         type = "text/vnd.tiddlywiki";
@@ -314,6 +324,9 @@ wikiparser
         // Unknown from leaf to top, we keep the top modified field
         if (merged[field] == undefined || merged[field] == null || field === "modified") {
           merged[field] = importedTiddler[field];
+        }
+        if (field === "type") {
+          merged[field] = type;
         }
       }
       // Tags,

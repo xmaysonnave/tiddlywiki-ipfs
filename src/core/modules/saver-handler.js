@@ -168,14 +168,14 @@ downloadType: the content type for the saved file
       text = this.wiki.renderTiddler(downloadType, template, options),
       callback = function (err) {
         if (err) {
-          self.logger.alert($tw.language.getString("Error/WhileSaving") + ": " + err);
+          alert($tw.language.getString("Error/WhileSaving") + ":\n\n" + err);
         } else {
           // Clear the task queue if we're saving (rather than downloading)
           if (method !== "download") {
             self.numChanges = 0;
             self.updateDirtyStatus();
           }
-          $tw.utils.alert("saver-handler", self.titleSavedNotification);
+          $tw.notifier.display(self.titleSavedNotification);
           if (options.callback) {
             options.callback();
           }
