@@ -114,8 +114,8 @@ IPFS Tiddler
       }
     }
     // IPNS name preference
-    const ipns = changes["$:/ipfs/saver/ipns/name"];
-    if (ipns !== undefined && ipns.modified) {
+    const ipnsName = changes["$:/ipfs/saver/ipns/name"];
+    if (ipnsName !== undefined && ipnsName.modified) {
       const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
       if (tiddler !== undefined) {
         if ($tw.utils.getIpfsIpnsKey() !== null) {
