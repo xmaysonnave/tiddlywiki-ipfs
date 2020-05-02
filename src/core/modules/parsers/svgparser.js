@@ -99,4 +99,5 @@ The image parser parses an image into an embeddable HTML element
   };
 
   exports["image/svg+xml"] = SvgParser;
+  exports[".svg"] = SvgParser;
 })();

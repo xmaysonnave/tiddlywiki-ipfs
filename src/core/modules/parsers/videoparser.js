@@ -50,6 +50,7 @@ The video parser parses a video tiddler into an embeddable HTML element
   const name = "ipfs-videoparser";
 
   var VideoParser = function (type, text, options) {
+    var self = this;
     var value = "data:" + type + ";base64,";
     var element = {
       type: "element",

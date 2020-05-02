@@ -423,7 +423,7 @@ IPFS Tiddler
         var cid = null;
         var normalizedUrl = null;
         try {
-          var { normalizedUrl, cid } = await this.ipfsController.resolveUrl(true, oldTiddler.getFieldString(field));
+          var { normalizedUrl, cid } = await this.ipfsController.resolveUrl(false, oldTiddler.getFieldString(field));
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
@@ -484,7 +484,7 @@ IPFS Tiddler
       var cid = null;
       var normalizedUrl = null;
       try {
-        var { normalizedUrl, cid } = await this.ipfsController.resolveUrl(true, value);
+        var { normalizedUrl, cid } = await this.ipfsController.resolveUrl(false, value);
       } catch (error) {
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
@@ -510,7 +510,7 @@ IPFS Tiddler
       var oldCid = null;
       var oldNormalizedUrl = null;
       try {
-        var { normalizedUrl: oldNormalizedUrl, cid: oldCid } = await this.ipfsController.resolveUrl(true, oldValue);
+        var { normalizedUrl: oldNormalizedUrl, cid: oldCid } = await this.ipfsController.resolveUrl(false, oldValue);
       } catch (error) {
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);

@@ -18,7 +18,6 @@ IPFS Controller
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
   const ipfsKeyword = "ipfs";
-  const ipnsKeyword = "ipns";
 
   const name = "ipfs-controller";
 
@@ -177,7 +176,7 @@ IPFS Controller
     var normalizedUrl = null;
     try {
       if (url !== undefined && url !== null) {
-        var { cid, normalizedUrl } = await this.resolveUrl(true, url);
+        var { cid, normalizedUrl } = await this.resolveUrl(false, url);
         // Retrieve cached immutable imported Tiddlers
         if (cid !== null) {
           importedTiddlers = this.importedTiddlers.get(cid);
@@ -244,8 +243,8 @@ IPFS Controller
     return this.ipfsUrl.getIpfsGatewayUrl();
   };
 
-  IpfsController.prototype.resolveUrl = async function (ipns, value) {
-    return await this.ipfsUrl.resolveUrl(ipns, value);
+  IpfsController.prototype.resolveUrl = async function (resolveIpns, value) {
+    return await this.ipfsUrl.resolveUrl(resolveIpns, value);
   };
 
   IpfsController.prototype.getUrl = function (url, base) {

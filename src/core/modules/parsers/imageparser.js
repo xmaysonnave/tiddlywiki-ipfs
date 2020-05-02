@@ -50,6 +50,7 @@ The image parser parses an image into an embeddable HTML element
   var name = "ipfs-imageparser";
 
   var ImageParser = function (type, text, options) {
+    var self = this;
     var value = "data:" + type + ";base64,";
     var element = {
       type: "element",

@@ -50,6 +50,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
   var name = "ipfs-audioparser";
 
   var AudioParser = function (type, text, options) {
+    var self = this;
     var value = "data:" + type + ";base64,";
     var element = {
       type: "element",
@@ -61,7 +62,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
     };
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var tiddler = options.tiddler;
-      var url = options.tiddler.fields._canonical_uri;
+      var url = tiddler.fields._canonical_uri;
       // Load external resource
       if (url !== undefined && url !== null && url.trim() != "") {
         $tw.ipfsController

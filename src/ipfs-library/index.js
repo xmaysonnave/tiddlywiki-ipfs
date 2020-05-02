@@ -384,7 +384,7 @@ import root from "window-or-global";
     if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
       this.getLogger().info("Processing IPNS name resolve...");
       const resolvedSource = await client.name.resolve(id.trim(), {
-        recursive: true,
+        recursive: false,
       });
       // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
       var lastResult = null;

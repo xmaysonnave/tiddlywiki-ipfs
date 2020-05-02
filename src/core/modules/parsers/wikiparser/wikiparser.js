@@ -58,14 +58,8 @@ wikiparser
         url = options.tiddler.fields._canonical_uri;
       }
       if (url !== undefined && url !== null && url.trim() !== "") {
-        (async () => {
-          try {
-            await this.loadRemoteTiddlers(options.tiddler);
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          }
-        })();
+        this.loadRemoteTiddlers(options.tiddler);
+        text = $tw.language.getRawString("LazyLoadingWarning");
       }
     }
     // Initialise the classes if we don't have them already
@@ -155,51 +149,56 @@ wikiparser
     this.processedKeys = new Map();
     this.processedTitles = new Map();
     this.root = null;
-    var { added, updated } = await this.loadImportedRemoteTiddlers(
-      tiddler.fields._canonical_uri,
-      tiddler.fields._import_uri,
-      tiddler.fields.title
-    );
-    // Update Tiddly
-    for (var [title, merged] of this.processedImported.entries()) {
-      $tw.wiki.addTiddler(merged);
-    }
-    // Process deleted
-    // $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, tiddler) {
-    //   var value = tiddler.getFieldString("_canonical_uri");
-    //   if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
-    //     $tw.wiki.deleteTiddler(title);
-    //     return;
-    //   }
-    //   var value = tiddler.getFieldString("_import_uri");
-    //   if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
-    //     $tw.wiki.deleteTiddler(title);
-    //     return;
-    //   }
-    // });
-    if (this.processedImported.size > 0) {
-      $tw.utils.alert(name, "Successfully Added: " + added + ", Updated: " + updated + " Tiddlers...");
-    }
-    if (this.processedTitles.get(this.host.fields.title) == undefined) {
-      var updatedTiddler = new $tw.Tiddler(this.host);
-      if (this.root !== null) {
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          fields: [{ key: "text", value: "Successfully Imported Tiddlers: [[" + this.root + "]]..." }],
-        });
-      } else if (this.processedImported.size === 0) {
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          fields: [{ key: "text", value: "No Tiddlers have been Imported..." }],
-        });
-      } else {
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          fields: [{ key: "text", value: "Successfully Imported Tiddlers..." }],
-        });
+    try {
+      var { added, updated } = await this.loadImportedRemoteTiddlers(
+        tiddler.fields._canonical_uri,
+        tiddler.fields._import_uri,
+        tiddler.fields.title
+      );
+      // Update Tiddly
+      for (var [title, merged] of this.processedImported.entries()) {
+        $tw.wiki.addTiddler(merged);
       }
-      // Update
-      $tw.wiki.addTiddler(updatedTiddler);
+      // Process deleted
+      // $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, tiddler) {
+      //   var value = tiddler.getFieldString("_canonical_uri");
+      //   if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
+      //     $tw.wiki.deleteTiddler(title);
+      //     return;
+      //   }
+      //   var value = tiddler.getFieldString("_import_uri");
+      //   if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
+      //     $tw.wiki.deleteTiddler(title);
+      //     return;
+      //   }
+      // });
+      if (this.processedImported.size > 0) {
+        $tw.utils.alert(name, "Successfully Added: " + added + ", Updated: " + updated + " Tiddlers...");
+      }
+      if (this.processedTitles.get(this.host.fields.title) == undefined) {
+        var updatedTiddler = new $tw.Tiddler(this.host);
+        if (this.root !== null) {
+          updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: updatedTiddler,
+            fields: [{ key: "text", value: "Successfully Imported Tiddlers: [[" + this.root + "]]..." }],
+          });
+        } else if (this.processedImported.size === 0) {
+          updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: updatedTiddler,
+            fields: [{ key: "text", value: "No Tiddlers have been Imported..." }],
+          });
+        } else {
+          updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: updatedTiddler,
+            fields: [{ key: "text", value: "Successfully Imported Tiddlers..." }],
+          });
+        }
+        // Update
+        $tw.wiki.addTiddler(updatedTiddler);
+      }
+    } catch (error) {
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
     }
     // Cleanup
     this.host = null;

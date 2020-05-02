@@ -53,133 +53,77 @@ IPFS parser utils
    * Load to Base64
    */
   exports.loadToBase64 = async function (url) {
-    return await new Promise((resolve, reject) => {
-      $tw.utils
-        .httpGetToUint8Array(url)
-        .then((array) => {
-          // Empty
-          if (array.length == 0) {
-            resolve({
-              data: "",
-              decrypted: false,
-            });
-          }
-          // Decrypt
-          if ($tw.utils.isUtf8ArrayEncrypted(array)) {
-            $tw.utils
-              .decryptUint8ArrayToBase64(array)
-              .then((base64) => {
-                resolve({
-                  data: base64,
-                  decrypted: true,
-                });
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          } else {
-            resolve({
-              data: $tw.utils.Uint8ArrayToBase64(array),
-              decrypted: false,
-            });
-          }
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    const array = await $tw.utils.httpGetToUint8Array(url);
+    if (array.length == 0) {
+      return {
+        data: "",
+        decrypted: false,
+      };
+    }
+    // Decrypt
+    if ($tw.utils.isUtf8ArrayEncrypted(array)) {
+      const decrypted = await $tw.utils.decryptUint8ArrayToBase64(array);
+      return {
+        data: decrypted,
+        decrypted: true,
+      };
+    }
+    const data = await $tw.utils.Uint8ArrayToBase64(array);
+    return {
+      data: data,
+      decrypted: false,
+    };
   };
 
   /*
    * Load to UTF-8
    */
   exports.loadToUtf8 = async function (url) {
-    return await new Promise((resolve, reject) => {
-      $tw.utils
-        .httpGetToUint8Array(url)
-        .then((array) => {
-          // Empty
-          if (array.length == 0) {
-            resolve({
-              data: "",
-              decrypted: false,
-            });
-          }
-          // Decrypt
-          if ($tw.utils.isUtf8ArrayEncrypted(array)) {
-            $tw.utils
-              .decryptUint8ArrayToUtf8(array)
-              .then((data) => {
-                resolve({
-                  data: data,
-                  decrypted: true,
-                });
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          } else {
-            resolve({
-              data: $tw.utils.Utf8ArrayToStr(array),
-              decrypted: false,
-            });
-          }
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    const array = await $tw.utils.httpGetToUint8Array(url);
+    if (array.length == 0) {
+      return {
+        data: "",
+        decrypted: false,
+      };
+    }
+    if ($tw.utils.isUtf8ArrayEncrypted(array)) {
+      const decrypted = await $tw.utils.decryptUint8ArrayToUtf8(array);
+      return {
+        data: decrypted,
+        decrypted: true,
+      };
+    }
+    const data = await $tw.utils.Utf8ArrayToStr(array);
+    return {
+      data: data,
+      decrypted: false,
+    };
   };
 
   /*
    * Decrypt Uint8 Array to Base64 String
    */
   exports.decryptUint8ArrayToBase64 = async function (array) {
-    return await new Promise((resolve, reject) => {
-      try {
-        (async () => {
-          var content = $tw.utils.Utf8ArrayToStr(array);
-          if ($tw.crypto.hasPassword() == false) {
-            try {
-              content = await $tw.utils.decryptFromPasswordPrompt(content);
-            } catch (error) {
-              reject(error);
-            }
-          } else {
-            content = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
-          }
-          const base64 = btoa(content);
-          resolve(base64);
-        })();
-      } catch (error) {
-        reject(error);
-      }
-    });
+    var data = $tw.utils.Utf8ArrayToStr(array);
+    if ($tw.crypto.hasPassword() == false) {
+      data = await $tw.utils.decryptFromPasswordPrompt(data);
+    } else {
+      data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword);
+    }
+    return btoa(data);
   };
 
   /*
    * Decrypt Uint8 Array to UTF-8 String
    */
   exports.decryptUint8ArrayToUtf8 = async function (array) {
-    return await new Promise((resolve, reject) => {
-      try {
-        (async () => {
-          var content = $tw.utils.Utf8ArrayToStr(array);
-          if ($tw.crypto.hasPassword() == false) {
-            try {
-              content = await $tw.utils.decryptFromPasswordPrompt(content);
-            } catch (error) {
-              reject(error);
-            }
-          } else {
-            content = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
-          }
-          resolve(content);
-        })();
-      } catch (error) {
-        reject(error);
-      }
-    });
+    var data = $tw.utils.Utf8ArrayToStr(array);
+    if ($tw.crypto.hasPassword() == false) {
+      data = await $tw.utils.decryptFromPasswordPrompt(data);
+    } else {
+      data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword);
+    }
+    return data;
   };
 
   exports.decryptFromPasswordPrompt = async function (encrypted) {

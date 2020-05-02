@@ -1,10 +1,9 @@
 /*\
-title: $:/plugins/ipfs/modules/parsers/pdfparser.js
+title: $:/plugins/ipfs/modules/parsers/htmlparser.js
 type: application/javascript
-tags: $:/ipfs/core
 module-type: parser
 
-The PDF parser embeds a PDF viewer
+The HTML parser displays text as raw HTML
 
 \*/
 
@@ -47,56 +46,51 @@ The PDF parser embeds a PDF viewer
   /*global $tw: false */
   "use strict";
 
-  const name = "ipfs-pdfparser";
+  const name = "ipfs-binaryparser";
 
-  var PdfParser = function (type, text, options) {
+  var HtmlParser = function (type, text, options) {
     var self = this;
-    var value = "data:application/pdf;base64,";
-    var element = {
-      type: "element",
-      tag: "embed",
-      attributes: {},
-    };
+    var value = "data:text/html;charset=utf-8,";
+    var src;
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var tiddler = options.tiddler;
-      var url = options.tiddler.fields._canonical_uri;
+      var url = tiddler.fields._canonical_uri;
       // Load external resource
       if (url !== undefined && url !== null && url.trim() != "") {
         $tw.ipfsController
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;
-            // Load
-            $tw.utils
-              .loadToBase64(normalizedUrl)
-              .then((loaded) => {
-                element.attributes.src = { type: "string", value: value + loaded.data };
-                const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-                $tw.rootWidget.refresh(parsedTiddler);
-              })
-              .catch((error) => {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              });
+            src = normalizedUrl;
+            const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+            $tw.rootWidget.refresh(parsedTiddler);
           })
           .catch((error) => {
             self.getLogger().error(error);
             $tw.utils.alert(name, error.message);
           });
       } else if (text) {
-        element.attributes.src = { type: "string", value: value + text };
+        src = value + encodeURIComponent(text);
       }
     }
-    // Return the parsed tree
-    this.tree = [element];
+    this.tree = [
+      {
+        type: "element",
+        tag: "iframe",
+        attributes: {
+          src: { type: "string", value: src },
+          sandbox: { type: "string", value: "" },
+        },
+      },
+    ];
   };
 
-  PdfParser.prototype.getLogger = function () {
+  HtmlParser.prototype.getLogger = function () {
     if (window.log) {
       return window.log.getLogger(name);
     }
     return console;
   };
 
-  exports["application/pdf"] = PdfParser;
+  exports["text/html"] = HtmlParser;
 })();

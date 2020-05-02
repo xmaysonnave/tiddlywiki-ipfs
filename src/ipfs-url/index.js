@@ -22,7 +22,7 @@ import { URL } from "universal-url";
     return root.log.getLogger(name);
   };
 
-  IpfsUrl.prototype.resolveUrl = async function (ipns, value) {
+  IpfsUrl.prototype.resolveUrl = async function (resolveIpns, value) {
     var cid = null;
     var normalizedUrl = null;
     var protocol = null;
@@ -40,9 +40,10 @@ import { URL } from "universal-url";
         // IPFS
         var { protocol, cid } = this.ipfsLibrary.decodeCid(normalizedUrl.pathname);
         // IPNS
-        if (ipns && protocol !== null && cid !== null && protocol === ipnsKeyword) {
+        if (resolveIpns && cid !== null && protocol !== null && protocol === ipnsKeyword) {
           try {
             const { ipnsKey } = await $tw.ipfsController.getIpnsIdentifiers(cid);
+            cid = null;
             cid = await $tw.ipfsController.resolveIpnsKey(ipnsKey);
           } catch (error) {
             this.getLogger().error(error);

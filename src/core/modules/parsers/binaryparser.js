@@ -1,10 +1,9 @@
 /*\
-title: $:/plugins/ipfs/modules/parsers/pdfparser.js
+title: $:/plugins/ipfs/modules/parsers/binaryparser.js
 type: application/javascript
-tags: $:/ipfs/core
 module-type: parser
 
-The PDF parser embeds a PDF viewer
+The binary parser parses a binary tiddler into a warning message and download link
 
 \*/
 
@@ -47,56 +46,88 @@ The PDF parser embeds a PDF viewer
   /*global $tw: false */
   "use strict";
 
-  const name = "ipfs-pdfparser";
+  const name = "ipfs-binaryparser";
 
-  var PdfParser = function (type, text, options) {
+  var BINARY_WARNING_MESSAGE = "$:/core/ui/BinaryWarning";
+  var EXPORT_BUTTON_IMAGE = "$:/core/images/export-button";
+
+  var BinaryParser = function (type, text, options) {
     var self = this;
-    var value = "data:application/pdf;base64,";
-    var element = {
+    // Transclude the binary data tiddler warning message
+    var warn = {
       type: "element",
-      tag: "embed",
-      attributes: {},
+      tag: "p",
+      children: [
+        {
+          type: "transclude",
+          attributes: {
+            tiddler: { type: "string", value: BINARY_WARNING_MESSAGE },
+          },
+        },
+      ],
+    };
+    // Create download link based on binary tiddler title
+    var link = {
+      type: "element",
+      tag: "a",
+      attributes: {
+        title: { type: "indirect", textReference: "!!title" },
+        download: { type: "indirect", textReference: "!!title" },
+      },
+      children: [
+        {
+          type: "transclude",
+          attributes: {
+            tiddler: { type: "string", value: EXPORT_BUTTON_IMAGE },
+          },
+        },
+      ],
     };
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var tiddler = options.tiddler;
-      var url = options.tiddler.fields._canonical_uri;
-      // Load external resource
+      var url = tiddler.fields._canonical_uri;
+      // Set the link href to external or internal data URI
       if (url !== undefined && url !== null && url.trim() != "") {
         $tw.ipfsController
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;
-            // Load
-            $tw.utils
-              .loadToBase64(normalizedUrl)
-              .then((loaded) => {
-                element.attributes.src = { type: "string", value: value + loaded.data };
-                const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-                $tw.rootWidget.refresh(parsedTiddler);
-              })
-              .catch((error) => {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              });
+            link.attributes.href = {
+              type: "string",
+              value: normalizedUrl,
+            };
+            const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+            $tw.rootWidget.refresh(parsedTiddler);
           })
           .catch((error) => {
             self.getLogger().error(error);
             $tw.utils.alert(name, error.message);
           });
       } else if (text) {
-        element.attributes.src = { type: "string", value: value + text };
+        link.attributes.href = {
+          type: "string",
+          value: "data:" + type + ";base64," + text,
+        };
       }
     }
-    // Return the parsed tree
+    // Combine warning message and download link in a div
+    var element = {
+      type: "element",
+      tag: "div",
+      attributes: {
+        class: { type: "string", value: "tc-binary-warning" },
+      },
+      children: [warn, link],
+    };
     this.tree = [element];
   };
 
-  PdfParser.prototype.getLogger = function () {
+  BinaryParser.prototype.getLogger = function () {
     if (window.log) {
       return window.log.getLogger(name);
     }
     return console;
   };
 
-  exports["application/pdf"] = PdfParser;
+  exports["application/octet-stream"] = BinaryParser;
 })();
