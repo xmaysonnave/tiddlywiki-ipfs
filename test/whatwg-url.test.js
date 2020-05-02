@@ -31,28 +31,33 @@ const relative = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujd
 
 beforeAll(() => {
   root.log = log;
-  root.ipfsBundle = new IpfsBundle();
   log.setLevel("silent", false);
 });
 
 describe("WHATWG-URL", () => {
   it("Undefined URL", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
     expect(() => {
-      ipfsUri.getUrl();
+      ipfsUrl.getUrl();
     }).toThrow();
   });
 
   it("Invalid URL", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
     expect(() => {
-      ipfsUri.getUrl(invalid);
+      ipfsUrl.getUrl(invalid);
     }).toThrow();
   });
 
   it("HTTPS protocol URL", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getUrl(baseHttp);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getUrl(baseHttp);
     expect(
       parsed.protocol === "https:" &&
         parsed.origin === baseHttp &&
@@ -64,8 +69,10 @@ describe("WHATWG-URL", () => {
   });
 
   it("File protocol URL", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getUrl(baseFile);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getUrl(baseFile);
     expect(
       parsed.protocol === "file:" &&
         parsed.origin === "null" &&
@@ -76,16 +83,20 @@ describe("WHATWG-URL", () => {
   });
 
   it("Useless base HTTP URL", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getUrl(absolute, baseHttp);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getUrl(absolute, baseHttp);
     expect(
       parsed.protocol === "https:" && parsed.hostname === "bluelightav.eth" && parsed.href == absolute + "/"
     ).toBeTruthy();
   });
 
   it("Relative URL", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getUrl(relative, baseHttp);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getUrl(relative, baseHttp);
     expect(parsed.href === baseHttp + relative).toBeTruthy();
   });
 });

@@ -2,26 +2,27 @@ import CID from "cids";
 import contentHash from "content-hash";
 import root from "window-or-global";
 
-(function() {
+(function () {
   /*jslint node: true, browser: true*/
   "use strict";
 
   const name = "ens-library";
 
-  var EnsLibrary = function() {
+  var EnsLibrary = function (ipfsBundle) {
+    this.ipfsBundle = ipfsBundle;
     this.network = {
       1: "Ethereum Main Network: 'Mainnet', chainId: '1'",
       3: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'",
       4: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'",
       5: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'",
-      42: "Ethereum Test Network (PoA): 'Kovan', chainId: '42'"
+      42: "Ethereum Test Network (PoA): 'Kovan', chainId: '42'",
     };
     this.etherscan = {
       1: "https://etherscan.io",
       3: "https://ropsten.etherscan.io",
       4: "https://rinkeby.etherscan.io",
       5: "https://goerli.etherscan.io",
-      42: "https://kovan.etherscan.io"
+      42: "https://kovan.etherscan.io",
     };
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
@@ -29,36 +30,36 @@ import root from "window-or-global";
       1: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       3: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       4: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      5: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+      5: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
     };
   };
 
-  EnsLibrary.prototype.getLogger = function() {
+  EnsLibrary.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
-  EnsLibrary.prototype.getEtherscanRegistry = function() {
+  EnsLibrary.prototype.getEtherscanRegistry = function () {
     return this.etherscan;
   };
 
-  EnsLibrary.prototype.getNetwork = function() {
+  EnsLibrary.prototype.getNetwork = function () {
     return this.network;
   };
 
-  EnsLibrary.prototype.getENSRegistry = function() {
+  EnsLibrary.prototype.getENSRegistry = function () {
     return this.registry;
   };
 
-  EnsLibrary.prototype.getLogger = function() {
+  EnsLibrary.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
-  EnsLibrary.prototype.loadEthers = async function() {
-    if (window.ethers == undefined || window.ethers == null) {
+  EnsLibrary.prototype.loadEthers = async function () {
+    if (root.ethers == undefined || root.ethers == null) {
       try {
         // Load ethers
-        await window.ipfsBundle.ipfsLoader.loadEtherJsLibrary();
-        if (window.ethers !== undefined && window.ethers !== null) {
+        await this.ipfsBundle.ipfsLoader.loadEtherJsLibrary();
+        if (root.ethers !== undefined && root.ethers !== null) {
           return;
         }
       } catch (error) {
@@ -70,7 +71,7 @@ import root from "window-or-global";
   };
 
   // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
-  EnsLibrary.prototype.decodeContenthash = function(content) {
+  EnsLibrary.prototype.decodeContenthash = function (content) {
     var decoded = null;
     var protocol = null;
     if (content.error) {
@@ -91,12 +92,12 @@ import root from "window-or-global";
     }
     return {
       decoded: decoded,
-      protocol: protocol
+      protocol: protocol,
     };
   };
 
   // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1577.md
-  EnsLibrary.prototype.encodeContenthash = function(content) {
+  EnsLibrary.prototype.encodeContenthash = function (content) {
     var type = null;
     var text = null;
     var encoded = null;
@@ -119,11 +120,11 @@ import root from "window-or-global";
       }
     }
     return {
-      encoded: encoded
+      encoded: encoded,
     };
   };
 
-  EnsLibrary.prototype.enableProvider = async function(provider) {
+  EnsLibrary.prototype.enableProvider = async function (provider) {
     // Check
     if (provider == undefined || provider == null) {
       throw new Error("Undefined Ethereum provider...");
@@ -164,7 +165,7 @@ import root from "window-or-global";
     return accounts[0];
   };
 
-  EnsLibrary.prototype.getProvider = async function() {
+  EnsLibrary.prototype.getProvider = async function () {
     // Retrieve an available Ethereum provider
     var provider = null;
     if (typeof root.ethereum !== "undefined") {
@@ -186,7 +187,7 @@ import root from "window-or-global";
     return provider;
   };
 
-  EnsLibrary.prototype.getEnabledWeb3Provider = async function(provider) {
+  EnsLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
     // Check
     if (provider == undefined || provider == null) {
       throw new Error("Undefined Ethereum provider...");
@@ -204,11 +205,11 @@ import root from "window-or-global";
     return {
       web3: web3,
       chainId: network.chainId,
-      account: account
+      account: account,
     };
   };
 
-  EnsLibrary.prototype.getWeb3Provider = async function(provider) {
+  EnsLibrary.prototype.getWeb3Provider = async function (provider) {
     // Check
     if (provider == undefined || provider == null) {
       throw new Error("Undefined Ethereum provider...");
@@ -222,11 +223,11 @@ import root from "window-or-global";
     const network = await web3.getNetwork();
     return {
       web3: web3,
-      chainId: network.chainId
+      chainId: network.chainId,
     };
   };
 
-  EnsLibrary.prototype.getRegistry = async function(web3) {
+  EnsLibrary.prototype.getRegistry = async function (web3) {
     // Check
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
@@ -246,11 +247,11 @@ import root from "window-or-global";
     // Return registry address
     return {
       chainId: network.chainId,
-      registry: registry
+      registry: registry,
     };
   };
 
-  EnsLibrary.prototype.getResolver = async function(web3, registry, node) {
+  EnsLibrary.prototype.getResolver = async function (web3, registry, node) {
     // Check
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
@@ -284,7 +285,7 @@ import root from "window-or-global";
   };
 
   // https://eips.ethereum.org/EIPS/eip-165
-  EnsLibrary.prototype.checkEip165 = async function(web3, address) {
+  EnsLibrary.prototype.checkEip165 = async function (web3, address) {
     // Check
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
@@ -334,7 +335,7 @@ import root from "window-or-global";
   };
 
   // https://eips.ethereum.org/EIPS/eip-1577
-  EnsLibrary.prototype.checkEip1577 = async function(web3, address) {
+  EnsLibrary.prototype.checkEip1577 = async function (web3, address) {
     // check
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
@@ -367,7 +368,7 @@ import root from "window-or-global";
     return true;
   };
 
-  EnsLibrary.prototype.getContenthash = async function(domain, web3) {
+  EnsLibrary.prototype.getContentHash = async function (domain, web3) {
     // check
     if (domain == undefined || domain == null) {
       throw new Error("Undefined ENS domain...");
@@ -421,7 +422,7 @@ import root from "window-or-global";
     if (result == undefined || result == null || result === "0x") {
       return {
         content: null,
-        protocol: null
+        protocol: null,
       };
     }
 
@@ -430,7 +431,7 @@ import root from "window-or-global";
     if (content == undefined || content == null || Array.isArray(content) === false || content[0] === "0x") {
       return {
         content: null,
-        protocol: null
+        protocol: null,
       };
     }
 
@@ -439,11 +440,11 @@ import root from "window-or-global";
 
     return {
       content: decoded,
-      protocol: protocol
+      protocol: protocol,
     };
   };
 
-  EnsLibrary.prototype.setContenthash = async function(domain, cid, web3, account) {
+  EnsLibrary.prototype.setContentHash = async function (domain, cid, web3, account) {
     // check
     if (domain == undefined || domain == null) {
       throw new Error("Undefined ENS domain...");

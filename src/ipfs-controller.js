@@ -13,17 +13,8 @@ IPFS Controller
   /*global $tw: false */
   "use strict";
 
-  /**
-   * https://github.com/purposeindustries/window-or-global
-   * The MIT License (MIT) Copyright (c) Purpose Industries
-   * version: 1.0.1
-   */
-  const root =
-    (typeof self === "object" && self.self === self && self) ||
-    (typeof global === "object" && global.global === global && global) ||
-    this;
-
   const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
+  const IpfsBundle = require("$:/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
   const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
 
   const ipfsKeyword = "ipfs";
@@ -36,9 +27,11 @@ IPFS Controller
     this.chainId = null;
     this.account = null;
     this.ethereum = null;
-    this.ensWrapper = new EnsWrapper();
-    this.ipfsUri = root.ipfsBundle.ipfsUri;
-    this.ipfsWrapper = new IpfsWrapper();
+    this.ipfsBundle = new IpfsBundle();
+    this.ipfsBundle.init();
+    this.ensWrapper = new EnsWrapper(this.ipfsBundle);
+    this.ipfsUrl = this.ipfsBundle.ipfsUrl;
+    this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle);
     this.ipfsClients = new Map();
     this.importedTiddlers = new Map();
     this.unpin = [];
@@ -55,7 +48,7 @@ IPFS Controller
     }
   };
 
-  IpfsController.prototype.addToUnpin = async function (cid) {
+  IpfsController.prototype.addToUnpin = function (cid) {
     if (cid !== undefined && cid !== null) {
       if (this.unpin.indexOf(cid) === -1) {
         this.unpin.push(cid);
@@ -63,6 +56,63 @@ IPFS Controller
       }
     }
     return false;
+  };
+
+  IpfsController.prototype.exportTiddler = async function (tiddler, child) {
+    return await this.ipfsWrapper.exportTiddler(tiddler, child);
+  };
+
+  IpfsController.prototype.pinToIpfs = async function (cid) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.pinToIpfs(ipfs, cid);
+  };
+
+  IpfsController.prototype.unpinFromIpfs = async function (cid) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
+  };
+
+  IpfsController.prototype.addToIpfs = async function (content) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.addToIpfs(ipfs, content);
+  };
+
+  IpfsController.prototype.generateIpnsKey = async function (ipnsName) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.generateIpnsKey(ipfs, ipnsName);
+  };
+
+  IpfsController.prototype.removeIpnsKey = async function (ipnsName) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName);
+  };
+
+  IpfsController.prototype.renameIpnsName = async function (oldIpnsName, newIpnsName) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName);
+  };
+
+  IpfsController.prototype.decodeCid = function (pathname) {
+    return this.ipfsWrapper.decodeCid(pathname);
+  };
+
+  IpfsController.prototype.getIpnsIdentifiers = async function (ipnsKey, ipnsName) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+  };
+
+  IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+  };
+
+  IpfsController.prototype.publishToIpns = async function (ipnsKey, ipnsName, cid) {
+    const { ipfs } = await this.getIpfsClient();
+    return await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
+  };
+
+  IpfsController.prototype.getAttachmentContent = function (tiddler) {
+    return this.ipfsWrapper.getAttachmentContent(tiddler);
   };
 
   IpfsController.prototype.getContentType = function (tiddler) {
@@ -120,40 +170,29 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.importTiddlers = async function (uri) {
+  IpfsController.prototype.importTiddlers = async function (url) {
     // Process
     var cid = null;
     var importedTiddlers = null;
-    var normalizedUri = null;
+    var normalizedUrl = null;
     try {
-      if (uri !== undefined && uri !== null) {
-        var protocol = null;
-        normalizedUri = await this.normalizeIpfsUrl(uri);
-        // IPFS
-        var { protocol, cid } = this.decodeCid(normalizedUri.pathname);
-        // IPNS
-        if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
-          // IPFS client
-          const { ipfs } = await $tw.ipfs.getIpfsClient();
-          const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
-          cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
-        }
+      if (url !== undefined && url !== null) {
+        var { cid, normalizedUrl } = await this.resolveUrl(true, url);
         // Retrieve cached immutable imported Tiddlers
         if (cid !== null) {
           importedTiddlers = this.importedTiddlers.get(cid);
           if (importedTiddlers !== undefined && importedTiddlers !== null) {
-            const url = await this.ipfsUri.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-            this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + url.href);
+            this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl.href);
             // Done
             return {
               cid,
               importedTiddlers: importedTiddlers,
-              normalizedUri: normalizedUri,
+              normalizedUrl: normalizedUrl,
             };
           }
         }
         // Load
-        const content = await $tw.utils.loadToUtf8(normalizedUri);
+        const content = await $tw.utils.loadToUtf8(normalizedUrl);
         if (this.isJSON(content.data)) {
           importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
         } else {
@@ -164,15 +203,13 @@ IPFS Controller
           return {
             cid: cid, // IPFS cid
             importedTiddlers: null,
-            normalizedUri: normalizedUri,
+            normalizedUrl: normalizedUrl,
           };
         }
         // Cache immutable imported Tiddlers
         if (cid != null) {
           this.importedTiddlers.set(cid, importedTiddlers);
-          const pathname = "/" + ipfsKeyword + "/" + cid;
-          const url = await this.ipfsUri.normalizeUrl(pathname);
-          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + url.href);
+          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + normalizedUrl.href);
         }
       }
     } catch (error) {
@@ -183,69 +220,36 @@ IPFS Controller
     return {
       cid: cid, // IPFS cid
       importedTiddlers: importedTiddlers,
-      normalizedUri: normalizedUri,
+      normalizedUrl: normalizedUrl,
     };
-  };
-
-  IpfsController.prototype.getImportedTiddler = async function (uri, title) {
-    const { cid, importedTiddlers, normalizedUri } = await this.importTiddlers(uri);
-    if (importedTiddlers !== undefined || importedTiddlers !== null) {
-      for (var i in importedTiddlers) {
-        if (title === importedTiddlers[i].title) {
-          // Done
-          return {
-            cid: cid,
-            normalizedUri: normalizedUri,
-            importedTiddler: importedTiddlers[i],
-          };
-        }
-      }
-    }
-    return {
-      cid: cid,
-      importedTiddler: null,
-      normalizedUri: normalizedUri,
-    };
-  };
-
-  IpfsController.prototype.getNoBaseUrl = function (url) {
-    return this.ipfsUri.getUrl(url);
   };
 
   IpfsController.prototype.getIpfsBaseUrl = function () {
-    return this.ipfsUri.getIpfsBaseUrl();
+    return this.ipfsUrl.getIpfsBaseUrl();
   };
 
   IpfsController.prototype.normalizeIpfsUrl = async function (url) {
-    return await this.ipfsUri.normalizeUrl(url, this.getIpfsBaseUrl());
+    return await this.ipfsUrl.normalizeUrl(url, this.getIpfsBaseUrl());
   };
 
   IpfsController.prototype.getDocumentUrl = function () {
-    return this.ipfsUri.getDocumentUrl();
+    return this.ipfsUrl.getDocumentUrl();
   };
 
   IpfsController.prototype.getIpfsApiUrl = function () {
-    return this.ipfsUri.getIpfsApiUrl();
+    return this.ipfsUrl.getIpfsApiUrl();
   };
 
   IpfsController.prototype.getIpfsGatewayUrl = function () {
-    return this.ipfsUri.getIpfsGatewayUrl();
+    return this.ipfsUrl.getIpfsGatewayUrl();
   };
 
-  IpfsController.prototype.decodeUrl = async function (value) {
-    return await this.ipfsWrapper.decodeUrl(value);
+  IpfsController.prototype.resolveUrl = async function (ipns, value) {
+    return await this.ipfsUrl.resolveUrl(ipns, value);
   };
 
   IpfsController.prototype.getUrl = function (url, base) {
-    return this.ipfsUri.getUrl(url, base ? base : this.getIpfsBaseUrl());
-  };
-
-  IpfsController.prototype.decodeCid = function (pathname) {
-    return this.ipfsWrapper.decodeCid(pathname);
-  };
-
-  IpfsController.prototype.getIpnsIdentifiers = function (ipfs, ipnsKey, ipnsName) {
-    return this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+    return this.ipfsUrl.getUrl(url, base ? base : this.getIpfsBaseUrl());
   };
 
   IpfsController.prototype.isJSON = function (content) {
@@ -313,6 +317,14 @@ IPFS Controller
       ipfs: ipfs,
       provider: provider,
     };
+  };
+
+  IpfsController.prototype.getContentHash = async function (domain, web3) {
+    return await this.ensWrapper.getContentHash(domain, web3);
+  };
+
+  IpfsController.prototype.setContentHash = async function (domain, cid, web3, account) {
+    await this.ensWrapper.setContentHash(domain, cid, web3, account);
   };
 
   IpfsController.prototype.getEthereumProvider = async function () {
@@ -434,9 +446,9 @@ IPFS Controller
     // Retrieve a Web3 provider
     const { web3 } = await this.getWeb3Provider();
     // Fetch ENS domain content
-    const { content, protocol } = await this.ensWrapper.getContenthash(ensDomain, web3);
+    const { content, protocol } = await this.ensWrapper.getContentHash(ensDomain, web3);
     if (content !== null && protocol !== null) {
-      const url = await $tw.ipfs.normalizeIpfsUrl("/" + protocol + "/" + content);
+      const url = await this.normalizeIpfsUrl("/" + protocol + "/" + content);
       return url;
     }
     // Empty content

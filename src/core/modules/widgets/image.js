@@ -57,7 +57,7 @@ The width and height attributes are interpreted as a number of pixels, and do no
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -66,7 +66,7 @@ The width and height attributes are interpreted as a number of pixels, and do no
 
   var name = "ipfs-image";
 
-  var ImageWidget = function(parseTreeNode, options) {
+  var ImageWidget = function (parseTreeNode, options) {
     this.initialise(parseTreeNode, options);
   };
 
@@ -75,7 +75,7 @@ Inherit from the base widget class
 */
   ImageWidget.prototype = new Widget();
 
-  ImageWidget.prototype.getLogger = function() {
+  ImageWidget.prototype.getLogger = function () {
     if (window.log) {
       return window.log.getLogger(name);
     }
@@ -85,8 +85,7 @@ Inherit from the base widget class
   /*
 Render this widget into the DOM
 */
-  ImageWidget.prototype.render = function(parent, nextSibling) {
-    var self = this;
+  ImageWidget.prototype.render = function (parent, nextSibling) {
     this.parentDomNode = parent;
     this.computeAttributes();
     this.execute();
@@ -101,7 +100,7 @@ Render this widget into the DOM
         "src",
         this.getVariable("tv-get-export-image-link", {
           params: [{ name: "src", value: this.imageSource }],
-          defaultValue: this.imageSource
+          defaultValue: this.imageSource,
         })
       );
     } else {
@@ -127,52 +126,38 @@ Render this widget into the DOM
           }
         } else if (_canonical_uri) {
           // Normalize
-          var uri = _canonical_uri;
-          $tw.ipfs
-            .normalizeIpfsUrl(uri)
-            .then(uri => {
-              // Process
-              switch (type) {
-                case "application/pdf":
-                  domNode = this.document.createElement("embed");
-                  $tw.utils
-                    .loadToBase64(uri)
-                    .then(loaded => {
+          var url = _canonical_uri;
+          (async () => {
+            try {
+              var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, url);
+              if (normalizedUrl !== null) {
+                switch (type) {
+                  case "application/pdf":
+                    domNode = this.document.createElement("embed");
+                    var loaded = await $tw.utils.loadToBase64(normalizedUrl);
+                    if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
                       domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
-                    })
-                    .catch(error => {
-                      self.getLogger().error(error);
-                      $tw.utils.alert(name, error.message);
-                    });
-                  break;
-                case "image/svg+xml":
-                  $tw.utils
-                    .loadToUtf8(uri)
-                    .then(loaded => {
+                    }
+                    break;
+                  case "image/svg+xml":
+                    var loaded = await $tw.utils.loadToUtf8(normalizedUrl);
+                    if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
                       domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
-                    })
-                    .catch(error => {
-                      self.getLogger().error(error);
-                      $tw.utils.alert(name, error.message);
-                    });
-                  break;
-                default:
-                  $tw.utils
-                    .loadToBase64(uri)
-                    .then(loaded => {
+                    }
+                    break;
+                  default:
+                    var loaded = await $tw.utils.loadToBase64(normalizedUrl);
+                    if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
                       domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
-                    })
-                    .catch(error => {
-                      self.getLogger().error(error);
-                      $tw.utils.alert(name, error.message);
-                    });
-                  break;
+                    }
+                    break;
+                }
               }
-            })
-            .catch(error => {
-              self.getLogger().error(error);
+            } catch (error) {
+              this.getLogger().error(error);
               $tw.utils.alert(name, error.message);
-            });
+            }
+          })();
         } else {
           // Just trigger loading of the tiddler
           this.wiki.getTiddlerText(this.imageSource);
@@ -204,7 +189,7 @@ Render this widget into the DOM
   /*
 Compute the internal state of the widget
 */
-  ImageWidget.prototype.execute = function() {
+  ImageWidget.prototype.execute = function () {
     // Get our parameters
     this.imageSource = this.getAttribute("source");
     this.imageWidth = this.getAttribute("width");
@@ -217,7 +202,7 @@ Compute the internal state of the widget
   /*
 Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
 */
-  ImageWidget.prototype.refresh = function(changedTiddlers) {
+  ImageWidget.prototype.refresh = function (changedTiddlers) {
     var changedAttributes = this.computeAttributes();
     if (
       changedAttributes.source ||

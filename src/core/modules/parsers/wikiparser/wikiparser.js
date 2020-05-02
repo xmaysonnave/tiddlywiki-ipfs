@@ -53,11 +53,11 @@ wikiparser
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
     if ($tw.browser && (text || "") === "" && options.tiddler !== undefined && options.tiddler !== null) {
-      var uri = options.tiddler.fields._import_uri;
-      if (uri == undefined || uri == null) {
-        uri = options.tiddler.fields._canonical_uri;
+      var url = options.tiddler.fields._import_uri;
+      if (url == undefined || url == null) {
+        url = options.tiddler.fields._canonical_uri;
       }
-      if (uri !== undefined && uri !== null && uri.trim() !== "") {
+      if (url !== undefined && url !== null && url.trim() !== "") {
         (async () => {
           try {
             await this.loadRemoteTiddlers(options.tiddler);
@@ -125,16 +125,16 @@ wikiparser
     return console;
   };
 
-  WikiParser.prototype.getImportedTiddlers = async function (field, title, uri) {
+  WikiParser.prototype.getImportedTiddlers = async function (field, title, url) {
     var cid = null;
     var importedTiddlers = null;
-    var normalizedUri = null;
-    var { cid, importedTiddlers, normalizedUri } = await $tw.ipfs.importTiddlers(uri);
+    var normalizedUrl = null;
+    var { cid, importedTiddlers, normalizedUrl } = await $tw.ipfsController.importTiddlers(url);
     if (importedTiddlers == null) {
       $tw.utils.alert(
         name,
         'Failed to import : <a rel="noopener noreferrer" target="_blank" href="' +
-          normalizedUri +
+          normalizedUrl +
           '">' +
           field +
           "</a> from Imported Tiddler [[" +
@@ -145,7 +145,7 @@ wikiparser
     return {
       cid,
       importedTiddlers,
-      normalizedUri,
+      normalizedUrl,
     };
   };
 
@@ -214,25 +214,25 @@ wikiparser
     var cid = null;
     var importedTiddlers = null;
     var updated = 0;
-    var uri = null;
+    var url = null;
     // Load Imported
     if (importUri !== undefined && importUri !== null) {
-      uri = importUri;
-      var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers("_import_uri", title, uri);
+      url = importUri;
+      var { cid, importedTiddlers, normalizedUrl } = await this.getImportedTiddlers("_import_uri", title, url);
       // Fallback
       if (importedTiddlers == null) {
-        uri = canonicalUri;
-        if (uri !== undefined && uri !== null) {
-          var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers("_canonical_uri", title, uri);
+        url = canonicalUri;
+        if (url !== undefined && url !== null) {
+          var { cid, importedTiddlers, normalizedUrl } = await this.getImportedTiddlers("_canonical_uri", title, url);
         }
       }
     } else if (canonicalUri !== undefined && canonicalUri !== null) {
-      uri = canonicalUri;
-      var { cid, importedTiddlers, normalizedUri } = await this.getImportedTiddlers("_canonical_uri", title, uri);
+      url = canonicalUri;
+      var { cid, importedTiddlers, normalizedUrl } = await this.getImportedTiddlers("_canonical_uri", title, url);
     }
     // Process Imported
     if (importedTiddlers !== null) {
-      var { added, updated } = await this.processImportedTiddlers(cid, importedTiddlers, uri, normalizedUri);
+      var { added, updated } = await this.processImportedTiddlers(cid, importedTiddlers, url, normalizedUrl);
     }
     return {
       added: added,
@@ -243,8 +243,8 @@ wikiparser
   WikiParser.prototype.processImportedTiddlers = async function (
     cid,
     importedTiddlers,
-    importedUri,
-    importedNormalizedUri
+    importedUrl,
+    importedNormalizedUrl
   ) {
     var importedAdded = 0;
     var importedUpdated = 0;
@@ -274,7 +274,7 @@ wikiparser
           "Unknown Content-Type: '" +
             type +
             "', default to: 'text/vnd.tiddlywiki', <a rel='noopener noreferrer' target='_blank' href='" +
-            importedNormalizedUri +
+            importedNormalizedUrl +
             "'>" +
             importedTitle +
             "</a>"
@@ -352,14 +352,14 @@ wikiparser
       merged["tags"] = importedTags;
       // URI
       if (info.encoding === "base64" || type === "image/svg+xml") {
-        merged["_import_uri"] = importedUri;
+        merged["_import_uri"] = importedUrl;
       } else {
         var canonical_uri = merged["_canonical_uri"];
         if (canonical_uri == undefined || canonical_uri == null) {
-          merged["_canonical_uri"] = importedUri;
+          merged["_canonical_uri"] = importedUrl;
           // import_uri
-        } else if (canonical_uri !== importedUri) {
-          merged["_import_uri"] = importedUri;
+        } else if (canonical_uri !== importedUrl) {
+          merged["_import_uri"] = importedUrl;
         }
       }
       // Count
@@ -379,8 +379,8 @@ wikiparser
           keys.push(cid);
         }
       } else {
-        if (keys.indexOf(importedNormalizedUri) === -1) {
-          keys.push(importedNormalizedUri);
+        if (keys.indexOf(importedNormalizedUrl) === -1) {
+          keys.push(importedNormalizedUrl);
         }
       }
       // Processed Keys
@@ -394,10 +394,10 @@ wikiparser
           titles.push(importedTitle);
         }
       } else {
-        var titles = this.processedKeys.get(importedNormalizedUri);
+        var titles = this.processedKeys.get(importedNormalizedUrl);
         if (titles == undefined) {
           titles = new Array();
-          this.processedKeys.set(importedNormalizedUri, titles);
+          this.processedKeys.set(importedNormalizedUrl, titles);
         }
         if (titles.indexOf(importedTitle) === -1) {
           titles.push(importedTitle);

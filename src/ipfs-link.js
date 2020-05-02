@@ -67,8 +67,6 @@ IPFS link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.render = function (parent, nextSibling) {
-    // self
-    const self = this;
     // Save the parent dom node
     this.parentDomNode = parent;
     // Compute our attributes
@@ -76,35 +74,23 @@ IPFS link widget
     // Execute our logic
     this.execute();
     // Tiddler link
-    const tiddler = $tw.wiki.getTiddler(this.value);
+    var tiddler = $tw.wiki.getTiddler(this.value);
     if (tiddler !== undefined && tiddler !== null) {
       this.renderTiddlerLink(parent, nextSibling);
     } else {
-      var text = false;
-      try {
-        $tw.ipfs.getNoBaseUrl(this.value);
-      } catch (error) {
-        if (this.value.startsWith("/") === false) {
-          text = true;
+      (async () => {
+        try {
+          this.renderText(parent, nextSibling);
+          var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, this.value);
+          if (normalizedUrl !== null) {
+            this.removeChildDomNodes();
+            this.renderExternalLink(parent, nextSibling, normalizedUrl.href);
+          }
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
-      }
-      // Text
-      if (text) {
-        this.renderText(parent, nextSibling);
-        // External URL
-      } else {
-        this.renderText(parent, nextSibling);
-        $tw.ipfs
-          .normalizeIpfsUrl(this.value)
-          .then((normalized_uri) => {
-            self.removeChildDomNodes();
-            self.renderExternalLink(parent, nextSibling, normalized_uri.href);
-          })
-          .catch((error) => {
-            self.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          });
-      }
+      })();
     }
   };
 
@@ -113,14 +99,14 @@ IPFS link widget
    */
   IpfsLinkWidget.prototype.renderExternalLink = function (parent, nextSibling, uri) {
     // Link
-    const domNode = this.document.createElement("a");
+    var domNode = this.document.createElement("a");
     domNode.setAttribute("href", uri);
     // Add a click event handler
     $tw.utils.addEventListeners(domNode, [
       { name: "click", handlerObject: this, handlerMethod: "handleExternalClickEvent" },
     ]);
     // Assign classes
-    const classes = [];
+    var classes = [];
     if (this.classes) {
       classes.push(this.classes);
     }
@@ -245,7 +231,7 @@ IPFS link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderText = function (parent, nextSibling) {
-    const domNode = this.document.createElement("span");
+    var domNode = this.document.createElement("span");
     // Insert the text into the DOM and render any children
     parent.insertBefore(domNode, nextSibling);
     // Process
@@ -254,22 +240,18 @@ IPFS link widget
   };
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
-    // self
-    const self = this;
-    // Normalize
-    $tw.ipfs
-      .normalizeIpfsUrl(this.value)
-      .then((normalized_uri) => {
-        // Process
-        window.open(normalized_uri.href, "_blank", "noopener,noreferrer");
-      })
-      .catch((error) => {
-        // Log
-        self.getLogger().error(error);
+    (async () => {
+      try {
+        var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, this.value);
+        if (normalizedUrl !== null) {
+          window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
+        }
+      } catch (error) {
+        this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
-        // Fallback
         window.open(this.value, "_blank", "noopener,noreferrer");
-      });
+      }
+    })();
     event.preventDefault();
     event.stopPropagation();
     return false;

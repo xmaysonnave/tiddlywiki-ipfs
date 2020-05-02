@@ -11,21 +11,31 @@ IPFS Bundle
 import EnsLibrary from "./ens-library";
 import IpfsLibrary from "./ipfs-library";
 import IpfsLoader from "./ipfs-loader";
-import IpfsUri from "./ipfs-uri";
+import IpfsUrl from "./ipfs-url";
 
-(function() {
+(function () {
   /*jslint node: true, browser: true*/
   /*global $tw: false*/
   "use strict";
 
-  var IpfsBundle = function() {
-    this.ensLibrary = new EnsLibrary();
-    this.ipfsLibrary = new IpfsLibrary();
+  var IpfsBundle = function () {
+    this.once = false;
+  };
+
+  IpfsBundle.prototype.init = function () {
+    // Init once
+    if (this.once) {
+      return;
+    }
+    this.ensLibrary = new EnsLibrary(this);
+    this.ipfsLibrary = new IpfsLibrary(this);
     this.ipfsLoader = new IpfsLoader();
-    this.ipfsUri = new IpfsUri();
+    this.ipfsUrl = new IpfsUrl(this.ensLibrary, this.ipfsLibrary);
+    // Init once
+    this.once = true;
   };
 
   module.exports = {
-    IpfsBundle
+    IpfsBundle,
   };
 })();

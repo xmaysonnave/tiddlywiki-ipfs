@@ -13,19 +13,15 @@ ENS Action
   /*global $tw: false */
   "use strict";
 
-  const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-  const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-
   const fileProtocol = "file:";
   const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
 
   const name = "ens-action";
 
-  var EnsAction = function () {
+  var EnsAction = function (ipfsController) {
     this.once = false;
-    this.ensWrapper = new EnsWrapper();
-    this.ipfsWrapper = new IpfsWrapper();
+    this.ipfsController = ipfsController;
   };
 
   EnsAction.prototype.getLogger = function () {
@@ -75,7 +71,7 @@ ENS Action
 
       this.getLogger().info("ENS domain: " + ensDomain);
 
-      const url = await $tw.ipfs.resolveENS(ensDomain);
+      const url = await this.ipfsController.resolveENS(ensDomain);
       if (url !== null) {
         window.open(url.href, "_blank", "noopener,noreferrer");
       }
@@ -91,7 +87,7 @@ ENS Action
   EnsAction.prototype.handlePublishToEns = async function (event) {
     try {
       // Process document URL
-      const wiki = $tw.ipfs.getDocumentUrl();
+      const wiki = this.ipfsController.getDocumentUrl();
 
       // Check
       if (wiki.protocol === fileProtocol) {
@@ -100,7 +96,7 @@ ENS Action
       }
 
       // Extract and check URL IPFS protocol and CID
-      var { protocol, cid } = this.ipfsWrapper.decodeCid(wiki.pathname);
+      var { protocol, cid } = this.ipfsController.decodeCid(wiki.pathname);
 
       // Check
       if (protocol == null) {
@@ -112,15 +108,12 @@ ENS Action
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // Resolve IPNS key if applicable
       if (protocol === ipnsKeyword) {
-        const { ipnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+        const { ipnsKey } = await this.ipfsController.getIpnsIdentifiers(cid);
         try {
           cid = null;
-          cid = await this.resolveIpnsKey(ipfs, ipnsKey);
+          cid = await this.resolveIpnsKey(ipnsKey);
         } catch (error) {
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
@@ -136,25 +129,25 @@ ENS Action
       }
 
       // Retrieve a Web3 provider
-      const { web3, account } = await $tw.ipfs.getEnabledWeb3Provider();
+      const { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
 
       // Fetch ENS domain content
-      const { content } = await this.ensWrapper.getContenthash(ensDomain, web3);
+      const { content } = await this.ipfsController.getContentHash(ensDomain, web3);
       // Nothing to publish
       if (content !== null && content === cid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
       }
 
-      const url = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
+      const url = await this.ipfsController.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Publishing wiki:" + "\n " + url.href + "\n to ENS domain: " + ensDomain);
 
-      await this.ensWrapper.setContenthash(ensDomain, cid, web3, account);
+      await this.ipfsController.setContentHash(ensDomain, cid, web3, account);
 
       // Unpin if applicable
       if ($tw.utils.getIpfsUnpin() && content !== null) {
         try {
-          await this.ipfsWrapper.unpinFromIpfs(ipfs, content);
+          await this.ipfsController.unpinFromIpfs(content);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);

@@ -28,9 +28,9 @@ IPFS Wrapper
 
   const name = "ipfs-wrapper";
 
-  var IpfsWrapper = function () {
-    this.ipfsLibrary = root.ipfsBundle.ipfsLibrary;
-    this.ipfsUri = root.ipfsBundle.ipfsUri;
+  var IpfsWrapper = function (ipfsBundle) {
+    this.ipfsLibrary = ipfsBundle.ipfsLibrary;
+    this.ipfsUrl = ipfsBundle.ipfsUrl;
   };
 
   IpfsWrapper.prototype.getLogger = function () {
@@ -41,60 +41,12 @@ IPFS Wrapper
     return this.ipfsLibrary.decodeCid(pathname);
   };
 
-  IpfsWrapper.prototype.decodeUrl = async function (value) {
-    // Check
-    var text = false;
-    try {
-      this.ipfsUri.getUrl(value);
-    } catch (error) {
-      if (value !== undefined && value !== null && value.startsWith("/") === false) {
-        text = true;
-      }
-    }
-    // Process
-    var uri = null;
-    var cid = null;
-    var protocol = null;
-    if (text == false) {
-      try {
-        uri = await this.ipfsUri.normalizeUrl(value, this.ipfsUri.getIpfsBaseUrl());
-      } catch (error) {
-        // Ignore
-      }
-      if (uri !== null) {
-        // IPFS
-        try {
-          var { protocol, cid } = this.ipfsLibrary.decodeCid(uri.pathname);
-        } catch (error) {
-          // Ignore
-        }
-        // IPNS
-        if (protocol !== null && cid !== null && protocol === ipnsKeyword) {
-          // IPFS client
-          const { ipfs } = await $tw.ipfs.getIpfsClient();
-          const { ipnsKey } = await this.getIpnsIdentifiers(ipfs, cid);
-          try {
-            cid = null;
-            cid = await this.resolveIpnsKey(ipfs, ipnsKey);
-          } catch (error) {
-            this.getLogger().warn(error);
-            $tw.utils.alert(name, error.message);
-          }
-        }
-      }
-    }
-    return {
-      cid: cid, // IPFS cid or null
-      uri: uri, // Normalized URI
-    };
-  };
-
   IpfsWrapper.prototype.getAttachmentContent = function (tiddler) {
     var type = null;
     var info = null;
     // Retrieve Content-Type
     try {
-      var { type, info } = $tw.ipfs.getContentType(tiddler);
+      var { type, info } = $tw.ipfsController.getContentType(tiddler);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -153,8 +105,14 @@ IPFS Wrapper
           continue;
         }
         // Process value
+        var cid = null;
         const fieldValue = tiddler.getFieldString(field);
-        const { cid } = await this.decodeUrl(fieldValue);
+        try {
+          var { cid } = await this.ipfsUrl.resolveUrl(false, fieldValue);
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        }
         if (cid !== null) {
           isIpfs = true;
         }
@@ -390,7 +348,7 @@ IPFS Wrapper
         throw new Error("Unknown IPNS key...");
       }
     }
-    const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
+    const url = await this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
     this.getLogger().info("Successfully Fetched IPNS name: " + ipnsName + "\n " + url.href);
     return {
       ipnsKey: ipnsKey,
@@ -401,7 +359,7 @@ IPFS Wrapper
   IpfsWrapper.prototype.generateIpnsKey = async function (ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName);
-      const url = await this.ipfsUri.normalizeUrl("/" + ipnsKeyword + "/" + key);
+      const url = await this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + key);
       this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url.href);
       return key;
     } catch (error) {
@@ -454,7 +412,7 @@ IPFS Wrapper
     const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname);
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const url = await this.ipfsUrl.normalizeUrl(pathname);
       this.getLogger().info("Successfully fetched:" + "\n " + url.href);
       return fetched;
     } catch (error) {
@@ -467,7 +425,7 @@ IPFS Wrapper
     try {
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content);
       const pathname = "/" + ipfsKeyword + "/" + hash;
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const url = await this.ipfsUrl.normalizeUrl(pathname);
       this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
       return {
         added: hash,
@@ -486,11 +444,11 @@ IPFS Wrapper
     }
     const pathname = "/" + ipnsKeyword + "/" + ipnsKey.trim();
     try {
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const url = await this.ipfsUrl.normalizeUrl(pathname);
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname);
       const { cid } = await this.ipfsLibrary.decodeCid(resolved);
       if (cid !== null) {
-        const parsed = await this.ipfsUri.normalizeUrl(resolved);
+        const parsed = await this.ipfsUrl.normalizeUrl(resolved);
         this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
         return cid;
       }
@@ -514,8 +472,8 @@ IPFS Wrapper
     try {
       // Publish
       const published = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname);
-      const keyParsed = await this.ipfsUri.normalizeUrl(key);
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const keyParsed = await this.ipfsUrl.normalizeUrl(key);
+      const url = await this.ipfsUrl.normalizeUrl(pathname);
       this.getLogger().info(
         "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + url.href
       );
@@ -534,7 +492,7 @@ IPFS Wrapper
     const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname);
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const url = await this.ipfsUrl.normalizeUrl(pathname);
       this.getLogger().info("Successfully pinned:" + "\n " + url.href);
       return pinned;
     } catch (error) {
@@ -551,7 +509,7 @@ IPFS Wrapper
     const pathname = "/" + ipfsKeyword + "/" + cid.trim();
     try {
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname);
-      const url = await this.ipfsUri.normalizeUrl(pathname);
+      const url = await this.ipfsUrl.normalizeUrl(pathname);
       this.getLogger().info("Successfully unpinned:" + "\n " + url.href);
       return unpinned;
     } catch (error) {

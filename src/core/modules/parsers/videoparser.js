@@ -60,35 +60,37 @@ The video parser parses a video tiddler into an embeddable HTML element
       },
     };
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
-      var uri = options.tiddler.fields._canonical_uri;
-      // Load external attachment
-      if (uri !== undefined && uri !== null && uri.trim() != "") {
-        (async () => {
-          try {
-            await this.loadRemoteAttachment(element, options.tiddler, value, uri);
-          } catch (error) {
-            this.getLogger().error(error);
+      var tiddler = options.tiddler;
+      var url = options.tiddler.fields._canonical_uri;
+      // Load external resource
+      if (url !== undefined && url !== null && url.trim() != "") {
+        $tw.ipfsController
+          .resolveUrl(false, url)
+          .then((data) => {
+            var { normalizedUrl } = data;
+            // Load
+            $tw.utils
+              .loadToBase64(normalizedUrl)
+              .then((loaded) => {
+                element.attributes.src = { type: "string", value: value + loaded.data };
+                const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+                $tw.rootWidget.refresh(parsedTiddler);
+              })
+              .catch((error) => {
+                self.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
+              });
+          })
+          .catch((error) => {
+            self.getLogger().error(error);
             $tw.utils.alert(name, error.message);
-          }
-        })();
+          });
       } else if (text) {
         element.attributes.src = { type: "string", value: value + text };
       }
     }
     // Return the parsed tree
     this.tree = [element];
-  };
-
-  VideoParser.prototype.loadRemoteAttachment = async function (element, tiddler, value, uri) {
-    var normalizedUri = await $tw.ipfs.normalizeIpfsUrl(uri);
-    if (normalizedUri !== null) {
-      var loaded = await $tw.utils.loadToBase64(normalizedUri);
-      if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
-        element.attributes.src = { type: "string", value: value + loaded.data };
-        const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-        $tw.rootWidget.refresh(parsedTiddler);
-      }
-    }
   };
 
   VideoParser.prototype.getLogger = function () {

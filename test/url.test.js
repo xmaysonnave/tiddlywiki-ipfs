@@ -19,27 +19,32 @@ const relative = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujd
 
 beforeAll(() => {
   root.log = log;
-  root.ipfsBundle = new IpfsBundle();
   log.setLevel("silent", false);
 });
 
 describe("API URL", () => {
   it("Valid Default", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getDefaultIpfsApiUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getDefaultIpfsApiUrl();
     expect(parsed.href === api.href).toBeTruthy();
   });
 
   it("Valid Safe", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getIpfsApiUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getIpfsApiUrl();
     expect(parsed.href === api.href).toBeTruthy();
   });
 
   it("Invalid", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
     try {
-      ipfsUri.getIpfsApiUrl();
+      ipfsUrl.getIpfsApiUrl();
     } catch (error) {
       expect(error.message).toBe("Invalid IPFS API URL...");
     }
@@ -48,17 +53,21 @@ describe("API URL", () => {
 
 describe("Document URL", () => {
   it("Valid", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    ipfsUri.getDocumentUrl = jest.fn();
-    ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const parsed = ipfsUri.getDocumentUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
+    const parsed = ipfsUrl.getDocumentUrl();
     expect(parsed.href === remote.href).toBeTruthy();
   });
 
   it("Invalid", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
     try {
-      ipfsUri.getDocumentUrl();
+      ipfsUrl.getDocumentUrl();
     } catch (error) {
       expect(error.message).toBe("Invalid current HTML Document URL...");
     }
@@ -67,21 +76,27 @@ describe("Document URL", () => {
 
 describe("Gateway URL", () => {
   it("Valid Default", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getDefaultIpfsGatewayUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getDefaultIpfsGatewayUrl();
     expect(parsed.href === gateway.href).toBeTruthy();
   });
 
   it("Valid Safe", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getIpfsGatewayUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getIpfsGatewayUrl();
     expect(parsed.href === gateway.href).toBeTruthy();
   });
 
   it("Invalid", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
     try {
-      ipfsUri.getIpfsGatewayUrl();
+      ipfsUrl.getIpfsGatewayUrl();
     } catch (error) {
       expect(error.message).toBe("Invalid IPFS Gateway URL...");
     }
@@ -90,15 +105,19 @@ describe("Gateway URL", () => {
 
 describe("URL", () => {
   it("Valid", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    const parsed = ipfsUri.getUrl(api);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.getUrl(api);
     expect(parsed.href === api.href).toBeTruthy();
   });
 
   it("Invalid", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
     try {
-      ipfsUri.getUrl();
+      ipfsUrl.getUrl();
     } catch (error) {
       expect(error.message).toBe("Invalid URL...");
     }
@@ -107,44 +126,54 @@ describe("URL", () => {
 
 describe("Base URL", () => {
   it("Origin", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    ipfsUri.getDocumentUrl = jest.fn();
-    ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const base = ipfsUri.getIpfsBaseUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
+    const base = ipfsUrl.getIpfsBaseUrl();
     expect(base.href === "https://ipfs.infura.io/").toBeTruthy();
   });
 
   it("Fallback to default Gateway", () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    ipfsUri.getDocumentUrl = jest.fn();
-    ipfsUri.getDocumentUrl.mockReturnValueOnce(local);
-    const base = ipfsUri.getIpfsBaseUrl();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(local);
+    const base = ipfsUrl.getIpfsBaseUrl();
     expect(base.href === gateway.href).toBeTruthy();
   });
 });
 
 describe("Normalize Gateway URL", () => {
   it("Relative. Fallback to Origin...", async () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    ipfsUri.getDocumentUrl = jest.fn();
-    ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const parsed = await ipfsUri.normalizeUrl(relative);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
+    const parsed = await ipfsUrl.normalizeUrl(relative);
     expect(parsed.href === remote.protocol + "//" + remote.hostname + relative).toBeTruthy();
   });
 
   it("Relative. Fallback to default Gateway...", async () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    ipfsUri.getDocumentUrl = jest.fn();
-    ipfsUri.getDocumentUrl.mockReturnValueOnce(local);
-    const parsed = await ipfsUri.normalizeUrl(relative);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(local);
+    const parsed = await ipfsUrl.normalizeUrl(relative);
     expect(parsed.href === gateway.protocol + "//" + gateway.hostname + relative).toBeTruthy();
   });
 
   it("Remove dot link...", async () => {
-    const ipfsUri = root.ipfsBundle.ipfsUri;
-    ipfsUri.getDocumentUrl = jest.fn();
-    ipfsUri.getDocumentUrl.mockReturnValueOnce(remote);
-    const parsed = await ipfsUri.normalizeUrl(ethLink);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
+    const parsed = await ipfsUrl.normalizeUrl(ethLink);
     expect(parsed.href === eth.href).toBeTruthy();
   });
 });

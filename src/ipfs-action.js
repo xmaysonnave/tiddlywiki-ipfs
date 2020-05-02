@@ -13,20 +13,16 @@ IPFS Action
   /*global $tw: false */
   "use strict";
 
-  const EnsWrapper = require("$:/plugins/ipfs/ens-wrapper.js").EnsWrapper;
-  const IpfsWrapper = require("$:/plugins/ipfs/ipfs-wrapper.js").IpfsWrapper;
-
   const fileProtocol = "file:";
   const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
 
   const name = "ipfs-action";
 
-  var IpfsAction = function () {
+  var IpfsAction = function (ipfsController) {
     this.once = false;
     this.console = false;
-    this.ensWrapper = new EnsWrapper();
-    this.ipfsWrapper = new IpfsWrapper();
+    this.ipfsController = ipfsController;
     this.ipnsName = $tw.utils.getIpfsIpnsName();
     this.ipnsKey = $tw.utils.getIpfsIpnsKey();
   };
@@ -101,31 +97,28 @@ IPFS Action
       }
 
       try {
-        export_uri = $tw.ipfs.getUrl(export_uri);
+        export_uri = this.ipfsController.getUrl(export_uri);
       } catch (error) {
         // Log an continue
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
       }
 
-      // IPFS client
-      var { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // URL Analysis
       if (export_uri !== null && export_uri.protocol !== fileProtocol) {
         // Decode pathname
-        var { protocol, cid } = this.ipfsWrapper.decodeCid(export_uri.pathname);
+        var { protocol, cid } = this.ipfsController.decodeCid(export_uri.pathname);
         // Check
         if ($tw.utils.getIpfsUnpin() && protocol != null && protocol === ipfsKeyword && cid != null) {
-          $tw.ipfs.requestToUnpin(cid);
+          await this.ipfsController.requestToUnpin(cid);
         }
       }
 
       // Analyse IPNS
       if (protocol == ipnsKeyword) {
-        var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+        var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(cid);
         try {
-          ipnsCid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+          ipnsCid = await this.ipfsController.resolveIpnsKey(ipnsKey);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
@@ -133,24 +126,24 @@ IPFS Action
         }
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
-          $tw.ipfs.requestToUnpin(ipnsCid);
+          await this.ipfsController.requestToUnpin(ipnsCid);
         }
       }
 
       // Analyse URI
       if (export_uri.hostname.endsWith(".eth")) {
         // Retrieve a Web3 provider
-        const { web3 } = await $tw.ipfs.getWeb3Provider();
+        const { web3 } = await this.ipfsController.getWeb3Provider();
         // Fetch ENS domain content
-        var { content: ensCid } = await this.ensWrapper.getContenthash(export_uri.hostname, web3);
+        var { content: ensCid } = await this.ipfsController.getContentHash(export_uri.hostname, web3);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ensCid !== null) {
-          $tw.ipfs.requestToUnpin(ensCid);
+          await this.ipfsController.requestToUnpin(ensCid);
         }
       }
 
       // Retrieve content
-      const content = await this.ipfsWrapper.exportTiddler(tiddler, child);
+      const content = await this.ipfsController.exportTiddler(tiddler, child);
 
       // Check
       if (content == null) {
@@ -160,12 +153,12 @@ IPFS Action
       this.getLogger().info("Uploading Tiddler: " + content.length + " bytes");
 
       // Add
-      const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
+      const { added } = await this.ipfsController.addToIpfs(content);
       // Save
       fields.push({ key: "_export_uri", value: "/" + ipfsKeyword + "/" + added });
 
       try {
-        await this.ipfsWrapper.pinToIpfs(ipfs, added);
+        await this.ipfsController.pinToIpfs(added);
       } catch (error) {
         // Log and continue
         this.getLogger().warn(error);
@@ -181,7 +174,7 @@ IPFS Action
          * However the local server is getting the update ????
          **/
         try {
-          await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, added);
+          await this.ipfsController.publishToIpns(ipnsKey, ipnsName, added);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
@@ -195,15 +188,15 @@ IPFS Action
         fields.push({ key: "_export_uri", value: "https://" + export_uri.hostname });
         try {
           // Retrieve an enabled Web3 provider
-          const { web3, account } = await $tw.ipfs.getEnabledWeb3Provider();
+          const { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
           // Set ENS domain content
-          await this.ensWrapper.setContenthash(export_uri.hostname, added, web3, account);
+          await this.ipfsController.setContentHash(export_uri.hostname, added, web3, account);
         } catch (error) {
           // Log and continue
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
           // Discard unpin request
-          $tw.ipfs.discardRequestToUnpin(ensCid);
+          this.ipfsController.discardRequestToUnpin(ensCid);
         }
       }
 
@@ -229,7 +222,7 @@ IPFS Action
       // Load tiddler
       const tiddler = $tw.wiki.getTiddler(title);
       // Retrieve Content-Type
-      const { type, info } = $tw.ipfs.getContentType(tiddler);
+      const { type, info } = this.ipfsController.getContentType(tiddler);
 
       // Check
       if (info.encoding !== "base64" && type !== "image/svg+xml") {
@@ -245,22 +238,19 @@ IPFS Action
       }
 
       // Getting content
-      const content = this.ipfsWrapper.getAttachmentContent(tiddler);
+      const content = this.ipfsController.getAttachmentContent(tiddler);
       // Check
       if (content == null) {
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       this.getLogger().info("Uploading attachment: " + content.length + " bytes");
 
       // Add
-      const { added } = await this.ipfsWrapper.addToIpfs(ipfs, content);
+      const { added } = await this.ipfsController.addToIpfs(content);
 
       try {
-        await this.ipfsWrapper.pinToIpfs(ipfs, added);
+        await this.ipfsController.pinToIpfs(added);
       } catch (error) {
         // Log an continue
         this.getLogger().warn(error);
@@ -311,11 +301,8 @@ IPFS Action
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // Rename IPNS name
-      const { ipnsKey } = await this.ipfsWrapper.renameIpnsName(ipfs, this.ipnsName, ipnsName);
+      const { ipnsKey } = await this.ipfsController.renameIpnsName(this.ipnsName, ipnsName);
 
       // Update Tiddler
       const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
@@ -350,11 +337,8 @@ IPFS Action
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // Generate IPNS key
-      const key = await this.ipfsWrapper.generateIpnsKey(ipfs, ipnsName);
+      const key = await this.ipfsController.generateIpnsKey(ipnsName);
 
       // Update Tiddler
       const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
@@ -391,13 +375,10 @@ IPFS Action
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // Resolve CID,
-      var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+      var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(ipnsKey, ipnsName);
       try {
-        cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+        cid = await this.ipfsController.resolveIpnsKey(ipnsKey);
       } catch (error) {
         // Log and continue
         this.getLogger().warn(error);
@@ -407,8 +388,8 @@ IPFS Action
       // Unpin
       if ($tw.utils.getIpfsUnpin() && cid != null) {
         try {
-          await this.ipfsWrapper.unpinFromIpfs(ipfs, cid);
-          $tw.ipfs.discardRequestToUnpin(cid);
+          await this.ipfsController.unpinFromIpfs(cid);
+          this.ipfsController.discardRequestToUnpin(cid);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
@@ -417,7 +398,7 @@ IPFS Action
       }
 
       // Remove IPNS key
-      await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName);
+      await this.ipfsController.removeIpnsKey(ipnsName);
 
       // Update Tiddlers
       var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
@@ -461,11 +442,8 @@ IPFS Action
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // Fetch
-      const { ipnsKey: resolvedIpnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+      const { ipnsKey: resolvedIpnsKey } = await this.ipfsController.getIpnsIdentifiers(ipnsKey, ipnsName);
 
       // Update Tiddler
       var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
@@ -499,12 +477,9 @@ IPFS Action
         return false;
       }
 
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
-
       // Resolve CID
-      var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
-      const resolved = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+      var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(ipnsKey, ipnsName);
+      const resolved = await this.ipfsController.resolveIpnsKey(ipnsKey);
 
       // Update Tiddler
       var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
@@ -519,7 +494,7 @@ IPFS Action
 
       if (resolved !== null) {
         // Build URL
-        const url = await $tw.ipfs.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
+        const url = await this.ipfsController.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
         window.open(url.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
@@ -536,7 +511,7 @@ IPFS Action
     if (typeof window.eruda === "undefined") {
       try {
         // Load eruda
-        await window.ipfsBundle.ipfsLoader.loadErudaLibrary();
+        await this.ipfsController.ipfsBundle.ipfsLoader.loadErudaLibrary();
       } catch (error) {
         this.getLogger().error(error);
         throw new Error(error.message);
@@ -580,7 +555,7 @@ IPFS Action
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
     try {
       // Process document URL
-      const wiki = $tw.ipfs.getDocumentUrl();
+      const wiki = this.ipfsController.getDocumentUrl();
 
       // Check
       if (wiki.protocol === fileProtocol) {
@@ -593,7 +568,7 @@ IPFS Action
       }
 
       // Extract and check URL IPFS protocol and CID
-      var { protocol, cid } = this.ipfsWrapper.decodeCid(wiki.pathname);
+      var { protocol, cid } = this.ipfsController.decodeCid(wiki.pathname);
 
       // Check
       if (protocol == null) {
@@ -604,9 +579,6 @@ IPFS Action
         $tw.utils.alert(name, "Unknown IPFS identifier...");
         return false;
       }
-
-      // IPFS client
-      const { ipfs } = await $tw.ipfs.getIpfsClient();
 
       // Default IPNS key and IPNS name
       var ipnsKey = $tw.utils.getIpfsIpnsKey();
@@ -627,10 +599,10 @@ IPFS Action
         }
         // Resolve current IPNS key
         this.getLogger().info("Processing current IPNS...");
-        const { ipnsKey: currentIpnsKey } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, cid);
+        const { ipnsKey: currentIpnsKey } = await this.ipfsController.getIpnsIdentifiers(cid);
         try {
           cid = null;
-          cid = await this.ipfsWrapper.resolveIpnsKey(ipfs, currentIpnsKey);
+          cid = await this.ipfsController.resolveIpnsKey(currentIpnsKey);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
@@ -640,9 +612,9 @@ IPFS Action
 
       // Resolve default IPNS key and IPNS name
       this.getLogger().info("Processing default IPNS...");
-      var { ipnsKey, ipnsName } = await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+      var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(ipnsKey, ipnsName);
       try {
-        resolved = await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
+        resolved = await this.ipfsController.resolveIpnsKey(ipnsKey);
       } catch (error) {
         // Log and continue
         this.getLogger().warn(error);
@@ -662,7 +634,7 @@ IPFS Action
        * However the local server is getting the update ????
        **/
       try {
-        await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
+        await this.ipfsController.publishToIpns(ipnsKey, ipnsName, cid);
       } catch (error) {
         // Log and continue
         this.getLogger().warn(error);
@@ -672,8 +644,8 @@ IPFS Action
       // Unpin
       if ($tw.utils.getIpfsUnpin() && resolved != null) {
         try {
-          await this.ipfsWrapper.unpinFromIpfs(ipfs, resolved);
-          $tw.ipfs.discardRequestToUnpin(resolved);
+          await this.ipfsController.unpinFromIpfs(resolved);
+          this.ipfsController.discardRequestToUnpin(resolved);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);

@@ -8,7 +8,7 @@ ENS Wrapper
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -25,36 +25,36 @@ ENS Wrapper
 
   const name = "ens-wrapper";
 
-  var EnsWrapper = function() {
-    this.ensLibrary = root.ipfsBundle.ensLibrary;
-    this.ipfsLibrary = root.ipfsBundle.ipfsLibrary;
-    this.ipfsUri = root.ipfsBundle.ipfsUri;
+  var EnsWrapper = function (ipfsBundle) {
+    this.ensLibrary = ipfsBundle.ensLibrary;
+    this.ipfsLibrary = ipfsBundle.ipfsLibrary;
+    this.ipfsUrl = ipfsBundle.ipfsUrl;
   };
 
-  EnsWrapper.prototype.getLogger = function() {
+  EnsWrapper.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
-  EnsWrapper.prototype.getContenthash = async function(domain, web3) {
+  EnsWrapper.prototype.getContentHash = async function (domain, web3) {
     try {
       // Retrieve
-      var { content, protocol } = await this.ensLibrary.getContenthash(domain, web3);
+      var { content, protocol } = await this.ensLibrary.getContentHash(domain, web3);
       if (content !== null && protocol !== null) {
         // Convert CidV0 to CidV1
         content = this.ipfsLibrary.cidV0ToCidV1(content);
         // Normalize
-        const url = await this.ipfsUri.normalizeUrl("/" + protocol + "/" + content);
+        const url = await this.ipfsUrl.normalizeUrl("/" + protocol + "/" + content);
         this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url.href + "\n from: " + domain);
         // Success
         return {
           content: content,
-          protocol: protocol
+          protocol: protocol,
         };
       }
       this.getLogger().warn("Unassigned ENS domain content...");
       return {
         content: null,
-        protocol: null
+        protocol: null,
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -62,14 +62,14 @@ ENS Wrapper
     }
   };
 
-  EnsWrapper.prototype.setContenthash = async function(domain, cid, web3, account) {
+  EnsWrapper.prototype.setContentHash = async function (domain, cid, web3, account) {
     try {
       // Convert CidV1 to CidV0
       const cidv0 = this.ipfsLibrary.cidV1ToCidV0(cid);
       // Set
-      await this.ensLibrary.setContenthash(domain, cidv0, web3, account);
+      await this.ensLibrary.setContentHash(domain, cidv0, web3, account);
       // Normalize
-      const url = await this.ipfsUri.normalizeUrl("/ipfs/" + cidv0);
+      const url = await this.ipfsUrl.normalizeUrl("/ipfs/" + cidv0);
       // Success
       this.getLogger().info("Successfully set ENS domain content:" + "\n " + url.href + "\n to: " + domain);
     } catch (error) {
@@ -78,13 +78,13 @@ ENS Wrapper
     }
   };
 
-  EnsWrapper.prototype.getEnabledWeb3Provider = async function(provider) {
+  EnsWrapper.prototype.getEnabledWeb3Provider = async function (provider) {
     try {
       const { web3, chainId, account } = await this.ensLibrary.getEnabledWeb3Provider(provider);
       return {
         web3: web3,
         chainId: chainId,
-        account: account
+        account: account,
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -92,12 +92,12 @@ ENS Wrapper
     }
   };
 
-  EnsWrapper.prototype.getWeb3Provider = async function(provider) {
+  EnsWrapper.prototype.getWeb3Provider = async function (provider) {
     try {
       const { web3, chainId } = await this.ensLibrary.getWeb3Provider(provider);
       return {
         web3: web3,
-        chainId: chainId
+        chainId: chainId,
       };
     } catch (error) {
       this.getLogger().error(error);
@@ -105,7 +105,7 @@ ENS Wrapper
     }
   };
 
-  EnsWrapper.prototype.getProvider = async function() {
+  EnsWrapper.prototype.getProvider = async function () {
     try {
       const provider = await this.ensLibrary.getProvider();
       return provider;
@@ -115,15 +115,15 @@ ENS Wrapper
     }
   };
 
-  EnsWrapper.prototype.getEtherscanRegistry = function() {
+  EnsWrapper.prototype.getEtherscanRegistry = function () {
     return this.ensLibrary.getEtherscanRegistry();
   };
 
-  EnsWrapper.prototype.getNetwork = function() {
+  EnsWrapper.prototype.getNetwork = function () {
     return this.ensLibrary.getNetwork();
   };
 
-  EnsWrapper.prototype.getENSRegistry = function() {
+  EnsWrapper.prototype.getENSRegistry = function () {
     return this.ensLibrary.getENSRegistry();
   };
 

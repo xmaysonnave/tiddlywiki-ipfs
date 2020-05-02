@@ -137,20 +137,20 @@ IPFS parser utils
   exports.decryptUint8ArrayToBase64 = async function (array) {
     return await new Promise((resolve, reject) => {
       try {
-        var content = $tw.utils.Utf8ArrayToStr(array);
-        if ($tw.crypto.hasPassword() == false) {
-          (async () => {
+        (async () => {
+          var content = $tw.utils.Utf8ArrayToStr(array);
+          if ($tw.crypto.hasPassword() == false) {
             try {
               content = await $tw.utils.decryptFromPasswordPrompt(content);
             } catch (error) {
               reject(error);
             }
-          })();
-        } else {
-          content = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
-        }
-        const base64 = btoa(content);
-        resolve(base64);
+          } else {
+            content = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
+          }
+          const base64 = btoa(content);
+          resolve(base64);
+        })();
       } catch (error) {
         reject(error);
       }
@@ -163,19 +163,19 @@ IPFS parser utils
   exports.decryptUint8ArrayToUtf8 = async function (array) {
     return await new Promise((resolve, reject) => {
       try {
-        var content = $tw.utils.Utf8ArrayToStr(array);
-        if ($tw.crypto.hasPassword() == false) {
-          (async () => {
+        (async () => {
+          var content = $tw.utils.Utf8ArrayToStr(array);
+          if ($tw.crypto.hasPassword() == false) {
             try {
               content = await $tw.utils.decryptFromPasswordPrompt(content);
             } catch (error) {
               reject(error);
             }
-          })();
-        } else {
-          content = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
-        }
-        resolve(content);
+          } else {
+            content = $tw.crypto.decrypt(content, $tw.crypto.currentPassword);
+          }
+          resolve(content);
+        })();
       } catch (error) {
         reject(error);
       }

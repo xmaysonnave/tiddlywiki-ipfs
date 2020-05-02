@@ -13,33 +13,34 @@ const resolvedTiddly = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp
 
 const decodedCid = {
   protocol: "ipfs",
-  cid: "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau"
+  cid: "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau",
 };
 
 const keys = [
   {
     id: "QmZLTGyFGnbmYJoitU6cRCb8SwWEkgTz4EQgbKydxWyDsJ",
-    name: "self"
+    name: "self",
   },
   {
     id: "QmNQhkAtdGVjK5Ehck8jx7QHQoz9pxUnnc12fGJP8MuqyL",
-    name: "documentation"
+    name: "documentation",
   },
   {
     id: "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf",
-    name: "tiddly"
-  }
+    name: "tiddly",
+  },
 ];
 
 beforeAll(() => {
   root.log = log;
-  root.ipfsBundle = new IpfsBundle();
   log.setLevel("silent", false);
 });
 
 describe("IPNS", () => {
   it("Undefined IPNS key and IPNS name", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     try {
       await ipfsWrapper.getIpnsIdentifiers();
     } catch (error) {
@@ -48,7 +49,9 @@ describe("IPNS", () => {
   });
 
   it("Unknown IPNS keys", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(null);
     try {
@@ -61,7 +64,9 @@ describe("IPNS", () => {
 
 describe("IPNS key and IPNS name", () => {
   it("Unknown IPNS key and IPNS name", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     try {
@@ -72,7 +77,9 @@ describe("IPNS key and IPNS name", () => {
   });
 
   it("Fetch IPNS key and IPNS name", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(
@@ -86,7 +93,9 @@ describe("IPNS key and IPNS name", () => {
 
 describe("IPNS name", () => {
   it("Unknown IPNS name", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     try {
@@ -97,7 +106,9 @@ describe("IPNS name", () => {
   });
 
   it("Fetch IPNS key and IPNS name", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(null, null, "tiddly");
@@ -107,7 +118,9 @@ describe("IPNS name", () => {
 
 describe("IPNS key", () => {
   it("Unknown IPNS key.", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     try {
@@ -118,7 +131,9 @@ describe("IPNS key", () => {
   });
 
   it("Fetch IPNS key and IPNS name", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(
@@ -130,7 +145,9 @@ describe("IPNS key", () => {
   });
 
   it("Resolve IPNS key", async () => {
-    const ipfsWrapper = new IpfsWrapper();
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.resolve = jest.fn();
     ipfsWrapper.ipfsLibrary.resolve.mockResolvedValue(resolvedTiddly);
     ipfsWrapper.ipfsLibrary.decodeCid = jest.fn();
@@ -140,15 +157,16 @@ describe("IPNS key", () => {
   });
 
   it("Unassigned IPNS key.", async () => {
-    const ipfsWrapper = new IpfsWrapper();
-    ipfsWrapper.ipfsUri.getDocumentUrl = jest.fn();
-    ipfsWrapper.ipfsUri.getDocumentUrl.mockReturnValueOnce(base);
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsWrapper = new IpfsWrapper(ipfsBundle);
+    ipfsWrapper.ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsWrapper.ipfsUrl.getDocumentUrl.mockReturnValueOnce(base);
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn();
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys);
     try {
       await ipfsWrapper.resolveIpnsKey(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
     } catch (error) {
-      console.log(error.message);
       expect(error.message).toBe("Failed to resolve an IPNS key...");
     }
   });

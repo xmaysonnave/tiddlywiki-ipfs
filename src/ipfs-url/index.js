@@ -1,20 +1,61 @@
 import root from "window-or-global";
 import { URL } from "universal-url";
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   "use strict";
 
-  const name = "ipfs-uri";
+  const name = "ipfs-url";
 
   const defaultApiUrl = new URL("https://ipfs.infura.io:5001");
 
   const defaultGatewayUrl = new URL("https://ipfs.infura.io");
 
-  var IpfsUri = function() {};
+  const ipnsKeyword = "ipns";
 
-  IpfsUri.prototype.getLogger = function() {
+  var IpfsUrl = function (ensLibrary, ipfsLibrary) {
+    this.ensLibrary = ensLibrary;
+    this.ipfsLibrary = ipfsLibrary;
+  };
+
+  IpfsUrl.prototype.getLogger = function () {
     return root.log.getLogger(name);
+  };
+
+  IpfsUrl.prototype.resolveUrl = async function (ipns, value) {
+    var cid = null;
+    var normalizedUrl = null;
+    var protocol = null;
+    var text = false;
+    if (value !== undefined && value !== null) {
+      try {
+        this.getUrl(value);
+      } catch (error) {
+        if (value !== undefined && value !== null && value.startsWith("/") === false) {
+          text = true;
+        }
+      }
+      if (text == false) {
+        normalizedUrl = await this.normalizeUrl(value, this.getIpfsBaseUrl());
+        // IPFS
+        var { protocol, cid } = this.ipfsLibrary.decodeCid(normalizedUrl.pathname);
+        // IPNS
+        if (ipns && protocol !== null && cid !== null && protocol === ipnsKeyword) {
+          try {
+            const { ipnsKey } = await $tw.ipfsController.getIpnsIdentifiers(cid);
+            cid = await $tw.ipfsController.resolveIpnsKey(ipnsKey);
+          } catch (error) {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          }
+        }
+      }
+    }
+    return {
+      cid: cid, // IPFS or IPNS cid
+      normalizedUrl: normalizedUrl,
+      protocol: protocol,
+    };
   };
 
   /**
@@ -34,7 +75,7 @@ import { URL } from "universal-url";
    * https://github.com/stevenvachon/universal-url-lite
    * https://url.spec.whatwg.org/
    */
-  IpfsUri.prototype.getDocumentUrl = function() {
+  IpfsUrl.prototype.getDocumentUrl = function () {
     try {
       return new URL(root.location.href);
     } catch (error) {
@@ -43,7 +84,7 @@ import { URL } from "universal-url";
     throw new Error("Invalid current HTML Document URL...");
   };
 
-  IpfsUri.prototype.getIpfsApiUrl = function() {
+  IpfsUrl.prototype.getIpfsApiUrl = function () {
     try {
       return new URL($tw.utils.getIpfsSaverApiUrl());
     } catch (error) {
@@ -51,11 +92,11 @@ import { URL } from "universal-url";
     }
   };
 
-  IpfsUri.prototype.getDefaultIpfsApiUrl = function() {
+  IpfsUrl.prototype.getDefaultIpfsApiUrl = function () {
     return defaultApiUrl;
   };
 
-  IpfsUri.prototype.getIpfsGatewayUrl = function() {
+  IpfsUrl.prototype.getIpfsGatewayUrl = function () {
     try {
       return new URL($tw.utils.getIpfsSaverGatewayUrl());
     } catch (error) {
@@ -63,11 +104,11 @@ import { URL } from "universal-url";
     }
   };
 
-  IpfsUri.prototype.getDefaultIpfsGatewayUrl = function() {
+  IpfsUrl.prototype.getDefaultIpfsGatewayUrl = function () {
     return defaultGatewayUrl;
   };
 
-  IpfsUri.prototype.getUrl = function(url, base) {
+  IpfsUrl.prototype.getUrl = function (url, base) {
     try {
       return new URL(url, base);
     } catch (error) {
@@ -76,7 +117,7 @@ import { URL } from "universal-url";
     throw new Error("Invalid URL...");
   };
 
-  IpfsUri.prototype.getIpfsBaseUrl = function() {
+  IpfsUrl.prototype.getIpfsBaseUrl = function () {
     var base = this.getIpfsGatewayUrl();
     try {
       if ($tw.utils.getIpfsUrlPolicy() === "origin") {
@@ -91,7 +132,7 @@ import { URL } from "universal-url";
     return new URL(base.protocol + "//" + base.host);
   };
 
-  IpfsUri.prototype.normalizeUrl = async function(url, base) {
+  IpfsUrl.prototype.normalizeUrl = async function (url, base) {
     // Check
     if (url == undefined || url == null || url.toString().trim() === "") {
       return null;
@@ -129,11 +170,11 @@ import { URL } from "universal-url";
       }
       // Errors are triggered and tests are running...
       if (jest === false) {
-        parsed = await $tw.ipfs.resolveENS(parsed.hostname);
+        parsed = await $tw.ipfsController.resolveENS(parsed.hostname);
       }
     }
     return parsed;
   };
 
-  module.exports = IpfsUri;
+  module.exports = IpfsUrl;
 })();

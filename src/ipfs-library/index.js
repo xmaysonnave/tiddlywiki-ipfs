@@ -13,7 +13,9 @@ import root from "window-or-global";
   /*
    * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
    **/
-  var IpfsLibrary = function () {};
+  var IpfsLibrary = function (ipfsBundle) {
+    this.ipfsBundle = ipfsBundle;
+  };
 
   IpfsLibrary.prototype.getLogger = function () {
     return root.log.getLogger(name);
@@ -142,7 +144,7 @@ import root from "window-or-global";
     if (typeof root.IpfsHttpClient === "undefined") {
       try {
         // Load js-ipfs-http-client
-        await window.ipfsBundle.ipfsLoader.loadIpfsHttpLibrary();
+        await this.ipfsBundle.ipfsLoader.loadIpfsHttpLibrary();
         if (typeof root.IpfsHttpClient !== "undefined") {
           return;
         }

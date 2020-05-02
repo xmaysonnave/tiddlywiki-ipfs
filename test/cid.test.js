@@ -7,13 +7,14 @@ const root = require("window-or-global");
 
 beforeAll(() => {
   root.log = log;
-  root.ipfsBundle = new IpfsBundle();
   log.setLevel("silent", false);
 });
 
 describe("CID", () => {
   it("Undefined pathname", async () => {
-    const ipfsLibrary = root.ipfsBundle.ipfsLibrary;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsLibrary = ipfsBundle.ipfsLibrary;
     var { protocol, cid } = ipfsLibrary.decodeCid();
     expect(protocol == null && cid == null).toBeTruthy();
     var { protocol, cid } = ipfsLibrary.decodeCid("");
@@ -23,7 +24,9 @@ describe("CID", () => {
   });
 
   it("Incorrect pathname", async () => {
-    const ipfsLibrary = root.ipfsBundle.ipfsLibrary;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsLibrary = ipfsBundle.ipfsLibrary;
     var { protocol, cid } = ipfsLibrary.decodeCid("Hello World");
     expect(protocol == null && cid == null).toBeTruthy();
     var { protocol, cid } = ipfsLibrary.decodeCid("/Hello/World");
@@ -31,7 +34,9 @@ describe("CID", () => {
   });
 
   it("Invalid CID", async () => {
-    const ipfsLibrary = root.ipfsBundle.ipfsLibrary;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsLibrary = ipfsBundle.ipfsLibrary;
     var { protocol, cid } = ipfsLibrary.decodeCid("/ipfs/Hello World");
     expect(protocol == "ipfs" && cid == null).toBeTruthy();
     var { protocol, cid } = ipfsLibrary.decodeCid("/ipns/Hello World");
@@ -39,7 +44,9 @@ describe("CID", () => {
   });
 
   it("Resolve", async () => {
-    const ipfsLibrary = root.ipfsBundle.ipfsLibrary;
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsLibrary = ipfsBundle.ipfsLibrary;
     var { protocol, cid } = ipfsLibrary.decodeCid("/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
     expect(protocol === "ipfs" && cid === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau").toBeTruthy();
     var { protocol, cid } = ipfsLibrary.decodeCid("/ipns/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
