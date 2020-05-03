@@ -71,9 +71,9 @@ ENS Action
 
       this.getLogger().info("ENS domain: " + ensDomain);
 
-      const url = await this.ipfsController.resolveENS(ensDomain);
-      if (url !== null) {
-        window.open(url.href, "_blank", "noopener,noreferrer");
+      const { normalizedUrl } = await this.ipfsController.resolveENS(ensDomain);
+      if (normalizedUrl !== null) {
+        window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -88,16 +88,13 @@ ENS Action
     try {
       // Process document URL
       const wiki = this.ipfsController.getDocumentUrl();
-
       // Check
       if (wiki.protocol === fileProtocol) {
         $tw.utils.alert(name, "Undefined IPFS wiki...");
         return false;
       }
-
       // Extract and check URL IPFS protocol and CID
       var { protocol, cid } = this.ipfsController.decodeCid(wiki.pathname);
-
       // Check
       if (protocol == null) {
         $tw.utils.alert(name, "Unknown IPFS protocol...");
@@ -107,7 +104,6 @@ ENS Action
         $tw.utils.alert(name, "Unknown IPFS identifier...");
         return false;
       }
-
       // Resolve IPNS key if applicable
       if (protocol === ipnsKeyword) {
         const { ipnsKey } = await this.ipfsController.getIpnsIdentifiers(cid);
@@ -119,7 +115,6 @@ ENS Action
           $tw.utils.alert(name, error.message);
         }
       }
-
       // Getting the default ENS domain
       const ensDomain = $tw.utils.getIpfsEnsDomain();
       // Check
@@ -127,23 +122,15 @@ ENS Action
         $tw.utils.alert(name, "Undefined ENS domain...");
         return false;
       }
-
-      // Retrieve a Web3 provider
-      const { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
-
       // Fetch ENS domain content
-      const { content } = await this.ipfsController.getContentHash(ensDomain, web3);
+      const { content } = await this.ipfsController.resolveEns(ensDomain);
       // Nothing to publish
       if (content !== null && content === cid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
       }
-
-      const url = await this.ipfsController.normalizeIpfsUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Publishing wiki:" + "\n " + url.href + "\n to ENS domain: " + ensDomain);
-
-      await this.ipfsController.setContentHash(ensDomain, cid, web3, account);
-
+      // Assign ENS domain content
+      await this.ipfsController.setEns(ensDomain, cid);
       // Unpin if applicable
       if ($tw.utils.getIpfsUnpin() && content !== null) {
         try {
@@ -159,7 +146,6 @@ ENS Action
       $tw.utils.alert(name, error.message);
       return false;
     }
-
     return true;
   };
 

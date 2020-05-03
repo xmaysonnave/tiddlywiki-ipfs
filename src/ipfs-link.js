@@ -67,6 +67,7 @@ IPFS link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.render = function (parent, nextSibling) {
+    var self = this;
     // Save the parent dom node
     this.parentDomNode = parent;
     // Compute our attributes
@@ -78,19 +79,18 @@ IPFS link widget
     if (tiddler !== undefined && tiddler !== null) {
       this.renderTiddlerLink(parent, nextSibling);
     } else {
-      (async () => {
-        try {
-          this.renderText(parent, nextSibling);
-          var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, this.value);
-          if (normalizedUrl !== null) {
-            this.removeChildDomNodes();
-            this.renderExternalLink(parent, nextSibling, normalizedUrl.href);
-          }
-        } catch (error) {
-          this.getLogger().error(error);
+      this.renderText(parent, nextSibling);
+      $tw.ipfsController
+        .resolveUrl(false, this.value)
+        .then((data) => {
+          var { normalizedUrl } = data;
+          self.removeChildDomNodes();
+          self.renderExternalLink(parent, nextSibling, normalizedUrl.href);
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
           $tw.utils.alert(name, error.message);
-        }
-      })();
+        });
     }
   };
 
@@ -240,18 +240,23 @@ IPFS link widget
   };
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
-    (async () => {
-      try {
-        var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, this.value);
-        if (normalizedUrl !== null) {
-          window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
-        }
-      } catch (error) {
-        this.getLogger().error(error);
+    // self
+    const self = this;
+    // Normalize
+    $tw.ipfsController
+      .resolveUrl(false, this.value)
+      .then((data) => {
+        var { normalizedUrl } = data;
+        // Process
+        window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
+      })
+      .catch((error) => {
+        // Log
+        self.getLogger().error(error);
         $tw.utils.alert(name, error.message);
+        // Fallback
         window.open(this.value, "_blank", "noopener,noreferrer");
-      }
-    })();
+      });
     event.preventDefault();
     event.stopPropagation();
     return false;

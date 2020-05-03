@@ -8,8 +8,8 @@ import root from "window-or-global";
 
   const name = "ens-library";
 
-  var EnsLibrary = function (ipfsBundle) {
-    this.ipfsBundle = ipfsBundle;
+  var EnsLibrary = function (ipfsLoader) {
+    this.ipfsLoader = ipfsLoader;
     this.network = {
       1: "Ethereum Main Network: 'Mainnet', chainId: '1'",
       3: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'",
@@ -58,7 +58,7 @@ import root from "window-or-global";
     if (root.ethers == undefined || root.ethers == null) {
       try {
         // Load ethers
-        await this.ipfsBundle.ipfsLoader.loadEtherJsLibrary();
+        await this.ipfsLoader.loadEtherJsLibrary();
         if (root.ethers !== undefined && root.ethers !== null) {
           return;
         }
@@ -369,50 +369,40 @@ import root from "window-or-global";
   };
 
   EnsLibrary.prototype.getContentHash = async function (domain, web3) {
-    // check
+    // Check
     if (domain == undefined || domain == null) {
       throw new Error("Undefined ENS domain...");
     }
     if (root.ethers == undefined || root.ethers == null) {
       await this.loadEthers();
     }
-
     if (web3 == undefined) {
       var { web3 } = await this.getWeb3Provider();
     }
-
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain);
-
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3);
-
     // Log
     this.getLogger().info("ENS registry:" + "\n " + this.etherscan[chainId] + "/address/" + registry);
-
     // Fetch resolver address
     var resolver = await this.getResolver(web3, registry, domainHash);
-
     // Check
     if (resolver == null || /^0x0+$/.test(resolver) == true) {
       throw new Error("Undefined ENS domain resolver...");
     }
-
     // Log
     this.getLogger().info("ENS domain resolver:" + "\n " + this.etherscan[chainId] + "/address/" + resolver);
-
     // Check if resolver is EIP165
     const eip165 = await this.checkEip165(web3, resolver);
     if (eip165 == false) {
       throw new Error("ENS domain resolver do not conform to EIP165...");
     }
-
     // Check if resolver is EIP1577
     const eip1577 = await this.checkEip1577(web3, resolver);
     if (eip1577 == false) {
       throw new Error("ENS domain resolver do not conform to EIP1577...");
     }
-
     // retrieve content hash
     this.getLogger().info("Processing ENS domain content...");
     const abi = [{ name: "contenthash", type: "function", inputs: [{ type: "bytes32" }] }];
@@ -425,7 +415,6 @@ import root from "window-or-global";
         protocol: null,
       };
     }
-
     // decode bytes result
     var content = root.ethers.utils.defaultAbiCoder.decode(["bytes"], result);
     if (content == undefined || content == null || Array.isArray(content) === false || content[0] === "0x") {
@@ -434,10 +423,8 @@ import root from "window-or-global";
         protocol: null,
       };
     }
-
     // decode content hash
     var { decoded, protocol } = this.decodeContenthash(content[0]);
-
     return {
       content: decoded,
       protocol: protocol,

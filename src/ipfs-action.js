@@ -83,11 +83,8 @@ IPFS Action
       var ensCid = null;
       var protocol = null;
       var cid = null;
-
       const title = event.tiddlerTitle;
-
       const tiddler = $tw.wiki.getTiddler(title);
-
       // Check
       export_uri = tiddler.getFieldString("_export_uri");
       if (export_uri == undefined || export_uri == null || export_uri.trim() === "") {
@@ -95,7 +92,6 @@ IPFS Action
       } else {
         export_uri = export_uri.trim();
       }
-
       try {
         export_uri = this.ipfsController.getUrl(export_uri);
       } catch (error) {
@@ -103,7 +99,6 @@ IPFS Action
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
       }
-
       // URL Analysis
       if (export_uri !== null && export_uri.protocol !== fileProtocol) {
         // Decode pathname
@@ -113,7 +108,6 @@ IPFS Action
           await this.ipfsController.requestToUnpin(cid);
         }
       }
-
       // Analyse IPNS
       if (protocol == ipnsKeyword) {
         var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(cid);
@@ -129,34 +123,26 @@ IPFS Action
           await this.ipfsController.requestToUnpin(ipnsCid);
         }
       }
-
       // Analyse URI
       if (export_uri.hostname.endsWith(".eth")) {
-        // Retrieve a Web3 provider
-        const { web3 } = await this.ipfsController.getWeb3Provider();
         // Fetch ENS domain content
-        var { content: ensCid } = await this.ipfsController.getContentHash(export_uri.hostname, web3);
+        var { content: ensCid } = await this.ipfsController.resolveEns(export_uri.hostname);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ensCid !== null) {
           await this.ipfsController.requestToUnpin(ensCid);
         }
       }
-
       // Retrieve content
       const content = await this.ipfsController.exportTiddler(tiddler, child);
-
       // Check
       if (content == null) {
         return false;
       }
-
       this.getLogger().info("Uploading Tiddler: " + content.length + " bytes");
-
       // Add
       const { added } = await this.ipfsController.addToIpfs(content);
       // Save
       fields.push({ key: "_export_uri", value: "/" + ipfsKeyword + "/" + added });
-
       try {
         await this.ipfsController.pinToIpfs(added);
       } catch (error) {
@@ -164,7 +150,6 @@ IPFS Action
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
       }
-
       // Publish to IPNS
       if (protocol == ipnsKeyword) {
         this.getLogger().info("Publishing IPNS Tiddler: " + ipnsName);
@@ -181,16 +166,11 @@ IPFS Action
           $tw.utils.alert(name, error.message);
         }
       }
-
       // Publish to ENS
       if (export_uri.hostname.endsWith(".eth")) {
-        this.getLogger().info("Publishing ENS domain content: " + export_uri.hostname);
         fields.push({ key: "_export_uri", value: "https://" + export_uri.hostname });
         try {
-          // Retrieve an enabled Web3 provider
-          const { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
-          // Set ENS domain content
-          await this.ipfsController.setContentHash(export_uri.hostname, added, web3, account);
+          await this.ipfsController.setEns(export_uri.hostname, added);
         } catch (error) {
           // Log and continue
           this.getLogger().error(error);
@@ -199,7 +179,6 @@ IPFS Action
           this.ipfsController.discardRequestToUnpin(ensCid);
         }
       }
-
       var updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         addTags: ["$:/isExported", "$:/isIpfs"],
@@ -211,7 +190,6 @@ IPFS Action
       $tw.utils.alert(name, error.message);
       return false;
     }
-
     return true;
   };
 
@@ -494,7 +472,7 @@ IPFS Action
 
       if (resolved !== null) {
         // Build URL
-        const url = await this.ipfsController.normalizeIpfsUrl("/" + ipfsKeyword + "/" + resolved);
+        const url = await this.ipfsController.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
         window.open(url.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {

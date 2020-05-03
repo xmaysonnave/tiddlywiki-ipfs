@@ -28,7 +28,6 @@ ENS Wrapper
   var EnsWrapper = function (ipfsBundle) {
     this.ensLibrary = ipfsBundle.ensLibrary;
     this.ipfsLibrary = ipfsBundle.ipfsLibrary;
-    this.ipfsUrl = ipfsBundle.ipfsUrl;
   };
 
   EnsWrapper.prototype.getLogger = function () {
@@ -42,9 +41,6 @@ ENS Wrapper
       if (content !== null && protocol !== null) {
         // Convert CidV0 to CidV1
         content = this.ipfsLibrary.cidV0ToCidV1(content);
-        // Normalize
-        const url = await this.ipfsUrl.normalizeUrl("/" + protocol + "/" + content);
-        this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url.href + "\n from: " + domain);
         // Success
         return {
           content: content,
@@ -64,14 +60,11 @@ ENS Wrapper
 
   EnsWrapper.prototype.setContentHash = async function (domain, cid, web3, account) {
     try {
-      // Convert CidV1 to CidV0
-      const cidv0 = this.ipfsLibrary.cidV1ToCidV0(cid);
-      // Set
-      await this.ensLibrary.setContentHash(domain, cidv0, web3, account);
-      // Normalize
-      const url = await this.ipfsUrl.normalizeUrl("/ipfs/" + cidv0);
-      // Success
-      this.getLogger().info("Successfully set ENS domain content:" + "\n " + url.href + "\n to: " + domain);
+      const cidV0 = this.ipfsLibrary.cidV1ToCidV0(cid);
+      await this.ensLibrary.setContentHash(domain, cidV0, web3, account);
+      return {
+        cidV0: cidV0,
+      };
     } catch (error) {
       this.getLogger().error(error);
       throw new Error("Unable to set ENS domain content...");

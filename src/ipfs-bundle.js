@@ -8,6 +8,8 @@ IPFS Bundle
 
 \*/
 
+import root from "window-or-global";
+
 import EnsLibrary from "./ens-library";
 import IpfsLibrary from "./ipfs-library";
 import IpfsLoader from "./ipfs-loader";
@@ -18,8 +20,14 @@ import IpfsUrl from "./ipfs-url";
   /*global $tw: false*/
   "use strict";
 
+  const name = "ipfs-bundle";
+
   var IpfsBundle = function () {
     this.once = false;
+  };
+
+  IpfsBundle.prototype.getLogger = function () {
+    return root.log.getLogger(name);
   };
 
   IpfsBundle.prototype.init = function () {
@@ -27,10 +35,10 @@ import IpfsUrl from "./ipfs-url";
     if (this.once) {
       return;
     }
-    this.ensLibrary = new EnsLibrary(this);
-    this.ipfsLibrary = new IpfsLibrary(this);
     this.ipfsLoader = new IpfsLoader();
-    this.ipfsUrl = new IpfsUrl(this.ensLibrary, this.ipfsLibrary);
+    this.ensLibrary = new EnsLibrary(this.ipfsLoader);
+    this.ipfsLibrary = new IpfsLibrary(this.ipfsLoader);
+    this.ipfsUrl = new IpfsUrl();
     // Init once
     this.once = true;
   };

@@ -8,7 +8,7 @@ IPFS Default
 
 \*/
 
-(function() {
+(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
   "use strict";
@@ -18,7 +18,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver export protocol with default value if applicable
    */
-  exports.getIpfsExport = function() {
+  exports.getIpfsExport = function () {
     var output = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/export");
     if (tiddler !== undefined && tiddler !== null) {
@@ -36,14 +36,14 @@ IPFS Default
   /*
    * Default Export
    */
-  exports.getIpfsDefaultExport = function() {
+  exports.getIpfsDefaultExport = function () {
     return "json";
   };
 
   /*
    * Retrieve ipfs saver protocol with default value if applicable
    */
-  exports.getIpfsProtocol = function() {
+  exports.getIpfsProtocol = function () {
     var protocol = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/protocol");
     if (tiddler !== undefined && tiddler !== null) {
@@ -61,14 +61,14 @@ IPFS Default
   /*
    * Default Protocol
    */
-  exports.getIpfsDefaultProtocol = function() {
+  exports.getIpfsDefaultProtocol = function () {
     return "ipfs";
   };
 
   /*
    * Retrieve ipfs saver api url with default value if applicable
    */
-  exports.getIpfsSaverApiUrl = function() {
+  exports.getIpfsSaverApiUrl = function () {
     var api = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/api");
     if (tiddler !== undefined && tiddler !== null) {
@@ -87,22 +87,15 @@ IPFS Default
       }
     }
     if (api === null) {
-      api = $tw.utils.getIpfsDefaultApiUrl();
+      api = $tw.ipfsController.getIpfsDefaultApi();
     }
     return api;
   };
 
   /*
-   * Default API URL
-   */
-  exports.getIpfsDefaultApiUrl = function() {
-    return "https://ipfs.infura.io:5001";
-  };
-
-  /*
    * Retrieve ipfs saver gateway url with default value if applicable
    */
-  exports.getIpfsSaverGatewayUrl = function() {
+  exports.getIpfsSaverGatewayUrl = function () {
     var gateway = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/gateway");
     if (tiddler !== undefined && tiddler !== null) {
@@ -121,22 +114,15 @@ IPFS Default
       }
     }
     if (gateway === null) {
-      gateway = $tw.utils.getIpfsDefaultGatewayUrl();
+      gateway = $tw.ipfsController.getIpfsDefaultGateway();
     }
     return gateway;
   };
 
   /*
-   * Default Gateway URL
-   */
-  exports.getIpfsDefaultGatewayUrl = function() {
-    return "https://ipfs.infura.io";
-  };
-
-  /*
    * Retrieve ipfs saver ens domain with default value if applicable
    */
-  exports.getIpfsEnsDomain = function() {
+  exports.getIpfsEnsDomain = function () {
     var ensDomain = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ens/domain");
     if (tiddler !== undefined && tiddler !== null) {
@@ -151,7 +137,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver ipns name with default value if applicable
    */
-  exports.getIpfsIpnsName = function() {
+  exports.getIpfsIpnsName = function () {
     var ipnsName = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
     if (tiddler !== undefined && tiddler !== null) {
@@ -166,7 +152,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver ipns key with default value if applicable
    */
-  exports.getIpfsIpnsKey = function() {
+  exports.getIpfsIpnsKey = function () {
     var ipnsKey = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
     if (tiddler !== undefined && tiddler !== null) {
@@ -181,7 +167,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver verbose with default value if applicable
    */
-  exports.getIpfsVerbose = function() {
+  exports.getIpfsVerbose = function () {
     var verbose = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/verbose");
     if (tiddler !== undefined && tiddler !== null) {
@@ -201,7 +187,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver unpin with default value if applicable
    */
-  exports.getIpfsUnpin = function() {
+  exports.getIpfsUnpin = function () {
     var unpin = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/unpin");
     if (tiddler !== undefined && tiddler !== null) {
@@ -221,7 +207,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver url policy with default value if applicable
    */
-  exports.getIpfsUrlPolicy = function() {
+  exports.getIpfsUrlPolicy = function () {
     var policy = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/policy");
     if (tiddler !== undefined && tiddler !== null) {
@@ -239,14 +225,14 @@ IPFS Default
   /*
    * Default Policy
    */
-  exports.getIpfsDefaultPolicy = function() {
+  exports.getIpfsDefaultPolicy = function () {
     return "gateway";
   };
 
   /*
    * Retrieve ipfs saver provider with default value if applicable
    */
-  exports.getIpfsProvider = function() {
+  exports.getIpfsProvider = function () {
     var provider = null;
     var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/provider");
     if (tiddler !== undefined && tiddler !== null) {
@@ -264,7 +250,7 @@ IPFS Default
   /*
    * Default Provider
    */
-  exports.getIpfsDefaultProvider = function() {
+  exports.getIpfsDefaultProvider = function () {
     return "http";
   };
 })();

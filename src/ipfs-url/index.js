@@ -7,56 +7,51 @@ import { URL } from "universal-url";
 
   const name = "ipfs-url";
 
-  const defaultApiUrl = new URL("https://ipfs.infura.io:5001");
-
-  const defaultGatewayUrl = new URL("https://ipfs.infura.io");
-
-  const ipnsKeyword = "ipns";
-
-  var IpfsUrl = function (ensLibrary, ipfsLibrary) {
-    this.ensLibrary = ensLibrary;
-    this.ipfsLibrary = ipfsLibrary;
+  var IpfsUrl = function () {
+    this.defaultApiUrl = null;
+    this.defaultGatewayUrl = null;
   };
 
   IpfsUrl.prototype.getLogger = function () {
     return root.log.getLogger(name);
   };
 
-  IpfsUrl.prototype.resolveUrl = async function (resolveIpns, value) {
-    var cid = null;
-    var normalizedUrl = null;
-    var protocol = null;
-    var text = false;
-    if (value !== undefined && value !== null) {
-      try {
-        this.getUrl(value);
-      } catch (error) {
-        if (value !== undefined && value !== null && value.startsWith("/") === false) {
-          text = true;
-        }
-      }
-      if (text == false) {
-        normalizedUrl = await this.normalizeUrl(value, this.getIpfsBaseUrl());
-        // IPFS
-        var { protocol, cid } = this.ipfsLibrary.decodeCid(normalizedUrl.pathname);
-        // IPNS
-        if (resolveIpns && cid !== null && protocol !== null && protocol === ipnsKeyword) {
-          try {
-            const { ipnsKey } = await $tw.ipfsController.getIpnsIdentifiers(cid);
-            cid = null;
-            cid = await $tw.ipfsController.resolveIpnsKey(ipnsKey);
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          }
-        }
-      }
+  IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {
+    if (this.defaultApiUrl == null) {
+      this.defaultApiUrl = new URL(this.getIpfsDefaultApi());
     }
-    return {
-      cid: cid, // IPFS or IPNS cid
-      normalizedUrl: normalizedUrl,
-      protocol: protocol,
-    };
+    return this.defaultApiUrl;
+  };
+
+  IpfsUrl.prototype.getIpfsDefaultGatewayUrl = function () {
+    if (this.defaultGatewayUrl == null) {
+      this.defaultGatewayUrl = new URL(this.getIpfsDefaultGateway());
+    }
+    return this.defaultGatewayUrl;
+  };
+
+  IpfsUrl.prototype.getIpfsApiUrl = function () {
+    try {
+      return this.getUrl($tw.utils.getIpfsSaverApiUrl());
+    } catch (error) {
+      return this.getIpfsDefaultApiUrl();
+    }
+  };
+
+  IpfsUrl.prototype.getIpfsGatewayUrl = function () {
+    try {
+      return this.getUrl($tw.utils.getIpfsSaverGatewayUrl());
+    } catch (error) {
+      return this.getIpfsDefaultGatewayUrl();
+    }
+  };
+
+  IpfsUrl.prototype.getIpfsDefaultApi = function () {
+    return "https://ipfs.infura.io:5001";
+  };
+
+  IpfsUrl.prototype.getIpfsDefaultGateway = function () {
+    return "https://ipfs.infura.io";
   };
 
   /**
@@ -85,30 +80,6 @@ import { URL } from "universal-url";
     throw new Error("Invalid current HTML Document URL...");
   };
 
-  IpfsUrl.prototype.getIpfsApiUrl = function () {
-    try {
-      return new URL($tw.utils.getIpfsSaverApiUrl());
-    } catch (error) {
-      return this.getDefaultIpfsApiUrl();
-    }
-  };
-
-  IpfsUrl.prototype.getDefaultIpfsApiUrl = function () {
-    return defaultApiUrl;
-  };
-
-  IpfsUrl.prototype.getIpfsGatewayUrl = function () {
-    try {
-      return new URL($tw.utils.getIpfsSaverGatewayUrl());
-    } catch (error) {
-      return this.getDefaultIpfsGatewayUrl();
-    }
-  };
-
-  IpfsUrl.prototype.getDefaultIpfsGatewayUrl = function () {
-    return defaultGatewayUrl;
-  };
-
   IpfsUrl.prototype.getUrl = function (url, base) {
     try {
       return new URL(url, base);
@@ -130,10 +101,10 @@ import { URL } from "universal-url";
     } catch (error) {
       base = this.getIpfsGatewayUrl();
     }
-    return new URL(base.protocol + "//" + base.host);
+    return this.getUrl(base.protocol + "//" + base.host);
   };
 
-  IpfsUrl.prototype.normalizeUrl = async function (url, base) {
+  IpfsUrl.prototype.normalizeUrl = function (url, base) {
     // Check
     if (url == undefined || url == null || url.toString().trim() === "") {
       return null;
@@ -151,27 +122,6 @@ import { URL } from "universal-url";
       base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl();
       if (url !== undefined && url !== null) {
         parsed = this.getUrl(url, base);
-      }
-    }
-    // Remove .link from .eth.link
-    if (parsed.hostname.endsWith(".eth.link")) {
-      parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
-    }
-    // Resolve .eth
-    if (parsed.hostname.endsWith(".eth")) {
-      // To accomodate jest
-      var jest = true;
-      try {
-        if ($tw.browser) {
-          // It never happen as node raises an exception...
-          jest = false;
-        }
-      } catch (error) {
-        // Ignore
-      }
-      // Errors are triggered and tests are running...
-      if (jest === false) {
-        parsed = await $tw.ipfsController.resolveENS(parsed.hostname);
       }
     }
     return parsed;

@@ -88,22 +88,16 @@ IPFS Saver
       var cid = null;
       var ensDomain = null;
       var ensContent = null;
-      var web3 = null;
-      var account = null;
       var options = options || {};
-
       // Process document URL
       const wiki = this.ipfsController.getDocumentUrl();
-
       // Retrieve base URL
       const base = this.ipfsController.getIpfsBaseUrl();
-
       // Next
       const nextWiki = this.ipfsController.getUrl(wiki);
       nextWiki.protocol = base.protocol;
       nextWiki.hostname = base.hostname;
       nextWiki.port = base.port;
-
       // URL Analysis
       if (wiki.protocol !== fileProtocol) {
         // Decode pathname
@@ -118,7 +112,6 @@ IPFS Saver
           }
         }
       }
-
       // IPNS
       if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
         // Resolve current IPNS
@@ -164,13 +157,11 @@ IPFS Saver
             $tw.utils.alert(name, error.message);
           }
         }
-
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
           await this.ipfsController.requestToUnpin(ipnsCid);
         }
       }
-
       // ENS Analysis
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         // Getting default ens domain
@@ -180,25 +171,19 @@ IPFS Saver
           callback("Undefined ENS domain...");
           return false;
         }
-        // Retrieve an enabled Web3 provider
-        var { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
         // Fetch ENS domain content
-        const { content } = await this.ipfsController.getContentHash(ensDomain, web3);
+        const { content } = await this.ipfsController.resolveEns(ensDomain);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && content !== null) {
           await this.ipfsController.requestToUnpin(content);
         }
       }
-
       // Upload  current document
       this.getLogger().info("Uploading wiki: " + text.length + " bytes");
-
       // Add
       const { added } = await this.ipfsController.addToIpfs(text);
-
       // Default next
       nextWiki.pathname = "/" + ipfsKeyword + "/" + added;
-
       // Pin, if failure log and continue
       try {
         await this.ipfsController.pinToIpfs(added);
@@ -206,7 +191,6 @@ IPFS Saver
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
       }
-
       // Publish to IPNS
       if (ipnsName !== null && (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword)) {
         this.getLogger().info("Publishing IPNS name: " + ipnsName);
@@ -224,13 +208,10 @@ IPFS Saver
         // IPNS next
         nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
       }
-
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-        const url = await this.ipfsController.normalizeIpfsUrl("/" + ipfsKeyword + "/" + added);
-        this.getLogger().info("Publishing wiki:" + "\n " + url.href + "\n to ENS domain: " + ensDomain);
         try {
-          await this.ipfsController.setContentHash(ensDomain, added, web3, account);
+          await this.ipfsController.setEns(ensDomain, added);
           // ENS next
           nextWiki.protocol = "https:";
           nextWiki.host = ensDomain;
@@ -244,7 +225,6 @@ IPFS Saver
           }
         }
       }
-
       // Unpin
       if ($tw.utils.getIpfsUnpin()) {
         for (var i = this.ipfsController.unpin.length - 1; i >= 0; i--) {
@@ -260,10 +240,8 @@ IPFS Saver
           }
         }
       }
-
       // Done
       callback(null);
-
       // Next
       if (nextWiki.toString() !== wiki.toString()) {
         window.location.assign(nextWiki.toString());
@@ -273,7 +251,6 @@ IPFS Saver
       callback(error.message);
       return false;
     }
-
     return true;
   };
 

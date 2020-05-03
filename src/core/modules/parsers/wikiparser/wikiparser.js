@@ -119,30 +119,6 @@ wikiparser
     return console;
   };
 
-  WikiParser.prototype.getImportedTiddlers = async function (field, title, url) {
-    var cid = null;
-    var importedTiddlers = null;
-    var normalizedUrl = null;
-    var { cid, importedTiddlers, normalizedUrl } = await $tw.ipfsController.importTiddlers(url);
-    if (importedTiddlers == null) {
-      $tw.utils.alert(
-        name,
-        'Failed to import : <a rel="noopener noreferrer" target="_blank" href="' +
-          normalizedUrl +
-          '">' +
-          field +
-          "</a> from Imported Tiddler [[" +
-          title +
-          "]]"
-      );
-    }
-    return {
-      cid,
-      importedTiddlers,
-      normalizedUrl,
-    };
-  };
-
   WikiParser.prototype.loadRemoteTiddlers = async function (tiddler) {
     this.host = tiddler;
     this.processedImported = new Map();
@@ -206,6 +182,30 @@ wikiparser
     this.processedKeys = null;
     this.processedTitles = null;
     this.root = null;
+  };
+
+  WikiParser.prototype.getImportedTiddlers = async function (field, title, url) {
+    var cid = null;
+    var importedTiddlers = null;
+    var normalizedUrl = null;
+    var { cid, importedTiddlers, normalizedUrl } = await $tw.ipfsController.importTiddlers(url);
+    if (importedTiddlers == null) {
+      $tw.utils.alert(
+        name,
+        'Failed to import : <a rel="noopener noreferrer" target="_blank" href="' +
+          normalizedUrl +
+          '">' +
+          field +
+          "</a> from Imported Tiddler [[" +
+          title +
+          "]]"
+      );
+    }
+    return {
+      cid,
+      importedTiddlers,
+      normalizedUrl,
+    };
   };
 
   WikiParser.prototype.loadImportedRemoteTiddlers = async function (canonicalUri, importUri, title) {

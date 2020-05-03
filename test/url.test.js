@@ -27,7 +27,7 @@ describe("API URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
-    const parsed = ipfsUrl.getDefaultIpfsApiUrl();
+    const parsed = ipfsUrl.getIpfsDefaultApiUrl();
     expect(parsed.href === api.href).toBeTruthy();
   });
 
@@ -79,7 +79,7 @@ describe("Gateway URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
-    const parsed = ipfsUrl.getDefaultIpfsGatewayUrl();
+    const parsed = ipfsUrl.getIpfsDefaultGatewayUrl();
     expect(parsed.href === gateway.href).toBeTruthy();
   });
 
@@ -165,15 +165,5 @@ describe("Normalize Gateway URL", () => {
     ipfsUrl.getDocumentUrl.mockReturnValueOnce(local);
     const parsed = await ipfsUrl.normalizeUrl(relative);
     expect(parsed.href === gateway.protocol + "//" + gateway.hostname + relative).toBeTruthy();
-  });
-
-  it("Remove dot link...", async () => {
-    const ipfsBundle = new IpfsBundle();
-    ipfsBundle.init();
-    const ipfsUrl = ipfsBundle.ipfsUrl;
-    ipfsUrl.getDocumentUrl = jest.fn();
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
-    const parsed = await ipfsUrl.normalizeUrl(ethLink);
-    expect(parsed.href === eth.href).toBeTruthy();
   });
 });

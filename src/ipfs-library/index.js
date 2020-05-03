@@ -13,8 +13,8 @@ import root from "window-or-global";
   /*
    * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
    **/
-  var IpfsLibrary = function (ipfsBundle) {
-    this.ipfsBundle = ipfsBundle;
+  var IpfsLibrary = function (ipfsLoader) {
+    this.ipfsLoader = ipfsLoader;
   };
 
   IpfsLibrary.prototype.getLogger = function () {
@@ -144,7 +144,7 @@ import root from "window-or-global";
     if (typeof root.IpfsHttpClient === "undefined") {
       try {
         // Load js-ipfs-http-client
-        await this.ipfsBundle.ipfsLoader.loadIpfsHttpLibrary();
+        await this.ipfsLoader.loadIpfsHttpLibrary();
         if (typeof root.IpfsHttpClient !== "undefined") {
           return;
         }
@@ -388,13 +388,8 @@ import root from "window-or-global";
       });
       // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
       var lastResult = null;
-      try {
-        for await (const resolved of resolvedSource) {
-          lastResult = resolved;
-        }
-      } catch (error) {
-        // Log and continue
-        this.getLogger().warn(error);
+      for await (const resolved of resolvedSource) {
+        lastResult = resolved;
       }
       if (lastResult == null || lastResult == undefined || lastResult.trim() === "") {
         throw new Error("IPFS client returned an unknown result...");

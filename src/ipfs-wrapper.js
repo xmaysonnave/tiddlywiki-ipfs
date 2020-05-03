@@ -105,15 +105,16 @@ IPFS Wrapper
           continue;
         }
         // Process value
-        var cid = null;
+        var ipfsCid = null;
+        var ipnsCid = null;
         const fieldValue = tiddler.getFieldString(field);
         try {
-          var { cid } = await this.ipfsUrl.resolveUrl(false, fieldValue);
+          var { ipfsCid, ipnsCid } = await $tw.ipfsController.resolveUrl(false, fieldValue);
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
         }
-        if (cid !== null) {
+        if (ipfsCid !== null || ipnsCid !== null) {
           isIpfs = true;
         }
         // Store field
