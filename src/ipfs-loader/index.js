@@ -6,8 +6,8 @@ import root from "window-or-global";
 
   const name = "ipfs-loader";
 
-  const eruda = "https://cdn.jsdelivr.net/npm/eruda@2.3.2/eruda.min.js";
-  const eruda_sri = "sha384-z9F0xYiEVo0GYZtbAYsmGZULmqiPliHaQs7qEvK3p+e66yyScIHUwjQ6wPVFMbvG";
+  const eruda = "https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js";
+  const eruda_sri = "sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP";
 
   const ethers = "https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js";
   const ethers_sri = "sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5";
