@@ -1,5 +1,6 @@
 ## ```IPFS with TiddyWiki```
 <a name="ipfs-with-tiddlywiki"/>
+
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
 ```IPFS with TiddyWiki``` is a [TiddlyWiki](https://tiddlywiki.com/) plugin who aims to help users, editors and developers to save their wikis and attachments over [IPFS](https://ipfs.io).
