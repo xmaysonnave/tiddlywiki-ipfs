@@ -23,10 +23,6 @@ IPFS Controller
   const name = "ipfs-controller";
 
   var IpfsController = function () {
-    this.web3 = null;
-    this.chainId = null;
-    this.account = null;
-    this.ethereum = null;
     this.ipfsBundle = new IpfsBundle();
     this.ipfsBundle.init();
     this.ensWrapper = new EnsWrapper(this.ipfsBundle);
@@ -41,9 +37,9 @@ IPFS Controller
     return window.log.getLogger(name);
   };
 
-  IpfsController.prototype.requestToUnpin = async function (cid) {
+  IpfsController.prototype.requestToUnpin = function (cid) {
     if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
-      const url = await this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+      const url = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Request to unpin:" + "\n " + url.href);
     }
   };
@@ -96,9 +92,9 @@ IPFS Controller
     return this.ipfsWrapper.decodeCid(pathname);
   };
 
-  IpfsController.prototype.getIpnsIdentifiers = async function (ipnsKey, ipnsName) {
+  IpfsController.prototype.getIpnsIdentifiers = async function (identifier, ipnsName) {
     const { ipfs } = await this.getIpfsClient();
-    return await this.ipfsWrapper.getIpnsIdentifiers(ipfs, ipnsKey, ipnsName);
+    return await this.ipfsWrapper.getIpnsIdentifiers(ipfs, identifier, ipnsName);
   };
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
@@ -152,9 +148,9 @@ IPFS Controller
     };
   };
 
-  IpfsController.prototype.discardRequestToUnpin = async function (cid) {
+  IpfsController.prototype.discardRequestToUnpin = function (cid) {
     if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
-      const url = await this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+      const url = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Discard request to unpin:" + "\n " + url.href);
     }
   };
@@ -177,14 +173,10 @@ IPFS Controller
     var normalizedUrl = null;
     try {
       if (url !== undefined && url !== null) {
-        var { ipfsCid, ipnsCid, normalizedUrl } = await this.resolveUrl(false, url);
+        var { cid, normalizedUrl } = await this.resolveUrl(true, url);
         // Retrieve cached immutable imported Tiddlers
-        if (ipfsCid !== null) {
-          cid = ipfsCid;
-          importedTiddlers = this.importedTiddlers.get(ipfsCid);
-        } else if (ipnsCid !== null) {
-          cid = ipnsCid;
-          importedTiddlers = this.importedTiddlers.get(ipnsCid);
+        if (cid !== null) {
+          importedTiddlers = this.importedTiddlers.get(cid);
         }
         if (importedTiddlers !== undefined && importedTiddlers !== null) {
           this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl.href);
@@ -232,17 +224,8 @@ IPFS Controller
     return this.ipfsUrl.getIpfsBaseUrl();
   };
 
-  IpfsController.prototype.normalizeUrl = async function (url) {
-    var parsed = this.ipfsUrl.normalizeUrl(url, this.getIpfsBaseUrl());
-    // Remove .link from .eth.link
-    if (parsed !== null && parsed.hostname.endsWith(".eth.link")) {
-      parsed.hostname = parsed.hostname.substring(0, parsed.hostname.indexOf(".link"));
-    }
-    // Resolve .eth
-    if (parsed !== null && parsed.hostname.endsWith(".eth")) {
-      parsed = await this.resolveENS(parsed.hostname);
-    }
-    return parsed;
+  IpfsController.prototype.normalizeUrl = function (value) {
+    return this.ipfsUrl.normalizeUrl(value);
   };
 
   IpfsController.prototype.getDocumentUrl = function () {
@@ -266,44 +249,75 @@ IPFS Controller
   };
 
   IpfsController.prototype.resolveUrl = async function (resolveIpns, value) {
-    var ipfsCid = null;
-    var ipnsCid = null;
+    var cid = null;
+    var ipnsKey = null;
     var normalizedUrl = null;
     var text = false;
-    if (value !== undefined && value !== null) {
-      try {
-        this.ipfsUrl.getUrl(value);
-      } catch (error) {
-        if (value !== undefined && value !== null && value.startsWith("/") === false) {
-          text = true;
-        }
+    // Check
+    if (value == undefined || value == null) {
+      return {
+        cid: null,
+        ipnsKey: null,
+        normalizedUrl: null,
+      };
+    }
+    // Text or ENS
+    try {
+      this.ipfsUrl.getUrl(value);
+    } catch (error) {
+      // Text
+      if (value.startsWith("/") === false) {
+        text = true;
       }
-      if (text == false) {
-        normalizedUrl = await this.normalizeUrl(value);
-        // Analyse
-        var { protocol, cid } = this.decodeCid(normalizedUrl.pathname);
-        if (cid !== null && protocol !== null) {
-          if (protocol === ipnsKeyword) {
-            ipnsCid = cid;
-          } else {
-            ipfsCid = cid;
-          }
+      // ENS
+      try {
+        normalizedUrl = this.normalizeUrl("https://" + value);
+        if (normalizedUrl.hostname.endsWith(".eth")) {
+          text = false;
         }
-        // IPNS
-        if (resolveIpns && ipnsCid !== null) {
-          try {
-            const { ipnsKey } = await this.getIpnsIdentifiers(ipnsCid);
-            ipfsCid = await this.resolveIpnsKey(ipnsKey);
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          }
-        }
+      } catch (error) {
+        // ignore
       }
     }
+    // Check
+    if (text == true) {
+      return {
+        cid: null,
+        ipnsKey: null,
+        normalizedUrl: null,
+      };
+    }
+    // Resolve
+    if (normalizedUrl == null) {
+      normalizedUrl = this.normalizeUrl(value);
+    }
+    // Check
+    if (normalizedUrl == null) {
+      return {
+        cid: null,
+        ipnsKey: null,
+        normalizedUrl: null,
+      };
+    }
+    var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl.pathname);
+    if (protocol !== null) {
+      if (protocol == ipnsKeyword) {
+        if (ipnsIdentifier !== null) {
+          var { ipnsKey, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
+          if (resolveIpns && ipnsKey !== null) {
+            cid = await this.resolveIpnsKey(ipnsKey);
+          }
+        }
+      }
+      if (cid == null) {
+        normalizedUrl = null;
+      }
+    } else if (normalizedUrl.hostname.endsWith(".eth")) {
+      var { content: cid, normalizedUrl } = await this.resolveEns(normalizedUrl.hostname);
+    }
     return {
-      ipfsCid: ipfsCid,
-      ipnsCid: ipnsCid,
+      cid: cid,
+      ipnsKey: ipnsKey,
       normalizedUrl: normalizedUrl,
     };
   };
@@ -383,7 +397,7 @@ IPFS Controller
     const { web3 } = await this.getWeb3Provider();
     const { content, protocol } = await this.ensWrapper.getContentHash(ensDomain, web3);
     if (content !== null && protocol !== null) {
-      const url = await this.normalizeUrl("/" + protocol + "/" + content);
+      const url = this.normalizeUrl("/" + protocol + "/" + content);
       this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url.href + "\n from: " + ensDomain);
       return {
         content: content,
@@ -402,124 +416,21 @@ IPFS Controller
     const { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
     const { cidV0 } = await this.ensWrapper.setContentHash(ensDomain, cid, web3, account);
     if (cidV0 !== null) {
-      const url = await this.normalizeUrl("/ipfs/" + cidV0);
+      const url = this.normalizeUrl("/ipfs/" + cidV0);
       this.getLogger().info("Successfully set ENS domain content:" + "\n " + url.href + "\n to: " + ensDomain);
     }
   };
 
   IpfsController.prototype.getEthereumProvider = async function () {
-    if (this.ethereum == null) {
-      const self = this;
-      this.ethereum = await this.ensWrapper.getProvider();
-      // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-      this.ethereum.on("chainChanged", function networkChanged(chainId) {
-        self.networkChanged(chainId);
-      });
-      this.ethereum.on("networkChanged", function networkChanged(chainId) {
-        self.networkChanged(chainId);
-      });
-      this.ethereum.on("accountsChanged", function accountChanged(accounts) {
-        self.accountChanged(accounts);
-      });
-      this.ethereum.on("close", function closeProvider(code, reason) {
-        self.closeProvider(code, reason);
-      });
-    }
-    return this.ethereum;
-  };
-
-  IpfsController.prototype.networkChanged = function (chainId) {
-    if (this.chainId !== chainId) {
-      const network = this.ensWrapper.getNetwork();
-      try {
-        this.web3 = null;
-        this.chainId = chainId;
-        this.account = null;
-        this.getLogger().info("Current Ethereum network:" + "\n " + network[chainId]);
-      } catch (error) {
-        this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      }
-    }
-  };
-
-  IpfsController.prototype.accountChanged = async function (accounts) {
-    if (accounts == undefined || accounts == null || Array.isArray(accounts) == false || accounts.length === 0) {
-      this.web3 = null;
-      this.chainId = null;
-      this.account = null;
-      this.getLogger().info("Closing Ethereum provider...");
-    } else if (this.account !== accounts[0]) {
-      try {
-        if (this.web3 == null && this.chainId == null) {
-          const { web3, chainId } = await this.getWeb3Provider();
-          this.web3 = web3;
-          this.chainId = chainId;
-        }
-        this.account = accounts[0];
-        const etherscan = this.ensWrapper.getEtherscanRegistry();
-        this.getLogger().info(
-          "Current Ethereum account:" + "\n " + etherscan[this.chainId] + "/address/" + this.account
-        );
-      } catch (error) {
-        this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-      }
-    }
-  };
-
-  IpfsController.prototype.closeProvider = function (code, reason) {
-    this.web3 = null;
-    this.chainId = null;
-    this.account = null;
-    this.getLogger().info("Closing Ethereum provider:" + "\n " + "Reason: " + reason + "\n " + "Code: " + code);
+    return await this.ensWrapper.getEthereumProvider();
   };
 
   IpfsController.prototype.getEnabledWeb3Provider = async function () {
-    const provider = await this.getEthereumProvider();
-    const network = this.ensWrapper.getNetwork();
-    const etherscan = this.ensWrapper.getEtherscanRegistry();
-    var info = "Reuse Web3 provider:";
-    if (this.account == null) {
-      const { web3, chainId, account } = await this.ensWrapper.getEnabledWeb3Provider(provider);
-      this.web3 = web3;
-      this.chainId = chainId;
-      this.account = account;
-      info = "New Web3 provider:";
-    }
-    // Log
-    this.getLogger().info(
-      info +
-        "\n network: " +
-        network[this.chainId] +
-        "\n account: " +
-        etherscan[this.chainId] +
-        "/address/" +
-        this.account
-    );
-    return {
-      web3: this.web3,
-      chainId: this.chainId,
-      account: this.account,
-    };
+    return await this.ensWrapper.getEnabledWeb3Provider();
   };
 
   IpfsController.prototype.getWeb3Provider = async function () {
-    const provider = await this.getEthereumProvider();
-    const network = this.ensWrapper.getNetwork();
-    var info = "Reuse Web3 provider:";
-    if (this.web3 == null) {
-      const { web3, chainId } = await this.ensWrapper.getWeb3Provider(provider);
-      this.web3 = web3;
-      this.chainId = chainId;
-      info = "New Web3 provider:";
-    }
-    // Log
-    this.getLogger().info(info + "\n network: " + network[this.chainId]);
-    return {
-      web3: this.web3,
-      chainId: this.chainId,
-    };
+    return await this.ensWrapper.getWeb3Provider();
   };
 
   exports.IpfsController = IpfsController;

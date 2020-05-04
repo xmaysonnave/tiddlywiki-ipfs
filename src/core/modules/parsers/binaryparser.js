@@ -92,16 +92,17 @@ The binary parser parses a binary tiddler into a warning message and download li
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;
-            link.attributes.href = {
-              type: "string",
-              value: normalizedUrl,
-            };
-            const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-            $tw.rootWidget.refresh(parsedTiddler);
+            if (normalizedUrl !== null) {
+              link.attributes.href = {
+                type: "string",
+                value: normalizedUrl,
+              };
+              const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            }
           })
           .catch((error) => {
-            self.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
+            // Ignore
           });
       } else if (text) {
         link.attributes.href = {

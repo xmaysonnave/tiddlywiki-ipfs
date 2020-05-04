@@ -61,13 +61,14 @@ The HTML parser displays text as raw HTML
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;
-            src = normalizedUrl;
-            const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-            $tw.rootWidget.refresh(parsedTiddler);
+            if (normalizedUrl !== null) {
+              src = normalizedUrl;
+              const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+              $tw.rootWidget.refresh(parsedTiddler);
+            }
           })
           .catch((error) => {
-            self.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
+            // Ignore
           });
       } else if (text) {
         src = value + encodeURIComponent(text);

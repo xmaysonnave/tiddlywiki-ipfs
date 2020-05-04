@@ -130,7 +130,11 @@ Render this widget into the DOM
           (async () => {
             try {
               var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, url);
-              if (normalizedUrl !== null) {
+            } catch (error) {
+              // Ignore
+            }
+            if (normalizedUrl !== null) {
+              try {
                 switch (type) {
                   case "application/pdf":
                     domNode = this.document.createElement("embed");
@@ -152,10 +156,10 @@ Render this widget into the DOM
                     }
                     break;
                 }
+              } catch (error) {
+                this.getLogger().error(error);
+                $tw.utils.alert(name, error.message);
               }
-            } catch (error) {
-              this.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
             }
           })();
         } else {

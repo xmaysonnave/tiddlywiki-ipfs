@@ -104,27 +104,28 @@ import { URL } from "universal-url";
     return this.getUrl(base.protocol + "//" + base.host);
   };
 
-  IpfsUrl.prototype.normalizeUrl = function (url, base) {
+  IpfsUrl.prototype.normalizeUrl = function (value, base) {
     // Check
-    if (url == undefined || url == null || url.toString().trim() === "") {
+    if (value == undefined || value == null || value.toString().trim() === "") {
       return null;
     }
-    var url = url.toString().trim();
+    value = value.toString().trim();
     // Parse
-    var parsed = null;
+    var url = null;
     try {
-      parsed = new URL(url);
+      url = new URL(value);
     } catch (error) {
-      parsed = null;
+      // Ignore
     }
     // Invalid URL, try to parse with a Base URL
-    if (parsed == null) {
-      base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl();
-      if (url !== undefined && url !== null) {
-        parsed = this.getUrl(url, base);
-      }
+    if (url == null) {
+      url = this.getUrl(value, base !== undefined && base !== null ? base : this.getIpfsBaseUrl());
     }
-    return parsed;
+    // Remove .link from .eth.link
+    if (url.hostname.endsWith(".eth.link")) {
+      url.hostname = url.hostname.substring(0, url.hostname.indexOf(".link"));
+    }
+    return url;
   };
 
   module.exports = IpfsUrl;

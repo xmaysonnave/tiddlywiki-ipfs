@@ -71,7 +71,7 @@ ENS Action
 
       this.getLogger().info("ENS domain: " + ensDomain);
 
-      const { normalizedUrl } = await this.ipfsController.resolveENS(ensDomain);
+      const { normalizedUrl } = await this.ipfsController.resolveEns(ensDomain);
       if (normalizedUrl !== null) {
         window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
       }
@@ -94,14 +94,14 @@ ENS Action
         return false;
       }
       // Extract and check URL IPFS protocol and CID
-      var { protocol, cid } = this.ipfsController.decodeCid(wiki.pathname);
+      var { cid, protocol } = this.ipfsController.decodeCid(wiki.pathname);
       // Check
-      if (protocol == null) {
-        $tw.utils.alert(name, "Unknown IPFS protocol...");
-        return false;
-      }
       if (cid == null) {
         $tw.utils.alert(name, "Unknown IPFS identifier...");
+        return false;
+      }
+      if (protocol == null) {
+        $tw.utils.alert(name, "Unknown IPFS protocol...");
         return false;
       }
       // Resolve IPNS key if applicable

@@ -101,14 +101,14 @@ IPFS Saver
       // URL Analysis
       if (wiki.protocol !== fileProtocol) {
         // Decode pathname
-        var { protocol, cid } = this.ipfsController.decodeCid(wiki.pathname);
+        var { cid, protocol } = this.ipfsController.decodeCid(wiki.pathname);
         // Check
-        if (protocol != null && cid != null) {
+        if (cid != null && protocol != null) {
           // Store current protocol
           ipfsProtocol = protocol;
           // Request to unpin
           if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
-            await this.ipfsController.requestToUnpin(cid);
+            this.ipfsController.requestToUnpin(cid);
           }
         }
       }
@@ -159,7 +159,7 @@ IPFS Saver
         }
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
-          await this.ipfsController.requestToUnpin(ipnsCid);
+          this.ipfsController.requestToUnpin(ipnsCid);
         }
       }
       // ENS Analysis
@@ -175,7 +175,7 @@ IPFS Saver
         const { content } = await this.ipfsController.resolveEns(ensDomain);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && content !== null) {
-          await this.ipfsController.requestToUnpin(content);
+          this.ipfsController.requestToUnpin(content);
         }
       }
       // Upload  current document

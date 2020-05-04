@@ -84,12 +84,13 @@ IPFS link widget
         .resolveUrl(false, this.value)
         .then((data) => {
           var { normalizedUrl } = data;
-          self.removeChildDomNodes();
-          self.renderExternalLink(parent, nextSibling, normalizedUrl.href);
+          if (normalizedUrl !== null) {
+            self.removeChildDomNodes();
+            self.renderExternalLink(parent, nextSibling, normalizedUrl.href);
+          }
         })
         .catch((error) => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
+          // Ignore
         });
     }
   };
@@ -247,15 +248,12 @@ IPFS link widget
       .resolveUrl(false, this.value)
       .then((data) => {
         var { normalizedUrl } = data;
-        // Process
-        window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
+        if (normalizedUrl !== null) {
+          window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
+        }
       })
       .catch((error) => {
-        // Log
-        self.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-        // Fallback
-        window.open(this.value, "_blank", "noopener,noreferrer");
+        // Ignore
       });
     event.preventDefault();
     event.stopPropagation();

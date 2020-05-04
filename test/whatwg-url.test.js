@@ -22,18 +22,15 @@
 const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 const log = require("loglevel");
 const root = require("window-or-global");
-
 const invalid = "Wrong URL...";
 const baseFile = "file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html";
 const baseHttp = "https://ipfs.bluelightav.org";
 const absolute = "https://bluelightav.eth";
 const relative = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau";
-
 beforeAll(() => {
   root.log = log;
   log.setLevel("silent", false);
 });
-
 describe("WHATWG-URL", () => {
   it("Undefined URL", () => {
     const ipfsBundle = new IpfsBundle();
@@ -43,7 +40,6 @@ describe("WHATWG-URL", () => {
       ipfsUrl.getUrl();
     }).toThrow();
   });
-
   it("Invalid URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
@@ -52,7 +48,6 @@ describe("WHATWG-URL", () => {
       ipfsUrl.getUrl(invalid);
     }).toThrow();
   });
-
   it("HTTPS protocol URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
@@ -67,7 +62,6 @@ describe("WHATWG-URL", () => {
         parsed.href === baseHttp + "/"
     ).toBeTruthy();
   });
-
   it("File protocol URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
@@ -81,7 +75,6 @@ describe("WHATWG-URL", () => {
         parsed.href === baseFile
     ).toBeTruthy();
   });
-
   it("Useless base HTTP URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
@@ -91,7 +84,6 @@ describe("WHATWG-URL", () => {
       parsed.protocol === "https:" && parsed.hostname === "bluelightav.eth" && parsed.href == absolute + "/"
     ).toBeTruthy();
   });
-
   it("Relative URL", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();

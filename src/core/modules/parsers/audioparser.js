@@ -69,22 +69,23 @@ The audio parser parses an audio tiddler into an embeddable HTML element
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;
-            // Load
-            $tw.utils
-              .loadToBase64(normalizedUrl)
-              .then((loaded) => {
-                element.attributes.src = { type: "string", value: value + loaded.data };
-                const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-                $tw.rootWidget.refresh(parsedTiddler);
-              })
-              .catch((error) => {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              });
+            if (normalizedUrl !== null) {
+              // Load
+              $tw.utils
+                .loadToBase64(normalizedUrl)
+                .then((loaded) => {
+                  element.attributes.src = { type: "string", value: value + loaded.data };
+                  const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+                  $tw.rootWidget.refresh(parsedTiddler);
+                })
+                .catch((error) => {
+                  self.getLogger().error(error);
+                  $tw.utils.alert(name, error.message);
+                });
+            }
           })
           .catch((error) => {
-            self.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
+            // Ignore
           });
       } else if (text) {
         element.attributes.src = { type: "string", value: value + text };

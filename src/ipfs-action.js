@@ -102,10 +102,10 @@ IPFS Action
       // URL Analysis
       if (export_uri !== null && export_uri.protocol !== fileProtocol) {
         // Decode pathname
-        var { protocol, cid } = this.ipfsController.decodeCid(export_uri.pathname);
+        var { cid, protocol } = this.ipfsController.decodeCid(export_uri.pathname);
         // Check
         if ($tw.utils.getIpfsUnpin() && protocol != null && protocol === ipfsKeyword && cid != null) {
-          await this.ipfsController.requestToUnpin(cid);
+          this.ipfsController.requestToUnpin(cid);
         }
       }
       // Analyse IPNS
@@ -120,7 +120,7 @@ IPFS Action
         }
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
-          await this.ipfsController.requestToUnpin(ipnsCid);
+          this.ipfsController.requestToUnpin(ipnsCid);
         }
       }
       // Analyse URI
@@ -129,7 +129,7 @@ IPFS Action
         var { content: ensCid } = await this.ipfsController.resolveEns(export_uri.hostname);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ensCid !== null) {
-          await this.ipfsController.requestToUnpin(ensCid);
+          this.ipfsController.requestToUnpin(ensCid);
         }
       }
       // Retrieve content
@@ -472,7 +472,7 @@ IPFS Action
 
       if (resolved !== null) {
         // Build URL
-        const url = await this.ipfsController.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
+        const url = this.ipfsController.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
         window.open(url.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
@@ -546,18 +546,17 @@ IPFS Action
       }
 
       // Extract and check URL IPFS protocol and CID
-      var { protocol, cid } = this.ipfsController.decodeCid(wiki.pathname);
+      var { cid, protocol } = this.ipfsController.decodeCid(wiki.pathname);
 
       // Check
-      if (protocol == null) {
-        $tw.utils.alert(name, "Unknown IPFS protocol...");
-        return false;
-      }
       if (cid == null) {
         $tw.utils.alert(name, "Unknown IPFS identifier...");
         return false;
       }
-
+      if (protocol == null) {
+        $tw.utils.alert(name, "Unknown IPFS protocol...");
+        return false;
+      }
       // Default IPNS key and IPNS name
       var ipnsKey = $tw.utils.getIpfsIpnsKey();
       var ipnsName = $tw.utils.getIpfsIpnsName();

@@ -25,14 +25,16 @@ import root from "window-or-global";
     // Check
     if (pathname == undefined || pathname == null || pathname.trim() === "" || pathname.trim() === "/") {
       return {
-        protocol: null,
         cid: null,
+        ipnsIdentifier: null,
+        protocol: null,
       };
     }
+    var cid = null;
+    var ipnsIdentifier = null;
+    var protocol = null;
     // Parse
     const members = pathname.trim().split("/");
-    var protocol = null;
-    var cid = null;
     for (var i = 0; i < members.length; i++) {
       // Ignore
       if (members[i].trim() === "") {
@@ -54,28 +56,32 @@ import root from "window-or-global";
     // Check
     if (protocol == null || cid == null) {
       return {
-        protocol: null,
         cid: null,
+        ipnsIdentifier: null,
+        protocol: null,
       };
     }
     // Check protocol
     if (protocol !== "ipfs" && protocol !== "ipns") {
       return {
-        protocol: null,
         cid: null,
+        ipnsIdentifier: null,
+        protocol: null,
       };
     }
     // Check
-    if (this.isCid(cid) == false) {
-      return {
-        protocol: protocol,
-        cid: null,
-      };
+    var isCid = this.isCid(cid);
+    if (protocol === "ipns" && isCid == false) {
+      ipnsIdentifier = cid;
+      cid = null;
+    } else if (isCid == false) {
+      cid = null;
     }
     // All good
     return {
-      protocol: protocol,
       cid: cid,
+      ipnsIdentifier: ipnsIdentifier,
+      protocol: protocol,
     };
   };
 
@@ -384,7 +390,7 @@ import root from "window-or-global";
     if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
       this.getLogger().info("Processing IPNS name resolve...");
       const resolvedSource = await client.name.resolve(id.trim(), {
-        recursive: false,
+        recursive: true,
       });
       // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
       var lastResult = null;

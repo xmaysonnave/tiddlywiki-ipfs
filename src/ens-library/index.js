@@ -165,7 +165,7 @@ import root from "window-or-global";
     return accounts[0];
   };
 
-  EnsLibrary.prototype.getProvider = async function () {
+  EnsLibrary.prototype.getProvider = function () {
     // Retrieve an available Ethereum provider
     var provider = null;
     if (typeof root.ethereum !== "undefined") {
@@ -177,7 +177,7 @@ import root from "window-or-global";
       this.getLogger().info("Ethereum provider: 'window.web3.currentProvider'...");
     }
     if (provider == null) {
-      throw new Error("Unavailable Ethereum provider.\nYou should consider installing Frame or MetaMask...");
+      throw new Error("Unable to retrieve an Ethereum provider...");
     }
     // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
     if (provider.isMetaMask) {

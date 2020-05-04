@@ -4,12 +4,10 @@
 const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 const log = require("loglevel");
 const root = require("window-or-global");
-
 beforeAll(() => {
   root.log = log;
   log.setLevel("silent", false);
 });
-
 describe("CID", () => {
   it("Undefined pathname", async () => {
     const ipfsBundle = new IpfsBundle();
@@ -22,7 +20,6 @@ describe("CID", () => {
     var { protocol, cid } = ipfsLibrary.decodeCid("/");
     expect(protocol == null && cid == null).toBeTruthy();
   });
-
   it("Incorrect pathname", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
@@ -32,7 +29,6 @@ describe("CID", () => {
     var { protocol, cid } = ipfsLibrary.decodeCid("/Hello/World");
     expect(protocol == null && cid == null).toBeTruthy();
   });
-
   it("Invalid CID", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
@@ -42,7 +38,6 @@ describe("CID", () => {
     var { protocol, cid } = ipfsLibrary.decodeCid("/ipns/Hello World");
     expect(protocol == "ipns" && cid == null).toBeTruthy();
   });
-
   it("Resolve", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
