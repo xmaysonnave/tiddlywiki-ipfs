@@ -88,7 +88,7 @@ The binary parser parses a binary tiddler into a warning message and download li
       var url = tiddler.fields._canonical_uri;
       // Set the link href to external or internal data URI
       if (url !== undefined && url !== null && url.trim() != "") {
-        $tw.ipfsController
+        $tw.ipfs
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;

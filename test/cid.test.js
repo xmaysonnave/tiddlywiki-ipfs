@@ -12,39 +12,35 @@ describe("CID", () => {
   it("Undefined pathname", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
-    const ipfsLibrary = ipfsBundle.ipfsLibrary;
-    var { protocol, cid } = ipfsLibrary.decodeCid();
+    var { protocol, cid } = ipfsBundle.decodeCid();
     expect(protocol == null && cid == null).toBeTruthy();
-    var { protocol, cid } = ipfsLibrary.decodeCid("");
+    var { protocol, cid } = ipfsBundle.decodeCid("");
     expect(protocol == null && cid == null).toBeTruthy();
-    var { protocol, cid } = ipfsLibrary.decodeCid("/");
+    var { protocol, cid } = ipfsBundle.decodeCid("/");
     expect(protocol == null && cid == null).toBeTruthy();
   });
   it("Incorrect pathname", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
-    const ipfsLibrary = ipfsBundle.ipfsLibrary;
-    var { protocol, cid } = ipfsLibrary.decodeCid("Hello World");
+    var { protocol, cid } = ipfsBundle.decodeCid("Hello World");
     expect(protocol == null && cid == null).toBeTruthy();
-    var { protocol, cid } = ipfsLibrary.decodeCid("/Hello/World");
+    var { protocol, cid } = ipfsBundle.decodeCid("/Hello/World");
     expect(protocol == null && cid == null).toBeTruthy();
   });
   it("Invalid CID", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
-    const ipfsLibrary = ipfsBundle.ipfsLibrary;
-    var { protocol, cid } = ipfsLibrary.decodeCid("/ipfs/Hello World");
+    var { protocol, cid } = ipfsBundle.decodeCid("/ipfs/Hello World");
     expect(protocol == "ipfs" && cid == null).toBeTruthy();
-    var { protocol, cid } = ipfsLibrary.decodeCid("/ipns/Hello World");
+    var { protocol, cid } = ipfsBundle.decodeCid("/ipns/Hello World");
     expect(protocol == "ipns" && cid == null).toBeTruthy();
   });
   it("Resolve", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
-    const ipfsLibrary = ipfsBundle.ipfsLibrary;
-    var { protocol, cid } = ipfsLibrary.decodeCid("/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
+    var { protocol, cid } = ipfsBundle.decodeCid("/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
     expect(protocol === "ipfs" && cid === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau").toBeTruthy();
-    var { protocol, cid } = ipfsLibrary.decodeCid("/ipns/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
+    var { protocol, cid } = ipfsBundle.decodeCid("/ipns/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
     expect(protocol === "ipns" && cid === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau").toBeTruthy();
   });
 });

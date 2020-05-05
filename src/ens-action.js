@@ -14,14 +14,12 @@ ENS Action
   "use strict";
 
   const fileProtocol = "file:";
-  const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
 
   const name = "ens-action";
 
-  var EnsAction = function (ipfsController) {
+  var EnsAction = function () {
     this.once = false;
-    this.ipfsController = ipfsController;
   };
 
   EnsAction.prototype.getLogger = function () {
@@ -71,7 +69,7 @@ ENS Action
 
       this.getLogger().info("ENS domain: " + ensDomain);
 
-      const { normalizedUrl } = await this.ipfsController.resolveEns(ensDomain);
+      const { normalizedUrl } = await $tw.ipfs.resolveEns(ensDomain);
       if (normalizedUrl !== null) {
         window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
       }
@@ -87,14 +85,14 @@ ENS Action
   EnsAction.prototype.handlePublishToEns = async function (event) {
     try {
       // Process document URL
-      const wiki = this.ipfsController.getDocumentUrl();
+      const wiki = $tw.ipfs.getDocumentUrl();
       // Check
       if (wiki.protocol === fileProtocol) {
         $tw.utils.alert(name, "Undefined IPFS wiki...");
         return false;
       }
       // Extract and check URL IPFS protocol and CID
-      var { cid, protocol } = this.ipfsController.decodeCid(wiki.pathname);
+      var { cid, protocol } = $tw.ipfs.decodeCid(wiki.pathname);
       // Check
       if (cid == null) {
         $tw.utils.alert(name, "Unknown IPFS identifier...");
@@ -106,7 +104,7 @@ ENS Action
       }
       // Resolve IPNS key if applicable
       if (protocol === ipnsKeyword) {
-        const { ipnsKey } = await this.ipfsController.getIpnsIdentifiers(cid);
+        const { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(cid);
         try {
           cid = null;
           cid = await this.resolveIpnsKey(ipnsKey);
@@ -123,18 +121,18 @@ ENS Action
         return false;
       }
       // Fetch ENS domain content
-      const { content } = await this.ipfsController.resolveEns(ensDomain);
+      const { content } = await $tw.ipfs.resolveEns(ensDomain);
       // Nothing to publish
       if (content !== null && content === cid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
       }
       // Assign ENS domain content
-      await this.ipfsController.setEns(ensDomain, cid);
+      await $tw.ipfs.setEns(ensDomain, cid);
       // Unpin if applicable
       if ($tw.utils.getIpfsUnpin() && content !== null) {
         try {
-          await this.ipfsController.unpinFromIpfs(content);
+          await $tw.ipfs.unpinFromIpfs(content);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);

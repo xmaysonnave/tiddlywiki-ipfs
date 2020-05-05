@@ -49,7 +49,6 @@ The HTML parser displays text as raw HTML
   const name = "ipfs-binaryparser";
 
   var HtmlParser = function (type, text, options) {
-    var self = this;
     var value = "data:text/html;charset=utf-8,";
     var src;
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
@@ -57,7 +56,7 @@ The HTML parser displays text as raw HTML
       var url = tiddler.fields._canonical_uri;
       // Load external resource
       if (url !== undefined && url !== null && url.trim() != "") {
-        $tw.ipfsController
+        $tw.ipfs
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;

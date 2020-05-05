@@ -80,7 +80,7 @@ IPFS link widget
       this.renderTiddlerLink(parent, nextSibling);
     } else {
       this.renderText(parent, nextSibling);
-      $tw.ipfsController
+      $tw.ipfs
         .resolveUrl(false, this.value)
         .then((data) => {
           var { normalizedUrl } = data;
@@ -241,10 +241,7 @@ IPFS link widget
   };
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
-    // self
-    const self = this;
-    // Normalize
-    $tw.ipfsController
+    $tw.ipfs
       .resolveUrl(false, this.value)
       .then((data) => {
         var { normalizedUrl } = data;

@@ -45,13 +45,11 @@ IPFS Saver
       }
     }
     // Controller
-    this.ipfsController = new IpfsController();
-    // Global Object
-    $tw.ipfsController = this.ipfsController;
+    $tw.ipfs = new IpfsController();
     // Listener
-    this.ensAction = new EnsAction(this.ipfsController);
-    this.ipfsAction = new IpfsAction(this.ipfsController);
-    this.ipfsTiddler = new IpfsTiddler(this.ipfsController);
+    this.ensAction = new EnsAction();
+    this.ipfsAction = new IpfsAction();
+    this.ipfsTiddler = new IpfsTiddler();
     // Init
     this.ensAction.init();
     this.ipfsAction.init();
@@ -61,7 +59,7 @@ IPFS Saver
     // Log
     logger.info("ipfs-saver is starting up...");
     // Log url policy
-    const base = this.ipfsController.getIpfsBaseUrl();
+    const base = $tw.ipfs.getIpfsBaseUrl();
     if ($tw.utils.getIpfsUrlPolicy() === "origin") {
       logger.info("Origin base URL:" + "\n " + base.toString());
     } else {
@@ -90,25 +88,25 @@ IPFS Saver
       var ensContent = null;
       var options = options || {};
       // Process document URL
-      const wiki = this.ipfsController.getDocumentUrl();
+      const wiki = $tw.ipfs.getDocumentUrl();
       // Retrieve base URL
-      const base = this.ipfsController.getIpfsBaseUrl();
+      const base = $tw.ipfs.getIpfsBaseUrl();
       // Next
-      const nextWiki = this.ipfsController.getUrl(wiki);
+      const nextWiki = $tw.ipfs.getUrl(wiki);
       nextWiki.protocol = base.protocol;
       nextWiki.hostname = base.hostname;
       nextWiki.port = base.port;
       // URL Analysis
       if (wiki.protocol !== fileProtocol) {
         // Decode pathname
-        var { cid, protocol } = this.ipfsController.decodeCid(wiki.pathname);
+        var { cid, protocol } = $tw.ipfs.decodeCid(wiki.pathname);
         // Check
         if (cid != null && protocol != null) {
           // Store current protocol
           ipfsProtocol = protocol;
           // Request to unpin
           if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
-            this.ipfsController.requestToUnpin(cid);
+            $tw.ipfs.requestToUnpin(cid);
           }
         }
       }
@@ -117,9 +115,9 @@ IPFS Saver
         // Resolve current IPNS
         if (ipfsProtocol === ipnsKeyword) {
           this.getLogger().info("Processing current IPNS key...");
-          var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(cid);
+          var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(cid);
           try {
-            ipnsCid = await this.ipfsController.resolveIpnsKey(ipnsKey);
+            ipnsCid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
           } catch (error) {
             // Log and continue
             if (ipnsName == null || ipnsKey == null) {
@@ -133,9 +131,9 @@ IPFS Saver
               ipnsName = $tw.utils.getIpfsIpnsName();
               ipnsKey = $tw.utils.getIpfsIpnsKey();
               this.getLogger().info("Processing default IPNS...");
-              var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(ipnsKey, ipnsName);
+              var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
               try {
-                ipnsCid = await this.ipfsController.resolveIpnsKey(ipnsKey);
+                ipnsCid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
               } catch (error) {
                 // Log and continue
                 this.getLogger().warn(error);
@@ -148,9 +146,9 @@ IPFS Saver
           ipnsName = $tw.utils.getIpfsIpnsName();
           ipnsKey = $tw.utils.getIpfsIpnsKey();
           this.getLogger().info("Processing default IPNS name and IPNS key...");
-          var { ipnsKey, ipnsName } = await this.ipfsController.getIpnsIdentifiers(ipnsKey, ipnsName);
+          var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
           try {
-            ipnsCid = await this.ipfsController.resolveIpnsKey(ipnsKey);
+            ipnsCid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
           } catch (error) {
             // Log and continue
             this.getLogger().warn(error);
@@ -159,7 +157,7 @@ IPFS Saver
         }
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
-          this.ipfsController.requestToUnpin(ipnsCid);
+          $tw.ipfs.requestToUnpin(ipnsCid);
         }
       }
       // ENS Analysis
@@ -172,21 +170,21 @@ IPFS Saver
           return false;
         }
         // Fetch ENS domain content
-        const { content } = await this.ipfsController.resolveEns(ensDomain);
+        const { content } = await $tw.ipfs.resolveEns(ensDomain);
         // Request to unpin
         if ($tw.utils.getIpfsUnpin() && content !== null) {
-          this.ipfsController.requestToUnpin(content);
+          $tw.ipfs.requestToUnpin(content);
         }
       }
       // Upload  current document
       this.getLogger().info("Uploading wiki: " + text.length + " bytes");
       // Add
-      const { added } = await this.ipfsController.addToIpfs(text);
+      const { added } = await $tw.ipfs.addToIpfs(text);
       // Default next
       nextWiki.pathname = "/" + ipfsKeyword + "/" + added;
       // Pin, if failure log and continue
       try {
-        await this.ipfsController.pinToIpfs(added);
+        await $tw.ipfs.pinToIpfs(added);
       } catch (error) {
         this.getLogger().warn(error);
         $tw.utils.alert(name, error.message);
@@ -199,7 +197,7 @@ IPFS Saver
          * However the local server is getting the update ????
          **/
         try {
-          await this.ipfsController.publishToIpns(ipnsKey, ipnsName, added);
+          await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
         } catch (error) {
           // Log and continue
           this.getLogger().warn(error);
@@ -211,7 +209,7 @@ IPFS Saver
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
-          await this.ipfsController.setEns(ensDomain, added);
+          await $tw.ipfs.setEns(ensDomain, added);
           // ENS next
           nextWiki.protocol = "https:";
           nextWiki.host = ensDomain;
@@ -221,18 +219,18 @@ IPFS Saver
           $tw.utils.alert(name, error.message);
           // Discard unpin request
           if (ipfsProtocol === ipnsKeyword && $tw.utils.getIpfsUnpin() && ensContent !== null) {
-            this.ipfsController.discardRequestToUnpin(ensContent);
+            $tw.ipfs.discardRequestToUnpin(ensContent);
           }
         }
       }
       // Unpin
       if ($tw.utils.getIpfsUnpin()) {
-        for (var i = this.ipfsController.unpin.length - 1; i >= 0; i--) {
+        for (var i = $tw.ipfs.unpin.length - 1; i >= 0; i--) {
           try {
-            const unpin = this.ipfsController.unpin[i];
-            await this.ipfsController.unpinFromIpfs(unpin);
+            const unpin = $tw.ipfs.unpin[i];
+            await $tw.ipfs.unpinFromIpfs(unpin);
             // Remove unpin request
-            this.ipfsController.removeFromUnpin(unpin);
+            $tw.ipfs.removeFromUnpin(unpin);
           } catch (error) {
             // Log and continue
             this.getLogger().warn(error);

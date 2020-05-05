@@ -32,7 +32,6 @@ ENS Wrapper
     this.provider = null;
     this.web3 = null;
     this.ensLibrary = ipfsBundle.ensLibrary;
-    this.ipfsLibrary = ipfsBundle.ipfsLibrary;
   };
 
   EnsWrapper.prototype.getLogger = function () {
@@ -175,7 +174,7 @@ ENS Wrapper
       var { content, protocol } = await this.ensLibrary.getContentHash(domain, web3);
       if (content !== null && protocol !== null) {
         // Convert CidV0 to CidV1
-        content = this.ipfsLibrary.cidV0ToCidV1(content);
+        content = this.ipfsBundle.cidV0ToCidV1(content);
         // Success
         return {
           content: content,
@@ -195,7 +194,7 @@ ENS Wrapper
 
   EnsWrapper.prototype.setContentHash = async function (domain, cid, web3, account) {
     try {
-      const cidV0 = this.ipfsLibrary.cidV1ToCidV0(cid);
+      const cidV0 = this.ipfsBundle.cidV1ToCidV0(cid);
       await this.ensLibrary.setContentHash(domain, cidV0, web3, account);
       return {
         cidV0: cidV0,

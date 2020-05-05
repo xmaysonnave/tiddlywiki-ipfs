@@ -87,7 +87,7 @@ IPFS Default
       }
     }
     if (api === null) {
-      api = $tw.ipfsController.getIpfsDefaultApi();
+      api = $tw.ipfs.getIpfsDefaultApi();
     }
     return api;
   };
@@ -114,7 +114,7 @@ IPFS Default
       }
     }
     if (gateway === null) {
-      gateway = $tw.ipfsController.getIpfsDefaultGateway();
+      gateway = $tw.ipfs.getIpfsDefaultGateway();
     }
     return gateway;
   };

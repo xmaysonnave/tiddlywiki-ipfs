@@ -37,10 +37,26 @@ IPFS Controller
     return window.log.getLogger(name);
   };
 
-  IpfsController.prototype.requestToUnpin = function (cid) {
-    if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
-      const url = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Request to unpin:" + "\n " + url.href);
+  IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
+    if ($tw.utils.getIpfsUnpin() == false) {
+      return;
+    }
+    const self = this;
+    if (ipnsKey !== undefined && ipnsKey !== null) {
+      this.resolveUrl(true, value)
+        .then((data) => {
+          var { normalizedUrl } = data;
+          if (normalizedUrl !== null && cid !== undefined && cid !== null && self.addToUnpin(cid)) {
+            self.getLogger().info("Request to unpin:" + "\n " + normalizedUrl.href);
+          }
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
+      const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+      this.getLogger().info("Request to unpin:" + "\n " + normalizedUrl.href);
     }
   };
 
@@ -54,8 +70,39 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.exportTiddler = async function (tiddler, child) {
-    return await this.ipfsWrapper.exportTiddler(tiddler, child);
+  IpfsController.prototype.discardRequestToUnpin = async function (cid, ipnsKey, value) {
+    // Check
+    if ($tw.utils.getIpfsUnpin() == false) {
+      return;
+    }
+    const self = this;
+    if (ipnsKey !== undefined && ipnsKey !== null) {
+      this.resolveUrl(true, value)
+        .then((data) => {
+          var { normalizedUrl } = data;
+          if (normalizedUrl !== null && cid !== undefined && cid !== null && self.removeFromUnpin(cid)) {
+            self.getLogger().info("Discard request to unpin:" + "\n " + normalizedUrl.href);
+          }
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
+      const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+      this.getLogger().info("Discard request to unpin:" + "\n " + normalizedUrl.href);
+    }
+  };
+
+  IpfsController.prototype.removeFromUnpin = function (cid) {
+    if (cid !== undefined && cid !== null) {
+      var index = this.unpin.indexOf(cid);
+      if (index !== -1) {
+        this.unpin.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
   };
 
   IpfsController.prototype.pinToIpfs = async function (cid) {
@@ -89,7 +136,7 @@ IPFS Controller
   };
 
   IpfsController.prototype.decodeCid = function (pathname) {
-    return this.ipfsWrapper.decodeCid(pathname);
+    return this.ipfsBundle.decodeCid(pathname);
   };
 
   IpfsController.prototype.getIpnsIdentifiers = async function (identifier, ipnsName) {
@@ -102,13 +149,9 @@ IPFS Controller
     return await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey);
   };
 
-  IpfsController.prototype.publishToIpns = async function (ipnsKey, ipnsName, cid) {
+  IpfsController.prototype.publishIpnsName = async function (cid, ipnsKey, ipnsName) {
     const { ipfs } = await this.getIpfsClient();
-    return await this.ipfsWrapper.publishToIpns(ipfs, ipnsKey, ipnsName, cid);
-  };
-
-  IpfsController.prototype.getAttachmentContent = function (tiddler) {
-    return this.ipfsWrapper.getAttachmentContent(tiddler);
+    return await this.ipfsWrapper.publishIpnsName(cid, ipfs, ipnsKey, ipnsName);
   };
 
   IpfsController.prototype.getContentType = function (tiddler) {
@@ -146,24 +189,6 @@ IPFS Controller
       type: type,
       info: info,
     };
-  };
-
-  IpfsController.prototype.discardRequestToUnpin = function (cid) {
-    if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
-      const url = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Discard request to unpin:" + "\n " + url.href);
-    }
-  };
-
-  IpfsController.prototype.removeFromUnpin = function (cid) {
-    if (cid !== undefined && cid !== null) {
-      var index = this.unpin.indexOf(cid);
-      if (index !== -1) {
-        this.unpin.splice(index, 1);
-        return true;
-      }
-    }
-    return false;
   };
 
   IpfsController.prototype.importTiddlers = async function (url) {
@@ -251,6 +276,7 @@ IPFS Controller
   IpfsController.prototype.resolveUrl = async function (resolveIpns, value) {
     var cid = null;
     var ipnsKey = null;
+    var ipnsName = null;
     var normalizedUrl = null;
     var text = false;
     // Check
@@ -258,25 +284,26 @@ IPFS Controller
       return {
         cid: null,
         ipnsKey: null,
+        ipnsName: null,
         normalizedUrl: null,
       };
     }
     // Text or ENS
     try {
-      this.ipfsUrl.getUrl(value);
+      normalizedUrl = this.ipfsUrl.getUrl(value);
     } catch (error) {
-      // Text
       if (value.startsWith("/") === false) {
+        // Text
         text = true;
-      }
-      // ENS
-      try {
-        normalizedUrl = this.normalizeUrl("https://" + value);
-        if (normalizedUrl.hostname.endsWith(".eth")) {
-          text = false;
+        // ENS
+        try {
+          normalizedUrl = this.normalizeUrl("https://" + value);
+          if (normalizedUrl.hostname.endsWith(".eth")) {
+            text = false;
+          }
+        } catch (error) {
+          // ignore
         }
-      } catch (error) {
-        // ignore
       }
     }
     // Check
@@ -284,6 +311,7 @@ IPFS Controller
       return {
         cid: null,
         ipnsKey: null,
+        ipnsName: null,
         normalizedUrl: null,
       };
     }
@@ -296,6 +324,7 @@ IPFS Controller
       return {
         cid: null,
         ipnsKey: null,
+        ipnsName: null,
         normalizedUrl: null,
       };
     }
@@ -303,13 +332,13 @@ IPFS Controller
     if (protocol !== null) {
       if (protocol == ipnsKeyword) {
         if (ipnsIdentifier !== null) {
-          var { ipnsKey, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
+          var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
           if (resolveIpns && ipnsKey !== null) {
             cid = await this.resolveIpnsKey(ipnsKey);
           }
         }
       }
-      if (cid == null) {
+      if (cid == null && ipnsKey == null && ipnsName == null) {
         normalizedUrl = null;
       }
     } else if (normalizedUrl.hostname.endsWith(".eth")) {
@@ -318,6 +347,7 @@ IPFS Controller
     return {
       cid: cid,
       ipnsKey: ipnsKey,
+      ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
     };
   };
@@ -413,7 +443,7 @@ IPFS Controller
   };
 
   IpfsController.prototype.setEns = async function (ensDomain, cid) {
-    const { web3, account } = await this.ipfsController.getEnabledWeb3Provider();
+    const { web3, account } = await this.getEnabledWeb3Provider();
     const { cidV0 } = await this.ensWrapper.setContentHash(ensDomain, cid, web3, account);
     if (cidV0 !== null) {
       const url = this.normalizeUrl("/ipfs/" + cidV0);

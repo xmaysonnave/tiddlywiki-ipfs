@@ -167,7 +167,6 @@ IPFS utils
         component: callee,
       };
       existingCount = 0;
-      this.alertCount += 1;
     }
     alertFields.modified = new Date();
     if (++existingCount > 1) {

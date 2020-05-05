@@ -127,41 +127,73 @@ Render this widget into the DOM
         } else if (_canonical_uri) {
           // Normalize
           var url = _canonical_uri;
-          (async () => {
-            try {
-              var { normalizedUrl } = await $tw.ipfsController.resolveUrl(false, url);
-            } catch (error) {
-              // Ignore
-            }
-            if (normalizedUrl !== null) {
-              try {
+          $tw.ipfs
+            .resolveUrl(false, url)
+            .then((data) => {
+              var { normalizedUrl } = data;
+              if (normalizedUrl !== null) {
                 switch (type) {
                   case "application/pdf":
                     domNode = this.document.createElement("embed");
-                    var loaded = await $tw.utils.loadToBase64(normalizedUrl);
-                    if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
-                      domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
-                    }
+                    $tw.utils
+                      .loadToBase64(normalizedUrl)
+                      .then((loaded) => {
+                        if (
+                          loaded !== undefined &&
+                          loaded !== null &&
+                          loaded.data !== undefined &&
+                          loaded.data !== null
+                        ) {
+                          domNode.setAttribute("src", "data:application/pdf;base64," + loaded.data);
+                        }
+                      })
+                      .catch((error) => {
+                        self.getLogger().error(error);
+                        $tw.utils.alert(name, error.message);
+                      });
                     break;
                   case "image/svg+xml":
-                    var loaded = await $tw.utils.loadToUtf8(normalizedUrl);
-                    if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
-                      domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
-                    }
+                    $tw.utils
+                      .loadToUtf8(normalizedUrl)
+                      .then((loaded) => {
+                        if (
+                          loaded !== undefined &&
+                          loaded !== null &&
+                          loaded.data !== undefined &&
+                          loaded.data !== null
+                        ) {
+                          domNode.setAttribute("src", "data:image/svg+xml," + encodeURIComponent(loaded.data));
+                        }
+                      })
+                      .catch((error) => {
+                        self.getLogger().error(error);
+                        $tw.utils.alert(name, error.message);
+                      });
                     break;
                   default:
-                    var loaded = await $tw.utils.loadToBase64(normalizedUrl);
-                    if (loaded !== undefined && loaded !== null && loaded.data !== undefined && loaded.data !== null) {
-                      domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
-                    }
+                    $tw.utils
+                      .loadToBase64(normalizedUrl)
+                      .then((loaded) => {
+                        if (
+                          loaded !== undefined &&
+                          loaded !== null &&
+                          loaded.data !== undefined &&
+                          loaded.data !== null
+                        ) {
+                          domNode.setAttribute("src", "data:" + type + ";base64," + loaded.data);
+                        }
+                      })
+                      .catch((error) => {
+                        self.getLogger().error(error);
+                        $tw.utils.alert(name, error.message);
+                      });
                     break;
                 }
-              } catch (error) {
-                this.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
               }
-            }
-          })();
+            })
+            .catch((error) => {
+              // Ignore
+            });
         } else {
           // Just trigger loading of the tiddler
           this.wiki.getTiddlerText(this.imageSource);

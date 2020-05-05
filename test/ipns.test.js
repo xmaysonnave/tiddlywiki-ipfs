@@ -146,8 +146,8 @@ describe("Resolve IPNS", () => {
     const ipfsWrapper = new IpfsWrapper(ipfsBundle);
     ipfsWrapper.ipfsLibrary.resolve = jest.fn();
     ipfsWrapper.ipfsLibrary.resolve.mockResolvedValue(resolvedTiddly);
-    ipfsWrapper.ipfsLibrary.decodeCid = jest.fn();
-    ipfsWrapper.ipfsLibrary.decodeCid.mockReturnValue(decodedCid);
+    ipfsWrapper.ipfsBundle.decodeCid = jest.fn();
+    ipfsWrapper.ipfsBundle.decodeCid.mockReturnValue(decodedCid);
     const resolved = await ipfsWrapper.resolveIpnsKey(null, "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf");
     expect(resolved === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau").toBeTruthy();
   });

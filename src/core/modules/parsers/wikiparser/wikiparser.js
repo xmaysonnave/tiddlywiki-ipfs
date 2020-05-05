@@ -50,6 +50,7 @@ wikiparser
   var name = "ipfs-wikiparser";
 
   var WikiParser = function (type, text, options) {
+    var self = this;
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
     if ($tw.browser && (text || "") === "" && options.tiddler !== undefined && options.tiddler !== null) {
@@ -58,7 +59,10 @@ wikiparser
         url = options.tiddler.fields._canonical_uri;
       }
       if (url !== undefined && url !== null && url.trim() !== "") {
-        this.loadRemoteTiddlers(options.tiddler);
+        this.loadRemoteTiddlers(options.tiddler).catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
         text = $tw.language.getRawString("LazyLoadingWarning");
       }
     }
@@ -188,7 +192,7 @@ wikiparser
     var cid = null;
     var importedTiddlers = null;
     var normalizedUrl = null;
-    var { cid, importedTiddlers, normalizedUrl } = await $tw.ipfsController.importTiddlers(url);
+    var { cid, importedTiddlers, normalizedUrl } = await $tw.ipfs.importTiddlers(url);
     if (importedTiddlers == null) {
       $tw.utils.alert(
         name,

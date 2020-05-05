@@ -65,12 +65,11 @@ The audio parser parses an audio tiddler into an embeddable HTML element
       var url = tiddler.fields._canonical_uri;
       // Load external resource
       if (url !== undefined && url !== null && url.trim() != "") {
-        $tw.ipfsController
+        $tw.ipfs
           .resolveUrl(false, url)
           .then((data) => {
             var { normalizedUrl } = data;
             if (normalizedUrl !== null) {
-              // Load
               $tw.utils
                 .loadToBase64(normalizedUrl)
                 .then((loaded) => {
