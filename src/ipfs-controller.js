@@ -278,8 +278,6 @@ IPFS Controller
     var ipnsKey = null;
     var ipnsName = null;
     var normalizedUrl = null;
-    var text = false;
-    // Check
     if (value == undefined || value == null) {
       return {
         cid: null,
@@ -288,38 +286,11 @@ IPFS Controller
         normalizedUrl: null,
       };
     }
-    // Text or ENS
     try {
-      normalizedUrl = this.ipfsUrl.getUrl(value);
-    } catch (error) {
-      if (value.startsWith("/") === false) {
-        // Text
-        text = true;
-        // ENS
-        try {
-          normalizedUrl = this.normalizeUrl("https://" + value);
-          if (normalizedUrl.hostname.endsWith(".eth")) {
-            text = false;
-          }
-        } catch (error) {
-          // ignore
-        }
-      }
-    }
-    // Check
-    if (text == true) {
-      return {
-        cid: null,
-        ipnsKey: null,
-        ipnsName: null,
-        normalizedUrl: null,
-      };
-    }
-    // Resolve
-    if (normalizedUrl == null) {
       normalizedUrl = this.normalizeUrl(value);
+    } catch (error) {
+      // Ignore
     }
-    // Check
     if (normalizedUrl == null) {
       return {
         cid: null,
@@ -328,6 +299,7 @@ IPFS Controller
         normalizedUrl: null,
       };
     }
+    // Check
     var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl.pathname);
     if (protocol !== null) {
       if (protocol == ipnsKeyword) {

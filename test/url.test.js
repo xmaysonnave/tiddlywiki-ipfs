@@ -1,19 +1,36 @@
 /* global jest, beforeAll, describe, it, expect */
 "use strict";
 
+/**
+ * url.href;
+ * url.origin
+ * url.protocol;
+ * url.username;
+ * url.password;
+ * url.host;
+ * url.hostname;
+ * url.port;
+ * url.pathname;
+ * url.search;
+ * url.hash;
+ * https://jsdom.github.io/whatwg-url/
+ * https://github.com/stevenvachon/universal-url
+ * https://github.com/stevenvachon/universal-url-lite
+ * https://url.spec.whatwg.org/
+ */
+
 const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 const log = require("loglevel");
 const root = require("window-or-global");
 const { URL } = require("universal-url");
 const local = new URL("file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html");
-const remote = new URL("https://ipfs.infura.io/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
+const remote = new URL("https://ipfs.infura.io/ipfs/cid");
 const api = new URL("https://ipfs.infura.io:5001/");
 const gateway = new URL("https://ipfs.infura.io/");
-const eth = new URL("https://bluelightav.eth/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau");
-const ethLink = new URL(
-  "https://bluelightav.eth.link/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau"
-);
-const relative = "/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau";
+const eth = new URL("https://bluelightav.eth/ipfs/cid");
+const ethLink = new URL("https://bluelightav.eth.link/ipfs/cid");
+const text = "text";
+const relative = "/ipfs/cid";
 beforeAll(() => {
   root.log = log;
   log.setLevel("silent", false);
@@ -131,7 +148,24 @@ describe("Base URL", () => {
     expect(base.href === gateway.href).toBeTruthy();
   });
 });
-describe("Normalize Gateway URL", () => {
+describe("Normalize URL", () => {
+  it("Text...", () => {
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    try {
+      ipfsUrl.normalizeUrl(text);
+    } catch (error) {
+      expect(error.message).toBe("Invalid URL...");
+    }
+  });
+  it("Dot ETH, no protocol...", () => {
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    const parsed = ipfsUrl.normalizeUrl("bluelightav.eth/ipfs/cid");
+    expect(parsed.href === eth.href).toBeTruthy();
+  });
   it("Relative. Fallback to Origin...", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();

@@ -106,16 +106,32 @@ import { URL } from "universal-url";
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
     // Check
-    if (value == undefined || value == null || value.toString().trim() === "") {
+    if (value == undefined || value == null) {
       return null;
     }
-    value = value.toString().trim();
     // Parse
+    var text = false;
     var url = null;
+    // Text or ENS
     try {
-      url = new URL(value);
+      url = this.getUrl(value);
     } catch (error) {
-      // Ignore
+      if (value.startsWith("/") === false) {
+        text = true;
+        try {
+          url = this.getUrl("https://" + value);
+          if (!url.hostname.endsWith(".eth") && !url.hostname.endsWith(".eth.link")) {
+            url = null;
+          } else {
+            text = false;
+          }
+        } catch (error) {
+          // ignore
+        }
+      }
+    }
+    if (text) {
+      return null;
     }
     // Invalid URL, try to parse with a Base URL
     if (url == null) {

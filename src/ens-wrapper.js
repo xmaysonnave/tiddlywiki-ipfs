@@ -31,6 +31,7 @@ ENS Wrapper
     this.ethereum = null;
     this.provider = null;
     this.web3 = null;
+    this.ipfsBundle = ipfsBundle;
     this.ensLibrary = ipfsBundle.ensLibrary;
   };
 
