@@ -30,11 +30,49 @@ IPFS Controller
     this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle);
     this.ipfsClients = new Map();
     this.importedTiddlers = new Map();
+    this.pin = [];
     this.unpin = [];
   };
 
   IpfsController.prototype.getLogger = function () {
     return window.log.getLogger(name);
+  };
+
+  IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
+    const self = this;
+    if (ipnsKey !== undefined && ipnsKey !== null) {
+      this.resolveUrl(true, value)
+        .then((data) => {
+          var { cid, normalizedUrl } = data;
+          if (normalizedUrl !== null && cid !== undefined && cid !== null && self.addToPin(cid)) {
+            self.getLogger().info("Request to Pin:" + "\n " + normalizedUrl);
+          }
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (cid !== undefined && cid !== null && this.addToPin(cid)) {
+      const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+      this.getLogger().info("Request to Pin:" + "\n " + normalizedUrl);
+    }
+  };
+
+  IpfsController.prototype.addToPin = function (cid) {
+    if (cid !== undefined && cid !== null) {
+      // Discard
+      var index = this.unpin.indexOf(cid);
+      if (index !== -1) {
+        this.unpin.splice(index, 1);
+        return false;
+      }
+      // Add to pin
+      if (this.pin.indexOf(cid) === -1) {
+        this.pin.push(cid);
+        return true;
+      }
+    }
+    return false;
   };
 
   IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
@@ -45,9 +83,9 @@ IPFS Controller
     if (ipnsKey !== undefined && ipnsKey !== null) {
       this.resolveUrl(true, value)
         .then((data) => {
-          var { normalizedUrl } = data;
+          var { cid, normalizedUrl } = data;
           if (normalizedUrl !== null && cid !== undefined && cid !== null && self.addToUnpin(cid)) {
-            self.getLogger().info("Request to unpin:" + "\n " + normalizedUrl.href);
+            self.getLogger().info("Request to unpin:" + "\n " + normalizedUrl);
           }
         })
         .catch((error) => {
@@ -56,12 +94,19 @@ IPFS Controller
         });
     } else if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Request to unpin:" + "\n " + normalizedUrl.href);
+      this.getLogger().info("Request to unpin:" + "\n " + normalizedUrl);
     }
   };
 
   IpfsController.prototype.addToUnpin = function (cid) {
     if (cid !== undefined && cid !== null) {
+      // Discard
+      var index = this.pin.indexOf(cid);
+      if (index !== -1) {
+        this.pin.splice(index, 1);
+        return false;
+      }
+      // Add to unpin
       if (this.unpin.indexOf(cid) === -1) {
         this.unpin.push(cid);
         return true;
@@ -70,39 +115,18 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.discardRequestToUnpin = async function (cid, ipnsKey, value) {
-    // Check
-    if ($tw.utils.getIpfsUnpin() == false) {
-      return;
-    }
-    const self = this;
-    if (ipnsKey !== undefined && ipnsKey !== null) {
-      this.resolveUrl(true, value)
-        .then((data) => {
-          var { normalizedUrl } = data;
-          if (normalizedUrl !== null && cid !== undefined && cid !== null && self.removeFromUnpin(cid)) {
-            self.getLogger().info("Discard request to unpin:" + "\n " + normalizedUrl.href);
-          }
-        })
-        .catch((error) => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
-    } else if (cid !== undefined && cid !== null && this.removeFromUnpin(cid)) {
-      const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Discard request to unpin:" + "\n " + normalizedUrl.href);
-    }
-  };
-
-  IpfsController.prototype.removeFromUnpin = function (cid) {
+  IpfsController.prototype.removeFromPinUnpin = function (cid) {
     if (cid !== undefined && cid !== null) {
+      var index = this.pin.indexOf(cid);
+      if (index !== -1) {
+        this.pin.splice(index, 1);
+      }
       var index = this.unpin.indexOf(cid);
       if (index !== -1) {
         this.unpin.splice(index, 1);
-        return true;
       }
     }
-    return false;
+    return;
   };
 
   IpfsController.prototype.pinToIpfs = async function (cid) {
@@ -152,43 +176,6 @@ IPFS Controller
   IpfsController.prototype.publishIpnsName = async function (cid, ipnsKey, ipnsName) {
     const { ipfs } = await this.getIpfsClient();
     return await this.ipfsWrapper.publishIpnsName(cid, ipfs, ipnsKey, ipnsName);
-  };
-
-  IpfsController.prototype.getContentType = function (tiddler) {
-    // Check
-    if (tiddler == undefined || tiddler == null) {
-      throw new Error("Unknown Tiddler...");
-    }
-    // Type
-    var type = tiddler.fields["type"];
-    // Default
-    if (type == undefined || type == null) {
-      type = "text/vnd.tiddlywiki";
-    }
-    // Content-Type
-    var info = $tw.config.contentTypeInfo[type];
-    // Check
-    if (info == undefined || info == null) {
-      const url = this.getDocumentUrl();
-      url.hash = tiddler.fields.title;
-      $tw.utils.alert(
-        name,
-        "Unknown Content-Type: '" +
-          type +
-          "', default to: 'text/vnd.tiddlywiki', <a href='" +
-          url +
-          "'>" +
-          tiddler.fields.title +
-          "</a>"
-      );
-      // Default
-      type = "text/vnd.tiddlywiki";
-      info = $tw.config.contentTypeInfo[type];
-    }
-    return {
-      type: type,
-      info: info,
-    };
   };
 
   IpfsController.prototype.importTiddlers = async function (url) {
@@ -400,7 +387,7 @@ IPFS Controller
     const { content, protocol } = await this.ensWrapper.getContentHash(ensDomain, web3);
     if (content !== null && protocol !== null) {
       const url = this.normalizeUrl("/" + protocol + "/" + content);
-      this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url.href + "\n from: " + ensDomain);
+      this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url + "\n from: " + ensDomain);
       return {
         content: content,
         normalizedUrl: url,

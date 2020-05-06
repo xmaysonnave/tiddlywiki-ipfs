@@ -21,14 +21,17 @@ IPFS Import
     return window.log.getLogger(name);
   };
 
-  IpfsImport.prototype.loadRemoteTiddlers = async function (canonicalUri, importUri, title) {
+  IpfsImport.prototype.loadRemoteTiddlers = async function (importUri, canonicalUri, title) {
     this.host = title !== undefined && title !== null ? $tw.wiki.getTiddler(title) : null;
+    if (this.host == undefined) {
+      this.host = null;
+    }
     this.processedImported = new Map();
     this.processedKeys = new Map();
     this.processedTitles = new Map();
     this.root = null;
     try {
-      var { added, updated } = await this.loadImportedRemoteTiddlers(canonicalUri, importUri, title);
+      var { added, updated } = await this.loadImportedRemoteTiddlers(importUri, canonicalUri, title);
       // Update Tiddly
       for (var [title, merged] of this.processedImported.entries()) {
         $tw.wiki.addTiddler(merged);
@@ -106,7 +109,7 @@ IPFS Import
     };
   };
 
-  IpfsImport.prototype.loadImportedRemoteTiddlers = async function (canonicalUri, importUri, title) {
+  IpfsImport.prototype.loadImportedRemoteTiddlers = async function (importUri, canonicalUri, title) {
     var added = 0;
     var cid = null;
     var importedTiddlers = null;
@@ -188,8 +191,8 @@ IPFS Import
         }
         if (uri !== undefined && uri !== null) {
           var { added, updated } = await this.loadImportedRemoteTiddlers(
-            importedTiddler["_canonical_uri"],
             importedTiddler["_import_uri"],
+            importedTiddler["_canonical_uri"],
             importedTitle
           );
           importedAdded += added;
@@ -197,7 +200,7 @@ IPFS Import
         }
       }
       // Imported root
-      if (this.root == null) {
+      if (this.host !== null && this.root == null) {
         this.root = importedTitle;
       }
       // Retrieve target host Tiddler

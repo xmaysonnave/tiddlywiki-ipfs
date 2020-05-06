@@ -159,10 +159,8 @@ import root from "window-or-global";
       if (lastResult == null || lastResult.path == undefined || lastResult.path == null) {
         throw new Error("IPFS client returned an unknown result...");
       }
-      // Convert
-      const cidv1 = this.ipfsBundle.cidV0ToCidV1(lastResult.path);
       return {
-        hash: cidv1,
+        hash: this.ipfsBundle.cidV0ToCidV1(lastResult.path),
         size: lastResult.size,
       };
     }

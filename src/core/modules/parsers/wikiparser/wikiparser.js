@@ -56,22 +56,19 @@ wikiparser
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
     if ($tw.browser && (text || "") === "" && options.tiddler !== undefined && options.tiddler !== null) {
-      var url = options.tiddler.fields._import_uri;
+      var canonicalUri = options.tiddler.fields._import_uri;
+      var importUri = options.tiddler.fields._import_uri;
+      var title = options.tiddler.fields.title;
+      var url = importUri;
       if (url == undefined || url == null) {
-        url = options.tiddler.fields._canonical_uri;
+        url = canonicalUri;
       }
-      if (url !== undefined && url !== null && url.trim() !== "") {
+      if (url !== undefined && url !== null) {
         var ipfsImport = new IpfsImport();
-        ipfsImport
-          .loadRemoteTiddlers(
-            options.tiddler.fields._canonical_uri,
-            options.tiddler.fields._import_uri,
-            options.tiddler.fields.title
-          )
-          .catch((error) => {
-            self.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          });
+        ipfsImport.loadRemoteTiddlers(importUri, canonicalUri, title).catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
         text = $tw.language.getRawString("LazyLoadingWarning");
       }
     }

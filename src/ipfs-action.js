@@ -76,11 +76,11 @@ IPFS Action
     var ipnsKey = null;
     var ipnsName = null;
     var normalizedUrl = null;
+    var added = null;
     var fields = [];
     const title = event.tiddlerTitle;
     var tiddler = $tw.wiki.getTiddler(title);
     var exportUri = tiddler.getFieldString("_export_uri");
-    // Resolve
     try {
       var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(false, exportUri);
     } catch (error) {
@@ -95,47 +95,15 @@ IPFS Action
       return false;
     }
     this.getLogger().info("Uploading Tiddler: " + content.length + " bytes");
-    // Add
-    const { added } = await $tw.ipfs.addToIpfs(content);
+    try {
+      var { added } = await $tw.ipfs.addToIpfs(content);
+    } catch (error) {
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
+      return false;
+    }
     // Prepare New value
     fields.push({ key: "_export_uri", value: "/" + ipfsKeyword + "/" + added });
-    try {
-      await $tw.ipfs.pinToIpfs(added);
-    } catch (error) {
-      // Log and continue
-      this.getLogger().warn(error);
-      $tw.utils.alert(name, error.message);
-    }
-    // Publish to IPNS
-    if (ipnsKey !== null && ipnsName !== null) {
-      this.getLogger().info("Publishing IPNS Tiddler: " + ipnsName);
-      fields.push({ key: "_export_uri", value: exportUri });
-      try {
-        await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
-      } catch (error) {
-        // Log and continue
-        this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-        // Discard unpin request
-        $tw.ipfs.discardRequestToUnpin(cid, ipnsKey, normalizedUrl);
-        return;
-      }
-    }
-    // Publish to ENS
-    if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
-      fields.push({ key: "_export_uri", value: exportUri });
-      try {
-        await $tw.ipfs.setEns(exportUri.hostname, added);
-      } catch (error) {
-        // Log and continue
-        this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-        // Discard unpin request
-        $tw.ipfs.discardRequestToUnpin(cid, ipnsKey, normalizedUrl);
-        return;
-      }
-    }
-    // Update Tiddler
     var tiddler = $tw.wiki.getTiddler(title);
     var updatedTiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,
@@ -143,298 +111,313 @@ IPFS Action
       fields: fields,
     });
     $tw.wiki.addTiddler(updatedTiddler);
-    $tw.ipfs.requestToUnpin(cid, ipnsKey, normalizedUrl);
+    $tw.ipfs.requestToPin(added);
+    $tw.ipfs.requestToUnpin(cid);
+    if (ipnsKey !== null) {
+      // Publish to IPNS
+      this.getLogger().info("Publishing IPNS name: " + ipnsName);
+      $tw.ipfs
+        .requestToUnpin(null, ipnsKey, normalizedUrl)
+        .then(() => {
+          $tw.ipfs
+            .publishIpnsName(added, ipnsKey, ipnsName)
+            .then(() => {
+              fields.push({ key: "_export_uri", value: exportUri });
+              tiddler = $tw.utils.updateTiddler({
+                tiddler: tiddler,
+                addTags: ["$:/isExported", "$:/isIpfs"],
+                fields: fields,
+              });
+              $tw.wiki.addTiddler(tiddler);
+              $tw.utils.alert("Successfully Published IPNS name...");
+            })
+            .catch((error) => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
+      $tw.ipfs
+        .setEns(normalizedUrl.hostname, added)
+        .then(() => {
+          fields.push({ key: "_export_uri", value: exportUri });
+          tiddler = $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            addTags: ["$:/isExported", "$:/isIpfs"],
+            fields: fields,
+          });
+          $tw.wiki.addTiddler(tiddler);
+          $tw.utils.alert("Successfully Published ENS...");
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    }
     return true;
   };
 
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
+    const title = event.tiddlerTitle;
+    var tiddler = $tw.wiki.getTiddler(title);
+    const { type, info } = $tw.utils.getContentType(tiddler);
+    var added = null;
+    if (info.encoding !== "base64" && type !== "image/svg+xml") {
+      $tw.utils.alert(name, "This Tiddler do not contain any Attachment...");
+      return false;
+    }
+    // Do not process if _canonical_uri is set
+    const canonical_uri = tiddler.getFieldString("_canonical_uri");
+    if (canonical_uri !== undefined && canonical_uri !== null) {
+      $tw.utils.alert(name, "Attachment is already published...");
+      return false;
+    }
     try {
-      const title = event.tiddlerTitle;
-
-      // Load tiddler
-      const tiddler = $tw.wiki.getTiddler(title);
-      // Retrieve Content-Type
-      const { type, info } = $tw.ipfs.getContentType(tiddler);
-
-      // Check
-      if (info.encoding !== "base64" && type !== "image/svg+xml") {
-        $tw.utils.alert(name, "This Tiddler do not contain any attachment...");
-        return false;
-      }
-
-      // Do not process if _canonical_uri is set
-      const canonical_uri = tiddler.getFieldString("_canonical_uri");
-      if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri.trim() !== "") {
-        $tw.utils.alert(name, "Attachment is already published...");
-        return false;
-      }
-
-      // Getting content
       const content = this.getAttachmentContent(tiddler);
-      // Check
       if (content == null) {
         return false;
       }
-
       this.getLogger().info("Uploading attachment: " + content.length + " bytes");
-
-      // Add
-      const { added } = await $tw.ipfs.addToIpfs(content);
-
-      try {
-        await $tw.ipfs.pinToIpfs(added);
-      } catch (error) {
-        // Log an continue
-        this.getLogger().warn(error);
-        $tw.utils.alert(name, error.message);
-      }
-
-      var addTags = [];
-      var removeTags = [];
-      if ($tw.crypto.hasPassword()) {
-        addTags = ["$:/isAttachment", "$:/isIpfs"];
-        removeTags = ["$:/isEmbedded"];
-      } else {
-        addTags = ["$:/isAttachment", "$:/isIpfs"];
-        removeTags = ["$:/isEmbedded"];
-      }
-      // Update
-      const updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: tiddler,
-        addTags: addTags,
-        removeTags: removeTags,
-        fields: [
-          { key: "text", value: "" },
-          { key: "_canonical_uri", value: "/" + ipfsKeyword + "/" + added },
-        ],
-      });
-      $tw.wiki.addTiddler(updatedTiddler);
+      var { added } = await $tw.ipfs.addToIpfs(content);
+      await $tw.ipfs.requestToPin(added);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
     }
-
+    var addTags = [];
+    var removeTags = [];
+    if ($tw.crypto.hasPassword()) {
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
+      removeTags = ["$:/isEmbedded"];
+    } else {
+      addTags = ["$:/isAttachment", "$:/isIpfs"];
+      removeTags = ["$:/isEmbedded"];
+    }
+    // Update
+    tiddler = $tw.utils.updateTiddler({
+      tiddler: tiddler,
+      addTags: addTags,
+      removeTags: removeTags,
+      fields: [
+        { key: "text", value: "" },
+        { key: "_canonical_uri", value: "/" + ipfsKeyword + "/" + added },
+      ],
+    });
+    $tw.wiki.addTiddler(tiddler);
     return true;
   };
 
+  IpfsAction.prototype.getAttachmentContent = function (tiddler) {
+    const { type, info } = $tw.utils.getContentType(tiddler);
+    if (info.encoding !== "base64" && type !== "image/svg+xml") {
+      $tw.utils.alert(name, "Unsupported Tiddler Content-Type...");
+      return null;
+    }
+    var text = tiddler.getFieldString("text");
+    if (text == undefined || text == null) {
+      $tw.utils.alert(name, "Empty attachment content...");
+      return null;
+    }
+    if ($tw.crypto.hasPassword()) {
+      try {
+        // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
+        if (info.encoding === "base64") {
+          text = atob(text);
+        }
+        text = $tw.crypto.encrypt(text, $tw.crypto.currentPassword);
+        text = $tw.utils.StringToUint8Array(text);
+      } catch (error) {
+        this.getLogger().error(error);
+        $tw.utils.alert(name, "Failed to process encrypted Attachment content...");
+        return null;
+      }
+    } else {
+      try {
+        if (info.encoding === "base64") {
+          text = $tw.utils.Base64ToUint8Array(text);
+        } else {
+          text = $tw.utils.StringToUint8Array(text);
+        }
+      } catch (error) {
+        this.getLogger().error(error);
+        $tw.utils.alert(name, "Failed to process Attachment content...");
+        return null;
+      }
+    }
+    return text;
+  };
+
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
+    var ipnsKey = null;
+    const ipnsName = $tw.utils.getIpfsIpnsName();
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
+    if (this.ipnsName == null || this.ipnsName === ipnsName) {
+      $tw.utils.alert(name, "Nothing to rename....");
+      return false;
+    }
     try {
-      // Retrieve default IPNS name
-      var ipnsName = $tw.utils.getIpfsIpnsName();
-
-      // Check
-      if (ipnsName == null) {
-        $tw.utils.alert(name, "Undefined IPNS name....");
-        return false;
-      }
-      if (this.ipnsName == null || this.ipnsName === ipnsName) {
-        $tw.utils.alert(name, "Nothing to rename....");
-        return false;
-      }
-
-      // Rename IPNS name
-      const { ipnsKey } = await $tw.ipfs.renameIpnsName(this.ipnsName, ipnsName);
-
-      // Update Tiddler
-      const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined) {
-        const updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: ipnsKey }],
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
-
-      // Successfully renamed
-      this.ipnsName = ipnsName;
-      this.ipnsKey = ipnsKey;
+      var { ipnsKey } = await $tw.ipfs.renameIpnsName(this.ipnsName, ipnsName);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
     }
-
+    var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+    if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
+      tiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: ipnsKey }],
+      });
+      $tw.wiki.addTiddler(tiddler);
+    }
+    this.ipnsKey = ipnsKey;
+    this.ipnsName = ipnsName;
     return true;
   };
 
   IpfsAction.prototype.handleGenerateIpnsKey = async function (event) {
+    var ipnsKey = null;
+    const ipnsName = $tw.utils.getIpfsIpnsName();
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
     try {
-      // Retrieve default IPNS name
-      var ipnsName = $tw.utils.getIpfsIpnsName();
-
-      // Check
-      if (ipnsName == null) {
-        $tw.utils.alert(name, "Undefined IPNS name....");
-        return false;
-      }
-
-      // Generate IPNS key
-      const key = await $tw.ipfs.generateIpnsKey(ipnsName);
-
-      // Update Tiddler
-      const tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined) {
-        const updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: key }],
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
-
-      // Successfully generated
-      this.ipnsName = ipnsName;
-      this.ipnsKey = key;
+      var ipnsKey = await $tw.ipfs.generateIpnsKey(ipnsName);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
     }
-
+    var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+    if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
+      tiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: ipnsKey }],
+      });
+      $tw.wiki.addTiddler(tiddler);
+    }
+    this.ipnsKey = ipnsKey;
+    this.ipnsName = ipnsName;
     return true;
   };
 
   IpfsAction.prototype.handleRemoveIpnsKey = async function (event) {
+    var ipnsKey = null;
+    var normalizedUrl = null;
+    const ipnsName = $tw.utils.getIpfsIpnsName();
+    const self = this;
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
     try {
-      // Retrieve default IPNS name
-      var cid = null;
-      var ipnsName = $tw.utils.getIpfsIpnsName();
-      var ipnsKey = $tw.utils.getIpfsIpnsKey();
-
-      // Check
-      if (ipnsName == null) {
-        $tw.utils.alert(name, "Undefined IPNS name....");
-        return false;
-      }
-
-      // Resolve CID,
-      var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
-      try {
-        cid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
-      } catch (error) {
-        // Log and continue
-        this.getLogger().warn(error);
-        $tw.utils.alert(name, error.message);
-      }
-
-      // Unpin
-      if ($tw.utils.getIpfsUnpin() && cid != null) {
-        try {
-          await $tw.ipfs.unpinFromIpfs(cid);
-          $tw.ipfs.discardRequestToUnpin(cid);
-        } catch (error) {
-          // Log and continue
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-
-      // Remove IPNS key
-      await $tw.ipfs.removeIpnsKey(ipnsName);
-
-      // Update Tiddlers
-      var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
-      if (tiddler !== undefined) {
-        const updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: "" }],
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
-      tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined && $tw.utils.getIpfsIpnsKey() !== null) {
-        const updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: "" }],
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
-      }
-
-      // Successfully removed
-      this.ipnsName = null;
-      this.ipnsKey = null;
+      var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
-      return false;
+      return;
     }
-
+    // Async
+    $tw.ipfs
+      .requestToUnpin(null, ipnsKey, normalizedUrl)
+      .then(() => {
+        $tw.ipfs
+          .removeIpnsKey(ipnsName)
+          .then(() => {
+            $tw.utils.alert(name, "Succesfully removed Ipns key....");
+          })
+          .catch((error) => {
+            self.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          });
+      })
+      .catch((error) => {
+        self.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+      });
+    var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/name");
+    if (tiddler !== undefined) {
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: "" }],
+      });
+      $tw.wiki.addTiddler(updatedTiddler);
+    }
+    tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+    if (tiddler !== undefined) {
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: "" }],
+      });
+      $tw.wiki.addTiddler(updatedTiddler);
+    }
+    this.ipnsName = null;
+    this.ipnsKey = null;
     return true;
   };
 
   IpfsAction.prototype.handleFetchIpnsKey = async function (event) {
+    var ipnsKey = null;
+    const ipnsName = $tw.utils.getIpfsIpnsName();
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
     try {
-      // Retrieve default IPNS name
-      var ipnsName = $tw.utils.getIpfsIpnsName();
-      var ipnsKey = $tw.utils.getIpfsIpnsKey();
-
-      // Check
-      if (ipnsName == null) {
-        $tw.utils.alert(name, "Undefined IPNS name....");
-        return false;
-      }
-
-      // Fetch
-      const { ipnsKey: resolvedIpnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
-
-      // Update Tiddler
-      var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined) {
-        const updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: resolvedIpnsKey }],
-        });
-        $tw.wiki.addTiddler(updatedTiddler);
-        this.ipnsKey = resolvedIpnsKey;
-      }
-      this.ipnsName = ipnsName;
+      var { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
     }
-
+    var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+    if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
+      tiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: ipnsKey }],
+      });
+      $tw.wiki.addTiddler(tiddler);
+      this.ipnsKey = ipnsKey;
+    }
+    this.ipnsName = ipnsName;
     return true;
   };
 
   IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function (event) {
+    var ipnsKey = null;
+    const ipnsName = $tw.utils.getIpfsIpnsName();
+    var normalizedUrl = null;
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
     try {
-      // Retrieve default IPNS name
-      var ipnsName = $tw.utils.getIpfsIpnsName();
-      var ipnsKey = $tw.utils.getIpfsIpnsKey();
-
-      // Check
-      if (ipnsName == null) {
-        $tw.utils.alert(name, "Undefined IPNS name....");
-        return false;
-      }
-
-      // Resolve CID
-      var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
-      const resolved = await $tw.ipfs.resolveIpnsKey(ipnsKey);
-
-      // Update Tiddler
-      var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
-      if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
-        $tw.utils.updateTiddler({
-          tiddler: tiddler,
-          fields: [{ key: "text", value: ipnsKey }],
-        });
-        this.ipnsKey = ipnsKey;
-      }
-      this.ipnsName = ipnsName;
-
-      if (resolved !== null) {
-        // Build URL
-        const url = $tw.ipfs.normalizeUrl("/" + ipfsKeyword + "/" + resolved);
-        window.open(url.href, "_blank", "noopener,noreferrer");
-      }
+      var { ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, "/" + ipnsKeyword + "/" + ipnsName);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
     }
-
+    var tiddler = $tw.wiki.getTiddler("$:/ipfs/saver/ipns/key");
+    if (tiddler !== undefined && this.ipnsKey !== ipnsKey) {
+      tiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: ipnsKey }],
+      });
+      this.ipnsKey = ipnsKey;
+      $tw.wiki.addTiddler(tiddler);
+    }
+    this.ipnsName = ipnsName;
+    window.open(normalizedUrl, "_blank", "noopener,noreferrer");
     return true;
   };
 
@@ -485,159 +468,59 @@ IPFS Action
   };
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
-    try {
-      // Process document URL
-      const wiki = $tw.ipfs.getDocumentUrl();
-
-      // Check
-      if (wiki.protocol === fileProtocol) {
-        $tw.utils.alert(name, "Undefined IPFS identifier...");
-        return false;
-      }
-      if (wiki.pathname === "/") {
-        $tw.utils.alert(name, "Unknown IPFS identifier...");
-        return false;
-      }
-
-      // Extract and check URL IPFS protocol and CID
-      var { cid, protocol } = $tw.ipfs.decodeCid(wiki.pathname);
-
-      // Check
-      if (cid == null) {
-        $tw.utils.alert(name, "Unknown IPFS identifier...");
-        return false;
-      }
-      if (protocol == null) {
-        $tw.utils.alert(name, "Unknown IPFS protocol...");
-        return false;
-      }
-      // Default IPNS key and IPNS name
-      var ipnsKey = $tw.utils.getIpfsIpnsKey();
-      var ipnsName = $tw.utils.getIpfsIpnsName();
-      var resolved = null;
-
-      // Check
-      if (ipnsKey == null) {
-        $tw.utils.alert(name, "Undefined default IPNS key....");
-        return false;
-      }
-
-      if (protocol === ipnsKeyword) {
-        // Check
-        if (ipnsKey === cid) {
-          $tw.utils.alert(name, "Default IPNS key matches current IPNS key....");
-          return false;
-        }
-        // Resolve current IPNS key
-        this.getLogger().info("Processing current IPNS...");
-        const { ipnsKey: currentIpnsKey } = await $tw.ipfs.getIpnsIdentifiers(cid);
-        try {
-          cid = null;
-          cid = await $tw.ipfs.resolveIpnsKey(currentIpnsKey);
-        } catch (error) {
-          // Log and continue
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-
-      // Resolve default IPNS key and IPNS name
-      this.getLogger().info("Processing default IPNS...");
-      var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
-      try {
-        resolved = await $tw.ipfs.resolveIpnsKey(ipnsKey);
-      } catch (error) {
-        // Log and continue
-        this.getLogger().warn(error);
-        $tw.utils.alert(name, error.message);
-      }
-
-      // Check
-      if (resolved !== null && resolved === cid) {
-        $tw.utils.alert(name, "IPFS identifiers are matching....");
-        return false;
-      }
-
-      this.getLogger().info("Publishing IPNS name: " + ipnsName);
-
-      /*
-       * Publishing is failing as the server is behind a nat
-       * However the local server is getting the update ????
-       **/
-      try {
-        await $tw.ipfs.publishIpnsName(cid, ipnsKey, ipnsName);
-      } catch (error) {
-        // Log and continue
-        this.getLogger().warn(error);
-        $tw.utils.alert(name, error.message);
-      }
-
-      // Unpin
-      if ($tw.utils.getIpfsUnpin() && resolved != null) {
-        try {
-          await $tw.ipfs.unpinFromIpfs(resolved);
-          $tw.ipfs.discardRequestToUnpin(resolved);
-        } catch (error) {
-          // Log and continue
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
+    const self = this;
+    var currentCid = null;
+    var currentIpnsKey = null;
+    var ipnsKey = null;
+    const ipnsName = $tw.utils.getIpfsIpnsName();
+    var normalizedUrl = null;
+    const wiki = $tw.ipfs.getDocumentUrl();
+    if (wiki.protocol === fileProtocol) {
+      $tw.utils.alert(name, "Undefined IPFS identifier...");
       return false;
     }
-
-    $tw.utils.alert("Successfully Published...");
-
-    return true;
-  };
-
-  IpfsAction.prototype.getAttachmentContent = function (tiddler) {
-    var type = null;
-    var info = null;
-    // Retrieve Content-Type
+    if (wiki.pathname === "/") {
+      $tw.utils.alert(name, "Unknown IPFS identifier...");
+      return false;
+    }
+    if (ipnsName == null) {
+      $tw.utils.alert(name, "Undefined IPNS name....");
+      return false;
+    }
     try {
-      var { type, info } = $tw.ipfs.getContentType(tiddler);
+      var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
+      var { cid: currentCid, ipnsKey: currentIpnsKey } = await $tw.ipfs.resolveUrl(false, wiki);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
-      return null;
+      return;
     }
-    // Check
-    if (info.encoding !== "base64" && type !== "image/svg+xml") {
-      $tw.utils.alert(name, "Unsupported Tiddler Content-Type...");
-      return null;
+    if (currentCid == null || currentIpnsKey == null) {
+      $tw.utils.alert(name, "Unknown IPFS identifier...");
+      return false;
     }
-    // Retrieve content
-    var text = tiddler.getFieldString("text");
-    if (text == undefined || text == null || text.trim() === "") {
-      return null;
+    if (currentIpnsKey !== null && currentIpnsKey === ipnsKey) {
+      $tw.utils.alert(name, "Default IPNS key matches current IPNS key....");
+      return false;
     }
-    try {
-      // Encrypt
-      if ($tw.crypto.hasPassword()) {
-        // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
-        if (info.encoding === "base64") {
-          text = atob(text);
-        }
-        text = $tw.crypto.encrypt(text, $tw.crypto.currentPassword);
-        text = $tw.utils.StringToUint8Array(text);
-      } else {
-        // process base64
-        if (info.encoding === "base64") {
-          text = $tw.utils.Base64ToUint8Array(text);
-        } else {
-          text = $tw.utils.StringToUint8Array(text);
-        }
-      }
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, "Failed to encrypt Attachment content...");
-      return null;
-    }
-    return text;
+    $tw.ipfs
+      .requestToUnpin(null, ipnsKey, normalizedUrl)
+      .then(() => {
+        $tw.ipfs
+          .publishIpnsName(currentCid, ipnsKey, ipnsName)
+          .then(() => {
+            $tw.utils.alert("Successfully Published IPNS name...");
+          })
+          .catch((error) => {
+            self.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          });
+      })
+      .catch((error) => {
+        self.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+      });
+    return true;
   };
 
   IpfsAction.prototype.exportTiddlersAsJson = async function (filter, spaces) {

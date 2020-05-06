@@ -243,7 +243,43 @@ IPFS utils
       }
     }
     // Update tiddler
-    const updatedTiddler = new $tw.Tiddler(updates.tiddler, fields);
-    return updatedTiddler;
+    return new $tw.Tiddler(updates.tiddler, fields);
+  };
+
+  exports.getContentType = function (tiddler) {
+    // Check
+    if (tiddler == undefined || tiddler == null) {
+      throw new Error("Unknown Tiddler...");
+    }
+    // Type
+    var type = tiddler.fields["type"];
+    // Default
+    if (type == undefined || type == null) {
+      type = "text/vnd.tiddlywiki";
+    }
+    // Content-Type
+    var info = $tw.config.contentTypeInfo[type];
+    // Check
+    if (info == undefined || info == null) {
+      const url = this.getDocumentUrl();
+      url.hash = tiddler.fields.title;
+      $tw.utils.alert(
+        name,
+        "Unknown Content-Type: '" +
+          type +
+          "', default to: 'text/vnd.tiddlywiki', <a href='" +
+          url +
+          "'>" +
+          tiddler.fields.title +
+          "</a>"
+      );
+      // Default
+      type = "text/vnd.tiddlywiki";
+      info = $tw.config.contentTypeInfo[type];
+    }
+    return {
+      type: type,
+      info: info,
+    };
   };
 })();

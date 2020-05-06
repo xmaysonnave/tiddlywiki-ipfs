@@ -20,7 +20,6 @@ IPFS Saver
   const IpfsController = require("$:/plugins/ipfs/ipfs-controller.js").IpfsController;
   const IpfsTiddler = require("$:/plugins/ipfs/ipfs-tiddler.js").IpfsTiddler;
 
-  const fileProtocol = "file:";
   const ensKeyword = "ens";
   const ipfsKeyword = "ipfs";
   const ipnsKeyword = "ipns";
@@ -79,13 +78,10 @@ IPFS Saver
 
     try {
       // Init
-      var ipfsProtocol = null;
+      var cid = null;
       var ipnsKey = null;
       var ipnsName = null;
-      var ipnsCid = null;
-      var cid = null;
       var ensDomain = null;
-      var ensContent = null;
       var options = options || {};
       // Process document URL
       const wiki = $tw.ipfs.getDocumentUrl();
@@ -96,84 +92,65 @@ IPFS Saver
       nextWiki.protocol = base.protocol;
       nextWiki.hostname = base.hostname;
       nextWiki.port = base.port;
-      // URL Analysis
-      if (wiki.protocol !== fileProtocol) {
-        // Decode pathname
-        var { cid, protocol } = $tw.ipfs.decodeCid(wiki.pathname);
-        // Check
-        if (cid != null && protocol != null) {
-          // Store current protocol
-          ipfsProtocol = protocol;
-          // Request to unpin
-          if ($tw.utils.getIpfsUnpin() && ipfsProtocol === ipfsKeyword) {
-            $tw.ipfs.requestToUnpin(cid);
-          }
+      try {
+        var { cid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(false, wiki);
+        if (cid != null) {
+          $tw.ipfs.requestToUnpin(cid);
         }
+      } catch (error) {
+        this.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+        return;
       }
       // IPNS
-      if (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
+      if (ipnsKey !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
         // Resolve current IPNS
-        if (ipfsProtocol === ipnsKeyword) {
+        if (ipnsKey !== null) {
           this.getLogger().info("Processing current IPNS key...");
-          var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(cid);
           try {
-            ipnsCid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
+            var { cid } = await $tw.ipfs.resolveUrl(true, wiki);
+            if (cid != null) {
+              $tw.ipfs.requestToUnpin(cid);
+            }
           } catch (error) {
             // Log and continue
-            if (ipnsName == null || ipnsKey == null) {
-              this.getLogger().error(error);
-            } else {
-              this.getLogger().warn(error);
-            }
+            this.getLogger().error(error);
             $tw.utils.alert(name, error.message);
-            // Fallback to default
-            if (ipnsName === null && ipnsKey === null && $tw.utils.getIpfsProtocol() === ipnsKeyword) {
-              ipnsName = $tw.utils.getIpfsIpnsName();
-              ipnsKey = $tw.utils.getIpfsIpnsKey();
-              this.getLogger().info("Processing default IPNS...");
-              var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
-              try {
-                ipnsCid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
-              } catch (error) {
-                // Log and continue
-                this.getLogger().warn(error);
-                $tw.utils.alert(name, error.message);
-              }
-            }
           }
-          // Resolve default IPNS
         } else {
-          ipnsName = $tw.utils.getIpfsIpnsName();
+          // Resolve default IPNS
           ipnsKey = $tw.utils.getIpfsIpnsKey();
-          this.getLogger().info("Processing default IPNS name and IPNS key...");
-          var { ipnsKey, ipnsName } = await $tw.ipfs.getIpnsIdentifiers(ipnsKey, ipnsName);
+          ipnsName = $tw.utils.getIpfsIpnsName();
+          if ((ipnsKey == undefined || ipnsKey == null) && (ipnsName == undefined || ipnsName == null)) {
+            this.getLogger().info("Unknown default IPNS identifiers...");
+          }
+          this.getLogger().info("Processing default IPNS identifiers...");
+          var identifier = ipnsKey;
+          if (identifier == undefined || identifier == null) {
+            identifier = ipnsName;
+          }
           try {
-            ipnsCid = await $tw.ipfs.resolveIpnsKey(ipnsKey);
+            var { cid } = await $tw.ipfs.resolveUrl(true, "/" + ipnsKeyword + "/" + identifier);
+            if (cid != null) {
+              $tw.ipfs.requestToUnpin(cid);
+            }
           } catch (error) {
             // Log and continue
-            this.getLogger().warn(error);
+            this.getLogger().error(error);
             $tw.utils.alert(name, error.message);
           }
-        }
-        // Request to unpin
-        if ($tw.utils.getIpfsUnpin() && ipnsCid !== null) {
-          $tw.ipfs.requestToUnpin(ipnsCid);
         }
       }
-      // ENS Analysis
+      // ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
-        // Getting default ens domain
         ensDomain = $tw.utils.getIpfsEnsDomain();
-        // Check
         if (ensDomain == null) {
           callback("Undefined ENS domain...");
           return false;
         }
-        // Fetch ENS domain content
-        const { content } = await $tw.ipfs.resolveEns(ensDomain);
-        // Request to unpin
-        if ($tw.utils.getIpfsUnpin() && content !== null) {
-          $tw.ipfs.requestToUnpin(content);
+        var { cid } = await $tw.ipfs.resolveUrl(false, ensDomain);
+        if (cid != null) {
+          $tw.ipfs.requestToUnpin(cid);
         }
       }
       // Upload  current document
@@ -190,12 +167,8 @@ IPFS Saver
         $tw.utils.alert(name, error.message);
       }
       // Publish to IPNS
-      if (ipnsName !== null && (ipfsProtocol === ipnsKeyword || $tw.utils.getIpfsProtocol() === ipnsKeyword)) {
+      if (ipnsKey !== null) {
         this.getLogger().info("Publishing IPNS name: " + ipnsName);
-        /*
-         * Publishing is failing as the server is behind a nat
-         * However the local server is getting the update ????
-         **/
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
         } catch (error) {
@@ -217,27 +190,32 @@ IPFS Saver
           // Log and continue
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
-          // Discard unpin request
-          if (ipfsProtocol === ipnsKeyword && $tw.utils.getIpfsUnpin() && ensContent !== null) {
-            $tw.ipfs.discardRequestToUnpin(ensContent);
-          }
         }
       }
+      // Pin
+      for (var i in $tw.ipfs.pin) {
+        try {
+          const cid = $tw.ipfs.pin[i];
+          await $tw.ipfs.pinToIpfs(cid);
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        }
+      }
+      $tw.ipfs.pin = [];
       // Unpin
       if ($tw.utils.getIpfsUnpin()) {
-        for (var i = $tw.ipfs.unpin.length - 1; i >= 0; i--) {
+        for (var i in $tw.ipfs.unpin) {
           try {
-            const unpin = $tw.ipfs.unpin[i];
-            await $tw.ipfs.unpinFromIpfs(unpin);
-            // Remove unpin request
-            $tw.ipfs.removeFromUnpin(unpin);
+            const cid = $tw.ipfs.unpin[i];
+            await $tw.ipfs.unpinFromIpfs(cid);
           } catch (error) {
-            // Log and continue
             this.getLogger().warn(error);
             $tw.utils.alert(name, error.message);
           }
         }
       }
+      $tw.ipfs.unpin = [];
       // Done
       callback(null);
       // Next

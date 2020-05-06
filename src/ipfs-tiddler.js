@@ -172,7 +172,7 @@ IPFS Tiddler
             $tw.ipfs
               .pinToIpfs(cid)
               .then((data) => {
-                $tw.ipfs.removeFromUnpin(cid);
+                $tw.ipfs.removeFromPinUnpin(cid);
                 $tw.utils.alert(
                   name,
                   'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' +
@@ -227,7 +227,7 @@ IPFS Tiddler
             $tw.ipfs
               .unpinFromIpfs(cid)
               .then((data) => {
-                $tw.ipfs.removeFromUnpin(cid);
+                $tw.ipfs.removeFromPinUnpin(cid);
                 $tw.utils.alert(
                   name,
                   'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
@@ -262,8 +262,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
-      // Retrieve Content-Type
-      const { type, info } = $tw.ipfs.getContentType(tiddler);
+      const { type, info } = $tw.utils.getContentType(tiddler);
       // Process
       var field = null;
       if (info.encoding === "base64" || type === "image/svg+xml") {
@@ -314,39 +313,39 @@ IPFS Tiddler
   };
 
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
-    try {
-      const title = event.tiddlerTitle;
-      const tiddler = $tw.wiki.getTiddler(title);
-      const canonicalUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_canonical_uri"));
-      const importUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_import_uri"));
-      if (canonicalUri !== null || importUri !== null) {
-        var ipfsImport = new IpfsImport();
-        ipfsImport.loadRemoteTiddlers(canonicalUri, importUri).catch((error) => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
-      }
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-      return false;
+    const self = this;
+    const title = event.tiddlerTitle;
+    const tiddler = $tw.wiki.getTiddler(title);
+    const { type, info } = $tw.utils.getContentType(tiddler);
+    const importUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_import_uri"));
+    const canonicalUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_canonical_uri"));
+    // Nothing to do
+    if (canonicalUri == null && importUri == null) {
+      $tw.utils.alert(name, "Nothing to refresh here...");
+      return true;
     }
+    // Reload Attachment content
+    if ((info.encoding === "base64" || type === "image/svg+xml") && canonicalUri !== null && importUri == null) {
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: "text", value: "" }],
+      });
+      $tw.wiki.addTiddler(updatedTiddler);
+      return true;
+    }
+    // Async Import
+    var ipfsImport = new IpfsImport();
+    ipfsImport.loadRemoteTiddlers(importUri, canonicalUri).catch((error) => {
+      self.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
+    });
     return true;
   };
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
-    var type = null;
-    var info = null;
     // Previous tiddler
     const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title);
-    // Retrieve Content-Type
-    try {
-      var { type, info } = $tw.ipfs.getContentType(tiddler);
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-      return tiddler;
-    }
+    const { type, info } = $tw.utils.getContentType(tiddler);
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler);
     // Process deleted fields
@@ -401,8 +400,8 @@ IPFS Tiddler
               return tiddler;
             }
           }
-          $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl);
         }
+        $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl);
       }
     }
     var canonicalUri = null;
@@ -471,8 +470,8 @@ IPFS Tiddler
           fields: [{ key: "text", value: "" }],
         });
       }
+      $tw.ipfs.requestToPin(cid, ipnsKey, normalizedUrl);
       $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl);
-      $tw.ipfs.discardRequestToUnpin(cid, ipnsKey, normalizedUrl);
     }
     // Tag management
     var addTags = [];
@@ -561,7 +560,6 @@ IPFS Tiddler
         removeTags: removeTags,
       });
     }
-    // Update
     $tw.wiki.addTiddler(updatedTiddler);
     return updatedTiddler;
   };

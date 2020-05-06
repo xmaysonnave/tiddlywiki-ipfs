@@ -58,91 +58,107 @@ ENS Action
   };
 
   EnsAction.prototype.handleResolveEnsAndOpen = async function (event) {
+    const ensDomain = $tw.utils.getIpfsEnsDomain();
+    if (ensDomain == null) {
+      $tw.utils.alert(name, "Undefined ENS domain...");
+      return false;
+    }
     try {
-      // Getting default ENS domain
-      const ensDomain = $tw.utils.getIpfsEnsDomain();
-      // Check
-      if (ensDomain == null) {
-        $tw.utils.alert(name, "Undefined ENS domain...");
-        return false;
-      }
-
       this.getLogger().info("ENS domain: " + ensDomain);
-
       const { normalizedUrl } = await $tw.ipfs.resolveEns(ensDomain);
       if (normalizedUrl !== null) {
-        window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
+        window.open(normalizedUrl, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
     }
-
     return true;
   };
 
   EnsAction.prototype.handlePublishToEns = async function (event) {
+    const self = this;
+    const wiki = $tw.ipfs.getDocumentUrl();
+    if (wiki.protocol === fileProtocol) {
+      $tw.utils.alert(name, "Undefined IPFS identifier...");
+      return false;
+    }
+    if (wiki.pathname === "/") {
+      $tw.utils.alert(name, "Unknown IPFS identifier...");
+      return false;
+    }
+    var cid = null;
+    var ensCid = null;
+    var ipnsKey = null;
     try {
-      // Process document URL
-      const wiki = $tw.ipfs.getDocumentUrl();
-      // Check
-      if (wiki.protocol === fileProtocol) {
-        $tw.utils.alert(name, "Undefined IPFS wiki...");
-        return false;
-      }
-      // Extract and check URL IPFS protocol and CID
-      var { cid, protocol } = $tw.ipfs.decodeCid(wiki.pathname);
-      // Check
-      if (cid == null) {
-        $tw.utils.alert(name, "Unknown IPFS identifier...");
-        return false;
-      }
-      if (protocol == null) {
-        $tw.utils.alert(name, "Unknown IPFS protocol...");
-        return false;
-      }
-      // Resolve IPNS key if applicable
-      if (protocol === ipnsKeyword) {
-        const { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(cid);
-        try {
-          cid = null;
-          cid = await this.resolveIpnsKey(ipnsKey);
-        } catch (error) {
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-      // Getting the default ENS domain
-      const ensDomain = $tw.utils.getIpfsEnsDomain();
-      // Check
-      if (ensDomain == null) {
-        $tw.utils.alert(name, "Undefined ENS domain...");
-        return false;
-      }
-      // Fetch ENS domain content
-      const { content } = await $tw.ipfs.resolveEns(ensDomain);
-      // Nothing to publish
-      if (content !== null && content === cid) {
+      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, wiki);
+    } catch (error) {
+      this.getLogger().error(error);
+      $tw.utils.alert(name, error.message);
+      return false;
+    }
+    const ensDomain = $tw.utils.getIpfsEnsDomain();
+    if (ensDomain == null) {
+      $tw.utils.alert(name, "Undefined ENS domain...");
+      return false;
+    }
+    try {
+      var { cid: ensCid } = await $tw.ipfs.resolveUrl(ensDomain);
+      if (ensCid !== null && ensCid === cid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
-      }
-      // Assign ENS domain content
-      await $tw.ipfs.setEns(ensDomain, cid);
-      // Unpin if applicable
-      if ($tw.utils.getIpfsUnpin() && content !== null) {
-        try {
-          await $tw.ipfs.unpinFromIpfs(content);
-        } catch (error) {
-          // Log and continue
-          this.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        }
       }
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
       return false;
+    }
+    if (cid !== null) {
+      $tw.ipfs
+        .requestToUnpin(ensCid)
+        .then(() => {
+          $tw.ipfs
+            .setEns(ensDomain, cid)
+            .then(() => {
+              $tw.utils.alert("Successfully Published ENS...");
+            })
+            .catch((error) => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
+    } else if (ipnsKey !== null) {
+      $tw.ipfs
+        .resolveUrl(true, wiki)
+        .then((data) => {
+          const { cid } = data;
+          $tw.ipfs
+            .requestToUnpin(ensCid)
+            .then(() => {
+              $tw.ipfs
+                .setEns(ensDomain, cid)
+                .then(() => {
+                  $tw.utils.alert("Successfully Published ENS...");
+                })
+                .catch((error) => {
+                  self.getLogger().error(error);
+                  $tw.utils.alert(name, error.message);
+                });
+            })
+            .catch((error) => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        })
+        .catch((error) => {
+          self.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+        });
     }
     return true;
   };
