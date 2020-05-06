@@ -12,8 +12,8 @@ import root from "window-or-global";
   const ethers = "https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js";
   const ethers_sri = "sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5";
 
-  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.1/dist/index.min.js";
-  const ipfs_http_client_sri = "sha384-BE52P8MsMW2oBN52p6a4C8Iu++0/tYvGsSG2z4r5vdxUs4VBlc6+hHtzdKj8wrHn";
+  const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.3/dist/index.min.js";
+  const ipfs_http_client_sri = "sha384-xdAnH1MjCW7O7L2RyKVCGt9ODi4oqT/XUT4mFqctEW438NrZuqIJD68cFPx0VZb/";
 
   var IpfsLoader = function () {};
 
