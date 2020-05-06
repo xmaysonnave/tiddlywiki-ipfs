@@ -79,9 +79,11 @@ IPFS Saver
     try {
       // Init
       var cid = null;
+      var ipnsCid = null;
       var ipnsKey = null;
       var ipnsName = null;
       var ensDomain = null;
+      var ensCid = null;
       var options = options || {};
       // Process document URL
       const wiki = $tw.ipfs.getDocumentUrl();
@@ -98,23 +100,21 @@ IPFS Saver
           $tw.ipfs.requestToUnpin(cid);
         }
       } catch (error) {
-        this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
+        this.getLogger().warn(error);
+        callback(error.message);
         return;
       }
       // IPNS
       if (ipnsKey !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
         // Resolve current IPNS
         if (ipnsKey !== null) {
-          this.getLogger().info("Processing current IPNS key...");
           try {
-            var { cid } = await $tw.ipfs.resolveUrl(true, wiki);
-            if (cid != null) {
-              $tw.ipfs.requestToUnpin(cid);
+            var { cid: ipnsCid, ipnsName } = await $tw.ipfs.resolveUrl(true, wiki);
+            if (ipnsCid != null) {
+              $tw.ipfs.requestToUnpin(ipnsCid);
             }
           } catch (error) {
-            // Log and continue
-            this.getLogger().error(error);
+            this.getLogger().warn(error);
             $tw.utils.alert(name, error.message);
           }
         } else {
@@ -130,13 +130,15 @@ IPFS Saver
             identifier = ipnsName;
           }
           try {
-            var { cid } = await $tw.ipfs.resolveUrl(true, "/" + ipnsKeyword + "/" + identifier);
-            if (cid != null) {
-              $tw.ipfs.requestToUnpin(cid);
+            var { cid: ipnsCid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(
+              true,
+              "/" + ipnsKeyword + "/" + identifier
+            );
+            if (ipnsCid != null) {
+              $tw.ipfs.requestToUnpin(ipnsCid);
             }
           } catch (error) {
-            // Log and continue
-            this.getLogger().error(error);
+            this.getLogger().warn(error);
             $tw.utils.alert(name, error.message);
           }
         }
@@ -148,9 +150,9 @@ IPFS Saver
           callback("Undefined ENS domain...");
           return false;
         }
-        var { cid } = await $tw.ipfs.resolveUrl(false, ensDomain);
-        if (cid != null) {
-          $tw.ipfs.requestToUnpin(cid);
+        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, ensDomain);
+        if (ensCid != null) {
+          $tw.ipfs.requestToUnpin(ensCid);
         }
       }
       // Upload  current document
@@ -159,7 +161,7 @@ IPFS Saver
       const { added } = await $tw.ipfs.addToIpfs(text);
       // Default next
       nextWiki.pathname = "/" + ipfsKeyword + "/" + added;
-      // Pin, if failure log and continue
+      // Pin
       try {
         await $tw.ipfs.pinToIpfs(added);
       } catch (error) {
@@ -168,37 +170,26 @@ IPFS Saver
       }
       // Publish to IPNS
       if (ipnsKey !== null) {
-        this.getLogger().info("Publishing IPNS name: " + ipnsName);
+        const msg = "Publishing IPNS name: " + ipnsName;
+        this.getLogger().info(msg);
+        $tw.utils.alert(name, msg);
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
+          nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
         } catch (error) {
-          // Log and continue
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
+          $tw.ipfs.requestToPin(ipnsCid);
         }
-        // IPNS next
-        nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
       }
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
           await $tw.ipfs.setEns(ensDomain, added);
-          // ENS next
           nextWiki.protocol = "https:";
           nextWiki.host = ensDomain;
         } catch (error) {
-          // Log and continue
-          this.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        }
-      }
-      // Pin
-      for (var i in $tw.ipfs.pin) {
-        try {
-          const cid = $tw.ipfs.pin[i];
-          await $tw.ipfs.pinToIpfs(cid);
-        } catch (error) {
-          this.getLogger().error(error);
+          this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
         }
       }
@@ -207,8 +198,8 @@ IPFS Saver
       if ($tw.utils.getIpfsUnpin()) {
         for (var i in $tw.ipfs.unpin) {
           try {
-            const cid = $tw.ipfs.unpin[i];
-            await $tw.ipfs.unpinFromIpfs(cid);
+            const unpin = $tw.ipfs.unpin[i];
+            await $tw.ipfs.unpinFromIpfs(unpin);
           } catch (error) {
             this.getLogger().warn(error);
             $tw.utils.alert(name, error.message);
@@ -216,6 +207,16 @@ IPFS Saver
         }
       }
       $tw.ipfs.unpin = [];
+      // Pin
+      for (var i in $tw.ipfs.pin) {
+        try {
+          const pin = $tw.ipfs.pin[i];
+          await $tw.ipfs.pinToIpfs(pin);
+        } catch (error) {
+          this.getLogger().warn(error);
+          $tw.utils.alert(name, error.message);
+        }
+      }
       // Done
       callback(null);
       // Next

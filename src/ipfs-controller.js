@@ -49,7 +49,7 @@ IPFS Controller
           }
         })
         .catch((error) => {
-          self.getLogger().error(error);
+          self.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
         });
     } else if (cid !== undefined && cid !== null && this.addToPin(cid)) {
@@ -89,7 +89,7 @@ IPFS Controller
           }
         })
         .catch((error) => {
-          self.getLogger().error(error);
+          self.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
         });
     } else if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
@@ -293,6 +293,9 @@ IPFS Controller
         if (ipnsIdentifier !== null) {
           var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
           if (resolveIpns && ipnsKey !== null) {
+            const msg = "Resolving IPNS name: " + ipnsName;
+            this.getLogger().info(msg);
+            $tw.utils.alert(name, msg);
             cid = await this.resolveIpnsKey(ipnsKey);
           }
         }

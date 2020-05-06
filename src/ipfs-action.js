@@ -114,8 +114,9 @@ IPFS Action
     $tw.ipfs.requestToPin(added);
     $tw.ipfs.requestToUnpin(cid);
     if (ipnsKey !== null) {
-      // Publish to IPNS
-      this.getLogger().info("Publishing IPNS name: " + ipnsName);
+      const msg = "Publishing IPNS name: " + ipnsName;
+      this.getLogger().info(msg);
+      $tw.utils.alert(name, msg);
       $tw.ipfs
         .requestToUnpin(null, ipnsKey, normalizedUrl)
         .then(() => {
@@ -129,7 +130,7 @@ IPFS Action
                 fields: fields,
               });
               $tw.wiki.addTiddler(tiddler);
-              $tw.utils.alert("Successfully Published IPNS name...");
+              $tw.utils.alert(name, "Successfully Published IPNS name...");
             })
             .catch((error) => {
               self.getLogger().error(error);
@@ -141,6 +142,9 @@ IPFS Action
           $tw.utils.alert(name, error.message);
         });
     } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
+      const msg = "Publishing ENS: " + normalizedUrl.hostname;
+      this.getLogger().info(msg);
+      $tw.utils.alert(name, msg);
       $tw.ipfs
         .setEns(normalizedUrl.hostname, added)
         .then(() => {
@@ -151,7 +155,7 @@ IPFS Action
             fields: fields,
           });
           $tw.wiki.addTiddler(tiddler);
-          $tw.utils.alert("Successfully Published ENS...");
+          $tw.utils.alert(name, "Successfully Published ENS...");
         })
         .catch((error) => {
           self.getLogger().error(error);
@@ -183,7 +187,7 @@ IPFS Action
       }
       this.getLogger().info("Uploading attachment: " + content.length + " bytes");
       var { added } = await $tw.ipfs.addToIpfs(content);
-      await $tw.ipfs.requestToPin(added);
+      $tw.ipfs.requestToPin(added);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -503,13 +507,16 @@ IPFS Action
       $tw.utils.alert(name, "Default IPNS key matches current IPNS key....");
       return false;
     }
+    const msg = "Publishing IPNS name: " + ipnsName;
+    this.getLogger().info(msg);
+    $tw.utils.alert(name, msg);
     $tw.ipfs
       .requestToUnpin(null, ipnsKey, normalizedUrl)
       .then(() => {
         $tw.ipfs
           .publishIpnsName(currentCid, ipnsKey, ipnsName)
           .then(() => {
-            $tw.utils.alert("Successfully Published IPNS name...");
+            $tw.utils.alert(name, "Successfully Published IPNS name...");
           })
           .catch((error) => {
             self.getLogger().error(error);

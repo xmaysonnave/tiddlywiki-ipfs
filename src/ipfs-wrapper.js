@@ -237,17 +237,17 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
     // Check
-    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
+    if (ipnsKey == undefined || ipnsKey == null) {
       throw new Error("Undefined IPNS key...");
     }
-    const pathname = "/" + ipnsKeyword + "/" + ipnsKey.trim();
+    const pathname = "/" + ipnsKeyword + "/" + ipnsKey;
     try {
       const url = this.ipfsUrl.normalizeUrl(pathname);
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname);
       const { cid } = this.ipfsBundle.decodeCid(resolved);
       if (cid !== null) {
         const parsed = this.ipfsUrl.normalizeUrl(resolved);
-        this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url.href + "\n " + parsed.href);
+        this.getLogger().info("Successfully resolved IPNS key:" + "\n " + url + " \n " + parsed);
         return cid;
       }
     } catch (error) {
