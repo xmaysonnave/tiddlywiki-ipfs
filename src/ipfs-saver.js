@@ -60,9 +60,9 @@ IPFS Saver
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl();
     if ($tw.utils.getIpfsUrlPolicy() === "origin") {
-      logger.info("Origin base URL:" + "\n " + base.toString());
+      logger.info("Origin base URL:" + "\n " + base);
     } else {
-      logger.info("Gateway base URL:" + "\n " + base.toString());
+      logger.info("Gateway base URL:" + "\n " + base);
     }
   };
 
@@ -102,7 +102,7 @@ IPFS Saver
       } catch (error) {
         this.getLogger().warn(error);
         callback(error.message);
-        return;
+        return false;
       }
       // IPNS
       if (ipnsKey !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
@@ -220,8 +220,8 @@ IPFS Saver
       // Done
       callback(null);
       // Next
-      if (nextWiki.toString() !== wiki.toString()) {
-        window.location.assign(nextWiki.toString());
+      if (nextWiki.href !== wiki.href) {
+        window.location.assign(nextWiki);
       }
     } catch (error) {
       this.getLogger().error(error);

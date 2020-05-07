@@ -106,7 +106,7 @@ IPFS Tiddler
     if (gateway !== undefined && gateway.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl();
       if ($tw.utils.getIpfsUrlPolicy() === "gateway") {
-        this.getLogger().info("Gateway Relative URL:" + "\n " + base.toString());
+        this.getLogger().info("Gateway Relative URL:" + "\n " + base);
       }
     }
     // Policy preference
@@ -114,9 +114,9 @@ IPFS Tiddler
     if (policy !== undefined && policy.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl();
       if ($tw.utils.getIpfsUrlPolicy() === "origin") {
-        this.getLogger().info("Origin base URL:" + "\n " + base.toString());
+        this.getLogger().info("Origin base URL:" + "\n " + base);
       } else {
-        this.getLogger().info("Gateway base URL:" + "\n " + base.toString());
+        this.getLogger().info("Gateway base URL:" + "\n " + base);
       }
     }
     // Unpin preference
@@ -391,9 +391,7 @@ IPFS Tiddler
                 addTags: ["$:/isAttachment", "$:/isEmbedded"],
                 fields: [{ key: "text", value: content.data }],
               });
-              this.getLogger().info(
-                "Embed attachment: " + content.data.length + " bytes" + "\n " + oldNormalizedUrl.href
-              );
+              this.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + oldNormalizedUrl);
             } catch (error) {
               this.getLogger().error(error);
               $tw.utils.alert(name, error.message);

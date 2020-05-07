@@ -86,7 +86,7 @@ IPFS link widget
           var { normalizedUrl } = data;
           if (normalizedUrl !== null) {
             self.removeChildDomNodes();
-            self.renderExternalLink(parent, nextSibling, normalizedUrl.href);
+            self.renderExternalLink(parent, nextSibling, normalizedUrl);
           }
         })
         .catch((error) => {
@@ -98,10 +98,10 @@ IPFS link widget
   /*
    * Render this widget into the DOM
    */
-  IpfsLinkWidget.prototype.renderExternalLink = function (parent, nextSibling, uri) {
+  IpfsLinkWidget.prototype.renderExternalLink = function (parent, nextSibling, url) {
     // Link
     var domNode = this.document.createElement("a");
-    domNode.setAttribute("href", uri);
+    domNode.setAttribute("href", url);
     // Add a click event handler
     $tw.utils.addEventListeners(domNode, [
       { name: "click", handlerObject: this, handlerMethod: "handleExternalClickEvent" },
@@ -242,11 +242,11 @@ IPFS link widget
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     $tw.ipfs
-      .resolveUrl(false, this.value)
+      .resolveUrl(true, this.value)
       .then((data) => {
         var { normalizedUrl } = data;
         if (normalizedUrl !== null) {
-          window.open(normalizedUrl.href, "_blank", "noopener,noreferrer");
+          window.open(normalizedUrl, "_blank", "noopener,noreferrer");
         }
       })
       .catch((error) => {

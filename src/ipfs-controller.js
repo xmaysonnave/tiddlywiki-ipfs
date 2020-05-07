@@ -191,7 +191,7 @@ IPFS Controller
           importedTiddlers = this.importedTiddlers.get(cid);
         }
         if (importedTiddlers !== undefined && importedTiddlers !== null) {
-          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl.href);
+          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl);
           // Done
           return {
             cid,
@@ -217,7 +217,7 @@ IPFS Controller
         // Cache immutable imported Tiddlers
         if (cid != null) {
           this.importedTiddlers.set(cid, importedTiddlers);
-          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + normalizedUrl.href);
+          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + normalizedUrl);
         }
       }
     } catch (error) {
@@ -356,7 +356,7 @@ IPFS Controller
     // Current API URL
     const url = this.getIpfsApiUrl();
     // Check
-    if (url == undefined || url == null || url.href === "") {
+    if (url == undefined || url == null || url === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     // HTTP Client
@@ -390,7 +390,7 @@ IPFS Controller
     const { content, protocol } = await this.ensWrapper.getContentHash(ensDomain, web3);
     if (content !== null && protocol !== null) {
       const url = this.normalizeUrl("/" + protocol + "/" + content);
-      this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url + "\n from: " + ensDomain);
+      this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url + " \n from: " + ensDomain);
       return {
         content: content,
         normalizedUrl: url,
@@ -409,7 +409,7 @@ IPFS Controller
     const { cidV0 } = await this.ensWrapper.setContentHash(ensDomain, cid, web3, account);
     if (cidV0 !== null) {
       const url = this.normalizeUrl("/ipfs/" + cidV0);
-      this.getLogger().info("Successfully set ENS domain content:" + "\n " + url.href + "\n to: " + ensDomain);
+      this.getLogger().info("Successfully set ENS domain content:" + "\n " + url + " \n to: " + ensDomain);
     }
   };
 

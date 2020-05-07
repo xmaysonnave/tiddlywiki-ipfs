@@ -24,9 +24,9 @@ const log = require("loglevel");
 const root = require("window-or-global");
 const { URL } = require("universal-url");
 const local = new URL("file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html");
-const remote = new URL("https://ipfs.infura.io/ipfs/cid");
+const remote = new URL("https://gateway.ipfs.io/ipfs/cid");
 const api = new URL("https://ipfs.infura.io:5001/");
-const gateway = new URL("https://ipfs.infura.io/");
+const gateway = new URL("https://gateway.ipfs.io/");
 const eth = new URL("https://bluelightav.eth/ipfs/cid");
 const ethLink = new URL("https://bluelightav.eth.link/ipfs/cid");
 const text = "text";
@@ -69,7 +69,7 @@ describe("Document URL", () => {
     ipfsUrl.getDocumentUrl = jest.fn();
     ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
     const parsed = ipfsUrl.getDocumentUrl();
-    expect(parsed.href === remote.href).toBeTruthy();
+    expect(parsed === remote).toBeTruthy();
   });
   it("Invalid", () => {
     const ipfsBundle = new IpfsBundle();
@@ -135,7 +135,7 @@ describe("Base URL", () => {
     ipfsUrl.getDocumentUrl = jest.fn();
     ipfsUrl.getDocumentUrl.mockReturnValueOnce(remote);
     const base = ipfsUrl.getIpfsBaseUrl();
-    expect(base.href === "https://ipfs.infura.io/").toBeTruthy();
+    expect(base.href === "https://gateway.ipfs.io/").toBeTruthy();
   });
 
   it("Fallback to default Gateway", () => {

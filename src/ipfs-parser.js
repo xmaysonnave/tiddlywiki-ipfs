@@ -41,7 +41,7 @@ IPFS parser utils
         reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest")));
       };
       try {
-        xhr.open("get", url.toString(), true);
+        xhr.open("get", url, true);
         xhr.send();
       } catch (error) {
         reject(error);

@@ -87,15 +87,11 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.getIpnsIdentifiers = async function (ipfs, identifier, ipnsName) {
     // Cleanup
-    if (identifier == undefined || identifier == null || identifier.trim() === "") {
+    if (identifier == undefined || identifier == null || identifier === "") {
       identifier = null;
-    } else {
-      identifier = identifier.trim();
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       ipnsName = null;
-    } else {
-      ipnsName = ipnsName.trim();
     }
     // Check
     if (identifier == null && ipnsName == null) {
@@ -146,7 +142,7 @@ IPFS Wrapper
       }
     }
     const normalizedUrl = this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + identifier);
-    this.getLogger().info("Successfully Fetched IPNS identifiers: " + ipnsName + "\n " + normalizedUrl.href);
+    this.getLogger().info("Successfully Fetched IPNS identifiers: " + ipnsName + "\n " + normalizedUrl);
     return {
       ipnsKey: identifier,
       ipnsName: ipnsName,
@@ -158,7 +154,7 @@ IPFS Wrapper
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName);
       const url = this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + key);
-      this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url.href);
+      this.getLogger().info("Successfully generated IPNS key with IPNS name: " + ipnsName + "\n " + url);
       return key;
     } catch (error) {
       this.getLogger().error(error);
@@ -204,14 +200,14 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
     // Check
-    if (cid == undefined || cid == null || cid.trim() === "") {
+    if (cid == undefined || cid == null || cid === "") {
       throw new Error("Undefined IPNS identifier...");
     }
-    const pathname = "/" + ipfsKeyword + "/" + cid.trim();
+    const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname);
       const url = this.ipfsUrl.normalizeUrl(pathname);
-      this.getLogger().info("Successfully fetched:" + "\n " + url.href);
+      this.getLogger().info("Successfully fetched:" + "\n " + url);
       return fetched;
     } catch (error) {
       this.getLogger().error(error);
@@ -224,7 +220,7 @@ IPFS Wrapper
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content);
       const pathname = "/" + ipfsKeyword + "/" + hash;
       const url = this.ipfsUrl.normalizeUrl(pathname);
-      this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url.href);
+      this.getLogger().info("Successfully added " + size + " bytes:" + "\n " + url);
       return {
         added: hash,
         size: size,
@@ -237,7 +233,7 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
     // Check
-    if (ipnsKey == undefined || ipnsKey == null) {
+    if (ipnsKey == undefined || ipnsKey == null || ipnsKey === "") {
       throw new Error("Undefined IPNS key...");
     }
     const pathname = "/" + ipnsKeyword + "/" + ipnsKey;
@@ -258,26 +254,24 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipnsName) {
     // Check
-    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === "") {
+    if (ipnsKey == undefined || ipnsKey == null || ipnsKey === "") {
       throw new Error("Undefined IPNS key...");
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       throw new Error("Undefined IPNS name...");
     }
-    if (cid == undefined || cid == null || cid.trim() === "") {
+    if (cid == undefined || cid == null || cid === "") {
       throw new Error("Undefined IPNS identifier...");
     }
     // Path
-    const key = "/" + ipnsKeyword + "/" + ipnsKey.trim();
+    const key = "/" + ipnsKeyword + "/" + ipnsKey;
     const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
       // Publish
       const result = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname);
       const keyParsed = this.ipfsUrl.normalizeUrl(key);
       const url = this.ipfsUrl.normalizeUrl(pathname);
-      this.getLogger().info(
-        "Successfully published IPNS name: " + ipnsName + "\n " + keyParsed.href + "\n " + url.href
-      );
+      this.getLogger().info("Successfully published IPNS name: " + ipnsName + "\n " + keyParsed + "\n " + url);
       return result;
     } catch (error) {
       this.getLogger().error(error);
@@ -287,14 +281,14 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
     // Check
-    if (cid == undefined || cid == null || cid.trim() === "") {
+    if (cid == undefined || cid == null || cid === "") {
       throw new Error("Undefined IPNS identifier...");
     }
-    const pathname = "/" + ipfsKeyword + "/" + cid.trim();
+    const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname);
       const url = this.ipfsUrl.normalizeUrl(pathname);
-      this.getLogger().info("Successfully pinned:" + "\n " + url.href);
+      this.getLogger().info("Successfully pinned:" + "\n " + url);
       return pinned;
     } catch (error) {
       this.getLogger().error(error);
@@ -304,14 +298,14 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
     // Check
-    if (cid == undefined || cid == null || cid.trim() === "") {
+    if (cid == undefined || cid == null || cid === "") {
       throw new Error("Undefined IPNS identifier...");
     }
-    const pathname = "/" + ipfsKeyword + "/" + cid.trim();
+    const pathname = "/" + ipfsKeyword + "/" + cid;
     try {
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname);
       const url = this.ipfsUrl.normalizeUrl(pathname);
-      this.getLogger().info("Successfully unpinned:" + "\n " + url.href);
+      this.getLogger().info("Successfully unpinned:" + "\n " + url);
       return unpinned;
     } catch (error) {
       this.getLogger().error(error);

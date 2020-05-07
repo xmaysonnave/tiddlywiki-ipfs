@@ -51,7 +51,7 @@ import { URL } from "universal-url";
   };
 
   IpfsUrl.prototype.getIpfsDefaultGateway = function () {
-    return "https://ipfs.infura.io";
+    return "https://gateway.ipfs.io";
   };
 
   /**

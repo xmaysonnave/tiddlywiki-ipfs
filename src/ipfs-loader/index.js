@@ -117,7 +117,7 @@ import root from "window-or-global";
       }
       script.crossOrigin = "anonymous";
       // URL
-      script.src = url.toString();
+      script.src = url;
       // Load
       root.document.head.appendChild(script);
     });

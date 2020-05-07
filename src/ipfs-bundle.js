@@ -125,7 +125,7 @@ import IpfsUrl from "./ipfs-url";
       throw new Error("This 'cid' is not 'dag-pb' encoded: " + cidAnalyser + cidv0);
     }
     if (cidv0.version === 1) {
-      cidv0 = cidv0.toV0().toString();
+      cidv0 = cidv0.toV0();
       // Log
       this.getLogger().info(
         "Converted: " +
@@ -142,7 +142,7 @@ import IpfsUrl from "./ipfs-url";
       // Log
       this.getLogger().info("'cidv0' (Base58):" + "\n " + cidAnalyser + cidv0);
     }
-    return cidv0;
+    return cidv0.toString();
   };
 
   IpfsBundle.prototype.cidV0ToCidV1 = function (cidv0) {
@@ -151,7 +151,7 @@ import IpfsUrl from "./ipfs-url";
       throw new Error("This 'cid' is not 'dag-pb' encoded: " + cidAnalyser + cidv1);
     }
     if (cidv1.version === 0) {
-      cidv1 = cidv1.toV1().toString();
+      cidv1 = cidv1.toV1();
       this.getLogger().info(
         "Converted: " +
           "\n 'cidv0' (Base58):" +
@@ -167,7 +167,7 @@ import IpfsUrl from "./ipfs-url";
       // Log
       this.getLogger().info("'cidv1' (Base32): " + "\n " + cidAnalyser + cidv1);
     }
-    return cidv1;
+    return cidv1.toString();
   };
 
   module.exports = {

@@ -51,7 +51,7 @@ import root from "window-or-global";
       // IPFS Companion failed
     }
     // Check
-    if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
+    if (apiUrl == undefined || apiUrl == null || apiUrl === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     // Load IpfsHttpClient
@@ -91,7 +91,7 @@ import root from "window-or-global";
   // ipfs-http-client
   IpfsLibrary.prototype.getHttpIpfs = async function (url) {
     // Check
-    if (url == undefined || url == null || url.href === "") {
+    if (url == undefined || url == null || url === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     try {
@@ -101,18 +101,18 @@ import root from "window-or-global";
       }
       // Instantiate client
       const { httpClient } = providers;
-      this.getLogger().info("Processing connection to IPFS API URL:" + "\n " + url.href);
+      this.getLogger().info("Processing connection to IPFS API URL:" + "\n " + url);
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
             timeout: "2m",
-            apiAddress: url.href,
+            apiAddress: url,
           }),
         ],
       });
       return {
         ipfs: ipfs,
-        provider: provider + ", " + url.href,
+        provider: provider + ", " + url,
       };
     } catch (error) {
       this.getLogger().error(error);

@@ -256,10 +256,10 @@ import root from "window-or-global";
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
     }
-    if (registry == undefined || registry == null || registry.trim() === "") {
+    if (registry == undefined || registry == null || registry === "") {
       throw new Error("Undefined ENS registry address...");
     }
-    if (node == undefined || node == null || node.trim() === "") {
+    if (node == undefined || node == null || node === "") {
       throw new Error("Undefined ENS domain resolver...");
     }
     if (root.ethers == undefined || root.ethers == null) {
@@ -290,7 +290,7 @@ import root from "window-or-global";
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
     }
-    if (address == undefined || address == null || address.trim() === "") {
+    if (address == undefined || address == null || address === "") {
       throw new Error("Undefined Ethereum address...");
     }
     if (root.ethers == undefined || root.ethers == null) {
@@ -340,7 +340,7 @@ import root from "window-or-global";
     if (web3 == undefined || web3 == null) {
       throw new Error("Undefined Web3 provider...");
     }
-    if (address == undefined || address == null || address.trim() === "") {
+    if (address == undefined || address == null || address === "") {
       throw new Error("Undefined Ethereum address...");
     }
     if (root.ethers == undefined || root.ethers == null) {
