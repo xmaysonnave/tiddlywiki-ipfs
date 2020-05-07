@@ -118,13 +118,13 @@ ENS Action
       $tw.ipfs
         .requestToUnpin(ensCid)
         .then(() => {
-          const msg = "Publishing ENS: " + ensDomain;
+          const msg = "Publishing to ENS: " + ensDomain;
           self.getLogger().info(msg);
           $tw.utils.alert(name, msg);
           $tw.ipfs
             .setEns(ensDomain, cid)
             .then(() => {
-              $tw.utils.alert(name, "Successfully Published ENS...");
+              $tw.utils.alert(name, "Successfully Published to ENS...");
             })
             .catch((error) => {
               self.getLogger().error(error);
@@ -139,17 +139,17 @@ ENS Action
       $tw.ipfs
         .resolveUrl(true, wiki)
         .then((data) => {
-          const { cid } = data;
+          const { cid: ipnsCid } = data;
           $tw.ipfs
             .requestToUnpin(ensCid)
             .then(() => {
-              const msg = "Publishing ENS: " + ensDomain;
+              const msg = "Publishing to ENS: " + ensDomain;
               self.getLogger().info(msg);
               $tw.utils.alert(name, msg);
               $tw.ipfs
-                .setEns(ensDomain, cid)
+                .setEns(ensDomain, ipnsCid)
                 .then(() => {
-                  $tw.utils.alert(name, "Successfully Published ENS...");
+                  $tw.utils.alert(name, "Successfully Published to ENS...");
                 })
                 .catch((error) => {
                   self.getLogger().error(error);

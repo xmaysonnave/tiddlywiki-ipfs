@@ -68,10 +68,10 @@ The audio parser parses an audio tiddler into an embeddable HTML element
         $tw.ipfs
           .resolveUrl(false, url)
           .then((data) => {
-            var { normalizedUrl } = data;
-            if (normalizedUrl !== null) {
+            var { resolvedUrl } = data;
+            if (resolvedUrl !== null) {
               $tw.ipfs
-                .loadToBase64(normalizedUrl)
+                .loadToBase64(resolvedUrl)
                 .then((loaded) => {
                   element.attributes.src = { type: "string", value: value + loaded.data };
                   const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);

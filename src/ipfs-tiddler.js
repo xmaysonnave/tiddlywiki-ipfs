@@ -171,19 +171,16 @@ IPFS Tiddler
     $tw.ipfs
       .resolveUrl(true, value)
       .then((data) => {
-        const { cid, normalizedUrl } = data;
-        if (normalizedUrl !== null && cid !== null) {
-          self.getLogger().info("Pinning: '" + field + "'.\n " + normalizedUrl);
+        const { cid, resolvedUrl } = data;
+        if (resolvedUrl !== null && cid !== null) {
+          self.getLogger().info("Pinning: '" + field + "'.\n " + resolvedUrl);
           $tw.ipfs
             .pinToIpfs(cid)
             .then((data) => {
               $tw.ipfs.removeFromPinUnpin(cid);
               $tw.utils.alert(
                 name,
-                'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                  normalizedUrl +
-                  '">' +
-                  field
+                'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' + resolvedUrl + '">' + field
               );
             })
             .catch((error) => {
@@ -230,9 +227,9 @@ IPFS Tiddler
     $tw.ipfs
       .resolveUrl(true, value)
       .then((data) => {
-        const { cid, normalizedUrl } = data;
-        if (normalizedUrl !== null && cid !== null) {
-          self.getLogger().info("Unpinning: '" + field + "'.\n " + normalizedUrl);
+        const { cid, resolvedUrl } = data;
+        if (resolvedUrl !== null && cid !== null) {
+          self.getLogger().info("Unpinning: '" + field + "'.\n " + resolvedUrl);
           $tw.ipfs
             .unpinFromIpfs(cid)
             .then((data) => {
@@ -240,7 +237,7 @@ IPFS Tiddler
               $tw.utils.alert(
                 name,
                 'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                  normalizedUrl +
+                  resolvedUrl +
                   '">' +
                   field
               );
@@ -375,7 +372,7 @@ IPFS Tiddler
         if (reservedFields.indexOf(field) !== -1) {
           continue;
         }
-        // Discard updated
+        // Updated
         const discard = tiddler.fields[field];
         if (discard !== undefined && discard !== null && tiddler.getFieldString(field) !== "") {
           continue;
@@ -402,9 +399,9 @@ IPFS Tiddler
             // Embed
             try {
               if (info.encoding === "base64") {
-                content = await $tw.ipfs.loadToBase64(normalizedUrl);
+                content = await $tw.ipfs.loadToBase64(oldNormalizedUrl);
               } else {
-                content = await $tw.ipfs.loadToUtf8(normalizedUrl);
+                content = await $tw.ipfs.loadToUtf8(oldNormalizedUrl);
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,

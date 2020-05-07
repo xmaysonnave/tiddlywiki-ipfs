@@ -142,7 +142,7 @@ IPFS Action
           $tw.utils.alert(name, error.message);
         });
     } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
-      const msg = "Publishing ENS: " + normalizedUrl.hostname;
+      const msg = "Publishing to ENS: " + normalizedUrl.hostname;
       this.getLogger().info(msg);
       $tw.utils.alert(name, msg);
       $tw.ipfs
@@ -155,7 +155,7 @@ IPFS Action
             fields: fields,
           });
           $tw.wiki.addTiddler(tiddler);
-          $tw.utils.alert(name, "Successfully Published ENS...");
+          $tw.utils.alert(name, "Successfully Published to ENS...");
         })
         .catch((error) => {
           self.getLogger().error(error);
@@ -174,7 +174,7 @@ IPFS Action
       $tw.utils.alert(name, "This Tiddler do not contain any Attachment...");
       return false;
     }
-    // Do not process if _canonical_uri is set
+    // Do not process if _canonical_uri is set and the text field is empty
     const canonical_uri = tiddler.getFieldString("_canonical_uri");
     if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri !== "") {
       $tw.utils.alert(name, "Attachment is already published...");
@@ -533,13 +533,13 @@ IPFS Action
   IpfsAction.prototype.exportTiddlersAsJson = async function (filter, spaces) {
     var tiddlers = $tw.wiki.filterTiddlers(filter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
+    var processedFields = new Map();
     var data = [];
     // Process Tiddlers
     for (var t = 0; t < tiddlers.length; t++) {
       // Load Tiddler
       var tiddler = $tw.wiki.getTiddler(tiddlers[t]);
       // Process
-      var isIpfs = false;
       var fields = new Object();
       // Process fields
       for (var field in tiddler.fields) {
@@ -551,14 +551,20 @@ IPFS Action
         var cid = null;
         var ipnsKey = null;
         var fieldValue = tiddler.getFieldString(field);
-        try {
-          var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, fieldValue);
-        } catch (error) {
-          this.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        }
-        if (cid !== null || ipnsKey !== null) {
-          isIpfs = true;
+        var isIpfs = processedFields.get(fieldValue);
+        if (isIpfs == undefined) {
+          try {
+            var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, fieldValue);
+          } catch (error) {
+            this.getLogger().error(error);
+            $tw.utils.alert(name, error.message);
+          }
+          if (cid !== null || ipnsKey !== null) {
+            isIpfs = true;
+          } else {
+            isIpfs = false;
+          }
+          processedFields.set(fieldValue, isIpfs);
         }
         // IPNS
         if (ipnsKey !== null) {

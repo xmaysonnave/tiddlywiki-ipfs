@@ -67,9 +67,9 @@ IPFS Controller
     if (ipnsKey !== undefined && ipnsKey !== null) {
       this.resolveUrl(true, value)
         .then((data) => {
-          var { cid, normalizedUrl } = data;
-          if (normalizedUrl !== null && cid !== undefined && cid !== null && self.addToPin(cid)) {
-            self.getLogger().info("Request to Pin:" + "\n " + normalizedUrl);
+          var { cid, resolvedUrl } = data;
+          if (resolvedUrl !== null && cid !== undefined && cid !== null && self.addToPin(cid)) {
+            self.getLogger().info("Request to Pin:" + "\n " + resolvedUrl);
           }
         })
         .catch((error) => {
@@ -107,9 +107,9 @@ IPFS Controller
     if (ipnsKey !== undefined && ipnsKey !== null) {
       this.resolveUrl(true, value)
         .then((data) => {
-          var { cid, normalizedUrl } = data;
-          if (normalizedUrl !== null && cid !== undefined && cid !== null && self.addToUnpin(cid)) {
-            self.getLogger().info("Request to unpin:" + "\n " + normalizedUrl);
+          var { cid, resolvedUrl } = data;
+          if (resolvedUrl !== null && cid !== undefined && cid !== null && self.addToUnpin(cid)) {
+            self.getLogger().info("Request to unpin:" + "\n " + resolvedUrl);
           }
         })
         .catch((error) => {
@@ -206,25 +206,25 @@ IPFS Controller
     // Process
     var cid = null;
     var importedTiddlers = null;
-    var normalizedUrl = null;
+    var resolvedUrl = null;
     try {
       if (url !== undefined && url !== null) {
-        var { cid, normalizedUrl } = await this.resolveUrl(true, url);
+        var { cid, resolvedUrl } = await this.resolveUrl(true, url);
         // Retrieve cached immutable imported Tiddlers
         if (cid !== null) {
           importedTiddlers = this.importedTiddlers.get(cid);
         }
-        if (importedTiddlers !== undefined && importedTiddlers !== null) {
-          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl);
+        if (importedTiddlers !== undefined) {
+          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + resolvedUrl);
           // Done
           return {
             cid,
             importedTiddlers: importedTiddlers,
-            normalizedUrl: normalizedUrl,
+            normalizedUrl: resolvedUrl,
           };
         }
         // Load
-        const content = await this.loadToUtf8(normalizedUrl, true);
+        const content = await this.loadToUtf8(resolvedUrl, true);
         if (this.isJson(content.data)) {
           importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
         } else {
@@ -235,13 +235,13 @@ IPFS Controller
           return {
             cid,
             importedTiddlers: null,
-            normalizedUrl: normalizedUrl,
+            normalizedUrl: resolvedUrl,
           };
         }
         // Cache immutable imported Tiddlers
         if (cid != null) {
           this.importedTiddlers.set(cid, importedTiddlers);
-          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + normalizedUrl);
+          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + resolvedUrl);
         }
       }
     } catch (error) {
@@ -252,7 +252,7 @@ IPFS Controller
     return {
       cid,
       importedTiddlers: importedTiddlers,
-      normalizedUrl: normalizedUrl,
+      normalizedUrl: resolvedUrl,
     };
   };
 
@@ -289,12 +289,14 @@ IPFS Controller
     var ipnsKey = null;
     var ipnsName = null;
     var normalizedUrl = null;
+    var resolvedUrl = null;
     if (value == undefined || value == null || value.toString().trim() === "") {
       return {
         cid: null,
         ipnsKey: null,
         ipnsName: null,
         normalizedUrl: null,
+        resolvedUrl: null,
       };
     }
     try {
@@ -308,6 +310,7 @@ IPFS Controller
         ipnsKey: null,
         ipnsName: null,
         normalizedUrl: null,
+        resolvedUrl: null,
       };
     }
     // Check
@@ -321,20 +324,24 @@ IPFS Controller
             this.getLogger().info(msg);
             $tw.utils.alert(name, msg);
             cid = await this.resolveIpnsKey(ipnsKey);
+            if (cid !== null) {
+              resolvedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+            }
+          }
+          if (cid == null && ipnsKey == null && ipnsName == null) {
+            normalizedUrl = null;
           }
         }
       }
-      if (cid == null && ipnsKey == null && ipnsName == null) {
-        normalizedUrl = null;
-      }
     } else if (normalizedUrl.hostname.endsWith(".eth")) {
-      var { content: cid, normalizedUrl } = await this.resolveEns(normalizedUrl.hostname);
+      var { content: cid, normalizedUrl: resolvedUrl } = await this.resolveEns(normalizedUrl.hostname);
     }
     return {
       cid: cid,
       ipnsKey: ipnsKey,
       ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
+      resolvedurl: resolvedUrl,
     };
   };
 
@@ -377,7 +384,7 @@ IPFS Controller
     }
     // HTTP Client
     const client = this.ipfsClients.get(url.href);
-    if (client !== undefined && client !== null) {
+    if (client !== undefined) {
       // Log
       this.getLogger().info("Reuse IPFS provider:" + "\n " + client.provider);
       // Done

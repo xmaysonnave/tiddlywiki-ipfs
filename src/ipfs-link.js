@@ -244,9 +244,9 @@ IPFS link widget
     $tw.ipfs
       .resolveUrl(true, this.value)
       .then((data) => {
-        var { normalizedUrl } = data;
-        if (normalizedUrl !== null) {
-          window.open(normalizedUrl, "_blank", "noopener,noreferrer");
+        var { resolvedUrl } = data;
+        if (resolvedUrl !== null) {
+          window.open(resolvedUrl, "_blank", "noopener,noreferrer");
         }
       })
       .catch((error) => {
