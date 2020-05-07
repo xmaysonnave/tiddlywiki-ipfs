@@ -15,7 +15,9 @@ import root from "window-or-global";
   const ipfs_http_client = "https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.3/dist/index.min.js";
   const ipfs_http_client_sri = "sha384-xdAnH1MjCW7O7L2RyKVCGt9ODi4oqT/XUT4mFqctEW438NrZuqIJD68cFPx0VZb/";
 
-  var IpfsLoader = function () {};
+  var IpfsLoader = function (ipfsBundle) {
+    this.ipfsBundle = ipfsBundle;
+  };
 
   IpfsLoader.prototype.getLogger = function () {
     return root.log.getLogger(name);
@@ -92,9 +94,9 @@ import root from "window-or-global";
       };
       script.onload = () => {
         if (asModule) {
-          self.getLogger(name).info("Loaded Module:" + "\n " + url);
+          self.getLogger().info("Loaded Module:" + "\n " + url);
         } else {
-          self.getLogger(name).info("Loaded Script:" + "\n " + url);
+          self.getLogger().info("Loaded Script:" + "\n " + url);
         }
         resolve(root[id]);
         cleanup();
@@ -121,6 +123,170 @@ import root from "window-or-global";
       // Load
       root.document.head.appendChild(script);
     });
+  };
+
+  IpfsLoader.prototype.isJson = function (content) {
+    if (content !== undefined && content !== null && typeof content === "string") {
+      try {
+        JSON.parse(content);
+        return true;
+      } catch (error) {
+        // Ignore
+      }
+    }
+    return false;
+  };
+
+  IpfsLoader.prototype.httpGetToUint8Array = async function (url) {
+    const self = this;
+    return await new Promise(function (resolve, reject) {
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = "arraybuffer";
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status !== 0) {
+          if (xhr.status >= 300) {
+            reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest")));
+            return;
+          }
+          try {
+            const array = new Uint8Array(this.response);
+            self.getLogger().info("[" + xhr.status + "] Loaded:" + "\n " + url);
+            resolve(array);
+          } catch (error) {
+            reject(error);
+          }
+        }
+      };
+      xhr.onerror = function () {
+        reject(new Error($tw.language.getString("NetworkError/XMLHttpRequest")));
+      };
+      try {
+        xhr.open("get", url, true);
+        xhr.send();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+
+  /*
+   * Load to Base64
+   */
+  IpfsLoader.prototype.loadToBase64 = async function (url) {
+    const array = await this.httpGetToUint8Array(url);
+    if (array.length == 0) {
+      return {
+        data: "",
+        decrypted: false,
+      };
+    }
+    // Decrypt
+    if (this.isUtf8ArrayEncrypted(array)) {
+      const decrypted = await this.decryptUint8ArrayToBase64(array);
+      return {
+        data: decrypted,
+        decrypted: true,
+      };
+    }
+    const data = this.ipfsBundle.Uint8ArrayToBase64(array);
+    return {
+      data: data,
+      decrypted: false,
+    };
+  };
+
+  /*
+   * Load to UTF-8
+   */
+  IpfsLoader.prototype.loadToUtf8 = async function (url) {
+    var array = await this.httpGetToUint8Array(url);
+    if (array.length == 0) {
+      return {
+        data: "",
+        decrypted: false,
+      };
+    }
+    if (this.isUtf8ArrayEncrypted(array)) {
+      return {
+        data: await this.decryptUint8ArrayToUtf8(array),
+        decrypted: true,
+      };
+    }
+    return {
+      data: this.ipfsBundle.Utf8ArrayToStr(array),
+      decrypted: false,
+    };
+  };
+
+  /*
+   * Decrypt Uint8 Array to Base64 String
+   */
+  IpfsLoader.prototype.decryptUint8ArrayToBase64 = async function (array) {
+    var data = this.ipfsBundle.Utf8ArrayToStr(array);
+    if ($tw.crypto.hasPassword() == false) {
+      data = await this.decryptFromPasswordPrompt(data);
+    } else {
+      data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword);
+    }
+    return btoa(data);
+  };
+
+  /*
+   * Decrypt Uint8 Array to UTF-8 String
+   */
+  IpfsLoader.prototype.decryptUint8ArrayToUtf8 = async function (array) {
+    var data = this.ipfsBundle.Utf8ArrayToStr(array);
+    if ($tw.crypto.hasPassword() == false) {
+      data = await this.decryptFromPasswordPrompt(data);
+    } else {
+      data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword);
+    }
+    return data;
+  };
+
+  IpfsLoader.prototype.decryptFromPasswordPrompt = async function (encrypted) {
+    return await new Promise((resolve, reject) => {
+      $tw.passwordPrompt.createPrompt({
+        serviceName: "Enter a password to decrypt the imported content!!",
+        noUserName: true,
+        canCancel: true,
+        submitText: "Decrypt",
+        callback: function (data) {
+          if (!data) {
+            reject(new Error("User canceled password input..."));
+            return false;
+          }
+          // Decrypt
+          try {
+            const content = $tw.crypto.decrypt(encrypted, data.password);
+            resolve(content);
+            return true;
+          } catch (error) {
+            reject(error);
+            return false;
+          }
+        },
+      });
+    });
+  };
+
+  IpfsLoader.prototype.isUtf8ArrayEncrypted = function (content) {
+    // Check
+    if (content instanceof Uint8Array == false || content.length == 0) {
+      return false;
+    }
+    // Process
+    const standford = this.ipfsBundle.StringToUint8Array('{"iv":"');
+    var encrypted = false;
+    for (var i = 0; i < content.length && i < standford.length; i++) {
+      if (content[i] == standford[i]) {
+        encrypted = true;
+      } else {
+        encrypted = false;
+        break;
+      }
+    }
+    return encrypted;
   };
 
   module.exports = IpfsLoader;

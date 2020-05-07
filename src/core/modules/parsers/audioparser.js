@@ -70,7 +70,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
           .then((data) => {
             var { normalizedUrl } = data;
             if (normalizedUrl !== null) {
-              $tw.utils
+              $tw.ipfs
                 .loadToBase64(normalizedUrl)
                 .then((loaded) => {
                   element.attributes.src = { type: "string", value: value + loaded.data };

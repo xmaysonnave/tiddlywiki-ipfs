@@ -176,7 +176,7 @@ IPFS Action
     }
     // Do not process if _canonical_uri is set
     const canonical_uri = tiddler.getFieldString("_canonical_uri");
-    if (canonical_uri !== undefined && canonical_uri !== null) {
+    if (canonical_uri !== undefined && canonical_uri !== null && canonical_uri !== "") {
       $tw.utils.alert(name, "Attachment is already published...");
       return false;
     }
@@ -223,7 +223,7 @@ IPFS Action
       return null;
     }
     var text = tiddler.getFieldString("text");
-    if (text == undefined || text == null) {
+    if (text == undefined || text == null || text === "") {
       $tw.utils.alert(name, "Empty attachment content...");
       return null;
     }
@@ -234,7 +234,7 @@ IPFS Action
           text = atob(text);
         }
         text = $tw.crypto.encrypt(text, $tw.crypto.currentPassword);
-        text = $tw.utils.StringToUint8Array(text);
+        text = $tw.ipfs.StringToUint8Array(text);
       } catch (error) {
         this.getLogger().error(error);
         $tw.utils.alert(name, "Failed to process encrypted Attachment content...");
@@ -243,9 +243,9 @@ IPFS Action
     } else {
       try {
         if (info.encoding === "base64") {
-          text = $tw.utils.Base64ToUint8Array(text);
+          text = $tw.ipfs.Base64ToUint8Array(text);
         } else {
-          text = $tw.utils.StringToUint8Array(text);
+          text = $tw.ipfs.StringToUint8Array(text);
         }
       } catch (error) {
         this.getLogger().error(error);
@@ -259,7 +259,7 @@ IPFS Action
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    if (ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
@@ -290,7 +290,7 @@ IPFS Action
   IpfsAction.prototype.handleGenerateIpnsKey = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    if (ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
@@ -319,7 +319,7 @@ IPFS Action
     var normalizedUrl = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
     const self = this;
-    if (ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
@@ -372,7 +372,7 @@ IPFS Action
   IpfsAction.prototype.handleFetchIpnsKey = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    if (ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
@@ -400,7 +400,7 @@ IPFS Action
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
     var normalizedUrl = null;
-    if (ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
@@ -487,7 +487,7 @@ IPFS Action
       $tw.utils.alert(name, "Unknown IPFS identifier...");
       return false;
     }
-    if (ipnsName == null) {
+    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
@@ -642,15 +642,21 @@ IPFS Action
       };
       content = $tw.wiki.renderTiddler("text/plain", "$:/core/templates/exporters/TidFile", options);
     }
-    try {
-      // Encrypt
-      if ($tw.crypto.hasPassword()) {
+    // Encrypt
+    if ($tw.crypto.hasPassword()) {
+      try {
         content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
+      } catch (error) {
+        this.getLogger().error(error);
+        $tw.utils.alert(name, "Failed to encrypt content...");
+        return null;
       }
-      content = $tw.utils.StringToUint8Array(content);
+    }
+    try {
+      content = $tw.ipfs.StringToUint8Array(content);
     } catch (error) {
       this.getLogger().error(error);
-      $tw.utils.alert(name, "Failed to encrypt content...");
+      $tw.utils.alert(name, "Failed to convert content...");
       return null;
     }
     return content;

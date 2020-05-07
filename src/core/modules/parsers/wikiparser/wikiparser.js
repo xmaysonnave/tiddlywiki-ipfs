@@ -56,7 +56,7 @@ wikiparser
     this.wiki = options.wiki;
     // Check for an externally linked tiddler
     if ($tw.browser && (text || "") === "" && options.tiddler !== undefined && options.tiddler !== null) {
-      var canonicalUri = options.tiddler.fields._import_uri;
+      var canonicalUri = options.tiddler.fields._canonical_uri;
       var importUri = options.tiddler.fields._import_uri;
       var title = options.tiddler.fields.title;
       var url = importUri;

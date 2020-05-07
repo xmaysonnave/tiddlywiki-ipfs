@@ -51,7 +51,7 @@ import root from "window-or-global";
       // IPFS Companion failed
     }
     // Check
-    if (apiUrl == undefined || apiUrl == null || apiUrl === "") {
+    if (apiUrl == undefined || apiUrl == null || apiUrl.href === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     // Load IpfsHttpClient
@@ -91,7 +91,7 @@ import root from "window-or-global";
   // ipfs-http-client
   IpfsLibrary.prototype.getHttpIpfs = async function (url) {
     // Check
-    if (url == undefined || url == null || url === "") {
+    if (url == undefined || url == null || url.href === "") {
       throw new Error("Undefined IPFS API URL...");
     }
     try {

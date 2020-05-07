@@ -67,7 +67,7 @@ The image parser parses an image into an embeddable HTML element
           .then((data) => {
             var { normalizedUrl } = data;
             if (normalizedUrl !== null) {
-              $tw.utils
+              $tw.ipfs
                 .loadToUtf8(normalizedUrl)
                 .then((loaded) => {
                   element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };

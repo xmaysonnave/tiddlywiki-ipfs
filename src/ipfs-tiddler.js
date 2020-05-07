@@ -161,37 +161,41 @@ IPFS Tiddler
   };
 
   IpfsTiddler.prototype.ipfsPin = function (value, field) {
-    if (value !== undefined && value !== null && field !== undefined && field !== null) {
-      const self = this;
-      $tw.ipfs
-        .resolveUrl(true, value)
-        .then((data) => {
-          const { cid, normalizedUrl } = data;
-          if (normalizedUrl !== null && cid !== null) {
-            self.getLogger().info("Pinning: '" + field + "'.\n " + normalizedUrl);
-            $tw.ipfs
-              .pinToIpfs(cid)
-              .then((data) => {
-                $tw.ipfs.removeFromPinUnpin(cid);
-                $tw.utils.alert(
-                  name,
-                  'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                    normalizedUrl +
-                    '">' +
-                    field
-                );
-              })
-              .catch((error) => {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              });
-          }
-        })
-        .catch((error) => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
+    if (value == undefined || value == null || value.trim() === "") {
+      return;
     }
+    if (field == undefined || field == null || field.trim() === "") {
+      return;
+    }
+    const self = this;
+    $tw.ipfs
+      .resolveUrl(true, value)
+      .then((data) => {
+        const { cid, normalizedUrl } = data;
+        if (normalizedUrl !== null && cid !== null) {
+          self.getLogger().info("Pinning: '" + field + "'.\n " + normalizedUrl);
+          $tw.ipfs
+            .pinToIpfs(cid)
+            .then((data) => {
+              $tw.ipfs.removeFromPinUnpin(cid);
+              $tw.utils.alert(
+                name,
+                'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' +
+                  normalizedUrl +
+                  '">' +
+                  field
+              );
+            })
+            .catch((error) => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        }
+      })
+      .catch((error) => {
+        self.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+      });
   };
 
   IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
@@ -216,37 +220,41 @@ IPFS Tiddler
   };
 
   IpfsTiddler.prototype.ipfsUnpin = function (value, field) {
-    if (value !== undefined && value !== null && field !== undefined && field !== null) {
-      const self = this;
-      $tw.ipfs
-        .resolveUrl(true, value)
-        .then((data) => {
-          const { cid, normalizedUrl } = data;
-          if (normalizedUrl !== null && cid !== null) {
-            self.getLogger().info("Unpinning: '" + field + "'.\n " + normalizedUrl);
-            $tw.ipfs
-              .unpinFromIpfs(cid)
-              .then((data) => {
-                $tw.ipfs.removeFromPinUnpin(cid);
-                $tw.utils.alert(
-                  name,
-                  'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                    normalizedUrl +
-                    '">' +
-                    field
-                );
-              })
-              .catch((error) => {
-                self.getLogger().error(error);
-                $tw.utils.alert(name, error.message);
-              });
-          }
-        })
-        .catch((error) => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
+    if (value == undefined || value == null || value.trim() === "") {
+      return;
     }
+    if (field == undefined || field == null || field.trim() === "") {
+      return;
+    }
+    const self = this;
+    $tw.ipfs
+      .resolveUrl(true, value)
+      .then((data) => {
+        const { cid, normalizedUrl } = data;
+        if (normalizedUrl !== null && cid !== null) {
+          self.getLogger().info("Unpinning: '" + field + "'.\n " + normalizedUrl);
+          $tw.ipfs
+            .unpinFromIpfs(cid)
+            .then((data) => {
+              $tw.ipfs.removeFromPinUnpin(cid);
+              $tw.utils.alert(
+                name,
+                'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
+                  normalizedUrl +
+                  '">' +
+                  field
+              );
+            })
+            .catch((error) => {
+              self.getLogger().error(error);
+              $tw.utils.alert(name, error.message);
+            });
+        }
+      })
+      .catch((error) => {
+        self.getLogger().error(error);
+        $tw.utils.alert(name, error.message);
+      });
   };
 
   IpfsTiddler.prototype.updateLoggers = function (level) {
@@ -273,7 +281,7 @@ IPFS Tiddler
       // Value
       var url = null;
       const value = tiddler.getFieldString(field);
-      if (value !== undefined && value !== null && value.trim() !== "") {
+      if (value !== undefined && value !== null && value !== "") {
         // URL or not
         try {
           url = $tw.ipfs.normalizeUrl(value);
@@ -317,15 +325,27 @@ IPFS Tiddler
     const title = event.tiddlerTitle;
     const tiddler = $tw.wiki.getTiddler(title);
     const { type, info } = $tw.utils.getContentType(tiddler);
-    const importUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_import_uri"));
-    const canonicalUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_canonical_uri"));
+    var hasCanonicalUri = false;
+    var canonicalUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_canonical_uri"));
+    if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri !== "") {
+      hasCanonicalUri = true;
+    } else {
+      canonicalUri = null;
+    }
+    var hasImportUri = false;
+    var importUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_import_uri"));
+    if (importUri !== undefined && importUri !== null && importUri !== "") {
+      hasImportUri = true;
+    } else {
+      importUri = null;
+    }
     // Nothing to do
-    if (canonicalUri == null && importUri == null) {
+    if (hasCanonicalUri === false && hasImportUri === false) {
       $tw.utils.alert(name, "Nothing to refresh here...");
       return true;
     }
     // Reload Attachment content
-    if ((info.encoding === "base64" || type === "image/svg+xml") && canonicalUri !== null && importUri == null) {
+    if ((info.encoding === "base64" || type === "image/svg+xml") && hasCanonicalUri && hasImportUri === false) {
       const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [{ key: "text", value: "" }],
@@ -335,7 +355,7 @@ IPFS Tiddler
     }
     // Async Import
     var ipfsImport = new IpfsImport();
-    ipfsImport.loadRemoteTiddlers(importUri, canonicalUri).catch((error) => {
+    ipfsImport.loadRemoteTiddlers(importUri, canonicalUri, title).catch((error) => {
       self.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     });
@@ -357,7 +377,7 @@ IPFS Tiddler
         }
         // Discard updated
         const discard = tiddler.fields[field];
-        if (discard !== undefined && discard !== null && tiddler.getFieldString(field).trim() !== "") {
+        if (discard !== undefined && discard !== null && tiddler.getFieldString(field) !== "") {
           continue;
         }
         // Process
@@ -382,9 +402,9 @@ IPFS Tiddler
             // Embed
             try {
               if (info.encoding === "base64") {
-                content = await $tw.utils.loadToBase64(normalizedUrl);
+                content = await $tw.ipfs.loadToBase64(normalizedUrl);
               } else {
-                content = await $tw.utils.loadToUtf8(normalizedUrl);
+                content = await $tw.ipfs.loadToUtf8(normalizedUrl);
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,

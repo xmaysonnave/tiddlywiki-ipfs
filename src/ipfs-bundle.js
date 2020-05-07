@@ -9,6 +9,7 @@ IPFS Bundle
 \*/
 
 import CID from "cids";
+import pako from "pako";
 import root from "window-or-global";
 
 import EnsLibrary from "./ens-library";
@@ -38,12 +39,24 @@ import IpfsUrl from "./ipfs-url";
     if (this.once) {
       return;
     }
-    this.ipfsLoader = new IpfsLoader();
+    this.ipfsLoader = new IpfsLoader(this);
     this.ensLibrary = new EnsLibrary(this.ipfsLoader);
     this.ipfsLibrary = new IpfsLibrary(this);
     this.ipfsUrl = new IpfsUrl();
     // Init once
     this.once = true;
+  };
+
+  IpfsBundle.prototype.isJson = function (content) {
+    return this.ipfsLoader.isJson(content);
+  };
+
+  IpfsBundle.prototype.loadToBase64 = async function (url) {
+    return this.ipfsLoader.loadToBase64(url);
+  };
+
+  IpfsBundle.prototype.loadToUtf8 = async function (url) {
+    return this.ipfsLoader.loadToUtf8(url);
   };
 
   IpfsBundle.prototype.decodeCid = function (pathname) {
@@ -168,6 +181,88 @@ import IpfsUrl from "./ipfs-url";
       this.getLogger().info("'cidv1' (Base32): " + "\n " + cidAnalyser + cidv1);
     }
     return cidv1.toString();
+  };
+
+  IpfsBundle.prototype.Base64ToUint8Array = function (base64) {
+    var raw = atob(base64);
+    var ua = new Uint8Array(raw.length);
+    for (var i = 0; i < raw.length; i++) {
+      ua[i] = raw.charCodeAt(i);
+    }
+    return ua;
+  };
+
+  IpfsBundle.prototype.Uint8ArrayToBase64 = function (uint8) {
+    var CHUNK_SIZE = 0x8000; //arbitrary number
+    var index = 0;
+    var length = uint8.length;
+    var str = "";
+    var slice;
+    while (index < length) {
+      slice = uint8.subarray(index, Math.min(index + CHUNK_SIZE, length));
+      str += String.fromCharCode.apply(null, slice);
+      index += CHUNK_SIZE;
+    }
+    return btoa(str);
+  };
+
+  // String to uint array
+  IpfsBundle.prototype.StringToUint8Array = function (string) {
+    var escstr = encodeURIComponent(string);
+    var binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
+      return String.fromCharCode("0x" + p1);
+    });
+    var ua = new Uint8Array(binstr.length);
+    Array.prototype.forEach.call(binstr, function (ch, i) {
+      ua[i] = ch.charCodeAt(0);
+    });
+    return ua;
+  };
+
+  // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+
+  /*
+   * utf.js - UTF-8 <=> UTF-16 convertion
+   *
+   * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+   * Version: 1.0
+   * LastModified: Dec 25 1999
+   * This library is free.  You can redistribute it and/or modify it.
+   */
+  IpfsBundle.prototype.Utf8ArrayToStr = function (array) {
+    var c, char2, char3;
+    var out = "";
+    var len = array.length;
+    var i = 0;
+    while (i < len) {
+      c = array[i++];
+      switch (c >> 4) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+          // 0xxxxxxx
+          out += String.fromCharCode(c);
+          break;
+        case 12:
+        case 13:
+          // 110x xxxx   10xx xxxx
+          char2 = array[i++];
+          out += String.fromCharCode(((c & 0x1f) << 6) | (char2 & 0x3f));
+          break;
+        case 14:
+          // 1110 xxxx  10xx xxxx  10xx xxxx
+          char2 = array[i++];
+          char3 = array[i++];
+          out += String.fromCharCode(((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0));
+          break;
+      }
+    }
+    return out;
   };
 
   module.exports = {

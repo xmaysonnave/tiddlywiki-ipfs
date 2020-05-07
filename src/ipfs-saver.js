@@ -100,9 +100,9 @@ IPFS Saver
           $tw.ipfs.requestToUnpin(cid);
         }
       } catch (error) {
-        this.getLogger().warn(error);
+        this.getLogger().error(error);
         callback(error.message);
-        return false;
+        return true;
       }
       // IPNS
       if (ipnsKey !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
@@ -148,7 +148,7 @@ IPFS Saver
         ensDomain = $tw.utils.getIpfsEnsDomain();
         if (ensDomain == null) {
           callback("Undefined ENS domain...");
-          return false;
+          return true;
         }
         var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, ensDomain);
         if (ensCid != null) {
@@ -226,7 +226,6 @@ IPFS Saver
     } catch (error) {
       this.getLogger().error(error);
       callback(error.message);
-      return false;
     }
     return true;
   };

@@ -86,7 +86,6 @@ IPFS Wrapper
   };
 
   IpfsWrapper.prototype.getIpnsIdentifiers = async function (ipfs, identifier, ipnsName) {
-    // Cleanup
     if (identifier == undefined || identifier == null || identifier === "") {
       identifier = null;
     }

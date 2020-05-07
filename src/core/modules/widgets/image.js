@@ -135,7 +135,7 @@ Render this widget into the DOM
                 switch (type) {
                   case "application/pdf":
                     domNode = this.document.createElement("embed");
-                    $tw.utils
+                    $tw.ipfs
                       .loadToBase64(normalizedUrl)
                       .then((loaded) => {
                         if (
@@ -153,7 +153,7 @@ Render this widget into the DOM
                       });
                     break;
                   case "image/svg+xml":
-                    $tw.utils
+                    $tw.ipfs
                       .loadToUtf8(normalizedUrl)
                       .then((loaded) => {
                         if (
@@ -171,7 +171,7 @@ Render this widget into the DOM
                       });
                     break;
                   default:
-                    $tw.utils
+                    $tw.ipfs
                       .loadToBase64(normalizedUrl)
                       .then((loaded) => {
                         if (

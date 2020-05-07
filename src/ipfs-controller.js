@@ -38,6 +38,30 @@ IPFS Controller
     return window.log.getLogger(name);
   };
 
+  IpfsController.prototype.loadToBase64 = async function (url) {
+    return this.ipfsBundle.loadToBase64(url);
+  };
+
+  IpfsController.prototype.loadToUtf8 = async function (url) {
+    return this.ipfsBundle.loadToUtf8(url);
+  };
+
+  IpfsController.prototype.Base64ToUint8Array = function (base64) {
+    return this.ipfsBundle.Base64ToUint8Array(base64);
+  };
+
+  IpfsController.prototype.Uint8ArrayToBase64 = function (uint8) {
+    return this.ipfsBundle.Uint8ArrayToBase64(uint8);
+  };
+
+  IpfsController.prototype.StringToUint8Array = function (string) {
+    return this.ipfsBundle.StringToUint8Array(string);
+  };
+
+  IpfsController.prototype.Utf8ArrayToStr = function (array) {
+    return this.ipfsBundle.Utf8ArrayToStr(array);
+  };
+
   IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
     const self = this;
     if (ipnsKey !== undefined && ipnsKey !== null) {
@@ -200,8 +224,8 @@ IPFS Controller
           };
         }
         // Load
-        const content = await $tw.utils.loadToUtf8(normalizedUrl);
-        if (this.isJSON(content.data)) {
+        const content = await this.loadToUtf8(normalizedUrl, true);
+        if (this.isJson(content.data)) {
           importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
         } else {
           importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
@@ -265,7 +289,7 @@ IPFS Controller
     var ipnsKey = null;
     var ipnsName = null;
     var normalizedUrl = null;
-    if (value == undefined || value == null) {
+    if (value == undefined || value == null || value.toString().trim() === "") {
       return {
         cid: null,
         ipnsKey: null,
@@ -318,16 +342,8 @@ IPFS Controller
     return this.ipfsUrl.getUrl(url, base ? base : this.getIpfsBaseUrl());
   };
 
-  IpfsController.prototype.isJSON = function (content) {
-    if (content !== undefined && content !== null && typeof content === "string") {
-      try {
-        JSON.parse(content);
-        return true;
-      } catch (error) {
-        // Ignore
-      }
-    }
-    return false;
+  IpfsController.prototype.isJson = function (content) {
+    return this.ipfsBundle.isJson(content);
   };
 
   IpfsController.prototype.getIpfsClient = async function () {
