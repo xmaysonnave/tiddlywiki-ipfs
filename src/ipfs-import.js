@@ -88,15 +88,10 @@ IPFS Import
       this.host = null;
     }
     this.loadedKeys = new Array();
-    this.processedImported = new Map();
     this.processedTitles = new Map();
     this.root = null;
     try {
       var { added, updated } = await this.loadImportedRemoteTiddlers(importUri, canonicalUri, title);
-      // Update Tiddly
-      for (var [title, merged] of this.processedImported.entries()) {
-        $tw.wiki.addTiddler(merged);
-      }
       // Process deleted
       // $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, tiddler) {
       //   var value = tiddler.getFieldString("_canonical_uri");
@@ -110,7 +105,7 @@ IPFS Import
       //     return;
       //   }
       // });
-      if (this.processedImported.size > 0) {
+      if (this.processedTitles.size > 0) {
         $tw.utils.alert(name, "Successfully Added: " + added + ", Updated: " + updated + " Tiddlers...");
       }
       if (this.host !== null && this.processedTitles.get(this.host.fields.title) == undefined) {
@@ -120,7 +115,7 @@ IPFS Import
             tiddler: updatedTiddler,
             fields: [{ key: "text", value: "Successfully Imported Tiddlers: [[" + this.root + "]]..." }],
           });
-        } else if (this.processedImported.size === 0) {
+        } else if (this.processedTitles.size === 0) {
           updatedTiddler = $tw.utils.updateTiddler({
             tiddler: updatedTiddler,
             fields: [{ key: "text", value: "No Tiddlers have been Imported..." }],
@@ -141,7 +136,6 @@ IPFS Import
     // Cleanup
     this.host = null;
     this.loadedKeys = null;
-    this.processedImported = null;
     this.processedTitles = null;
     this.root = null;
   };
@@ -224,7 +218,7 @@ IPFS Import
     var importedUpdated = 0;
     // Process new and existing
     for (var i in importedTiddlers) {
-      var merged = null;
+      var merged = new Object();
       var currentTiddler = null;
       var importedTiddler = importedTiddlers[i];
       var importedTitle = importedTiddler["title"];
@@ -291,12 +285,6 @@ IPFS Import
       } else {
         currentTiddler = $tw.wiki.getTiddler(importedTitle);
       }
-      // Retrieve or prepare merged content
-      merged = this.processedImported.get(importedTitle);
-      if (merged == undefined) {
-        merged = new Object();
-        this.processedImported.set(importedTitle, merged);
-      }
       // Fields
       for (var field in importedTiddler) {
         // Discard
@@ -344,6 +332,8 @@ IPFS Import
           merged["_import_uri"] = importedUrl;
         }
       }
+      // Update
+      $tw.wiki.addTiddler(merged);
       // Count
       if (currentTiddler !== undefined && currentTiddler !== null) {
         importedUpdated += 1;
