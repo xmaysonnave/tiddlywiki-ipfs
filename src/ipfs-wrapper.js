@@ -86,64 +86,77 @@ IPFS Wrapper
   };
 
   IpfsWrapper.prototype.getIpnsIdentifiers = async function (ipfs, identifier, ipnsName) {
-    if (identifier == undefined || identifier == null || identifier === "") {
+    if (identifier == undefined || identifier == null || identifier.trim() === "") {
       identifier = null;
+    } else {
+      identifier = identifier.trim();
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       ipnsName = null;
+    } else {
+      ipnsName = ipnsName.trim();
     }
-    // Check
     if (identifier == null && ipnsName == null) {
       throw new Error("Undefined IPNS identifiers...");
     }
-    // Load IPNS keys
-    const keys = await this.getIpnsKeys(ipfs);
-    // Fetch IPNS name and IPNS key
+    var ipnsKey = null;
+    var normalizedUrl = null;
+    var found = false;
+    var keys = null;
+    try {
+      // Only the server who generates the key has the knowledge
+      keys = await this.getIpnsKeys(ipfs);
+    } catch (error) {
+      this.getLogger().error(error);
+    }
+    // Do our best
     if (ipnsName !== null && identifier !== null) {
-      var found = false;
       for (var index = 0; index < keys.length; index++) {
         if (keys[index].id === identifier && keys[index].name === ipnsName) {
+          ipnsKey = identifier;
           found = true;
           break;
         }
       }
-      if (found === false) {
-        throw new Error("Unknown IPNS key and IPNS name...");
-      }
     } else if (ipnsName !== null) {
-      var found = false;
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
           if (keys[index].name === ipnsName) {
-            identifier = keys[index].id;
+            ipnsKey = keys[index].id;
             found = true;
             break;
           }
         }
       }
-      if (found === false) {
-        throw new Error("Unknown IPNS name...");
-      }
     } else {
-      var found = false;
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
           if (keys[index].id === identifier || keys[index].name === identifier) {
-            identifier = keys[index].id;
+            ipnsKey = keys[index].id;
             ipnsName = keys[index].name;
             found = true;
             break;
           }
         }
       }
-      if (found === false) {
+    }
+    if (found === false) {
+      // Unable to resolve the keys, check if identifier is a an IPFS cid
+      if (this.ipfsBundle.isCid(identifier) === false) {
         throw new Error("Unknown IPNS identifier...");
+      } else {
+        ipnsKey = identifier;
       }
     }
-    const normalizedUrl = this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + identifier);
-    this.getLogger().info("Successfully Fetched IPNS identifiers: " + ipnsName + "\n " + normalizedUrl);
+    // Lets build an url, the resolver will do the final check, we cannot do more here
+    normalizedUrl = this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
+    if (found) {
+      this.getLogger().info("Successfully Fetched IPNS identifiers: " + ipnsName + "\n " + normalizedUrl);
+    } else {
+      this.getLogger().info("Unable to Fetch IPNS identifiers, default to\n " + normalizedUrl);
+    }
     return {
-      ipnsKey: identifier,
+      ipnsKey: ipnsKey,
       ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
     };

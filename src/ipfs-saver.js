@@ -71,13 +71,10 @@ IPFS Saver
   };
 
   IpfsSaver.prototype.save = async function (text, method, callback, options) {
-    // Is there anything to do
     if ($tw.saverHandler.isDirty() == false) {
       return false;
     }
-
     try {
-      // Init
       var cid = null;
       var ipnsCid = null;
       var ipnsKey = null;
@@ -85,23 +82,21 @@ IPFS Saver
       var ensDomain = null;
       var ensCid = null;
       var options = options || {};
-      // Process document URL
       const wiki = $tw.ipfs.getDocumentUrl();
-      // Retrieve base URL
       const base = $tw.ipfs.getIpfsBaseUrl();
-      // Next
       const nextWiki = $tw.ipfs.getUrl(wiki);
       nextWiki.protocol = base.protocol;
       nextWiki.hostname = base.hostname;
       nextWiki.port = base.port;
       try {
-        var { cid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(false, wiki);
+        var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki);
         if (cid != null) {
           $tw.ipfs.requestToUnpin(cid);
         }
       } catch (error) {
         this.getLogger().error(error);
-        callback(error.message);
+        $tw.utils.alert(name, error.message);
+        callback(null);
         return true;
       }
       // IPNS
@@ -109,20 +104,19 @@ IPFS Saver
         // Resolve current IPNS
         if (ipnsKey !== null) {
           try {
-            var { cid: ipnsCid, ipnsName } = await $tw.ipfs.resolveUrl(true, wiki);
-            if (ipnsCid != null) {
-              $tw.ipfs.requestToUnpin(ipnsCid);
-            }
+            var { cid: ipnsCid, ipnsName } = await $tw.ipfs.resolveUrl(true, false, wiki);
           } catch (error) {
-            this.getLogger().warn(error);
+            this.getLogger().error(error);
             $tw.utils.alert(name, error.message);
           }
         } else {
-          // Resolve default IPNS
+          // Default IPNS
           ipnsKey = $tw.utils.getIpfsIpnsKey();
           ipnsName = $tw.utils.getIpfsIpnsName();
           if ((ipnsKey == undefined || ipnsKey == null) && (ipnsName == undefined || ipnsName == null)) {
-            this.getLogger().info("Unknown default IPNS identifiers...");
+            $tw.utils.alert(name, "Unknown default IPNS identifiers...");
+            callback(null);
+            return true;
           }
           this.getLogger().info("Processing default IPNS identifiers...");
           var identifier = ipnsKey;
@@ -132,15 +126,18 @@ IPFS Saver
           try {
             var { cid: ipnsCid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(
               true,
+              false,
               "/" + ipnsKeyword + "/" + identifier
             );
-            if (ipnsCid != null) {
-              $tw.ipfs.requestToUnpin(ipnsCid);
-            }
           } catch (error) {
-            this.getLogger().warn(error);
+            this.getLogger().error(error);
             $tw.utils.alert(name, error.message);
+            callback(null);
+            return true;
           }
+        }
+        if (ipnsCid != null) {
+          $tw.ipfs.requestToUnpin(ipnsCid);
         }
       }
       // ENS
@@ -150,7 +147,7 @@ IPFS Saver
           callback("Undefined ENS domain...");
           return true;
         }
-        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, ensDomain);
+        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
         if (ensCid != null) {
           $tw.ipfs.requestToUnpin(ensCid);
         }
@@ -170,9 +167,7 @@ IPFS Saver
       }
       // Publish to IPNS
       if (ipnsKey !== null) {
-        const msg = "Publishing IPNS name: " + ipnsName;
-        this.getLogger().info(msg);
-        $tw.utils.alert(name, msg);
+        $tw.utils.alert(name, "Publishing IPNS name: " + ipnsName);
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
           nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
@@ -191,6 +186,7 @@ IPFS Saver
         } catch (error) {
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
+          $tw.ipfs.requestToPin(ensCid);
         }
       }
       $tw.ipfs.pin = [];
@@ -221,7 +217,7 @@ IPFS Saver
       callback(null);
       // Next
       if (nextWiki.href !== wiki.href) {
-        window.location.assign(nextWiki);
+        window.location.assign(nextWiki.href);
       }
     } catch (error) {
       this.getLogger().error(error);

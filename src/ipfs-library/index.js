@@ -56,7 +56,7 @@ import root from "window-or-global";
     }
     // Load IpfsHttpClient
     try {
-      const { ipfs, provider } = await this.getHttpIpfs(apiUrl);
+      const { ipfs, provider } = await this.getHttpIpfs(apiUrl.href);
       if (ipfs !== null) {
         return {
           ipfs: ipfs,
@@ -106,7 +106,7 @@ import root from "window-or-global";
         providers: [
           httpClient({
             timeout: "2m",
-            apiAddress: url,
+            apiAddress: url.href,
           }),
         ],
       });

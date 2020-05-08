@@ -63,15 +63,19 @@ The image parser parses an image into an embeddable HTML element
       // Load external resource
       if (url !== undefined && url !== null && url.trim() != "") {
         $tw.ipfs
-          .resolveUrl(false, url)
+          .resolveUrl(false, true, url)
           .then((data) => {
-            var { normalizedUrl } = data;
-            if (normalizedUrl !== null) {
+            var { normalizedUrl, resolvedUrl } = data;
+            if (normalizedUrl !== null || resolvedUrl !== null) {
+              var toBeLoadedUrl = resolvedUrl;
+              if (toBeLoadedUrl == null) {
+                toBeLoadedUrl = normalizedUrl;
+              }
               $tw.ipfs
-                .loadToBase64(normalizedUrl)
+                .loadToBase64(toBeLoadedUrl.href)
                 .then((loaded) => {
                   element.attributes.src = { type: "string", value: value + loaded.data };
-                  const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
                   $tw.rootWidget.refresh(parsedTiddler);
                 })
                 .catch((error) => {

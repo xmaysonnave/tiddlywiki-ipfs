@@ -82,7 +82,7 @@ IPFS Action
     var tiddler = $tw.wiki.getTiddler(title);
     var exportUri = tiddler.getFieldString("_export_uri");
     try {
-      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(false, exportUri);
+      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(false, true, exportUri);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -328,7 +328,7 @@ IPFS Action
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
-      return;
+      return false;
     }
     // Async
     $tw.ipfs
@@ -399,13 +399,13 @@ IPFS Action
   IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    var normalizedUrl = null;
+    var resolvedUrl = null;
     if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
     }
     try {
-      var { ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, "/" + ipnsKeyword + "/" + ipnsName);
+      var { ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(true, false, "/" + ipnsKeyword + "/" + ipnsName);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -421,7 +421,7 @@ IPFS Action
       $tw.wiki.addTiddler(tiddler);
     }
     this.ipnsName = ipnsName;
-    window.open(normalizedUrl, "_blank", "noopener,noreferrer");
+    window.open(resolvedUrl.href, "_blank", "noopener,noreferrer");
     return true;
   };
 
@@ -473,8 +473,8 @@ IPFS Action
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
     const self = this;
-    var currentCid = null;
-    var currentIpnsKey = null;
+    var wikiCid = null;
+    var wikiIpnsKey = null;
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
     var normalizedUrl = null;
@@ -493,30 +493,28 @@ IPFS Action
     }
     try {
       var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
-      var { cid: currentCid, ipnsKey: currentIpnsKey } = await $tw.ipfs.resolveUrl(false, wiki);
+      var { cid: wikiCid, ipnsKey: wikiIpnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
-      return;
+      return false;
     }
-    if (currentCid == null || currentIpnsKey == null) {
+    if (wikiIpnsKey == null && wikiCid == null) {
       $tw.utils.alert(name, "Unknown IPFS identifier...");
       return false;
     }
-    if (currentIpnsKey !== null && currentIpnsKey === ipnsKey) {
+    if (wikiIpnsKey !== null && wikiIpnsKey === ipnsKey) {
       $tw.utils.alert(name, "Default IPNS key matches current IPNS key....");
       return false;
     }
-    const msg = "Publishing IPNS name: " + ipnsName;
-    this.getLogger().info(msg);
-    $tw.utils.alert(name, msg);
+    $tw.utils.alert(name, "Publishing IPNS name: " + ipnsName);
     $tw.ipfs
       .requestToUnpin(null, ipnsKey, normalizedUrl)
       .then(() => {
         $tw.ipfs
-          .publishIpnsName(currentCid, ipnsKey, ipnsName)
+          .publishIpnsName(wikiCid, ipnsKey, ipnsName)
           .then(() => {
-            $tw.utils.alert(name, "Successfully Published IPNS name...");
+            $tw.utils.alert(name, "Successfully Published to IPNS...");
           })
           .catch((error) => {
             self.getLogger().error(error);
@@ -533,7 +531,6 @@ IPFS Action
   IpfsAction.prototype.exportTiddlersAsJson = async function (filter, spaces) {
     var tiddlers = $tw.wiki.filterTiddlers(filter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
-    var processedFields = new Map();
     var data = [];
     // Process Tiddlers
     for (var t = 0; t < tiddlers.length; t++) {
@@ -548,23 +545,14 @@ IPFS Action
           continue;
         }
         // Process value
-        var cid = null;
         var ipnsKey = null;
         var fieldValue = tiddler.getFieldString(field);
-        var isIpfs = processedFields.get(fieldValue);
-        if (isIpfs == undefined) {
-          try {
-            var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, fieldValue);
-          } catch (error) {
-            this.getLogger().error(error);
-            $tw.utils.alert(name, error.message);
-          }
-          if (cid !== null || ipnsKey !== null) {
-            isIpfs = true;
-          } else {
-            isIpfs = false;
-          }
-          processedFields.set(fieldValue, isIpfs);
+        try {
+          var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue);
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
+          return null;
         }
         // IPNS
         if (ipnsKey !== null) {
@@ -580,7 +568,7 @@ IPFS Action
         for (var i = 0; i < tags.length; i++) {
           const tag = tags[i];
           // Discard
-          if (tag === "$:/isExported" || tag === "$:/isImported" || (isIpfs === false && tag === "$:/isIpfs")) {
+          if (tag === "$:/isExported" || tag === "$:/isImported") {
             continue;
           }
           tagValues = (tagValues.length === 0 ? "[[" : tagValues + " [[") + tag + "]]";
@@ -648,22 +636,24 @@ IPFS Action
       };
       content = $tw.wiki.renderTiddler("text/plain", "$:/core/templates/exporters/TidFile", options);
     }
-    // Encrypt
-    if ($tw.crypto.hasPassword()) {
+    if (content !== undefined && content !== null) {
+      // Encrypt
+      if ($tw.crypto.hasPassword()) {
+        try {
+          content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
+        } catch (error) {
+          this.getLogger().error(error);
+          $tw.utils.alert(name, "Failed to encrypt content...");
+          return null;
+        }
+      }
       try {
-        content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword);
+        content = $tw.ipfs.StringToUint8Array(content);
       } catch (error) {
         this.getLogger().error(error);
-        $tw.utils.alert(name, "Failed to encrypt content...");
+        $tw.utils.alert(name, "Failed to convert content...");
         return null;
       }
-    }
-    try {
-      content = $tw.ipfs.StringToUint8Array(content);
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(name, "Failed to convert content...");
-      return null;
     }
     return content;
   };

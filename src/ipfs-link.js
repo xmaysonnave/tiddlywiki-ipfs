@@ -81,7 +81,7 @@ IPFS link widget
     } else {
       this.renderText(parent, nextSibling);
       $tw.ipfs
-        .resolveUrl(false, this.value)
+        .resolveUrl(false, false, this.value)
         .then((data) => {
           var { normalizedUrl } = data;
           if (normalizedUrl !== null) {
@@ -242,11 +242,11 @@ IPFS link widget
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     $tw.ipfs
-      .resolveUrl(true, this.value)
+      .resolveUrl(true, true, this.value)
       .then((data) => {
         var { resolvedUrl } = data;
         if (resolvedUrl !== null) {
-          window.open(resolvedUrl, "_blank", "noopener,noreferrer");
+          window.open(resolvedUrl.href, "_blank", "noopener,noreferrer");
         }
       })
       .catch((error) => {

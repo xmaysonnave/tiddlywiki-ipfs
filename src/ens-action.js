@@ -65,9 +65,9 @@ ENS Action
     }
     try {
       this.getLogger().info("ENS domain: " + ensDomain);
-      const { normalizedUrl } = await $tw.ipfs.resolveEns(ensDomain);
-      if (normalizedUrl !== null) {
-        window.open(normalizedUrl, "_blank", "noopener,noreferrer");
+      const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain);
+      if (resolvedUrl !== null) {
+        window.open(resolvedUrl.href, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -92,7 +92,7 @@ ENS Action
     var ensCid = null;
     var ipnsKey = null;
     try {
-      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, wiki);
+      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -104,7 +104,7 @@ ENS Action
       return false;
     }
     try {
-      var { cid: ensCid } = await $tw.ipfs.resolveUrl(ensDomain);
+      var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
       if (ensCid !== null && ensCid === cid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
@@ -137,15 +137,13 @@ ENS Action
         });
     } else if (ipnsKey !== null) {
       $tw.ipfs
-        .resolveUrl(true, wiki)
+        .resolveUrl(true, false, wiki)
         .then((data) => {
           const { cid: ipnsCid } = data;
           $tw.ipfs
             .requestToUnpin(ensCid)
             .then(() => {
-              const msg = "Publishing to ENS: " + ensDomain;
-              self.getLogger().info(msg);
-              $tw.utils.alert(name, msg);
+              $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
               $tw.ipfs
                 .setEns(ensDomain, ipnsCid)
                 .then(() => {

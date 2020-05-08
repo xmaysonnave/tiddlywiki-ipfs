@@ -64,7 +64,7 @@ describe("IPNS key and IPNS name", () => {
     try {
       await ipfsWrapper.getIpnsIdentifiers(null, "dummy", "dummy");
     } catch (error) {
-      expect(error.message).toBe("Unknown IPNS key and IPNS name...");
+      expect(error.message).toBe("Unknown IPNS identifier...");
     }
   });
   it("Fetch IPNS key and IPNS name", async () => {
@@ -91,7 +91,7 @@ describe("IPNS name", () => {
     try {
       await ipfsWrapper.getIpnsIdentifiers(null, null, "dummy");
     } catch (error) {
-      expect(error.message).toBe("Unknown IPNS name...");
+      expect(error.message).toBe("Unknown IPNS identifier...");
     }
   });
   it("Fetch IPNS key and IPNS name", async () => {
@@ -117,7 +117,7 @@ describe("IPNS identifier", () => {
       expect(error.message).toBe("Unknown IPNS identifier...");
     }
   });
-  it("Fetch IPNS key and IPNS name from IPNS key", async () => {
+  it("Fetch IPNS key and IPNS name from an IPNS key", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
     const ipfsWrapper = new IpfsWrapper(ipfsBundle);
@@ -129,7 +129,7 @@ describe("IPNS identifier", () => {
     );
     expect(ipnsName === "tiddly" && ipnsKey === "QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf").toBeTruthy();
   });
-  it("Fetch IPNS key and IPNS name from IPNS name", async () => {
+  it("Fetch IPNS key and IPNS name from an IPNS name", async () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
     const ipfsWrapper = new IpfsWrapper(ipfsBundle);

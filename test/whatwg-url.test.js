@@ -54,7 +54,6 @@ describe("WHATWG-URL", () => {
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
     const parsed = ipfsUrl.getUrl(baseHttp);
-    console.log("parsed protocol: " + parsed.protocol);
     expect(
       parsed.protocol === "https:" &&
         parsed.origin == baseHttp.origin &&

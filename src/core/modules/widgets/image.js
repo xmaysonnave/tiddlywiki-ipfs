@@ -128,15 +128,19 @@ Render this widget into the DOM
           // Normalize
           var url = _canonical_uri;
           $tw.ipfs
-            .resolveUrl(false, url)
+            .resolveUrl(false, true, url)
             .then((data) => {
-              var { normalizedUrl } = data;
-              if (normalizedUrl !== null) {
+              var { normalizedUrl, resolvedUrl } = data;
+              if (normalizedUrl !== null || resolvedUrl !== null) {
+                var toBeLoadedUrl = resolvedUrl;
+                if (toBeLoadedUrl == null) {
+                  toBeLoadedUrl = normalizedUrl;
+                }
                 switch (type) {
                   case "application/pdf":
                     domNode = this.document.createElement("embed");
                     $tw.ipfs
-                      .loadToBase64(normalizedUrl)
+                      .loadToBase64(toBeLoadedUrl.href)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
@@ -154,7 +158,7 @@ Render this widget into the DOM
                     break;
                   case "image/svg+xml":
                     $tw.ipfs
-                      .loadToUtf8(normalizedUrl)
+                      .loadToUtf8(toBeLoadedUrl.href)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
@@ -172,7 +176,7 @@ Render this widget into the DOM
                     break;
                   default:
                     $tw.ipfs
-                      .loadToBase64(normalizedUrl)
+                      .loadToBase64(toBeLoadedUrl.href)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&

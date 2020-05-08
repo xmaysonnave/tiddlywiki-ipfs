@@ -169,7 +169,7 @@ IPFS Tiddler
     }
     const self = this;
     $tw.ipfs
-      .resolveUrl(true, value)
+      .resolveUrl(true, true, value)
       .then((data) => {
         const { cid, resolvedUrl } = data;
         if (resolvedUrl !== null && cid !== null) {
@@ -225,7 +225,7 @@ IPFS Tiddler
     }
     const self = this;
     $tw.ipfs
-      .resolveUrl(true, value)
+      .resolveUrl(true, true, value)
       .then((data) => {
         const { cid, resolvedUrl } = data;
         if (resolvedUrl !== null && cid !== null) {
@@ -385,6 +385,7 @@ IPFS Tiddler
         try {
           var { cid: oldCid, ipnsKey: oldIpnsKey, normalizedUrl: oldNormalizedUrl } = await $tw.ipfs.resolveUrl(
             false,
+            true,
             oldValue
           );
         } catch (error) {
@@ -399,9 +400,9 @@ IPFS Tiddler
             // Embed
             try {
               if (info.encoding === "base64") {
-                content = await $tw.ipfs.loadToBase64(oldNormalizedUrl);
+                content = await $tw.ipfs.loadToBase64(oldNormalizedUrl.href);
               } else {
-                content = await $tw.ipfs.loadToUtf8(oldNormalizedUrl);
+                content = await $tw.ipfs.loadToUtf8(oldNormalizedUrl.href);
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,
@@ -437,7 +438,7 @@ IPFS Tiddler
       var normalizedUrl = null;
       var value = tiddler.getFieldString(field);
       try {
-        var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, value);
+        var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, true, value);
       } catch (error) {
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
@@ -471,6 +472,7 @@ IPFS Tiddler
       try {
         var { cid: oldCid, ipnsKey: oldIpnsKey, normalizedUrl: oldNormalizedUrl } = await $tw.ipfs.resolveUrl(
           false,
+          true,
           oldValue
         );
       } catch (error) {

@@ -57,12 +57,16 @@ The HTML parser displays text as raw HTML
       // Load external resource
       if (url !== undefined && url !== null && url.trim() != "") {
         $tw.ipfs
-          .resolveUrl(false, url)
+          .resolveUrl(false, true, url)
           .then((data) => {
-            var { normalizedUrl } = data;
-            if (normalizedUrl !== null) {
-              src = normalizedUrl;
-              const parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
+            var { normalizedUrl, resolvedUrl } = data;
+            if (normalizedUrl !== null || resolvedUrl !== null) {
+              var toBeLoadedUrl = resolvedUrl;
+              if (toBeLoadedUrl == null) {
+                toBeLoadedUrl = normalizedUrl;
+              }
+              src = normalizedUrl.href;
+              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
               $tw.rootWidget.refresh(parsedTiddler);
             }
           })

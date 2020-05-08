@@ -38,6 +38,10 @@ IPFS Controller
     return window.log.getLogger(name);
   };
 
+  IpfsController.prototype.isCid = function (cid) {
+    return this.ipfsBundle.isCid(cid);
+  };
+
   IpfsController.prototype.loadToBase64 = async function (url) {
     return this.ipfsBundle.loadToBase64(url);
   };
@@ -65,10 +69,10 @@ IPFS Controller
   IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
     const self = this;
     if (ipnsKey !== undefined && ipnsKey !== null) {
-      this.resolveUrl(true, value)
+      this.resolveUrl(true, true, value)
         .then((data) => {
           var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== undefined && cid !== null && self.addToPin(cid)) {
+          if (resolvedUrl !== null && cid !== null && self.addToPin(cid)) {
             self.getLogger().info("Request to Pin:" + "\n " + resolvedUrl);
           }
         })
@@ -105,10 +109,10 @@ IPFS Controller
     }
     const self = this;
     if (ipnsKey !== undefined && ipnsKey !== null) {
-      this.resolveUrl(true, value)
+      this.resolveUrl(true, true, value)
         .then((data) => {
           var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== undefined && cid !== null && self.addToUnpin(cid)) {
+          if (resolvedUrl !== null && cid !== null && self.addToUnpin(cid)) {
             self.getLogger().info("Request to unpin:" + "\n " + resolvedUrl);
           }
         })
@@ -202,60 +206,6 @@ IPFS Controller
     return await this.ipfsWrapper.publishIpnsName(cid, ipfs, ipnsKey, ipnsName);
   };
 
-  IpfsController.prototype.importTiddlers = async function (url) {
-    // Process
-    var cid = null;
-    var importedTiddlers = null;
-    var resolvedUrl = null;
-    try {
-      if (url !== undefined && url !== null) {
-        var { cid, resolvedUrl } = await this.resolveUrl(true, url);
-        // Retrieve cached immutable imported Tiddlers
-        if (cid !== null) {
-          importedTiddlers = this.importedTiddlers.get(cid);
-        }
-        if (importedTiddlers !== undefined) {
-          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + resolvedUrl);
-          // Done
-          return {
-            cid,
-            importedTiddlers: importedTiddlers,
-            normalizedUrl: resolvedUrl,
-          };
-        }
-        // Load
-        const content = await this.loadToUtf8(resolvedUrl, true);
-        if (this.isJson(content.data)) {
-          importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
-        } else {
-          importedTiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
-        }
-        // Check
-        if (importedTiddlers == undefined || importedTiddlers == null) {
-          return {
-            cid,
-            importedTiddlers: null,
-            normalizedUrl: resolvedUrl,
-          };
-        }
-        // Cache immutable imported Tiddlers
-        if (cid != null) {
-          this.importedTiddlers.set(cid, importedTiddlers);
-          this.getLogger().info("Caching imported Tiddler(s):" + "\n " + resolvedUrl);
-        }
-      }
-    } catch (error) {
-      // Log and continue
-      this.getLogger().error(error);
-      $tw.utils.alert(name, error.message);
-    }
-    return {
-      cid,
-      importedTiddlers: importedTiddlers,
-      normalizedUrl: resolvedUrl,
-    };
-  };
-
   IpfsController.prototype.getIpfsBaseUrl = function () {
     return this.ipfsUrl.getIpfsBaseUrl();
   };
@@ -284,7 +234,7 @@ IPFS Controller
     return this.ipfsUrl.getIpfsGatewayUrl();
   };
 
-  IpfsController.prototype.resolveUrl = async function (resolveIpns, value) {
+  IpfsController.prototype.resolveUrl = async function (resolveIpns, resolveEns, value) {
     var cid = null;
     var ipnsKey = null;
     var ipnsName = null;
@@ -315,33 +265,25 @@ IPFS Controller
     }
     // Check
     var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl.pathname);
-    if (protocol !== null) {
-      if (protocol == ipnsKeyword) {
-        if (ipnsIdentifier !== null) {
-          var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
-          if (resolveIpns && ipnsKey !== null) {
-            const msg = "Resolving IPNS name: " + ipnsName;
-            this.getLogger().info(msg);
-            $tw.utils.alert(name, msg);
-            cid = await this.resolveIpnsKey(ipnsKey);
-            if (cid !== null) {
-              resolvedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-            }
-          }
-          if (cid == null && ipnsKey == null && ipnsName == null) {
-            normalizedUrl = null;
-          }
+    if (protocol !== null && ipnsIdentifier !== null && protocol == ipnsKeyword) {
+      cid = null;
+      var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
+      if (resolveIpns) {
+        $tw.utils.alert(name, "Resolving IPNS Key: " + ipnsKey);
+        cid = await this.resolveIpnsKey(ipnsKey);
+        if (cid !== null) {
+          resolvedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
         }
       }
-    } else if (normalizedUrl.hostname.endsWith(".eth")) {
-      var { content: cid, normalizedUrl: resolvedUrl } = await this.resolveEns(normalizedUrl.hostname);
+    } else if (resolveEns && normalizedUrl.hostname.endsWith(".eth")) {
+      var { content: cid, resolvedUrl: resolvedUrl } = await this.resolveEns(normalizedUrl.hostname);
     }
     return {
       cid: cid,
       ipnsKey: ipnsKey,
       ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
-      resolvedurl: resolvedUrl,
+      resolvedUrl: resolvedUrl,
     };
   };
 
@@ -416,13 +358,13 @@ IPFS Controller
       this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url + " \n from: " + ensDomain);
       return {
         content: content,
-        normalizedUrl: url,
+        resolvedUrl: url,
         protocol: protocol,
       };
     }
     return {
       content: null,
-      normalizedUrl: null,
+      resolvedUrl: null,
       protocol: null,
     };
   };
