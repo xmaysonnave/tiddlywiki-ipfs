@@ -277,13 +277,27 @@ IPFS Controller
     if (protocol !== null && protocol == ipnsKeyword && ipnsIdentifier !== null) {
       var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
       if (resolveIpns) {
-        cid = await this.resolveIpnsKey(ipnsKey);
-        if (cid !== null) {
-          resolvedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+        this.getLogger().info("Resolving IPNS key:" + "\n " + normalizedUrl);
+        $tw.utils.alert(name, "Resolving an IPNS key...");
+        try {
+          cid = await this.resolveIpnsKey(ipnsKey);
+          if (cid !== null) {
+            resolvedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+            this.getLogger().info("Successfully resolved IPNS key:" + "\n " + normalizedUrl);
+            $tw.utils.alert(name, "Successfully resolved an IPNS key...");
+          }
+        } catch (error) {
+          // Unable to resolve the key
+          // It usually happen when the key is not initialized
+          cid = null;
+          this.getLogger().error(error);
+          $tw.utils.alert(name, error.message);
         }
       }
     } else if (resolveEns && normalizedUrl.hostname.endsWith(".eth")) {
       var { content: cid, resolvedUrl: resolvedUrl } = await this.resolveEns(normalizedUrl.hostname);
+    } else {
+      resolvedUrl = normalizedUrl;
     }
     return {
       cid: cid,

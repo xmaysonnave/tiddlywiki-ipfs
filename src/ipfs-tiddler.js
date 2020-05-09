@@ -155,7 +155,7 @@ IPFS Tiddler
       }
     } else {
       // Wiki
-      this.ipfsPin($tw.ipfs.getDocumentUrl(), "Wiki");
+      this.ipfsPin($tw.ipfs.getDocumentUrl().href, "Wiki");
     }
     return true;
   };
@@ -211,7 +211,7 @@ IPFS Tiddler
       }
     } else {
       // Wiki
-      this.ipfsUnpin($tw.ipfs.getDocumentUrl(), "Wiki");
+      this.ipfsUnpin($tw.ipfs.getDocumentUrl().href, "Wiki");
     }
     return true;
   };

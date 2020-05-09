@@ -213,7 +213,7 @@ IPFS Saver
         }
       }
       callback(null);
-      if (nextWiki.href !== wiki.href) {
+      if (nextWiki.hostname !== wiki.hostname || nextWiki.pathname !== wiki.pathname) {
         window.location.assign(nextWiki.href);
       }
     } catch (error) {
