@@ -109,6 +109,7 @@ Render this widget into the DOM
         var type = tiddler.fields.type;
         var text = tiddler.fields.text;
         var _canonical_uri = tiddler.fields._canonical_uri;
+        var self = this;
         // If the tiddler has body text then it doesn't need to be lazily loaded
         if (text) {
           // Render the appropriate element for the image type
@@ -135,7 +136,7 @@ Render this widget into the DOM
                   case "application/pdf":
                     domNode = this.document.createElement("embed");
                     $tw.ipfs
-                      .loadToBase64(url.href)
+                      .loadToBase64(url)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
@@ -153,7 +154,7 @@ Render this widget into the DOM
                     break;
                   case "image/svg+xml":
                     $tw.ipfs
-                      .loadToUtf8(url.href)
+                      .loadToUtf8(url)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
@@ -171,7 +172,7 @@ Render this widget into the DOM
                     break;
                   default:
                     $tw.ipfs
-                      .loadToBase64(url.href)
+                      .loadToBase64(url)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&

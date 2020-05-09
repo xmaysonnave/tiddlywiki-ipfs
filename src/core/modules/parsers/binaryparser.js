@@ -96,7 +96,7 @@ The binary parser parses a binary tiddler into a warning message and download li
             if (url !== null) {
               link.attributes.href = {
                 type: "string",
-                value: url.href,
+                value: url,
               };
               var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
               $tw.rootWidget.refresh(parsedTiddler);

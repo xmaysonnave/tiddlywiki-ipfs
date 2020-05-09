@@ -68,7 +68,7 @@ The image parser parses an image into an embeddable HTML element
             var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
             if (url !== null) {
               $tw.ipfs
-                .loadToUtf8(url.href)
+                .loadToUtf8(url)
                 .then((loaded) => {
                   element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
                   var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);

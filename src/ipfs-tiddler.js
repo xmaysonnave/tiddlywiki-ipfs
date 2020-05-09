@@ -187,6 +187,8 @@ IPFS Tiddler
               self.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             });
+        } else {
+          $tw.utils.alert(name, "Nothing to pin...");
         }
       })
       .catch((error) => {
@@ -246,6 +248,8 @@ IPFS Tiddler
               self.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             });
+        } else {
+          $tw.utils.alert(name, "Nothing to unpin...");
         }
       })
       .catch((error) => {

@@ -103,6 +103,10 @@ ENS Action
       $tw.utils.alert(name, "Undefined ENS domain...");
       return false;
     }
+    if (cid == null && ipnsKey == null) {
+      $tw.utils.alert(name, "Nothing to publish to ENS...");
+      return false;
+    }
     try {
       var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
       if (cid !== null && ensCid !== null && cid === ensCid) {

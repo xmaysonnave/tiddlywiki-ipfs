@@ -61,7 +61,7 @@ The HTML parser displays text as raw HTML
             var { normalizedUrl, resolvedUrl } = data;
             var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
             if (url !== null) {
-              src = url.href;
+              src = url;
               var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
               $tw.rootWidget.refresh(parsedTiddler);
             }

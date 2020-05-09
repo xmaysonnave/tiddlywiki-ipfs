@@ -68,7 +68,7 @@ The PDF parser embeds a PDF viewer
             var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
             if (url !== null) {
               $tw.ipfs
-                .loadToBase64(url.href)
+                .loadToBase64(url)
                 .then((loaded) => {
                   element.attributes.src = { type: "string", value: value + loaded.data };
                   var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
