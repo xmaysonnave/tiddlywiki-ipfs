@@ -54,8 +54,8 @@ IPFS Import
           normalizedUrl: normalizedUrl,
         };
       }
-      // Resolve
-      var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(true, true, url);
+      // Resolve ENS
+      var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, url);
       var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
       if (url !== null) {
         const content = await $tw.ipfs.loadToUtf8(url.href);

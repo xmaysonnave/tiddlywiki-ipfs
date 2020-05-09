@@ -223,14 +223,14 @@ downloadType: the content type for the saved file
   };
 
   SaverHandler.prototype.save = async function (saver, method, variables, text, callback) {
-    if (
-      saver.info.capabilities.indexOf(method) !== -1 &&
-      (await saver.save(text, method, callback, {
+    if (saver.info.capabilities.indexOf(method) !== -1) {
+      var saved = await saver.save(text, method, callback, {
         variables: { filename: variables.filename },
-      }))
-    ) {
-      this.logger.log("Saved wiki with method", method, "through saver", saver.info.name);
-      return true;
+      });
+      if (saved) {
+        this.logger.log("Saved wiki with method", method, "through saver", saver.info.name);
+        return true;
+      }
     }
     return false;
   };

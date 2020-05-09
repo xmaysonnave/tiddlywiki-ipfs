@@ -95,8 +95,7 @@ IPFS Saver
         }
       } catch (error) {
         this.getLogger().error(error);
-        $tw.utils.alert(name, error.message);
-        callback(null);
+        callback(error.message);
         return true;
       }
       // IPNS
@@ -114,8 +113,7 @@ IPFS Saver
           ipnsKey = $tw.utils.getIpfsIpnsKey();
           ipnsName = $tw.utils.getIpfsIpnsName();
           if ((ipnsKey == undefined || ipnsKey == null) && (ipnsName == undefined || ipnsName == null)) {
-            $tw.utils.alert(name, "Unknown default IPNS identifiers...");
-            callback(null);
+            callback("Unknown default IPNS identifiers...");
             return true;
           }
           this.getLogger().info("Processing default IPNS identifiers...");
@@ -132,8 +130,6 @@ IPFS Saver
           } catch (error) {
             this.getLogger().error(error);
             $tw.utils.alert(name, error.message);
-            callback(null);
-            return true;
           }
         }
         if (ipnsCid != null) {
@@ -216,16 +212,16 @@ IPFS Saver
           $tw.utils.alert(name, error.message);
         }
       }
-      // Done
       callback(null);
-      // Next
       if (nextWiki.href !== wiki.href) {
         window.location.assign(nextWiki.href);
       }
     } catch (error) {
       this.getLogger().error(error);
       callback(error.message);
+      return true;
     }
+    callback(null);
     return true;
   };
 

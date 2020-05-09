@@ -274,8 +274,7 @@ IPFS Controller
     }
     // Check
     var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl.pathname);
-    if (protocol !== null && ipnsIdentifier !== null && protocol == ipnsKeyword) {
-      cid = null;
+    if (protocol !== null && protocol == ipnsKeyword && ipnsIdentifier !== null) {
       var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
       if (resolveIpns) {
         cid = await this.resolveIpnsKey(ipnsKey);

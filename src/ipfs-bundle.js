@@ -68,8 +68,7 @@ import IpfsUrl from "./ipfs-url";
         protocol: null,
       };
     }
-    var cid = null;
-    var ipnsIdentifier = null;
+    var identifier = null;
     var protocol = null;
     // Parse
     const members = pathname.trim().split("/");
@@ -84,15 +83,15 @@ import IpfsUrl from "./ipfs-url";
         continue;
       }
       // Second non empty member
-      if (cid == null) {
-        cid = members[i];
+      if (identifier == null) {
+        identifier = members[i];
         break;
       }
       // Nothing to process
       break;
     }
     // Check
-    if (protocol == null || cid == null) {
+    if (protocol == null || identifier == null) {
       return {
         cid: null,
         ipnsIdentifier: null,
@@ -108,12 +107,12 @@ import IpfsUrl from "./ipfs-url";
       };
     }
     // Check
-    var isCid = this.isCid(cid);
-    if (protocol === "ipns" && isCid == false) {
-      ipnsIdentifier = cid;
-      cid = null;
-    } else if (isCid == false) {
-      cid = null;
+    var cid = null;
+    var ipnsIdentifier = null;
+    if (protocol === "ipns") {
+      ipnsIdentifier = identifier;
+    } else if (this.isCid(identifier)) {
+      cid = identifier;
     }
     // All good
     return {
