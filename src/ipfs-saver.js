@@ -162,7 +162,7 @@ IPFS Saver
         $tw.utils.alert(name, error.message);
       }
       // Publish to IPNS
-      if (ipnsKey !== null) {
+      if (ipnsKey !== null && ipnsName !== null) {
         $tw.utils.alert(name, "Publishing IPNS name: " + ipnsName);
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
