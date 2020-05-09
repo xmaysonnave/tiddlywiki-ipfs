@@ -118,13 +118,11 @@ ENS Action
       $tw.ipfs
         .requestToUnpin(ensCid)
         .then((data) => {
-          const msg = "Publishing to ENS: " + ensDomain;
-          self.getLogger().info(msg);
-          $tw.utils.alert(name, msg);
+          $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
           $tw.ipfs
             .setEns(ensDomain, cid)
             .then((data) => {
-              $tw.utils.alert(name, "Successfully Published to ENS...");
+              $tw.utils.alert(name, "Successfully published to ENS...");
             })
             .catch((error) => {
               self.getLogger().error(error);

@@ -171,6 +171,7 @@ IPFS Saver
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName);
           nextWiki.pathname = "/" + ipnsKeyword + "/" + ipnsKey;
+          $tw.utils.alert(name, "Successfully Published IPNS name: " + ipnsName);
         } catch (error) {
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
@@ -180,9 +181,11 @@ IPFS Saver
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
+          $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
           await $tw.ipfs.setEns(ensDomain, added);
           nextWiki.protocol = "https:";
           nextWiki.host = ensDomain;
+          $tw.utils.alert(name, "Successfully published to ENS: " + ensDomain);
         } catch (error) {
           this.getLogger().warn(error);
           $tw.utils.alert(name, error.message);

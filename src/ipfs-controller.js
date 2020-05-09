@@ -278,7 +278,6 @@ IPFS Controller
       cid = null;
       var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
       if (resolveIpns) {
-        $tw.utils.alert(name, "Resolving IPNS Key: " + ipnsKey);
         cid = await this.resolveIpnsKey(ipnsKey);
         if (cid !== null) {
           resolvedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);

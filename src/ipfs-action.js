@@ -142,9 +142,7 @@ IPFS Action
           $tw.utils.alert(name, error.message);
         });
     } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
-      const msg = "Publishing to ENS: " + normalizedUrl.hostname;
-      this.getLogger().info(msg);
-      $tw.utils.alert(name, msg);
+      $tw.utils.alert(name, "Publishing to ENS: " + normalizedUrl.hostname);
       $tw.ipfs
         .setEns(normalizedUrl.hostname, added)
         .then((data) => {
