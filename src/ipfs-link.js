@@ -99,8 +99,14 @@ IPFS link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderExternalLink = function (parent, nextSibling, url) {
-    // Link
-    var domNode = this.document.createElement("a");
+    // Sanitise the specified tag
+    var tag = this.linkTag;
+    if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
+      tag = "a";
+    }
+    // Create our element
+    var namespace = this.getVariable("namespace", { defaultValue: "http://www.w3.org/1999/xhtml" });
+    var domNode = this.document.createElementNS(namespace, tag);
     domNode.setAttribute("href", url);
     // Add a click event handler
     $tw.utils.addEventListeners(domNode, [
@@ -136,7 +142,8 @@ IPFS link widget
       tag = "a";
     }
     // Create our element
-    var domNode = this.document.createElement(tag);
+    var namespace = this.getVariable("namespace", { defaultValue: "http://www.w3.org/1999/xhtml" });
+    var domNode = this.document.createElementNS(namespace, tag);
     // Assign classes
     var classes = [];
     if (this.overrideClasses === undefined) {
@@ -185,7 +192,8 @@ IPFS link widget
       defaultValue: wikiLinkText,
     });
     if (tag === "a") {
-      domNode.setAttribute("href", wikiLinkText);
+      var namespaceHref = namespace === "http://www.w3.org/2000/svg" ? "http://www.w3.org/1999/xlink" : undefined;
+      domNode.setAttributeNS(namespaceHref, "href", wikiLinkText);
     }
     // Set the tabindex
     if (this.tabIndex) {
@@ -294,9 +302,12 @@ IPFS link widget
     this.tiddler = this.getAttribute("tiddler");
     // Internal link
     this.tooltip = this.getAttribute("tooltip");
+    this["aria-label"] = this.getAttribute("aria-label");
+    this.linkClasses = this.getAttribute("class") || "tc-ipfs-link-external";
     this.overrideClasses = this.getAttribute("overrideClass");
     this.tabIndex = this.getAttribute("tabindex");
     this.draggable = this.getAttribute("draggable", "yes");
+    this.linkTag = this.getAttribute("tag", "a");
     // Determine the link characteristics
     this.isMissing = !this.wiki.tiddlerExists(this.to);
     this.isShadow = this.wiki.isShadowTiddler(this.to);
@@ -305,15 +316,12 @@ IPFS link widget
     this.caption = this.getAttribute("caption");
     this.value = this.getAttribute("value");
     this.field = this.getAttribute("field");
-    this.linkTag = this.getAttribute("tag", "a");
     const tiddler = $tw.wiki.getTiddler(this.tiddler);
     if (this.value == undefined) {
       this.value = tiddler.getFieldString(this.field);
     }
     this.target = this.getAttribute("target") || "_blank";
     this.rel = this.getAttribute("rel") || "noopener";
-    this["aria-label"] = this.getAttribute("aria-label");
-    this.classes = this.getAttribute("class") || "tc-ipfs-link-external";
     this.makeChildWidgets([{ type: "text", text: this.caption }]);
   };
 

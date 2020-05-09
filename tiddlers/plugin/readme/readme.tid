@@ -43,7 +43,7 @@ Resources:
 !! With a capable ENS browser:
 
 * [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
-* <$ipfslink caption="IPFS with TiddlyWiki Development" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/> on "[ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network"
+* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on [ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network
 * [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
 * [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#IPFS%20Documentation]]
 
