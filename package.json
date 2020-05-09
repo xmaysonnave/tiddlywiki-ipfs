@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200508470",
+  "version": "v0.3.0-200509265",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -68,7 +68,7 @@
     "browserify": "^16.5.1",
     "browserify-transform-tools": "^1.7.0",
     "build-number-generator": "^0.0.6",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-flowtype": "^4.7.0",
     "eslint-plugin-prettier": "^3.1.3",

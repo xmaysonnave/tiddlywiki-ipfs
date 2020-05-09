@@ -29,7 +29,6 @@ IPFS Controller
     this.ipfsUrl = this.ipfsBundle.ipfsUrl;
     this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle);
     this.ipfsClients = new Map();
-    this.importedTiddlers = new Map();
     this.pin = [];
     this.unpin = [];
   };

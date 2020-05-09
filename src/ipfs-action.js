@@ -89,7 +89,7 @@ IPFS Action
       return false;
     }
     // Retrieve content
-    const content = await this.exportTiddler(tiddler, child);
+    const content = await this.exportTiddler(child, exportUri, tiddler);
     // Check
     if (content == null) {
       return false;
@@ -528,8 +528,8 @@ IPFS Action
     return true;
   };
 
-  IpfsAction.prototype.exportTiddlersAsJson = async function (filter, spaces) {
-    var tiddlers = $tw.wiki.filterTiddlers(filter);
+  IpfsAction.prototype.exportTiddlersAsJson = async function (exportFilter, exportUri, spaces) {
+    var tiddlers = $tw.wiki.filterTiddlers(exportFilter);
     var spaces = spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces;
     var data = [];
     // Process Tiddlers
@@ -544,9 +544,14 @@ IPFS Action
         if (field === "tags" || field === "_export_uri") {
           continue;
         }
-        // Process value
         var ipnsKey = null;
         var fieldValue = tiddler.getFieldString(field);
+        if (field === "_canonical_uri" && fieldValue === exportUri) {
+          continue;
+        }
+        if (field === "_import_uri" && fieldValue === exportUri) {
+          continue;
+        }
         try {
           var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue);
         } catch (error) {
@@ -582,7 +587,7 @@ IPFS Action
     return JSON.stringify(data, null, spaces);
   };
 
-  IpfsAction.prototype.exportTiddler = async function (tiddler, child) {
+  IpfsAction.prototype.exportTiddler = async function (child, exportUri, tiddler) {
     // Check
     if (tiddler == undefined || tiddler == null) {
       const error = new Error("Unknown Tiddler...");
@@ -612,7 +617,7 @@ IPFS Action
     }
     var content = null;
     if (child || $tw.utils.getIpfsExport() === "json") {
-      content = await this.exportTiddlersAsJson(exportFilter);
+      content = await this.exportTiddlersAsJson(exportFilter, exportUri);
     } else if ($tw.utils.getIpfsExport() === "static") {
       // Export Tiddler as Static River
       const options = {

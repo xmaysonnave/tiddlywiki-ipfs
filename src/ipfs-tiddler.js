@@ -322,27 +322,27 @@ IPFS Tiddler
     const title = event.tiddlerTitle;
     const tiddler = $tw.wiki.getTiddler(title);
     const { type, info } = $tw.utils.getContentType(tiddler);
-    var hasCanonicalUri = false;
-    var canonicalUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_canonical_uri"));
-    if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri !== "") {
-      hasCanonicalUri = true;
+    var hasCanonicalUrl = false;
+    var canonicalUrl = tiddler.getFieldString("_canonical_uri");
+    if (canonicalUrl !== undefined && canonicalUrl !== null && canonicalUrl !== "") {
+      hasCanonicalUrl = true;
     } else {
-      canonicalUri = null;
+      canonicalUrl = null;
     }
-    var hasImportUri = false;
-    var importUri = $tw.ipfs.normalizeUrl(tiddler.getFieldString("_import_uri"));
-    if (importUri !== undefined && importUri !== null && importUri !== "") {
-      hasImportUri = true;
+    var hasImportUrl = false;
+    var importUrl = tiddler.getFieldString("_import_uri");
+    if (importUrl !== undefined && importUrl !== null && importUrl !== "") {
+      hasImportUrl = true;
     } else {
-      importUri = null;
+      importUrl = null;
     }
     // Nothing to do
-    if (hasCanonicalUri === false && hasImportUri === false) {
+    if (hasCanonicalUrl === false && hasImportUrl === false) {
       $tw.utils.alert(name, "Nothing to refresh here...");
       return true;
     }
     // Reload Attachment content
-    if ((info.encoding === "base64" || type === "image/svg+xml") && hasCanonicalUri && hasImportUri === false) {
+    if ((info.encoding === "base64" || type === "image/svg+xml") && hasCanonicalUrl && hasImportUrl === false) {
       const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [{ key: "text", value: "" }],
@@ -352,7 +352,7 @@ IPFS Tiddler
     }
     // Async Import
     var ipfsImport = new IpfsImport();
-    ipfsImport.loadRemoteTiddlers(importUri, canonicalUri, title).catch((error) => {
+    ipfsImport.loadRemoteTiddlers(importUrl, canonicalUrl, title).catch((error) => {
       self.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     });

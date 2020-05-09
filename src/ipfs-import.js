@@ -32,11 +32,13 @@ IPFS Import
           key = cid;
         } else if (ipnsKey !== null) {
           key = ipnsKey;
+        } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
+          key = normalizedUrl.hostname;
         } else {
           key = normalizedUrl.href;
         }
         // Retrieve cached imported Tiddlers
-        importedTiddlers = $tw.ipfs.importedTiddlers.get(key);
+        importedTiddlers = this.importedTiddlers.get(key);
         if (importedTiddlers !== undefined) {
           this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl);
           return {
@@ -68,7 +70,7 @@ IPFS Import
           };
         }
         // Cache
-        $tw.ipfs.importedTiddlers.set(key, importedTiddlers);
+        this.importedTiddlers.set(key, importedTiddlers);
         this.getLogger().info("Caching imported Tiddler(s):" + "\n " + toBeLoadedUrl);
       }
     } catch (error) {
@@ -87,11 +89,17 @@ IPFS Import
     if (this.host == undefined) {
       this.host = null;
     }
+    this.importedTiddlers = new Map();
     this.loadedKeys = new Array();
+    this.processedImported = new Map();
     this.processedTitles = new Map();
     this.root = null;
     try {
       var { added, updated } = await this.loadImportedRemoteTiddlers(importUri, canonicalUri, title);
+      // Update Tiddly
+      for (var [title, merged] of this.processedImported.entries()) {
+        $tw.wiki.addTiddler(merged);
+      }
       // Process deleted
       // $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, tiddler) {
       //   var value = tiddler.getFieldString("_canonical_uri");
@@ -136,6 +144,7 @@ IPFS Import
     // Cleanup
     this.host = null;
     this.loadedKeys = null;
+    this.processedImported = null;
     this.processedTitles = null;
     this.root = null;
   };
@@ -218,7 +227,7 @@ IPFS Import
     var importedUpdated = 0;
     // Process new and existing
     for (var i in importedTiddlers) {
-      var merged = new Object();
+      var merged = null;
       var currentTiddler = null;
       var importedTiddler = importedTiddlers[i];
       var importedTitle = importedTiddler["title"];
@@ -285,6 +294,12 @@ IPFS Import
       } else {
         currentTiddler = $tw.wiki.getTiddler(importedTitle);
       }
+      // Retrieve or prepare merged content
+      merged = this.processedImported.get(importedTitle);
+      if (merged == undefined) {
+        merged = new Object();
+        this.processedImported.set(importedTitle, merged);
+      }
       // Fields
       for (var field in importedTiddler) {
         // Discard
@@ -332,8 +347,6 @@ IPFS Import
           merged["_import_uri"] = importedUrl;
         }
       }
-      // Update
-      $tw.wiki.addTiddler(merged);
       // Count
       if (currentTiddler !== undefined && currentTiddler !== null) {
         importedUpdated += 1;
