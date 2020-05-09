@@ -105,7 +105,7 @@ ENS Action
     }
     try {
       var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
-      if (ensCid !== null && ensCid === cid) {
+      if (cid !== null && ensCid !== null && cid === ensCid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
       }
@@ -117,13 +117,13 @@ ENS Action
     if (cid !== null) {
       $tw.ipfs
         .requestToUnpin(ensCid)
-        .then(() => {
+        .then((data) => {
           const msg = "Publishing to ENS: " + ensDomain;
           self.getLogger().info(msg);
           $tw.utils.alert(name, msg);
           $tw.ipfs
             .setEns(ensDomain, cid)
-            .then(() => {
+            .then((data) => {
               $tw.utils.alert(name, "Successfully Published to ENS...");
             })
             .catch((error) => {
@@ -142,11 +142,11 @@ ENS Action
           const { cid: ipnsCid } = data;
           $tw.ipfs
             .requestToUnpin(ensCid)
-            .then(() => {
+            .then((data) => {
               $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
               $tw.ipfs
                 .setEns(ensDomain, ipnsCid)
-                .then(() => {
+                .then((data) => {
                   $tw.utils.alert(name, "Successfully Published to ENS...");
                 })
                 .catch((error) => {

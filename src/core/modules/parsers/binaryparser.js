@@ -85,21 +85,18 @@ The binary parser parses a binary tiddler into a warning message and download li
     };
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var tiddler = options.tiddler;
-      var url = tiddler.fields._canonical_uri;
       // Set the link href to external or internal data URI
-      if (url !== undefined && url !== null && url.trim() != "") {
+      var canonicalUri = tiddler.fields._canonical_uri;
+      if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() != "") {
         $tw.ipfs
-          .resolveUrl(false, true, url)
+          .resolveUrl(false, true, canonicalUri)
           .then((data) => {
             var { normalizedUrl, resolvedUrl } = data;
-            if (normalizedUrl !== null || resolvedUrl !== null) {
-              var toBeLoadedUrl = resolvedUrl;
-              if (toBeLoadedUrl == null) {
-                toBeLoadedUrl = normalizedUrl;
-              }
+            var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+            if (url !== null) {
               link.attributes.href = {
                 type: "string",
-                value: toBeLoadedUrl.href,
+                value: url.href,
               };
               var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
               $tw.rootWidget.refresh(parsedTiddler);

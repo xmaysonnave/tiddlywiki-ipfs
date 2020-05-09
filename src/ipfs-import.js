@@ -25,38 +25,40 @@ IPFS Import
     var importedTiddlers = null;
     var key = null;
     var normalizedUrl = null;
+    if (url == undefined || url == null || url.trim() === "") {
+      return {
+        importedTiddlers: null,
+        key: null,
+        normalizedUrl: null,
+      };
+    }
     try {
-      if (url !== undefined && url !== null) {
-        var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, false, url);
-        if (cid !== null) {
-          key = cid;
-        } else if (ipnsKey !== null) {
-          key = ipnsKey;
-        } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
-          key = normalizedUrl.hostname;
-        } else {
-          key = normalizedUrl.href;
-        }
-        // Retrieve cached imported Tiddlers
-        importedTiddlers = this.importedTiddlers.get(key);
-        if (importedTiddlers !== undefined) {
-          this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + normalizedUrl);
-          return {
-            importedTiddlers: importedTiddlers,
-            key,
-            normalizedUrl: normalizedUrl,
-          };
-        }
-        // Resolve ENS
-        var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, url);
-        var toBeLoadedUrl = null;
-        if (normalizedUrl !== null || resolvedUrl !== null) {
-          toBeLoadedUrl = resolvedUrl;
-          if (toBeLoadedUrl == null) {
-            toBeLoadedUrl = normalizedUrl;
-          }
-        }
-        const content = await $tw.ipfs.loadToUtf8(toBeLoadedUrl.href);
+      // Do not resolve and setup a reasonable key
+      var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, false, url);
+      if (cid !== null) {
+        key = cid;
+      } else if (ipnsKey !== null) {
+        key = ipnsKey;
+      } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith(".eth")) {
+        key = normalizedUrl.hostname;
+      } else {
+        key = normalizedUrl.href;
+      }
+      // Retrieve cached imported Tiddlers
+      importedTiddlers = this.importedTiddlers.get(key);
+      if (importedTiddlers !== undefined) {
+        this.getLogger().info("Retrieve cached imported Tiddler(s):" + "\n " + key);
+        return {
+          importedTiddlers: importedTiddlers,
+          key,
+          normalizedUrl: normalizedUrl,
+        };
+      }
+      // Resolve
+      var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(true, true, url);
+      var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+      if (url !== null) {
+        const content = await $tw.ipfs.loadToUtf8(url.href);
         if ($tw.ipfs.isJson(content.data)) {
           importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
         } else {
@@ -69,9 +71,32 @@ IPFS Import
             normalizedUrl: normalizedUrl,
           };
         }
+        // Filter out unknown titles and duplicates
+        var imported = new Map();
+        for (var i in importedTiddlers) {
+          var importedTiddler = importedTiddlers[i];
+          var importedTitle = importedTiddler["title"];
+          // Unknown
+          if (importedTitle == undefined || importedTitle == null || importedTitle.trim() === "") {
+            continue;
+          }
+          // Duplicate
+          if (imported.get(importedTitle) !== undefined) {
+            $tw.utils.alert(
+              name,
+              'Duplicate imported Tiddler: <a rel="noopener noreferrer" target="_blank" href="' +
+                resolvedUrl +
+                '">' +
+                importedTitle +
+                "</a>"
+            );
+          } else {
+            imported.set(importedTitle, importedTiddler);
+          }
+        }
         // Cache
-        this.importedTiddlers.set(key, importedTiddlers);
-        this.getLogger().info("Caching imported Tiddler(s):" + "\n " + toBeLoadedUrl);
+        this.importedTiddlers.set(key, imported);
+        this.getLogger().info("Caching imported Tiddler(s):" + "\n " + key);
       }
     } catch (error) {
       this.getLogger().error(error);
@@ -226,15 +251,9 @@ IPFS Import
     var importedAdded = 0;
     var importedUpdated = 0;
     // Process new and existing
-    for (var i in importedTiddlers) {
+    for (var [importedTitle, importedTiddler] of this.importedTiddlers.entries()) {
       var merged = null;
       var currentTiddler = null;
-      var importedTiddler = importedTiddlers[i];
-      var importedTitle = importedTiddler["title"];
-      // Check
-      if (importedTitle == undefined || importedTitle == null || importedTitle.trim() === "") {
-        continue;
-      }
       var importedTags = importedTiddler["tags"] !== undefined ? importedTiddler["tags"] : "";
       // Type
       var type = importedTiddler["type"];

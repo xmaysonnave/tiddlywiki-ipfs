@@ -65,7 +65,7 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array);
   };
 
-  IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
+  IpfsController.prototype.requestToPin = async function (cid, ipnsKey, value) {
     const self = this;
     if (ipnsKey !== undefined && ipnsKey !== null) {
       this.resolveUrl(true, true, value)
@@ -73,16 +73,21 @@ IPFS Controller
           var { cid, resolvedUrl } = data;
           if (resolvedUrl !== null && cid !== null && self.addToPin(cid)) {
             self.getLogger().info("Request to Pin:" + "\n " + resolvedUrl);
+            return true;
           }
+          return false;
         })
         .catch((error) => {
           self.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
+          return false;
         });
     } else if (cid !== undefined && cid !== null && this.addToPin(cid)) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Request to Pin:" + "\n " + normalizedUrl);
+      return true;
     }
+    return false;
   };
 
   IpfsController.prototype.addToPin = function (cid) {
@@ -102,7 +107,7 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
+  IpfsController.prototype.requestToUnpin = async function (cid, ipnsKey, value) {
     if ($tw.utils.getIpfsUnpin() == false) {
       return;
     }
@@ -113,16 +118,21 @@ IPFS Controller
           var { cid, resolvedUrl } = data;
           if (resolvedUrl !== null && cid !== null && self.addToUnpin(cid)) {
             self.getLogger().info("Request to unpin:" + "\n " + resolvedUrl);
+            return true;
           }
+          return false;
         })
         .catch((error) => {
           self.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
+          return false;
         });
     } else if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
       this.getLogger().info("Request to unpin:" + "\n " + normalizedUrl);
+      return true;
     }
+    return false;
   };
 
   IpfsController.prototype.addToUnpin = function (cid) {
@@ -374,7 +384,9 @@ IPFS Controller
     if (cidV0 !== null) {
       const url = this.normalizeUrl("/ipfs/" + cidV0);
       this.getLogger().info("Successfully set ENS domain content:" + "\n " + url + " \n to: " + ensDomain);
+      return true;
     }
+    return false;
   };
 
   IpfsController.prototype.getEthereumProvider = async function () {

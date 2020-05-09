@@ -381,35 +381,40 @@ IPFS Tiddler
         var oldCid = null;
         var oldIpnsKey = null;
         var oldNormalizedUrl = null;
+        var oldResolvedUrl = null;
+        var oldUrl = null;
         var oldValue = oldTiddler.getFieldString(field);
         try {
-          var { cid: oldCid, ipnsKey: oldIpnsKey, normalizedUrl: oldNormalizedUrl } = await $tw.ipfs.resolveUrl(
-            false,
-            true,
-            oldValue
-          );
+          var {
+            cid: oldCid,
+            ipnsKey: oldIpnsKey,
+            normalizedUrl: oldNormalizedUrl,
+            resolvedUrl: oldResolvedUrl,
+          } = await $tw.ipfs.resolveUrl(false, true, oldValue);
         } catch (error) {
           this.getLogger().error(error);
           $tw.utils.alert(name, error.message);
           return tiddler;
         }
-        if (field === "_canonical_uri") {
+        var oldUrl =
+          oldResolvedUrl !== null ? oldResolvedUrl.href : oldNormalizedUrl !== null ? oldNormalizedUrl.href : null;
+        if (oldUrl !== null && field === "_canonical_uri") {
           var content = tiddler.getFieldString("text");
           // Attachment
           if (info.encoding === "base64" || type === "image/svg+xml") {
             // Embed
             try {
               if (info.encoding === "base64") {
-                content = await $tw.ipfs.loadToBase64(oldNormalizedUrl.href);
+                content = await $tw.ipfs.loadToBase64(oldUrl.href);
               } else {
-                content = await $tw.ipfs.loadToUtf8(oldNormalizedUrl.href);
+                content = await $tw.ipfs.loadToUtf8(oldUrl.href);
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,
                 addTags: ["$:/isAttachment", "$:/isEmbedded"],
                 fields: [{ key: "text", value: content.data }],
               });
-              this.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + oldNormalizedUrl);
+              this.getLogger().info("Embed attachment: " + content.data.length + " bytes" + "\n " + oldUrl);
             } catch (error) {
               this.getLogger().error(error);
               $tw.utils.alert(name, error.message);
@@ -436,25 +441,27 @@ IPFS Tiddler
       var cid = null;
       var ipnsKey = null;
       var normalizedUrl = null;
+      var resolvedUrl = null;
       var value = tiddler.getFieldString(field);
       try {
-        var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, true, value);
+        var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, value);
       } catch (error) {
         this.getLogger().error(error);
         $tw.utils.alert(name, error.message);
         return tiddler;
       }
       // Store
+      var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
       if (field === "_canonical_uri") {
-        canonicalUri = normalizedUrl;
+        canonicalUri = url;
         canonicalCid = cid;
       }
       if (field === "_import_uri") {
-        importUri = normalizedUrl;
+        importUri = url;
         importCid = cid;
       }
       if (field === "_export_uri") {
-        exportUri = normalizedUrl;
+        exportUri = url;
         exportCid = cid;
       }
       // Previous values if any

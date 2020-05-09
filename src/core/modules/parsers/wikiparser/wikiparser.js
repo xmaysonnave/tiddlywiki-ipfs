@@ -59,11 +59,13 @@ wikiparser
       var canonicalUri = options.tiddler.fields._canonical_uri;
       var importUri = options.tiddler.fields._import_uri;
       var title = options.tiddler.fields.title;
-      var url = importUri;
-      if (url == undefined || url == null) {
-        url = canonicalUri;
-      }
-      if (url !== undefined && url !== null) {
+      var url =
+        importUri !== undefined && importUri !== null
+          ? importUri
+          : canonicalUri !== undefined && canonicalUri !== null
+          ? canonicalUri
+          : null;
+      if (url !== null) {
         var ipfsImport = new IpfsImport();
         ipfsImport.loadRemoteTiddlers(importUri, canonicalUri, title).catch((error) => {
           self.getLogger().error(error);

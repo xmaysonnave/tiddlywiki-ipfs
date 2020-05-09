@@ -125,22 +125,17 @@ Render this widget into the DOM
               break;
           }
         } else if (_canonical_uri) {
-          // Normalize
-          var url = _canonical_uri;
           $tw.ipfs
-            .resolveUrl(false, true, url)
+            .resolveUrl(false, true, _canonical_uri)
             .then((data) => {
               var { normalizedUrl, resolvedUrl } = data;
-              if (normalizedUrl !== null || resolvedUrl !== null) {
-                var toBeLoadedUrl = resolvedUrl;
-                if (toBeLoadedUrl == null) {
-                  toBeLoadedUrl = normalizedUrl;
-                }
+              var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+              if (url !== null) {
                 switch (type) {
                   case "application/pdf":
                     domNode = this.document.createElement("embed");
                     $tw.ipfs
-                      .loadToBase64(toBeLoadedUrl.href)
+                      .loadToBase64(url.href)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
@@ -158,7 +153,7 @@ Render this widget into the DOM
                     break;
                   case "image/svg+xml":
                     $tw.ipfs
-                      .loadToUtf8(toBeLoadedUrl.href)
+                      .loadToUtf8(url.href)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
@@ -176,7 +171,7 @@ Render this widget into the DOM
                     break;
                   default:
                     $tw.ipfs
-                      .loadToBase64(toBeLoadedUrl.href)
+                      .loadToBase64(url.href)
                       .then((loaded) => {
                         if (
                           loaded !== undefined &&
