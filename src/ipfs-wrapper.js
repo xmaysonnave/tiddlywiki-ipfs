@@ -99,10 +99,10 @@ IPFS Wrapper
     if (identifier == null && ipnsName == null) {
       throw new Error("Undefined IPNS identifiers...");
     }
-    var ipnsKey = null;
-    var normalizedUrl = null;
     var found = false;
+    var ipnsKey = null;
     var keys = null;
+    var normalizedUrl = null;
     try {
       // Only the server who generates the key has the knowledge
       keys = await this.getIpnsKeys(ipfs);
@@ -111,11 +111,13 @@ IPFS Wrapper
     }
     // Do our best
     if (ipnsName !== null && identifier !== null) {
-      for (var index = 0; index < keys.length; index++) {
-        if (keys[index].id === identifier && keys[index].name === ipnsName) {
-          ipnsKey = identifier;
-          found = true;
-          break;
+      if (keys !== null && keys !== undefined && Array.isArray(keys)) {
+        for (var index = 0; index < keys.length; index++) {
+          if (keys[index].id === identifier && keys[index].name === ipnsName) {
+            ipnsKey = identifier;
+            found = true;
+            break;
+          }
         }
       }
     } else if (ipnsName !== null) {
@@ -144,9 +146,8 @@ IPFS Wrapper
       // Unable to resolve the keys, check if identifier is a an IPFS cid
       if (this.ipfsBundle.isCid(identifier) === false) {
         throw new Error("Unknown IPNS identifier...");
-      } else {
-        ipnsKey = identifier;
       }
+      ipnsKey = identifier;
     }
     // Lets build an url, the resolver will do the final check, we cannot do more here
     normalizedUrl = this.ipfsUrl.normalizeUrl("/" + ipnsKeyword + "/" + ipnsKey);
