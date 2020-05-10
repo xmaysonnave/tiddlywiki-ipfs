@@ -126,7 +126,7 @@ IPFS Controller
           $tw.utils.alert(name, error.message);
           return false;
         });
-    } else if (cid !== undefined && cid !== null)) {
+    } else if (cid !== undefined && cid !== null) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
       if (this.addToUnpin(cid, normalizedUrl)) {
         return true;
