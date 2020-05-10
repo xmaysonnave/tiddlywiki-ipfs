@@ -383,13 +383,13 @@ IPFS Controller
       return {
         content: content,
         protocol: protocol,
-        resolvedUrl: url,
+        resolvedUrl: url
       };
     }
     return {
       content: null,
       protocol: null,
-      resolvedUrl: null,
+      resolvedUrl: null
     };
   };
 
