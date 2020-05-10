@@ -90,9 +90,10 @@ ENS Action
     }
     var cid = null;
     var ensCid = null;
+    var ensResolvedUrl = null;
     var ipnsKey = null;
     try {
-      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki);
+      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(true, false, wiki);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
@@ -108,7 +109,7 @@ ENS Action
       return false;
     }
     try {
-      var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
+      var { cid: ensCid, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
       if (cid !== null && ensCid !== null && cid === ensCid) {
         $tw.utils.alert(name, "The current resolved ENS domain content is up to date...");
         return false;
@@ -119,16 +120,20 @@ ENS Action
       return false;
     }
     if (cid !== null) {
+      $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
       $tw.ipfs
         .requestToUnpin(ensCid)
         .then((data) => {
-          $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
+          if (data !== undefined && data !== null) {
+            $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl);
+          }
           $tw.ipfs
             .setEns(ensDomain, cid)
             .then((data) => {
               $tw.utils.alert(name, "Successfully published to ENS...");
             })
             .catch((error) => {
+              $tw.ipfs.requestToPin(ensCid);
               self.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             });
@@ -138,6 +143,7 @@ ENS Action
           $tw.utils.alert(name, error.message);
         });
     } else if (ipnsKey !== null) {
+      $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
       $tw.ipfs
         .resolveUrl(true, false, wiki)
         .then((data) => {
@@ -145,13 +151,16 @@ ENS Action
           $tw.ipfs
             .requestToUnpin(ensCid)
             .then((data) => {
-              $tw.utils.alert(name, "Publishing to ENS: " + ensDomain);
+              if (data !== undefined && data !== null) {
+                $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl);
+              }
               $tw.ipfs
                 .setEns(ensDomain, ipnsCid)
                 .then((data) => {
                   $tw.utils.alert(name, "Successfully Published to ENS...");
                 })
                 .catch((error) => {
+                  $tw.ipfs.requestToPin(ensCid);
                   self.getLogger().error(error);
                   $tw.utils.alert(name, error.message);
                 });

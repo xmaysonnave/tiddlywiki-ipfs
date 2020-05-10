@@ -177,11 +177,17 @@ IPFS Tiddler
           $tw.ipfs
             .pinToIpfs(cid)
             .then((data) => {
-              $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
-              $tw.utils.alert(
-                name,
-                'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' + resolvedUrl + '">' + field
-              );
+              if (data !== undefined && data !== null) {
+                $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
+                $tw.utils.alert(
+                  name,
+                  'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' +
+                    resolvedUrl +
+                    '">' +
+                    field +
+                    "</a>"
+                );
+              }
             })
             .catch((error) => {
               self.getLogger().error(error);
@@ -233,14 +239,17 @@ IPFS Tiddler
           $tw.ipfs
             .unpinFromIpfs(cid)
             .then((data) => {
-              $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
-              $tw.utils.alert(
-                name,
-                'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                  resolvedUrl +
-                  '">' +
-                  field
-              );
+              if (data !== undefined && data !== null) {
+                $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
+                $tw.utils.alert(
+                  name,
+                  'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
+                    resolvedUrl +
+                    '">' +
+                    field +
+                    "</a>"
+                );
+              }
             })
             .catch((error) => {
               self.getLogger().error(error);

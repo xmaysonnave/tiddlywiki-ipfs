@@ -7,6 +7,8 @@ import root from "window-or-global";
 
   const name = "ipfs-library";
 
+  const empty = "/ipfs/bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354";
+
   /*
    * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
    **/
@@ -182,10 +184,9 @@ import root from "window-or-global";
     // Process
     if (client !== undefined && client.pin !== undefined && client.pin.add !== undefined) {
       this.getLogger().info("Processing IPFS pin add...");
-      const result = await client.pin.add(cid.trim());
-      if (result == undefined || result == null) {
-        throw new Error("IPFS client returned an unknown result...");
-      }
+      const result = await client.pin.add(cid.trim(), {
+        recursive: true,
+      });
       return result;
     }
     throw new Error("Undefined IPFS pin add...");
@@ -206,10 +207,9 @@ import root from "window-or-global";
     // Process
     if (client !== undefined && client.pin !== undefined && client.pin.rm !== undefined) {
       this.getLogger().info("Processing IPFS pin rm...");
-      const result = await client.pin.rm(cid.trim());
-      if (result == undefined || result == null) {
-        throw new Error("IPFS client returned an unknown result...");
-      }
+      const result = await client.pin.rm(cid.trim(), {
+        recursive: true,
+      });
       return result;
     }
     throw new Error("Undefined IPFS pin rm");
@@ -232,7 +232,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
       this.getLogger().info("Processing IPNS name publish...");
-      const result = await client.name.publish(cid, {
+      const result = await client.name.publish(cid.trim(), {
         resolve: true,
         key: ipnsName.trim(),
         allowOffline: false,
