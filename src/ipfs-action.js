@@ -112,30 +112,20 @@ IPFS Action
     });
     $tw.wiki.addTiddler(updatedTiddler);
     $tw.ipfs.requestToPin(added);
-    $tw.ipfs.requestToUnpin(cid);
     if (ipnsKey !== null) {
-      const msg = "Publishing IPNS name: " + ipnsName;
-      this.getLogger().info(msg);
-      $tw.utils.alert(name, msg);
+      $tw.utils.alert(name, "Publishing IPNS name: " + ipnsName);
       $tw.ipfs
-        .requestToUnpin(null, ipnsKey, normalizedUrl)
+        .publishIpnsName(added, ipnsKey, ipnsName)
         .then((data) => {
-          $tw.ipfs
-            .publishIpnsName(added, ipnsKey, ipnsName)
-            .then((data) => {
-              fields.push({ key: "_export_uri", value: exportUri });
-              tiddler = $tw.utils.updateTiddler({
-                tiddler: tiddler,
-                addTags: ["$:/isExported", "$:/isIpfs"],
-                fields: fields,
-              });
-              $tw.wiki.addTiddler(tiddler);
-              $tw.utils.alert(name, "Successfully Published IPNS name: " + ipnsName);
-            })
-            .catch((error) => {
-              self.getLogger().error(error);
-              $tw.utils.alert(name, error.message);
-            });
+          fields.push({ key: "_export_uri", value: exportUri });
+          tiddler = $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            addTags: ["$:/isExported", "$:/isIpfs"],
+            fields: fields,
+          });
+          $tw.ipfs.requestToUnpin(cid);
+          $tw.wiki.addTiddler(tiddler);
+          $tw.utils.alert(name, "Successfully Published IPNS name: " + ipnsName);
         })
         .catch((error) => {
           self.getLogger().error(error);
@@ -152,6 +142,7 @@ IPFS Action
             addTags: ["$:/isExported", "$:/isIpfs"],
             fields: fields,
           });
+          $tw.ipfs.requestToUnpin(cid);
           $tw.wiki.addTiddler(tiddler);
           $tw.utils.alert(name, "Successfully Published to ENS...");
         })
@@ -490,14 +481,10 @@ IPFS Action
     }
     try {
       var { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
-      var { cid: wikiCid, ipnsKey: wikiIpnsKey } = await $tw.ipfs.resolveUrl(true, false, wiki);
+      var { cid: wikiCid, ipnsKey: wikiIpnsKey } = await $tw.ipfs.resolveUrl(true, true, wiki);
     } catch (error) {
       this.getLogger().error(error);
       $tw.utils.alert(name, error.message);
-      return false;
-    }
-    if (wikiIpnsKey == null && wikiCid == null) {
-      $tw.utils.alert(name, "Unknown IPNS identifier...");
       return false;
     }
     if (wikiIpnsKey !== null && wikiIpnsKey === ipnsKey) {
