@@ -58,7 +58,7 @@ IPFS Import
       var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, url);
       var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
       if (url !== null) {
-        const content = await $tw.ipfs.loadToUtf8(url.href);
+        const content = await $tw.ipfs.loadToUtf8(url);
         if ($tw.ipfs.isJson(content.data)) {
           importedTiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
         } else {

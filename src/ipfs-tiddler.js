@@ -409,9 +409,9 @@ IPFS Tiddler
             // Embed
             try {
               if (info.encoding === "base64") {
-                content = await $tw.ipfs.loadToBase64(oldUrl.href);
+                content = await $tw.ipfs.loadToBase64(oldUrl);
               } else {
-                content = await $tw.ipfs.loadToUtf8(oldUrl.href);
+                content = await $tw.ipfs.loadToUtf8(oldUrl);
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,
