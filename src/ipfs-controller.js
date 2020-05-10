@@ -276,7 +276,6 @@ IPFS Controller
         resolvedUrl: null,
       };
     }
-    // Check
     var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl.pathname);
     if (protocol !== null && protocol == ipnsKeyword && ipnsIdentifier !== null) {
       var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier);
@@ -383,14 +382,14 @@ IPFS Controller
       this.getLogger().info("Successfully fetched ENS domain content:" + "\n " + url + " \n from: " + ensDomain);
       return {
         content: content,
-        resolvedUrl: url,
         protocol: protocol,
+        resolvedUrl: url,
       };
     }
     return {
       content: null,
-      resolvedUrl: null,
       protocol: null,
+      resolvedUrl: null,
     };
   };
 
