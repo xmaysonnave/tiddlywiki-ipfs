@@ -139,8 +139,8 @@ import root from "window-or-global";
 
   IpfsLoader.prototype.httpGetToUint8Array = async function (url) {
     const self = this;
-    return await new Promise(function (resolve, reject) {
-      const xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
+    return new Promise(function (resolve, reject) {
       xhr.responseType = "arraybuffer";
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status !== 0) {
@@ -245,7 +245,7 @@ import root from "window-or-global";
   };
 
   IpfsLoader.prototype.decryptFromPasswordPrompt = async function (encrypted) {
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       $tw.passwordPrompt.createPrompt({
         serviceName: "Enter a password to decrypt the imported content!!",
         noUserName: true,
@@ -263,8 +263,8 @@ import root from "window-or-global";
             return true;
           } catch (error) {
             reject(error);
-            return false;
           }
+          return false;
         },
       });
     });
