@@ -9,7 +9,6 @@ IPFS Bundle
 \*/
 
 import CID from "cids";
-import pako from "pako";
 import root from "window-or-global";
 
 import EnsLibrary from "./ens-library";
