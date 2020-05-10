@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200509442",
+  "version": "v0.3.0-200510239",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -62,7 +62,7 @@
     "@babel/core": "^7.9.6",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
-    "acorn": "^7.1.1",
+    "acorn": "^7.2.0",
     "babel-eslint": "^10.1.0",
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",

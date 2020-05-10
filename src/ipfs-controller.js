@@ -71,8 +71,7 @@ IPFS Controller
       this.resolveUrl(true, true, value)
         .then((data) => {
           var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== null && self.addToPin(cid)) {
-            self.getLogger().info("Request to Pin:" + "\n " + resolvedUrl);
+          if (resolvedUrl !== null && cid !== null && self.addToPin(cid, resolvedUrl)) {
             return true;
           }
           return false;
@@ -82,25 +81,26 @@ IPFS Controller
           $tw.utils.alert(name, error.message);
           return false;
         });
-    } else if (cid !== undefined && cid !== null && this.addToPin(cid)) {
+    } else if (cid !== undefined && cid !== null) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Request to Pin:" + "\n " + normalizedUrl);
-      return true;
+      if (this.addToPin(cid, normalizedUrl)) {
+        return true;
+      }
     }
     return false;
   };
 
-  IpfsController.prototype.addToPin = function (cid) {
+  IpfsController.prototype.addToPin = function (cid, normalizedUrl) {
     if (cid !== undefined && cid !== null) {
-      // Discard
       var index = this.unpin.indexOf(cid);
       if (index !== -1) {
         this.unpin.splice(index, 1);
+        this.getLogger().info("Cancel request to Unpin:" + "\n " + normalizedUrl);
         return false;
       }
-      // Add to pin
       if (this.pin.indexOf(cid) === -1) {
         this.pin.push(cid);
+        this.getLogger().info("Request to Pin:" + "\n " + normalizedUrl);
         return true;
       }
     }
@@ -116,8 +116,7 @@ IPFS Controller
       this.resolveUrl(true, true, value)
         .then((data) => {
           var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== null && self.addToUnpin(cid)) {
-            self.getLogger().info("Request to unpin:" + "\n " + resolvedUrl);
+          if (resolvedUrl !== null && cid !== null && self.addToUnpin(cid, resolvedUrl)) {
             return true;
           }
           return false;
@@ -127,25 +126,28 @@ IPFS Controller
           $tw.utils.alert(name, error.message);
           return false;
         });
-    } else if (cid !== undefined && cid !== null && this.addToUnpin(cid)) {
+    } else if (cid !== undefined && cid !== null)) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.getLogger().info("Request to unpin:" + "\n " + normalizedUrl);
-      return true;
+      if (this.addToUnpin(cid, normalizedUrl)) {
+        return true;
+      }
     }
     return false;
   };
 
-  IpfsController.prototype.addToUnpin = function (cid) {
+  IpfsController.prototype.addToUnpin = function (cid, normalizedUrl) {
     if (cid !== undefined && cid !== null) {
       // Discard
       var index = this.pin.indexOf(cid);
       if (index !== -1) {
         this.pin.splice(index, 1);
+        this.getLogger().info("Cancel request to Pin:" + "\n " + normalizedUrl);
         return false;
       }
       // Add to unpin
       if (this.unpin.indexOf(cid) === -1) {
         this.unpin.push(cid);
+        this.getLogger().info("Request to unpin:" + "\n " + normalizedUrl);
         return true;
       }
     }
