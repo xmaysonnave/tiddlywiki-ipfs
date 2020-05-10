@@ -60,14 +60,14 @@ wikiparser
       var importUri = options.tiddler.fields._import_uri;
       var title = options.tiddler.fields.title;
       var url =
-        importUri !== undefined && importUri !== null
+        importUri !== undefined && importUri !== null && importUri.trim() !== ""
           ? importUri
-          : canonicalUri !== undefined && canonicalUri !== null
+          : canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== ""
           ? canonicalUri
           : null;
       if (url !== null) {
         var ipfsImport = new IpfsImport();
-        ipfsImport.loadRemoteTiddlers(importUri, canonicalUri, title).catch((error) => {
+        ipfsImport.import(canonicalUri, importUri, title).catch((error) => {
           self.getLogger().error(error);
           $tw.utils.alert(name, error.message);
         });

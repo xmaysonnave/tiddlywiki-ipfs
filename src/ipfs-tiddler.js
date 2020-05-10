@@ -352,7 +352,7 @@ IPFS Tiddler
     }
     // Async Import
     var ipfsImport = new IpfsImport();
-    ipfsImport.loadRemoteTiddlers(importUrl, canonicalUrl, title).catch((error) => {
+    ipfsImport.import(canonicalUrl, importUrl, title).catch((error) => {
       self.getLogger().error(error);
       $tw.utils.alert(name, error.message);
     });
