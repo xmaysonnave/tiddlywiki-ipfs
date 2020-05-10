@@ -258,7 +258,7 @@ IPFS link widget
         }
       })
       .catch((error) => {
-        // Ignore
+        $tw.utils.alert(name, error.message);
       });
     event.preventDefault();
     event.stopPropagation();
