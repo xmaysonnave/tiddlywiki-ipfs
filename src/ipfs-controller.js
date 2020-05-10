@@ -154,15 +154,17 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.removeFromPinUnpin = function (cid) {
+  IpfsController.prototype.removeFromPinUnpin = function (cid, normalizedUrl) {
     if (cid !== undefined && cid !== null) {
       var index = this.pin.indexOf(cid);
       if (index !== -1) {
         this.pin.splice(index, 1);
+        this.getLogger().info("Cancel request to Pin:" + "\n " + normalizedUrl);
       }
       var index = this.unpin.indexOf(cid);
       if (index !== -1) {
         this.unpin.splice(index, 1);
+        this.getLogger().info("Cancel request to Unpin:" + "\n " + normalizedUrl);
       }
     }
     return;

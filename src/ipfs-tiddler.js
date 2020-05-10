@@ -177,7 +177,7 @@ IPFS Tiddler
           $tw.ipfs
             .pinToIpfs(cid)
             .then((data) => {
-              $tw.ipfs.removeFromPinUnpin(cid);
+              $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
               $tw.utils.alert(
                 name,
                 'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' + resolvedUrl + '">' + field
@@ -187,8 +187,6 @@ IPFS Tiddler
               self.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             });
-        } else {
-          $tw.utils.alert(name, "Nothing to pin...");
         }
       })
       .catch((error) => {
@@ -235,7 +233,7 @@ IPFS Tiddler
           $tw.ipfs
             .unpinFromIpfs(cid)
             .then((data) => {
-              $tw.ipfs.removeFromPinUnpin(cid);
+              $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
               $tw.utils.alert(
                 name,
                 'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
@@ -248,8 +246,6 @@ IPFS Tiddler
               self.getLogger().error(error);
               $tw.utils.alert(name, error.message);
             });
-        } else {
-          $tw.utils.alert(name, "Nothing to unpin...");
         }
       })
       .catch((error) => {
