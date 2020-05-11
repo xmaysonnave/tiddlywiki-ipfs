@@ -50,7 +50,9 @@ import root from "window-or-global";
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
     if (typeof root.IpfsHttpClient === "undefined") {
       await this.loadLibrary("IpfsHttpLibrary", ipfs_http_client, ipfs_http_client_sri, true);
-      this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
+      if (typeof root.IpfsHttpClient !== "undefined") {
+        this.getLogger().info("Loaded IpfsHttpLibrary:" + "\n " + ipfs_http_client);
+      }
     }
   };
 
@@ -65,16 +67,15 @@ import root from "window-or-global";
   };
 
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
-  IpfsLoader.prototype.loadLibrary = async function (id, url, sri, asModule) {
+  IpfsLoader.prototype.loadLibrary = function (id, url, sri, asModule) {
     // Dynamic import
-    if (this.supportDynamicImport()) {
-      try {
-        return new Function(`return import("${url}")`)();
-      } catch (error) {
-        // Ignore
-      }
-    }
-    // Fallback
+    // if (this.supportDynamicImport()) {
+    //   try {
+    //     return new Function(`return import("${url}")`)();
+    //   } catch (error) {
+    //     // Ignore
+    //   }
+    // }
     const self = this;
     return new Promise((resolve, reject) => {
       // Process
@@ -89,15 +90,10 @@ import root from "window-or-global";
           URL.revokeObjectURL(script.src);
           script.src = "";
         } catch (error) {
-          this.getLogger().error(error);
+          self.getLogger().error(error);
         }
       };
       script.onload = () => {
-        if (asModule) {
-          self.getLogger().info("Loaded Module:" + "\n " + url);
-        } else {
-          self.getLogger().info("Loaded Script:" + "\n " + url);
-        }
         resolve(root[id]);
         cleanup();
       };
@@ -137,7 +133,7 @@ import root from "window-or-global";
     return false;
   };
 
-  IpfsLoader.prototype.httpGetToUint8Array = async function (url) {
+  IpfsLoader.prototype.httpGetToUint8Array = function (url) {
     const self = this;
     const xhr = new XMLHttpRequest();
     return new Promise(function (resolve, reject) {
@@ -244,7 +240,7 @@ import root from "window-or-global";
     return data;
   };
 
-  IpfsLoader.prototype.decryptFromPasswordPrompt = async function (encrypted) {
+  IpfsLoader.prototype.decryptFromPasswordPrompt = function (encrypted) {
     return new Promise((resolve, reject) => {
       $tw.passwordPrompt.createPrompt({
         serviceName: "Enter a password to decrypt the imported content!!",
