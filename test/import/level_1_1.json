@@ -1,0 +1,43 @@
+[
+    {
+        "text": "Content from 'Node 1' @ 1_1",
+        "title": "Node 1",
+        "modified": "20200320085428678"
+    },
+    {
+        "text": "Unkwown IPNS 'Node 2' @ 1_1",
+        "title": "Node 2",
+        "modified": "20200320085428678",
+        "_canonical_uri": "/ipns/unknown"
+    },
+    {
+        "text": "Unkwown IPFS 'Node 3' @ 1_1",
+        "title": "Node 3",
+        "modified": "20200320085428678",
+        "_canonical_uri": "/ipfs/unknown"
+    },
+    {
+        "text": "Unkwown ENS 'Node 4' @1_1",
+        "title": "Node 4",
+        "modified": "20200320085428678",
+        "_canonical_uri": "test.eth"
+    },
+    {
+        "text": "Unkwown ENS 'Node 5' @1_1",
+        "title": "Node 5",
+        "modified": "20200320085428678",
+        "_canonical_uri": "test.eth"
+    },
+    {
+        "text": "Empty _canonical_uri 'Node 6' @ 1_1",
+        "title": "Node 6",
+        "modified": "20200320085428678",
+        "_canonical_uri": ""
+    },
+    {
+        "text": "Failed to resolved _canonical_uri 'Node 7' @ 1_1",
+        "title": "Node 7",
+        "modified": "20200320085428678",
+        "_canonical_uri": "not_an_url"
+    }
+]

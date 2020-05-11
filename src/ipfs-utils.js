@@ -164,34 +164,17 @@ IPFS utils
     return new $tw.Tiddler(updates.tiddler, fields);
   };
 
-  exports.getContentType = function (tiddler) {
-    // Check
-    if (tiddler == undefined || tiddler == null) {
-      throw new Error("Unknown Tiddler...");
-    }
-    // Type
-    var type = tiddler.fields["type"];
-    // Default
-    if (type == undefined || type == null) {
+  exports.getContentType = function (title, type) {
+    if (type !== undefined && type !== null) {
+      type = type.trim();
+    } else {
       type = "text/vnd.tiddlywiki";
     }
-    // Content-Type
     var info = $tw.config.contentTypeInfo[type];
-    // Check
     if (info == undefined || info == null) {
-      const url = this.getDocumentUrl();
-      url.hash = tiddler.fields.title;
-      $tw.utils.alert(
-        name,
-        "Unknown Content-Type: '" +
-          type +
-          "', default to: 'text/vnd.tiddlywiki', <a href='" +
-          url +
-          "'>" +
-          tiddler.fields.title +
-          "</a>"
-      );
-      // Default
+      const url = $tw.ipfs.getDocumentUrl();
+      url.hash = title;
+      this.getLogger().info("Unknown Content-Type: '" + type + "', default to: 'text/vnd.tiddlywiki':" + "\n " + url);
       type = "text/vnd.tiddlywiki";
       info = $tw.config.contentTypeInfo[type];
     }

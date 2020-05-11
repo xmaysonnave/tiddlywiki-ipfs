@@ -194,7 +194,7 @@ IPFS Action
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
     const title = event.tiddlerTitle;
     var tiddler = $tw.wiki.getTiddler(title);
-    const { type, info } = $tw.utils.getContentType(tiddler);
+    const { type, info } = $tw.utils.getContentType(title, tiddler.fields["type"]);
     var added = null;
     if (info.encoding !== "base64" && type !== "image/svg+xml") {
       $tw.utils.alert(name, "This Tiddler do not contain any Attachment...");
@@ -243,7 +243,7 @@ IPFS Action
   };
 
   IpfsAction.prototype.getAttachmentContent = function (tiddler) {
-    const { type, info } = $tw.utils.getContentType(tiddler);
+    const { type, info } = $tw.utils.getContentType(tiddler.fields["title"], tiddler.fields["type"]);
     if (info.encoding !== "base64" && type !== "image/svg+xml") {
       $tw.utils.alert(name, "Unsupported Tiddler Content-Type...");
       return null;
@@ -285,9 +285,11 @@ IPFS Action
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
+    } else {
+      ipnsName = ipnsName.trim();
     }
     if (this.ipnsName == null || this.ipnsName === ipnsName) {
       $tw.utils.alert(name, "Nothing to rename....");
@@ -316,9 +318,11 @@ IPFS Action
   IpfsAction.prototype.handleGenerateIpnsKey = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
+    } else {
+      ipnsName = ipnsName.trim();
     }
     try {
       var ipnsKey = await $tw.ipfs.generateIpnsKey(ipnsName);
@@ -345,9 +349,11 @@ IPFS Action
     var normalizedUrl = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
     const self = this;
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
+    } else {
+      ipnsName = ipnsName.trim();
     }
     try {
       var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
@@ -398,9 +404,11 @@ IPFS Action
   IpfsAction.prototype.handleFetchIpnsKey = async function (event) {
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
+    } else {
+      ipnsName = ipnsName.trim();
     }
     try {
       var { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsName);
@@ -426,9 +434,11 @@ IPFS Action
     var ipnsKey = null;
     const ipnsName = $tw.utils.getIpfsIpnsName();
     var resolvedUrl = null;
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
+    } else {
+      ipnsName = ipnsName.trim();
     }
     try {
       var { ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(true, false, "/" + ipnsKeyword + "/" + ipnsName);
@@ -513,9 +523,11 @@ IPFS Action
       $tw.utils.alert(name, "Unknown IPFS identifier...");
       return false;
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName === "") {
+    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       $tw.utils.alert(name, "Undefined IPNS name....");
       return false;
+    } else {
+      ipnsName = ipnsName.trim();
     }
     try {
       var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(true, false, "/ipns/" + ipnsName);

@@ -106,7 +106,7 @@ import { URL } from "universal-url";
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
     // Check
-    if (value == undefined || value == null) {
+    if (value == undefined || value == null || value.toString() === "") {
       return null;
     }
     // Parse
@@ -120,7 +120,7 @@ import { URL } from "universal-url";
         text = true;
         try {
           url = this.getUrl("https://" + value);
-          if (!url.hostname.endsWith(".eth") && !url.hostname.endsWith(".eth.link")) {
+          if (url.hostname.endsWith(".eth") == false && url.hostname.endsWith(".eth.link") == false) {
             url = null;
           } else {
             text = false;

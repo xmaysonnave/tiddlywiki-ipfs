@@ -148,25 +148,19 @@ IPFS Tiddler
         if (reservedFields.indexOf(field) !== -1) {
           continue;
         }
-        const value = tiddler.getFieldString(field);
-        if (value !== undefined && value !== null) {
-          this.ipfsPin(value, field);
+        var value = tiddler.getFieldString(field);
+        if (value !== undefined && value !== null && value.trim() !== "") {
+          this.ipfsPin(value.trim(), field);
         }
       }
-    } else {
-      // Wiki
-      this.ipfsPin($tw.ipfs.getDocumentUrl().href, "Wiki");
+      return true;
     }
+    // Wiki
+    this.ipfsPin($tw.ipfs.getDocumentUrl().toString(), "Wiki");
     return true;
   };
 
   IpfsTiddler.prototype.ipfsPin = function (value, field) {
-    if (value == undefined || value == null || value.trim() === "") {
-      return;
-    }
-    if (field == undefined || field == null || field.trim() === "") {
-      return;
-    }
     const self = this;
     $tw.ipfs
       .resolveUrl(true, true, value)
@@ -177,7 +171,7 @@ IPFS Tiddler
           $tw.ipfs
             .pinToIpfs(cid)
             .then((data) => {
-              if (data !== undefined && data !== null) {
+              if (data) {
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl);
                 $tw.utils.alert(
                   name,
@@ -204,6 +198,7 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
     const title = event.tiddlerTitle;
     const tiddler = $tw.wiki.getTiddler(title);
+    const { type, info } = $tw.utils.getContentType(title, tiddler.fields["type"]);
     if (event.param !== undefined && event.param !== null) {
       // Tiddler
       for (var field in tiddler.fields) {
@@ -211,14 +206,19 @@ IPFS Tiddler
           continue;
         }
         const value = tiddler.getFieldString(field);
-        if (value !== undefined && value !== null) {
-          this.ipfsUnpin(value, field);
+        if (value !== undefined && value !== null && value.trim() !== "") {
+          if (info.encoding !== "base64" && type !== "image/svg+xml") {
+            if (field === "_canonical_uri" || field === "_import_uri") {
+              continue;
+            }
+          }
+          this.ipfsUnpin(value.trim(), field);
         }
       }
-    } else {
-      // Wiki
-      this.ipfsUnpin($tw.ipfs.getDocumentUrl().href, "Wiki");
+      return true;
     }
+    // Wiki
+    this.ipfsUnpin($tw.ipfs.getDocumentUrl().toString(), "Wiki");
     return true;
   };
 
@@ -276,7 +276,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
-      const { type, info } = $tw.utils.getContentType(tiddler);
+      const { type, info } = $tw.utils.getContentType(tiddler.fields["title"], tiddler.fields["type"]);
       // Process
       var field = null;
       if (info.encoding === "base64" || type === "image/svg+xml") {
@@ -330,17 +330,19 @@ IPFS Tiddler
     const self = this;
     const title = event.tiddlerTitle;
     const tiddler = $tw.wiki.getTiddler(title);
-    const { type, info } = $tw.utils.getContentType(tiddler);
+    const { type, info } = $tw.utils.getContentType(title, tiddler.fields["type"]);
     var hasCanonicalUrl = false;
     var canonicalUrl = tiddler.getFieldString("_canonical_uri");
-    if (canonicalUrl !== undefined && canonicalUrl !== null && canonicalUrl !== "") {
+    if (canonicalUrl !== undefined && canonicalUrl !== null && canonicalUrl.trim() !== "") {
+      canonicalUrl = canonicalUrl.trim();
       hasCanonicalUrl = true;
     } else {
       canonicalUrl = null;
     }
     var hasImportUrl = false;
     var importUrl = tiddler.getFieldString("_import_uri");
-    if (importUrl !== undefined && importUrl !== null && importUrl !== "") {
+    if (importUrl !== undefined && importUrl !== null && importUrl.trim() !== "") {
+      importUrl = importUrl.trim();
       hasImportUrl = true;
     } else {
       importUrl = null;
@@ -370,8 +372,8 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     // Previous tiddler
-    const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title);
-    const { type, info } = $tw.utils.getContentType(tiddler);
+    const oldTiddler = $tw.wiki.getTiddler(tiddler.fields["title"]);
+    const { type, info } = $tw.utils.getContentType(tiddler.fields["title"], tiddler.fields["type"]);
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler);
     // Process deleted fields
@@ -383,7 +385,7 @@ IPFS Tiddler
         }
         // Updated
         const discard = tiddler.fields[field];
-        if (discard !== undefined && discard !== null && tiddler.getFieldString(field) !== "") {
+        if (discard !== undefined && discard !== null && tiddler.getFieldString(field) !== undefined) {
           continue;
         }
         // Process
