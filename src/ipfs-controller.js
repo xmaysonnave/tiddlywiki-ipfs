@@ -72,7 +72,7 @@ IPFS Controller
         .then((data) => {
           var { cid, resolvedUrl } = data;
           if (resolvedUrl !== null && cid !== null) {
-            self.addToPin(cid, resolvedUrl);
+            self.addToPin(cid, resolvedUrl)
           }
         })
         .catch((error) => {
@@ -112,7 +112,7 @@ IPFS Controller
         .then((data) => {
           var { cid, resolvedUrl } = data;
           if (resolvedUrl !== null && cid !== null) {
-            self.addToUnpin(cid, resolvedUrl);
+            self.addToUnpin(cid, resolvedUrl)
           }
         })
         .catch((error) => {
