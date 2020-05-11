@@ -249,7 +249,6 @@ import root from "window-or-global";
         submitText: "Decrypt",
         callback: function (data) {
           if (!data) {
-            reject(new Error("User canceled password input..."));
             return false;
           }
           // Decrypt

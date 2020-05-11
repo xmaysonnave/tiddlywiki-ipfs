@@ -67,22 +67,28 @@ IPFS Controller
 
   IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
     const self = this;
-    if (ipnsKey !== undefined && ipnsKey !== null) {
-      this.resolveUrl(true, true, value)
-        .then((data) => {
-          var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== null) {
-            self.addToPin(cid, resolvedUrl)
-          }
-        })
-        .catch((error) => {
-          self.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        });
-    } else if (cid !== undefined && cid !== null) {
-      const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.addToPin(cid, normalizedUrl);
-    }
+    return new Promise((resolve, reject) => {
+      if (ipnsKey !== undefined && ipnsKey !== null) {
+        self
+          .resolveUrl(true, true, value)
+          .then((data) => {
+            const { cid, resolvedUrl } = data;
+            if (resolvedUrl !== null && cid !== null) {
+              resolve(self.addToPin(cid, resolvedUrl));
+            } else {
+              resolve(false);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      } else if (cid !== undefined && cid !== null) {
+        const normalizedUrl = self.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+        resolve(self.addToPin(cid, normalizedUrl));
+      } else {
+        resolve(false);
+      }
+    });
   };
 
   IpfsController.prototype.addToPin = function (cid, normalizedUrl) {
@@ -103,27 +109,32 @@ IPFS Controller
   };
 
   IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
-    if ($tw.utils.getIpfsUnpin() == false) {
-      return;
-    }
     const self = this;
-    if (ipnsKey !== undefined && ipnsKey !== null) {
-      this.resolveUrl(true, true, value)
-        .then((data) => {
-          var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== null) {
-            self.addToUnpin(cid, resolvedUrl)
-          }
-        })
-        .catch((error) => {
-          self.getLogger().warn(error);
-          $tw.utils.alert(name, error.message);
-        });
-    } else if (cid !== undefined && cid !== null) {
-      const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      this.addToUnpin(cid, normalizedUrl);
-    }
-    return false;
+    return new Promise((resolve, reject) => {
+      if ($tw.utils.getIpfsUnpin() == false) {
+        resolve(false);
+      }
+      if (ipnsKey !== undefined && ipnsKey !== null) {
+        self
+          .resolveUrl(true, true, value)
+          .then((data) => {
+            const { cid, resolvedUrl } = data;
+            if (resolvedUrl !== null && cid !== null) {
+              resolve(self.addToUnpin(cid, resolvedUrl));
+            } else {
+              resolve(false);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      } else if (cid !== undefined && cid !== null) {
+        const normalizedUrl = self.normalizeUrl("/" + ipfsKeyword + "/" + cid);
+        resolve(self.addToUnpin(cid, normalizedUrl));
+      } else {
+        resolve(false);
+      }
+    });
   };
 
   IpfsController.prototype.addToUnpin = function (cid, normalizedUrl) {

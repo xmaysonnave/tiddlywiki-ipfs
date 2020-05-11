@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200510475",
+  "version": "v0.3.0-200511275",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -18,6 +18,11 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged --pattern '**/*.js'"
     }
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint --fix"
+    ]
   },
   "scripts": {
     "build-all-noclone": "./scripts/build-all-noclone.sh",

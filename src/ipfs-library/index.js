@@ -176,6 +176,8 @@ import root from "window-or-global";
     }
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPFS identifier...");
+    } else {
+      cid = cid.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -184,7 +186,7 @@ import root from "window-or-global";
     // Process
     if (client !== undefined && client.pin !== undefined && client.pin.add !== undefined) {
       this.getLogger().info("Processing IPFS pin add...");
-      const result = await client.pin.add(cid.trim(), {
+      const result = await client.pin.add(cid, {
         recursive: true,
       });
       return result;
@@ -199,6 +201,8 @@ import root from "window-or-global";
     }
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPFS identifier...");
+    } else {
+      cid = cid.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -207,7 +211,7 @@ import root from "window-or-global";
     // Process
     if (client !== undefined && client.pin !== undefined && client.pin.rm !== undefined) {
       this.getLogger().info("Processing IPFS pin rm...");
-      const result = await client.pin.rm(cid.trim(), {
+      const result = await client.pin.rm(cid, {
         recursive: true,
       });
       return result;
@@ -222,9 +226,13 @@ import root from "window-or-global";
     }
     if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       throw new Error("Undefined IPNS name...");
+    } else {
+      ipnsName = ipnsName.trim();
     }
     if (cid == undefined || cid == null || cid.trim() === "") {
       throw new Error("Undefined IPNS identifier...");
+    } else {
+      cid = cid.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -232,9 +240,9 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.name !== undefined && client.name.publish !== undefined) {
       this.getLogger().info("Processing IPNS name publish...");
-      const result = await client.name.publish(cid.trim(), {
+      const result = await client.name.publish(cid, {
         resolve: true,
-        key: ipnsName.trim(),
+        key: ipnsName,
         allowOffline: false,
       });
       if (result == undefined || result == null) {
@@ -255,6 +263,8 @@ import root from "window-or-global";
     }
     if (id == undefined || id == null || id.trim() === "") {
       throw new Error("Undefined IPNS key...");
+    } else {
+      id = id.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -262,16 +272,16 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.name !== undefined && client.name.resolve !== undefined) {
       this.getLogger().info("Processing IPNS name resolve...");
-      const resolvedSource = await client.name.resolve(id.trim(), {
-        recursive: true,
+      const resolvedSource = await client.name.resolve(id, {
         nocache: false,
+        recursive: true,
       });
       // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
       var lastResult = null;
       for await (const resolved of resolvedSource) {
         lastResult = resolved;
       }
-      if (lastResult == null || lastResult == undefined || lastResult.trim() === "") {
+      if (lastResult == null || lastResult == undefined) {
         throw new Error("IPFS client returned an unknown result...");
       }
       return lastResult;
@@ -309,6 +319,8 @@ import root from "window-or-global";
     }
     if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       throw new Error("Undefined IPNS name...");
+    } else {
+      ipnsName = ipnsName.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -316,7 +328,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.key !== undefined && client.key.gen !== undefined) {
       this.getLogger().info("Processing IPNS key gen...");
-      const key = await client.key.gen(ipnsName.trim(), {
+      const key = await client.key.gen(ipnsName, {
         type: "rsa",
         size: 2048,
       });
@@ -335,6 +347,8 @@ import root from "window-or-global";
     }
     if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === "") {
       throw new Error("Undefined IPNS name...");
+    } else {
+      ipnsName = ipnsName.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -342,7 +356,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.key !== undefined && client.key.rm !== undefined) {
       this.getLogger().info("Processing IPNS key rm...");
-      const key = await client.key.rm(ipnsName.trim());
+      const key = await client.key.rm(ipnsName);
       if (key == undefined || key == null || key.id == undefined || key.id == null) {
         throw new Error("IPFS client returned an unknown result...");
       }
@@ -358,9 +372,13 @@ import root from "window-or-global";
     }
     if (oldIpnsName == undefined || oldIpnsName == null || oldIpnsName.trim() === "") {
       throw new Error("Undefined IPNS old name...");
+    } else {
+      oldIpnsName = oldIpnsName.trim();
     }
     if (newIpnsName == undefined || newIpnsName == null || newIpnsName.trim() === "") {
       throw new Error("Undefined IPNS nem name...");
+    } else {
+      newIpnsName = newIpnsName.trim();
     }
     // Window IPFS policy
     if (client.enable) {
@@ -368,7 +386,7 @@ import root from "window-or-global";
     }
     if (client !== undefined && client.key !== undefined && client.key.rename !== undefined) {
       this.getLogger().info("Processing IPNS key rename...");
-      const key = await client.key.rename(oldIpnsName.trim(), newIpnsName.trim());
+      const key = await client.key.rename(oldIpnsName, newIpnsName);
       if (key == undefined || key == null) {
         throw new Error("IPFS client returned an unknown result...");
       }

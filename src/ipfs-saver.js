@@ -91,7 +91,7 @@ IPFS Saver
       try {
         var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki);
         if (cid != null) {
-          $tw.ipfs.requestToUnpin(cid);
+          await $tw.ipfs.requestToUnpin(cid);
         }
       } catch (error) {
         this.getLogger().error(error);
@@ -133,7 +133,7 @@ IPFS Saver
           }
         }
         if (ipnsCid != null) {
-          $tw.ipfs.requestToUnpin(ipnsCid);
+          await $tw.ipfs.requestToUnpin(ipnsCid);
         }
       }
       // ENS
@@ -145,7 +145,7 @@ IPFS Saver
         }
         var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain);
         if (ensCid != null) {
-          $tw.ipfs.requestToUnpin(ensCid);
+          await $tw.ipfs.requestToUnpin(ensCid);
         }
       }
       // Upload  current document

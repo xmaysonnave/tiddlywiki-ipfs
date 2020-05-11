@@ -124,7 +124,7 @@ ENS Action
       $tw.ipfs
         .requestToUnpin(ensCid)
         .then((data) => {
-          if (data !== undefined && data !== null) {
+          if (data) {
             $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl);
           }
           $tw.ipfs
@@ -151,7 +151,7 @@ ENS Action
           $tw.ipfs
             .requestToUnpin(ensCid)
             .then((data) => {
-              if (data !== undefined && data !== null) {
+              if (data) {
                 $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl);
               }
               $tw.ipfs

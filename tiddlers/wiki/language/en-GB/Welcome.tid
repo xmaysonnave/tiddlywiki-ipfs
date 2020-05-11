@@ -15,6 +15,7 @@ Welcome to <b>IPFS with ~TiddlyWiki</b>.
 </p>
 <ul>
   <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
+  <li><$ipfslink caption="IPFS with TiddlyWiki Development" field="uri" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/> on "[ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network"</li>
 </ul>
 <p>
 To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
