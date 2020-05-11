@@ -65,29 +65,24 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array);
   };
 
-  IpfsController.prototype.requestToPin = async function (cid, ipnsKey, value) {
+  IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
     const self = this;
     if (ipnsKey !== undefined && ipnsKey !== null) {
       this.resolveUrl(true, true, value)
         .then((data) => {
           var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== null && self.addToPin(cid, resolvedUrl)) {
-            return true;
+          if (resolvedUrl !== null && cid !== null) {
+            self.addToPin(cid, resolvedUrl);
           }
-          return false;
         })
         .catch((error) => {
           self.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
-          return false;
         });
     } else if (cid !== undefined && cid !== null) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      if (this.addToPin(cid, normalizedUrl)) {
-        return true;
-      }
+      this.addToPin(cid, normalizedUrl);
     }
-    return false;
   };
 
   IpfsController.prototype.addToPin = function (cid, normalizedUrl) {
@@ -107,7 +102,7 @@ IPFS Controller
     return false;
   };
 
-  IpfsController.prototype.requestToUnpin = async function (cid, ipnsKey, value) {
+  IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
     if ($tw.utils.getIpfsUnpin() == false) {
       return;
     }
@@ -116,21 +111,17 @@ IPFS Controller
       this.resolveUrl(true, true, value)
         .then((data) => {
           var { cid, resolvedUrl } = data;
-          if (resolvedUrl !== null && cid !== null && self.addToUnpin(cid, resolvedUrl)) {
-            return true;
+          if (resolvedUrl !== null && cid !== null) {
+            self.addToUnpin(cid, resolvedUrl);
           }
-          return false;
         })
         .catch((error) => {
           self.getLogger().warn(error);
           $tw.utils.alert(name, error.message);
-          return false;
         });
     } else if (cid !== undefined && cid !== null) {
       const normalizedUrl = this.normalizeUrl("/" + ipfsKeyword + "/" + cid);
-      if (this.addToUnpin(cid, normalizedUrl)) {
-        return true;
-      }
+      this.addToUnpin(cid, normalizedUrl);
     }
     return false;
   };
