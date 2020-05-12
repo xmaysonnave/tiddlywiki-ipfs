@@ -8,22 +8,22 @@ IPFS info saver
 
 \*/
 
-(function() {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
   /*
    * Information about this macro
    */
-  exports.name = "ipfs-info-saver";
+  exports.name = 'ipfs-info-saver'
 
-  exports.params = [{ name: "tiddler" }];
+  exports.params = [{ name: 'tiddler' }]
 
   /*
    * Run the macro
    */
-  exports.run = function(tiddler) {
-    return $tw.saverHandler.getSaver(tiddler).module.info.name;
-  };
-})();
+  exports.run = function (tiddler) {
+    return $tw.saverHandler.getSaver(tiddler).module.info.name
+  }
+})()

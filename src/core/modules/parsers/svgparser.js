@@ -42,62 +42,81 @@ The image parser parses an image into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  const name = "ipfs-svgparser";
+  const name = 'ipfs-svgparser'
 
   var SvgParser = function (type, text, options) {
-    var self = this;
-    var value = "data:image/svg+xml,";
+    var self = this
+    var value = 'data:image/svg+xml,'
     var element = {
-      type: "element",
-      tag: "img",
-      attributes: {},
-    };
-    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
-      var tiddler = options.tiddler;
-      var canonicalUri = tiddler.fields._canonical_uri;
-      if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() != "") {
+      type: 'element',
+      tag: 'img',
+      attributes: {}
+    }
+    if (
+      $tw.browser &&
+      options.tiddler !== undefined &&
+      options.tiddler !== null
+    ) {
+      var tiddler = options.tiddler
+      var canonicalUri = tiddler.fields._canonical_uri
+      if (
+        canonicalUri !== undefined &&
+        canonicalUri !== null &&
+        canonicalUri.trim() != ''
+      ) {
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
-          .then((data) => {
-            var { normalizedUrl, resolvedUrl } = data;
-            var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+          .then(data => {
+            var { normalizedUrl, resolvedUrl } = data
+            var url =
+              resolvedUrl !== null
+                ? resolvedUrl.href
+                : normalizedUrl !== null
+                ? normalizedUrl.href
+                : null
             if (url !== null) {
               $tw.ipfs
                 .loadToUtf8(url)
-                .then((loaded) => {
-                  element.attributes.src = { type: "string", value: value + encodeURIComponent(loaded.data) };
-                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-                  $tw.rootWidget.refresh(parsedTiddler);
+                .then(loaded => {
+                  element.attributes.src = {
+                    type: 'string',
+                    value: value + encodeURIComponent(loaded.data)
+                  }
+                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler)
+                  $tw.rootWidget.refresh(parsedTiddler)
                 })
-                .catch((error) => {
-                  self.getLogger().error(error);
-                  $tw.utils.alert(name, error.message);
-                });
+                .catch(error => {
+                  self.getLogger().error(error)
+                  $tw.utils.alert(name, error.message)
+                })
             }
           })
-          .catch((error) => {
+          .catch(error => {
             // Ignore
-          });
+          })
       } else {
-        element.attributes.src = { type: "string", value: value + encodeURIComponent(text) };
+        element.attributes.src = {
+          type: 'string',
+          value: value + encodeURIComponent(text)
+        }
       }
     }
     // Return the parsed tree
-    this.tree = [element];
-  };
+    this.tree = [element]
+  }
 
   SvgParser.prototype.getLogger = function () {
     if (window.log) {
-      return window.log.getLogger(name);
+      return window.log.getLogger(name)
     }
-    return console;
-  };
+    return console
+  }
 
-  exports["image/svg+xml"] = SvgParser;
-  exports[".svg"] = SvgParser;
-})();
+  exports['image/svg+xml'] = SvgParser
+  exports['.svg'] = SvgParser
+})()

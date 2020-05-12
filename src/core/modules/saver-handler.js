@@ -6,10 +6,10 @@ module-type: global
 The saver handler tracks changes to the store and handles saving the entire wiki via saver modules.
 
 \*/
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
   /*
 Instantiate the saver handler with the following options:
@@ -17,119 +17,131 @@ wiki: wiki to be synced
 dirtyTracking: true if dirty tracking should be performed
 */
   function SaverHandler(options) {
-    var self = this;
-    this.wiki = options.wiki;
-    this.dirtyTracking = options.dirtyTracking;
-    this.preloadDirty = options.preloadDirty || [];
-    this.pendingAutoSave = false;
+    var self = this
+    this.wiki = options.wiki
+    this.dirtyTracking = options.dirtyTracking
+    this.preloadDirty = options.preloadDirty || []
+    this.pendingAutoSave = false
     // Make a logger
-    this.logger = new $tw.utils.Logger("saver-handler");
+    this.logger = new $tw.utils.Logger('saver-handler')
     // Initialise our savers
     if ($tw.browser) {
-      this.initSavers();
+      this.initSavers()
     }
     // Only do dirty tracking if required
     if ($tw.browser && this.dirtyTracking) {
       // Compile the dirty tiddler filter
-      this.filterFn = this.wiki.compileFilter(this.wiki.getTiddlerText(this.titleSyncFilter));
+      this.filterFn = this.wiki.compileFilter(
+        this.wiki.getTiddlerText(this.titleSyncFilter)
+      )
       // Count of changes that have not yet been saved
       var filteredChanges = self.filterFn.call(self.wiki, function (iterator) {
         $tw.utils.each(self.preloadDirty, function (title) {
-          var tiddler = self.wiki.getTiddler(title);
-          iterator(tiddler, title);
-        });
-      });
-      this.numChanges = filteredChanges.length;
+          var tiddler = self.wiki.getTiddler(title)
+          iterator(tiddler, title)
+        })
+      })
+      this.numChanges = filteredChanges.length
       // Listen out for changes to tiddlers
-      this.wiki.addEventListener("change", async function (changes) {
+      this.wiki.addEventListener('change', async function (changes) {
         // Filter the changes so that we only count changes to tiddlers that we care about
-        var filteredChanges = self.filterFn.call(self.wiki, function (iterator) {
+        var filteredChanges = self.filterFn.call(self.wiki, function (
+          iterator
+        ) {
           $tw.utils.each(changes, function (change, title) {
-            var tiddler = self.wiki.getTiddler(title);
-            iterator(tiddler, title);
-          });
-        });
+            var tiddler = self.wiki.getTiddler(title)
+            iterator(tiddler, title)
+          })
+        })
         // Adjust the number of changes
-        self.numChanges += filteredChanges.length;
-        self.updateDirtyStatus();
+        self.numChanges += filteredChanges.length
+        self.updateDirtyStatus()
         // Do any autosave if one is pending and there's no more change events
-        if (self.pendingAutoSave && self.wiki.getSizeOfTiddlerEventQueue() === 0) {
+        if (
+          self.pendingAutoSave &&
+          self.wiki.getSizeOfTiddlerEventQueue() === 0
+        ) {
           // Check if we're dirty
           if (self.numChanges > 0) {
             await self.saveWiki({
-              method: "autosave",
-              downloadType: "text/plain",
-            });
+              method: 'autosave',
+              downloadType: 'text/plain'
+            })
           }
-          self.pendingAutoSave = false;
+          self.pendingAutoSave = false
         }
-      });
+      })
       // Listen for the autosave event
-      $tw.rootWidget.addEventListener("tm-auto-save-wiki", async function (event) {
+      $tw.rootWidget.addEventListener('tm-auto-save-wiki', async function (
+        event
+      ) {
         // Do the autosave unless there are outstanding tiddler change events
         if (self.wiki.getSizeOfTiddlerEventQueue() === 0) {
           // Check if we're dirty
           if (self.numChanges > 0) {
             await self.saveWiki({
-              method: "autosave",
-              downloadType: "text/plain",
-            });
+              method: 'autosave',
+              downloadType: 'text/plain'
+            })
           }
         } else {
           // Otherwise put ourselves in the "pending autosave" state and wait for the change event before we do the autosave
-          self.pendingAutoSave = true;
+          self.pendingAutoSave = true
         }
-      });
+      })
       // Set up our beforeunload handler
       $tw.addUnloadTask(function (event) {
-        var confirmationMessage;
+        var confirmationMessage
         if (self.isDirty()) {
-          confirmationMessage = $tw.language.getString("UnsavedChangesWarning");
-          event.returnValue = confirmationMessage; // Gecko
+          confirmationMessage = $tw.language.getString('UnsavedChangesWarning')
+          event.returnValue = confirmationMessage // Gecko
         }
-        return confirmationMessage;
-      });
+        return confirmationMessage
+      })
     }
     // Install the save action handlers
     if ($tw.browser) {
-      $tw.rootWidget.addEventListener("tm-save-wiki", async function (event) {
+      $tw.rootWidget.addEventListener('tm-save-wiki', async function (event) {
         await self.saveWiki({
           template: event.param,
-          downloadType: "text/plain",
-          variables: event.paramObject,
-        });
-      });
-      $tw.rootWidget.addEventListener("tm-download-file", async function (event) {
+          downloadType: 'text/plain',
+          variables: event.paramObject
+        })
+      })
+      $tw.rootWidget.addEventListener('tm-download-file', async function (
+        event
+      ) {
         await self.saveWiki({
-          method: "download",
+          method: 'download',
           template: event.param,
-          downloadType: "text/plain",
-          variables: event.paramObject,
-        });
-      });
+          downloadType: 'text/plain',
+          variables: event.paramObject
+        })
+      })
     }
   }
 
-  SaverHandler.prototype.titleSyncFilter = "$:/config/SaverFilter";
-  SaverHandler.prototype.titleAutoSave = "$:/config/AutoSave";
-  SaverHandler.prototype.titleSavedNotification = "$:/language/Notifications/Save/Done";
+  SaverHandler.prototype.titleSyncFilter = '$:/config/SaverFilter'
+  SaverHandler.prototype.titleAutoSave = '$:/config/AutoSave'
+  SaverHandler.prototype.titleSavedNotification =
+    '$:/language/Notifications/Save/Done'
 
   /*
 Select the appropriate saver modules and set them up
 */
   SaverHandler.prototype.initSavers = function (moduleType) {
-    moduleType = moduleType || "saver";
+    moduleType = moduleType || 'saver'
     // Instantiate the available savers
-    this.savers = [];
-    var self = this;
+    this.savers = []
+    var self = this
     $tw.modules.forEachModuleOfType(moduleType, function (title, module) {
       if (module.canSave(self)) {
-        self.savers.push({ title: title, module: module.create(self.wiki) });
+        self.savers.push({ title: title, module: module.create(self.wiki) })
       }
-    });
+    })
     // Sort savers
-    this.sortSavers();
-  };
+    this.sortSavers()
+  }
 
   /*
    * Sort the savers into priority order
@@ -137,16 +149,16 @@ Select the appropriate saver modules and set them up
   SaverHandler.prototype.sortSavers = function () {
     this.savers.sort(function (a, b) {
       if (a.module.info.priority < b.module.info.priority) {
-        return -1;
+        return -1
       } else {
         if (a.module.info.priority > b.module.info.priority) {
-          return +1;
+          return +1
         } else {
-          return 0;
+          return 0
         }
       }
-    });
-  };
+    })
+  }
 
   /*
 Save the wiki contents. Options are:
@@ -155,42 +167,53 @@ template: the tiddler containing the template to save
 downloadType: the content type for the saved file
 */
   SaverHandler.prototype.saveWiki = async function (options) {
-    options = options || {};
+    options = options || {}
     var self = this,
-      method = options.method || "save";
+      method = options.method || 'save'
     // Ignore autosave if disabled
-    if (method === "autosave" && this.wiki.getTiddlerText(this.titleAutoSave, "yes") !== "yes") {
-      return false;
+    if (
+      method === 'autosave' &&
+      this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes'
+    ) {
+      return false
     }
     var variables = options.variables || {},
-      template = options.template || "$:/core/save/all",
-      downloadType = options.downloadType || "text/plain",
+      template = options.template || '$:/core/save/all',
+      downloadType = options.downloadType || 'text/plain',
       text = this.wiki.renderTiddler(downloadType, template, options),
       callback = function (err) {
         if (err) {
-          alert($tw.language.getString("Error/WhileSaving") + ":\n\n" + err);
+          alert($tw.language.getString('Error/WhileSaving') + ':\n\n' + err)
         } else {
           // Clear the task queue if we're saving (rather than downloading)
-          if (method !== "download") {
-            self.numChanges = 0;
-            self.updateDirtyStatus();
+          if (method !== 'download') {
+            self.numChanges = 0
+            self.updateDirtyStatus()
           }
-          $tw.notifier.display(self.titleSavedNotification);
+          $tw.notifier.display(self.titleSavedNotification)
           if (options.callback) {
-            options.callback();
+            options.callback()
           }
         }
-      };
+      }
     // Process preferred if any
-    var ignorePreferred = null;
-    var preferredSaver = $tw.wiki.getTiddler("$:/config/PreferredSaver");
+    var ignorePreferred = null
+    var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')
     if (preferredSaver !== null && preferredSaver !== undefined) {
-      var title = preferredSaver.getFieldString("text");
-      if (title !== null && title !== undefined && title.trim() !== "") {
-        ignorePreferred = title;
+      var title = preferredSaver.getFieldString('text')
+      if (title !== null && title !== undefined && title.trim() !== '') {
+        ignorePreferred = title
         // Process preferred saver
-        if (await this.save(this.getSaver(title).module, method, variables, text, callback)) {
-          return true;
+        if (
+          await this.save(
+            this.getSaver(title).module,
+            method,
+            variables,
+            text,
+            callback
+          )
+        ) {
+          return true
         }
       }
     }
@@ -199,57 +222,76 @@ downloadType: the content type for the saved file
     for (var t = this.savers.length - 1; t >= 0; t--) {
       // Ignore failed preferred if any
       if (this.savers[t].title === ignorePreferred) {
-        continue;
+        continue
       }
       // Process
-      if (await this.save(this.savers[t].module, method, variables, text, callback)) {
-        return true;
+      if (
+        await this.save(
+          this.savers[t].module,
+          method,
+          variables,
+          text,
+          callback
+        )
+      ) {
+        return true
       }
     }
-    return false;
-  };
+    return false
+  }
 
   SaverHandler.prototype.getSaver = function (title) {
     // Locate saver
-    var saver = null;
+    var saver = null
     for (var i = 0; i < this.savers.length; i++) {
-      var current = this.savers[i];
+      var current = this.savers[i]
       if (current.title === title) {
-        saver = current;
-        break;
+        saver = current
+        break
       }
     }
-    return saver;
-  };
+    return saver
+  }
 
-  SaverHandler.prototype.save = async function (saver, method, variables, text, callback) {
+  SaverHandler.prototype.save = async function (
+    saver,
+    method,
+    variables,
+    text,
+    callback
+  ) {
     if (saver.info.capabilities.indexOf(method) !== -1) {
       var saved = await saver.save(text, method, callback, {
-        variables: { filename: variables.filename },
-      });
+        variables: { filename: variables.filename }
+      })
       if (saved) {
-        this.logger.log("Saved wiki with method", method, "through saver", saver.info.name);
-        return true;
+        this.logger.log(
+          'Saved wiki with method',
+          method,
+          'through saver',
+          saver.info.name
+        )
+        return true
       }
     }
-    return false;
-  };
+    return false
+  }
 
   /*
 Checks whether the wiki is dirty (ie the window shouldn't be closed)
 */
   SaverHandler.prototype.isDirty = function () {
-    return this.numChanges > 0;
-  };
+    return this.numChanges > 0
+  }
 
   /*
 Update the document body with the class "tc-dirty" if the wiki has unsaved/unsynced changes
 */
   SaverHandler.prototype.updateDirtyStatus = function () {
     if ($tw.browser) {
-      $tw.utils.toggleClass(document.body, "tc-dirty", this.isDirty());
+      $tw.utils.toggleClass(document.body, 'tc-dirty', this.isDirty())
     }
-  };
+  }
 
-  exports.SaverHandler = SaverHandler;
-})();
+  exports.SaverHandler = SaverHandler
+})()

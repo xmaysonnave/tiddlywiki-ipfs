@@ -41,237 +41,272 @@ IPFS link widget
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  var Widget = require("$:/core/modules/widgets/widget.js").widget;
+  var Widget = require('$:/core/modules/widgets/widget.js').widget
 
-  const name = "ipfs-link";
+  const name = 'ipfs-link'
 
   var IpfsLinkWidget = function (parseTreeNode, options) {
-    this.initialise(parseTreeNode, options);
-  };
+    this.initialise(parseTreeNode, options)
+  }
 
   /*
    * Inherit from the base widget class
    */
-  IpfsLinkWidget.prototype = new Widget();
+  IpfsLinkWidget.prototype = new Widget()
 
   IpfsLinkWidget.prototype.getLogger = function () {
-    return window.log.getLogger(name);
-  };
+    return window.log.getLogger(name)
+  }
 
   /*
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.render = function (parent, nextSibling) {
-    var self = this;
+    var self = this
     // Save the parent dom node
-    this.parentDomNode = parent;
+    this.parentDomNode = parent
     // Compute our attributes
-    this.computeAttributes();
+    this.computeAttributes()
     // Execute our logic
-    this.execute();
+    this.execute()
     // Tiddler link
-    var tiddler = $tw.wiki.getTiddler(this.value);
+    var tiddler = $tw.wiki.getTiddler(this.value)
     if (tiddler !== undefined && tiddler !== null) {
-      this.renderTiddlerLink(parent, nextSibling);
+      this.renderTiddlerLink(parent, nextSibling)
     } else {
-      this.renderText(parent, nextSibling);
+      this.renderText(parent, nextSibling)
       $tw.ipfs
         .resolveUrl(false, false, this.value)
-        .then((data) => {
-          var { normalizedUrl } = data;
+        .then(data => {
+          var { normalizedUrl } = data
           if (normalizedUrl !== null) {
-            self.removeChildDomNodes();
-            self.renderExternalLink(parent, nextSibling, normalizedUrl);
+            self.removeChildDomNodes()
+            self.renderExternalLink(parent, nextSibling, normalizedUrl)
           }
         })
-        .catch((error) => {
+        .catch(error => {
           // Ignore
-        });
+        })
     }
-  };
+  }
 
   /*
    * Render this widget into the DOM
    */
-  IpfsLinkWidget.prototype.renderExternalLink = function (parent, nextSibling, url) {
+  IpfsLinkWidget.prototype.renderExternalLink = function (
+    parent,
+    nextSibling,
+    url
+  ) {
     // Sanitise the specified tag
-    var tag = this.linkTag;
+    var tag = this.linkTag
     if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
-      tag = "a";
+      tag = 'a'
     }
     // Create our element
-    var namespace = this.getVariable("namespace", { defaultValue: "http://www.w3.org/1999/xhtml" });
-    var domNode = this.document.createElementNS(namespace, tag);
-    domNode.setAttribute("href", url);
+    var namespace = this.getVariable('namespace', {
+      defaultValue: 'http://www.w3.org/1999/xhtml'
+    })
+    var domNode = this.document.createElementNS(namespace, tag)
+    domNode.setAttribute('href', url)
     // Add a click event handler
     $tw.utils.addEventListeners(domNode, [
-      { name: "click", handlerObject: this, handlerMethod: "handleExternalClickEvent" },
-    ]);
+      {
+        name: 'click',
+        handlerObject: this,
+        handlerMethod: 'handleExternalClickEvent'
+      }
+    ])
     // Assign classes
-    var classes = [];
+    var classes = []
     if (this.classes) {
-      classes.push(this.classes);
+      classes.push(this.classes)
     }
     if (classes.length > 0) {
-      domNode.setAttribute("class", classes.join(" "));
+      domNode.setAttribute('class', classes.join(' '))
     }
-    if (this["aria-label"]) {
-      domNode.setAttribute("aria-label", this["aria-label"]);
+    if (this['aria-label']) {
+      domNode.setAttribute('aria-label', this['aria-label'])
     }
     // Insert the URL into the DOM and render any children
-    parent.insertBefore(domNode, nextSibling);
+    parent.insertBefore(domNode, nextSibling)
     // Process
-    this.renderChildren(domNode, null);
-    this.domNodes.push(domNode);
-  };
+    this.renderChildren(domNode, null)
+    this.domNodes.push(domNode)
+  }
 
   /*
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderTiddlerLink = function (parent, nextSibling) {
     // self
-    var self = this;
+    var self = this
     // Sanitise the specified tag
-    var tag = this.linkTag;
+    var tag = this.linkTag
     if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
-      tag = "a";
+      tag = 'a'
     }
     // Create our element
-    var namespace = this.getVariable("namespace", { defaultValue: "http://www.w3.org/1999/xhtml" });
-    var domNode = this.document.createElementNS(namespace, tag);
+    var namespace = this.getVariable('namespace', {
+      defaultValue: 'http://www.w3.org/1999/xhtml'
+    })
+    var domNode = this.document.createElementNS(namespace, tag)
     // Assign classes
-    var classes = [];
+    var classes = []
     if (this.overrideClasses === undefined) {
-      classes.push("tc-tiddlylink");
+      classes.push('tc-tiddlylink')
       if (this.isShadow) {
-        classes.push("tc-tiddlylink-shadow");
+        classes.push('tc-tiddlylink-shadow')
       }
       if (this.isMissing && !this.isShadow) {
-        classes.push("tc-tiddlylink-missing");
+        classes.push('tc-tiddlylink-missing')
       } else {
         if (!this.isMissing) {
-          classes.push("tc-tiddlylink-resolves");
+          classes.push('tc-tiddlylink-resolves')
         }
       }
       if (this.linkClasses) {
-        classes.push(this.linkClasses);
+        classes.push(this.linkClasses)
       }
-    } else if (this.overrideClasses !== "") {
-      classes.push(this.overrideClasses);
+    } else if (this.overrideClasses !== '') {
+      classes.push(this.overrideClasses)
     }
     if (classes.length > 0) {
-      domNode.setAttribute("class", classes.join(" "));
+      domNode.setAttribute('class', classes.join(' '))
     }
     // Set an href
-    var wikilinkTransformFilter = this.getVariable("tv-filter-export-link"),
-      wikiLinkText;
+    var wikilinkTransformFilter = this.getVariable('tv-filter-export-link'),
+      wikiLinkText
     if (wikilinkTransformFilter) {
       // Use the filter to construct the href
-      wikiLinkText = this.wiki.filterTiddlers(wikilinkTransformFilter, this, function (iterator) {
-        iterator(self.wiki.getTiddler(self.value), self.value);
-      })[0];
+      wikiLinkText = this.wiki.filterTiddlers(
+        wikilinkTransformFilter,
+        this,
+        function (iterator) {
+          iterator(self.wiki.getTiddler(self.value), self.value)
+        }
+      )[0]
     } else {
       // Expand the tv-wikilink-template variable to construct the href
-      var wikiLinkTemplateMacro = this.getVariable("tv-wikilink-template"),
-        wikiLinkTemplate = wikiLinkTemplateMacro ? wikiLinkTemplateMacro.trim() : "#$uri_encoded$";
-      wikiLinkText = $tw.utils.replaceString(wikiLinkTemplate, "$uri_encoded$", encodeURIComponent(this.value));
+      var wikiLinkTemplateMacro = this.getVariable('tv-wikilink-template'),
+        wikiLinkTemplate = wikiLinkTemplateMacro
+          ? wikiLinkTemplateMacro.trim()
+          : '#$uri_encoded$'
+      wikiLinkText = $tw.utils.replaceString(
+        wikiLinkTemplate,
+        '$uri_encoded$',
+        encodeURIComponent(this.value)
+      )
       wikiLinkText = $tw.utils.replaceString(
         wikiLinkText,
-        "$uri_doubleencoded$",
+        '$uri_doubleencoded$',
         encodeURIComponent(encodeURIComponent(this.value))
-      );
+      )
     }
     // Override with the value of tv-get-export-link if defined
-    wikiLinkText = this.getVariable("tv-get-export-link", {
-      params: [{ name: "to", value: this.value }],
-      defaultValue: wikiLinkText,
-    });
-    if (tag === "a") {
-      var namespaceHref = namespace === "http://www.w3.org/2000/svg" ? "http://www.w3.org/1999/xlink" : undefined;
-      domNode.setAttributeNS(namespaceHref, "href", wikiLinkText);
+    wikiLinkText = this.getVariable('tv-get-export-link', {
+      params: [{ name: 'to', value: this.value }],
+      defaultValue: wikiLinkText
+    })
+    if (tag === 'a') {
+      var namespaceHref =
+        namespace === 'http://www.w3.org/2000/svg'
+          ? 'http://www.w3.org/1999/xlink'
+          : undefined
+      domNode.setAttributeNS(namespaceHref, 'href', wikiLinkText)
     }
     // Set the tabindex
     if (this.tabIndex) {
-      domNode.setAttribute("tabindex", this.tabIndex);
+      domNode.setAttribute('tabindex', this.tabIndex)
     }
     // Set the tooltip
     // HACK: Performance issues with re-parsing the tooltip prevent us defaulting the tooltip to "<$transclude field='tooltip'><$transclude field='title'/></$transclude>"
-    var tooltipWikiText = this.tooltip || this.getVariable("tv-wikilink-tooltip");
+    var tooltipWikiText =
+      this.tooltip || this.getVariable('tv-wikilink-tooltip')
     if (tooltipWikiText) {
-      var tooltipText = this.wiki.renderText("text/plain", "text/vnd.tiddlywiki", tooltipWikiText, {
-        parseAsInline: true,
-        variables: {
-          currentTiddler: this.value,
-        },
-        parentWidget: this,
-      });
-      domNode.setAttribute("title", tooltipText);
+      var tooltipText = this.wiki.renderText(
+        'text/plain',
+        'text/vnd.tiddlywiki',
+        tooltipWikiText,
+        {
+          parseAsInline: true,
+          variables: {
+            currentTiddler: this.value
+          },
+          parentWidget: this
+        }
+      )
+      domNode.setAttribute('title', tooltipText)
     }
-    if (this["aria-label"]) {
-      domNode.setAttribute("aria-label", this["aria-label"]);
+    if (this['aria-label']) {
+      domNode.setAttribute('aria-label', this['aria-label'])
     }
     // Add a click event handler
     $tw.utils.addEventListeners(domNode, [
-      { name: "click", handlerObject: this, handlerMethod: "handleTiddlerClickEvent" },
-    ]);
+      {
+        name: 'click',
+        handlerObject: this,
+        handlerMethod: 'handleTiddlerClickEvent'
+      }
+    ])
     // Make the link draggable if required
-    if (this.draggable === "yes") {
+    if (this.draggable === 'yes') {
       $tw.utils.makeDraggable({
         domNode: domNode,
         dragTiddlerFn: function () {
-          return self.value;
+          return self.value
         },
-        widget: this,
-      });
+        widget: this
+      })
     }
     // Insert the link into the DOM and render any children
-    parent.insertBefore(domNode, nextSibling);
+    parent.insertBefore(domNode, nextSibling)
     // Process
-    this.renderChildren(domNode, null);
-    this.domNodes.push(domNode);
-  };
+    this.renderChildren(domNode, null)
+    this.domNodes.push(domNode)
+  }
 
   /*
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderText = function (parent, nextSibling) {
-    var domNode = this.document.createElement("span");
+    var domNode = this.document.createElement('span')
     // Insert the text into the DOM and render any children
-    parent.insertBefore(domNode, nextSibling);
+    parent.insertBefore(domNode, nextSibling)
     // Process
-    this.renderChildren(domNode, null);
-    this.domNodes.push(domNode);
-  };
+    this.renderChildren(domNode, null)
+    this.domNodes.push(domNode)
+  }
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     $tw.ipfs
       .resolveUrl(true, true, this.value)
-      .then((data) => {
-        var { resolvedUrl } = data;
+      .then(data => {
+        var { resolvedUrl } = data
         if (resolvedUrl !== null) {
-          window.open(resolvedUrl.href, "_blank", "noopener,noreferrer");
+          window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
         }
       })
-      .catch((error) => {
-        $tw.utils.alert(name, error.message);
-      });
-    event.preventDefault();
-    event.stopPropagation();
-    return false;
-  };
+      .catch(error => {
+        $tw.utils.alert(name, error.message)
+      })
+    event.preventDefault()
+    event.stopPropagation()
+    return false
+  }
 
   IpfsLinkWidget.prototype.handleTiddlerClickEvent = function (event) {
     // Send the click on its way as a navigate event
-    var bounds = this.domNodes[0].getBoundingClientRect();
+    var bounds = this.domNodes[0].getBoundingClientRect()
     this.dispatchEvent({
-      type: "tm-navigate",
+      type: 'tm-navigate',
       navigateTo: this.value,
-      navigateFromTitle: this.getVariable("storyTiddler"),
+      navigateFromTitle: this.getVariable('storyTiddler'),
       navigateFromNode: this,
       navigateFromClientRect: {
         top: bounds.top,
@@ -279,61 +314,63 @@ IPFS link widget
         width: bounds.width,
         right: bounds.right,
         bottom: bounds.bottom,
-        height: bounds.height,
+        height: bounds.height
       },
-      navigateSuppressNavigation: event.metaKey || event.ctrlKey || event.button === 1,
+      navigateSuppressNavigation:
+        event.metaKey || event.ctrlKey || event.button === 1,
       metaKey: event.metaKey,
       ctrlKey: event.ctrlKey,
       altKey: event.altKey,
-      shiftKey: event.shiftKey,
-    });
-    if (this.domNodes[0].hasAttribute("href")) {
-      event.preventDefault();
+      shiftKey: event.shiftKey
+    })
+    if (this.domNodes[0].hasAttribute('href')) {
+      event.preventDefault()
     }
-    event.stopPropagation();
-    return false;
-  };
+    event.stopPropagation()
+    return false
+  }
 
   /*
    * Compute the internal state of the widget
    */
   IpfsLinkWidget.prototype.execute = function () {
     // Tiddler
-    this.tiddler = this.getAttribute("tiddler");
+    this.tiddler = this.getAttribute('tiddler')
     // Internal link
-    this.tooltip = this.getAttribute("tooltip");
-    this["aria-label"] = this.getAttribute("aria-label");
-    this.linkClasses = this.getAttribute("class") || "tc-ipfs-link-external";
-    this.overrideClasses = this.getAttribute("overrideClass");
-    this.tabIndex = this.getAttribute("tabindex");
-    this.draggable = this.getAttribute("draggable", "yes");
-    this.linkTag = this.getAttribute("tag", "a");
+    this.tooltip = this.getAttribute('tooltip')
+    this['aria-label'] = this.getAttribute('aria-label')
+    this.linkClasses = this.getAttribute('class') || 'tc-ipfs-link-external'
+    this.overrideClasses = this.getAttribute('overrideClass')
+    this.tabIndex = this.getAttribute('tabindex')
+    this.draggable = this.getAttribute('draggable', 'yes')
+    this.linkTag = this.getAttribute('tag', 'a')
     // Determine the link characteristics
-    this.isMissing = !this.wiki.tiddlerExists(this.to);
-    this.isShadow = this.wiki.isShadowTiddler(this.to);
-    this.hideMissingLinks = (this.getVariable("tv-show-missing-links") || "yes") === "no";
+    this.isMissing = !this.wiki.tiddlerExists(this.to)
+    this.isShadow = this.wiki.isShadowTiddler(this.to)
+    this.hideMissingLinks =
+      (this.getVariable('tv-show-missing-links') || 'yes') === 'no'
     // External link
-    this.caption = this.getAttribute("caption");
-    this.value = this.getAttribute("value");
-    this.field = this.getAttribute("field");
-    const tiddler = $tw.wiki.getTiddler(this.tiddler);
+    this.caption = this.getAttribute('caption')
+    this.value = this.getAttribute('value')
+    this.field = this.getAttribute('field')
+    const tiddler = $tw.wiki.getTiddler(this.tiddler)
     if (this.value == undefined) {
-      this.value = tiddler.getFieldString(this.field);
+      this.value = tiddler.getFieldString(this.field)
     }
-    this.target = this.getAttribute("target") || "_blank";
-    this.rel = this.getAttribute("rel") || "noopener";
-    this.makeChildWidgets([{ type: "text", text: this.caption }]);
-  };
+    this.target = this.getAttribute('target') || '_blank'
+    this.rel = this.getAttribute('rel') || 'noopener'
+    this.makeChildWidgets([{ type: 'text', text: this.caption }])
+  }
 
   /*
    * Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
    */
   IpfsLinkWidget.prototype.refresh = function (changedTiddlers) {
-    const changedAttributes = this.computeAttributes();
-    const tiddler = $tw.wiki.getTiddler(this.tiddler);
-    var value = null;
+    const changedAttributes = this.computeAttributes()
+    const tiddler = $tw.wiki.getTiddler(this.tiddler)
+    var value = null
     if (this.field !== undefined && this.field !== null) {
-      value = tiddler.getFieldString(this.field);
+      value = tiddler.getFieldString(this.field)
     }
     if (
       changedAttributes.caption ||
@@ -345,16 +382,16 @@ IPFS link widget
       changedAttributes.to ||
       changedTiddlers[this.to] ||
       changedAttributes.tooltip ||
-      changedAttributes["aria-label"] ||
-      changedTiddlers["$:/ipfs/saver/gateway"] ||
-      changedTiddlers["$:/ipfs/saver/policy"] ||
+      changedAttributes['aria-label'] ||
+      changedTiddlers['$:/ipfs/saver/gateway'] ||
+      changedTiddlers['$:/ipfs/saver/policy'] ||
       (value !== null && value !== this.value)
     ) {
-      this.refreshSelf();
-      return true;
+      this.refreshSelf()
+      return true
     }
-    return this.refreshChildren(changedTiddlers);
-  };
+    return this.refreshChildren(changedTiddlers)
+  }
 
-  exports.ipfslink = IpfsLinkWidget;
-})();
+  exports.ipfslink = IpfsLinkWidget
+})()

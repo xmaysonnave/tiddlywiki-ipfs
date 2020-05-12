@@ -1,58 +1,58 @@
-import root from "window-or-global";
-import { URL } from "universal-url";
+import root from 'window-or-global'
+import { URL } from 'universal-url'
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
-  "use strict";
+  'use strict'
 
-  const name = "ipfs-url";
+  const name = 'ipfs-url'
 
   var IpfsUrl = function () {
-    this.defaultApiUrl = null;
-    this.defaultGatewayUrl = null;
-  };
+    this.defaultApiUrl = null
+    this.defaultGatewayUrl = null
+  }
 
   IpfsUrl.prototype.getLogger = function () {
-    return root.log.getLogger(name);
-  };
+    return root.log.getLogger(name)
+  }
 
   IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {
     if (this.defaultApiUrl == null) {
-      this.defaultApiUrl = new URL(this.getIpfsDefaultApi());
+      this.defaultApiUrl = new URL(this.getIpfsDefaultApi())
     }
-    return this.defaultApiUrl;
-  };
+    return this.defaultApiUrl
+  }
 
   IpfsUrl.prototype.getIpfsDefaultGatewayUrl = function () {
     if (this.defaultGatewayUrl == null) {
-      this.defaultGatewayUrl = new URL(this.getIpfsDefaultGateway());
+      this.defaultGatewayUrl = new URL(this.getIpfsDefaultGateway())
     }
-    return this.defaultGatewayUrl;
-  };
+    return this.defaultGatewayUrl
+  }
 
   IpfsUrl.prototype.getIpfsApiUrl = function () {
     try {
-      return this.getUrl($tw.utils.getIpfsSaverApiUrl());
+      return this.getUrl($tw.utils.getIpfsSaverApiUrl())
     } catch (error) {
-      return this.getIpfsDefaultApiUrl();
+      return this.getIpfsDefaultApiUrl()
     }
-  };
+  }
 
   IpfsUrl.prototype.getIpfsGatewayUrl = function () {
     try {
-      return this.getUrl($tw.utils.getIpfsSaverGatewayUrl());
+      return this.getUrl($tw.utils.getIpfsSaverGatewayUrl())
     } catch (error) {
-      return this.getIpfsDefaultGatewayUrl();
+      return this.getIpfsDefaultGatewayUrl()
     }
-  };
+  }
 
   IpfsUrl.prototype.getIpfsDefaultApi = function () {
-    return "https://ipfs.infura.io:5001";
-  };
+    return 'https://ipfs.infura.io:5001'
+  }
 
   IpfsUrl.prototype.getIpfsDefaultGateway = function () {
-    return "https://gateway.ipfs.io";
-  };
+    return 'https://gateway.ipfs.io'
+  }
 
   /**
    * url.href;
@@ -73,57 +73,60 @@ import { URL } from "universal-url";
    */
   IpfsUrl.prototype.getDocumentUrl = function () {
     try {
-      return new URL(root.location.href);
+      return new URL(root.location.href)
     } catch (error) {
-      this.getLogger().error(error);
+      this.getLogger().error(error)
     }
-    throw new Error("Invalid current HTML Document URL...");
-  };
+    throw new Error('Invalid current HTML Document URL...')
+  }
 
   IpfsUrl.prototype.getUrl = function (url, base) {
     try {
-      return new URL(url, base);
+      return new URL(url, base)
     } catch (error) {
       // Ignore
     }
-    throw new Error("Invalid URL...");
-  };
+    throw new Error('Invalid URL...')
+  }
 
   IpfsUrl.prototype.getIpfsBaseUrl = function () {
-    var base = this.getIpfsGatewayUrl();
+    var base = this.getIpfsGatewayUrl()
     try {
-      if ($tw.utils.getIpfsUrlPolicy() === "origin") {
-        base = this.getDocumentUrl();
-        if (base.protocol === "file:") {
-          base = this.getIpfsGatewayUrl();
+      if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
+        base = this.getDocumentUrl()
+        if (base.protocol === 'file:') {
+          base = this.getIpfsGatewayUrl()
         }
       }
     } catch (error) {
-      base = this.getIpfsGatewayUrl();
+      base = this.getIpfsGatewayUrl()
     }
-    return this.getUrl(base.protocol + "//" + base.host);
-  };
+    return this.getUrl(base.protocol + '//' + base.host)
+  }
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
     // Check
-    if (value == undefined || value == null || value.toString() === "") {
-      return null;
+    if (value == undefined || value == null || value.toString() === '') {
+      return null
     }
     // Parse
-    var text = false;
-    var url = null;
+    var text = false
+    var url = null
     // Text or ENS
     try {
-      url = this.getUrl(value);
+      url = this.getUrl(value)
     } catch (error) {
-      if (value.startsWith("/") === false) {
-        text = true;
+      if (value.startsWith('/') === false) {
+        text = true
         try {
-          url = this.getUrl("https://" + value);
-          if (url.hostname.endsWith(".eth") == false && url.hostname.endsWith(".eth.link") == false) {
-            url = null;
+          url = this.getUrl('https://' + value)
+          if (
+            url.hostname.endsWith('.eth') == false &&
+            url.hostname.endsWith('.eth.link') == false
+          ) {
+            url = null
           } else {
-            text = false;
+            text = false
           }
         } catch (error) {
           // ignore
@@ -131,18 +134,21 @@ import { URL } from "universal-url";
       }
     }
     if (text) {
-      return null;
+      return null
     }
     // Invalid URL, try to parse with a Base URL
     if (url == null) {
-      url = this.getUrl(value, base !== undefined && base !== null ? base : this.getIpfsBaseUrl());
+      url = this.getUrl(
+        value,
+        base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+      )
     }
     // Remove .link from .eth.link
-    if (url.hostname.endsWith(".eth.link")) {
-      url.hostname = url.hostname.substring(0, url.hostname.indexOf(".link"));
+    if (url.hostname.endsWith('.eth.link')) {
+      url.hostname = url.hostname.substring(0, url.hostname.indexOf('.link'))
     }
-    return url;
-  };
+    return url
+  }
 
-  module.exports = IpfsUrl;
-})();
+  module.exports = IpfsUrl
+})()

@@ -41,56 +41,69 @@ The HTML parser displays text as raw HTML
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  const name = "ipfs-binaryparser";
+  const name = 'ipfs-binaryparser'
 
   var HtmlParser = function (type, text, options) {
-    var value = "data:text/html;charset=utf-8,";
-    var src;
-    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
-      var tiddler = options.tiddler;
-      var canonicalUri = tiddler.fields._canonical_uri;
-      if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() != "") {
+    var value = 'data:text/html;charset=utf-8,'
+    var src
+    if (
+      $tw.browser &&
+      options.tiddler !== undefined &&
+      options.tiddler !== null
+    ) {
+      var tiddler = options.tiddler
+      var canonicalUri = tiddler.fields._canonical_uri
+      if (
+        canonicalUri !== undefined &&
+        canonicalUri !== null &&
+        canonicalUri.trim() != ''
+      ) {
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
-          .then((data) => {
-            var { normalizedUrl, resolvedUrl } = data;
-            var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+          .then(data => {
+            var { normalizedUrl, resolvedUrl } = data
+            var url =
+              resolvedUrl !== null
+                ? resolvedUrl.href
+                : normalizedUrl !== null
+                ? normalizedUrl.href
+                : null
             if (url !== null) {
-              src = url;
-              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-              $tw.rootWidget.refresh(parsedTiddler);
+              src = url
+              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler)
+              $tw.rootWidget.refresh(parsedTiddler)
             }
           })
-          .catch((error) => {
+          .catch(error => {
             // Ignore
-          });
+          })
       } else if (text) {
-        src = value + encodeURIComponent(text);
+        src = value + encodeURIComponent(text)
       }
     }
     this.tree = [
       {
-        type: "element",
-        tag: "iframe",
+        type: 'element',
+        tag: 'iframe',
         attributes: {
-          src: { type: "string", value: src },
-          sandbox: { type: "string", value: "" },
-        },
-      },
-    ];
-  };
+          src: { type: 'string', value: src },
+          sandbox: { type: 'string', value: '' }
+        }
+      }
+    ]
+  }
 
   HtmlParser.prototype.getLogger = function () {
     if (window.log) {
-      return window.log.getLogger(name);
+      return window.log.getLogger(name)
     }
-    return console;
-  };
+    return console
+  }
 
-  exports["text/html"] = HtmlParser;
-})();
+  exports['text/html'] = HtmlParser
+})()

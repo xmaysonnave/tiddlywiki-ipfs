@@ -42,144 +42,172 @@ wikiparser
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  const IpfsImport = require("$:/plugins/ipfs/ipfs-import.js").IpfsImport;
+  const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
 
-  var name = "ipfs-wikiparser";
+  var name = 'ipfs-wikiparser'
 
   var WikiParser = function (type, text, options) {
-    var self = this;
-    this.wiki = options.wiki;
+    var self = this
+    this.wiki = options.wiki
     // Check for an externally linked tiddler
-    if ($tw.browser && (text || "") === "" && options.tiddler !== undefined && options.tiddler !== null) {
-      var canonicalUri = options.tiddler.fields._canonical_uri;
-      var importUri = options.tiddler.fields._import_uri;
-      var title = options.tiddler.fields.title;
+    if (
+      $tw.browser &&
+      (text || '') === '' &&
+      options.tiddler !== undefined &&
+      options.tiddler !== null
+    ) {
+      var canonicalUri = options.tiddler.fields._canonical_uri
+      var importUri = options.tiddler.fields._import_uri
+      var title = options.tiddler.fields.title
       var url =
-        importUri !== undefined && importUri !== null && importUri.trim() !== ""
+        importUri !== undefined && importUri !== null && importUri.trim() !== ''
           ? importUri
-          : canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== ""
+          : canonicalUri !== undefined &&
+            canonicalUri !== null &&
+            canonicalUri.trim() !== ''
           ? canonicalUri
-          : null;
+          : null
       if (url !== null) {
-        var ipfsImport = new IpfsImport();
-        ipfsImport.import(canonicalUri, importUri, title).catch((error) => {
-          self.getLogger().error(error);
-          $tw.utils.alert(name, error.message);
-        });
-        text = $tw.language.getRawString("LazyLoadingWarning");
+        var ipfsImport = new IpfsImport()
+        ipfsImport.import(canonicalUri, importUri, title).catch(error => {
+          self.getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+        })
+        text = $tw.language.getRawString('LazyLoadingWarning')
       }
     }
     // Initialise the classes if we don't have them already
     if (!this.pragmaRuleClasses) {
       WikiParser.prototype.pragmaRuleClasses = $tw.modules.createClassesFromModules(
-        "wikirule",
-        "pragma",
+        'wikirule',
+        'pragma',
         $tw.WikiRuleBase
-      );
-      this.setupRules(WikiParser.prototype.pragmaRuleClasses, "$:/config/WikiParserRules/Pragmas/");
+      )
+      this.setupRules(
+        WikiParser.prototype.pragmaRuleClasses,
+        '$:/config/WikiParserRules/Pragmas/'
+      )
     }
     if (!this.blockRuleClasses) {
       WikiParser.prototype.blockRuleClasses = $tw.modules.createClassesFromModules(
-        "wikirule",
-        "block",
+        'wikirule',
+        'block',
         $tw.WikiRuleBase
-      );
-      this.setupRules(WikiParser.prototype.blockRuleClasses, "$:/config/WikiParserRules/Block/");
+      )
+      this.setupRules(
+        WikiParser.prototype.blockRuleClasses,
+        '$:/config/WikiParserRules/Block/'
+      )
     }
     if (!this.inlineRuleClasses) {
       WikiParser.prototype.inlineRuleClasses = $tw.modules.createClassesFromModules(
-        "wikirule",
-        "inline",
+        'wikirule',
+        'inline',
         $tw.WikiRuleBase
-      );
-      this.setupRules(WikiParser.prototype.inlineRuleClasses, "$:/config/WikiParserRules/Inline/");
+      )
+      this.setupRules(
+        WikiParser.prototype.inlineRuleClasses,
+        '$:/config/WikiParserRules/Inline/'
+      )
     }
     // Save the parse text
-    this.type = type || "text/vnd.tiddlywiki";
-    this.source = text || "";
-    this.sourceLength = this.source.length;
+    this.type = type || 'text/vnd.tiddlywiki'
+    this.source = text || ''
+    this.sourceLength = this.source.length
     // Flag for ignoring whitespace
-    this.configTrimWhiteSpace = false;
+    this.configTrimWhiteSpace = false
     // Set current parse position
-    this.pos = 0;
+    this.pos = 0
     // Instantiate the pragma parse rules
-    this.pragmaRules = this.instantiateRules(this.pragmaRuleClasses, "pragma", 0);
+    this.pragmaRules = this.instantiateRules(
+      this.pragmaRuleClasses,
+      'pragma',
+      0
+    )
     // Instantiate the parser block and inline rules
-    this.blockRules = this.instantiateRules(this.blockRuleClasses, "block", 0);
-    this.inlineRules = this.instantiateRules(this.inlineRuleClasses, "inline", 0);
+    this.blockRules = this.instantiateRules(this.blockRuleClasses, 'block', 0)
+    this.inlineRules = this.instantiateRules(
+      this.inlineRuleClasses,
+      'inline',
+      0
+    )
     // Parse any pragmas
-    this.tree = [];
-    var topBranch = this.parsePragmas();
+    this.tree = []
+    var topBranch = this.parsePragmas()
     // Parse the text into inline runs or blocks
     if (options.parseAsInline) {
-      topBranch.push.apply(topBranch, this.parseInlineRun());
+      topBranch.push.apply(topBranch, this.parseInlineRun())
     } else {
-      topBranch.push.apply(topBranch, this.parseBlocks());
+      topBranch.push.apply(topBranch, this.parseBlocks())
     }
     // Return the parsed tree
-  };
+  }
 
   WikiParser.prototype.getLogger = function () {
     if (window.log) {
-      return window.log.getLogger(name);
+      return window.log.getLogger(name)
     }
-    return console;
-  };
+    return console
+  }
 
   /*
    */
   WikiParser.prototype.setupRules = function (proto, configPrefix) {
-    var self = this;
+    var self = this
     if (!$tw.safemode) {
       $tw.utils.each(proto, function (object, name) {
-        if (self.wiki.getTiddlerText(configPrefix + name, "enable") !== "enable") {
-          delete proto[name];
+        if (
+          self.wiki.getTiddlerText(configPrefix + name, 'enable') !== 'enable'
+        ) {
+          delete proto[name]
         }
-      });
+      })
     }
-  };
+  }
 
   /*
 Instantiate an array of parse rules
 */
   WikiParser.prototype.instantiateRules = function (classes, type, startPos) {
     var rulesInfo = [],
-      self = this;
+      self = this
     $tw.utils.each(classes, function (RuleClass) {
       // Instantiate the rule
-      var rule = new RuleClass(self);
-      rule.is = {};
-      rule.is[type] = true;
-      rule.init(self);
-      var matchIndex = rule.findNextMatch(startPos);
+      var rule = new RuleClass(self)
+      rule.is = {}
+      rule.is[type] = true
+      rule.init(self)
+      var matchIndex = rule.findNextMatch(startPos)
       if (matchIndex !== undefined) {
         rulesInfo.push({
           rule: rule,
-          matchIndex: matchIndex,
-        });
+          matchIndex: matchIndex
+        })
       }
-    });
-    return rulesInfo;
-  };
+    })
+    return rulesInfo
+  }
 
   /*
 Skip any whitespace at the current position. Options are:
   treatNewlinesAsNonWhitespace: true if newlines are NOT to be treated as whitespace
 */
   WikiParser.prototype.skipWhitespace = function (options) {
-    options = options || {};
-    var whitespaceRegExp = options.treatNewlinesAsNonWhitespace ? /([^\S\n]+)/gm : /(\s+)/gm;
-    whitespaceRegExp.lastIndex = this.pos;
-    var whitespaceMatch = whitespaceRegExp.exec(this.source);
+    options = options || {}
+    var whitespaceRegExp = options.treatNewlinesAsNonWhitespace
+      ? /([^\S\n]+)/gm
+      : /(\s+)/gm
+    whitespaceRegExp.lastIndex = this.pos
+    var whitespaceMatch = whitespaceRegExp.exec(this.source)
     if (whitespaceMatch && whitespaceMatch.index === this.pos) {
-      this.pos = whitespaceRegExp.lastIndex;
+      this.pos = whitespaceRegExp.lastIndex
     }
-  };
+  }
 
   /*
 Get the next match out of an array of parse rule instances
@@ -187,52 +215,55 @@ Get the next match out of an array of parse rule instances
   WikiParser.prototype.findNextMatch = function (rules, startPos) {
     // Find the best matching rule by finding the closest match position
     var matchingRule,
-      matchingRulePos = this.sourceLength;
+      matchingRulePos = this.sourceLength
     // Step through each rule
     for (var t = 0; t < rules.length; t++) {
-      var ruleInfo = rules[t];
+      var ruleInfo = rules[t]
       // Ask the rule to get the next match if we've moved past the current one
       if (ruleInfo.matchIndex !== undefined && ruleInfo.matchIndex < startPos) {
-        ruleInfo.matchIndex = ruleInfo.rule.findNextMatch(startPos);
+        ruleInfo.matchIndex = ruleInfo.rule.findNextMatch(startPos)
       }
       // Adopt this match if it's closer than the current best match
-      if (ruleInfo.matchIndex !== undefined && ruleInfo.matchIndex <= matchingRulePos) {
-        matchingRule = ruleInfo;
-        matchingRulePos = ruleInfo.matchIndex;
+      if (
+        ruleInfo.matchIndex !== undefined &&
+        ruleInfo.matchIndex <= matchingRulePos
+      ) {
+        matchingRule = ruleInfo
+        matchingRulePos = ruleInfo.matchIndex
       }
     }
-    return matchingRule;
-  };
+    return matchingRule
+  }
 
   /*
 Parse any pragmas at the beginning of a block of parse text
 */
   WikiParser.prototype.parsePragmas = function () {
-    var currentTreeBranch = this.tree;
+    var currentTreeBranch = this.tree
     while (true) {
       // Skip whitespace
-      this.skipWhitespace();
+      this.skipWhitespace()
       // Check for the end of the text
       if (this.pos >= this.sourceLength) {
-        break;
+        break
       }
       // Check if we've arrived at a pragma rule match
-      var nextMatch = this.findNextMatch(this.pragmaRules, this.pos);
+      var nextMatch = this.findNextMatch(this.pragmaRules, this.pos)
       // If not, just exit
       if (!nextMatch || nextMatch.matchIndex !== this.pos) {
-        break;
+        break
       }
       // Process the pragma rule
-      var subTree = nextMatch.rule.parse();
+      var subTree = nextMatch.rule.parse()
       if (subTree.length > 0) {
         // Quick hack; we only cope with a single parse tree node being returned, which is true at the moment
-        currentTreeBranch.push.apply(currentTreeBranch, subTree);
-        subTree[0].children = [];
-        currentTreeBranch = subTree[0].children;
+        currentTreeBranch.push.apply(currentTreeBranch, subTree)
+        subTree[0].children = []
+        currentTreeBranch = subTree[0].children
       }
     }
-    return currentTreeBranch;
-  };
+    return currentTreeBranch
+  }
 
   /*
 Parse a block from the current position
@@ -240,20 +271,26 @@ Parse a block from the current position
 */
   WikiParser.prototype.parseBlock = function (terminatorRegExpString) {
     var terminatorRegExp = terminatorRegExpString
-      ? new RegExp("(" + terminatorRegExpString + "|\\r?\\n\\r?\\n)", "mg")
-      : /(\r?\n\r?\n)/gm;
-    this.skipWhitespace();
+      ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'mg')
+      : /(\r?\n\r?\n)/gm
+    this.skipWhitespace()
     if (this.pos >= this.sourceLength) {
-      return [];
+      return []
     }
     // Look for a block rule that applies at the current position
-    var nextMatch = this.findNextMatch(this.blockRules, this.pos);
+    var nextMatch = this.findNextMatch(this.blockRules, this.pos)
     if (nextMatch && nextMatch.matchIndex === this.pos) {
-      return nextMatch.rule.parse();
+      return nextMatch.rule.parse()
     }
     // Treat it as a paragraph if we didn't find a block rule
-    return [{ type: "element", tag: "p", children: this.parseInlineRun(terminatorRegExp) }];
-  };
+    return [
+      {
+        type: 'element',
+        tag: 'p',
+        children: this.parseInlineRun(terminatorRegExp)
+      }
+    ]
+  }
 
   /*
 Parse a series of blocks of text until a terminating regexp is encountered or the end of the text
@@ -261,49 +298,54 @@ Parse a series of blocks of text until a terminating regexp is encountered or th
 */
   WikiParser.prototype.parseBlocks = function (terminatorRegExpString) {
     if (terminatorRegExpString) {
-      return this.parseBlocksTerminated(terminatorRegExpString);
+      return this.parseBlocksTerminated(terminatorRegExpString)
     } else {
-      return this.parseBlocksUnterminated();
+      return this.parseBlocksUnterminated()
     }
-  };
+  }
 
   /*
 Parse a block from the current position to the end of the text
 */
   WikiParser.prototype.parseBlocksUnterminated = function () {
-    var tree = [];
+    var tree = []
     while (this.pos < this.sourceLength) {
-      tree.push.apply(tree, this.parseBlock());
+      tree.push.apply(tree, this.parseBlock())
     }
-    return tree;
-  };
+    return tree
+  }
 
   /*
 Parse blocks of text until a terminating regexp is encountered
 */
-  WikiParser.prototype.parseBlocksTerminated = function (terminatorRegExpString) {
-    var terminatorRegExp = new RegExp("(" + terminatorRegExpString + ")", "mg"),
-      tree = [];
+  WikiParser.prototype.parseBlocksTerminated = function (
+    terminatorRegExpString
+  ) {
+    var terminatorRegExp = new RegExp('(' + terminatorRegExpString + ')', 'mg'),
+      tree = []
     // Skip any whitespace
-    this.skipWhitespace();
+    this.skipWhitespace()
     //  Check if we've got the end marker
-    terminatorRegExp.lastIndex = this.pos;
-    var match = terminatorRegExp.exec(this.source);
+    terminatorRegExp.lastIndex = this.pos
+    var match = terminatorRegExp.exec(this.source)
     // Parse the text into blocks
-    while (this.pos < this.sourceLength && !(match && match.index === this.pos)) {
-      var blocks = this.parseBlock(terminatorRegExpString);
-      tree.push.apply(tree, blocks);
+    while (
+      this.pos < this.sourceLength &&
+      !(match && match.index === this.pos)
+    ) {
+      var blocks = this.parseBlock(terminatorRegExpString)
+      tree.push.apply(tree, blocks)
       // Skip any whitespace
-      this.skipWhitespace();
+      this.skipWhitespace()
       //  Check if we've got the end marker
-      terminatorRegExp.lastIndex = this.pos;
-      match = terminatorRegExp.exec(this.source);
+      terminatorRegExp.lastIndex = this.pos
+      match = terminatorRegExp.exec(this.source)
     }
     if (match && match.index === this.pos) {
-      this.pos = match.index + match[0].length;
+      this.pos = match.index + match[0].length
     }
-    return tree;
-  };
+    return tree
+  }
 
   /*
 Parse a run of text at the current position
@@ -314,110 +356,128 @@ Options available:
 */
   WikiParser.prototype.parseInlineRun = function (terminatorRegExp, options) {
     if (terminatorRegExp) {
-      return this.parseInlineRunTerminated(terminatorRegExp, options);
+      return this.parseInlineRunTerminated(terminatorRegExp, options)
     } else {
-      return this.parseInlineRunUnterminated(options);
+      return this.parseInlineRunUnterminated(options)
     }
-  };
+  }
 
   WikiParser.prototype.parseInlineRunUnterminated = function (options) {
-    var tree = [];
+    var tree = []
     // Find the next occurrence of an inline rule
-    var nextMatch = this.findNextMatch(this.inlineRules, this.pos);
+    var nextMatch = this.findNextMatch(this.inlineRules, this.pos)
     // Loop around the matches until we've reached the end of the text
     while (this.pos < this.sourceLength && nextMatch) {
       // Process the text preceding the run rule
       if (nextMatch.matchIndex > this.pos) {
-        this.pushTextWidget(tree, this.source.substring(this.pos, nextMatch.matchIndex));
-        this.pos = nextMatch.matchIndex;
+        this.pushTextWidget(
+          tree,
+          this.source.substring(this.pos, nextMatch.matchIndex)
+        )
+        this.pos = nextMatch.matchIndex
       }
       // Process the run rule
-      tree.push.apply(tree, nextMatch.rule.parse());
+      tree.push.apply(tree, nextMatch.rule.parse())
       // Look for the next run rule
-      nextMatch = this.findNextMatch(this.inlineRules, this.pos);
+      nextMatch = this.findNextMatch(this.inlineRules, this.pos)
     }
     // Process the remaining text
     if (this.pos < this.sourceLength) {
-      this.pushTextWidget(tree, this.source.substr(this.pos));
+      this.pushTextWidget(tree, this.source.substr(this.pos))
     }
-    this.pos = this.sourceLength;
-    return tree;
-  };
+    this.pos = this.sourceLength
+    return tree
+  }
 
-  WikiParser.prototype.parseInlineRunTerminated = function (terminatorRegExp, options) {
-    options = options || {};
-    var tree = [];
+  WikiParser.prototype.parseInlineRunTerminated = function (
+    terminatorRegExp,
+    options
+  ) {
+    options = options || {}
+    var tree = []
     // Find the next occurrence of the terminator
-    terminatorRegExp.lastIndex = this.pos;
-    var terminatorMatch = terminatorRegExp.exec(this.source);
+    terminatorRegExp.lastIndex = this.pos
+    var terminatorMatch = terminatorRegExp.exec(this.source)
     // Find the next occurrence of a inlinerule
-    var inlineRuleMatch = this.findNextMatch(this.inlineRules, this.pos);
+    var inlineRuleMatch = this.findNextMatch(this.inlineRules, this.pos)
     // Loop around until we've reached the end of the text
-    while (this.pos < this.sourceLength && (terminatorMatch || inlineRuleMatch)) {
+    while (
+      this.pos < this.sourceLength &&
+      (terminatorMatch || inlineRuleMatch)
+    ) {
       // Return if we've found the terminator, and it precedes any inline rule match
       if (terminatorMatch) {
-        if (!inlineRuleMatch || inlineRuleMatch.matchIndex >= terminatorMatch.index) {
+        if (
+          !inlineRuleMatch ||
+          inlineRuleMatch.matchIndex >= terminatorMatch.index
+        ) {
           if (terminatorMatch.index > this.pos) {
-            this.pushTextWidget(tree, this.source.substring(this.pos, terminatorMatch.index));
+            this.pushTextWidget(
+              tree,
+              this.source.substring(this.pos, terminatorMatch.index)
+            )
           }
-          this.pos = terminatorMatch.index;
+          this.pos = terminatorMatch.index
           if (options.eatTerminator) {
-            this.pos += terminatorMatch[0].length;
+            this.pos += terminatorMatch[0].length
           }
-          return tree;
+          return tree
         }
       }
       // Process any inline rule, along with the text preceding it
       if (inlineRuleMatch) {
         // Preceding text
         if (inlineRuleMatch.matchIndex > this.pos) {
-          this.pushTextWidget(tree, this.source.substring(this.pos, inlineRuleMatch.matchIndex));
-          this.pos = inlineRuleMatch.matchIndex;
+          this.pushTextWidget(
+            tree,
+            this.source.substring(this.pos, inlineRuleMatch.matchIndex)
+          )
+          this.pos = inlineRuleMatch.matchIndex
         }
         // Process the inline rule
-        tree.push.apply(tree, inlineRuleMatch.rule.parse());
+        tree.push.apply(tree, inlineRuleMatch.rule.parse())
         // Look for the next inline rule
-        inlineRuleMatch = this.findNextMatch(this.inlineRules, this.pos);
+        inlineRuleMatch = this.findNextMatch(this.inlineRules, this.pos)
         // Look for the next terminator match
-        terminatorRegExp.lastIndex = this.pos;
-        terminatorMatch = terminatorRegExp.exec(this.source);
+        terminatorRegExp.lastIndex = this.pos
+        terminatorMatch = terminatorRegExp.exec(this.source)
       }
     }
     // Process the remaining text
     if (this.pos < this.sourceLength) {
-      this.pushTextWidget(tree, this.source.substr(this.pos));
+      this.pushTextWidget(tree, this.source.substr(this.pos))
     }
-    this.pos = this.sourceLength;
-    return tree;
-  };
+    this.pos = this.sourceLength
+    return tree
+  }
 
   /*
 Push a text widget onto an array, respecting the configTrimWhiteSpace setting
 */
   WikiParser.prototype.pushTextWidget = function (array, text) {
     if (this.configTrimWhiteSpace) {
-      text = $tw.utils.trim(text);
+      text = $tw.utils.trim(text)
     }
     if (text) {
-      array.push({ type: "text", text: text });
+      array.push({ type: 'text', text: text })
     }
-  };
+  }
 
   /*
 Parse zero or more class specifiers `.classname`
 */
   WikiParser.prototype.parseClasses = function () {
     var classRegExp = /\.([^\s\.]+)/gm,
-      classNames = [];
-    classRegExp.lastIndex = this.pos;
-    var match = classRegExp.exec(this.source);
+      classNames = []
+    classRegExp.lastIndex = this.pos
+    var match = classRegExp.exec(this.source)
     while (match && match.index === this.pos) {
-      this.pos = match.index + match[0].length;
-      classNames.push(match[1]);
-      match = classRegExp.exec(this.source);
+      this.pos = match.index + match[0].length
+      classNames.push(match[1])
+      match = classRegExp.exec(this.source)
     }
-    return classNames;
-  };
+    return classNames
+  }
 
   /*
 Amend the rules used by this instance of the parser
@@ -425,33 +485,33 @@ Amend the rules used by this instance of the parser
   names: array of rule names
 */
   WikiParser.prototype.amendRules = function (type, names) {
-    names = names || [];
+    names = names || []
     // Define the filter function
-    var keepFilter;
-    if (type === "only") {
+    var keepFilter
+    if (type === 'only') {
       keepFilter = function (name) {
-        return names.indexOf(name) !== -1;
-      };
-    } else if (type === "except") {
+        return names.indexOf(name) !== -1
+      }
+    } else if (type === 'except') {
       keepFilter = function (name) {
-        return names.indexOf(name) === -1;
-      };
+        return names.indexOf(name) === -1
+      }
     } else {
-      return;
+      return
     }
     // Define a function to process each of our rule arrays
     var processRuleArray = function (ruleArray) {
       for (var t = ruleArray.length - 1; t >= 0; t--) {
         if (!keepFilter(ruleArray[t].rule.name)) {
-          ruleArray.splice(t, 1);
+          ruleArray.splice(t, 1)
         }
       }
-    };
+    }
     // Process each rule array
-    processRuleArray(this.pragmaRules);
-    processRuleArray(this.blockRules);
-    processRuleArray(this.inlineRules);
-  };
+    processRuleArray(this.pragmaRules)
+    processRuleArray(this.blockRules)
+    processRuleArray(this.inlineRules)
+  }
 
-  exports["text/vnd.tiddlywiki"] = WikiParser;
-})();
+  exports['text/vnd.tiddlywiki'] = WikiParser
+})()

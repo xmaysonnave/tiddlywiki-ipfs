@@ -42,67 +42,83 @@ The audio parser parses an audio tiddler into an embeddable HTML element
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  var name = "ipfs-audioparser";
+  var name = 'ipfs-audioparser'
 
   var AudioParser = function (type, text, options) {
-    var self = this;
-    var value = "data:" + type + ";base64,";
+    var self = this
+    var value = 'data:' + type + ';base64,'
     var element = {
-      type: "element",
-      tag: "audio",
+      type: 'element',
+      tag: 'audio',
       attributes: {
-        controls: { type: "string", value: "controls" },
-        style: { type: "string", value: "width: 100%; object-fit: contain" },
-      },
-    };
-    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
-      var tiddler = options.tiddler;
-      var canonicalUri = tiddler.fields._canonical_uri;
-      if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() != "") {
+        controls: { type: 'string', value: 'controls' },
+        style: { type: 'string', value: 'width: 100%; object-fit: contain' }
+      }
+    }
+    if (
+      $tw.browser &&
+      options.tiddler !== undefined &&
+      options.tiddler !== null
+    ) {
+      var tiddler = options.tiddler
+      var canonicalUri = tiddler.fields._canonical_uri
+      if (
+        canonicalUri !== undefined &&
+        canonicalUri !== null &&
+        canonicalUri.trim() != ''
+      ) {
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
-          .then((data) => {
-            var { normalizedUrl, resolvedUrl } = data;
-            var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+          .then(data => {
+            var { normalizedUrl, resolvedUrl } = data
+            var url =
+              resolvedUrl !== null
+                ? resolvedUrl.href
+                : normalizedUrl !== null
+                ? normalizedUrl.href
+                : null
             if (url !== null) {
               $tw.ipfs
                 .loadToBase64(url)
-                .then((loaded) => {
-                  element.attributes.src = { type: "string", value: value + loaded.data };
-                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-                  $tw.rootWidget.refresh(parsedTiddler);
+                .then(loaded => {
+                  element.attributes.src = {
+                    type: 'string',
+                    value: value + loaded.data
+                  }
+                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler)
+                  $tw.rootWidget.refresh(parsedTiddler)
                 })
-                .catch((error) => {
-                  self.getLogger().error(error);
-                  $tw.utils.alert(name, error.message);
-                });
+                .catch(error => {
+                  self.getLogger().error(error)
+                  $tw.utils.alert(name, error.message)
+                })
             }
           })
-          .catch((error) => {
+          .catch(error => {
             // Ignore
-          });
+          })
       } else if (text) {
-        element.attributes.src = { type: "string", value: value + text };
+        element.attributes.src = { type: 'string', value: value + text }
       }
     }
     // Return the parsed tree
-    this.tree = [element];
-  };
+    this.tree = [element]
+  }
 
   AudioParser.prototype.getLogger = function () {
     if (window.log) {
-      return window.log.getLogger(name);
+      return window.log.getLogger(name)
     }
-    return console;
-  };
+    return console
+  }
 
-  exports["audio/ogg"] = AudioParser;
-  exports["audio/mpeg"] = AudioParser;
-  exports["audio/mp3"] = AudioParser;
-  exports["audio/mp4"] = AudioParser;
-})();
+  exports['audio/ogg'] = AudioParser
+  exports['audio/mpeg'] = AudioParser
+  exports['audio/mp3'] = AudioParser
+  exports['audio/mp4'] = AudioParser
+})()

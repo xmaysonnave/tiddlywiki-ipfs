@@ -8,22 +8,22 @@ IPFS plugin version
 
 \*/
 
-(function() {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
   /*
    * Information about this macro
    */
-  exports.name = "ipfs-plugin-version";
+  exports.name = 'ipfs-plugin-version'
 
-  exports.params = [];
+  exports.params = []
 
   /*
    * Run the macro
    */
-  exports.run = function() {
-    return $tw.wiki.getTiddler("$:/plugins/ipfs").fields.version;
-  };
-})();
+  exports.run = function () {
+    return $tw.wiki.getTiddler('$:/plugins/ipfs').fields.version
+  }
+})()

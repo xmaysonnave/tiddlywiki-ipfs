@@ -41,95 +41,108 @@ The binary parser parses a binary tiddler into a warning message and download li
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  const name = "ipfs-binaryparser";
+  const name = 'ipfs-binaryparser'
 
-  var BINARY_WARNING_MESSAGE = "$:/core/ui/BinaryWarning";
-  var EXPORT_BUTTON_IMAGE = "$:/core/images/export-button";
+  var BINARY_WARNING_MESSAGE = '$:/core/ui/BinaryWarning'
+  var EXPORT_BUTTON_IMAGE = '$:/core/images/export-button'
 
   var BinaryParser = function (type, text, options) {
-    var self = this;
+    var self = this
     // Transclude the binary data tiddler warning message
     var warn = {
-      type: "element",
-      tag: "p",
+      type: 'element',
+      tag: 'p',
       children: [
         {
-          type: "transclude",
+          type: 'transclude',
           attributes: {
-            tiddler: { type: "string", value: BINARY_WARNING_MESSAGE },
-          },
-        },
-      ],
-    };
+            tiddler: { type: 'string', value: BINARY_WARNING_MESSAGE }
+          }
+        }
+      ]
+    }
     // Create download link based on binary tiddler title
     var link = {
-      type: "element",
-      tag: "a",
+      type: 'element',
+      tag: 'a',
       attributes: {
-        title: { type: "indirect", textReference: "!!title" },
-        download: { type: "indirect", textReference: "!!title" },
+        title: { type: 'indirect', textReference: '!!title' },
+        download: { type: 'indirect', textReference: '!!title' }
       },
       children: [
         {
-          type: "transclude",
+          type: 'transclude',
           attributes: {
-            tiddler: { type: "string", value: EXPORT_BUTTON_IMAGE },
-          },
-        },
-      ],
-    };
-    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
-      var tiddler = options.tiddler;
+            tiddler: { type: 'string', value: EXPORT_BUTTON_IMAGE }
+          }
+        }
+      ]
+    }
+    if (
+      $tw.browser &&
+      options.tiddler !== undefined &&
+      options.tiddler !== null
+    ) {
+      var tiddler = options.tiddler
       // Set the link href to external or internal data URI
-      var canonicalUri = tiddler.fields._canonical_uri;
-      if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() != "") {
+      var canonicalUri = tiddler.fields._canonical_uri
+      if (
+        canonicalUri !== undefined &&
+        canonicalUri !== null &&
+        canonicalUri.trim() != ''
+      ) {
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
-          .then((data) => {
-            var { normalizedUrl, resolvedUrl } = data;
-            var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+          .then(data => {
+            var { normalizedUrl, resolvedUrl } = data
+            var url =
+              resolvedUrl !== null
+                ? resolvedUrl.href
+                : normalizedUrl !== null
+                ? normalizedUrl.href
+                : null
             if (url !== null) {
               link.attributes.href = {
-                type: "string",
-                value: url,
-              };
-              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-              $tw.rootWidget.refresh(parsedTiddler);
+                type: 'string',
+                value: url
+              }
+              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler)
+              $tw.rootWidget.refresh(parsedTiddler)
             }
           })
-          .catch((error) => {
+          .catch(error => {
             // Ignore
-          });
+          })
       } else if (text) {
         link.attributes.href = {
-          type: "string",
-          value: "data:" + type + ";base64," + text,
-        };
+          type: 'string',
+          value: 'data:' + type + ';base64,' + text
+        }
       }
     }
     // Combine warning message and download link in a div
     var element = {
-      type: "element",
-      tag: "div",
+      type: 'element',
+      tag: 'div',
       attributes: {
-        class: { type: "string", value: "tc-binary-warning" },
+        class: { type: 'string', value: 'tc-binary-warning' }
       },
-      children: [warn, link],
-    };
-    this.tree = [element];
-  };
+      children: [warn, link]
+    }
+    this.tree = [element]
+  }
 
   BinaryParser.prototype.getLogger = function () {
     if (window.log) {
-      return window.log.getLogger(name);
+      return window.log.getLogger(name)
     }
-    return console;
-  };
+    return console
+  }
 
-  exports["application/octet-stream"] = BinaryParser;
-})();
+  exports['application/octet-stream'] = BinaryParser
+})()

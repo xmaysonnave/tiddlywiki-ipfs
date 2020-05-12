@@ -42,10 +42,10 @@ wikimethod
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
   /*
    * Parse a block of text of a specified MIME type
@@ -57,44 +57,50 @@ wikimethod
    *  _canonical_uri: optional string of the canonical URI of this content
    */
   exports.parseText = function (type, text, options) {
-    text = text || "";
-    options = options || {};
+    text = text || ''
+    options = options || {}
     // Select a parser
-    var Parser = $tw.Wiki.parsers[type];
+    var Parser = $tw.Wiki.parsers[type]
     if (!Parser && $tw.utils.getFileExtensionInfo(type)) {
-      Parser = $tw.Wiki.parsers[$tw.utils.getFileExtensionInfo(type).type];
+      Parser = $tw.Wiki.parsers[$tw.utils.getFileExtensionInfo(type).type]
     }
     if (!Parser) {
-      Parser = $tw.Wiki.parsers[options.defaultType || "text/vnd.tiddlywiki"];
+      Parser = $tw.Wiki.parsers[options.defaultType || 'text/vnd.tiddlywiki']
     }
     if (!Parser) {
-      return null;
+      return null
     }
     // Return the parser instance
     return new Parser(type, text, {
       parseAsInline: options.parseAsInline,
       wiki: this,
       _canonical_uri: options._canonical_uri,
-      tiddler: options.tiddler,
-    });
-  };
+      tiddler: options.tiddler
+    })
+  }
 
   /*
    * Parse a tiddler according to its MIME type
    */
   exports.parseTiddler = function (title, options) {
-    options = $tw.utils.extend({}, options);
-    var cacheType = options.parseAsInline ? "inlineParseTree" : "blockParseTree",
+    options = $tw.utils.extend({}, options)
+    var cacheType = options.parseAsInline
+        ? 'inlineParseTree'
+        : 'blockParseTree',
       tiddler = this.getTiddler(title),
-      self = this;
+      self = this
     return tiddler
       ? this.getCacheForTiddler(title, cacheType, function () {
-          if (tiddler.hasField("_canonical_uri")) {
-            options._canonical_uri = tiddler.fields._canonical_uri;
+          if (tiddler.hasField('_canonical_uri')) {
+            options._canonical_uri = tiddler.fields._canonical_uri
           }
-          options.tiddler = tiddler;
-          return self.parseText(tiddler.fields.type, tiddler.fields.text, options);
+          options.tiddler = tiddler
+          return self.parseText(
+            tiddler.fields.type,
+            tiddler.fields.text,
+            options
+          )
         })
-      : null;
-  };
-})();
+      : null
+  }
+})()

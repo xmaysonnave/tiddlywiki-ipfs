@@ -42,61 +42,77 @@ The PDF parser embeds a PDF viewer
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function () {
+;(function () {
   /*jslint node: true, browser: true */
   /*global $tw: false */
-  "use strict";
+  'use strict'
 
-  const name = "ipfs-pdfparser";
+  const name = 'ipfs-pdfparser'
 
   var PdfParser = function (type, text, options) {
-    var self = this;
-    var value = "data:application/pdf;base64,";
+    var self = this
+    var value = 'data:application/pdf;base64,'
     var element = {
-      type: "element",
-      tag: "embed",
-      attributes: {},
-    };
-    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
-      var tiddler = options.tiddler;
-      var canonicalUri = tiddler.fields._canonical_uri;
-      if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() != "") {
+      type: 'element',
+      tag: 'embed',
+      attributes: {}
+    }
+    if (
+      $tw.browser &&
+      options.tiddler !== undefined &&
+      options.tiddler !== null
+    ) {
+      var tiddler = options.tiddler
+      var canonicalUri = tiddler.fields._canonical_uri
+      if (
+        canonicalUri !== undefined &&
+        canonicalUri !== null &&
+        canonicalUri.trim() != ''
+      ) {
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
-          .then((data) => {
-            var { normalizedUrl, resolvedUrl } = data;
-            var url = resolvedUrl !== null ? resolvedUrl.href : normalizedUrl !== null ? normalizedUrl.href : null;
+          .then(data => {
+            var { normalizedUrl, resolvedUrl } = data
+            var url =
+              resolvedUrl !== null
+                ? resolvedUrl.href
+                : normalizedUrl !== null
+                ? normalizedUrl.href
+                : null
             if (url !== null) {
               $tw.ipfs
                 .loadToBase64(url)
-                .then((loaded) => {
-                  element.attributes.src = { type: "string", value: value + loaded.data };
-                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler);
-                  $tw.rootWidget.refresh(parsedTiddler);
+                .then(loaded => {
+                  element.attributes.src = {
+                    type: 'string',
+                    value: value + loaded.data
+                  }
+                  var parsedTiddler = $tw.utils.getChangedTiddler(tiddler)
+                  $tw.rootWidget.refresh(parsedTiddler)
                 })
-                .catch((error) => {
-                  self.getLogger().error(error);
-                  $tw.utils.alert(name, error.message);
-                });
+                .catch(error => {
+                  self.getLogger().error(error)
+                  $tw.utils.alert(name, error.message)
+                })
             }
           })
-          .catch((error) => {
+          .catch(error => {
             // Ignore
-          });
+          })
       } else if (text) {
-        element.attributes.src = { type: "string", value: value + text };
+        element.attributes.src = { type: 'string', value: value + text }
       }
     }
     // Return the parsed tree
-    this.tree = [element];
-  };
+    this.tree = [element]
+  }
 
   PdfParser.prototype.getLogger = function () {
     if (window.log) {
-      return window.log.getLogger(name);
+      return window.log.getLogger(name)
     }
-    return console;
-  };
+    return console
+  }
 
-  exports["application/pdf"] = PdfParser;
-})();
+  exports['application/pdf'] = PdfParser
+})()
