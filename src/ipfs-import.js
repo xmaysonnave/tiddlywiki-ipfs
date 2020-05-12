@@ -32,30 +32,32 @@ IPFS Import
     try {
       var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(false, false, value);
       if (normalizedUrl == null) {
-        throw new Error("Failed to resolve URL...");
+        throw new Error('Failed to resolve value: "' + value + '"');
       }
     } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(
-        name,
-        'Failed to resolve field: "' +
-          field +
-          '" from Tiddler <a rel="noopener noreferrer" target="_blank" href="' +
-          url +
-          '">' +
-          title +
-          "</a>"
-      );
       this.notResolved.push(value);
+      this.getLogger().error(error);
+      var msgAlert = 'Failed to resolve field: "';
+      msgAlert += field;
+      if (url.hostname === $tw.ipfs.getDocumentUrl().hostname && url.pathname === $tw.ipfs.getDocumentUrl().pathname) {
+        msgAlert += '" from: <a href="';
+      } else {
+        msgAlert += '" from: <a rel="noopener noreferrer" target="_blank" href="';
+      }
+      msgAlert += url;
+      msgAlert += '">';
+      msgAlert += title;
+      msgAlert += "</a>";
+      $tw.utils.alert(name, msgAlert);
     }
     if (normalizedUrl !== null) {
       if (normalizedUrl.hostname.endsWith(".eth")) {
         key = normalizedUrl.hostname;
       } else if (ipnsKey !== null) {
-        key = ipnsKey;
+        key = "/ipns/" + ipnsKey;
       }
       if (cid !== null) {
-        key = cid;
+        key = "/ipfs/" + cid;
       } else {
         key = normalizedUrl.toString();
       }
@@ -92,7 +94,7 @@ IPFS Import
       // Load and prepare imported tiddlers to be processed
       var added = 0;
       var updated = 0;
-      var currentUrl = $tw.ipfs.getUrl("/" + title, $tw.ipfs.getDocumentUrl());
+      var currentUrl = $tw.ipfs.getUrl("#" + title, $tw.ipfs.getDocumentUrl());
       var canonicalUri = await this.getKey("_canonical_uri", currentUrl, title, canonicalUri);
       var importUri = await this.getKey("_import_uri", currentUrl, title, importUri);
       if (canonicalUri !== null || importUri !== null) {
@@ -100,9 +102,9 @@ IPFS Import
       }
       var references = this.getReferences("Node 1");
       this.getLogger().info("*** Loaded: " + count + " Tiddler(s) ***");
-      this.getLogger().info("*** Loaded: " + this.loaded.size + " remote content ***");
-      this.getLogger().info("*** Fail to load: " + this.notLoaded.length + " remote content ***");
-      this.getLogger().info("*** Fail to resolve: " + this.notResolved.length + " URL(s) ***");
+      this.getLogger().info("*** Loaded: " + this.loaded.size + " content(s) ***");
+      this.getLogger().info("*** Fail to load: " + this.notLoaded.length + " content(s) ***");
+      this.getLogger().info("*** Fail to resolve: " + this.notResolved.length + " value(s) ***");
       // // Update Tiddly
       // for (var [title, merged] of this.processedImported.entries()) {
       //   $tw.wiki.addTiddler(merged);
@@ -161,21 +163,16 @@ IPFS Import
   IpfsImport.prototype.load = async function (canonicalUri, importUri, parentUrl, parentTitle) {
     var count = 0;
     if (canonicalUri !== null && this.notResolved.indexOf(canonicalUri) === -1) {
-      var { imported, url } = await this.importTiddlers("_canonical_uri", canonicalUri, parentUrl, parentTitle);
-      if (imported !== null) {
-        count += await this.processLoaded(url, imported);
-      }
+      count += await this.importTiddlers("_canonical_uri", canonicalUri, parentUrl, parentTitle);
     }
     if (importUri !== null && this.notResolved.indexOf(importUri) === -1) {
-      var { imported, url } = await this.importTiddlers("_import_uri", importUri, parentUrl, parentTitle);
-      if (imported !== null) {
-        count += await this.processLoaded(url, imported);
-      }
+      count += await this.importTiddlers("_import_uri", importUri, parentUrl, parentTitle);
     }
     return count;
   };
 
-  IpfsImport.prototype.importTiddlers = async function (field, key, parentUrl, parentTitle) {
+  IpfsImport.prototype.importTiddlers = async function (parentField, key, parentUrl, parentTitle) {
+    var count = 0;
     var content = null;
     var imported = new Map();
     var normalizedUrl = null;
@@ -185,131 +182,202 @@ IPFS Import
     try {
       var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, key);
       if (normalizedUrl == null) {
-        throw new Error("Failed to resolve URL...");
+        throw new Error('Failed to resolve key: "' + key + '"');
       }
     } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(
-        name,
-        'Failed to resolve field: "' +
-          field +
-          '" from Tiddler <a rel="noopener noreferrer" target="_blank" href="' +
-          parentUrl +
-          '">' +
-          parentTitle +
-          "</a>"
-      );
       this.notResolved.push(key);
-      return {
-        imported: null,
-        url: null,
-      };
+      this.getLogger().error(error);
+      var msgAlert = 'Failed to resolve field: "';
+      msgAlert += parentField;
+      if (
+        parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+        parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+      ) {
+        msgAlert += '" from: <a href="';
+      } else {
+        msgAlert += '" from: <a rel="noopener noreferrer" target="_blank" href="';
+      }
+      msgAlert += parentUrl;
+      msgAlert += '">';
+      msgAlert += parentTitle;
+      msgAlert += "</a>";
+      $tw.utils.alert(name, msgAlert);
+      return count;
     }
+    // To be loaded
     url = resolvedUrl !== null ? resolvedUrl : normalizedUrl;
-    // Already loaded or can't be loaded
+    // Loaded or can't be loaded
     if (this.loaded.get(key) !== undefined || this.notLoaded.indexOf(key) !== -1) {
-      // this.getLogger().warn("Cycle detected in Tiddler: " + parentTitle + "\n " + parentUrl);
+      // this.getLogger().info("Cycle detected, Tiddler: " + parentTitle + "\n " + parentUrl);
       // $tw.utils.alert(
       //   name,
-      //   'Cycle detected in Tiddler: <a rel="noopener noreferrer" target="_blank" href="' +
+      //   'Cycle detected, Tiddler: <a rel="noopener noreferrer" target="_blank" href="' +
       //     parentUrl +
       //     '">' +
       //     parentTitle +
       //     "</a>"
       // );
-      return {
-        imported: null,
-        url: null,
-      };
+      return count;
     }
     try {
+      // Load
       content = await $tw.ipfs.loadToUtf8(url.toString());
       if ($tw.ipfs.isJson(content.data)) {
         tiddlers = $tw.wiki.deserializeTiddlers(".json", content.data, $tw.wiki.getCreationFields());
       } else {
         tiddlers = $tw.wiki.deserializeTiddlers(".tid", content.data, $tw.wiki.getCreationFields());
       }
-      if (tiddlers == undefined || tiddlers == null) {
-        return {
-          imported: null,
-          url: null,
-        };
-      }
-      // Filter out
-      for (var i in tiddlers) {
-        var tiddler = tiddlers[i];
-        var title = tiddler["title"];
-        if (title == undefined || title == null || title.trim() === "") {
-          this.getLogger().warn("Ignored unknown Tiddler field: 'title'" + "\n " + url);
-          $tw.utils.alert(
-            name,
-            'Ignored unknown field "title" from <a rel="noopener noreferrer" target="_blank" href="' +
-              url +
-              '"> Tiddler</a>'
-          );
-          continue;
-        }
-        if (imported.get(title) !== undefined) {
-          this.getLogger().warn("Ignored Duplicate Tiddler: " + title + "\n " + url);
-          $tw.utils.alert(
-            name,
-            'Ignored duplicate Tiddler: <a rel="noopener noreferrer" target="_blank" href="' +
-              url +
-              '">' +
-              title +
-              "</a>"
-          );
-          continue;
-        }
-        var canonicalUri = await this.getKey("_canonical_uri", url, title, tiddler["_canonical_uri"]);
-        var importUri = await this.getKey("_import_uri", url, title, tiddler["_import_uri"]);
-        imported.set(title, { canonicalUri, importUri, tiddler });
-      }
+      // Loaded
       this.loaded.set(key, imported);
-    } catch (error) {
-      this.getLogger().error(error);
-      $tw.utils.alert(
-        name,
-        'Failed to import Tiddler: <a rel="noopener noreferrer" target="_blank" href="' +
-          parentUrl +
-          '">' +
-          parentTitle +
-          "</a>"
-      );
-      this.notLoaded.push(key);
-      return {
-        imported: null,
-        url: null,
-      };
-    }
-    return {
-      imported: imported.size === 0 ? null : imported,
-      url: url,
-    };
-  };
-
-  IpfsImport.prototype.processLoaded = async function (url, imported) {
-    var count = 0;
-    if (imported == undefined || imported == null) {
-      return count;
-    }
-    for (var [title, { canonicalUri, importUri, tiddler }] of imported.entries()) {
-      var type = tiddler["type"];
-      if (type == undefined || type == null) {
-        type = "text/vnd.tiddlywiki";
-      }
-      var info = $tw.config.contentTypeInfo[type];
-      if (info == undefined || info == null) {
-        type = "text/vnd.tiddlywiki";
-        info = $tw.config.contentTypeInfo[type];
-      }
-      tiddler["type"] = type;
-      if (info.encoding !== "base64" && tiddler["type"] !== "image/svg+xml") {
-        if (canonicalUri !== null || importUri !== null) {
-          count += await this.load(canonicalUri, importUri, url, title);
+      if (tiddlers !== undefined && tiddlers !== null) {
+        // First round
+        for (var i in tiddlers) {
+          count += 1;
+          var tiddler = tiddlers[i];
+          var title = tiddler["title"];
+          if (title == undefined || title == null || title.trim() === "") {
+            var msgConsole = "Ignored Unknown Title from: ";
+            msgConsole += "\n ";
+            msgConsole += url;
+            msgConsole += '\n loaded from: "';
+            msgConsole += parentTitle;
+            msgConsole += '", field: "';
+            msgConsole += parentField;
+            msgConsole += '"\n ';
+            msgConsole += parentUrl;
+            this.getLogger().info(msgConsole);
+            var msgAlert = 'Ignored unknown Title: <a rel="noopener noreferrer" target="_blank" href="';
+            msgAlert += url;
+            msgAlert += '">Tiddler</a>';
+            if (
+              parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+              parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+            ) {
+              msgAlert += ' loaded from: <a href="';
+            } else {
+              msgAlert += ' loaded from: <a rel="noopener noreferrer" target="_blank" href="';
+            }
+            msgAlert += parentUrl;
+            msgAlert += '">';
+            msgAlert += parentTitle;
+            msgAlert += '</a>, field: "';
+            msgAlert += parentField;
+            msgAlert += '"';
+            $tw.utils.alert(name, msgAlert);
+            continue;
+          }
+          if (imported.get(title) !== undefined) {
+            var msgConsole = 'Ignored Duplicate: "';
+            msgConsole += title;
+            msgConsole += '"\n ';
+            msgConsole += url;
+            msgConsole += '\n loaded from: "';
+            msgConsole += parentTitle;
+            msgConsole += '", field: "';
+            msgConsole += parentField;
+            msgConsole += '"\n ';
+            msgConsole += parentUrl;
+            this.getLogger().info(msgConsole);
+            var msgAlert = 'Ignored duplicate: <a rel="noopener noreferrer" target="_blank" href="';
+            msgAlert += url;
+            msgAlert += '">';
+            msgAlert += title;
+            msgAlert += "</a>";
+            if (
+              parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+              parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+            ) {
+              msgAlert += ' loaded from: <a href="';
+            } else {
+              msgAlert += ' loaded from: <a rel="noopener noreferrer" target="_blank" href="';
+            }
+            msgAlert += parentUrl;
+            msgAlert += '">';
+            msgAlert += parentTitle;
+            msgAlert += '</a>, field: "';
+            msgAlert += parentField;
+            msgAlert += '"';
+            $tw.utils.alert(name, msgAlert);
+            continue;
+          }
+          var type = tiddler["type"];
+          if (type == undefined || type == null) {
+            type = "text/vnd.tiddlywiki";
+          }
+          var info = $tw.config.contentTypeInfo[type];
+          if (info == undefined || info == null) {
+            var msgConsole = "Unknown Content-Type: ";
+            msgConsole += type;
+            msgConsole += " from: ";
+            msgConsole += title;
+            msgConsole += "\n ";
+            msgConsole += url;
+            msgConsole += "\n loaded from: ";
+            msgConsole += parentTitle;
+            msgConsole += ", field: ";
+            msgConsole += parentField;
+            msgConsole += "\n ";
+            msgConsole += parentUrl;
+            this.getLogger().info(msgConsole);
+            var msgAlert = "Unknown Content-Type: ";
+            msgAlert += type;
+            msgAlert += ' from <a rel="noopener noreferrer" target="_blank" href="';
+            msgAlert += url;
+            msgAlert += '">';
+            msgAlert += title;
+            msgAlert += "</a>";
+            if (
+              parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+              parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+            ) {
+              msgAlert += ' loaded from: <a href="';
+            } else {
+              msgAlert += ' loaded from: <a rel="noopener noreferrer" target="_blank" href="';
+            }
+            msgAlert += parentUrl;
+            msgAlert += '">';
+            msgAlert += parentTitle;
+            msgAlert += '</a>, field: "';
+            msgAlert += parentField;
+            msgAlert += '"';
+            $tw.utils.alert(name, msgAlert);
+            // Default
+            type = "text/vnd.tiddlywiki";
+            info = $tw.config.contentTypeInfo[type];
+          }
+          tiddler["type"] = type;
+          // Next
+          var canonicalUri = await this.getKey("_canonical_uri", url, title, tiddler["_canonical_uri"]);
+          var importUri = await this.getKey("_import_uri", url, title, tiddler["_import_uri"]);
+          if (info.encoding !== "base64" && tiddler["type"] !== "image/svg+xml") {
+            if (canonicalUri !== null || importUri !== null) {
+              count += await this.load(canonicalUri, importUri, url, title);
+            }
+          }
+          imported.set(title, { canonicalUri, importUri, tiddler });
         }
       }
-      count += 1;
+    } catch (error) {
+      this.notLoaded.push(key);
+      this.getLogger().error(error);
+      var msgAlert = 'Failed to load: <a rel="noopener noreferrer" target="_blank" href="';
+      msgAlert += url;
+      if (
+        parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+        parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+      ) {
+        msgAlert += '">Content</a>, loaded from: <a href="';
+      } else {
+        msgAlert += '">Content</a>, loaded from: <a rel="noopener noreferrer" target="_blank" href="';
+      }
+      msgAlert += parentUrl;
+      msgAlert += '">';
+      msgAlert += parentTitle;
+      msgAlert += '</a>, field: "';
+      msgAlert += parentField;
+      msgAlert += '"';
+      $tw.utils.alert(name, msgAlert);
+      return count;
     }
     return count;
   };

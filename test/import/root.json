@@ -25,9 +25,16 @@
         "_canonical_uri": "/import/level_1_1.json"
     },
     {
-        "text": "Content from Node 5",
+        "text": "Valid IPFS cid v0 but invalid content",
         "title": "Node 5",
-        "modified": "20200320085428678"
+        "modified": "20200320085428678",
+        "_canonical_uri": "/ipfs/QmZE8aUxitmPdBjriC82rhhUmQbeh7KP4oEbgqBEATMct5"
+    },
+    {
+        "text": "Valid IPFS cid v1 but invalid content",
+        "title": "Node 6",
+        "modified": "20200320085428678",
+        "_canonical_uri": "/ipfs/bafybeifbyuagses2m4mwhxdde23pfiqsvaolwgrv2nrwupllmjwxtesjdy"
     },
     {
         "text": "Duplicate",
