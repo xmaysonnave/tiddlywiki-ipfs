@@ -1,6 +1,5 @@
 import { getIpfs, providers } from 'ipfs-provider'
 import root from 'window-or-global'
-
 ;(function () {
   /*jslint node: true, browser: true */
   'use strict'

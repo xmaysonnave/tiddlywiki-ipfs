@@ -15,7 +15,6 @@ import EnsLibrary from './ens-library'
 import IpfsLibrary from './ipfs-library'
 import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
-
 ;(function () {
   /*jslint node: true, browser: true*/
   /*global $tw: false*/

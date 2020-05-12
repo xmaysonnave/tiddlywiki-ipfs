@@ -383,9 +383,9 @@ IPFS Import
           }
           var info = $tw.config.contentTypeInfo[type]
           if (info == undefined || info == null) {
-            var msgConsole = 'Unknown Content-Type: '
+            var msgConsole = 'Unknown Content-Type: "'
             msgConsole += type
-            msgConsole += ' from: '
+            msgConsole += '" from: '
             msgConsole += title
             msgConsole += '\n '
             msgConsole += url
@@ -396,10 +396,10 @@ IPFS Import
             msgConsole += '\n '
             msgConsole += parentUrl
             this.getLogger().info(msgConsole)
-            var msgAlert = 'Unknown Content-Type: '
+            var msgAlert = 'Unknown Content-Type: "'
             msgAlert += type
             msgAlert +=
-              ' from <a rel="noopener noreferrer" target="_blank" href="'
+              '" from <a rel="noopener noreferrer" target="_blank" href="'
             msgAlert += url
             msgAlert += '">'
             msgAlert += title
@@ -448,6 +448,37 @@ IPFS Import
           }
           imported.set(title, { canonicalUri, importUri, tiddler })
         }
+      }
+      if (imported.size === 0) {
+        var msgConsole = 'Empty content: '
+        msgConsole += '\n '
+        msgConsole += url
+        msgConsole += '\n loaded from: '
+        msgConsole += parentTitle
+        msgConsole += ', field: '
+        msgConsole += parentField
+        msgConsole += '\n '
+        msgConsole += parentUrl
+        this.getLogger().info(msgConsole)
+        var msgAlert =
+          'Empty <a rel="noopener noreferrer" target="_blank" href="'
+        msgAlert += url
+        if (
+          parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+          parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+        ) {
+          msgAlert += '">Content</a>, loaded from: <a href="'
+        } else {
+          msgAlert +=
+            '">Content</a>, loaded from: <a rel="noopener noreferrer" target="_blank" href="'
+        }
+        msgAlert += parentUrl
+        msgAlert += '">'
+        msgAlert += parentTitle
+        msgAlert += '</a>, field: "'
+        msgAlert += parentField
+        msgAlert += '"'
+        $tw.utils.alert(name, msgAlert)
       }
     } catch (error) {
       this.notLoaded.push(key)

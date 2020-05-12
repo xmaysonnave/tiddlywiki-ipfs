@@ -57,5 +57,11 @@
         "title": "Node 10",
         "modified": "20200320085428678",
         "_canonical_uri": "/ipfs/bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354"
+    },
+    {
+        "text": "Unknown Content-Type",
+        "type": "wrong/type",
+        "title": "Node 11",
+        "modified": "20200320085428678"
     }
 ]
