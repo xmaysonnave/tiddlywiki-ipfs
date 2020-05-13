@@ -6,27 +6,18 @@ import { URL } from 'universal-url'
 
   const name = 'ipfs-url'
 
-  var IpfsUrl = function () {
-    this.defaultApiUrl = null
-    this.defaultGatewayUrl = null
-  }
+  var IpfsUrl = function () {}
 
   IpfsUrl.prototype.getLogger = function () {
     return root.log.getLogger(name)
   }
 
   IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {
-    if (this.defaultApiUrl == null) {
-      this.defaultApiUrl = new URL(this.getIpfsDefaultApi())
-    }
-    return this.defaultApiUrl
+    return new URL(this.getIpfsDefaultApi())
   }
 
   IpfsUrl.prototype.getIpfsDefaultGatewayUrl = function () {
-    if (this.defaultGatewayUrl == null) {
-      this.defaultGatewayUrl = new URL(this.getIpfsDefaultGateway())
-    }
-    return this.defaultGatewayUrl
+    return new URL(this.getIpfsDefaultGateway())
   }
 
   IpfsUrl.prototype.getIpfsApiUrl = function () {
@@ -115,7 +106,11 @@ import { URL } from 'universal-url'
     try {
       url = this.getUrl(value)
     } catch (error) {
-      if (value.startsWith('/') === false) {
+      if (
+        value.startsWith('/') === false &&
+        value.startsWith('./') === false &&
+        value.startsWith('../') === false
+      ) {
         text = true
         try {
           url = this.getUrl('https://' + value)

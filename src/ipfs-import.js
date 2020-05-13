@@ -21,6 +21,38 @@ IPFS Import
     return window.log.getLogger(name)
   }
 
+  IpfsImport.prototype.getImported = function (key, title) {
+    const imported = this.loaded.get(key)
+    if (imported !== undefined) {
+      for (var importedTitle of imported.keys()) {
+        if (importedTitle === title) {
+          const { canonicalUri, importUri, tiddler } = imported.get(importedTitle)
+          return {
+            canonicalUri: canonicalUri,
+            importUri: importUri,
+            tiddler: tiddler
+          }
+        }
+      }
+    }
+    return {
+      canonicalUri: null,
+      importUri: null,
+      tiddler: null
+    }
+  }
+
+  IpfsImport.prototype.removeTitles = function (keys, currentTitle) {
+    for (var key of this.loaded.keys()) {
+      const imported = this.loaded.get(key)
+      for (var title of imported.keys()) {
+        if (currentTitle === title && keys.indexOf(key) === -1) {
+          imported.delete(title);
+        }
+      }
+    }
+  }
+
   IpfsImport.prototype.getKey = async function (field, url, title, value) {
     var cid = null
     var ipnsKey = null
@@ -41,8 +73,8 @@ IPFS Import
     } catch (error) {
       this.notResolved.push(value)
       this.getLogger().error(error)
-      var msgAlert = 'Failed to resolve field: "'
-      msgAlert += field
+      var msgAlert = 'Failed to resolve field: "' +
+      msgAlert + field
       if (
         url.hostname === $tw.ipfs.getDocumentUrl().hostname &&
         url.pathname === $tw.ipfs.getDocumentUrl().pathname
@@ -73,21 +105,6 @@ IPFS Import
     return key
   }
 
-  IpfsImport.prototype.getReferences = function (title) {
-    const references = new Map()
-    for (var [key, imported] of this.loaded.entries()) {
-      for (var [
-        importedTitle,
-        { canonicalUri, importUri }
-      ] of imported.entries()) {
-        if (importedTitle === title) {
-          references.set(key, { canonicalUri, importUri })
-        }
-      }
-    }
-    return references
-  }
-
   IpfsImport.prototype.import = async function (
     canonicalUri,
     importUri,
@@ -112,7 +129,8 @@ IPFS Import
       // Load and prepare imported tiddlers to be processed
       var added = 0
       var updated = 0
-      var currentUrl = $tw.ipfs.getUrl('#' + title, $tw.ipfs.getDocumentUrl())
+      var currentUrl = $tw.ipfs.getDocumentUrl()
+      currentUrl.hash = title;
       var canonicalUri = await this.getKey(
         '_canonical_uri',
         currentUrl,
@@ -126,9 +144,9 @@ IPFS Import
         importUri
       )
       if (canonicalUri !== null || importUri !== null) {
-        count = await this.load(canonicalUri, importUri, currentUrl, title)
+        count = await this.load(currentUrl, title, canonicalUri, importUri)
+        this.analyzeTitles()
       }
-      var references = this.getReferences('Node 1')
       this.getLogger().info('*** Loaded: ' + count + ' Tiddler(s) ***')
       this.getLogger().info(
         '*** Loaded: ' + this.loaded.size + ' content(s) ***'
@@ -195,10 +213,10 @@ IPFS Import
   }
 
   IpfsImport.prototype.load = async function (
-    canonicalUri,
-    importUri,
     parentUrl,
-    parentTitle
+    parentTitle,
+    canonicalUri,
+    importUri
   ) {
     var count = 0
     if (
@@ -206,28 +224,28 @@ IPFS Import
       this.notResolved.indexOf(canonicalUri) === -1
     ) {
       count += await this.importTiddlers(
-        '_canonical_uri',
-        canonicalUri,
         parentUrl,
-        parentTitle
+        parentTitle,
+        '_canonical_uri',
+        canonicalUri
       )
     }
     if (importUri !== null && this.notResolved.indexOf(importUri) === -1) {
       count += await this.importTiddlers(
-        '_import_uri',
-        importUri,
         parentUrl,
-        parentTitle
+        parentTitle,
+        '_import_uri',
+        importUri
       )
     }
     return count
   }
 
   IpfsImport.prototype.importTiddlers = async function (
-    parentField,
-    key,
     parentUrl,
-    parentTitle
+    parentTitle,
+    parentField,
+    key
   ) {
     var count = 0
     var content = null
@@ -268,20 +286,18 @@ IPFS Import
     }
     // To be loaded
     url = resolvedUrl !== null ? resolvedUrl : normalizedUrl
+    if (
+      this.loaded.get(key) !== undefined ||
+      this.notLoaded.indexOf(key) !== -1
+    ) {
+
+      return count
+    }
     // Loaded or can't be loaded
     if (
       this.loaded.get(key) !== undefined ||
       this.notLoaded.indexOf(key) !== -1
     ) {
-      // this.getLogger().info("Cycle detected, Tiddler: " + parentTitle + "\n " + parentUrl);
-      // $tw.utils.alert(
-      //   name,
-      //   'Cycle detected, Tiddler: <a rel="noopener noreferrer" target="_blank" href="' +
-      //     parentUrl +
-      //     '">' +
-      //     parentTitle +
-      //     "</a>"
-      // );
       return count
     }
     try {
@@ -443,7 +459,7 @@ IPFS Import
             tiddler['type'] !== 'image/svg+xml'
           ) {
             if (canonicalUri !== null || importUri !== null) {
-              count += await this.load(canonicalUri, importUri, url, title)
+              count += await this.load(url, title, canonicalUri, importUri)
             }
           }
           imported.set(title, { canonicalUri, importUri, tiddler })
@@ -505,6 +521,80 @@ IPFS Import
       return count
     }
     return count
+  }
+
+  IpfsImport.prototype.analyzeTitles = function (parentKey, parentTitle) {
+    for (var key of this.loaded.keys()) {
+      const imported = this.loaded.get(key)
+      for (var title of imported.keys()) {
+        var keys = new Array()
+        keys.push(key);
+        const { canonicalUri, importUri } = this.getImported(
+          key,
+          title
+        )
+        if (canonicalUri !== null && importUri !== null) {
+          if (canonicalUri !== null) {
+            if (this.loaded.get(canonicalUri) !== undefined && this.notLoaded.indexOf(canonicalUri) === -1) {
+              const { canonicalUri: leafCanonicalUri, importUri: leafImportUri } = this.getImported(
+                canonicalUri,
+                title
+              )
+              // Inconsistency
+              if (leafCanonicalUri !== null || leafImportUri !== null) {
+              }
+            } else {
+              // Leaf is not loadable
+            }
+          }
+          if (importUri !== null) {
+            if (this.loaded.get(importUri) !== undefined && this.notLoaded.indexOf(importUri) === -1) {
+              this.analyzeTitle(keys, key, canonicalUri, importUri, title)
+            } else {
+              // Node is not loadable
+            }
+          } else if (canonicalUri !== null) {
+            keys.push(canonicalUri);
+          }
+        } else if (canonicalUri == null && importUri !== null) {
+          // Inconsistency
+        }
+        this.removeTitles(keys, title);
+      }
+    }
+  }
+
+  IpfsImport.prototype.analyzeTitle = function (keys, parentKey, canonicalUri, importUri, title) {
+    const { canonicalUri: nextCanonicalUri, importUri: nextImportUri } = this.getImported(
+      importUri,
+      title
+    )
+    // Inconsistency
+    if (nextCanonicalUri !== null && nextCanonicalUri !== canonicalUri) {
+      return;
+    }
+    // Inconsistency
+    if (nextCanonicalUri == null && nextImportUri !== null) {
+      return;
+    }
+    if (nextImportUri !== null) {
+      // Cycle
+      if (keys.indexOf(nextImportUri) !== -1) {
+        return;
+      }
+      // Next
+      if (this.loaded.get(nextImportUri) !== undefined && this.notLoaded.indexOf(nextImportUri) === -1) {
+        keys.push(importUri);
+        return this.analyzeTitle(keys, importUri, canonicalUri, nextImportUri, title)
+      } else {
+        // Not loadable
+        return;
+      }
+    } else if (nextCanonicalUri !== null && nextCanonicalUri === canonicalUri) {
+      keys.push(importUri);
+      keys.push(canonicalUri);
+    }
+    return;
   }
 
   IpfsImport.prototype.loadRemoteImportedTiddlers = async function (

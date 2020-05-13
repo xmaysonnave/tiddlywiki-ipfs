@@ -23,7 +23,7 @@ const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 const log = require("loglevel");
 const root = require("window-or-global");
 const { URL } = require("universal-url");
-const local = new URL("file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html");
+const local = new URL("file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json");
 const remote = new URL("https://gateway.ipfs.io/ipfs/cid");
 const api = new URL("https://ipfs.infura.io:5001/");
 const gateway = new URL("https://gateway.ipfs.io/");
@@ -31,6 +31,7 @@ const eth = new URL("https://bluelightav.eth/ipfs/cid");
 const ethLink = new URL("https://bluelightav.eth.link/ipfs/cid");
 const text = "text";
 const relative = "/ipfs/cid";
+const resourceRelative = "../../import/cleanup/root.json";
 beforeAll(() => {
   root.log = log;
   log.setLevel("silent", false);
@@ -183,6 +184,16 @@ describe("Normalize URL", () => {
     ipfsUrl.getDocumentUrl.mockReturnValueOnce(local);
     const parsed = ipfsUrl.normalizeUrl(relative);
     expect(parsed.href === gateway.protocol + "//" + gateway.hostname + relative).toBeTruthy();
+  });
+  it("Relative. File system...", () => {
+    const ipfsBundle = new IpfsBundle();
+    ipfsBundle.init();
+    const ipfsUrl = ipfsBundle.ipfsUrl;
+    ipfsUrl.getDocumentUrl = jest.fn();
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce(local);
+    const parsed = ipfsUrl.normalizeUrl(resourceRelative, ipfsUrl.getDocumentUrl());
+    console.log(parsed.href);
+    expect(parsed.href === "file:///work/tiddly/tiddlywiki-ipfs/test/import/cleanup/root.json").toBeTruthy();
   });
   it("Remove dot link...", () => {
     const ipfsBundle = new IpfsBundle();
