@@ -239,8 +239,8 @@ IPFS Controller
     return this.ipfsUrl.getIpfsBaseUrl()
   }
 
-  IpfsController.prototype.normalizeUrl = function (value) {
-    return this.ipfsUrl.normalizeUrl(value)
+  IpfsController.prototype.normalizeUrl = function (value, base) {
+    return this.ipfsUrl.normalizeUrl(value, base)
   }
 
   IpfsController.prototype.getDocumentUrl = function () {
@@ -266,7 +266,8 @@ IPFS Controller
   IpfsController.prototype.resolveUrl = async function (
     resolveIpns,
     resolveEns,
-    value
+    value,
+    base
   ) {
     var cid = null
     var ipnsKey = null
@@ -283,7 +284,7 @@ IPFS Controller
       }
     }
     try {
-      normalizedUrl = this.normalizeUrl(value)
+      normalizedUrl = this.normalizeUrl(value, base)
     } catch (error) {
       // Ignore
     }
@@ -313,7 +314,7 @@ IPFS Controller
         try {
           cid = await this.resolveIpnsKey(ipnsKey)
           if (cid !== null) {
-            resolvedUrl = this.normalizeUrl('/' + ipfsKeyword + '/' + cid)
+            resolvedUrl = this.normalizeUrl('/' + ipfsKeyword + '/' + cid, base)
             this.getLogger().info(
               'Successfully resolved IPNS key:' + '\n ' + normalizedUrl
             )

@@ -15,6 +15,74 @@ IPFS Import
 
   const name = 'ipfs-import'
 
+  const local = '<a href="'
+  const remote = '<a rel="noopener noreferrer" target="_blank" href="'
+
+  var alertKeyFailed = function (strings, field, url, title) {
+    var failed = strings[0]
+    var from = strings[1]
+    var endH = strings[2]
+    var endL = strings[3]
+    if (
+      url.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+      url.pathname === $tw.ipfs.getDocumentUrl().pathname
+    ) {
+      return `${failed}${field}${from}${local}${url}${endH}${title}${endL}`
+    } else {
+      return `${failed}${field}${from}${remote}${url}${endH}${title}${endL}`
+    }
+  }
+
+  var alertFailed = function (
+    strings,
+    msg,
+    key,
+    field,
+    parentUrl,
+    parentTitle,
+    parentField
+  ) {
+    var space = strings[1]
+    var endH1 = strings[2]
+    var endL1 = strings[3]
+    var endH2 = strings[4]
+    var endL2 = strings[5]
+    if (
+      parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+      parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+    ) {
+      return `${msg}${space}${remote}${key}${endH1}${field}${endL1}${local}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
+    } else {
+      return `${msg}${space}${remote}${key}${endH1}${field}${endL1}${remote}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
+    }
+  }
+
+  var alertTypeFailed = function (
+    strings,
+    msg,
+    type,
+    key,
+    field,
+    parentUrl,
+    parentTitle,
+    parentField
+  ) {
+    var space = strings[1]
+    var from = strings[2]
+    var endH1 = strings[3]
+    var endL1 = strings[4]
+    var endH2 = strings[5]
+    var endL2 = strings[6]
+    if (
+      parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
+      parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+    ) {
+      return `${msg}${space}${type}${from}${remote}${key}${endH1}${field}${endL1}${local}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
+    } else {
+      return `${msg}${space}${type}${from}${remote}${key}${endH1}${field}${endL1}${remote}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
+    }
+  }
+
   var IpfsImport = function () {}
 
   IpfsImport.prototype.getLogger = function () {
@@ -26,83 +94,73 @@ IPFS Import
     if (imported !== undefined) {
       for (var importedTitle of imported.keys()) {
         if (importedTitle === title) {
-          const { canonicalUri, importUri, tiddler } = imported.get(importedTitle)
+          const { canonicalKey, importKey, tiddler } = imported.get(
+            importedTitle
+          )
           return {
-            canonicalUri: canonicalUri,
-            importUri: importUri,
+            canonicalKey: canonicalKey,
+            importKey: importKey,
             tiddler: tiddler
           }
         }
       }
     }
     return {
-      canonicalUri: null,
-      importUri: null,
+      canonicalKey: null,
+      importKey: null,
       tiddler: null
     }
   }
 
   IpfsImport.prototype.removeTitles = function (keys, currentTitle) {
+    var removed = 0
     for (var key of this.loaded.keys()) {
       const imported = this.loaded.get(key)
       for (var title of imported.keys()) {
         if (currentTitle === title && keys.indexOf(key) === -1) {
-          imported.delete(title);
+          imported.delete(title)
+          removed += 1
         }
       }
     }
+    return removed
   }
 
-  IpfsImport.prototype.getKey = async function (field, url, title, value) {
+  IpfsImport.prototype.getKey = async function (base, value) {
     var cid = null
     var ipnsKey = null
-    var normalizedUrl = null
     var key = null
-    if (value == undefined || value == null || value.trim() === '') {
+    var normalizedUrl = null
+    var resolvedUrl = null;
+    value =
+      value == null || value == undefined || value.trim() === ''
+        ? null
+        : value.trim()
+    if (value == null) {
       return null
     }
-    try {
-      var { cid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(
-        false,
-        false,
-        value
-      )
-      if (normalizedUrl == null) {
-        throw new Error('Failed to resolve value: "' + value + '"')
-      }
-    } catch (error) {
-      this.notResolved.push(value)
-      this.getLogger().error(error)
-      var msgAlert = 'Failed to resolve field: "' +
-      msgAlert + field
-      if (
-        url.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-        url.pathname === $tw.ipfs.getDocumentUrl().pathname
-      ) {
-        msgAlert += '" from: <a href="'
-      } else {
-        msgAlert +=
-          '" from: <a rel="noopener noreferrer" target="_blank" href="'
-      }
-      msgAlert += url
-      msgAlert += '">'
-      msgAlert += title
-      msgAlert += '</a>'
-      $tw.utils.alert(name, msgAlert)
+    var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(
+      false,
+      true,
+      value,
+      base
+    )
+    if (normalizedUrl == null && resolvedUrl == null) {
+      throw new Error(`Failed to resolve value: "${value}"`)
     }
-    if (normalizedUrl !== null) {
-      if (normalizedUrl.hostname.endsWith('.eth')) {
-        key = normalizedUrl.hostname
-      } else if (ipnsKey !== null) {
-        key = '/ipns/' + ipnsKey
-      }
-      if (cid !== null) {
-        key = '/ipfs/' + cid
-      } else {
-        key = normalizedUrl.toString()
-      }
+    if (cid !== null) {
+      key = '/ipfs/' + cid
+    } else if (ipnsKey !== null) {
+      key = '/ipns/' + ipnsKey
+    } else if (normalizedUrl.hostname.endsWith('.eth')) {
+      key = normalizedUrl.hostname
+    } else {
+      key = normalizedUrl.toString()
     }
-    return key
+    return {
+      key: key,
+      resolvedUrl: resolvedUrl
+    }
   }
 
   IpfsImport.prototype.import = async function (
@@ -110,53 +168,59 @@ IPFS Import
     importUri,
     title
   ) {
+    canonicalUri =
+      canonicalUri == null ||
+      canonicalUri == undefined ||
+      canonicalUri.trim() === ''
+        ? null
+        : canonicalUri.trim()
+    importUri =
+      importUri == null || importUri == undefined || importUri.trim() === ''
+        ? null
+        : importUri.trim()
     this.host =
       title !== undefined && title !== null && title.trim() !== ''
-        ? $tw.wiki.getTiddler(title)
+        ? $tw.wiki.getTiddler(title.trim())
         : null
     if (this.host == undefined) {
       this.host = null
     }
     this.loaded = new Map()
-    this.notResolved = new Array()
     this.notLoaded = new Array()
+    this.resolved = new Map()
+    this.notResolved = new Array()
     this.processedImported = new Map()
     this.processedTitles = new Map()
     this.root = null
-    var count = 0
-    this.getLogger().info('*** Begin Import ***')
     try {
       // Load and prepare imported tiddlers to be processed
       var added = 0
       var updated = 0
-      var currentUrl = $tw.ipfs.getDocumentUrl()
-      currentUrl.hash = title;
-      var canonicalUri = await this.getKey(
-        '_canonical_uri',
-        currentUrl,
-        title,
-        canonicalUri
-      )
-      var importUri = await this.getKey(
-        '_import_uri',
-        currentUrl,
-        title,
-        importUri
-      )
+      var url = $tw.ipfs.getDocumentUrl()
+      url.hash = title
       if (canonicalUri !== null || importUri !== null) {
-        count = await this.load(currentUrl, title, canonicalUri, importUri)
-        this.analyzeTitles()
+        this.getLogger().info('*** Begin Import ***')
+        var { loaded, removed: loadedRemoved } = await this.loadResources(
+          url,
+          title,
+          canonicalUri,
+          importUri
+        )
+        //var { prepared, removed: preparedRemoved } = this.prepareTiddlers()
+        this.getLogger().info(`*** Loaded: ${this.loaded.size} resource(s) ***`)
+        this.getLogger().info(
+          `*** Failed to load: ${this.notLoaded.length} resource(s) ***`
+        )
+        this.getLogger().info(
+          `*** Failed to resolve: ${this.notResolved.length} URL(s) ***`
+        )
+        this.getLogger().info(
+          `*** Loaded: ${loaded} and Removed: ${loadedRemoved} Tiddler(s) ***`
+        )
+        // this.getLogger().info(
+        //   `*** Prepared: ${prepared} and Removed: ${preparedRemoved} Tiddler(s) ***`
+        // )
       }
-      this.getLogger().info('*** Loaded: ' + count + ' Tiddler(s) ***')
-      this.getLogger().info(
-        '*** Loaded: ' + this.loaded.size + ' content(s) ***'
-      )
-      this.getLogger().info(
-        '*** Fail to load: ' + this.notLoaded.length + ' content(s) ***'
-      )
-      this.getLogger().info(
-        '*** Fail to resolve: ' + this.notResolved.length + ' value(s) ***'
-      )
       // // Update Tiddly
       // for (var [title, merged] of this.processedImported.entries()) {
       //   $tw.wiki.addTiddler(merged);
@@ -206,103 +270,106 @@ IPFS Import
     this.host = null
     this.loaded = null
     this.notLoaded = null
+    this.resolved = null
     this.notResolved = null
     this.processedImported = null
     this.processedTitles = null
     this.root = null
   }
 
-  IpfsImport.prototype.load = async function (
-    parentUrl,
-    parentTitle,
+  IpfsImport.prototype.loadResources = async function (
+    url,
+    title,
     canonicalUri,
     importUri
   ) {
-    var count = 0
+    var loaded = 0
+    var removed = 0
+    var canonicalKey = null
+    var resolvedCanonicalKey = null
     if (
       canonicalUri !== null &&
-      this.notResolved.indexOf(canonicalUri) === -1
+      this.notResolved.indexOf(canonicalUri) === -1 &&
+      this.resolved.get(canonicalUri) == undefined
     ) {
-      count += await this.importTiddlers(
-        parentUrl,
-        parentTitle,
-        '_canonical_uri',
-        canonicalUri
-      )
+      try {
+        var { key: canonicalKey, resolvedUrl: resolvedCanonicalKey } = await this.getKey(url, canonicalUri)
+        this.resolved.set(canonicalUri, canonicalKey)
+      } catch (error) {
+        var field = '_canonical_uri'
+        this.notResolved.push(canonicalUri)
+        this.getLogger().error(error)
+        $tw.utils.alert(
+          name,
+          alertKeyFailed`Failed to resolve field: "${field}" from: ${url}">${title}</a>`
+        )
+      }
     }
-    if (importUri !== null && this.notResolved.indexOf(importUri) === -1) {
-      count += await this.importTiddlers(
-        parentUrl,
-        parentTitle,
-        '_import_uri',
-        importUri
-      )
+    var importKey = null
+    var resolvedImportKey = null
+    if (
+      importUri !== null &&
+      this.notResolved.indexOf(importUri) === -1 &&
+      this.resolved.get(importUri) == undefined
+    ) {
+      try {
+        var { key: importKey, resolvedUrl: resolvedImportKey } = await this.getKey(url, importUri)
+        this.resolved.set(importUri, importKey)
+      } catch (error) {
+        var field = '_import_uri'
+        this.notResolved.push(canonicalUri)
+        this.getLogger().error(error)
+        $tw.utils.alert(
+          name,
+          alertKeyFailed`Failed to resolve field: "${field}" from: ${url}">${title}</a>`
+        )
+      }
     }
-    return count
+    if (
+      canonicalKey !== null &&
+      this.notLoaded.indexOf(canonicalKey) === -1 &&
+      this.loaded.get(canonicalKey) == undefined
+    ) {
+      const {
+        loaded: loadedAdded,
+        removed: loadedRemoved
+      } = await this.loadResource(url, title, '_canonical_uri', canonicalKey, resolvedCanonicalKey)
+      loaded = loadedAdded
+      removed = loadedRemoved
+    }
+    if (
+      importKey !== null &&
+      this.notLoaded.indexOf(importKey) === -1 &&
+      this.loaded.get(importKey) == undefined
+    ) {
+      const {
+        loaded: loadedAdded,
+        removed: loadedRemoved
+      } = await this.loadResource(url, title, '_import_uri', importKey, resolvedImportKey)
+      loaded += loadedAdded
+      removed += loadedRemoved
+    }
+    return {
+      loaded: loaded,
+      removed: removed
+    }
   }
 
-  IpfsImport.prototype.importTiddlers = async function (
+  IpfsImport.prototype.loadResource = async function (
     parentUrl,
     parentTitle,
     parentField,
-    key
+    key,
+    resolvedKey
   ) {
-    var count = 0
+    var loaded = 0
+    var removed = 0
     var content = null
     var imported = new Map()
-    var normalizedUrl = null
-    var resolvedUrl = null
     var tiddlers = null
-    var url = null
-    try {
-      var { normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(
-        false,
-        true,
-        key
-      )
-      if (normalizedUrl == null) {
-        throw new Error('Failed to resolve key: "' + key + '"')
-      }
-    } catch (error) {
-      this.notResolved.push(key)
-      this.getLogger().error(error)
-      var msgAlert = 'Failed to resolve field: "'
-      msgAlert += parentField
-      if (
-        parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-        parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
-      ) {
-        msgAlert += '" from: <a href="'
-      } else {
-        msgAlert +=
-          '" from: <a rel="noopener noreferrer" target="_blank" href="'
-      }
-      msgAlert += parentUrl
-      msgAlert += '">'
-      msgAlert += parentTitle
-      msgAlert += '</a>'
-      $tw.utils.alert(name, msgAlert)
-      return count
-    }
-    // To be loaded
-    url = resolvedUrl !== null ? resolvedUrl : normalizedUrl
-    if (
-      this.loaded.get(key) !== undefined ||
-      this.notLoaded.indexOf(key) !== -1
-    ) {
-
-      return count
-    }
-    // Loaded or can't be loaded
-    if (
-      this.loaded.get(key) !== undefined ||
-      this.notLoaded.indexOf(key) !== -1
-    ) {
-      return count
-    }
     try {
       // Load
-      content = await $tw.ipfs.loadToUtf8(url.toString())
+      content = await $tw.ipfs.loadToUtf8(resolvedKey.toString())
       if ($tw.ipfs.isJson(content.data)) {
         tiddlers = $tw.wiki.deserializeTiddlers(
           '.json',
@@ -319,78 +386,32 @@ IPFS Import
       // Loaded
       this.loaded.set(key, imported)
       if (tiddlers !== undefined && tiddlers !== null) {
-        // First round
         for (var i in tiddlers) {
-          count += 1
           var tiddler = tiddlers[i]
           var title = tiddler['title']
           if (title == undefined || title == null || title.trim() === '') {
-            var msgConsole = 'Ignored Unknown Title from: '
-            msgConsole += '\n '
-            msgConsole += url
-            msgConsole += '\n loaded from: "'
-            msgConsole += parentTitle
-            msgConsole += '", field: "'
-            msgConsole += parentField
-            msgConsole += '"\n '
-            msgConsole += parentUrl
-            this.getLogger().info(msgConsole)
-            var msgAlert =
-              'Ignored unknown Title: <a rel="noopener noreferrer" target="_blank" href="'
-            msgAlert += url
-            msgAlert += '">Tiddler</a>'
-            if (
-              parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-              parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
-            ) {
-              msgAlert += ' loaded from: <a href="'
-            } else {
-              msgAlert +=
-                ' loaded from: <a rel="noopener noreferrer" target="_blank" href="'
-            }
-            msgAlert += parentUrl
-            msgAlert += '">'
-            msgAlert += parentTitle
-            msgAlert += '</a>, field: "'
-            msgAlert += parentField
-            msgAlert += '"'
-            $tw.utils.alert(name, msgAlert)
+            this.getLogger().info(
+              `Ignored Unknown "Title":\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+            )
+            var msg = 'Ignored Unknown'
+            var field = 'Title'
+            $tw.utils.alert(
+              name,
+              alertFailed`${msg}: ${resolvedKey}">${field}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
+            )
+            removed += 1
             continue
           }
           if (imported.get(title) !== undefined) {
-            var msgConsole = 'Ignored Duplicate: "'
-            msgConsole += title
-            msgConsole += '"\n '
-            msgConsole += url
-            msgConsole += '\n loaded from: "'
-            msgConsole += parentTitle
-            msgConsole += '", field: "'
-            msgConsole += parentField
-            msgConsole += '"\n '
-            msgConsole += parentUrl
-            this.getLogger().info(msgConsole)
-            var msgAlert =
-              'Ignored duplicate: <a rel="noopener noreferrer" target="_blank" href="'
-            msgAlert += url
-            msgAlert += '">'
-            msgAlert += title
-            msgAlert += '</a>'
-            if (
-              parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-              parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
-            ) {
-              msgAlert += ' loaded from: <a href="'
-            } else {
-              msgAlert +=
-                ' loaded from: <a rel="noopener noreferrer" target="_blank" href="'
-            }
-            msgAlert += parentUrl
-            msgAlert += '">'
-            msgAlert += parentTitle
-            msgAlert += '</a>, field: "'
-            msgAlert += parentField
-            msgAlert += '"'
-            $tw.utils.alert(name, msgAlert)
+            this.getLogger().info(
+              `Ignored Duplicate "${title}"\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+            )
+            var msg = 'Ignored Duplicate'
+            $tw.utils.alert(
+              name,
+              alertFailed`${msg}: ${resolvedKey}">${title}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
+            )
+            removed += 1
             continue
           }
           var type = tiddler['type']
@@ -399,202 +420,197 @@ IPFS Import
           }
           var info = $tw.config.contentTypeInfo[type]
           if (info == undefined || info == null) {
-            var msgConsole = 'Unknown Content-Type: "'
-            msgConsole += type
-            msgConsole += '" from: '
-            msgConsole += title
-            msgConsole += '\n '
-            msgConsole += url
-            msgConsole += '\n loaded from: '
-            msgConsole += parentTitle
-            msgConsole += ', field: '
-            msgConsole += parentField
-            msgConsole += '\n '
-            msgConsole += parentUrl
-            this.getLogger().info(msgConsole)
-            var msgAlert = 'Unknown Content-Type: "'
-            msgAlert += type
-            msgAlert +=
-              '" from <a rel="noopener noreferrer" target="_blank" href="'
-            msgAlert += url
-            msgAlert += '">'
-            msgAlert += title
-            msgAlert += '</a>'
-            if (
-              parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-              parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
-            ) {
-              msgAlert += ' loaded from: <a href="'
-            } else {
-              msgAlert +=
-                ' loaded from: <a rel="noopener noreferrer" target="_blank" href="'
-            }
-            msgAlert += parentUrl
-            msgAlert += '">'
-            msgAlert += parentTitle
-            msgAlert += '</a>, field: "'
-            msgAlert += parentField
-            msgAlert += '"'
-            $tw.utils.alert(name, msgAlert)
+            var msg = `Unknown Content-Type "${type}" from: "${title}"\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`;
+            this.getLogger().info(
+              `Unknown Content-Type "${type}" from: "${title}"\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+            )
+            var msg = 'Unknown Content-Type'
+            $tw.utils.alert(
+              name,
+              alertTypeFailed`${msg}: "${type}" from ${resolvedKey}">${title}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
+            )
             // Default
             type = 'text/vnd.tiddlywiki'
             info = $tw.config.contentTypeInfo[type]
           }
           tiddler['type'] = type
           // Next
-          var canonicalUri = await this.getKey(
-            '_canonical_uri',
-            url,
-            title,
-            tiddler['_canonical_uri']
-          )
-          var importUri = await this.getKey(
-            '_import_uri',
-            url,
-            title,
-            tiddler['_import_uri']
-          )
+          var canonicalUri = tiddler['_canonical_uri']
+          canonicalUri =
+            canonicalUri == null ||
+            canonicalUri == undefined ||
+            canonicalUri.trim() === ''
+              ? null
+              : canonicalUri.trim()
+          var importUri = tiddler['_import_uri']
+          importUri =
+            importUri == null ||
+            importUri == undefined ||
+            importUri.trim() === ''
+              ? null
+              : importUri.trim()
           if (
             info.encoding !== 'base64' &&
             tiddler['type'] !== 'image/svg+xml'
           ) {
             if (canonicalUri !== null || importUri !== null) {
-              count += await this.load(url, title, canonicalUri, importUri)
+              const {
+                loaded: loadedAdded,
+                removed: loadedRemoved
+              } = await this.loadResources(resolvedKey, title, canonicalUri, importUri)
+              loaded += loadedAdded
+              removed += loadedRemoved
             }
           }
-          imported.set(title, { canonicalUri, importUri, tiddler })
+          imported.set(title, tiddler)
+          loaded += 1
         }
       }
       if (imported.size === 0) {
-        var msgConsole = 'Empty content: '
-        msgConsole += '\n '
-        msgConsole += url
-        msgConsole += '\n loaded from: '
-        msgConsole += parentTitle
-        msgConsole += ', field: '
-        msgConsole += parentField
-        msgConsole += '\n '
-        msgConsole += parentUrl
-        this.getLogger().info(msgConsole)
-        var msgAlert =
-          'Empty <a rel="noopener noreferrer" target="_blank" href="'
-        msgAlert += url
-        if (
-          parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-          parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
-        ) {
-          msgAlert += '">Content</a>, loaded from: <a href="'
-        } else {
-          msgAlert +=
-            '">Content</a>, loaded from: <a rel="noopener noreferrer" target="_blank" href="'
-        }
-        msgAlert += parentUrl
-        msgAlert += '">'
-        msgAlert += parentTitle
-        msgAlert += '</a>, field: "'
-        msgAlert += parentField
-        msgAlert += '"'
-        $tw.utils.alert(name, msgAlert)
+        this.getLogger().info(
+          `Empty Content:\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+        )
+        var msg = 'Empty'
+        var field = 'Content'
+        $tw.utils.alert(
+          name,
+          alertFailed`${msg}: ${resolvedKey}">${field}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
+        )
       }
     } catch (error) {
       this.notLoaded.push(key)
+      this.getLogger().info(
+        `Failed to Load:\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+      )
       this.getLogger().error(error)
-      var msgAlert =
-        'Failed to load: <a rel="noopener noreferrer" target="_blank" href="'
-      msgAlert += url
-      if (
-        parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-        parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
-      ) {
-        msgAlert += '">Content</a>, loaded from: <a href="'
-      } else {
-        msgAlert +=
-          '">Content</a>, loaded from: <a rel="noopener noreferrer" target="_blank" href="'
-      }
-      msgAlert += parentUrl
-      msgAlert += '">'
-      msgAlert += parentTitle
-      msgAlert += '</a>, field: "'
-      msgAlert += parentField
-      msgAlert += '"'
-      $tw.utils.alert(name, msgAlert)
-      return count
+      var msg = 'Failed to Load'
+      var field = 'Content'
+      $tw.utils.alert(
+        name,
+        alertFailed`${msg}: ${resolvedKey}">${field}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
+      )
     }
-    return count
+    return {
+      loaded: loaded,
+      removed: removed
+    }
   }
 
-  IpfsImport.prototype.analyzeTitles = function (parentKey, parentTitle) {
+  IpfsImport.prototype.prepareTiddlers = function (parentKey, parentTitle) {
+    var prepared = 0
+    var removed = 0
+    var processedTitles = new Array()
     for (var key of this.loaded.keys()) {
       const imported = this.loaded.get(key)
       for (var title of imported.keys()) {
-        var keys = new Array()
-        keys.push(key);
-        const { canonicalUri, importUri } = this.getImported(
-          key,
-          title
-        )
-        if (canonicalUri !== null && importUri !== null) {
-          if (canonicalUri !== null) {
-            if (this.loaded.get(canonicalUri) !== undefined && this.notLoaded.indexOf(canonicalUri) === -1) {
-              const { canonicalUri: leafCanonicalUri, importUri: leafImportUri } = this.getImported(
-                canonicalUri,
-                title
-              )
-              // Inconsistency
-              if (leafCanonicalUri !== null || leafImportUri !== null) {
-              }
-            } else {
-              // Leaf is not loadable
-            }
-          }
-          if (importUri !== null) {
-            if (this.loaded.get(importUri) !== undefined && this.notLoaded.indexOf(importUri) === -1) {
-              this.analyzeTitle(keys, key, canonicalUri, importUri, title)
-            } else {
-              // Node is not loadable
-            }
-          } else if (canonicalUri !== null) {
-            keys.push(canonicalUri);
-          }
-        } else if (canonicalUri == null && importUri !== null) {
-          // Inconsistency
+        if (processedTitles.indexOf(title) !== -1) {
+          continue
         }
-        this.removeTitles(keys, title);
+        const keys = new Array()
+        const {
+          canonicalUriKey,
+          canonicalUri,
+          importUriKey,
+          importUri
+        } = this.getImported(key, title)
+        if (canonicalUri !== null || importUri !== null) {
+          if (canonicalUri == null && importUri !== null) {
+            // Inconsistency
+          } else {
+            if (
+              this.notResolved.indexOf(canonicalUri) === -1 &&
+              this.notLoaded.indexOf(canonicalUriKey) === -1
+            ) {
+              const {
+                canonicalUri: leafCanonicalUri,
+                importUri: leafImportUri
+              } = this.getImported(canonicalUri, title)
+              if (leafCanonicalUri !== null || leafImportUri !== null) {
+                // Inconsistency
+              } else if (importUri !== null) {
+                if (
+                  this.notResolved.indexOf(importUri) === -1 &&
+                  this.notLoaded.indexOf(importUriKey) === -1
+                ) {
+                  if (
+                    this.prepareTiddler(
+                      keys,
+                      key,
+                      canonicalUri,
+                      importUriKey,
+                      title
+                    )
+                  ) {
+                    keys.push(key)
+                  }
+                }
+              } else {
+                keys.push(key)
+              }
+            }
+          }
+        } else {
+          // Leaf
+          keys.push(key)
+        }
+        prepared += keys.length
+        removed += this.removeTitles(keys, title)
+        processedTitles.push(title)
       }
+    }
+    return {
+      prepared: prepared,
+      removed: removed
     }
   }
 
-  IpfsImport.prototype.analyzeTitle = function (keys, parentKey, canonicalUri, importUri, title) {
-    const { canonicalUri: nextCanonicalUri, importUri: nextImportUri } = this.getImported(
-      importUri,
-      title
-    )
+  IpfsImport.prototype.prepareTiddler = function (
+    keys,
+    parentKey,
+    canonicalUri,
+    importUriKey,
+    title
+  ) {
+    const {
+      canonicalUri: nextCanonicalUri,
+      importUriKey: nextImportUriKey,
+      importUri: nextImportUri
+    } = this.getImported(importUriKey, title)
     // Inconsistency
     if (nextCanonicalUri !== null && nextCanonicalUri !== canonicalUri) {
-      return;
+      return false
     }
     // Inconsistency
     if (nextCanonicalUri == null && nextImportUri !== null) {
-      return;
+      return false
     }
     if (nextImportUri !== null) {
       // Cycle
-      if (keys.indexOf(nextImportUri) !== -1) {
-        return;
+      if (keys.indexOf(nextImportUriKey) !== -1) {
+        return false
       }
       // Next
-      if (this.loaded.get(nextImportUri) !== undefined && this.notLoaded.indexOf(nextImportUri) === -1) {
-        keys.push(importUri);
-        return this.analyzeTitle(keys, importUri, canonicalUri, nextImportUri, title)
-      } else {
-        // Not loadable
-        return;
+      if (
+        this.notResolved.indexOf(nextImportUri) === -1 &&
+        this.notLoaded.indexOf(nextImportUriKey) === -1
+      ) {
+        if (
+          this.prepareTiddler(
+            keys,
+            importUriKey,
+            canonicalUri,
+            nextImportUriKey,
+            title
+          )
+        ) {
+          keys.push(importUriKey)
+          return true
+        }
       }
-    } else if (nextCanonicalUri !== null && nextCanonicalUri === canonicalUri) {
-      keys.push(importUri);
-      keys.push(canonicalUri);
+      return false
     }
-    return;
+    keys.push(importUriKey)
+    return true
   }
 
   IpfsImport.prototype.loadRemoteImportedTiddlers = async function (

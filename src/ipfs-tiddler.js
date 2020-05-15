@@ -340,40 +340,28 @@ IPFS Tiddler
       title,
       tiddler.fields['type']
     )
-    var hasCanonicalUrl = false
-    var canonicalUrl = tiddler.getFieldString('_canonical_uri')
-    if (
-      canonicalUrl !== undefined &&
-      canonicalUrl !== null &&
-      canonicalUrl.trim() !== ''
-    ) {
-      canonicalUrl = canonicalUrl.trim()
-      hasCanonicalUrl = true
-    } else {
-      canonicalUrl = null
-    }
-    var hasImportUrl = false
-    var importUrl = tiddler.getFieldString('_import_uri')
-    if (
-      importUrl !== undefined &&
-      importUrl !== null &&
-      importUrl.trim() !== ''
-    ) {
-      importUrl = importUrl.trim()
-      hasImportUrl = true
-    } else {
-      importUrl = null
-    }
+    var canonicalUri = tiddler.getFieldString('_canonical_uri')
+    canonicalUri =
+      canonicalUri == null ||
+      canonicalUri == undefined ||
+      canonicalUri.trim() === ''
+        ? null
+        : canonicalUri.trim()
+    var importUri = tiddler.getFieldString('_import_uri')
+    importUri =
+      importUri == null || importUri == undefined || importUri.trim() === ''
+        ? null
+        : importUri.trim()
     // Nothing to do
-    if (hasCanonicalUrl === false && hasImportUrl === false) {
+    if (canonicalUri == null && importUri === null) {
       $tw.utils.alert(name, 'Nothing to refresh here...')
       return true
     }
     // Reload Attachment content
     if (
       (info.encoding === 'base64' || type === 'image/svg+xml') &&
-      hasCanonicalUrl &&
-      hasImportUrl === false
+      canonicalUri !== null &&
+      importUri == null
     ) {
       const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
@@ -384,10 +372,12 @@ IPFS Tiddler
     }
     // Async Import
     var ipfsImport = new IpfsImport()
-    ipfsImport.import(canonicalUrl, importUrl, title).catch(error => {
-      self.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
-    })
+    if (canonicalUri !== null || importUri !== null) {
+      ipfsImport.import(canonicalUri, importUri, title).catch(error => {
+        self.getLogger().error(error)
+        $tw.utils.alert(name, error.message)
+      })
+    }
     return true
   }
 
@@ -542,9 +532,9 @@ IPFS Tiddler
           normalizedUrl: oldNormalizedUrl
         } = await $tw.ipfs.resolveUrl(false, true, oldValue)
       } catch (error) {
+        // We cannot resolve the previous value
         this.getLogger().error(error)
         $tw.utils.alert(name, error.message)
-        return tiddler
       }
       // Process _canonical_uri
       if (field === '_canonical_uri') {

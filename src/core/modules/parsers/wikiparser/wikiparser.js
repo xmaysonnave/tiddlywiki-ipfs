@@ -62,18 +62,20 @@ wikiparser
       options.tiddler !== null
     ) {
       var canonicalUri = options.tiddler.fields._canonical_uri
+      canonicalUri =
+        canonicalUri == null ||
+        canonicalUri == undefined ||
+        canonicalUri.trim() === ''
+          ? null
+          : canonicalUri.trim()
       var importUri = options.tiddler.fields._import_uri
-      var title = options.tiddler.fields.title
-      var url =
-        importUri !== undefined && importUri !== null && importUri.trim() !== ''
-          ? importUri
-          : canonicalUri !== undefined &&
-            canonicalUri !== null &&
-            canonicalUri.trim() !== ''
-          ? canonicalUri
-          : null
-      if (url !== null) {
+      importUri =
+        importUri == null || importUri == undefined || importUri.trim() === ''
+          ? null
+          : importUri.trim()
+      if (canonicalUri !== null || importUri !== null) {
         var ipfsImport = new IpfsImport()
+        var title = options.tiddler.fields.title
         ipfsImport.import(canonicalUri, importUri, title).catch(error => {
           self.getLogger().error(error)
           $tw.utils.alert(name, error.message)

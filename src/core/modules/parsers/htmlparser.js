@@ -56,13 +56,14 @@ The HTML parser displays text as raw HTML
       options.tiddler !== undefined &&
       options.tiddler !== null
     ) {
-      var tiddler = options.tiddler
-      var canonicalUri = tiddler.fields._canonical_uri
-      if (
-        canonicalUri !== undefined &&
-        canonicalUri !== null &&
-        canonicalUri.trim() != ''
-      ) {
+      var canonicalUri = options.tiddler.fields._canonical_uri
+      canonicalUri =
+        canonicalUri == null ||
+        canonicalUri == undefined ||
+        canonicalUri.trim() === ''
+          ? null
+          : canonicalUri.trim()
+      if (canonicalUri !== null) {
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
@@ -75,7 +76,7 @@ The HTML parser displays text as raw HTML
                 : null
             if (url !== null) {
               src = url
-              var parsedTiddler = $tw.utils.getChangedTiddler(tiddler)
+              var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
               $tw.rootWidget.refresh(parsedTiddler)
             }
           })

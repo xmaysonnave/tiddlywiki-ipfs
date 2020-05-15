@@ -23,13 +23,13 @@
         "_canonical_uri": "test.eth"
     },
     {
-        "text": "Empty _canonical_uri 'Node 6' @ 1_1",
+        "text": "Empty _canonical_uri 'Node 5' @ 1_1",
         "title": "Node 5",
         "modified": "20200320085428678",
         "_canonical_uri": ""
     },
     {
-        "text": "Failed to resolve _canonical_uri 'Node 7' @ 1_1",
+        "text": "Failed to resolve _canonical_uri 'Node 6' @ 1_1",
         "title": "Node 6",
         "modified": "20200320085428678",
         "_canonical_uri": "not_an_url"
@@ -50,7 +50,7 @@
         "text": "Empty Content",
         "title": "Node 9",
         "modified": "20200320085428678",
-        "_canonical_uri": "https://ipfs.infura.io/"
+        "_canonical_uri": "https://tiddlywiki.com/"
     },
     {
         "text": "Empty IPFS directory",
@@ -63,5 +63,17 @@
         "type": "wrong/type",
         "title": "Node 11",
         "modified": "20200320085428678"
+    },
+    {
+        "text": "CORS",
+        "title": "Node 12",
+        "modified": "20200320085428678",
+        "_canonical_uri": "https://www.fsf.org/"
+    },
+    {
+        "text": "Bad Request",
+        "title": "Node 13",
+        "modified": "20200320085428678",
+        "_canonical_uri": "https://ipfs.infura.io:5001/"
     }
 ]
