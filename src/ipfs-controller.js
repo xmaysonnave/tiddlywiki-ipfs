@@ -83,7 +83,7 @@ IPFS Controller
             reject(error)
           })
       } else if (cid !== undefined && cid !== null) {
-        const normalizedUrl = self.normalizeUrl('/' + ipfsKeyword + '/' + cid)
+        const normalizedUrl = self.normalizeUrl(`/${ipfsKeyword}/${cid}`)
         resolve(self.addToPin(cid, normalizedUrl))
       } else {
         resolve(false)
@@ -97,13 +97,13 @@ IPFS Controller
       if (index !== -1) {
         this.unpin.splice(index, 1)
         this.getLogger().info(
-          'Cancel request to Unpin:' + '\n ' + normalizedUrl
+          `Cancel request to Unpin:\n ${normalizedUrl}`
         )
         return false
       }
       if (this.pin.indexOf(cid) === -1) {
         this.pin.push(cid)
-        this.getLogger().info('Request to Pin:' + '\n ' + normalizedUrl)
+        this.getLogger().info(`Request to Pin:\n ${normalizedUrl}`)
         return true
       }
     }
@@ -131,7 +131,7 @@ IPFS Controller
             reject(error)
           })
       } else if (cid !== undefined && cid !== null) {
-        const normalizedUrl = self.normalizeUrl('/' + ipfsKeyword + '/' + cid)
+        const normalizedUrl = self.normalizeUrl(`/${ipfsKeyword}/${cid}`)
         resolve(self.addToUnpin(cid, normalizedUrl))
       } else {
         resolve(false)
@@ -145,13 +145,13 @@ IPFS Controller
       var index = this.pin.indexOf(cid)
       if (index !== -1) {
         this.pin.splice(index, 1)
-        this.getLogger().info('Cancel request to Pin:' + '\n ' + normalizedUrl)
+        this.getLogger().info(`Cancel request to Pin:\n ${normalizedUrl}`)
         return false
       }
       // Add to unpin
       if (this.unpin.indexOf(cid) === -1) {
         this.unpin.push(cid)
-        this.getLogger().info('Request to unpin:' + '\n ' + normalizedUrl)
+        this.getLogger().info(`Request to unpin:\n ${normalizedUrl}`)
         return true
       }
     }
@@ -163,13 +163,13 @@ IPFS Controller
       var index = this.pin.indexOf(cid)
       if (index !== -1) {
         this.pin.splice(index, 1)
-        this.getLogger().info('Cancel request to Pin:' + '\n ' + normalizedUrl)
+        this.getLogger().info(`Cancel request to Pin:\n ${normalizedUrl}`)
       }
       var index = this.unpin.indexOf(cid)
       if (index !== -1) {
         this.unpin.splice(index, 1)
         this.getLogger().info(
-          'Cancel request to Unpin:' + '\n ' + normalizedUrl
+          `Cancel request to Unpin:\n ${normalizedUrl}`
         )
       }
     }
@@ -309,14 +309,14 @@ IPFS Controller
         ipnsIdentifier
       )
       if (resolveIpns) {
-        this.getLogger().info('Resolving IPNS key:' + '\n ' + normalizedUrl)
+        this.getLogger().info(`Resolving IPNS key:\n ${normalizedUrl}`)
         $tw.utils.alert(name, 'Resolving an IPNS key...')
         try {
           cid = await this.resolveIpnsKey(ipnsKey)
           if (cid !== null) {
-            resolvedUrl = this.normalizeUrl('/' + ipfsKeyword + '/' + cid, base)
+            resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}`, base)
             this.getLogger().info(
-              'Successfully resolved IPNS key:' + '\n ' + normalizedUrl
+              `Successfully resolved IPNS key:\n ${normalizedUrl}`
             )
             $tw.utils.alert(name, 'Successfully resolved an IPNS key...')
           }
@@ -385,7 +385,7 @@ IPFS Controller
     const client = this.ipfsClients.get(url.href)
     if (client !== undefined) {
       // Log
-      this.getLogger().info('Reuse IPFS provider:' + '\n ' + client.provider)
+      this.getLogger().info(`Reuse IPFS provider: "${client.provider}"`)
       // Done
       return {
         ipfs: client.ipfs,
@@ -399,7 +399,7 @@ IPFS Controller
     // Store
     this.ipfsClients.set(url.href, { ipfs, provider })
     // Log
-    this.getLogger().info('New IPFS provider:' + '\n ' + policy.provider)
+    this.getLogger().info(`New IPFS provider: "${policy.provider}"`)
     // Done
     return {
       ipfs: ipfs,
@@ -414,13 +414,9 @@ IPFS Controller
       web3
     )
     if (content !== null && protocol !== null) {
-      const url = this.normalizeUrl('/' + protocol + '/' + content)
+      const url = this.normalizeUrl(`/${protocol}/${content}`)
       this.getLogger().info(
-        'Successfully fetched ENS domain content:' +
-          '\n ' +
-          url +
-          ' \n from: ' +
-          ensDomain
+        `Successfully fetched ENS domain content: "${ensDomain}"\n ${url}`
       )
       return {
         content: content,
@@ -444,13 +440,9 @@ IPFS Controller
       account
     )
     if (cidV0 !== null) {
-      const url = this.normalizeUrl('/ipfs/' + cidV0)
+      const url = this.normalizeUrl(`/ipfs/${cidV0}`)
       this.getLogger().info(
-        'Successfully set ENS domain content:' +
-          '\n ' +
-          url +
-          ' \n to: ' +
-          ensDomain
+        `Successfully set ENS domain content:\n ${url} \n to: "${ensDomain}"`
       )
       return true
     }

@@ -54,7 +54,7 @@ ENS Action
       window.open('https://app.ens.domains', '_blank', 'noopener,noreferrer')
     } else {
       window.open(
-        'https://app.ens.domains/name/' + ensDomain,
+        `https://app.ens.domains/name/${ensDomain}`,
         '_blank',
         'noopener,noreferrer'
       )
@@ -72,7 +72,7 @@ ENS Action
       this.getLogger().info(`ENS domain: ${ensDomain}`)
       const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
       if (resolvedUrl !== null) {
-        window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
+        window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
       }
     } catch (error) {
       this.getLogger().error(error)
