@@ -30,6 +30,12 @@
     "run-prepare": "./scripts/run-prepare.sh",
     "test": "./scripts/test.sh"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
+  },
   "lint-staged": {
     "*.js": [
       "prettier-standard --lint",
