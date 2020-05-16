@@ -4,7 +4,14 @@ os: linux
 dist: bionic
 arch: amd64
 
+node_js:
+  - '12'
+
 script:
   - npm run lint
   - npm run build
   - npm test
+
+branches:
+  only:
+    - master

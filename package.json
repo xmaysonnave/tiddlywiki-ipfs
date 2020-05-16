@@ -22,7 +22,6 @@
     "eslint": "eslint \"src/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix",
     "eslint-check": "eslint --print-config src/ipfs-saver.js | eslint-config-prettier-check",
-    "precommit": "lint-staged",
     "format": "prettier-standard --format",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
