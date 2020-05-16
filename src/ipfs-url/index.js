@@ -91,12 +91,17 @@ import { URL } from 'universal-url'
     } catch (error) {
       base = this.getIpfsGatewayUrl()
     }
-    return this.getUrl(base.protocol + '//' + base.host)
+    return this.getUrl(`${base.protocol}//${base.host}`)
   }
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
-    // Check
-    if (value == undefined || value == null || value.toString() === '') {
+    value =
+    value == null ||
+    value == undefined ||
+    value.trim() === ''
+      ? null
+      : value.trim()
+    if (value == null) {
       return null
     }
     // Parse
@@ -113,7 +118,7 @@ import { URL } from 'universal-url'
       ) {
         text = true
         try {
-          url = this.getUrl('https://' + value)
+          url = this.getUrl(`https://${value}`)
           if (
             url.hostname.endsWith('.eth') == false &&
             url.hostname.endsWith('.eth.link') == false

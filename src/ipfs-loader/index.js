@@ -32,7 +32,7 @@ import root from 'window-or-global'
     if (typeof root.eruda === 'undefined') {
       await this.loadLibrary('ErudaLibrary', eruda, eruda_sri, true)
       if (typeof root.eruda !== 'undefined') {
-        this.getLogger().info('Loaded ErudaLibrary:' + '\n ' + eruda)
+        this.getLogger().info(`Loaded ErudaLibrary:\n ${eruda}`)
       }
     }
   }
@@ -43,7 +43,7 @@ import root from 'window-or-global'
     if (typeof root.ethers === 'undefined') {
       await this.loadLibrary('EtherJsLibrary', ethers, ethers_sri, true)
       if (typeof root.ethers !== 'undefined') {
-        this.getLogger().info('Loaded EtherJsLibrary:' + '\n ' + ethers)
+        this.getLogger().info(`Loaded EtherJsLibrary:\n ${ethers}`)
       }
     }
   }
@@ -60,7 +60,7 @@ import root from 'window-or-global'
       )
       if (typeof root.IpfsHttpClient !== 'undefined') {
         this.getLogger().info(
-          'Loaded IpfsHttpLibrary:' + '\n ' + ipfs_http_client
+          `Loaded IpfsHttpLibrary:\n ${ipfs_http_client}`
         )
       }
     }
@@ -108,7 +108,7 @@ import root from 'window-or-global'
         cleanup()
       }
       script.onerror = () => {
-        reject(new Error('Failed to load: ' + url))
+        reject(new Error(`Failed to load: ${url}`))
         cleanup()
       }
       // Attributes
@@ -162,7 +162,7 @@ import root from 'window-or-global'
           }
           try {
             const array = new Uint8Array(this.response)
-            self.getLogger().info('[' + xhr.status + '] Loaded:' + '\n ' + url)
+            self.getLogger().info(`[${xhr.status}] Loaded:\n ${url}`)
             resolve(array)
           } catch (error) {
             reject(error)

@@ -90,11 +90,11 @@ IPFS Import
   }
 
   IpfsImport.prototype.hasTitle = function (key, title) {
-    var imported = this.loaded.get(key);
+    var imported = this.loaded.get(key)
     if (imported !== undefined) {
-      var importedTitle = imported.get(title);
+      var importedTitle = imported.get(title)
       if (importedTitle !== undefined) {
-        return true;
+        return true
       }
     }
     return false
@@ -104,7 +104,7 @@ IPFS Import
     var removed = 0
     for (var key of this.loaded.keys()) {
       if (keys.indexOf(key) !== -1) {
-        continue;
+        continue
       }
       const imported = this.loaded.get(key)
       if (imported.delete(title)) {
