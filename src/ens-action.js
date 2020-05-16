@@ -109,7 +109,7 @@ ENS Action
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
     }
-    if (cid == null && ipnsKey == null) {
+    if (cid == null && ipnsKey !== null) {
       $tw.utils.alert(name, 'Nothing to publish to ENS...')
       return false
     }

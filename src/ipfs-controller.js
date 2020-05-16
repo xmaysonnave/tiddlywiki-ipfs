@@ -274,7 +274,11 @@ IPFS Controller
     var ipnsName = null
     var normalizedUrl = null
     var resolvedUrl = null
-    if (value == undefined || value == null || value.toString().trim() === '') {
+    value =
+      value == null || value == undefined || value.toString().trim() === ''
+        ? null
+        : value.toString().trim()
+    if (value == null) {
       return {
         cid: null,
         ipnsKey: null,
@@ -283,6 +287,7 @@ IPFS Controller
         resolvedUrl: null
       }
     }
+    base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
     try {
       normalizedUrl = this.normalizeUrl(value, base)
     } catch (error) {
@@ -345,7 +350,7 @@ IPFS Controller
   }
 
   IpfsController.prototype.getUrl = function (url, base) {
-    return this.ipfsUrl.getUrl(url, base ? base : this.getIpfsBaseUrl())
+    return this.ipfsUrl.getUrl(url, base !== undefined && base !== null ? base : this.getIpfsBaseUrl())
   }
 
   IpfsController.prototype.isJson = function (content) {
