@@ -2,7 +2,7 @@
 
 <a name="ipfs-with-tiddlywiki"/>
 
-[![Build Status][build-badge]][build] [![version][version-badge]][package]
+[![Build Status](https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=master)](https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs)
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
