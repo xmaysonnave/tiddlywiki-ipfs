@@ -44,16 +44,16 @@ ENS Wrapper
       const self = this
       this.ethereum = this.ensLibrary.getProvider()
       // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-      this.ethereum.on('accountsChanged', function accountChanged(accounts) {
+      this.ethereum.on('accountsChanged', function accountChanged (accounts) {
         self.accountChanged(accounts)
       })
-      this.ethereum.on('chainChanged', function networkChanged(chainId) {
+      this.ethereum.on('chainChanged', function networkChanged (chainId) {
         self.networkChanged(chainId)
       })
-      this.ethereum.on('close', function closeProvider(code, reason) {
+      this.ethereum.on('close', function closeProvider (code, reason) {
         self.closeConnection(code, reason)
       })
-      this.ethereum.on('networkChanged', function networkChanged(chainId) {
+      this.ethereum.on('networkChanged', function networkChanged (chainId) {
         self.networkChanged(chainId)
       })
     }

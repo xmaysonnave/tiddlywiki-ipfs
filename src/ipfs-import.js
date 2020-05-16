@@ -18,7 +18,7 @@ IPFS Import
   const local = '<a href="'
   const remote = '<a rel="noopener noreferrer" target="_blank" href="'
 
-  var alertKeyFailed = function (strings, field, url, title) {
+  const alertKeyFailed = function (strings, field, url, title) {
     var failed = strings[0]
     var from = strings[1]
     var endH = strings[2]
@@ -33,7 +33,7 @@ IPFS Import
     }
   }
 
-  var alertFailed = function (
+  const alertFailed = function (
     strings,
     msg,
     key,
@@ -57,7 +57,7 @@ IPFS Import
     }
   }
 
-  var alertTypeFailed = function (
+  const alertTypeFailed = function (
     strings,
     msg,
     type,
@@ -89,38 +89,26 @@ IPFS Import
     return window.log.getLogger(name)
   }
 
-  IpfsImport.prototype.getImported = function (key, title) {
-    const imported = this.loaded.get(key)
+  IpfsImport.prototype.hasTitle = function (key, title) {
+    var imported = this.loaded.get(key);
     if (imported !== undefined) {
-      for (var importedTitle of imported.keys()) {
-        if (importedTitle === title) {
-          const { canonicalKey, importKey, tiddler } = imported.get(
-            importedTitle
-          )
-          return {
-            canonicalKey: canonicalKey,
-            importKey: importKey,
-            tiddler: tiddler
-          }
-        }
+      var importedTitle = imported.get(title);
+      if (importedTitle !== undefined) {
+        return true;
       }
     }
-    return {
-      canonicalKey: null,
-      importKey: null,
-      tiddler: null
-    }
+    return false
   }
 
-  IpfsImport.prototype.removeTitles = function (keys, currentTitle) {
+  IpfsImport.prototype.removeTitles = function (keys, title) {
     var removed = 0
     for (var key of this.loaded.keys()) {
+      if (keys.indexOf(key) !== -1) {
+        continue;
+      }
       const imported = this.loaded.get(key)
-      for (var title of imported.keys()) {
-        if (currentTitle === title && keys.indexOf(key) === -1) {
-          imported.delete(title)
-          removed += 1
-        }
+      if (imported.delete(title)) {
+        removed += 1
       }
     }
     return removed
@@ -131,7 +119,7 @@ IPFS Import
     var ipnsKey = null
     var key = null
     var normalizedUrl = null
-    var resolvedUrl = null;
+    var resolvedUrl = null
     value =
       value == null || value == undefined || value.trim() === ''
         ? null
@@ -139,12 +127,12 @@ IPFS Import
     if (value == null) {
       return null
     }
-    var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(
-      false,
-      true,
-      value,
-      base
-    )
+    var {
+      cid,
+      ipnsKey,
+      normalizedUrl,
+      resolvedUrl
+    } = await $tw.ipfs.resolveUrl(false, true, value, base)
     if (normalizedUrl == null && resolvedUrl == null) {
       throw new Error(`Failed to resolve value: "${value}"`)
     }
@@ -196,17 +184,17 @@ IPFS Import
       // Load and prepare imported tiddlers to be processed
       var added = 0
       var updated = 0
-      var url = $tw.ipfs.getDocumentUrl()
+      const url = $tw.ipfs.getDocumentUrl()
       url.hash = title
       if (canonicalUri !== null || importUri !== null) {
         this.getLogger().info('*** Begin Import ***')
-        var { loaded, removed: loadedRemoved } = await this.loadResources(
+        const { loaded, removed: loadedRemoved } = await this.loadResources(
           url,
           title,
           canonicalUri,
           importUri
         )
-        //var { prepared, removed: preparedRemoved } = this.prepareTiddlers()
+        const { processed, removed: processedRemoved } = this.processTiddlers()
         this.getLogger().info(`*** Loaded: ${this.loaded.size} resource(s) ***`)
         this.getLogger().info(
           `*** Failed to load: ${this.notLoaded.length} resource(s) ***`
@@ -217,9 +205,9 @@ IPFS Import
         this.getLogger().info(
           `*** Loaded: ${loaded} and Removed: ${loadedRemoved} Tiddler(s) ***`
         )
-        // this.getLogger().info(
-        //   `*** Prepared: ${prepared} and Removed: ${preparedRemoved} Tiddler(s) ***`
-        // )
+        this.getLogger().info(
+          `*** Processed: ${processed} and Removed: ${processedRemoved} Tiddler(s) ***`
+        )
       }
       // // Update Tiddly
       // for (var [title, merged] of this.processedImported.entries()) {
@@ -278,8 +266,8 @@ IPFS Import
   }
 
   IpfsImport.prototype.loadResources = async function (
-    url,
-    title,
+    parentUrl,
+    parentTitle,
     canonicalUri,
     importUri
   ) {
@@ -293,7 +281,10 @@ IPFS Import
       this.resolved.get(canonicalUri) == undefined
     ) {
       try {
-        var { key: canonicalKey, resolvedUrl: resolvedCanonicalKey } = await this.getKey(url, canonicalUri)
+        var {
+          key: canonicalKey,
+          resolvedUrl: resolvedCanonicalKey
+        } = await this.getKey(parentUrl, canonicalUri)
         this.resolved.set(canonicalUri, canonicalKey)
       } catch (error) {
         var field = '_canonical_uri'
@@ -301,7 +292,7 @@ IPFS Import
         this.getLogger().error(error)
         $tw.utils.alert(
           name,
-          alertKeyFailed`Failed to resolve field: "${field}" from: ${url}">${title}</a>`
+          alertKeyFailed`Failed to Resolve field: "${field}" from: ${parentUrl}">${parentTitle}</a>`
         )
       }
     }
@@ -313,7 +304,10 @@ IPFS Import
       this.resolved.get(importUri) == undefined
     ) {
       try {
-        var { key: importKey, resolvedUrl: resolvedImportKey } = await this.getKey(url, importUri)
+        var {
+          key: importKey,
+          resolvedUrl: resolvedImportKey
+        } = await this.getKey(parentUrl, importUri)
         this.resolved.set(importUri, importKey)
       } catch (error) {
         var field = '_import_uri'
@@ -321,7 +315,7 @@ IPFS Import
         this.getLogger().error(error)
         $tw.utils.alert(
           name,
-          alertKeyFailed`Failed to resolve field: "${field}" from: ${url}">${title}</a>`
+          alertKeyFailed`Failed to Resolve field: "${field}" from: ${parentUrl}">${parentTitle}</a>`
         )
       }
     }
@@ -333,7 +327,13 @@ IPFS Import
       const {
         loaded: loadedAdded,
         removed: loadedRemoved
-      } = await this.loadResource(url, title, '_canonical_uri', canonicalKey, resolvedCanonicalKey)
+      } = await this.loadResource(
+        parentUrl,
+        parentTitle,
+        '_canonical_uri',
+        canonicalKey,
+        resolvedCanonicalKey
+      )
       loaded = loadedAdded
       removed = loadedRemoved
     }
@@ -345,7 +345,13 @@ IPFS Import
       const {
         loaded: loadedAdded,
         removed: loadedRemoved
-      } = await this.loadResource(url, title, '_import_uri', importKey, resolvedImportKey)
+      } = await this.loadResource(
+        parentUrl,
+        parentTitle,
+        '_import_uri',
+        importKey,
+        resolvedImportKey
+      )
       loaded += loadedAdded
       removed += loadedRemoved
     }
@@ -390,11 +396,11 @@ IPFS Import
           var tiddler = tiddlers[i]
           var title = tiddler['title']
           if (title == undefined || title == null || title.trim() === '') {
-            this.getLogger().info(
-              `Ignored Unknown "Title":\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
-            )
             var msg = 'Ignored Unknown'
             var field = 'Title'
+            this.getLogger().info(
+              `${msg} "${field}":\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+            )
             $tw.utils.alert(
               name,
               alertFailed`${msg}: ${resolvedKey}">${field}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
@@ -403,10 +409,10 @@ IPFS Import
             continue
           }
           if (imported.get(title) !== undefined) {
-            this.getLogger().info(
-              `Ignored Duplicate "${title}"\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
-            )
             var msg = 'Ignored Duplicate'
+            this.getLogger().info(
+              `${msg} "${title}"\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+            )
             $tw.utils.alert(
               name,
               alertFailed`${msg}: ${resolvedKey}">${title}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
@@ -420,11 +426,10 @@ IPFS Import
           }
           var info = $tw.config.contentTypeInfo[type]
           if (info == undefined || info == null) {
-            var msg = `Unknown Content-Type "${type}" from: "${title}"\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`;
-            this.getLogger().info(
-              `Unknown Content-Type "${type}" from: "${title}"\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
-            )
             var msg = 'Unknown Content-Type'
+            this.getLogger().info(
+              `${msg} "${type}" from: "${title}"\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+            )
             $tw.utils.alert(
               name,
               alertTypeFailed`${msg}: "${type}" from ${resolvedKey}">${title}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
@@ -457,7 +462,12 @@ IPFS Import
               const {
                 loaded: loadedAdded,
                 removed: loadedRemoved
-              } = await this.loadResources(resolvedKey, title, canonicalUri, importUri)
+              } = await this.loadResources(
+                resolvedKey,
+                title,
+                canonicalUri,
+                importUri
+              )
               loaded += loadedAdded
               removed += loadedRemoved
             }
@@ -467,11 +477,11 @@ IPFS Import
         }
       }
       if (imported.size === 0) {
-        this.getLogger().info(
-          `Empty Content:\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
-        )
         var msg = 'Empty'
         var field = 'Content'
+        this.getLogger().info(
+          `${msg} ${field}:\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+        )
         $tw.utils.alert(
           name,
           alertFailed`${msg}: ${resolvedKey}">${field}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
@@ -479,12 +489,12 @@ IPFS Import
       }
     } catch (error) {
       this.notLoaded.push(key)
+      var msg = 'Failed to Load'
+      var field = 'Resource'
       this.getLogger().info(
-        `Failed to Load:\n ${resolvedKey}\n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+        `${msg} ${field}:\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
       )
       this.getLogger().error(error)
-      var msg = 'Failed to Load'
-      var field = 'Content'
       $tw.utils.alert(
         name,
         alertFailed`${msg}: ${resolvedKey}">${field}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
@@ -496,8 +506,8 @@ IPFS Import
     }
   }
 
-  IpfsImport.prototype.prepareTiddlers = function (parentKey, parentTitle) {
-    var prepared = 0
+  IpfsImport.prototype.processTiddlers = function (parentKey, parentTitle) {
+    var processed = 0
     var removed = 0
     var processedTitles = new Array()
     for (var key of this.loaded.keys()) {
@@ -507,110 +517,156 @@ IPFS Import
           continue
         }
         const keys = new Array()
-        const {
-          canonicalUriKey,
-          canonicalUri,
-          importUriKey,
-          importUri
-        } = this.getImported(key, title)
+        const tiddler = imported.get(title)
+        var canonicalUri = tiddler['_canonical_uri']
+        canonicalUri =
+          canonicalUri == null ||
+          canonicalUri == undefined ||
+          canonicalUri.trim() === ''
+            ? null
+            : canonicalUri.trim()
+        var importUri = tiddler['_import_uri']
+        importUri =
+          importUri == null || importUri == undefined || importUri.trim() === ''
+            ? null
+            : importUri.trim()
+        if (this.hasTitle(key, title)) {
+          keys.push(key)
+        }
         if (canonicalUri !== null || importUri !== null) {
           if (canonicalUri == null && importUri !== null) {
             // Inconsistency
+          }
+          var canonicalKey = null
+          if (
+            canonicalUri !== null &&
+            this.notResolved.indexOf(canonicalUri) === -1
+          ) {
+            canonicalKey = this.resolved.get(canonicalUri)
+          }
+          if (
+            canonicalKey !== null &&
+            this.notLoaded.indexOf(canonicalKey) === -1
+          ) {
+            if (key === canonicalKey) {
+              // Cycle
+            }
+            if (this.hasTitle(canonicalKey, title)) {
+              keys.push(canonicalKey)
+            }
+          }
+          var importKey = null
+          if (
+            importUri !== null &&
+            this.notResolved.indexOf(importUri) === -1
+          ) {
+            importKey = this.resolved.get(importUri)
+          }
+          if (
+            canonicalKey !== null &&
+            importKey !== null &&
+            canonicalKey === importKey
+          ) {
+            // Inconsistency
           } else {
             if (
-              this.notResolved.indexOf(canonicalUri) === -1 &&
-              this.notLoaded.indexOf(canonicalUriKey) === -1
+              importKey !== null &&
+              this.notLoaded.indexOf(importKey) === -1
             ) {
-              const {
-                canonicalUri: leafCanonicalUri,
-                importUri: leafImportUri
-              } = this.getImported(canonicalUri, title)
-              if (leafCanonicalUri !== null || leafImportUri !== null) {
-                // Inconsistency
-              } else if (importUri !== null) {
-                if (
-                  this.notResolved.indexOf(importUri) === -1 &&
-                  this.notLoaded.indexOf(importUriKey) === -1
-                ) {
-                  if (
-                    this.prepareTiddler(
-                      keys,
-                      key,
-                      canonicalUri,
-                      importUriKey,
-                      title
-                    )
-                  ) {
-                    keys.push(key)
-                  }
-                }
+              if (key === importKey) {
+                // Cycle
               } else {
-                keys.push(key)
+                this.processTiddler(keys, key, title, canonicalKey, importKey)
               }
             }
           }
-        } else {
-          // Leaf
-          keys.push(key)
         }
-        prepared += keys.length
+        processed += keys.length
         removed += this.removeTitles(keys, title)
         processedTitles.push(title)
       }
     }
     return {
-      prepared: prepared,
+      processed: processed,
       removed: removed
     }
   }
 
-  IpfsImport.prototype.prepareTiddler = function (
+  IpfsImport.prototype.processTiddler = function (
     keys,
     parentKey,
-    canonicalUri,
-    importUriKey,
-    title
+    title,
+    canonicalKey,
+    importKey
   ) {
-    const {
-      canonicalUri: nextCanonicalUri,
-      importUriKey: nextImportUriKey,
-      importUri: nextImportUri
-    } = this.getImported(importUriKey, title)
-    // Inconsistency
-    if (nextCanonicalUri !== null && nextCanonicalUri !== canonicalUri) {
-      return false
+    const imported = this.loaded.get(importKey)
+    const tiddler = imported.get(title)
+    var targetCanonicalUri = tiddler['_canonical_uri']
+    targetCanonicalUri =
+      targetCanonicalUri == null ||
+      targetCanonicalUri == undefined ||
+      targetCanonicalUri.trim() === ''
+        ? null
+        : targetCanonicalUri.trim()
+    var targetCanonicalKey = null
+    if (
+      targetCanonicalUri !== null &&
+      this.notResolved.indexOf(targetCanonicalUri) === -1
+    ) {
+      targetCanonicalKey = this.resolved.get(targetCanonicalUri)
     }
-    // Inconsistency
-    if (nextCanonicalUri == null && nextImportUri !== null) {
-      return false
+    var nextImportUri = tiddler['_import_uri']
+    nextImportUri =
+      nextImportUri == null ||
+      nextImportUri == undefined ||
+      nextImportUri.trim() === ''
+        ? null
+        : nextImportUri.trim()
+    if (
+      canonicalKey !== null &&
+      targetCanonicalKey !== null &&
+      canonicalKey !== targetCanonicalKey
+    ) {
+      // Inconsistency
     }
-    if (nextImportUri !== null) {
-      // Cycle
-      if (keys.indexOf(nextImportUriKey) !== -1) {
-        return false
-      }
-      // Next
+    if (targetCanonicalUri == null && nextImportUri !== null) {
+      // Inconsistency
+    }
+    if (this.hasTitle(importKey, title)) {
+      keys.push(importKey)
+    }
+    var nextImportKey = null
+    if (
+      nextImportUri !== null &&
+      this.notResolved.indexOf(nextImportUri) === -1
+    ) {
+      nextImportKey = this.resolved.get(nextImportUri)
+    }
+    if (
+      targetCanonicalKey !== null &&
+      nextImportKey !== null &&
+      targetCanonicalKey === nextImportKey
+    ) {
+      // Inconsistency
+    } else {
       if (
-        this.notResolved.indexOf(nextImportUri) === -1 &&
-        this.notLoaded.indexOf(nextImportUriKey) === -1
+        nextImportKey !== null &&
+        this.notLoaded.indexOf(nextImportKey) === -1
       ) {
-        if (
-          this.prepareTiddler(
+        if (keys.indexOf(nextImportKey) !== -1) {
+          // Cycle
+        } else {
+          this.processTiddler(
             keys,
-            importUriKey,
-            canonicalUri,
-            nextImportUriKey,
-            title
+            importKey,
+            title,
+            targetCanonicalKey,
+            nextImportKey
           )
-        ) {
-          keys.push(importUriKey)
-          return true
         }
       }
-      return false
     }
-    keys.push(importUriKey)
-    return true
+    return
   }
 
   IpfsImport.prototype.loadRemoteImportedTiddlers = async function (

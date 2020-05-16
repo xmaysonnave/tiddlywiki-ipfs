@@ -51,7 +51,7 @@ Instantiate the saver handler with the following options:
 wiki: wiki to be synced
 dirtyTracking: true if dirty tracking should be performed
 */
-  function SaverHandler(options) {
+  function SaverHandler (options) {
     var self = this
     this.wiki = options.wiki
     this.dirtyTracking = options.dirtyTracking
