@@ -667,7 +667,7 @@ IPFS Action
             continue
           }
           tagValues =
-            (tagValues.length === 0 ? '[[' : tagValues + ' [[') + tag + ']]'
+            (tagValues.length === 0 ? '[[' : `${tagValues} [[`) + `${tag}]]`
         }
         // Store tags
         fields['tags'] = tagValues
@@ -693,7 +693,7 @@ IPFS Action
     // Title
     const title = tiddler.getFieldString('title')
     // Filter
-    var exportFilter = '[[' + tiddler.fields.title + ']]'
+    var exportFilter = `[[${tiddler.fields.title}]]`
     // Child filters
     if (child) {
       // Links
@@ -707,7 +707,7 @@ IPFS Action
       const filtered = linked.concat(transcluded)
       // Process filtered content
       for (var i = 0; i < filtered.length; i++) {
-        if (exportFilter.includes('[[' + filtered[i] + ']]') == false) {
+        if (exportFilter.includes(`[[${filtered[i]}]]`) == false) {
           exportFilter = `${exportFilter} [[${filtered[i]}]]`
         }
       }
