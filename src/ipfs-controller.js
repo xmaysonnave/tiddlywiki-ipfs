@@ -96,9 +96,7 @@ IPFS Controller
       var index = this.unpin.indexOf(cid)
       if (index !== -1) {
         this.unpin.splice(index, 1)
-        this.getLogger().info(
-          `Cancel request to Unpin:\n ${normalizedUrl}`
-        )
+        this.getLogger().info(`Cancel request to Unpin:\n ${normalizedUrl}`)
         return false
       }
       if (this.pin.indexOf(cid) === -1) {
@@ -168,9 +166,7 @@ IPFS Controller
       var index = this.unpin.indexOf(cid)
       if (index !== -1) {
         this.unpin.splice(index, 1)
-        this.getLogger().info(
-          `Cancel request to Unpin:\n ${normalizedUrl}`
-        )
+        this.getLogger().info(`Cancel request to Unpin:\n ${normalizedUrl}`)
       }
     }
     return
@@ -350,7 +346,10 @@ IPFS Controller
   }
 
   IpfsController.prototype.getUrl = function (url, base) {
-    return this.ipfsUrl.getUrl(url, base !== undefined && base !== null ? base : this.getIpfsBaseUrl())
+    return this.ipfsUrl.getUrl(
+      url,
+      base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+    )
   }
 
   IpfsController.prototype.isJson = function (content) {
