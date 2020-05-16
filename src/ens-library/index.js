@@ -10,11 +10,11 @@ import root from 'window-or-global'
   var EnsLibrary = function (ipfsLoader) {
     this.ipfsLoader = ipfsLoader
     this.network = {
-      1: "Ethereum Main Network: 'Mainnet', chainId: '1'",
-      3: "Ethereum Test Network (PoW): 'Ropsten', chainId: '3'",
-      4: "Ethereum Test Network (PoA): 'Rinkeby', chainId: '4'",
-      5: "Ethereum Test Network (PoA): 'Goerli', chainId: '5'",
-      42: "Ethereum Test Network (PoA): 'Kovan', chainId: '42'"
+      1: 'Ethereum Main Network: "Mainnet", chainId: "1"',
+      3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "3"',
+      4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "4"',
+      5: 'Ethereum Test Network (PoA): "Goerli", chainId: "5"',
+      42: 'Ethereum Test Network (PoA): "Kovan", chainId: "42"'
     }
     this.etherscan = {
       1: 'https://etherscan.io',
