@@ -81,11 +81,9 @@ ENS Wrapper
         this.account = accounts[0]
         const etherscan = this.getEtherscanRegistry()
         this.getLogger().info(
-          'Current Ethereum account:' +
-            '\n ' +
-            etherscan[this.chainId] +
-            '/address/' +
+          `Current Ethereum account:\n ${etherscan[this.chainId]}/address/${
             this.account
+          }`
         )
       } catch (error) {
         this.getLogger().error(error)
@@ -99,13 +97,7 @@ ENS Wrapper
     this.chainId = null
     this.account = null
     this.getLogger().info(
-      'Closing Ethereum Connection:' +
-        '\n ' +
-        'Reason: ' +
-        reason +
-        '\n ' +
-        'Code: ' +
-        code
+      `Closing Ethereum Connection:\n Reason: ${reason}\n Code: ${code}`
     )
   }
 
@@ -116,9 +108,7 @@ ENS Wrapper
         this.web3 = null
         this.chainId = chainId
         this.account = null
-        this.getLogger().info(
-          'Current Ethereum network:' + '\n ' + network[chainId]
-        )
+        this.getLogger().info(`Current Ethereum network:\n ${network[chainId]}`)
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(name, error.message)
@@ -152,13 +142,9 @@ ENS Wrapper
     }
     // Log
     this.getLogger().info(
-      msg +
-        '\n network: ' +
-        network[this.chainId] +
-        '\n account: ' +
-        etherscan[this.chainId] +
-        '/address/' +
-        this.account
+      `${msg}\n network: ${network[this.chainId]}\n account: ${
+        etherscan[this.chainId]
+      }/address/${this.account}`
     )
     return {
       web3: this.web3,
@@ -185,7 +171,7 @@ ENS Wrapper
       info = 'New Web3 provider:'
     }
     // Log
-    this.getLogger().info(info + '\n network: ' + network[this.chainId])
+    this.getLogger().info(`${info}\n network: ${network[this.chainId]}`)
     return {
       web3: this.web3,
       chainId: this.chainId

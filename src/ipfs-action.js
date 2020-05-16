@@ -107,7 +107,7 @@ IPFS Action
     if (content == null) {
       return false
     }
-    this.getLogger().info('Uploading Tiddler: ' + content.length + ' bytes')
+    this.getLogger().info(`Uploading Tiddler: ${content.length} bytes`)
     try {
       var { added } = await $tw.ipfs.addToIpfs(content)
     } catch (error) {
@@ -116,7 +116,7 @@ IPFS Action
       return false
     }
     // Prepare New value
-    fields.push({ key: '_export_uri', value: '/' + ipfsKeyword + '/' + added })
+    fields.push({ key: '_export_uri', value: `/${ipfsKeyword}/${added}` })
     var tiddler = $tw.wiki.getTiddler(title)
     var updatedTiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,
@@ -125,7 +125,7 @@ IPFS Action
     })
     $tw.wiki.addTiddler(updatedTiddler)
     if (ipnsKey !== null) {
-      $tw.utils.alert(name, 'Publishing IPNS name: ' + ipnsName)
+      $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
       $tw.ipfs
         .pinToIpfs(added)
         .then(data => {
@@ -141,7 +141,7 @@ IPFS Action
               $tw.wiki.addTiddler(tiddler)
               $tw.utils.alert(
                 name,
-                'Successfully Published IPNS name: ' + ipnsName
+                `Successfully Published IPNS name: ${ipnsName}`
               )
               $tw.ipfs
                 .unpinFromIpfs(cid)
@@ -169,7 +169,7 @@ IPFS Action
       normalizedUrl !== null &&
       normalizedUrl.hostname.endsWith('.eth')
     ) {
-      $tw.utils.alert(name, 'Publishing to ENS: ' + normalizedUrl.hostname)
+      $tw.utils.alert(name, `Publishing to ENS: ${normalizedUrl.hostname}`)
       $tw.ipfs
         .pinToIpfs(added)
         .then(data => {
@@ -227,7 +227,7 @@ IPFS Action
     if (
       canonical_uri !== undefined &&
       canonical_uri !== null &&
-      canonical_uri !== ''
+      canonical_uri.trim() !== ''
     ) {
       $tw.utils.alert(name, 'Attachment is already published...')
       return false
@@ -237,9 +237,7 @@ IPFS Action
       if (content == null) {
         return false
       }
-      this.getLogger().info(
-        'Uploading attachment: ' + content.length + ' bytes'
-      )
+      this.getLogger().info(`Uploading attachment: ${content.length} bytes`)
       var { added } = await $tw.ipfs.addToIpfs(content)
       $tw.ipfs.requestToPin(added)
     } catch (error) {
@@ -263,7 +261,7 @@ IPFS Action
       removeTags: removeTags,
       fields: [
         { key: 'text', value: '' },
-        { key: '_canonical_uri', value: '/' + ipfsKeyword + '/' + added }
+        { key: '_canonical_uri', value: `/${ipfsKeyword}/${added}` }
       ]
     })
     $tw.wiki.addTiddler(tiddler)
@@ -318,12 +316,14 @@ IPFS Action
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
     var ipnsKey = null
-    const ipnsName = $tw.utils.getIpfsIpnsName()
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
-    } else {
-      ipnsName = ipnsName.trim()
     }
     if (this.ipnsName == null || this.ipnsName === ipnsName) {
       $tw.utils.alert(name, 'Nothing to rename....')
@@ -351,12 +351,14 @@ IPFS Action
 
   IpfsAction.prototype.handleGenerateIpnsKey = async function (event) {
     var ipnsKey = null
-    const ipnsName = $tw.utils.getIpfsIpnsName()
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
-    } else {
-      ipnsName = ipnsName.trim()
     }
     try {
       var ipnsKey = await $tw.ipfs.generateIpnsKey(ipnsName)
@@ -381,13 +383,15 @@ IPFS Action
   IpfsAction.prototype.handleRemoveIpnsKey = async function (event) {
     var ipnsKey = null
     var normalizedUrl = null
-    const ipnsName = $tw.utils.getIpfsIpnsName()
     const self = this
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
-    } else {
-      ipnsName = ipnsName.trim()
     }
     try {
       var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifiers(
@@ -439,12 +443,14 @@ IPFS Action
 
   IpfsAction.prototype.handleFetchIpnsKey = async function (event) {
     var ipnsKey = null
-    const ipnsName = $tw.utils.getIpfsIpnsName()
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
-    } else {
-      ipnsName = ipnsName.trim()
     }
     try {
       var { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsName)
@@ -468,19 +474,21 @@ IPFS Action
 
   IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function (event) {
     var ipnsKey = null
-    const ipnsName = $tw.utils.getIpfsIpnsName()
     var resolvedUrl = null
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
-    } else {
-      ipnsName = ipnsName.trim()
     }
     try {
       var { ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(
         true,
         false,
-        '/' + ipnsKeyword + '/' + ipnsName
+        `/${ipnsKeyword}/${ipnsName}`
       )
     } catch (error) {
       this.getLogger().error(error)
@@ -553,7 +561,6 @@ IPFS Action
     var ipnsKey = null
     var wikiCid = null
     var wikiIpnsKey = null
-    const ipnsName = $tw.utils.getIpfsIpnsName()
     const wiki = $tw.ipfs.getDocumentUrl()
     if (wiki.protocol === fileProtocol) {
       $tw.utils.alert(name, 'Undefined IPFS identifier...')
@@ -563,17 +570,20 @@ IPFS Action
       $tw.utils.alert(name, 'Unknown IPFS identifier...')
       return false
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
-    } else {
-      ipnsName = ipnsName.trim()
     }
     try {
       var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(
         true,
         false,
-        '/ipns/' + ipnsName
+        `/ipns/${ipnsName}`
       )
       var { cid: wikiCid, ipnsKey: wikiIpnsKey } = await $tw.ipfs.resolveUrl(
         true,
@@ -641,7 +651,7 @@ IPFS Action
         }
         // IPNS
         if (ipnsKey !== null) {
-          fieldValue = '/' + ipnsKeyword + '/' + ipnsKey
+          fieldValue = `/${ipnsKeyword}/${ipnsKey}`
         }
         // Store field
         fields[field] = fieldValue
@@ -688,17 +698,17 @@ IPFS Action
     if (child) {
       // Links
       const linked = $tw.wiki.getTiddlerLinks(title)
-      this.getLogger().info('Found ' + linked.length + ' Tiddler link(s).')
+      this.getLogger().info(`Found ${linked.length} Tiddler link(s)...`)
       // Transcluded
       const transcluded = this.transcludeContent(title)
       this.getLogger().info(
-        'Found ' + transcluded.length + ' transcluded Tiddler reference(s).'
+        `Found ${transcluded.length} transcluded Tiddler reference(s)...`
       )
       const filtered = linked.concat(transcluded)
       // Process filtered content
       for (var i = 0; i < filtered.length; i++) {
         if (exportFilter.includes('[[' + filtered[i] + ']]') == false) {
-          exportFilter = exportFilter + ' [[' + filtered[i] + ']]'
+          exportFilter = `${exportFilter} [[${filtered[i]}]]`
         }
       }
     }

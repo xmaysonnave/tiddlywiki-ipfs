@@ -14,7 +14,6 @@ ENS Action
   'use strict'
 
   const fileProtocol = 'file:'
-  const ipnsKeyword = 'ipns'
 
   const name = 'ens-action'
 
@@ -70,7 +69,7 @@ ENS Action
       return false
     }
     try {
-      this.getLogger().info('ENS domain: ' + ensDomain)
+      this.getLogger().info(`ENS domain: ${ensDomain}`)
       const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
       if (resolvedUrl !== null) {
         window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
@@ -132,7 +131,7 @@ ENS Action
       return false
     }
     if (cid !== null) {
-      $tw.utils.alert(name, 'Publishing to ENS: ' + ensDomain)
+      $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
       $tw.ipfs
         .requestToUnpin(ensCid)
         .then(data => {
@@ -155,7 +154,7 @@ ENS Action
           $tw.utils.alert(name, error.message)
         })
     } else if (ipnsKey !== null) {
-      $tw.utils.alert(name, 'Publishing to ENS: ' + ensDomain)
+      $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
       $tw.ipfs
         .resolveUrl(true, false, wiki)
         .then(data => {

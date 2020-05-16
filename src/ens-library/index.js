@@ -266,20 +266,16 @@ import root from 'window-or-global'
       throw new Error('Undefined Web3 provider...')
     }
     node =
-    node == null ||
-    node == undefined ||
-    node.trim() === ''
-      ? null
-      : node.trim()
+      node == null || node == undefined || node.trim() === ''
+        ? null
+        : node.trim()
     if (node == null) {
       throw new Error('Undefined ENS domain resolver...')
     }
     registry =
-    registry == null ||
-    registry == undefined ||
-    registry.trim() === ''
-      ? null
-      : registry.trim()
+      registry == null || registry == undefined || registry.trim() === ''
+        ? null
+        : registry.trim()
     if (registry == null) {
       throw new Error('Undefined ENS registry address...')
     }
@@ -316,11 +312,9 @@ import root from 'window-or-global'
       throw new Error('Undefined Web3 provider...')
     }
     address =
-    address == null ||
-    address == undefined ||
-    address.trim() === ''
-      ? null
-      : address.trim()
+      address == null || address == undefined || address.trim() === ''
+        ? null
+        : address.trim()
     if (address == null) {
       throw new Error('Undefined Ethereum address...')
     }
@@ -377,11 +371,9 @@ import root from 'window-or-global'
       throw new Error('Undefined Web3 provider...')
     }
     address =
-    address == null ||
-    address == undefined ||
-    address.trim() === ''
-      ? null
-      : address.trim()
+      address == null || address == undefined || address.trim() === ''
+        ? null
+        : address.trim()
     if (address == null) {
       throw new Error('Undefined Ethereum address...')
     }
@@ -421,11 +413,9 @@ import root from 'window-or-global'
       await this.loadEthers()
     }
     domain =
-    domain == null ||
-    domain == undefined ||
-    domain.trim() === ''
-      ? null
-      : domain.trim()
+      domain == null || domain == undefined || domain.trim() === ''
+        ? null
+        : domain.trim()
     if (domain == null) {
       throw new Error('Undefined ENS domain...')
     }
@@ -505,11 +495,9 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS identifier...')
     }
     domain =
-    domain == null ||
-    domain == undefined ||
-    domain.trim() === ''
-      ? null
-      : domain.trim()
+      domain == null || domain == undefined || domain.trim() === ''
+        ? null
+        : domain.trim()
     if (domain == null) {
       throw new Error('Undefined ENS domain...')
     }

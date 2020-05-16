@@ -101,9 +101,7 @@ import root from 'window-or-global'
       }
       // Instantiate client
       const { httpClient } = providers
-      this.getLogger().info(
-        `Processing connection to IPFS API URL:\n ${url}`
-      )
+      this.getLogger().info(`Processing connection to IPFS API URL:\n ${url}`)
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
@@ -177,11 +175,7 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS provider...')
     }
     cid =
-    cid == null ||
-    cid == undefined ||
-    cid.trim() === ''
-      ? null
-      : cid.trim()
+      cid == null || cid == undefined || cid.trim() === '' ? null : cid.trim()
     if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
@@ -209,11 +203,7 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS provider...')
     }
     cid =
-    cid == null ||
-    cid == undefined ||
-    cid.trim() === ''
-      ? null
-      : cid.trim()
+      cid == null || cid == undefined || cid.trim() === '' ? null : cid.trim()
     if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
@@ -241,20 +231,14 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS provider...')
     }
     cid =
-    cid == null ||
-    cid == undefined ||
-    cid.trim() === ''
-      ? null
-      : cid.trim()
+      cid == null || cid == undefined || cid.trim() === '' ? null : cid.trim()
     if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
     ipnsName =
-    ipnsName == null ||
-    ipnsName == undefined ||
-    ipnsName.trim() === ''
-      ? null
-      : ipnsName.trim()
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
     if (ipnsName == null) {
       throw new Error('Undefined IPNS name...')
     }
@@ -288,12 +272,7 @@ import root from 'window-or-global'
     if (client == undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
-    id =
-    id == null ||
-    id == undefined ||
-    id.trim() === ''
-      ? null
-      : id.trim()
+    id = id == null || id == undefined || id.trim() === '' ? null : id.trim()
     if (id == null) {
       throw new Error('Undefined IPNS key...')
     }
@@ -359,11 +338,9 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS provider...')
     }
     ipnsName =
-    ipnsName == null ||
-    ipnsName == undefined ||
-    ipnsName.trim() === ''
-      ? null
-      : ipnsName.trim()
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
     if (ipnsName == null) {
       throw new Error('Undefined IPNS name...')
     }
@@ -399,11 +376,9 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS provider...')
     }
     ipnsName =
-    ipnsName == null ||
-    ipnsName == undefined ||
-    ipnsName.trim() === ''
-      ? null
-      : ipnsName.trim()
+      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
     if (ipnsName == null) {
       throw new Error('Undefined IPNS name...')
     }
@@ -440,20 +415,20 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS provider...')
     }
     oldIpnsName =
-    oldIpnsName == null ||
-    oldIpnsName == undefined ||
-    oldIpnsName.trim() === ''
-      ? null
-      : oldIpnsName.trim()
+      oldIpnsName == null ||
+      oldIpnsName == undefined ||
+      oldIpnsName.trim() === ''
+        ? null
+        : oldIpnsName.trim()
     if (oldIpnsName == null) {
       throw new Error('Undefined Old IPNS name...')
     }
     newIpnsName =
-    newIpnsName == null ||
-    newIpnsName == undefined ||
-    newIpnsName.trim() === ''
-      ? null
-      : newIpnsName.trim()
+      newIpnsName == null ||
+      newIpnsName == undefined ||
+      newIpnsName.trim() === ''
+        ? null
+        : newIpnsName.trim()
     if (newIpnsName == null) {
       throw new Error('Undefined New IPNS name...')
     }

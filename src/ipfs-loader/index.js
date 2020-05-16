@@ -59,9 +59,7 @@ import root from 'window-or-global'
         true
       )
       if (typeof root.IpfsHttpClient !== 'undefined') {
-        this.getLogger().info(
-          `Loaded IpfsHttpLibrary:\n ${ipfs_http_client}`
-        )
+        this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfs_http_client}`)
       }
     }
   }
