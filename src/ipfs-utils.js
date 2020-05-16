@@ -63,10 +63,10 @@ IPFS utils
     // Prepare the text of the alert
     // var text = Array.prototype.join.call(arguments," ");
     // Check if there is an existing alert with the same text and the same component
-    var existingAlerts = $tw.wiki.getTiddlersWithTag(ALERT_TAG),
-      alertFields,
-      existingCount,
-      self = this
+    var existingAlerts = $tw.wiki.getTiddlersWithTag(ALERT_TAG)
+    var alertFields
+    var existingCount
+    var self = this
     $tw.utils.each(existingAlerts, function (title) {
       var tiddler = $tw.wiki.getTiddler(title)
       if (
@@ -104,10 +104,10 @@ IPFS utils
     // Holder
     const changedTiddler = Object.create(null)
     // Check
-    if (object == undefined || object == null) {
+    if (object === undefined || object == null) {
       return changedTiddler
     }
-    if (object instanceof $tw.Tiddler == false && typeof object !== 'string') {
+    if (object instanceof $tw.Tiddler === false && typeof object !== 'string') {
       return changedTiddler
     }
     // Retrieve title
@@ -119,7 +119,7 @@ IPFS utils
       title = object.getFieldString('title')
     }
     // Check
-    if (title == undefined || title == null) {
+    if (title === undefined || title == null) {
       return changedTiddler
     }
     // Process title
@@ -131,9 +131,9 @@ IPFS utils
   exports.updateTiddler = function (updates) {
     // Is there anything to do
     if (
-      updates == undefined ||
+      updates === undefined ||
       updates == null ||
-      updates.tiddler == undefined ||
+      updates.tiddler === undefined ||
       updates.tiddler == null
     ) {
       return null
@@ -150,7 +150,7 @@ IPFS utils
     ) {
       for (var i = 0; i < updates.addTags.length; i++) {
         const tag = updates.addTags[i]
-        if (fields.tags.indexOf(tag) == -1) {
+        if (fields.tags.indexOf(tag) === -1) {
           $tw.utils.pushTop(fields.tags, tag)
         }
       }
@@ -193,7 +193,7 @@ IPFS utils
       type = 'text/vnd.tiddlywiki'
     }
     var info = $tw.config.contentTypeInfo[type]
-    if (info == undefined || info == null) {
+    if (info === undefined || info == null) {
       const url = $tw.ipfs.getDocumentUrl()
       url.hash = title
       this.getLogger().info(

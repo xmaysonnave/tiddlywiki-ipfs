@@ -64,13 +64,13 @@ wikiparser
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
         canonicalUri == null ||
-        canonicalUri == undefined ||
+        canonicalUri === undefined ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
       var importUri = options.tiddler.fields._import_uri
       importUri =
-        importUri == null || importUri == undefined || importUri.trim() === ''
+        importUri == null || importUri === undefined || importUri.trim() === ''
           ? null
           : importUri.trim()
       if (canonicalUri !== null || importUri !== null) {
@@ -176,8 +176,8 @@ wikiparser
 Instantiate an array of parse rules
 */
   WikiParser.prototype.instantiateRules = function (classes, type, startPos) {
-    var rulesInfo = [],
-      self = this
+    var rulesInfo = []
+    var self = this
     $tw.utils.each(classes, function (RuleClass) {
       // Instantiate the rule
       var rule = new RuleClass(self)
@@ -216,8 +216,8 @@ Get the next match out of an array of parse rule instances
 */
   WikiParser.prototype.findNextMatch = function (rules, startPos) {
     // Find the best matching rule by finding the closest match position
-    var matchingRule,
-      matchingRulePos = this.sourceLength
+    var matchingRule
+    var matchingRulePos = this.sourceLength
     // Step through each rule
     for (var t = 0; t < rules.length; t++) {
       var ruleInfo = rules[t]
@@ -273,7 +273,7 @@ Parse a block from the current position
 */
   WikiParser.prototype.parseBlock = function (terminatorRegExpString) {
     var terminatorRegExp = terminatorRegExpString
-      ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'mg')
+      ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'gm')
       : /(\r?\n\r?\n)/gm
     this.skipWhitespace()
     if (this.pos >= this.sourceLength) {
@@ -323,8 +323,8 @@ Parse blocks of text until a terminating regexp is encountered
   WikiParser.prototype.parseBlocksTerminated = function (
     terminatorRegExpString
   ) {
-    var terminatorRegExp = new RegExp('(' + terminatorRegExpString + ')', 'mg'),
-      tree = []
+    var terminatorRegExp = new RegExp('(' + terminatorRegExpString + ')', 'gm')
+    var tree = []
     // Skip any whitespace
     this.skipWhitespace()
     //  Check if we've got the end marker
@@ -468,9 +468,10 @@ Push a text widget onto an array, respecting the configTrimWhiteSpace setting
   /*
 Parse zero or more class specifiers `.classname`
 */
+  /*eslint no-useless-escape: "off"*/
   WikiParser.prototype.parseClasses = function () {
-    var classRegExp = /\.([^\s\.]+)/gm,
-      classNames = []
+    var classRegExp = /\.([^\s\.]+)/gm
+    var classNames = []
     classRegExp.lastIndex = this.pos
     var match = classRegExp.exec(this.source)
     while (match && match.index === this.pos) {

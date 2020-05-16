@@ -213,21 +213,18 @@ IPFS Action
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
-    const { type, info } = $tw.utils.getContentType(
-      title,
-      tiddler.fields['type']
-    )
+    const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     var added = null
     if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
       $tw.utils.alert(name, 'This Tiddler do not contain any Attachment...')
       return false
     }
     // Do not process if _canonical_uri is set and the text field is empty
-    const canonical_uri = tiddler.getFieldString('_canonical_uri')
+    const canonicalUri = tiddler.getFieldString('_canonical_uri')
     if (
-      canonical_uri !== undefined &&
-      canonical_uri !== null &&
-      canonical_uri.trim() !== ''
+      canonicalUri !== undefined &&
+      canonicalUri !== null &&
+      canonicalUri.trim() !== ''
     ) {
       $tw.utils.alert(name, 'Attachment is already published...')
       return false
@@ -270,15 +267,15 @@ IPFS Action
 
   IpfsAction.prototype.getAttachmentContent = function (tiddler) {
     const { type, info } = $tw.utils.getContentType(
-      tiddler.fields['title'],
-      tiddler.fields['type']
+      tiddler.fields.title,
+      tiddler.fields.type
     )
     if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
       $tw.utils.alert(name, 'Unsupported Tiddler Content-Type...')
       return null
     }
     var text = tiddler.getFieldString('text')
-    if (text == undefined || text == null || text === '') {
+    if (text === undefined || text == null || text === '') {
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
@@ -318,7 +315,7 @@ IPFS Action
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -353,7 +350,7 @@ IPFS Action
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -386,7 +383,7 @@ IPFS Action
     const self = this
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -445,7 +442,7 @@ IPFS Action
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -477,7 +474,7 @@ IPFS Action
     var resolvedUrl = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -544,7 +541,7 @@ IPFS Action
       // The first output line is eaten...
       this.getLogger().info('Mobile console has been loaded...')
     }
-    if (this.console == false) {
+    if (this.console === false) {
       // Show
       window.eruda.show()
       window.eruda.show('console')
@@ -572,7 +569,7 @@ IPFS Action
     }
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -627,7 +624,7 @@ IPFS Action
       // Load Tiddler
       var tiddler = $tw.wiki.getTiddler(tiddlers[t])
       // Process
-      var fields = new Object()
+      var fields = {}
       // Process fields
       for (var field in tiddler.fields) {
         // Discard
@@ -657,7 +654,7 @@ IPFS Action
         fields[field] = fieldValue
       }
       // Process tags
-      var tags = tiddler.fields['tags']
+      var tags = tiddler.fields.tags
       if (tags !== undefined && tags !== null) {
         var tagValues = ''
         for (var i = 0; i < tags.length; i++) {
@@ -670,7 +667,7 @@ IPFS Action
             (tagValues.length === 0 ? '[[' : `${tagValues} [[`) + `${tag}]]`
         }
         // Store tags
-        fields['tags'] = tagValues
+        fields.tags = tagValues
       }
       // Store
       data.push(fields)
@@ -684,7 +681,7 @@ IPFS Action
     tiddler
   ) {
     // Check
-    if (tiddler == undefined || tiddler == null) {
+    if (tiddler === undefined || tiddler == null) {
       const error = new Error('Unknown Tiddler...')
       this.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -707,7 +704,7 @@ IPFS Action
       const filtered = linked.concat(transcluded)
       // Process filtered content
       for (var i = 0; i < filtered.length; i++) {
-        if (exportFilter.includes(`[[${filtered[i]}]]`) == false) {
+        if (exportFilter.includes(`[[${filtered[i]}]]`) === false) {
           exportFilter = `${exportFilter} [[${filtered[i]}]]`
         }
       }

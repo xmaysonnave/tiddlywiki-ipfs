@@ -17,7 +17,6 @@ import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
 ;(function () {
   /*jslint node: true, browser: true*/
-  /*global $tw: false*/
   'use strict'
 
   const cidAnalyser = 'https://cid.ipfs.io/#'
@@ -60,7 +59,7 @@ import IpfsUrl from './ipfs-url'
   IpfsBundle.prototype.decodeCid = function (pathname) {
     // Check
     if (
-      pathname == undefined ||
+      pathname === undefined ||
       pathname == null ||
       pathname.trim() === '' ||
       pathname.trim() === '/'

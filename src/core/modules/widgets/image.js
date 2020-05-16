@@ -112,7 +112,7 @@ Render this widget into the DOM
         var canonicalUri = tiddler.fields._canonical_uri
         canonicalUri =
           canonicalUri == null ||
-          canonicalUri == undefined ||
+          canonicalUri === undefined ||
           canonicalUri.trim() === ''
             ? null
             : canonicalUri.trim()
@@ -216,7 +216,7 @@ Render this widget into the DOM
               }
             })
             .catch(error => {
-              // Ignore
+              self.getLogger().error(error)
             })
         } else {
           // Just trigger loading of the tiddler
@@ -268,7 +268,7 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
       changedAttributes.source ||
       changedAttributes.width ||
       changedAttributes.height ||
-      changedAttributes['class'] ||
+      changedAttributes.class ||
       changedAttributes.tooltip ||
       changedTiddlers[this.imageSource]
     ) {

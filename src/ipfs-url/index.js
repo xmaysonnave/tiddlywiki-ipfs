@@ -96,7 +96,7 @@ import { URL } from 'universal-url'
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
     value =
-      value == null || value == undefined || value.toString().trim() === ''
+      value == null || value === undefined || value.toString().trim() === ''
         ? null
         : value.toString().trim()
     if (value == null) {
@@ -118,8 +118,8 @@ import { URL } from 'universal-url'
         try {
           url = this.getUrl(`https://${value}`)
           if (
-            url.hostname.endsWith('.eth') == false &&
-            url.hostname.endsWith('.eth.link') == false
+            url.hostname.endsWith('.eth') === false &&
+            url.hostname.endsWith('.eth.link') === false
           ) {
             url = null
           } else {

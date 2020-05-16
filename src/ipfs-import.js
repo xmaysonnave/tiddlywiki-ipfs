@@ -121,7 +121,7 @@ IPFS Import
     var normalizedUrl = null
     var resolvedUrl = null
     value =
-      value == null || value == undefined || value.trim() === ''
+      value == null || value === undefined || value.trim() === ''
         ? null
         : value.trim()
     if (value == null) {
@@ -158,32 +158,32 @@ IPFS Import
   ) {
     canonicalUri =
       canonicalUri == null ||
-      canonicalUri == undefined ||
+      canonicalUri === undefined ||
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
     importUri =
-      importUri == null || importUri == undefined || importUri.trim() === ''
+      importUri == null || importUri === undefined || importUri.trim() === ''
         ? null
         : importUri.trim()
     this.host =
       title !== undefined && title !== null && title.trim() !== ''
         ? $tw.wiki.getTiddler(title.trim())
         : null
-    if (this.host == undefined) {
+    if (this.host === undefined) {
       this.host = null
     }
     this.loaded = new Map()
-    this.notLoaded = new Array()
+    this.notLoaded = []
     this.resolved = new Map()
-    this.notResolved = new Array()
+    this.notResolved = []
     this.processedImported = new Map()
     this.processedTitles = new Map()
     this.root = null
     try {
       // Load and prepare imported tiddlers to be processed
-      var added = 0
-      var updated = 0
+      // var added = 0
+      // var updated = 0
       const url = $tw.ipfs.getDocumentUrl()
       url.hash = title
       if (canonicalUri !== null || importUri !== null) {
@@ -278,7 +278,7 @@ IPFS Import
     if (
       canonicalUri !== null &&
       this.notResolved.indexOf(canonicalUri) === -1 &&
-      this.resolved.get(canonicalUri) == undefined
+      this.resolved.get(canonicalUri) === undefined
     ) {
       try {
         var {
@@ -301,7 +301,7 @@ IPFS Import
     if (
       importUri !== null &&
       this.notResolved.indexOf(importUri) === -1 &&
-      this.resolved.get(importUri) == undefined
+      this.resolved.get(importUri) === undefined
     ) {
       try {
         var {
@@ -322,7 +322,7 @@ IPFS Import
     if (
       canonicalKey !== null &&
       this.notLoaded.indexOf(canonicalKey) === -1 &&
-      this.loaded.get(canonicalKey) == undefined
+      this.loaded.get(canonicalKey) === undefined
     ) {
       const {
         loaded: loadedAdded,
@@ -340,7 +340,7 @@ IPFS Import
     if (
       importKey !== null &&
       this.notLoaded.indexOf(importKey) === -1 &&
-      this.loaded.get(importKey) == undefined
+      this.loaded.get(importKey) === undefined
     ) {
       const {
         loaded: loadedAdded,
@@ -394,8 +394,8 @@ IPFS Import
       if (tiddlers !== undefined && tiddlers !== null) {
         for (var i in tiddlers) {
           var tiddler = tiddlers[i]
-          var title = tiddler['title']
-          if (title == undefined || title == null || title.trim() === '') {
+          var title = tiddler.title
+          if (title === undefined || title == null || title.trim() === '') {
             var msg = 'Ignored Unknown'
             var field = 'Title'
             this.getLogger().info(
@@ -420,12 +420,12 @@ IPFS Import
             removed += 1
             continue
           }
-          var type = tiddler['type']
-          if (type == undefined || type == null) {
+          var type = tiddler.type
+          if (type === undefined || type == null) {
             type = 'text/vnd.tiddlywiki'
           }
           var info = $tw.config.contentTypeInfo[type]
-          if (info == undefined || info == null) {
+          if (info === undefined || info == null) {
             var msg = 'Unknown Content-Type'
             this.getLogger().info(
               `${msg} "${type}" from: "${title}"\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
@@ -438,26 +438,23 @@ IPFS Import
             type = 'text/vnd.tiddlywiki'
             info = $tw.config.contentTypeInfo[type]
           }
-          tiddler['type'] = type
+          tiddler.type = type
           // Next
-          var canonicalUri = tiddler['_canonical_uri']
+          var canonicalUri = tiddler._canonical_uri
           canonicalUri =
             canonicalUri == null ||
-            canonicalUri == undefined ||
+            canonicalUri === undefined ||
             canonicalUri.trim() === ''
               ? null
               : canonicalUri.trim()
-          var importUri = tiddler['_import_uri']
+          var importUri = tiddler._import_uri
           importUri =
             importUri == null ||
-            importUri == undefined ||
+            importUri === undefined ||
             importUri.trim() === ''
               ? null
               : importUri.trim()
-          if (
-            info.encoding !== 'base64' &&
-            tiddler['type'] !== 'image/svg+xml'
-          ) {
+          if (info.encoding !== 'base64' && tiddler.type !== 'image/svg+xml') {
             if (canonicalUri !== null || importUri !== null) {
               const {
                 loaded: loadedAdded,
@@ -509,25 +506,27 @@ IPFS Import
   IpfsImport.prototype.processTiddlers = function (parentKey, parentTitle) {
     var processed = 0
     var removed = 0
-    var processedTitles = new Array()
+    var processedTitles = []
     for (var key of this.loaded.keys()) {
       const imported = this.loaded.get(key)
       for (var title of imported.keys()) {
         if (processedTitles.indexOf(title) !== -1) {
           continue
         }
-        const keys = new Array()
+        const keys = []
         const tiddler = imported.get(title)
-        var canonicalUri = tiddler['_canonical_uri']
+        var canonicalUri = tiddler._canonical_uri
         canonicalUri =
           canonicalUri == null ||
-          canonicalUri == undefined ||
+          canonicalUri === undefined ||
           canonicalUri.trim() === ''
             ? null
             : canonicalUri.trim()
-        var importUri = tiddler['_import_uri']
+        var importUri = tiddler._import_uri
         importUri =
-          importUri == null || importUri == undefined || importUri.trim() === ''
+          importUri == null ||
+          importUri === undefined ||
+          importUri.trim() === ''
             ? null
             : importUri.trim()
         if (this.hasTitle(key, title)) {
@@ -601,10 +600,10 @@ IPFS Import
   ) {
     const imported = this.loaded.get(importKey)
     const tiddler = imported.get(title)
-    var targetCanonicalUri = tiddler['_canonical_uri']
+    var targetCanonicalUri = tiddler._canonical_uri
     targetCanonicalUri =
       targetCanonicalUri == null ||
-      targetCanonicalUri == undefined ||
+      targetCanonicalUri === undefined ||
       targetCanonicalUri.trim() === ''
         ? null
         : targetCanonicalUri.trim()
@@ -615,10 +614,10 @@ IPFS Import
     ) {
       targetCanonicalKey = this.resolved.get(targetCanonicalUri)
     }
-    var nextImportUri = tiddler['_import_uri']
+    var nextImportUri = tiddler._import_uri
     nextImportUri =
       nextImportUri == null ||
-      nextImportUri == undefined ||
+      nextImportUri === undefined ||
       nextImportUri.trim() === ''
         ? null
         : nextImportUri.trim()
@@ -666,7 +665,6 @@ IPFS Import
         }
       }
     }
-    return
   }
 
   IpfsImport.prototype.loadRemoteImportedTiddlers = async function (
@@ -738,17 +736,17 @@ IPFS Import
       var merged = null
       var currentTiddler = null
       var importedTags =
-        importedTiddler['tags'] !== undefined ? importedTiddler['tags'] : ''
+        importedTiddler.tags !== undefined ? importedTiddler.tags : ''
       // Type
-      var type = importedTiddler['type']
+      var type = importedTiddler.type
       // Default
-      if (type == undefined || type == null) {
+      if (type === undefined || type == null) {
         type = 'text/vnd.tiddlywiki'
       }
       // Content-Type
       var info = $tw.config.contentTypeInfo[type]
       // Check
-      if (info == undefined || info == null) {
+      if (info === undefined || info == null) {
         $tw.utils.alert(
           name,
           "Unknown Content-Type: '" +
@@ -765,15 +763,15 @@ IPFS Import
       }
       // Load until we reach the leaf
       if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
-        var uri = importedTiddler['_import_uri']
-        if (uri == undefined || uri == null) {
-          uri = importedTiddler['_canonical_uri']
+        var uri = importedTiddler._import_uri
+        if (uri === undefined || uri == null) {
+          uri = importedTiddler._canonical_uri
         }
         if (uri !== undefined && uri !== null) {
           try {
             var { added, updated } = await this.loadRemoteImportedTiddlers(
-              importedTiddler['_import_uri'],
-              importedTiddler['_canonical_uri'],
+              importedTiddler._import_uri,
+              importedTiddler._canonical_uri,
               importedTitle
             )
             importedAdded += added
@@ -799,8 +797,8 @@ IPFS Import
       }
       // Retrieve or prepare merged content
       merged = this.processedImported.get(importedTitle)
-      if (merged == undefined) {
-        merged = new Object()
+      if (merged === undefined) {
+        merged = {}
         this.processedImported.set(importedTitle, merged)
       }
       // Fields
@@ -811,7 +809,7 @@ IPFS Import
         }
         // Unknown from leaf to top, we keep the top modified field
         if (
-          merged[field] == undefined ||
+          merged[field] === undefined ||
           merged[field] == null ||
           field === 'modified'
         ) {
@@ -827,31 +825,31 @@ IPFS Import
         var tags = (currentTiddler.fields.tags || []).slice(0)
         for (var i = 0; i < tags.length; i++) {
           var tag = tags[i]
-          if (importedTags.includes(tag) == false) {
+          if (importedTags.includes(tag) === false) {
             importedTags = importedTags + ' ' + tag
           }
         }
       }
       // IPFS tag
-      if ($tw.ipfs.isCid(key) && importedTags.includes('$:/isIpfs') == false) {
+      if ($tw.ipfs.isCid(key) && importedTags.includes('$:/isIpfs') === false) {
         importedTags = importedTags + ' $:/isIpfs'
       }
       // Imported tag
-      if (importedTags.includes('$:/isImported') == false) {
+      if (importedTags.includes('$:/isImported') === false) {
         importedTags = importedTags + ' $:/isImported'
       }
       // Processed tags
-      merged['tags'] = importedTags
+      merged.tags = importedTags
       // URI
       if (info.encoding === 'base64' || type === 'image/svg+xml') {
-        merged['_import_uri'] = importedUrl
+        merged._import_uri = importedUrl
       } else {
-        var canonical_uri = merged['_canonical_uri']
-        if (canonical_uri == undefined || canonical_uri == null) {
-          merged['_canonical_uri'] = importedUrl
+        var canonicalUri = merged._canonical_uri
+        if (canonicalUri === undefined || canonicalUri == null) {
+          merged._canonical_uri = importedUrl
           // import_uri
-        } else if (canonical_uri !== importedUrl) {
-          merged['_import_uri'] = importedUrl
+        } else if (canonicalUri !== importedUrl) {
+          merged._import_uri = importedUrl
         }
       }
       // Count
@@ -862,8 +860,8 @@ IPFS Import
       }
       // Processed Titles
       var titles = this.processedTitles.get(importedTitle)
-      if (titles == undefined) {
-        titles = new Array()
+      if (titles === undefined) {
+        titles = []
         this.processedTitles.set(importedTitle, titles)
       }
       if (key !== null) {

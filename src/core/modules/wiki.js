@@ -84,11 +84,9 @@ wikimethod
    */
   exports.parseTiddler = function (title, options) {
     options = $tw.utils.extend({}, options)
-    var cacheType = options.parseAsInline
-        ? 'inlineParseTree'
-        : 'blockParseTree',
-      tiddler = this.getTiddler(title),
-      self = this
+    var cacheType = options.parseAsInline ? 'inlineParseTree' : 'blockParseTree'
+    var tiddler = this.getTiddler(title)
+    var self = this
     return tiddler
       ? this.getCacheForTiddler(title, cacheType, function () {
           if (tiddler.hasField('_canonical_uri')) {

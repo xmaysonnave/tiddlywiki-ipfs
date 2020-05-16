@@ -62,9 +62,9 @@ ENS Wrapper
 
   EnsWrapper.prototype.accountChanged = async function (accounts) {
     if (
-      accounts == undefined ||
+      accounts === undefined ||
       accounts == null ||
-      Array.isArray(accounts) == false ||
+      Array.isArray(accounts) === false ||
       accounts.length === 0
     ) {
       this.web3 = null

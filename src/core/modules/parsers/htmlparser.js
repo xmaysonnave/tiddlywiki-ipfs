@@ -49,6 +49,7 @@ The HTML parser displays text as raw HTML
   const name = 'ipfs-binaryparser'
 
   var HtmlParser = function (type, text, options) {
+    var self = this
     var value = 'data:text/html;charset=utf-8,'
     var src
     if (
@@ -59,7 +60,7 @@ The HTML parser displays text as raw HTML
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
         canonicalUri == null ||
-        canonicalUri == undefined ||
+        canonicalUri === undefined ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
@@ -81,7 +82,7 @@ The HTML parser displays text as raw HTML
             }
           })
           .catch(error => {
-            // Ignore
+            self.getLogger().error(error)
           })
       } else if (text) {
         src = value + encodeURIComponent(text)

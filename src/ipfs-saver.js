@@ -35,7 +35,7 @@ IPFS Saver
     this.apiUrl = null
     this.ipfsProvider = null
     // Loglevel
-    if (window.log == undefined || window.log == null) {
+    if (window.log === undefined || window.log == null) {
       // Init
       window.log = log
       if ($tw.utils.getIpfsVerbose()) {
@@ -72,7 +72,7 @@ IPFS Saver
   }
 
   IpfsSaver.prototype.save = async function (text, method, callback, options) {
-    if ($tw.saverHandler.isDirty() == false) {
+    if ($tw.saverHandler.isDirty() === false) {
       return false
     }
     try {
@@ -118,15 +118,15 @@ IPFS Saver
           ipnsKey = $tw.utils.getIpfsIpnsKey()
           ipnsName = $tw.utils.getIpfsIpnsName()
           if (
-            (ipnsKey == undefined || ipnsKey == null) &&
-            (ipnsName == undefined || ipnsName == null)
+            (ipnsKey === undefined || ipnsKey == null) &&
+            (ipnsName === undefined || ipnsName == null)
           ) {
-            callback('Unknown default IPNS identifiers...')
+            callback(null, 'Unknown default IPNS identifiers...')
             return true
           }
           this.getLogger().info('Processing default IPNS identifiers...')
           var identifier = ipnsKey
-          if (identifier == undefined || identifier == null) {
+          if (identifier === undefined || identifier == null) {
             identifier = ipnsName
           }
           try {
@@ -148,7 +148,7 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         ensDomain = $tw.utils.getIpfsEnsDomain()
         if (ensDomain == null) {
-          callback('Undefined ENS domain...')
+          callback(null, 'Undefined ENS domain...')
           return true
         }
         var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain)

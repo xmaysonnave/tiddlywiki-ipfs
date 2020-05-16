@@ -91,7 +91,7 @@ IPFS Wrapper
     ipnsName
   ) {
     if (
-      identifier == undefined ||
+      identifier === undefined ||
       identifier == null ||
       identifier.trim() === ''
     ) {
@@ -99,7 +99,7 @@ IPFS Wrapper
     } else {
       identifier = identifier.trim()
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    if (ipnsName === undefined || ipnsName == null || ipnsName.trim() === '') {
       ipnsName = null
     } else {
       ipnsName = ipnsName.trim()
@@ -246,7 +246,7 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
     // Check
-    if (cid == undefined || cid == null || cid.trim() === '') {
+    if (cid === undefined || cid == null || cid.trim() === '') {
       throw new Error('Undefined IPNS identifier...')
     } else {
       cid = cid.trim()
@@ -283,7 +283,7 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
     // Check
-    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === '') {
+    if (ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '') {
       throw new Error('Undefined IPNS key...')
     } else {
       ipnsKey.trim()
@@ -313,17 +313,17 @@ IPFS Wrapper
     ipnsName
   ) {
     // Check
-    if (ipnsKey == undefined || ipnsKey == null || ipnsKey.trim() === '') {
+    if (ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '') {
       throw new Error('Undefined IPNS key...')
     } else {
       ipnsKey = ipnsKey.trim()
     }
-    if (ipnsName == undefined || ipnsName == null || ipnsName.trim() === '') {
+    if (ipnsName === undefined || ipnsName == null || ipnsName.trim() === '') {
       throw new Error('Undefined IPNS name...')
     } else {
       ipnsName = ipnsName.trim()
     }
-    if (cid == undefined || cid == null || cid.trim() === '') {
+    if (cid === undefined || cid == null || cid.trim() === '') {
       throw new Error('Undefined IPNS identifier...')
     } else {
       cid = cid.trim()
@@ -353,7 +353,7 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
     // Check
-    if (cid == undefined || cid == null || cid.trim() === '') {
+    if (cid === undefined || cid == null || cid.trim() === '') {
       throw new Error('Undefined IPNS identifier...')
     } else {
       cid = cid.trim()
@@ -372,7 +372,7 @@ IPFS Wrapper
 
   IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
     // Check
-    if (cid == undefined || cid == null || cid.trim() === '') {
+    if (cid === undefined || cid == null || cid.trim() === '') {
       throw new Error('Undefined IPNS identifier...')
     } else {
       cid = cid.trim()

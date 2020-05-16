@@ -90,7 +90,7 @@ IPFS link widget
           }
         })
         .catch(error => {
-          // Ignore
+          self.getLogger().error(error)
         })
     }
   }
@@ -180,8 +180,8 @@ IPFS link widget
       domNode.setAttribute('class', classes.join(' '))
     }
     // Set an href
-    var wikilinkTransformFilter = this.getVariable('tv-filter-export-link'),
-      wikiLinkText
+    var wikilinkTransformFilter = this.getVariable('tv-filter-export-link')
+    var wikiLinkText
     if (wikilinkTransformFilter) {
       // Use the filter to construct the href
       wikiLinkText = this.wiki.filterTiddlers(
@@ -193,10 +193,10 @@ IPFS link widget
       )[0]
     } else {
       // Expand the tv-wikilink-template variable to construct the href
-      var wikiLinkTemplateMacro = this.getVariable('tv-wikilink-template'),
-        wikiLinkTemplate = wikiLinkTemplateMacro
-          ? wikiLinkTemplateMacro.trim()
-          : '#$uri_encoded$'
+      var wikiLinkTemplateMacro = this.getVariable('tv-wikilink-template')
+      var wikiLinkTemplate = wikiLinkTemplateMacro
+        ? wikiLinkTemplateMacro.trim()
+        : '#$uri_encoded$'
       wikiLinkText = $tw.utils.replaceString(
         wikiLinkTemplate,
         '$uri_encoded$',
@@ -284,6 +284,7 @@ IPFS link widget
   }
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
+    var self = this
     $tw.ipfs
       .resolveUrl(true, true, this.value)
       .then(data => {
@@ -293,6 +294,7 @@ IPFS link widget
         }
       })
       .catch(error => {
+        self.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
     event.preventDefault()
@@ -354,7 +356,7 @@ IPFS link widget
     this.value = this.getAttribute('value')
     this.field = this.getAttribute('field')
     const tiddler = $tw.wiki.getTiddler(this.tiddler)
-    if (this.value == undefined) {
+    if (this.value === undefined) {
       this.value = tiddler.getFieldString(this.field)
     }
     this.target = this.getAttribute('target') || '_blank'

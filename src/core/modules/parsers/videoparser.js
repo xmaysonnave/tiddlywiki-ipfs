@@ -68,7 +68,7 @@ The video parser parses a video tiddler into an embeddable HTML element
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
         canonicalUri == null ||
-        canonicalUri == undefined ||
+        canonicalUri === undefined ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
@@ -103,7 +103,7 @@ The video parser parses a video tiddler into an embeddable HTML element
             }
           })
           .catch(error => {
-            // Ignore
+            self.getLogger().error(error)
           })
       } else if (text) {
         element.attributes.src = { type: 'string', value: value + text }

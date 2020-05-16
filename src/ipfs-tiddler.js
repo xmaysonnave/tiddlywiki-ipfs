@@ -198,10 +198,7 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    const { type, info } = $tw.utils.getContentType(
-      title,
-      tiddler.fields['type']
-    )
+    const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     if (event.param !== undefined && event.param !== null) {
       // Tiddler
       for (var field in tiddler.fields) {
@@ -226,10 +223,10 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.ipfsUnpin = function (value, field) {
-    if (value == undefined || value == null || value.trim() === '') {
+    if (value === undefined || value == null || value.trim() === '') {
       return
     }
-    if (field == undefined || field == null || field.trim() === '') {
+    if (field === undefined || field == null || field.trim() === '') {
       return
     }
     const self = this
@@ -280,8 +277,8 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
       const { type, info } = $tw.utils.getContentType(
-        tiddler.fields['title'],
-        tiddler.fields['type']
+        tiddler.fields.title,
+        tiddler.fields.type
       )
       // Process
       var field = null
@@ -322,11 +319,11 @@ IPFS Tiddler
     addition.title = tiddler.fields.title
     addition.tags = (tiddler.fields.tags || []).slice(0)
     // Add isAttachment tag
-    if (addition.tags.indexOf('$:/isAttachment') == -1) {
+    if (addition.tags.indexOf('$:/isAttachment') === -1) {
       $tw.utils.pushTop(addition.tags, '$:/isAttachment')
     }
     // Add isEmbedded tag
-    if (addition.tags.indexOf('$:/isEmbedded') == -1) {
+    if (addition.tags.indexOf('$:/isEmbedded') === -1) {
       $tw.utils.pushTop(addition.tags, '$:/isEmbedded')
     }
     return new $tw.Tiddler(tiddler, addition)
@@ -336,20 +333,17 @@ IPFS Tiddler
     const self = this
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    const { type, info } = $tw.utils.getContentType(
-      title,
-      tiddler.fields['type']
-    )
+    const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     var canonicalUri = tiddler.getFieldString('_canonical_uri')
     canonicalUri =
       canonicalUri == null ||
-      canonicalUri == undefined ||
+      canonicalUri === undefined ||
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
     var importUri = tiddler.getFieldString('_import_uri')
     importUri =
-      importUri == null || importUri == undefined || importUri.trim() === ''
+      importUri == null || importUri === undefined || importUri.trim() === ''
         ? null
         : importUri.trim()
     // Nothing to do
@@ -383,10 +377,10 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     // Previous tiddler
-    const oldTiddler = $tw.wiki.getTiddler(tiddler.fields['title'])
+    const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
     const { type, info } = $tw.utils.getContentType(
-      tiddler.fields['title'],
-      tiddler.fields['type']
+      tiddler.fields.title,
+      tiddler.fields.type
     )
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler)

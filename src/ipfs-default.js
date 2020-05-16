@@ -13,8 +13,6 @@ IPFS Default
   /*global $tw: false */
   'use strict'
 
-  const name = 'ipfs-default'
-
   /*
    * Retrieve ipfs saver export protocol with default value if applicable
    */

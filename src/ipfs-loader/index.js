@@ -6,16 +6,16 @@ import root from 'window-or-global'
   const name = 'ipfs-loader'
 
   const eruda = 'https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js'
-  const eruda_sri =
+  const erudaSri =
     'sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP'
 
   const ethers = 'https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js'
-  const ethers_sri =
+  const ethersSri =
     'sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5'
 
-  const ipfs_http_client =
+  const ipfsHttpClient =
     'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.0.3/dist/index.min.js'
-  const ipfs_http_client_sri =
+  const ipfsHttpClientSri =
     'sha384-xdAnH1MjCW7O7L2RyKVCGt9ODi4oqT/XUT4mFqctEW438NrZuqIJD68cFPx0VZb/'
 
   var IpfsLoader = function (ipfsBundle) {
@@ -30,7 +30,7 @@ import root from 'window-or-global'
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === 'undefined') {
-      await this.loadLibrary('ErudaLibrary', eruda, eruda_sri, true)
+      await this.loadLibrary('ErudaLibrary', eruda, erudaSri, true)
       if (typeof root.eruda !== 'undefined') {
         this.getLogger().info(`Loaded ErudaLibrary:\n ${eruda}`)
       }
@@ -41,7 +41,7 @@ import root from 'window-or-global'
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === 'undefined') {
-      await this.loadLibrary('EtherJsLibrary', ethers, ethers_sri, true)
+      await this.loadLibrary('EtherJsLibrary', ethers, ethersSri, true)
       if (typeof root.ethers !== 'undefined') {
         this.getLogger().info(`Loaded EtherJsLibrary:\n ${ethers}`)
       }
@@ -54,23 +54,13 @@ import root from 'window-or-global'
     if (typeof root.IpfsHttpClient === 'undefined') {
       await this.loadLibrary(
         'IpfsHttpLibrary',
-        ipfs_http_client,
-        ipfs_http_client_sri,
+        ipfsHttpClient,
+        ipfsHttpClientSri,
         true
       )
       if (typeof root.IpfsHttpClient !== 'undefined') {
-        this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfs_http_client}`)
+        this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfsHttpClient}`)
       }
-    }
-  }
-
-  // https://gist.github.com/ebidel/3201b36f59f26525eb606663f7b487d0
-  IpfsLoader.prototype.supportDynamicImport = function () {
-    try {
-      new Function('import("")')
-      return true
-    } catch (error) {
-      return false
     }
   }
 
@@ -151,7 +141,7 @@ import root from 'window-or-global'
     return new Promise(function (resolve, reject) {
       xhr.responseType = 'arraybuffer'
       xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status !== 0) {
+        if (xhr.readyState === 4 && xhr.status !== 0) {
           if (xhr.status >= 300) {
             reject(
               new Error($tw.language.getString('NetworkError/XMLHttpRequest'))
@@ -184,7 +174,7 @@ import root from 'window-or-global'
    */
   IpfsLoader.prototype.loadToBase64 = async function (url) {
     const array = await this.httpGetToUint8Array(url)
-    if (array.length == 0) {
+    if (array.length === 0) {
       return {
         data: '',
         decrypted: false
@@ -210,7 +200,7 @@ import root from 'window-or-global'
    */
   IpfsLoader.prototype.loadToUtf8 = async function (url) {
     var array = await this.httpGetToUint8Array(url)
-    if (array.length == 0) {
+    if (array.length === 0) {
       return {
         data: '',
         decrypted: false
@@ -233,7 +223,7 @@ import root from 'window-or-global'
    */
   IpfsLoader.prototype.decryptUint8ArrayToBase64 = async function (array) {
     var data = this.ipfsBundle.Utf8ArrayToStr(array)
-    if ($tw.crypto.hasPassword() == false) {
+    if ($tw.crypto.hasPassword() === false) {
       data = await this.decryptFromPasswordPrompt(data)
     } else {
       data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
@@ -246,7 +236,7 @@ import root from 'window-or-global'
    */
   IpfsLoader.prototype.decryptUint8ArrayToUtf8 = async function (array) {
     var data = this.ipfsBundle.Utf8ArrayToStr(array)
-    if ($tw.crypto.hasPassword() == false) {
+    if ($tw.crypto.hasPassword() === false) {
       data = await this.decryptFromPasswordPrompt(data)
     } else {
       data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
@@ -281,14 +271,14 @@ import root from 'window-or-global'
 
   IpfsLoader.prototype.isUtf8ArrayEncrypted = function (content) {
     // Check
-    if (content instanceof Uint8Array == false || content.length == 0) {
+    if (content instanceof Uint8Array === false || content.length === 0) {
       return false
     }
     // Process
     const standford = this.ipfsBundle.StringToUint8Array('{"iv":"')
     var encrypted = false
     for (var i = 0; i < content.length && i < standford.length; i++) {
-      if (content[i] == standford[i]) {
+      if (content[i] === standford[i]) {
         encrypted = true
       } else {
         encrypted = false

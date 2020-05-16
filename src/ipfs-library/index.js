@@ -6,9 +6,6 @@ import root from 'window-or-global'
 
   const name = 'ipfs-library'
 
-  const empty =
-    '/ipfs/bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354'
-
   /*
    * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
    **/
@@ -52,7 +49,7 @@ import root from 'window-or-global'
     } catch (error) {
       // IPFS Companion failed
     }
-    if (apiUrl == undefined || apiUrl == null || apiUrl.href === '') {
+    if (apiUrl === undefined || apiUrl == null || apiUrl.href === '') {
       throw new Error('Undefined IPFS API URL...')
     }
     // Load IpfsHttpClient
@@ -91,7 +88,7 @@ import root from 'window-or-global'
 
   // ipfs-http-client
   IpfsLibrary.prototype.getHttpIpfs = async function (url) {
-    if (url == undefined || url == null || url.toString() === '') {
+    if (url === undefined || url == null || url.toString() === '') {
       throw new Error('Undefined IPFS API URL...')
     }
     try {
@@ -121,10 +118,10 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.add = async function (client, content) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
-    if (content == undefined || content == null) {
+    if (content === undefined || content == null) {
       throw new Error('Undefined content...')
     }
     // Window IPFS policy
@@ -157,7 +154,7 @@ import root from 'window-or-global'
       // Check
       if (
         lastResult == null ||
-        lastResult.path == undefined ||
+        lastResult.path === undefined ||
         lastResult.path == null
       ) {
         throw new Error('IPFS client returned an unknown result...')
@@ -171,11 +168,11 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.pin = async function (client, cid) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     cid =
-      cid == null || cid == undefined || cid.trim() === '' ? null : cid.trim()
+      cid == null || cid === undefined || cid.trim() === '' ? null : cid.trim()
     if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
@@ -199,11 +196,11 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.unpin = async function (client, cid) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     cid =
-      cid == null || cid == undefined || cid.trim() === '' ? null : cid.trim()
+      cid == null || cid === undefined || cid.trim() === '' ? null : cid.trim()
     if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
@@ -227,16 +224,16 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.publish = async function (client, ipnsName, cid) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     cid =
-      cid == null || cid == undefined || cid.trim() === '' ? null : cid.trim()
+      cid == null || cid === undefined || cid.trim() === '' ? null : cid.trim()
     if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -257,7 +254,7 @@ import root from 'window-or-global'
         key: ipnsName,
         allowOffline: false
       })
-      if (result == undefined || result == null) {
+      if (result === undefined || result == null) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
@@ -269,10 +266,10 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.resolve = async function (client, id) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
-    id = id == null || id == undefined || id.trim() === '' ? null : id.trim()
+    id = id == null || id === undefined || id.trim() === '' ? null : id.trim()
     if (id == null) {
       throw new Error('Undefined IPNS key...')
     }
@@ -295,7 +292,7 @@ import root from 'window-or-global'
       for await (const resolved of resolvedSource) {
         lastResult = resolved
       }
-      if (lastResult == null || lastResult == undefined) {
+      if (lastResult == null || lastResult === undefined) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return lastResult
@@ -304,7 +301,7 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.getKeys = async function (client) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     // Window IPFS policy
@@ -319,9 +316,9 @@ import root from 'window-or-global'
       this.getLogger().info('Processing IPNS key list...')
       const result = await client.key.list()
       if (
-        result == undefined ||
+        result === undefined ||
         result == null ||
-        Array.isArray(result) == false
+        Array.isArray(result) === false
       ) {
         throw new Error('IPFS client returned an unknown result...')
       }
@@ -334,11 +331,11 @@ import root from 'window-or-global'
   // https://github.com/ipfs/interface-js-ipfs-core/blob/master/SPEC/KEY.md#keygen
   // https://github.com/libp2p/js-libp2p-crypto/issues/145
   IpfsLibrary.prototype.genKey = async function (client, ipnsName) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -359,9 +356,9 @@ import root from 'window-or-global'
         size: 2048
       })
       if (
-        key == undefined ||
+        key === undefined ||
         key == null ||
-        key.id == undefined ||
+        key.id === undefined ||
         key.id == null
       ) {
         throw new Error('IPFS client returned an unknown result...')
@@ -372,11 +369,11 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.rmKey = async function (client, ipnsName) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     ipnsName =
-      ipnsName == null || ipnsName == undefined || ipnsName.trim() === ''
+      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -394,9 +391,9 @@ import root from 'window-or-global'
       this.getLogger().info('Processing IPNS key rm...')
       const key = await client.key.rm(ipnsName)
       if (
-        key == undefined ||
+        key === undefined ||
         key == null ||
-        key.id == undefined ||
+        key.id === undefined ||
         key.id == null
       ) {
         throw new Error('IPFS client returned an unknown result...')
@@ -411,12 +408,12 @@ import root from 'window-or-global'
     oldIpnsName,
     newIpnsName
   ) {
-    if (client == undefined || client == null) {
+    if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
     oldIpnsName =
       oldIpnsName == null ||
-      oldIpnsName == undefined ||
+      oldIpnsName === undefined ||
       oldIpnsName.trim() === ''
         ? null
         : oldIpnsName.trim()
@@ -425,7 +422,7 @@ import root from 'window-or-global'
     }
     newIpnsName =
       newIpnsName == null ||
-      newIpnsName == undefined ||
+      newIpnsName === undefined ||
       newIpnsName.trim() === ''
         ? null
         : newIpnsName.trim()
@@ -443,7 +440,7 @@ import root from 'window-or-global'
     ) {
       this.getLogger().info('Processing IPNS key rename...')
       const key = await client.key.rename(oldIpnsName, newIpnsName)
-      if (key == undefined || key == null) {
+      if (key === undefined || key == null) {
         throw new Error('IPFS client returned an unknown result...')
       }
       var id = null

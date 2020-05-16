@@ -33,6 +33,8 @@
     "arrow-parens": [
       "off"
     ],
+    "spaced-comment": "off",
+    "no-redeclare": "off",
     "consistent-return": "off",
     "no-use-before-define": "off",
     "class-methods-use-this": "off",

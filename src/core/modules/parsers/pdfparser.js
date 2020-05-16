@@ -65,7 +65,7 @@ The PDF parser embeds a PDF viewer
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
         canonicalUri == null ||
-        canonicalUri == undefined ||
+        canonicalUri === undefined ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
@@ -100,7 +100,7 @@ The PDF parser embeds a PDF viewer
             }
           })
           .catch(error => {
-            // Ignore
+            self.getLogger().error(error)
           })
       } else if (text) {
         element.attributes.src = { type: 'string', value: value + text }

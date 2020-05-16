@@ -203,8 +203,8 @@ downloadType: the content type for the saved file
 */
   SaverHandler.prototype.saveWiki = async function (options) {
     options = options || {}
-    var self = this,
-      method = options.method || 'save'
+    var self = this
+    var method = options.method || 'save'
     // Ignore autosave if disabled
     if (
       method === 'autosave' &&
@@ -212,25 +212,25 @@ downloadType: the content type for the saved file
     ) {
       return false
     }
-    var variables = options.variables || {},
-      template = options.template || '$:/core/save/all',
-      downloadType = options.downloadType || 'text/plain',
-      text = this.wiki.renderTiddler(downloadType, template, options),
-      callback = function (err) {
-        if (err) {
-          alert($tw.language.getString('Error/WhileSaving') + ':\n\n' + err)
-        } else {
-          // Clear the task queue if we're saving (rather than downloading)
-          if (method !== 'download') {
-            self.numChanges = 0
-            self.updateDirtyStatus()
-          }
-          $tw.notifier.display(self.titleSavedNotification)
-          if (options.callback) {
-            options.callback()
-          }
+    var variables = options.variables || {}
+    var template = options.template || '$:/core/save/all'
+    var downloadType = options.downloadType || 'text/plain'
+    var text = this.wiki.renderTiddler(downloadType, template, options)
+    var callback = function (err) {
+      if (err) {
+        alert($tw.language.getString('Error/WhileSaving') + ':\n\n' + err)
+      } else {
+        // Clear the task queue if we're saving (rather than downloading)
+        if (method !== 'download') {
+          self.numChanges = 0
+          self.updateDirtyStatus()
+        }
+        $tw.notifier.display(self.titleSavedNotification)
+        if (options.callback) {
+          options.callback()
         }
       }
+    }
     // Process preferred if any
     var ignorePreferred = null
     var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')

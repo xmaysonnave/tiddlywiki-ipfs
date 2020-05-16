@@ -111,7 +111,7 @@ IPFS Controller
   IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
     const self = this
     return new Promise((resolve, reject) => {
-      if ($tw.utils.getIpfsUnpin() == false) {
+      if ($tw.utils.getIpfsUnpin() === false) {
         resolve(false)
       }
       if (ipnsKey !== undefined && ipnsKey !== null) {
@@ -169,7 +169,6 @@ IPFS Controller
         this.getLogger().info(`Cancel request to Unpin:\n ${normalizedUrl}`)
       }
     }
-    return
   }
 
   IpfsController.prototype.pinToIpfs = async function (cid) {
@@ -271,7 +270,7 @@ IPFS Controller
     var normalizedUrl = null
     var resolvedUrl = null
     value =
-      value == null || value == undefined || value.toString().trim() === ''
+      value == null || value === undefined || value.toString().trim() === ''
         ? null
         : value.toString().trim()
     if (value == null) {
@@ -303,7 +302,7 @@ IPFS Controller
     )
     if (
       protocol !== null &&
-      protocol == ipnsKeyword &&
+      protocol === ipnsKeyword &&
       ipnsIdentifier !== null
     ) {
       var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(
@@ -330,7 +329,7 @@ IPFS Controller
         }
       }
     } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
-      var { content: cid, resolvedUrl: resolvedUrl } = await this.resolveEns(
+      var { content: cid, resolvedUrl } = await this.resolveEns(
         normalizedUrl.hostname
       )
     } else {
@@ -382,7 +381,7 @@ IPFS Controller
     // Current API URL
     const url = this.getIpfsApiUrl()
     // Check
-    if (url == undefined || url == null || url === '') {
+    if (url === undefined || url == null || url === '') {
       throw new Error('Undefined IPFS API URL...')
     }
     // HTTP Client

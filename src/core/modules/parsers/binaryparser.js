@@ -52,6 +52,7 @@ The binary parser parses a binary tiddler into a warning message and download li
   var EXPORT_BUTTON_IMAGE = '$:/core/images/export-button'
 
   var BinaryParser = function (type, text, options) {
+    var self = this
     // Transclude the binary data tiddler warning message
     var warn = {
       type: 'element',
@@ -90,7 +91,7 @@ The binary parser parses a binary tiddler into a warning message and download li
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
         canonicalUri == null ||
-        canonicalUri == undefined ||
+        canonicalUri === undefined ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
@@ -115,7 +116,7 @@ The binary parser parses a binary tiddler into a warning message and download li
             }
           })
           .catch(error => {
-            // Ignore
+            self.getLogger().error(error)
           })
       } else if (text) {
         link.attributes.href = {
