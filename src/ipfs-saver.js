@@ -116,17 +116,22 @@ IPFS Saver
         } else {
           // Default IPNS
           ipnsKey = $tw.utils.getIpfsIpnsKey()
+          ipnsKey =
+            ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === ''
+              ? null
+              : ipnsKey.trim()
           ipnsName = $tw.utils.getIpfsIpnsName()
-          if (
-            (ipnsKey === undefined || ipnsKey == null) &&
-            (ipnsName === undefined || ipnsName == null)
-          ) {
+          ipnsName =
+            ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
+              ? null
+              : ipnsName.trim()
+          if (ipnsKey == null && ipnsName == null) {
             callback(null, 'Unknown default IPNS identifiers...')
             return true
           }
           this.getLogger().info('Processing default IPNS identifiers...')
           var identifier = ipnsKey
-          if (identifier === undefined || identifier == null) {
+          if (identifier == null) {
             identifier = ipnsName
           }
           try {

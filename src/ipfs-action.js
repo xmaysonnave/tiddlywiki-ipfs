@@ -315,7 +315,7 @@ IPFS Action
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -350,7 +350,7 @@ IPFS Action
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -383,7 +383,7 @@ IPFS Action
     const self = this
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -442,7 +442,7 @@ IPFS Action
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -474,7 +474,7 @@ IPFS Action
     var resolvedUrl = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {
@@ -569,7 +569,7 @@ IPFS Action
     }
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
-      ipnsName == null || ipnsName === undefined || ipnsName.trim() === ''
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
         ? null
         : ipnsName.trim()
     if (ipnsName == null) {

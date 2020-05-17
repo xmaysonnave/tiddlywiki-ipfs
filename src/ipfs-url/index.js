@@ -96,7 +96,7 @@ import { URL } from 'universal-url'
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
     value =
-      value == null || value === undefined || value.toString().trim() === ''
+      value === undefined || value == null || value.toString().trim() === ''
         ? null
         : value.toString().trim()
     if (value == null) {

@@ -63,14 +63,14 @@ wikiparser
     ) {
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
-        canonicalUri == null ||
         canonicalUri === undefined ||
+        canonicalUri == null ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
       var importUri = options.tiddler.fields._import_uri
       importUri =
-        importUri == null || importUri === undefined || importUri.trim() === ''
+        importUri === undefined || importUri == null || importUri.trim() === ''
           ? null
           : importUri.trim()
       if (canonicalUri !== null || importUri !== null) {

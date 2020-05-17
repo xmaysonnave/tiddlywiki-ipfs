@@ -111,8 +111,8 @@ Render this widget into the DOM
         var text = tiddler.fields.text
         var canonicalUri = tiddler.fields._canonical_uri
         canonicalUri =
-          canonicalUri == null ||
           canonicalUri === undefined ||
+          canonicalUri == null ||
           canonicalUri.trim() === ''
             ? null
             : canonicalUri.trim()

@@ -90,20 +90,14 @@ IPFS Wrapper
     identifier,
     ipnsName
   ) {
-    if (
-      identifier === undefined ||
-      identifier == null ||
-      identifier.trim() === ''
-    ) {
-      identifier = null
-    } else {
-      identifier = identifier.trim()
-    }
-    if (ipnsName === undefined || ipnsName == null || ipnsName.trim() === '') {
-      ipnsName = null
-    } else {
-      ipnsName = ipnsName.trim()
-    }
+    identifier =
+      identifier === undefined || identifier == null || identifier.trim() === ''
+        ? null
+        : identifier.trim()
+    ipnsName =
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
     if (identifier == null && ipnsName == null) {
       throw new Error('Undefined IPNS identifiers...')
     }
@@ -161,17 +155,14 @@ IPFS Wrapper
       ipnsKey = identifier
     }
     // Lets build an url, the resolver will do the final check, we cannot do more here
-    normalizedUrl = this.ipfsUrl.normalizeUrl('/' + ipnsKeyword + '/' + ipnsKey)
+    normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}`)
     if (found) {
       this.getLogger().info(
-        'Successfully Fetched IPNS identifiers: ' +
-          ipnsName +
-          '\n ' +
-          normalizedUrl
+        `Successfully Fetched IPNS identifiers: ${ipnsName}\n ${normalizedUrl}`
       )
     } else {
       this.getLogger().info(
-        'Unable to Fetch IPNS identifiers, default to\n ' + normalizedUrl
+        `Unable to Fetch IPNS identifiers, default to\n ${normalizedUrl}`
       )
     }
     return {
@@ -184,12 +175,9 @@ IPFS Wrapper
   IpfsWrapper.prototype.generateIpnsKey = async function (ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName)
-      const url = this.ipfsUrl.normalizeUrl('/' + ipnsKeyword + '/' + key)
+      const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${key}`)
       this.getLogger().info(
-        'Successfully generated IPNS key with IPNS name: ' +
-          ipnsName +
-          '\n ' +
-          url
+        `Successfully generated IPNS key with IPNS name: ${ipnsName}\n ${url}`
       )
       return key
     } catch (error) {
@@ -201,7 +189,7 @@ IPFS Wrapper
   IpfsWrapper.prototype.removeIpnsKey = async function (ipfs, ipnsName) {
     try {
       const hash = await this.ipfsLibrary.rmKey(ipfs, ipnsName)
-      this.getLogger().info('Successfully removed IPNS name: ' + ipnsName)
+      this.getLogger().info(`Successfully removed IPNS name: ${ipnsName}`)
       return hash
     } catch (error) {
       this.getLogger().error(error)
@@ -221,7 +209,7 @@ IPFS Wrapper
         newIpnsName
       )
       this.getLogger().info(
-        'Successfully renamed IPNS name: ' + was + ' with ' + now
+        `Successfully renamed IPNS name: ${was} with ${now}`
       )
       return {
         ipnsKey: key,
@@ -245,17 +233,18 @@ IPFS Wrapper
   }
 
   IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
-    // Check
-    if (cid === undefined || cid == null || cid.trim() === '') {
+    cid =
+      cid === undefined || cid == null || cid.toString().trim() === ''
+        ? null
+        : cid.toString().trim()
+    if (cid == null) {
       throw new Error('Undefined IPNS identifier...')
-    } else {
-      cid = cid.trim()
     }
-    const pathname = '/' + ipfsKeyword + '/' + cid
+    const pathname = `/${ipfsKeyword}/${cid}`
     try {
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname)
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info('Successfully fetched:' + '\n ' + url)
+      this.getLogger().info(`Successfully fetched:\n ${url}`)
       return fetched
     } catch (error) {
       this.getLogger().error(error)
@@ -268,9 +257,7 @@ IPFS Wrapper
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content)
       const pathname = '/' + ipfsKeyword + '/' + hash
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info(
-        'Successfully added ' + size + ' bytes:' + '\n ' + url
-      )
+      this.getLogger().info(`Successfully added ${size} bytes:\n ${url}`)
       return {
         added: hash,
         size: size
@@ -282,13 +269,14 @@ IPFS Wrapper
   }
 
   IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
-    // Check
-    if (ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '') {
+    ipnsKey =
+      ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === ''
+        ? null
+        : ipnsKey.trim()
+    if (ipnsKey == null) {
       throw new Error('Undefined IPNS key...')
-    } else {
-      ipnsKey.trim()
     }
-    const pathname = '/' + ipnsKeyword + '/' + ipnsKey
+    const pathname = `/${ipnsKeyword}/${ipnsKey}`
     try {
       const url = this.ipfsUrl.normalizeUrl(pathname)
       const resolved = await this.ipfsLibrary.resolve(ipfs, pathname)
@@ -296,7 +284,7 @@ IPFS Wrapper
       if (cid !== null) {
         const parsed = this.ipfsUrl.normalizeUrl(resolved)
         this.getLogger().info(
-          'Successfully resolved IPNS key:' + '\n ' + url + ' \n ' + parsed
+          `Successfully resolved IPNS key:\n ${url} \n ${parsed}`
         )
         return cid
       }
@@ -312,37 +300,37 @@ IPFS Wrapper
     ipnsKey,
     ipnsName
   ) {
-    // Check
-    if (ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '') {
+    ipnsKey =
+      ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === ''
+        ? null
+        : ipnsKey.trim()
+    if (ipnsKey == null) {
       throw new Error('Undefined IPNS key...')
-    } else {
-      ipnsKey = ipnsKey.trim()
     }
-    if (ipnsName === undefined || ipnsName == null || ipnsName.trim() === '') {
+    ipnsName =
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
       throw new Error('Undefined IPNS name...')
-    } else {
-      ipnsName = ipnsName.trim()
     }
-    if (cid === undefined || cid == null || cid.trim() === '') {
+    cid =
+      cid === undefined || cid == null || cid.toString().trim() === ''
+        ? null
+        : cid.toString().trim()
+    if (cid == null) {
       throw new Error('Undefined IPNS identifier...')
-    } else {
-      cid = cid.trim()
     }
     // Path
-    const key = '/' + ipnsKeyword + '/' + ipnsKey
-    const pathname = '/' + ipfsKeyword + '/' + cid
+    const key = `/${ipnsKeyword}/${ipnsKey}`
+    const pathname = `/${ipfsKeyword}/${cid}`
     try {
       // Publish
       const result = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname)
       const keyParsed = this.ipfsUrl.normalizeUrl(key)
       const url = this.ipfsUrl.normalizeUrl(pathname)
       this.getLogger().info(
-        'Successfully published IPNS name: ' +
-          ipnsName +
-          '\n ' +
-          keyParsed +
-          '\n ' +
-          url
+        `Successfully published IPNS name: ${ipnsName}\n ${keyParsed}\n ${url}`
       )
       return result
     } catch (error) {
@@ -352,17 +340,18 @@ IPFS Wrapper
   }
 
   IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
-    // Check
-    if (cid === undefined || cid == null || cid.trim() === '') {
+    cid =
+      cid === undefined || cid == null || cid.toString().trim() === ''
+        ? null
+        : cid.toString().trim()
+    if (cid == null) {
       throw new Error('Undefined IPNS identifier...')
-    } else {
-      cid = cid.trim()
     }
-    const pathname = '/' + ipfsKeyword + '/' + cid
+    const pathname = `/${ipfsKeyword}/${cid}`
     try {
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname)
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info('Successfully pinned:' + '\n ' + url)
+      this.getLogger().info(`Successfully pinned:\n ${url}`)
       return pinned
     } catch (error) {
       this.getLogger().error(error)
@@ -371,17 +360,18 @@ IPFS Wrapper
   }
 
   IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
-    // Check
-    if (cid === undefined || cid == null || cid.trim() === '') {
+    cid =
+      cid === undefined || cid == null || cid.toString().trim() === ''
+        ? null
+        : cid.toString().trim()
+    if (cid == null) {
       throw new Error('Undefined IPNS identifier...')
-    } else {
-      cid = cid.trim()
     }
-    const pathname = '/' + ipfsKeyword + '/' + cid
+    const pathname = `/${ipfsKeyword}/${cid}`
     try {
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname)
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info('Successfully unpinned:' + '\n ' + url)
+      this.getLogger().info(`Successfully unpinned:\n ${url}`)
       return unpinned
     } catch (error) {
       this.getLogger().error(error)

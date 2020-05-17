@@ -270,7 +270,7 @@ IPFS Controller
     var normalizedUrl = null
     var resolvedUrl = null
     value =
-      value == null || value === undefined || value.toString().trim() === ''
+      value === undefined || value == null || value.toString().trim() === ''
         ? null
         : value.toString().trim()
     if (value == null) {
@@ -282,7 +282,6 @@ IPFS Controller
         resolvedUrl: null
       }
     }
-    base = base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
     try {
       normalizedUrl = this.normalizeUrl(value, base)
     } catch (error) {
@@ -381,11 +380,11 @@ IPFS Controller
     // Current API URL
     const url = this.getIpfsApiUrl()
     // Check
-    if (url === undefined || url == null || url === '') {
+    if (url === undefined || url == null || url.toString().trim() === '') {
       throw new Error('Undefined IPFS API URL...')
     }
     // HTTP Client
-    const client = this.ipfsClients.get(url.href)
+    const client = this.ipfsClients.get(url.toString())
     if (client !== undefined) {
       // Log
       this.getLogger().info(`Reuse IPFS provider: "${client.provider}"`)
@@ -396,7 +395,7 @@ IPFS Controller
       }
     }
     // Build a new HTTP client
-    const policy = await this.ipfsWrapper.getHttpIpfsClient(url)
+    const policy = await this.ipfsWrapper.getHttpIpfsClient(url.toString())
     const ipfs = policy.ipfs
     const provider = policy.provider
     // Store

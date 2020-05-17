@@ -100,27 +100,32 @@ import root from 'window-or-global'
     var type = null
     var text = null
     var encoded = null
-    if (content !== undefined && content !== null && content.trim() !== '') {
-      const matched =
-        content.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) ||
-        content.match(/\/(ipfs)\/(.*)/)
-      if (matched) {
-        type = matched[1]
-        text = matched[2]
-      }
-      if (type === 'ipfs') {
-        if (text.length >= 4) {
-          const cid = new CID(text)
-          if (cid.version !== 0) {
-            throw new Error(
-              `ENS domain content should be Base58 (CidV0): ${text}`
-            )
-          }
-          encoded = '0x' + contentHash.fromIpfs(text)
+    content =
+      content === undefined || content == null || content.trim() === ''
+        ? null
+        : content.trim()
+    if (content == null) {
+      return null
+    }
+    const matched =
+      content.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) ||
+      content.match(/\/(ipfs)\/(.*)/)
+    if (matched) {
+      type = matched[1]
+      text = matched[2]
+    }
+    if (type === 'ipfs') {
+      if (text.length >= 4) {
+        const cid = new CID(text)
+        if (cid.version !== 0) {
+          throw new Error(
+            `ENS domain content should be Base58 (CidV0): ${text}`
+          )
         }
-      } else {
-        throw new Error(`Unsupported ENS domain protocol: ${type}`)
+        encoded = '0x' + contentHash.fromIpfs(text)
       }
+    } else {
+      throw new Error(`Unsupported ENS domain protocol: ${type}`)
     }
     return {
       encoded: encoded
@@ -266,14 +271,14 @@ import root from 'window-or-global'
       throw new Error('Undefined Web3 provider...')
     }
     node =
-      node == null || node === undefined || node.trim() === ''
+      node === undefined || node == null || node.trim() === ''
         ? null
         : node.trim()
     if (node == null) {
       throw new Error('Undefined ENS domain resolver...')
     }
     registry =
-      registry == null || registry === undefined || registry.trim() === ''
+      registry === undefined || registry == null || registry.trim() === ''
         ? null
         : registry.trim()
     if (registry == null) {
@@ -312,7 +317,7 @@ import root from 'window-or-global'
       throw new Error('Undefined Web3 provider...')
     }
     address =
-      address == null || address === undefined || address.trim() === ''
+      address === undefined || address == null || address.trim() === ''
         ? null
         : address.trim()
     if (address == null) {
@@ -371,7 +376,7 @@ import root from 'window-or-global'
       throw new Error('Undefined Web3 provider...')
     }
     address =
-      address == null || address === undefined || address.trim() === ''
+      address === undefined || address == null || address.trim() === ''
         ? null
         : address.trim()
     if (address == null) {
@@ -413,7 +418,7 @@ import root from 'window-or-global'
       await this.loadEthers()
     }
     domain =
-      domain == null || domain === undefined || domain.trim() === ''
+      domain === undefined || domain == null || domain.trim() === ''
         ? null
         : domain.trim()
     if (domain == null) {
@@ -491,11 +496,15 @@ import root from 'window-or-global'
     web3,
     account
   ) {
-    if (cid === undefined || cid == null) {
+    cid =
+      cid === undefined || cid == null || cid.toString().trim() === ''
+        ? null
+        : cid.toString().trim()
+    if (cid == null) {
       throw new Error('Undefined IPFS identifier...')
     }
     domain =
-      domain == null || domain === undefined || domain.trim() === ''
+      domain === undefined || domain == null || domain.trim() === ''
         ? null
         : domain.trim()
     if (domain == null) {

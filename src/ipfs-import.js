@@ -121,7 +121,7 @@ IPFS Import
     var normalizedUrl = null
     var resolvedUrl = null
     value =
-      value == null || value === undefined || value.trim() === ''
+      value === undefined || value == null || value.trim() === ''
         ? null
         : value.trim()
     if (value == null) {
@@ -157,13 +157,13 @@ IPFS Import
     title
   ) {
     canonicalUri =
-      canonicalUri == null ||
       canonicalUri === undefined ||
+      canonicalUri == null ||
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
     importUri =
-      importUri == null || importUri === undefined || importUri.trim() === ''
+      importUri === undefined || importUri == null || importUri.trim() === ''
         ? null
         : importUri.trim()
     this.host =
@@ -175,6 +175,7 @@ IPFS Import
     }
     this.loaded = new Map()
     this.notLoaded = []
+    this.isEmpty = []
     this.resolved = new Map()
     this.notResolved = []
     this.processedImported = new Map()
@@ -195,9 +196,12 @@ IPFS Import
           importUri
         )
         const { processed, removed: processedRemoved } = this.processTiddlers()
-        this.getLogger().info(`*** Loaded: ${this.loaded.size} resource(s) ***`)
+        this.getLogger().info(`*** Loaded: ${this.loaded.size} Resource(s) ***`)
         this.getLogger().info(
-          `*** Failed to load: ${this.notLoaded.length} resource(s) ***`
+          `*** Loaded: ${this.isEmpty.length} Empty Resource(s) ***`
+        )
+        this.getLogger().info(
+          `*** Failed to load: ${this.notLoaded.length} Resource(s) ***`
         )
         this.getLogger().info(
           `*** Failed to resolve: ${this.notResolved.length} URL(s) ***`
@@ -257,6 +261,7 @@ IPFS Import
     this.getLogger().info('*** End Import ***')
     this.host = null
     this.loaded = null
+    this.isEmpty = null
     this.notLoaded = null
     this.resolved = null
     this.notResolved = null
@@ -390,8 +395,8 @@ IPFS Import
         )
       }
       // Loaded
-      this.loaded.set(key, imported)
       if (tiddlers !== undefined && tiddlers !== null) {
+        this.loaded.set(key, imported)
         for (var i in tiddlers) {
           var tiddler = tiddlers[i]
           var title = tiddler.title
@@ -442,15 +447,15 @@ IPFS Import
           // Next
           var canonicalUri = tiddler._canonical_uri
           canonicalUri =
-            canonicalUri == null ||
             canonicalUri === undefined ||
+            canonicalUri == null ||
             canonicalUri.trim() === ''
               ? null
               : canonicalUri.trim()
           var importUri = tiddler._import_uri
           importUri =
-            importUri == null ||
             importUri === undefined ||
+            importUri == null ||
             importUri.trim() === ''
               ? null
               : importUri.trim()
@@ -474,6 +479,7 @@ IPFS Import
         }
       }
       if (imported.size === 0) {
+        this.isEmpty.push(key)
         var msg = 'Empty'
         var field = 'Content'
         this.getLogger().info(
@@ -517,15 +523,15 @@ IPFS Import
         const tiddler = imported.get(title)
         var canonicalUri = tiddler._canonical_uri
         canonicalUri =
-          canonicalUri == null ||
           canonicalUri === undefined ||
+          canonicalUri == null ||
           canonicalUri.trim() === ''
             ? null
             : canonicalUri.trim()
         var importUri = tiddler._import_uri
         importUri =
-          importUri == null ||
           importUri === undefined ||
+          importUri == null ||
           importUri.trim() === ''
             ? null
             : importUri.trim()
@@ -545,14 +551,13 @@ IPFS Import
           }
           if (
             canonicalKey !== null &&
-            this.notLoaded.indexOf(canonicalKey) === -1
+            this.notLoaded.indexOf(canonicalKey) === -1 &&
+            this.hasTitle(canonicalKey, title)
           ) {
             if (key === canonicalKey) {
               // Cycle
             }
-            if (this.hasTitle(canonicalKey, title)) {
-              keys.push(canonicalKey)
-            }
+            keys.push(canonicalKey)
           }
           var importKey = null
           if (
@@ -570,7 +575,8 @@ IPFS Import
           } else {
             if (
               importKey !== null &&
-              this.notLoaded.indexOf(importKey) === -1
+              this.notLoaded.indexOf(importKey) === -1 &&
+              this.hasTitle(importKey, title)
             ) {
               if (key === importKey) {
                 // Cycle
@@ -598,6 +604,7 @@ IPFS Import
     canonicalKey,
     importKey
   ) {
+    keys.push(importKey)
     const imported = this.loaded.get(importKey)
     const tiddler = imported.get(title)
     var targetCanonicalUri = tiddler._canonical_uri
@@ -631,9 +638,6 @@ IPFS Import
     if (targetCanonicalUri == null && nextImportUri !== null) {
       // Inconsistency
     }
-    if (this.hasTitle(importKey, title)) {
-      keys.push(importKey)
-    }
     var nextImportKey = null
     if (
       nextImportUri !== null &&
@@ -650,7 +654,8 @@ IPFS Import
     } else {
       if (
         nextImportKey !== null &&
-        this.notLoaded.indexOf(nextImportKey) === -1
+        this.notLoaded.indexOf(nextImportKey) === -1 &&
+        this.hasTitle(nextImportKey, title)
       ) {
         if (keys.indexOf(nextImportKey) !== -1) {
           // Cycle

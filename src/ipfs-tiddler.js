@@ -223,10 +223,18 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.ipfsUnpin = function (value, field) {
-    if (value === undefined || value == null || value.trim() === '') {
+    value =
+      value === undefined || value == null || value.trim() === ''
+        ? null
+        : value.trim()
+    if (value == null) {
       return
     }
-    if (field === undefined || field == null || field.trim() === '') {
+    field =
+      field === undefined || field == null || field.trim() === ''
+        ? null
+        : field.trim()
+    if (field == null) {
       return
     }
     const self = this
@@ -336,14 +344,14 @@ IPFS Tiddler
     const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     var canonicalUri = tiddler.getFieldString('_canonical_uri')
     canonicalUri =
-      canonicalUri == null ||
       canonicalUri === undefined ||
+      canonicalUri == null ||
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
     var importUri = tiddler.getFieldString('_import_uri')
     importUri =
-      importUri == null || importUri === undefined || importUri.trim() === ''
+      importUri === undefined || importUri == null || importUri.trim() === ''
         ? null
         : importUri.trim()
     // Nothing to do

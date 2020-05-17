@@ -67,8 +67,8 @@ The audio parser parses an audio tiddler into an embeddable HTML element
     ) {
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri =
-        canonicalUri == null ||
         canonicalUri === undefined ||
+        canonicalUri == null ||
         canonicalUri.trim() === ''
           ? null
           : canonicalUri.trim()
