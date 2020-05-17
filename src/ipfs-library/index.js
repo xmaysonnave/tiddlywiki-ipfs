@@ -96,7 +96,7 @@ import root from 'window-or-global'
       apiUrl === undefined || apiUrl == null || apiUrl.toString().trim() === ''
         ? null
         : apiUrl.toString().trim()
-    if (apiUrl) {
+    if (apiUrl == null) {
       throw new Error('Undefined IPFS API URL...')
     }
     try {
