@@ -1,13 +1,10 @@
 ---
 name: Pull Request
 about: Propose a change to IPFS with TiddlyWiki
-title: ""
+title: ''
 labels: ''
 assignees: ''
-
----
-
-**Is your PR related to a problem? Please describe.**
+---**Is your PR related to a problem? Please describe.**
 A clear and detailed description of what the problem is.
 
 **Describe the solution you are proposing**
