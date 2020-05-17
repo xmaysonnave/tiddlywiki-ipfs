@@ -61,9 +61,9 @@ IPFS Saver
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      logger.info(`Origin base URL:\n ${base}`)
+      logger.info(`Origin base URL: ${base}`)
     } else {
-      logger.info(`Gateway base URL:\n ${base}`)
+      logger.info(`Gateway base URL: ${base}`)
     }
   }
 

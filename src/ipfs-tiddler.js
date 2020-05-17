@@ -114,9 +114,9 @@ IPFS Tiddler
     if (policy !== undefined && policy.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-        this.getLogger().info(`Origin base URL:\n ${base}`)
+        this.getLogger().info(`Origin base URL: ${base}`)
       } else {
-        this.getLogger().info(`Gateway base URL:\n ${base}`)
+        this.getLogger().info(`Gateway base URL: ${base}`)
       }
     }
     // Unpin preference
