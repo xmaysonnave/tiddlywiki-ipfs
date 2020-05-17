@@ -34,11 +34,20 @@ See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave
   <b>Community</b>
 </p>
 <ul>
+  <li><b>ENS</b>:
+    <ul>
+      <li><b>Forum</b>:
+        <ul>
+          <li>[ext[Discourse|https://discuss.ens.domains/]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li><b>IPFS</b>:
     <ul>
       <li><b>Forum</b>:
         <ul>
-          <li>[ext[Discussion and Support Forums|https://discuss.ipfs.io/]]</li>
+          <li>[ext[Discussion and Support Forum|https://discuss.ipfs.io/]]</li>
         </ul>
       </li>
     </ul>
