@@ -18,18 +18,18 @@ IPFS Import
   const local = '<a href="'
   const remote = '<a rel="noopener noreferrer" target="_blank" href="'
 
-  const alertKeyFailed = function (strings, field, url, title) {
-    var failed = strings[0]
-    var from = strings[1]
-    var endH = strings[2]
-    var endL = strings[3]
+  const alertFieldFailed = function (strings, msg, field, url, title) {
+    var failed = strings[1]
+    var from = strings[2]
+    var endH = strings[3]
+    var endL = strings[4]
     if (
       url.hostname === $tw.ipfs.getDocumentUrl().hostname &&
       url.pathname === $tw.ipfs.getDocumentUrl().pathname
     ) {
-      return `${failed}${field}${from}${local}${url}${endH}${title}${endL}`
+      return `${msg}${failed}${field}${from}${local}${url}${endH}${title}${endL}`
     } else {
-      return `${failed}${field}${from}${remote}${url}${endH}${title}${endL}`
+      return `${msg}${failed}${field}${from}${remote}${url}${endH}${title}${endL}`
     }
   }
 
@@ -57,10 +57,10 @@ IPFS Import
     }
   }
 
-  const alertTypeFailed = function (
+  const alertConditionFailed = function (
     strings,
     msg,
-    type,
+    condition,
     key,
     field,
     parentUrl,
@@ -77,9 +77,9 @@ IPFS Import
       parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
       parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
     ) {
-      return `${msg}${space}${type}${from}${remote}${key}${endH1}${field}${endL1}${local}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
+      return `${msg}${space}${condition}${from}${remote}${key}${endH1}${field}${endL1}${local}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
     } else {
-      return `${msg}${space}${type}${from}${remote}${key}${endH1}${field}${endL1}${remote}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
+      return `${msg}${space}${condition}${from}${remote}${key}${endH1}${field}${endL1}${remote}${parentUrl}${endH2}${parentTitle}${endL2}${parentField}`
     }
   }
 
@@ -90,9 +90,9 @@ IPFS Import
   }
 
   IpfsImport.prototype.hasTitle = function (key, title) {
-    var imported = this.loaded.get(key)
+    const { imported } = this.loaded.get(key)
     if (imported !== undefined) {
-      var importedTitle = imported.get(title)
+      const importedTitle = imported.get(title)
       if (importedTitle !== undefined) {
         return true
       }
@@ -106,7 +106,7 @@ IPFS Import
       if (keys.indexOf(key) !== -1) {
         continue
       }
-      const imported = this.loaded.get(key)
+      const { imported } = this.loaded.get(key)
       if (imported.delete(title)) {
         removed += 1
       }
@@ -201,16 +201,16 @@ IPFS Import
           `*** Loaded: ${this.isEmpty.length} Empty Resource(s) ***`
         )
         this.getLogger().info(
-          `*** Failed to load: ${this.notLoaded.length} Resource(s) ***`
+          `*** Failed to Load: ${this.notLoaded.length} Resource(s) ***`
         )
         this.getLogger().info(
-          `*** Failed to resolve: ${this.notResolved.length} URL(s) ***`
+          `*** Failed to Resolve: ${this.notResolved.length} URL(s) ***`
         )
         this.getLogger().info(
-          `*** Loaded: ${loaded} and Removed: ${loadedRemoved} Tiddler(s) ***`
+          `*** Loaded: ${loaded} and Removed "On Error": ${loadedRemoved} Tiddler(s) ***`
         )
         this.getLogger().info(
-          `*** Processed: ${processed} and Removed: ${processedRemoved} Tiddler(s) ***`
+          `*** Processed: ${processed} and Removed "Duplicate": ${processedRemoved} Tiddler(s) ***`
         )
       }
       // // Update Tiddly
@@ -292,12 +292,13 @@ IPFS Import
         } = await this.getKey(parentUrl, canonicalUri)
         this.resolved.set(canonicalUri, canonicalKey)
       } catch (error) {
+        var msg = 'Failed to Resolve'
         var field = '_canonical_uri'
         this.notResolved.push(canonicalUri)
         this.getLogger().error(error)
         $tw.utils.alert(
           name,
-          alertKeyFailed`Failed to Resolve field: "${field}" from: ${parentUrl}">${parentTitle}</a>`
+          alertFieldFailed`${msg} field: "${field}" from: ${parentUrl}">${parentTitle}</a>`
         )
       }
     }
@@ -315,12 +316,13 @@ IPFS Import
         } = await this.getKey(parentUrl, importUri)
         this.resolved.set(importUri, importKey)
       } catch (error) {
+        var msg = 'Failed to Resolve'
         var field = '_import_uri'
         this.notResolved.push(canonicalUri)
         this.getLogger().error(error)
         $tw.utils.alert(
           name,
-          alertKeyFailed`Failed to Resolve field: "${field}" from: ${parentUrl}">${parentTitle}</a>`
+          alertFieldFailed`${msg} field: "${field}" from: ${parentUrl}">${parentTitle}</a>`
         )
       }
     }
@@ -396,7 +398,7 @@ IPFS Import
       }
       // Loaded
       if (tiddlers !== undefined && tiddlers !== null) {
-        this.loaded.set(key, imported)
+        this.loaded.set(key, { resolvedKey, imported })
         for (var i in tiddlers) {
           var tiddler = tiddlers[i]
           var title = tiddler.title
@@ -437,7 +439,7 @@ IPFS Import
             )
             $tw.utils.alert(
               name,
-              alertTypeFailed`${msg}: "${type}" from ${resolvedKey}">${title}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
+              alertConditionFailed`${msg}: "${type}" from ${resolvedKey}">${title}</a>, loaded from: ${parentUrl}">${parentTitle}</a>, field: "${parentField}"`
             )
             // Default
             type = 'text/vnd.tiddlywiki'
@@ -483,7 +485,7 @@ IPFS Import
         var msg = 'Empty'
         var field = 'Content'
         this.getLogger().info(
-          `${msg} ${field}:\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+          `${msg} "${field}":\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
         )
         $tw.utils.alert(
           name,
@@ -495,7 +497,7 @@ IPFS Import
       var msg = 'Failed to Load'
       var field = 'Resource'
       this.getLogger().info(
-        `${msg} ${field}:\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
+        `${msg} "${field}":\n ${resolvedKey} \n loaded from: "${parentTitle}", field: "${parentField}"\n ${parentUrl}`
       )
       this.getLogger().error(error)
       $tw.utils.alert(
@@ -509,12 +511,12 @@ IPFS Import
     }
   }
 
-  IpfsImport.prototype.processTiddlers = function (parentKey, parentTitle) {
+  IpfsImport.prototype.processTiddlers = function () {
     var processed = 0
     var removed = 0
     var processedTitles = []
     for (var key of this.loaded.keys()) {
-      const imported = this.loaded.get(key)
+      const { resolvedKey, imported } = this.loaded.get(key)
       for (var title of imported.keys()) {
         if (processedTitles.indexOf(title) !== -1) {
           continue
@@ -540,7 +542,15 @@ IPFS Import
         }
         if (canonicalUri !== null || importUri !== null) {
           if (canonicalUri == null && importUri !== null) {
-            // Inconsistency
+            var msg = 'Missing'
+            var field = '_canonical_uri'
+            this.getLogger().info(
+              `${msg} "${field}":\n from: "${title}"\n ${resolvedKey}`
+            )
+            $tw.utils.alert(
+              name,
+              alertFieldFailed`${msg} "${field}" from: ${resolvedKey}">${title}</a>`
+            )
           }
           var canonicalKey = null
           if (
@@ -555,7 +565,15 @@ IPFS Import
             this.hasTitle(canonicalKey, title)
           ) {
             if (key === canonicalKey) {
-              // Cycle
+              var msg = 'Cycle from'
+              var field = '_canonical_uri'
+              this.getLogger().info(
+                `${msg} "${field}":\n from: "${title}"\n ${resolvedKey}`
+              )
+              $tw.utils.alert(
+                name,
+                alertFieldFailed`${msg} "${field}" from: ${resolvedKey}">${title}</a>`
+              )
             }
             keys.push(canonicalKey)
           }
@@ -571,7 +589,15 @@ IPFS Import
             importKey !== null &&
             canonicalKey === importKey
           ) {
-            // Inconsistency
+            var msg = 'Matching "_canonical_uri" and'
+            var field = '_import_uri'
+            this.getLogger().info(
+              `${msg} "${field}":\n from: "${title}"\n ${resolvedKey}`
+            )
+            $tw.utils.alert(
+              name,
+              alertFieldFailed`${msg} "${field}" from: ${resolvedKey}">${title}</a>`
+            )
           } else {
             if (
               importKey !== null &&
@@ -579,9 +605,24 @@ IPFS Import
               this.hasTitle(importKey, title)
             ) {
               if (key === importKey) {
-                // Cycle
+                var msg = 'Cycle from'
+                var field = '_import_uri'
+                this.getLogger().info(
+                  `${msg} "${field}":\n from: "${title}"\n ${resolvedKey}`
+                )
+                $tw.utils.alert(
+                  name,
+                  alertFieldFailed`${msg} "${field}" from: ${resolvedKey}">${title}</a>`
+                )
               } else {
-                this.processTiddler(keys, key, title, canonicalKey, importKey)
+                this.processTiddler(
+                  keys,
+                  key,
+                  resolvedKey,
+                  title,
+                  canonicalKey,
+                  importKey
+                )
               }
             }
           }
@@ -600,12 +641,15 @@ IPFS Import
   IpfsImport.prototype.processTiddler = function (
     keys,
     parentKey,
+    parentResolvedKey,
     title,
     canonicalKey,
     importKey
   ) {
     keys.push(importKey)
-    const imported = this.loaded.get(importKey)
+    const { resolvedKey: importResolvedKey, imported } = this.loaded.get(
+      importKey
+    )
     const tiddler = imported.get(title)
     var targetCanonicalUri = tiddler._canonical_uri
     targetCanonicalUri =
@@ -633,10 +677,26 @@ IPFS Import
       targetCanonicalKey !== null &&
       canonicalKey !== targetCanonicalKey
     ) {
-      // Inconsistency
+      var msg = 'Inconsistency with'
+      var field = '_canonical_uri'
+      this.getLogger().info(
+        `${msg} "${field}" from: "${title}"\n ${importResolvedKey} \n and "${title}", field: "${field}"\n ${parentResolvedKey}`
+      )
+      $tw.utils.alert(
+        name,
+        alertConditionFailed`${msg}: "${field}" from ${importResolvedKey}">${title}</a>, and ${parentResolvedKey}">${title}</a>, field: "${field}"`
+      )
     }
     if (targetCanonicalUri == null && nextImportUri !== null) {
-      // Inconsistency
+      var msg = 'Missing'
+      var field = '_canonical_uri'
+      this.getLogger().info(
+        `${msg} "${field}":\n from: "${title}"\n ${importResolvedKey}`
+      )
+      $tw.utils.alert(
+        name,
+        alertFieldFailed`${msg} "${field}" from: ${importResolvedKey}">${title}</a>`
+      )
     }
     var nextImportKey = null
     if (
@@ -650,7 +710,15 @@ IPFS Import
       nextImportKey !== null &&
       targetCanonicalKey === nextImportKey
     ) {
-      // Inconsistency
+      var msg = 'Matching "_canonical_uri" and'
+      var field = '_import_uri'
+      this.getLogger().info(
+        `${msg} "${field}":\n from: "${title}"\n ${importResolvedKey}`
+      )
+      $tw.utils.alert(
+        name,
+        alertFieldFailed`${msg} "${field}" from: ${importResolvedKey}">${title}</a>`
+      )
     } else {
       if (
         nextImportKey !== null &&
@@ -658,11 +726,20 @@ IPFS Import
         this.hasTitle(nextImportKey, title)
       ) {
         if (keys.indexOf(nextImportKey) !== -1) {
-          // Cycle
+          var msg = 'Cycle from'
+          var field = '_import_uri'
+          this.getLogger().info(
+            `${msg} "${field}":\n from: "${title}"\n ${importResolvedKey}`
+          )
+          $tw.utils.alert(
+            name,
+            alertFieldFailed`${msg} "${field}" from: ${importResolvedKey}">${title}</a>`
+          )
         } else {
           this.processTiddler(
             keys,
             importKey,
+            importResolvedKey,
             title,
             targetCanonicalKey,
             nextImportKey
