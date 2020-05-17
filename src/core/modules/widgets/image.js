@@ -141,16 +141,16 @@ Render this widget into the DOM
               var { normalizedUrl, resolvedUrl } = data
               var url =
                 resolvedUrl !== null
-                  ? resolvedUrl
+                  ? resolvedUrl.toString()
                   : normalizedUrl !== null
-                  ? normalizedUrl
+                  ? normalizedUrl.toString()
                   : null
               if (url !== null) {
                 switch (type) {
                   case 'application/pdf':
                     domNode = this.document.createElement('embed')
                     $tw.ipfs
-                      .loadToBase64(url.toString())
+                      .loadToBase64(url)
                       .then(loaded => {
                         if (
                           loaded !== undefined &&
@@ -171,7 +171,7 @@ Render this widget into the DOM
                     break
                   case 'image/svg+xml':
                     $tw.ipfs
-                      .loadToUtf8(url.toString())
+                      .loadToUtf8(url)
                       .then(loaded => {
                         if (
                           loaded !== undefined &&
@@ -193,7 +193,7 @@ Render this widget into the DOM
                     break
                   default:
                     $tw.ipfs
-                      .loadToBase64(url.toString())
+                      .loadToBase64(url)
                       .then(loaded => {
                         if (
                           loaded !== undefined &&

@@ -60,7 +60,8 @@ describe("WHATWG-URL", () => {
         parsed.pathname === "/" &&
         parsed.search === "" &&
         parsed.hash === "" &&
-        parsed.href == baseHttp.href
+        parsed.href == baseHttp.href &&
+        parsed.toString() == baseHttp.toString()
     ).toBeTruthy();
   });
   it("File protocol URL", () => {
@@ -73,7 +74,8 @@ describe("WHATWG-URL", () => {
         parsed.origin === "null" &&
         parsed.host === "" &&
         parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html" &&
-        parsed.href === baseFile.href
+        parsed.href === baseFile.href &&
+        parsed.toString() === baseFile.toString()
     ).toBeTruthy();
   });
   it("Useless base HTTP URL", () => {
@@ -86,7 +88,8 @@ describe("WHATWG-URL", () => {
         parsed.protocol === baseHttp.protocol &&
         parsed.hostname === "bluelightav.eth" &&
         parsed !== absolute &&
-        parsed.href === absolute.href
+        parsed.href === absolute.href &&
+        parsed.toString() === absolute.toString()
     ).toBeTruthy();
   });
   it("Relative URL", () => {

@@ -236,7 +236,11 @@ downloadType: the content type for the saved file
     var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')
     if (preferredSaver !== null && preferredSaver !== undefined) {
       var title = preferredSaver.getFieldString('text')
-      if (title !== null && title !== undefined && title.trim() !== '') {
+      title =
+        title === undefined || title == null || title.trim() === ''
+          ? null
+          : title.trim()
+      if (title !== null) {
         ignorePreferred = title
         // Process preferred saver
         if (

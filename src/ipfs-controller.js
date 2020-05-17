@@ -399,7 +399,7 @@ IPFS Controller
     const ipfs = policy.ipfs
     const provider = policy.provider
     // Store
-    this.ipfsClients.set(url.href, { ipfs, provider })
+    this.ipfsClients.set(url.toString(), { ipfs, provider })
     // Log
     this.getLogger().info(`New IPFS provider: "${policy.provider}"`)
     // Done

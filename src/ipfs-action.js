@@ -502,7 +502,7 @@ IPFS Action
       $tw.wiki.addTiddler(tiddler)
     }
     this.ipnsName = ipnsName
-    window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
+    window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
     return true
   }
 

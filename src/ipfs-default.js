@@ -20,12 +20,16 @@ IPFS Default
     var output = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/export')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         output = text
       }
     }
-    if (output === null) {
+    if (output == null) {
       output = $tw.utils.getIpfsDefaultExport()
     }
     return output
@@ -45,12 +49,16 @@ IPFS Default
     var protocol = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/protocol')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         protocol = text
       }
     }
-    if (protocol === null) {
+    if (protocol == null) {
       protocol = $tw.utils.getIpfsDefaultProtocol()
     }
     return protocol
@@ -70,21 +78,29 @@ IPFS Default
     var api = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/api')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         api = text
       }
     }
     if (api !== null) {
       tiddler = $tw.wiki.getTiddler(api)
       if (tiddler !== undefined && tiddler !== null) {
-        const text = tiddler.getFieldString('text')
-        if (text !== undefined && text !== null && text !== '') {
+        var text = tiddler.getFieldString('text')
+        text =
+          text === undefined || text == null || text.trim() === ''
+            ? null
+            : text.trim()
+        if (text !== null) {
           api = text
         }
       }
     }
-    if (api === null) {
+    if (api == null) {
       api = $tw.ipfs.getIpfsDefaultApi()
     }
     return api
@@ -97,21 +113,29 @@ IPFS Default
     var gateway = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/gateway')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         gateway = text
       }
     }
     if (gateway !== null) {
       tiddler = $tw.wiki.getTiddler(gateway)
-      if ($tw.wiki.getTiddler(gateway) !== undefined) {
-        const text = $tw.wiki.getTiddler(gateway).getFieldString('text')
-        if (text !== undefined && text !== null && text !== '') {
+      if (tiddler !== undefined && tiddler !== null) {
+        var text = tiddler.getFieldString('text')
+        text =
+          text === undefined || text == null || text.trim() === ''
+            ? null
+            : text.trim()
+        if (text !== null) {
           gateway = text
         }
       }
     }
-    if (gateway === null) {
+    if (gateway == null) {
       gateway = $tw.ipfs.getIpfsDefaultGateway()
     }
     return gateway
@@ -124,8 +148,12 @@ IPFS Default
     var ensDomain = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ens/domain')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         ensDomain = text
       }
     }
@@ -139,8 +167,12 @@ IPFS Default
     var ipnsName = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/name')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         ipnsName = text
       }
     }
@@ -154,8 +186,12 @@ IPFS Default
     var ipnsKey = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/key')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         ipnsKey = text
       }
     }
@@ -169,12 +205,16 @@ IPFS Default
     var verbose = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/verbose')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         verbose = text
       }
     }
-    if (verbose === null) {
+    if (verbose == null) {
       verbose = true // default, see ipfs-saver.tid
     } else {
       verbose = verbose === 'yes'
@@ -189,12 +229,16 @@ IPFS Default
     var unpin = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/unpin')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         unpin = text
       }
     }
-    if (unpin === null) {
+    if (unpin == null) {
       unpin = false // default, see ipfs-saver.tid
     } else {
       unpin = unpin === 'yes'
@@ -209,12 +253,16 @@ IPFS Default
     var policy = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/policy')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         policy = text
       }
     }
-    if (policy === null) {
+    if (policy == null) {
       policy = $tw.utils.getIpfsDefaultPolicy()
     }
     return policy
@@ -234,12 +282,16 @@ IPFS Default
     var provider = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/provider')
     if (tiddler !== undefined && tiddler !== null) {
-      const text = tiddler.getFieldString('text')
-      if (text !== undefined && text !== null && text !== '') {
+      var text = tiddler.getFieldString('text')
+      text =
+        text === undefined || text == null || text.trim() === ''
+          ? null
+          : text.trim()
+      if (text !== null) {
         provider = text
       }
     }
-    if (provider === null) {
+    if (provider == null) {
       provider = $tw.utils.getIpfsDefaultProvider()
     }
     return provider

@@ -106,7 +106,7 @@ IPFS Tiddler
     if (gateway !== undefined && gateway.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'gateway') {
-        this.getLogger().info('Gateway Relative URL:' + '\n ' + base)
+        this.getLogger().info(`Gateway Relative URL:\n ${base}`)
       }
     }
     // Policy preference
@@ -114,9 +114,9 @@ IPFS Tiddler
     if (policy !== undefined && policy.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-        this.getLogger().info('Origin base URL:' + '\n ' + base)
+        this.getLogger().info(`Origin base URL:\n ${base}`)
       } else {
-        this.getLogger().info('Gateway base URL:' + '\n ' + base)
+        this.getLogger().info(`Gateway base URL:\n ${base}`)
       }
     }
     // Unpin preference
@@ -149,8 +149,12 @@ IPFS Tiddler
           continue
         }
         var value = tiddler.getFieldString(field)
-        if (value !== undefined && value !== null && value.trim() !== '') {
-          this.ipfsPin(value.trim(), field)
+        value =
+          value === undefined || value == null || value.trim() === ''
+            ? null
+            : value.trim()
+        if (value !== null) {
+          this.ipfsPin(value, field)
         }
       }
       return true
@@ -167,7 +171,7 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info("Pinning: '" + field + "'.\n " + resolvedUrl)
+          self.getLogger().info(`Pinning: "${field}"\n ${resolvedUrl}`)
           $tw.ipfs
             .pinToIpfs(cid)
             .then(data => {
@@ -175,11 +179,7 @@ IPFS Tiddler
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
                 $tw.utils.alert(
                   name,
-                  'Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                    resolvedUrl +
-                    '">' +
-                    field +
-                    '</a>'
+                  `Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
                 )
               }
             })
@@ -205,14 +205,18 @@ IPFS Tiddler
         if (reservedFields.indexOf(field) !== -1) {
           continue
         }
-        const value = tiddler.getFieldString(field)
-        if (value !== undefined && value !== null && value.trim() !== '') {
+        var value = tiddler.getFieldString(field)
+        value =
+          value === undefined || value == null || value.trim() === ''
+            ? null
+            : value.trim()
+        if (value !== null) {
           if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
             if (field === '_canonical_uri' || field === '_import_uri') {
               continue
             }
           }
-          this.ipfsUnpin(value.trim(), field)
+          this.ipfsUnpin(value, field)
         }
       }
       return true
@@ -243,7 +247,7 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info("Unpinning: '" + field + "'.\n " + resolvedUrl)
+          self.getLogger().info(`Unpinning: "${field}\n ${resolvedUrl}`)
           $tw.ipfs
             .unpinFromIpfs(cid)
             .then(data => {
@@ -251,11 +255,7 @@ IPFS Tiddler
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
                 $tw.utils.alert(
                   name,
-                  'Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="' +
-                    resolvedUrl +
-                    '">' +
-                    field +
-                    '</a>'
+                  `Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
                 )
               }
             })
@@ -413,7 +413,6 @@ IPFS Tiddler
         var oldIpnsKey = null
         var oldNormalizedUrl = null
         var oldResolvedUrl = null
-        var oldUrl = null
         var oldValue = oldTiddler.getFieldString(field)
         try {
           var {
@@ -427,22 +426,22 @@ IPFS Tiddler
           $tw.utils.alert(name, error.message)
           return tiddler
         }
-        var oldUrl =
-          oldResolvedUrl !== null
-            ? oldResolvedUrl.href
-            : oldNormalizedUrl !== null
-            ? oldNormalizedUrl.href
-            : null
-        if (oldUrl !== null && field === '_canonical_uri') {
+        oldResolvedUrl =
+          oldResolvedUrl === undefined ||
+          oldResolvedUrl == null ||
+          oldResolvedUrl.toString().trim() === ''
+            ? null
+            : oldResolvedUrl.toString().trim()
+        if (oldResolvedUrl !== null && field === '_canonical_uri') {
           var content = tiddler.getFieldString('text')
           // Attachment
           if (info.encoding === 'base64' || type === 'image/svg+xml') {
             // Embed
             try {
               if (info.encoding === 'base64') {
-                content = await $tw.ipfs.loadToBase64(oldUrl)
+                content = await $tw.ipfs.loadToBase64(oldResolvedUrl)
               } else {
-                content = await $tw.ipfs.loadToUtf8(oldUrl)
+                content = await $tw.ipfs.loadToUtf8(oldResolvedUrl)
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,
@@ -450,11 +449,7 @@ IPFS Tiddler
                 fields: [{ key: 'text', value: content.data }]
               })
               this.getLogger().info(
-                'Embed attachment: ' +
-                  content.data.length +
-                  ' bytes' +
-                  '\n ' +
-                  oldUrl
+                `Embed attachment: ${content.data.length} bytes\n ${oldResolvedUrl}`
               )
             } catch (error) {
               this.getLogger().error(error)
@@ -497,22 +492,22 @@ IPFS Tiddler
         return tiddler
       }
       // Store
-      var url =
-        resolvedUrl !== null
-          ? resolvedUrl.href
-          : normalizedUrl !== null
-          ? normalizedUrl.href
-          : null
+      resolvedUrl =
+        resolvedUrl === undefined ||
+        resolvedUrl == null ||
+        resolvedUrl.toString().trim() === ''
+          ? null
+          : resolvedUrl.toString().trim()
       if (field === '_canonical_uri') {
-        canonicalUri = url
+        canonicalUri = resolvedUrl
         canonicalCid = cid
       }
       if (field === '_import_uri') {
-        importUri = url
+        importUri = resolvedUrl
         importCid = cid
       }
       if (field === '_export_uri') {
-        exportUri = url
+        exportUri = resolvedUrl
         exportCid = cid
       }
       // Previous values if any

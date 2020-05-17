@@ -61,9 +61,9 @@ IPFS Saver
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      logger.info('Origin base URL:' + '\n ' + base)
+      logger.info(`Origin base URL:\n ${base}`)
     } else {
-      logger.info('Gateway base URL:' + '\n ' + base)
+      logger.info(`Gateway base URL:\n ${base}`)
     }
   }
 
@@ -138,7 +138,7 @@ IPFS Saver
             var { cid: ipnsCid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(
               true,
               false,
-              '/' + ipnsKeyword + '/' + identifier
+              `/${ipnsKeyword}/${identifier}`
             )
           } catch (error) {
             this.getLogger().error(error)
@@ -162,11 +162,11 @@ IPFS Saver
         }
       }
       // Upload  current document
-      this.getLogger().info('Uploading wiki: ' + text.length + ' bytes')
+      this.getLogger().info(`Uploading wiki: ${text.length} bytes`)
       // Add
       const { added } = await $tw.ipfs.addToIpfs(text)
       // Default next
-      nextWiki.pathname = '/' + ipfsKeyword + '/' + added
+      nextWiki.pathname = `/${ipfsKeyword}/${added}`
       // Pin
       try {
         await $tw.ipfs.pinToIpfs(added)
@@ -176,11 +176,11 @@ IPFS Saver
       }
       // Publish to IPNS
       if (ipnsKey !== null && ipnsName !== null) {
-        $tw.utils.alert(name, 'Publishing IPNS name: ' + ipnsName)
+        $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
-          nextWiki.pathname = '/' + ipnsKeyword + '/' + ipnsKey
-          $tw.utils.alert(name, 'Successfully Published IPNS name: ' + ipnsName)
+          nextWiki.pathname = `/${ipnsKeyword}/${ipnsKey}`
+          $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
         } catch (error) {
           this.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
@@ -190,11 +190,11 @@ IPFS Saver
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
-          $tw.utils.alert(name, 'Publishing to ENS: ' + ensDomain)
+          $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setEns(ensDomain, added)
           nextWiki.protocol = 'https:'
           nextWiki.host = ensDomain
-          $tw.utils.alert(name, 'Successfully published to ENS: ' + ensDomain)
+          $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
           this.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
@@ -230,7 +230,7 @@ IPFS Saver
         nextWiki.hostname !== wiki.hostname ||
         nextWiki.pathname !== wiki.pathname
       ) {
-        window.location.assign(nextWiki.href)
+        window.location.assign(nextWiki.toString())
       }
     } catch (error) {
       this.getLogger().error(error)

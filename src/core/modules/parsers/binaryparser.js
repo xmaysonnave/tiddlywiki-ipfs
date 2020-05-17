@@ -102,9 +102,9 @@ The binary parser parses a binary tiddler into a warning message and download li
             var { normalizedUrl, resolvedUrl } = data
             var url =
               resolvedUrl !== null
-                ? resolvedUrl.href
+                ? resolvedUrl.toString()
                 : normalizedUrl !== null
-                ? normalizedUrl.href
+                ? normalizedUrl.toString()
                 : null
             if (url !== null) {
               link.attributes.href = {

@@ -76,9 +76,9 @@ The PDF parser embeds a PDF viewer
             var { normalizedUrl, resolvedUrl } = data
             var url =
               resolvedUrl !== null
-                ? resolvedUrl.href
+                ? resolvedUrl.toString()
                 : normalizedUrl !== null
-                ? normalizedUrl.href
+                ? normalizedUrl.toString()
                 : null
             if (url !== null) {
               $tw.ipfs

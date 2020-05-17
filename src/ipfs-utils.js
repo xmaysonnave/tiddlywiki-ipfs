@@ -187,9 +187,11 @@ IPFS utils
   }
 
   exports.getContentType = function (title, type) {
-    if (type !== undefined && type !== null) {
-      type = type.trim()
-    } else {
+    type =
+      type === undefined || type == null || type.trim() === ''
+        ? null
+        : type.trim()
+    if (type == null) {
       type = 'text/vnd.tiddlywiki'
     }
     var info = $tw.config.contentTypeInfo[type]
@@ -197,11 +199,7 @@ IPFS utils
       const url = $tw.ipfs.getDocumentUrl()
       url.hash = title
       this.getLogger().info(
-        "Unknown Content-Type: '" +
-          type +
-          "', default to: 'text/vnd.tiddlywiki':" +
-          '\n ' +
-          url
+        `Unknown Content-Type: "${type}", default: "text/vnd.tiddlywiki":\n ${url}`
       )
       type = 'text/vnd.tiddlywiki'
       info = $tw.config.contentTypeInfo[type]
