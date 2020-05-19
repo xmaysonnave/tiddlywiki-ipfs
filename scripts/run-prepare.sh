@@ -2,8 +2,9 @@
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
 # plugin directory
+mkdir -p ./build/plugins/ipfs/core > /dev/null 2>&1
 mkdir -p ./build/plugins/ipfs/files > /dev/null 2>&1
-# ipfs scripts
+# core scripts
 cp -R ./src/core/* ./build/plugins/ipfs/core > /dev/null 2>&1
 # don't copy sub-directories, they are meant to be bundled
 cp ./src/* ./build/plugins/ipfs > /dev/null 2>&1

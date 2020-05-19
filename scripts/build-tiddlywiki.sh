@@ -31,7 +31,7 @@ cp -R ./tiddlers/dev/* ./build/tiddlers > /dev/null 2>&1
 # metadata
 cp ./metadata/dev-bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
 
-# build prod wiki
+# build dev wiki
 npx tiddlywiki build \
   --output wiki \
   --build \

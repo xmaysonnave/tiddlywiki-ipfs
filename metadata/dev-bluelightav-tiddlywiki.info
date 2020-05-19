@@ -1,41 +1,42 @@
 {
-	"plugins": [
-		"tiddlywiki/browser-sniff",
-		"tiddlywiki/codemirror",
-		"tiddlywiki/codemirror-closebrackets",
-		"tiddlywiki/codemirror-closetag",
-		"tiddlywiki/codemirror-fullscreen-editing",
-		"tiddlywiki/codemirror-keymap-sublime-text",
-		"tiddlywiki/codemirror-mode-css",
-		"tiddlywiki/codemirror-mode-htmlembedded",
-		"tiddlywiki/codemirror-mode-htmlmixed",
-		"tiddlywiki/codemirror-mode-javascript",
-		"tiddlywiki/codemirror-mode-markdown",
-		"tiddlywiki/codemirror-mode-xml",
-		"tiddlywiki/codemirror-search-replace",
-		"tiddlywiki/menubar",
-		"tiddlywiki/markdown",
-		"tiddlywiki/highlight"
-	],
-	"includeWikis": [
-	],
-	"themes": [
-		"tiddlywiki/vanilla",
-		"tiddlywiki/snowwhite"
-	],
-	"build": {
-		"dev": [
-			"--rendertiddler",
-			"$:/core/save/all",
-			"dev.html",
-			"text/plain"
-		],
-		"plugin": [
-			"--render",
-			"$:/plugins/ipfs",
-			"tiddlywiki-ipfs-plugin.json",
-			"text/plain",
-			"$:/core/templates/json-tiddler"
-		]
-	}
+  "plugins": [
+    "tiddlywiki/browser-sniff",
+    "tiddlywiki/codemirror",
+    "tiddlywiki/codemirror-closebrackets",
+    "tiddlywiki/codemirror-closetag",
+    "tiddlywiki/codemirror-fullscreen-editing",
+    "tiddlywiki/codemirror-keymap-sublime-text",
+    "tiddlywiki/codemirror-mode-css",
+    "tiddlywiki/codemirror-mode-htmlembedded",
+    "tiddlywiki/codemirror-mode-htmlmixed",
+    "tiddlywiki/codemirror-mode-javascript",
+    "tiddlywiki/codemirror-mode-markdown",
+    "tiddlywiki/codemirror-mode-xml",
+    "tiddlywiki/codemirror-search-replace",
+    "tiddlywiki/internals",
+    "tiddlywiki/menubar",
+    "tiddlywiki/markdown",
+    "tiddlywiki/highlight"
+  ],
+  "includeWikis": [
+  ],
+  "themes": [
+    "tiddlywiki/vanilla",
+    "tiddlywiki/snowwhite"
+  ],
+  "build": {
+    "dev": [
+      "--rendertiddler",
+      "$:/core/save/all",
+      "dev.html",
+      "text/plain"
+    ],
+    "plugin": [
+      "--render",
+      "$:/plugins/ipfs",
+      "tiddlywiki-ipfs-plugin.json",
+      "text/plain",
+      "$:/core/templates/json-tiddler"
+    ]
+  }
 }
