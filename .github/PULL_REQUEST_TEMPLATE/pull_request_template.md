@@ -1,14 +1,10 @@
 ---
-
 name: Pull Request
 about: Propose a change to IPFS with TiddlyWiki
 title: ''
 labels: ''
 assignees: ''
-
----
-
-A clear and detailed description of what the problem is.
+---A clear and detailed description of what the problem is.
 
 **Describe the solution you are proposing**
 A clear and detailed description of the changes you are proposing. Include images to show visual changes.

@@ -1,14 +1,10 @@
 ---
-
 name: Feature request
 about: Suggest an idea for IPFS with TiddlyWiki
 title: '[IDEA]'
 labels: ''
 assignees: ''
-
----
-
-A clear and detailed description of what the problem is.
+---A clear and detailed description of what the problem is.
 
 **Describe the solution you'd like**
 A clear and detailed description of what you want to happen.

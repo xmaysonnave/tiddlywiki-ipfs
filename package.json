@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200519258",
+  "version": "v0.3.0-200519332",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -87,12 +87,13 @@
     "gzipper": "^3.7.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
-    "lint-staged": "^10.2.2",
+    "lint-staged": "^10.2.4",
     "loglevel": "^1.6.8",
     "prettier": "^2.0.5",
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.3.0",
     "pretty-quick": "^2.0.1",
-    "tiddlywiki": "^5.1.22"
+    "tiddlywiki": "^5.1.22",
+    "typescript": "^3.9.2"
   }
 }
