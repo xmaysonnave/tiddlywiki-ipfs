@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200519362",
+  "version": "v0.3.0-200519377",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -60,7 +60,6 @@
     "cids": "^0.8.0",
     "content-hash": "^2.5.2",
     "ipfs-provider": "^1.0.0",
-    "npm": "^6.14.5",
     "universal-url": "^2.0.0",
     "universal-url-lite": "^2.0.0",
     "window-or-global": "^1.0.1"
