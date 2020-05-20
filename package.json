@@ -27,7 +27,9 @@
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "test": "./scripts/test.sh"
+    "test": "./scripts/test.sh",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "husky": {
     "hooks": {
@@ -62,7 +64,8 @@
     "ipfs-provider": "^1.0.0",
     "universal-url": "^2.0.0",
     "universal-url-lite": "^2.0.0",
-    "window-or-global": "^1.0.1"
+    "window-or-global": "^1.0.1",
+    "snyk": "^1.323.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
@@ -94,5 +97,6 @@
     "pretty-quick": "^2.0.1",
     "tiddlywiki": "^5.1.22",
     "typescript": "^3.9.3"
-  }
+  },
+  "snyk": true
 }
