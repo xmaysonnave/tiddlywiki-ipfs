@@ -11,7 +11,7 @@ $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 <$list filter="[all[current]has[_canonical_uri]]">
   <div class="tc-message-box">
     <<lingo External/Hint>>
-    <p><$ipfslink caption={{!!_canonical_uri}} value={{!!_canonical_uri}} tiddler=<<currentTiddler>>/></p>
+    <p><$ipfslink caption={{!!_canonical_uri}} value={{!!_canonical_uri}} field="_canonical_uri" tiddler=<<currentTiddler>>/></p>
   </div>
 </$list>
 
