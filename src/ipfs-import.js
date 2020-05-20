@@ -89,6 +89,11 @@ IPFS Import
   }
 
   IpfsImport.prototype.hasTiddler = function (key, title) {
+    key =
+      key === undefined || key == null || key.trim() === '' ? null : key.trim()
+    if (key == null) {
+      return false
+    }
     const { imported } = this.loaded.get(key)
     if (imported !== undefined) {
       const tiddler = imported.get(title)
@@ -572,6 +577,8 @@ IPFS Import
         }
         const keys = []
         const tiddler = imported.get(title)
+        var type = tiddler.type
+        var info = $tw.config.contentTypeInfo[type]
         var canonicalUri = tiddler._canonical_uri
         canonicalUri =
           canonicalUri === undefined ||
@@ -586,42 +593,22 @@ IPFS Import
           importUri.trim() === ''
             ? null
             : importUri.trim()
-        if (canonicalUri !== null || importUri !== null) {
-          var canonicalKey = null
-          if (
-            canonicalUri !== null &&
-            this.notResolved.indexOf(canonicalUri) === -1
-          ) {
-            canonicalKey = this.resolved.get(canonicalUri)
-          }
-          if (
-            canonicalKey !== null &&
-            this.notLoaded.indexOf(canonicalKey) === -1 &&
-            this.hasTiddler(canonicalKey, title)
-          ) {
-            if (key === canonicalKey) {
-              var msg = 'Cycle Graph:'
-              var field = '_canonical_uri'
-              this.getLogger().info(
-                `${msg} "${field}" from ${title}"\n ${resolvedKey}`
-              )
-              $tw.utils.alert(
-                name,
-                alertFieldFailed`${msg} "${field}" from ${resolvedKey}">${title}</a>`
-              )
-            } else {
-              keys.push(canonicalKey)
-            }
-            var importKey = null
+        if (info.encoding !== 'base64' && tiddler.type !== 'image/svg+xml') {
+          if (canonicalUri !== null || importUri !== null) {
+            var canonicalKey
             if (
-              importUri !== null &&
-              this.notResolved.indexOf(importUri) === -1
+              canonicalUri !== null &&
+              this.notResolved.indexOf(canonicalUri) === -1
             ) {
-              importKey = this.resolved.get(importUri)
+              canonicalKey = this.resolved.get(canonicalUri)
             }
-            if (canonicalKey !== null && importKey !== null) {
-              if (canonicalUri == null && importUri !== null) {
-                var msg = 'Missing:'
+            if (
+              canonicalKey !== undefined &&
+              this.notLoaded.indexOf(canonicalKey) === -1 &&
+              this.hasTiddler(canonicalKey, title)
+            ) {
+              if (key === canonicalKey) {
+                var msg = 'Cycle Graph:'
                 var field = '_canonical_uri'
                 this.getLogger().info(
                   `${msg} "${field}" from ${title}"\n ${resolvedKey}`
@@ -630,37 +617,61 @@ IPFS Import
                   name,
                   alertFieldFailed`${msg} "${field}" from ${resolvedKey}">${title}</a>`
                 )
-              } else if (canonicalKey === importKey) {
-                var msg = 'Matching:'
-                var field = '"_canonical_uri" and "_import_uri"'
-                this.getLogger().info(
-                  `${msg} ${field} from "${title}"\n ${resolvedKey}`
-                )
-                $tw.utils.alert(
-                  name,
-                  alertFieldFailed`${msg} ${field} from ${resolvedKey}">${title}</a>`
-                )
-              } else if (key === importKey) {
-                var msg = 'Cycle Graph:'
-                var field = '_import_uri'
-                this.getLogger().info(
-                  `${msg} "${field}" from "${title}"\n ${resolvedKey}`
-                )
-                $tw.utils.alert(
-                  name,
-                  alertFieldFailed`${msg} "${field}" from ${resolvedKey}">${title}</a>`
-                )
               } else {
-                keys.push(key)
-                this.processTiddler(
-                  keys,
-                  resolvedKey,
-                  title,
-                  canonicalKey,
-                  importKey
-                )
+                keys.push(canonicalKey)
+              }
+              var importKey = null
+              if (
+                importUri !== null &&
+                this.notResolved.indexOf(importUri) === -1
+              ) {
+                importKey = this.resolved.get(importUri)
+              }
+              if (canonicalKey !== undefined && importKey !== undefined) {
+                if (canonicalUri == null && importUri !== null) {
+                  var msg = 'Missing:'
+                  var field = '_canonical_uri'
+                  this.getLogger().info(
+                    `${msg} "${field}" from ${title}"\n ${resolvedKey}`
+                  )
+                  $tw.utils.alert(
+                    name,
+                    alertFieldFailed`${msg} "${field}" from ${resolvedKey}">${title}</a>`
+                  )
+                } else if (canonicalKey === importKey) {
+                  var msg = 'Matching:'
+                  var field = '"_canonical_uri" and "_import_uri"'
+                  this.getLogger().info(
+                    `${msg} ${field} from "${title}"\n ${resolvedKey}`
+                  )
+                  $tw.utils.alert(
+                    name,
+                    alertFieldFailed`${msg} ${field} from ${resolvedKey}">${title}</a>`
+                  )
+                } else if (key === importKey) {
+                  var msg = 'Cycle Graph:'
+                  var field = '_import_uri'
+                  this.getLogger().info(
+                    `${msg} "${field}" from "${title}"\n ${resolvedKey}`
+                  )
+                  $tw.utils.alert(
+                    name,
+                    alertFieldFailed`${msg} "${field}" from ${resolvedKey}">${title}</a>`
+                  )
+                } else {
+                  keys.push(key)
+                  this.processTiddler(
+                    keys,
+                    resolvedKey,
+                    title,
+                    canonicalKey,
+                    importKey
+                  )
+                }
               }
             }
+          } else {
+            keys.push(key)
           }
         } else {
           keys.push(key)
@@ -714,7 +725,10 @@ IPFS Import
       nextImportUri.trim() === ''
         ? null
         : nextImportUri.trim()
-    if (targetCanonicalKey !== null && canonicalKey !== targetCanonicalKey) {
+    if (
+      targetCanonicalKey !== undefined &&
+      canonicalKey !== targetCanonicalKey
+    ) {
       var msg = 'Inconsistency:'
       var field = '_canonical_uri'
       this.getLogger().info(
@@ -742,9 +756,9 @@ IPFS Import
       ) {
         nextImportKey = this.resolved.get(nextImportUri)
       }
-      if (canonicalKey !== null && nextImportKey !== null) {
+      if (canonicalKey !== undefined && nextImportKey !== undefined) {
         if (
-          targetCanonicalKey !== null &&
+          targetCanonicalKey !== undefined &&
           targetCanonicalKey === nextImportKey
         ) {
           var msg = 'Matching:'
@@ -866,6 +880,9 @@ IPFS Import
     var merged = null
     var currentTiddler = null
     const key = this.resolved.get(uri)
+    if (key === undefined) {
+      return null
+    }
     const { imported } = this.loaded.get(key)
     if (imported === undefined) {
       return null
@@ -911,9 +928,9 @@ IPFS Import
     // Tags,
     // We use the target tiddler to manage complex tags like [[IPFS Documentation]]
     if (currentTiddler !== undefined && currentTiddler !== null) {
-      var tags = (currentTiddler.fields.tags || []).slice(0)
-      for (var i = 0; i < tags.length; i++) {
-        var tag = tags[i]
+      var currentTags = (currentTiddler.fields.tags || []).slice(0)
+      for (var i = 0; i < currentTags.length; i++) {
+        var tag = currentTags[i]
         if (tags.includes(tag) === false) {
           tags = `${tags} ${tag}`
         }
