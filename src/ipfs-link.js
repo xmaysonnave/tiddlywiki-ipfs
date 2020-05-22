@@ -81,7 +81,7 @@ IPFS link widget
     } else {
       this.renderText(parent, nextSibling)
       $tw.ipfs
-        .resolveUrl(false, false, this.value, this.base)
+        .resolveUrl(false, false, this.value)
         .then(data => {
           var { normalizedUrl } = data
           if (normalizedUrl !== null) {
@@ -286,7 +286,7 @@ IPFS link widget
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     var self = this
     $tw.ipfs
-      .resolveUrl(true, true, this.value, this.base)
+      .resolveUrl(true, true, this.value)
       .then(data => {
         var { resolvedUrl } = data
         if (resolvedUrl !== null) {
@@ -358,20 +358,6 @@ IPFS link widget
     const tiddler = $tw.wiki.getTiddler(this.tiddler)
     if (this.value === undefined) {
       this.value = tiddler.getFieldString(this.field)
-    }
-    if (this.field !== undefined && this.field === '_canonical_uri') {
-      var importUri = tiddler.getFieldString('_import_uri')
-      importUri =
-        importUri === undefined || importUri == null || importUri.trim() === ''
-          ? null
-          : importUri.trim()
-      if (importUri !== null) {
-        try {
-          this.base = $tw.ipfs.getUrl(importUri)
-        } catch (error) {
-          this.getLogger().error(error)
-        }
-      }
     }
     this.target = this.getAttribute('target') || '_blank'
     this.rel = this.getAttribute('rel') || 'noopener'

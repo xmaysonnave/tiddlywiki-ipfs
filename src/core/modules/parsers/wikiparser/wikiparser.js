@@ -75,11 +75,12 @@ wikiparser
           : importUri.trim()
       if (canonicalUri !== null || importUri !== null) {
         var ipfsImport = new IpfsImport()
-        var title = options.tiddler.fields.title
-        ipfsImport.import(canonicalUri, importUri, title).catch(error => {
-          self.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-        })
+        ipfsImport
+          .import(canonicalUri, importUri, options.tiddler)
+          .catch(error => {
+            self.getLogger().error(error)
+            $tw.utils.alert(name, error.message)
+          })
         text = $tw.language.getRawString('LazyLoadingWarning')
       }
     }

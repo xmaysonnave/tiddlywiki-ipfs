@@ -359,7 +359,7 @@ IPFS Tiddler
       $tw.utils.alert(name, 'Nothing to refresh here...')
       return true
     }
-    // Reload Attachment content
+    // Reload Attachment
     if (
       (info.encoding === 'base64' || type === 'image/svg+xml') &&
       canonicalUri !== null &&
@@ -375,7 +375,7 @@ IPFS Tiddler
     // Async Import
     var ipfsImport = new IpfsImport()
     if (canonicalUri !== null || importUri !== null) {
-      ipfsImport.import(canonicalUri, importUri, title).catch(error => {
+      ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
         self.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })

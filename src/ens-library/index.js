@@ -1,5 +1,7 @@
 import CID from 'cids'
+
 import contentHash from 'content-hash'
+
 import root from 'window-or-global'
 ;(function () {
   /*jslint node: true, browser: true*/
