@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200522447",
+  "version": "v0.3.0-200522451",
   "description": "IPFS with TiddlyWiki",
   "main": "ipfs-bundle.js",
   "directories": {
@@ -19,8 +19,8 @@
     "build-all-noclone": "./scripts/build-all-noclone.sh",
     "build": "./scripts/build.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
-    "eslint": "eslint \"src/**/*.js\" \"scripts/**/*.js\"",
-    "eslint:fix": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --fix",
+    "eslint": "eslint \"src/**/*.js\"",
+    "eslint:fix": "eslint \"src/**/*.js\" --fix",
     "format": "prettier-standard --lint --format",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
