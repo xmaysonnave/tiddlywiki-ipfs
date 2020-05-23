@@ -85,7 +85,7 @@ import { URL } from 'universal-url'
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
         base = this.getDocumentUrl()
         if (base.protocol === 'file:') {
-          base = this.getIpfsGatewayUrl()
+          return this.getUrl(base.toString())
         }
       }
     } catch (error) {

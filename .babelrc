@@ -4,10 +4,8 @@
       "@babel/preset-env", {
         "targets": {
           "browsers": [
-            ">1%",
-            "last 4 versions",
-            "Firefox ESR",
-            "not ie < 11"
+            "chrome >= 58",
+            "firefox >= 56.2"
           ]
         }
       }

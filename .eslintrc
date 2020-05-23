@@ -15,11 +15,6 @@
     "sourceType": "module",
     "ecmaFeatures": {}
   },
-  "settings": {
-    "import/extensions": [
-      ".js"
-    ]
-  },
   "env": {
     "es6": true,
     "node": true,
@@ -29,35 +24,69 @@
     "$tw": true
   },
   "rules": {
-    "linebreak-style": 0,
-    "arrow-parens": [
-      "off"
+    "spaced-comment": 0,
+    "no-redeclare": 0,
+    "flowtype/boolean-style": [
+      2,
+      "boolean"
     ],
-    "spaced-comment": "off",
-    "no-redeclare": "off",
-    "consistent-return": "off",
-    "no-use-before-define": "off",
-    "class-methods-use-this": "off",
-    "global-require": "off",
-    "no-underscore-dangle": "off",
-    "no-unused-expressions": "off",
     "flowtype/define-flow-type": 1,
-    "flowtype/use-flow-type": 1,
-    "generator-star-spacing": "off",
-    "import/no-unresolved": "off",
-    "import/no-extraneous-dependencies": "off",
-    "no-console": "off",
-    "promise/no-native": "off",
-    "no-loop-func": "off",
-    "guard-for-in": "off",
-    "react/no-multi-comp": "off",
-    "no-param-reassign": "off",
-    "no-restricted-syntax": "off",
-    "no-undef": [
-      "error", {
-        "typeof": false
+    "flowtype/delimiter-dangle": [
+      2,
+      "never"
+    ],
+    "flowtype/generic-spacing": [
+      2,
+      "never"
+    ],
+    "flowtype/no-mixed": 2,
+    "flowtype/no-primitive-constructor-types": 2,
+    "flowtype/no-types-missing-file-annotation": 2,
+    "flowtype/no-weak-types": 2,
+    "flowtype/object-type-delimiter": [
+      2,
+      "comma"
+    ],
+    "flowtype/require-parameter-type": 0,
+    "flowtype/require-readonly-react-props": 0,
+    "flowtype/require-return-type": [
+      0,
+      "always",
+      {
+        "annotateUndefined": "never"
       }
     ],
-    "max-len": "off"
+    "flowtype/require-valid-file-annotation": 2,
+    "flowtype/semi": [
+      2,
+      "always"
+    ],
+    "flowtype/space-after-type-colon": [
+      2,
+      "always"
+    ],
+    "flowtype/space-before-generic-bracket": [
+      2,
+      "never"
+    ],
+    "flowtype/space-before-type-colon": [
+      2,
+      "never"
+    ],
+    "flowtype/type-id-match": [
+      2,
+      "^([A-Z][a-z0-9]+)+Type$"
+    ],
+    "flowtype/union-intersection-spacing": [
+      2,
+      "always"
+    ],
+    "flowtype/use-flow-type": 1,
+    "flowtype/valid-syntax": 1
+  },
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": false
+    }
   }
 }
