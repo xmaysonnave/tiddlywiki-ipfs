@@ -1,10 +1,16 @@
-## `IPFS with TiddyWiki`
+<p align="center">
+  IPFS with TiddyWiki
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
+  <a href="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs"><img alt="Build Status" src="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=master"></a>
+  <a href="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs"><img alt="Vulnerabilities" src="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg"></a>
+  <a href="CODE_OF_CONDUCT.md"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg"></a>
+</p>
 
 <a name="ipfs-with-tiddlywiki"/>
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-
-[![Build Status](https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=master)](https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs) [![Known Vulnerabilities](https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg)](https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs)
 
 `IPFS with TiddyWiki` is a [TiddlyWiki](https://tiddlywiki.com/) plugin who aims to help users, editors and developers to save their wikis and attachments over [IPFS](https://ipfs.io).
 
