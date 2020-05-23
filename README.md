@@ -1,5 +1,5 @@
 <p align="center">
-  IPFS with TiddyWiki
+  <h2>IPFS with TiddyWiki</h2>
 </p>
 
 <p align="center">
