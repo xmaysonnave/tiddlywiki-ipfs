@@ -1,6 +1,4 @@
-<p align="center">
-  <h2>IPFS with TiddyWiki</h2>
-</p>
+<h1 align="center>IPFS with TiddyWiki</h1>
 
 <p align="center">
   <a href="LICENSE"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
