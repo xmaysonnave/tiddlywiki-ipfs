@@ -170,10 +170,12 @@ IPFS Import
     importUri,
     tiddler
   ) {
+    const self = this
     var loadedAdded = 0
     var loadedRemoved = 0
     var added = 0
     var updated = 0
+    var deleted = 0
     canonicalUri =
       canonicalUri === undefined ||
       canonicalUri == null ||
@@ -195,7 +197,6 @@ IPFS Import
     this.resolved = new Map()
     this.notResolved = []
     this.merged = new Map()
-    this.root = null
     try {
       // Load and prepare imported tiddlers to be processed
       const url = $tw.ipfs.getDocumentUrl()
@@ -270,18 +271,48 @@ IPFS Import
         }
       }
       // Process deleted
-      // $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, tiddler) {
-      //   var value = tiddler.getFieldString("_canonical_uri");
-      //   if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
-      //     $tw.wiki.deleteTiddler(title);
-      //     return;
-      //   }
-      //   var value = tiddler.getFieldString("_import_uri");
-      //   if (value !== undefined && value !== null && value === importedUri && processed.indexOf(title) === -1) {
-      //     $tw.wiki.deleteTiddler(title);
-      //     return;
-      //   }
-      // });
+      var reportDeletedMsg = "''Successfully Deleted''"
+      var reportDeleted = ''
+      $tw.wiki.forEachTiddler({ includeSystem: true }, function (
+        title,
+        tiddler
+      ) {
+        var value = tiddler.getFieldString('_canonical_uri')
+        if (
+          value !== undefined &&
+          value !== null &&
+          value === self.importUri &&
+          self.merged.get(title) === undefined
+        ) {
+          if (
+            self.host !== null &&
+            self.merged.get(self.host.fields.title) === undefined &&
+            self.host.fields.title !== title
+          ) {
+            $tw.wiki.deleteTiddler(title)
+            reportDeleted = `${reportDeleted}[[${title}]]`
+            deleted += 1
+          }
+          return
+        }
+        var value = tiddler.getFieldString('_import_uri')
+        if (
+          value !== undefined &&
+          value !== null &&
+          value === self.importUri &&
+          self.merged.get(title) === undefined
+        ) {
+          if (
+            self.host !== null &&
+            self.merged.get(self.host.fields.title) === undefined &&
+            self.host.fields.title !== title
+          ) {
+            $tw.wiki.deleteTiddler(title)
+            reportDeleted = `${reportDeleted}[[${title}]]`
+            deleted += 1
+          }
+        }
+      })
       if (this.merged.size > 0) {
         $tw.utils.alert(
           name,
@@ -289,6 +320,8 @@ IPFS Import
             added +
             ', Updated: ' +
             updated +
+            ', Deleted: ' +
+            deleted +
             ' Tiddlers...'
         )
       }
@@ -312,6 +345,10 @@ IPFS Import
             ]
           })
         } else {
+          var value = `${reportMsg}\n\n{{{${reportImported}}}}`
+          if (reportDeleted.trim() !== '') {
+            value = `${value}\n\n${reportDeletedMsg}\n\n{{{${reportDeleted}}}}`
+          }
           updatedTiddler = $tw.utils.updateTiddler({
             tiddler: updatedTiddler,
             fields: [
@@ -321,7 +358,7 @@ IPFS Import
               },
               {
                 key: 'text',
-                value: `${reportMsg}\n\n{{{${reportImported}}}}`
+                value: value
               }
             ]
           })
@@ -340,7 +377,6 @@ IPFS Import
     this.resolved = null
     this.notResolved = null
     this.merged = null
-    this.root = null
   }
 
   IpfsImport.prototype.load = async function (
@@ -988,10 +1024,6 @@ IPFS Import
       return null
     }
     var tags = tiddler.tags !== undefined ? tiddler.tags : ''
-    // Imported root
-    if (this.host !== null && this.root == null) {
-      this.root = title
-    }
     // Retrieve target host Tiddler
     if (this.host !== null && this.host.fields.title === title) {
       currentTiddler = this.host

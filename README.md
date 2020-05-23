@@ -9,7 +9,6 @@
 
 <a name="ipfs-with-tiddlywiki"/>
 
-
 `IPFS with TiddyWiki` is a [TiddlyWiki](https://tiddlywiki.com/) plugin who aims to help users, editors and developers to save their wikis and attachments over [IPFS](https://ipfs.io).
 
 This plugin provides the following features:
