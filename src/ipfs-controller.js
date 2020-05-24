@@ -395,7 +395,7 @@ IPFS Controller
       }
     }
     // Build a new HTTP client
-    const policy = await this.ipfsWrapper.getHttpIpfsClient(url.toString())
+    const policy = await this.ipfsWrapper.getHttpIpfsClient(url)
     const ipfs = policy.ipfs
     const provider = policy.provider
     // Store

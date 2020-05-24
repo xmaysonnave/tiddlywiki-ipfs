@@ -53,7 +53,7 @@ import root from 'window-or-global'
     apiUrl =
       apiUrl === undefined || apiUrl == null || apiUrl.toString().trim() === ''
         ? null
-        : apiUrl.toString().trim()
+        : apiUrl
     if (apiUrl == null) {
       throw new Error('Undefined IPFS API URL...')
     }
@@ -95,7 +95,7 @@ import root from 'window-or-global'
     apiUrl =
       apiUrl === undefined || apiUrl == null || apiUrl.toString().trim() === ''
         ? null
-        : apiUrl.toString().trim()
+        : apiUrl
     if (apiUrl == null) {
       throw new Error('Undefined IPFS API URL...')
     }
@@ -106,11 +106,20 @@ import root from 'window-or-global'
       this.getLogger().info(
         `Processing connection to IPFS API URL:\n ${apiUrl}`
       )
+      var port = apiUrl.port
+      if (port === undefined || port == null || port.trim() === '') {
+        port = 443
+        if (apiUrl.protocol === 'http:') {
+          port = 80
+        }
+      }
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
-            timeout: '2m',
-            apiAddress: apiUrl
+            protocol: apiUrl.protocol,
+            host: apiUrl.host,
+            port: port,
+            timeout: '2m'
           })
         ]
       })
