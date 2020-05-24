@@ -411,6 +411,7 @@ IPFS Import
     if (
       load &&
       key !== null &&
+      resolvedUrl !== null &&
       this.notLoaded.indexOf(key) === -1 &&
       this.loaded.get(key) === undefined
     ) {
@@ -934,7 +935,7 @@ IPFS Import
         if (importUri !== null) {
           this.importTiddler(title, importUri)
         } else if (canonicalUri !== null) {
-          if (info.encoding !== 'base64' && type === 'image/svg+xml') {
+          if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
             this.importTiddler(title, canonicalUri)
           }
         }
@@ -1001,7 +1002,7 @@ IPFS Import
     if (importUri !== null) {
       this.importTiddler(title, importUri)
     } else if (canonicalUri !== null) {
-      if (info.encoding !== 'base64' && type === 'image/svg+xml') {
+      if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
         this.importTiddler(title, canonicalUri)
       }
     }
