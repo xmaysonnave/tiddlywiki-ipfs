@@ -87,8 +87,7 @@ IPFS Saver
       const base = $tw.ipfs.getIpfsBaseUrl()
       const nextWiki = $tw.ipfs.getUrl(wiki)
       nextWiki.protocol = base.protocol
-      nextWiki.hostname = base.hostname
-      nextWiki.port = base.port
+      nextWiki.host = base.host
       try {
         var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki)
         if (cid != null) {
@@ -192,8 +191,16 @@ IPFS Saver
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setEns(ensDomain, added)
-          nextWiki.protocol = 'https:'
-          nextWiki.host = ensDomain
+          const chainId = $tw.ipfs.getChainId()
+          if (chainId !== null && chainId === 1) {
+            nextWiki.protocol = 'https:'
+            nextWiki.host = ensDomain
+          } else {
+            const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
+            nextWiki.protocol = resolvedUrl.protocol
+            nextWiki.host = resolvedUrl.host
+            nextWiki.pathname = resolvedUrl.pathname
+          }
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
           this.getLogger().warn(error)
@@ -226,10 +233,7 @@ IPFS Saver
         }
       }
       callback(null)
-      if (
-        nextWiki.hostname !== wiki.hostname ||
-        nextWiki.pathname !== wiki.pathname
-      ) {
+      if (nextWiki.host !== wiki.host || nextWiki.pathname !== wiki.pathname) {
         window.location.assign(nextWiki.toString())
       }
     } catch (error) {

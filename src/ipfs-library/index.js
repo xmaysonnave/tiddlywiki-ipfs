@@ -6,6 +6,8 @@ import root from 'window-or-global'
 
   const name = 'ipfs-library'
 
+  const { httpClient, windowIpfs } = providers
+
   /*
    * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
    **/
@@ -22,7 +24,6 @@ import root from 'window-or-global'
     const self = this
     if (typeof root.IpfsHttpClient === 'undefined') {
       try {
-        // Load js-ipfs-http-client
         await this.ipfsLoader.loadIpfsHttpLibrary()
         if (typeof root.IpfsHttpClient !== 'undefined') {
           return
@@ -75,7 +76,6 @@ import root from 'window-or-global'
   IpfsLibrary.prototype.getWindowIpfs = async function () {
     const self = this
     try {
-      const { windowIpfs } = providers
       this.getLogger().info('Processing connection to IPFS Companion...')
       const { ipfs, provider } = await getIpfs({
         providers: [windowIpfs()]
@@ -100,12 +100,9 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS API URL...')
     }
     try {
-      // Load IpfsHttpClient
       if (typeof root.IpfsHttpClient === 'undefined') {
         await this.loadIpfsHttpClient()
       }
-      // Instantiate client
-      const { httpClient } = providers
       this.getLogger().info(
         `Processing connection to IPFS API URL:\n ${apiUrl}`
       )

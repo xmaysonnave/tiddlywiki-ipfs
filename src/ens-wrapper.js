@@ -39,6 +39,10 @@ ENS Wrapper
     return root.log.getLogger(name)
   }
 
+  EnsWrapper.prototype.getChainId = function () {
+    return this.chainId
+  }
+
   EnsWrapper.prototype.getEthereumProvider = function () {
     if (this.ethereum == null) {
       const self = this

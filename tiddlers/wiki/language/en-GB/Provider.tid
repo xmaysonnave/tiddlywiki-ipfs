@@ -30,4 +30,7 @@ type: text/vnd.tiddlywiki
 <p>
   When the [[Verbose]] property is selected, the console shows which provider has been selected.
 </p>
+<p>
+  The <b>IPFS Companion</b> support is <a href="http://docs-beta.ipfs.io.ipns.localhost:8080/how-to/companion-window-ipfs/#window-ipfs-is-currently-disabled">temporarily disabled</a>.
+</p>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/provider/console]]

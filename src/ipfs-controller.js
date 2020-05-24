@@ -463,5 +463,9 @@ IPFS Controller
     return await this.ensWrapper.getWeb3Provider()
   }
 
+  IpfsController.prototype.getChainId = function () {
+    return this.ensWrapper.getChainId()
+  }
+
   exports.IpfsController = IpfsController
 })()
