@@ -94,10 +94,10 @@ IPFS Import
       if (keys.indexOf(key) !== -1) {
         continue
       }
-      const { resolvedKey, imported } = this.loaded.get(key)
+      const { imported, resolvedKey } = this.loaded.get(key)
       if (imported.delete(title)) {
-        var msg = 'Remove:'
-        var field = ''
+        const msg = 'Remove:'
+        const field = ''
         this.getLogger().info(`${msg} ${field}"${title}"\n ${resolvedKey}`)
         $tw.utils.alert(
           name,
@@ -202,8 +202,8 @@ IPFS Import
       url.hash = tiddler.fields.title
       if (canonicalUri !== null || importUri !== null) {
         this.getLogger().info('*** Begin Import ***')
-        this.importUri = importUri !== null ? importUri : canonicalUri
-        if (this.importUri !== null) {
+        this.rootUri = importUri !== null ? importUri : canonicalUri
+        if (this.rootUri !== null) {
           const {
             loaded: importLoaded,
             removed: importRemoved
@@ -414,7 +414,7 @@ IPFS Import
         var { key, resolvedUrl } = await this.getKey(parentUrl, url)
         this.resolved.set(url, key)
       } catch (error) {
-        var msg = 'Failed to Resolve:'
+        const msg = 'Failed to Resolve:'
         this.notResolved.push(url)
         this.getLogger().error(error)
         $tw.utils.alert(
@@ -481,13 +481,13 @@ IPFS Import
       }
       // Loaded
       if (tiddlers !== undefined && tiddlers !== null) {
-        this.loaded.set(key, { uri, resolvedKey, imported })
+        this.loaded.set(key, { imported, resolvedKey, uri })
         for (var i in tiddlers) {
-          var tiddler = tiddlers[i]
+          const tiddler = tiddlers[i]
           var title = tiddler.title
           if (title === undefined || title == null || title.trim() === '') {
-            var msg = 'Ignore Unknown:'
-            var field = 'Title'
+            const msg = 'Ignore Unknown:'
+            const field = 'Title'
             this.getLogger().info(
               `${msg} "${field}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
             )
@@ -499,7 +499,7 @@ IPFS Import
             continue
           }
           if (imported.get(title) !== undefined) {
-            var msg = 'Ignore Duplicate:'
+            const msg = 'Ignore Duplicate:'
             this.getLogger().info(
               `${msg} "${title}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
             )
@@ -516,8 +516,8 @@ IPFS Import
           }
           var info = $tw.config.contentTypeInfo[type]
           if (info === undefined || info == null) {
-            var msg = 'Unknown:'
-            var field = 'Content-Type'
+            const msg = 'Unknown:'
+            const field = 'Content-Type'
             this.getLogger().info(
               `${msg} "${field}": "${title}"\n ${resolvedKey}`
             )
@@ -590,8 +590,8 @@ IPFS Import
       }
       if (imported.size === 0) {
         this.isEmpty.push(key)
-        var msg = 'Empty:'
-        var field = 'Resource'
+        const msg = 'Empty:'
+        const field = 'Resource'
         this.getLogger().info(
           `${msg} "${field}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
         )
@@ -602,8 +602,8 @@ IPFS Import
       }
     } catch (error) {
       this.notLoaded.push(key)
-      var msg = 'Failed to Load:'
-      var field = 'Resource'
+      const msg = 'Failed to Load:'
+      const field = 'Resource'
       this.getLogger().info(
         `${msg} "${field}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
       )
@@ -624,7 +624,7 @@ IPFS Import
     var removed = 0
     var processedTitles = []
     for (var key of this.loaded.keys()) {
-      const { resolvedKey, imported } = this.loaded.get(key)
+      const { imported, resolvedKey } = this.loaded.get(key)
       for (var title of imported.keys()) {
         if (processedTitles.indexOf(title) !== -1) {
           continue
@@ -650,8 +650,8 @@ IPFS Import
         if (canonicalUri == null && importUri == null) {
           keys.push(key)
         } else if (canonicalUri == null && importUri !== null) {
-          var msg = 'Missing:'
-          var field = '_canonical_uri'
+          const msg = 'Missing:'
+          const field = '_canonical_uri'
           this.getLogger().info(
             `${msg} "${field}" from ${title}"\n ${resolvedKey}`
           )
@@ -669,8 +669,8 @@ IPFS Import
           }
           if (canonicalKey !== undefined && canonicalKey !== null) {
             if (key === canonicalKey) {
-              var msg = 'Cycle Graph:'
-              var field = '_canonical_uri'
+              const msg = 'Cycle Graph:'
+              const field = '_canonical_uri'
               this.getLogger().info(
                 `${msg} "${field}" from ${title}"\n ${resolvedKey}`
               )
@@ -699,8 +699,8 @@ IPFS Import
                 keys.push(key)
               } else {
                 if (canonicalKey === importKey) {
-                  var msg = 'Matching:'
-                  var field = '"_canonical_uri" and "_import_uri"'
+                  const msg = 'Matching:'
+                  const field = '"_canonical_uri" and "_import_uri"'
                   this.getLogger().info(
                     `${msg} ${field} from "${title}"\n ${resolvedKey}`
                   )
@@ -709,8 +709,8 @@ IPFS Import
                     alertFieldFailed`${msg} ${field} from ${resolvedKey}">${title}</a>`
                   )
                 } else if (key === importKey) {
-                  var msg = 'Cycle Graph:'
-                  var field = '_import_uri'
+                  const msg = 'Cycle Graph:'
+                  const field = '_import_uri'
                   this.getLogger().info(
                     `${msg} "${field}" from "${title}"\n ${resolvedKey}`
                   )
@@ -758,7 +758,7 @@ IPFS Import
     if (this.notLoaded.indexOf(canonicalKey) !== -1) {
       return false
     }
-    const { resolvedKey, imported } = this.loaded.get(canonicalKey)
+    const { imported, resolvedKey } = this.loaded.get(canonicalKey)
     if (imported === undefined) {
       return false
     }
@@ -774,8 +774,8 @@ IPFS Import
         ? null
         : canonicalUri.trim()
     if (canonicalUri !== null) {
-      var msg = 'Inconsistency:'
-      var field = '_canonical_uri'
+      const msg = 'Inconsistency:'
+      const field = '_canonical_uri'
       this.getLogger().info(
         `${msg} "${field}" from "${title}"\n ${resolvedKey} \n and ${parentResolvedKey}`
       )
@@ -791,8 +791,8 @@ IPFS Import
         ? null
         : importUri.trim()
     if (importUri !== null) {
-      var msg = 'Inconsistency:'
-      var field = '_import_uri'
+      const msg = 'Inconsistency:'
+      const field = '_import_uri'
       this.getLogger().info(
         `${msg} "${field}" from "${title}"\n ${resolvedKey} \n and ${parentResolvedKey}`
       )
@@ -816,7 +816,7 @@ IPFS Import
     if (this.notLoaded.indexOf(importKey) !== -1) {
       return
     }
-    const { resolvedKey: importResolvedKey, imported } = this.loaded.get(
+    const { imported, resolvedKey: importResolvedKey } = this.loaded.get(
       importKey
     )
     if (imported === undefined) {
@@ -845,8 +845,8 @@ IPFS Import
       targetCanonicalKey !== null &&
       canonicalKey !== targetCanonicalKey
     ) {
-      var msg = 'Inconsistency:'
-      var field = '_canonical_uri'
+      const msg = 'Inconsistency:'
+      const field = '_canonical_uri'
       this.getLogger().info(
         `${msg} "${field}" from "${title}"\n ${importResolvedKey} \n and ${parentResolvedKey}`
       )
@@ -864,8 +864,8 @@ IPFS Import
         ? null
         : nextImportUri.trim()
     if (targetCanonicalUri == null && nextImportUri !== null) {
-      var msg = 'Missing:'
-      var field = '_canonical_uri'
+      const msg = 'Missing:'
+      const field = '_canonical_uri'
       this.getLogger().info(
         `${msg} "${field}" from "${title}"\n ${importResolvedKey}`
       )
@@ -887,8 +887,8 @@ IPFS Import
       }
       if (nextImportKey !== undefined && nextImportKey !== null) {
         if (canonicalKey === nextImportKey) {
-          var msg = 'Matching:'
-          var field = '"_canonical_uri" and "_import_uri"'
+          const msg = 'Matching:'
+          const field = '"_canonical_uri" and "_import_uri"'
           this.getLogger().info(
             `${msg} ${field} from "${title}"\n ${importResolvedKey}`
           )
@@ -897,8 +897,8 @@ IPFS Import
             alertFieldFailed`${msg} ${field} from ${importResolvedKey}">${title}</a>`
           )
         } else if (keys.indexOf(nextImportKey) !== -1) {
-          var msg = 'Cycle Graph:'
-          var field = '_import_uri'
+          const msg = 'Cycle Graph:'
+          const field = '_import_uri'
           this.getLogger().info(
             `${msg} "${field}" from "${title}"\n ${importResolvedKey}`
           )
@@ -923,7 +923,7 @@ IPFS Import
   IpfsImport.prototype.importTiddlers = function () {
     var processedTitles = []
     for (var key of this.loaded.keys()) {
-      const { uri, imported } = this.loaded.get(key)
+      const { imported, uri } = this.loaded.get(key)
       for (var title of imported.keys()) {
         if (processedTitles.indexOf(title) !== -1) {
           continue
@@ -963,15 +963,20 @@ IPFS Import
           var type = merged.type
           var info = $tw.config.contentTypeInfo[type]
           if (info.encoding === 'base64' || type === 'image/svg+xml') {
-            merged._import_uri = this.importUri
+            merged._import_uri = this.rootUri
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
-              merged._canonical_uri = this.importUri
+              if (uri !== this.rootUri) {
+                merged._canonical_uri = this.resolved.get(uri)
+                merged._import_uri = this.rootUri
+              } else {
+                merged._canonical_uri = this.rootUri
+              }
             } else {
               merged._canonical_uri = this.resolved.get(merged._canonical_uri)
-              if (canonicalUri !== this.importUri) {
-                merged._import_uri = this.importUri
+              if (canonicalUri !== this.rootUri) {
+                merged._import_uri = this.rootUri
               }
             }
           }
