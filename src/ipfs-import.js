@@ -258,11 +258,8 @@ IPFS Import
         )
       }
       // Update Wiki
-      var reportImportedMsg = "<p align='center'>''Successfully Imported''</p>"
       var reportAdded = ''
-      var reportAddedMsg = `<p align='left'>''Added: ${this.added.length}''</p>`
       var reportUpdated = ''
-      var reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
       for (var [title, merged] of this.merged.entries()) {
         $tw.wiki.addTiddler(merged)
         if (
@@ -279,7 +276,6 @@ IPFS Import
       // Process deleted
       var deleted = 0
       var reportDeleted = ''
-      var reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
       $tw.wiki.forEachTiddler({ includeSystem: true }, function (
         title,
         tiddler
@@ -351,6 +347,11 @@ IPFS Import
             ]
           })
         } else {
+          const reportAddedMsg = `<p align='left'>''Added: ${this.added.length}''</p>`
+          const reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
+          const reportImportedMsg =
+            "<p align='center'>''Successfully Imported''</p>"
+          const reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
           var value = `${reportImportedMsg}`
           if (reportAdded.trim() !== '') {
             value = `${value}\n\n${reportAddedMsg}\n\n{{{${reportAdded}}}}`
