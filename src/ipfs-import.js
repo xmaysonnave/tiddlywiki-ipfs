@@ -173,9 +173,6 @@ IPFS Import
     const self = this
     var loadedAdded = 0
     var loadedRemoved = 0
-    var added = 0
-    var updated = 0
-    var deleted = 0
     canonicalUri =
       canonicalUri === undefined ||
       canonicalUri == null ||
@@ -196,6 +193,8 @@ IPFS Import
     this.isEmpty = []
     this.resolved = new Map()
     this.notResolved = []
+    this.added = []
+    this.updated = []
     this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
@@ -237,7 +236,7 @@ IPFS Import
           loadedRemoved += canonicalRemoved
         }
         const { processed, removed: processedRemoved } = this.processImported()
-        var { added, updated } = this.importTiddlers()
+        this.importTiddlers()
         this.getLogger().info(`*** Loaded: ${this.loaded.size} Resource(s) ***`)
         this.getLogger().info(
           `*** Loaded: ${this.isEmpty.length} Empty Resource(s) ***`
@@ -255,24 +254,32 @@ IPFS Import
           `*** Processed: ${processed}, Removed: ${processedRemoved} Tiddler(s) ***`
         )
         this.getLogger().info(
-          `*** Added: ${added}, Updated: ${updated} Tiddler(s) ***`
+          `*** Added: ${this.added.length}, Updated: ${this.updated.length} Tiddler(s) ***`
         )
       }
       // Update Wiki
-      var reportMsg = "''Successfully Imported''"
-      var reportImported = ''
+      var reportImportedMsg = "<p align='center'>''Successfully Imported''</p>"
+      var reportAdded = ''
+      var reportAddedMsg = `<p align='left'>''Added: ${this.added.length}''</p>`
+      var reportUpdated = ''
+      var reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
       for (var [title, merged] of this.merged.entries()) {
         $tw.wiki.addTiddler(merged)
         if (
           this.host !== null &&
           this.merged.get(this.host.fields.title) === undefined
         ) {
-          reportImported = `${reportImported}[[${title}]]`
+          if (this.added.indexOf(title) !== -1) {
+            reportAdded = `${reportAdded}[[${title}]]`
+          } else {
+            reportUpdated = `${reportUpdated}[[${title}]]`
+          }
         }
       }
       // Process deleted
-      var reportDeletedMsg = "''Successfully Deleted''"
+      var deleted = 0
       var reportDeleted = ''
+      var reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
       $tw.wiki.forEachTiddler({ includeSystem: true }, function (
         title,
         tiddler
@@ -316,13 +323,12 @@ IPFS Import
       if (this.merged.size > 0) {
         $tw.utils.alert(
           name,
-          'Successfully Added: ' +
-            added +
-            ', Updated: ' +
-            updated +
+          'Successfully Imported, Added: ' +
+            this.added.length +
             ', Deleted: ' +
             deleted +
-            ' Tiddlers...'
+            ', Updated: ' +
+            this.updated.length
         )
       }
       if (
@@ -345,9 +351,15 @@ IPFS Import
             ]
           })
         } else {
-          var value = `${reportMsg}\n\n{{{${reportImported}}}}`
+          var value = `${reportImportedMsg}`
+          if (reportAdded.trim() !== '') {
+            value = `${value}\n\n${reportAddedMsg}\n\n{{{${reportAdded}}}}`
+          }
           if (reportDeleted.trim() !== '') {
             value = `${value}\n\n${reportDeletedMsg}\n\n{{{${reportDeleted}}}}`
+          }
+          if (reportUpdated.trim() !== '') {
+            value = `${value}\n\n${reportUpdatedMsg}\n\n{{{${reportUpdated}}}}`
           }
           updatedTiddler = $tw.utils.updateTiddler({
             tiddler: updatedTiddler,
@@ -376,6 +388,8 @@ IPFS Import
     this.notLoaded = null
     this.resolved = null
     this.notResolved = null
+    this.added = null
+    this.updated = null
     this.merged = null
   }
 
@@ -906,8 +920,6 @@ IPFS Import
   }
 
   IpfsImport.prototype.importTiddlers = function () {
-    var added = 0
-    var updated = 0
     var processedTitles = []
     for (var key of this.loaded.keys()) {
       const { uri, imported } = this.loaded.get(key)
@@ -963,17 +975,13 @@ IPFS Import
             }
           }
           if (exist) {
-            updated += 1
+            this.updated.push(title)
           } else {
-            added += 1
+            this.added.push(title)
           }
           processedTitles.push(title)
         }
       }
-    }
-    return {
-      added: added,
-      updated: updated
     }
   }
 
