@@ -17,15 +17,15 @@ This plugin provides the following features:
 - Access `TiddlyWiki's` and attachments from [IPFS](https://ipfs.io/)
 - Encrypt and Decrypt `TiddlyWiki's` and attachments
 - Publish and Manage IPNS Names and Keys
-- Interact with Ethereum wallets [Metamask](https://metamask.io)
+- Interact with [Metamask](https://metamask.io) Ethereum wallets
 - Publish to [ENS](https://ens.domains)
-- Share `TiddlyWiki's` and attachments
+- Import/Export `TiddlyWiki's` and attachments
 
-According to [TiddlyWiki Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
+According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 `TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.`
 
-`IPFS with TiddlyWiki` is a decentralized application (Đapps) who uses distributed computing systems:
+`IPFS with TiddlyWiki` enhances TiddlyWiki as a decentralized application (Đapps) who uses distributed computing systems:
 
 - [IPFS](https://ipfs.io) is a decentralized storage network
 - [Ethereum Smart Contracts](https://ethereum.org/learn/#smart-contracts) are decentralized applications
@@ -77,12 +77,12 @@ Starting from the file system, Follow the developer instructions [Running Tiddly
 
 - To resolve https://bluelightav.eth you need an [ENS](https://ens.domains/) capable browser:
 - - Use [Metamask](https://metamask.io) as a browser extension
-- - Use [Metamask](https://metamask.io) as an Android  mobile application
+- - Use [Metamask](https://metamask.io) as an Android mobile application
 - - Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 
 - To use [ENS](https://app.ens.domains/) you need an Ethereum wallet:
 - - Use [Metamask](https://metamask.io) as a browser extension
-- - Use [Metamask](https://metamask.io) as an Android  mobile application
+- - Use [Metamask](https://metamask.io) as an Android mobile application
 
 - To run a local IPFS node, install:
 - - [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
