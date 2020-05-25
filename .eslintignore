@@ -6,4 +6,5 @@ scripts/*
 test/*
 tiddlers/*
 tw5-locator/*
+tw5-relink/*
 wiki/*

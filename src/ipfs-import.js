@@ -932,14 +932,19 @@ IPFS Import
           importUri.trim() === ''
             ? null
             : importUri.trim()
+        var exist = null
         if (importUri !== null) {
-          this.importTiddler(title, importUri)
-        } else if (canonicalUri !== null) {
-          if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
-            this.importTiddler(title, canonicalUri)
-          }
+          exist = this.importTiddler(title, importUri)
         }
-        const exist = this.mergeTiddler(title, uri)
+        if (
+          exist == null &&
+          canonicalUri !== null &&
+          info.encoding !== 'base64' &&
+          type !== 'image/svg+xml'
+        ) {
+          this.importTiddler(title, canonicalUri)
+        }
+        exist = this.mergeTiddler(title, uri)
         if (exist !== null) {
           const merged = this.merged.get(title)
           var type = merged.type
@@ -999,12 +1004,17 @@ IPFS Import
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
+    var exist = null
     if (importUri !== null) {
-      this.importTiddler(title, importUri)
-    } else if (canonicalUri !== null) {
-      if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
-        this.importTiddler(title, canonicalUri)
-      }
+      exist = this.importTiddler(title, importUri)
+    }
+    if (
+      exist == null &&
+      canonicalUri !== null &&
+      info.encoding !== 'base64' &&
+      type !== 'image/svg+xml'
+    ) {
+      this.importTiddler(title, canonicalUri)
     }
     return this.mergeTiddler(title, uri)
   }

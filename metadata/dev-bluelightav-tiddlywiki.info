@@ -5,7 +5,6 @@
     "tiddlywiki/codemirror-closebrackets",
     "tiddlywiki/codemirror-closetag",
     "tiddlywiki/codemirror-fullscreen-editing",
-    "tiddlywiki/codemirror-keymap-sublime-text",
     "tiddlywiki/codemirror-mode-css",
     "tiddlywiki/codemirror-mode-htmlembedded",
     "tiddlywiki/codemirror-mode-htmlmixed",
@@ -13,10 +12,12 @@
     "tiddlywiki/codemirror-mode-markdown",
     "tiddlywiki/codemirror-mode-xml",
     "tiddlywiki/codemirror-search-replace",
+    "tiddlywiki/highlight",
     "tiddlywiki/internals",
     "tiddlywiki/menubar",
     "tiddlywiki/markdown",
-    "tiddlywiki/highlight"
+    "tiddlywiki/railroad",
+    "tiddlywiki/twitter"
   ],
   "includeWikis": [
   ],
