@@ -5,20 +5,27 @@ tags: bluelightav.eth TableOfContents
 type: text/vnd.tiddlywiki
 
 <p>
-Welcome to <b>IPFS with ~TiddlyWiki</b>, the Unstoppable Wiki.
+  Welcome to <b>IPFS with ~TiddlyWiki</b>, the Unstoppable Wiki.
 </p>
 <p>
-[ext[Blue Light|https://wiki.bluelightav.org]] is happy to provide this [ext[Open Source|https://spdx.org/licenses/GPL-3.0-or-later.html]] <b>~TiddlyWiki</b> plugin.
+  [ext[Blue Light|https://wiki.bluelightav.org]] is happy to provide this [ext[Open Source|https://spdx.org/licenses/GPL-3.0-or-later.html]] <b>~TiddlyWiki</b> plugin.
 </p>
 <p>
   <b>IPFS with ~TiddlyWiki</b>
 </p>
 <ul>
-  <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
-  <li><$ipfslink caption="IPFS with TiddlyWiki Development" value="https://bluelightav.eth" tiddler=<<currentTiddler>>/> on "[ext[Ropsten|https://faucet.ropsten.be/]] (~PoW): Ethereum Test Network"</li>
+  <li>Project
+    <ul><li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li></ul>
+  </li>
+  <li>Resolve ENS with IPFS with ~TiddlyWiki
+    <ul><li><$ipfslink value="https://bluelightav.eth">https://bluelightav.eth</$ipfslink></li></ul>
+  </li>
+  <li>Resolve ENS with a browser extension
+    <ul><li>[ext[https://bluelightav.eth]]</li></ul>
+  </li>
 </ul>
 <p>
-To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
+  To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
 </p>
 <p>
   <b>~TiddlyWiki</b>
@@ -28,7 +35,7 @@ To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:
   <li>[ext[TiddlyWiki5 GitHub|https://github.com/Jermolene/TiddlyWiki5/]]</li>
 </ul>
 <p>
-See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
+  See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
 </p>
 <p>
   <b>Community</b>
@@ -76,5 +83,5 @@ See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave
   </li>
 </ul>
 <p>
-See the [[control panel|$:/ControlPanel]] for more options.
+  See the [[control panel|$:/ControlPanel]] for more options.
 </p>

@@ -15,8 +15,7 @@
     "tiddlywiki/highlight",
     "tiddlywiki/menubar",
     "tiddlywiki/markdown",
-    "tiddlywiki/railroad",
-    "tiddlywiki/twitter"
+    "tiddlywiki/railroad"
   ],
   "includeWikis": [
   ],

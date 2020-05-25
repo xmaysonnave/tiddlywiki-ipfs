@@ -151,6 +151,8 @@ IPFS link widget
     if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
       tag = 'a'
     }
+    var isMissing = !this.wiki.tiddlerExists(this.value)
+    var isShadow = this.wiki.isShadowTiddler(this.value)
     // Create our element
     var namespace = this.getVariable('namespace', {
       defaultValue: 'http://www.w3.org/1999/xhtml'
@@ -160,13 +162,13 @@ IPFS link widget
     var classes = []
     if (this.overrideClasses === undefined) {
       classes.push('tc-tiddlylink')
-      if (this.isShadow) {
+      if (isShadow) {
         classes.push('tc-tiddlylink-shadow')
       }
-      if (this.isMissing && !this.isShadow) {
+      if (isMissing && !isShadow) {
         classes.push('tc-tiddlylink-missing')
       } else {
-        if (!this.isMissing) {
+        if (!isMissing) {
           classes.push('tc-tiddlylink-resolves')
         }
       }
@@ -336,9 +338,12 @@ IPFS link widget
    * Compute the internal state of the widget
    */
   IpfsLinkWidget.prototype.execute = function () {
-    // Tiddler
-    this.tiddler = this.getAttribute('tiddler')
-    // Internal link
+    // Pick up our attributes
+    this.tiddler =
+      this.getAttribute('tiddler') !== undefined
+        ? this.getAttribute('tiddler')
+        : this.getVariable('currentTiddler')
+    this.value = this.getAttribute('value')
     this.tooltip = this.getAttribute('tooltip')
     this['aria-label'] = this.getAttribute('aria-label')
     this.linkClasses = this.getAttribute('class') || 'tc-ipfs-link-external'
@@ -346,22 +351,20 @@ IPFS link widget
     this.tabIndex = this.getAttribute('tabindex')
     this.draggable = this.getAttribute('draggable', 'yes')
     this.linkTag = this.getAttribute('tag', 'a')
-    // Determine the link characteristics
-    this.isMissing = !this.wiki.tiddlerExists(this.to)
-    this.isShadow = this.wiki.isShadowTiddler(this.to)
-    this.hideMissingLinks =
-      (this.getVariable('tv-show-missing-links') || 'yes') === 'no'
     // External link
     this.caption = this.getAttribute('caption')
-    this.value = this.getAttribute('value')
     this.field = this.getAttribute('field')
     const tiddler = $tw.wiki.getTiddler(this.tiddler)
     if (this.value === undefined) {
       this.value = tiddler.getFieldString(this.field)
     }
-    this.target = this.getAttribute('target') || '_blank'
-    this.rel = this.getAttribute('rel') || 'noopener'
-    this.makeChildWidgets([{ type: 'text', text: this.caption }])
+    var templateTree
+    if (this.parseTreeNode.children && this.parseTreeNode.children.length > 0) {
+      templateTree = this.parseTreeNode.children
+    } else {
+      templateTree = [{ type: 'text', text: this.caption }]
+    }
+    this.makeChildWidgets(templateTree)
   }
 
   /*
@@ -381,8 +384,6 @@ IPFS link widget
       changedTiddlers[this.field] ||
       changedAttributes.value ||
       changedTiddlers[this.value] ||
-      changedAttributes.to ||
-      changedTiddlers[this.to] ||
       changedAttributes.tooltip ||
       changedAttributes['aria-label'] ||
       changedTiddlers['$:/ipfs/saver/gateway'] ||

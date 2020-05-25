@@ -1,6 +1,5 @@
 title: $:/plugins/ipfs/readme
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200525094915385
 tags: $:/ipfs/core
 type: text/vnd.tiddlywiki
 
@@ -8,10 +7,13 @@ type: text/vnd.tiddlywiki
 
 Features:
 
-* Persist over [ext[IPFS|https://ipfs.io/]] saved <b>~TiddlyWiki's</b> and file attachments
-* Publish IPNS Names when <b>~TiddlyWiki</b> are saved
-* Interact with Ethereum wallets [ext[Metamask|https://metamask.io]] or [ext[Frame|https://frame.sh]]
+* Store <b>~TiddlyWiki's</b> and attachments on [ext[IPFS|https://ipfs.io/]]
+* Access <b>~TiddlyWiki's</b> and attachments from [ext[IPFS|https://ipfs.io/]]
+* Encrypt and Decrypt <b>~TiddlyWiki</b> ans attachments
+* Publish and Manage IPNS Keys and Names
+* Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
 * Publish to [ext[ENS|https://ens.domains]]
+* Import/Export <b>~TiddlyWiki's</b> and attachments
 
 Supported Browsers:
 
@@ -19,10 +21,9 @@ Supported Browsers:
 * [ext[Chrome|https://www.google.com/chrome/]]
 * [ext[Chromium|https://www.chromium.org]]
 
-Supported Ethereum wallets:
+Supported Ethereum browser extension:
 
 * [ext[Metamask|https://metamask.io]]
-* [ext[Frame|https://frame.sh]]
 
 Supported Mobile ĐApp browser:
 
