@@ -27,7 +27,7 @@ This plugin provides the following features:
 - Publish and Manage IPNS Keys and Names
 - Interact with [Metamask](https://metamask.io) Ethereum wallets
 - Publish to [ENS](https://ens.domains)
-- Share over [IPFS](https://ipfs.io/) `TiddlyWiki's Tiddlers` and attachments
+- Share over [IPFS](https://ipfs.io/) `TiddlyWiki's` [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
@@ -38,10 +38,10 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 - [IPFS](https://ipfs.io) is a decentralized storage network
 - [Ethereum Smart Contracts](https://ethereum.org/learn/#smart-contracts) are decentralized applications
 
-`IPFS with TiddlyWiki` has the following (ĐApp) characteristics:
+`IPFS with TiddlyWiki` has the following [ĐApp](https://en.wikipedia.org/wiki/Decentralized_application) characteristics:
 
 - Open Source
-- Privacy
+- Decentralized
 - Unstoppable
 - Transparency
 
@@ -50,18 +50,18 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 <a name="using-ipfs-with-tiddlywiki"/>
 
 - With a capable [ENS](https://ens.domains/) browser:
-- - [IPFS with TiddlyWiki](https://bluelightav.eth)
-- - [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
-- - [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
+- [IPFS with TiddlyWiki](https://bluelightav.eth)
+- [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
+- [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
 
 - With a non capable [ENS](https://ens.domains/) browser:
-- - [IPFS with TiddlyWiki](https://bluelightav.eth.link)
-- - [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
-- - [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
+- [IPFS with TiddlyWiki](https://bluelightav.eth.link)
+- [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
+- [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
 
 - Recommended TiddlyWiki Plugins:
-- - [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
-- - [Relink](https://flibbles.github.io/tw5-relink/)
+- [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
+- [Relink](https://flibbles.github.io/tw5-relink/)
 
 ### Getting Started
 
@@ -84,21 +84,21 @@ These instructions will get you a copy of the project up and running on your loc
 Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
 
 - To resolve https://bluelightav.eth you need an [ENS](https://ens.domains/) capable browser:
-- - Use [Metamask](https://metamask.io) as a browser extension
-- - Use [Metamask](https://metamask.io) as an Android mobile application
-- - Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
+- Use [Metamask](https://metamask.io) as a browser extension
+- Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 
 - To use [ENS](https://app.ens.domains/) you need an Ethereum wallet:
-- - Use [Metamask](https://metamask.io) as a browser extension
-- - Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [Metamask](https://metamask.io) as a browser extension
+- Use [Metamask](https://metamask.io) as an Android mobile application
 
 - To run a local IPFS node, install:
-- - [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
-- - [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
-- - [GO IPFS](https://github.com/ipfs/go-ipfs)
+- [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
+- [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
+- [GO IPFS](https://github.com/ipfs/go-ipfs)
 
 - More informations about IPFS are avalaible here:
-- - [IPFS](https://ipfs.io/)
+- [IPFS](https://ipfs.io/)
 
 Remarks:
 
@@ -127,10 +127,10 @@ The `IPFS Companion` support is [Temporarily Disabled](http://docs-beta.ipfs.io.
 
 <a name="ens-ethereum-network"/>
 
-- 'Mainnet': Ethereum Main Network
-- 'Ropsten': Ethereum Test Network (PoW)
-- 'Rinkeby': Ethereum Test Network (PoA)
-- 'Goerli': Ethereum Test Network (PoA)
+- `Mainnet`: Ethereum Main Network
+- `Ropsten`: Ethereum Test Network (PoW)
+- `Rinkeby`: Ethereum Test Network (PoA)
+- `Goerli`: Ethereum Test Network (PoA)
 
 ## Developer
 

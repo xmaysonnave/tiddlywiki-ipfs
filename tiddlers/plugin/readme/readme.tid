@@ -7,13 +7,13 @@ type: text/vnd.tiddlywiki
 
 Features:
 
-* Store <b>~TiddlyWiki's</b> and attachments on [ext[IPFS|https://ipfs.io/]]
-* Access <b>~TiddlyWiki's</b> and attachments from [ext[IPFS|https://ipfs.io/]]
-* Encrypt and Decrypt <b>~TiddlyWiki</b> ans attachments
+* Store `TiddlyWiki's` and attachments on [ext[IPFS|https://ipfs.io/]]
+* Access `TiddlyWiki's` and attachments from [ext[IPFS|https://ipfs.io/]]
+* Encrypt and Decrypt `TiddlyWiki` and attachments
 * Publish and Manage IPNS Keys and Names
 * Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
 * Publish to [ext[ENS|https://ens.domains]]
-* Import/Export <b>~TiddlyWiki's</b> and attachments
+* Share over [ext[IPFS|https://ipfs.io/]] `TiddlyWiki's` [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments
 
 Supported Browsers:
 
@@ -31,10 +31,10 @@ Supported Mobile ĐApp browser:
 
 Supported ENS Ethereum Networks
 
-* 'Mainnet': Ethereum Main Network
-* 'Ropsten': Ethereum Test Network (~PoW)
-* 'Rinkeby': Ethereum Test Network (~PoA)
-* 'Goerli': Ethereum Test Network (~PoA)
+* `Mainnet`: Ethereum Main Network
+* `Ropsten`: Ethereum Test Network (~PoW)
+* `Rinkeby`: Ethereum Test Network (~PoA)
+* `Goerli`: Ethereum Test Network (~PoA)
 
 Resources:
 
