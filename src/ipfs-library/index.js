@@ -106,21 +106,23 @@ import root from 'window-or-global'
       this.getLogger().info(
         `Processing connection to IPFS API URL:\n ${apiUrl}`
       )
+      var protocol = apiUrl.protocol.slice(0, -1)
       var port = apiUrl.port
       if (port === undefined || port == null || port.trim() === '') {
         port = 443
-        if (apiUrl.protocol === 'http:') {
+        if (protocol === 'http') {
           port = 80
         }
       }
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
-            apiAddress: apiUrl.toString()
-            // protocol: apiUrl.protocol,
-            // host: apiUrl.host,
-            // port: port,
-            // timeout: '2m'
+            apiAddress: {
+              protocol: protocol,
+              host: apiUrl.hostname,
+              port: port,
+              timeout: '2m'
+            }
           })
         ]
       })
