@@ -290,19 +290,19 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 
-The `wiki` directory will contain two runnable wikis:
+The `wiki` directory contains several runnable `TiddlyWikis`:
 
 - [index.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
 - [dev.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/dev.html)
 - [empty.html](https://htmlpreview.github.io/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
 
-and the plugin as a json file:
+and the `IPFS with TiddlyWiki` plugin as a json file:
 
 - [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/tiddlywiki-ipfs-plugin.json)
 
 Use the `test` script to run the tests.
 
-This repository is integrated with Travis CI:
+This project is integrated with Travis CI:
 
 - https://travis-ci.com/github/xmaysonnave/tiddlywiki-ipfs
 
@@ -312,11 +312,11 @@ This repository is integrated with Travis CI:
 
 Open `wiki/index.html` file in your favorite browser.
 
-## Contributing
+## Contributor Covenant Code of Conduct
 
 <a name="contributing"/>
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
