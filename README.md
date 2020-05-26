@@ -128,9 +128,9 @@ According to the `ipfs-desktop` [README.md](https://github.com/ipfs-shipyard/ipf
 
 According to the `ipfs-companion` [README.md](https://github.com/ipfs-shipyard/ipfs-companion/blob/master/README.md), `This add-on enables everyone to access IPFS resources the way they were meant: from locally running IPFS node :-)`.
 
-<span style="color:red">Warning</span>
+#### `Warning`
 
-The `IPFS Companion` support is [Temporarily Disabled](http://docs-beta.ipfs.io.ipns.localhost:8080/how-to/companion-window-ipfs/#window-ipfs-is-currently-disabled) and will be back in Q3 2020.
+The `IPFS Companion` support is [Temporarily Disabled](https://docs-beta.ipfs.io/how-to/companion-window-ipfs/) and will be back in Q3 2020.
 
 #### Supported ENS Ethereum Networks
 

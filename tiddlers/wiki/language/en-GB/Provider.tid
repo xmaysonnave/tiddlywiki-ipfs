@@ -5,6 +5,10 @@ tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>IPFS Provider Setting</h2>
+<span style="color:red">Warning</span>
+<p>
+  The <b>IPFS Companion</b> support is <a href="https://docs-beta.ipfs.io/how-to/companion-window-ipfs/">temporarily disabled</a>.
+</p>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/provider]]
 <p>
   <b>IPFS with ~TiddlyWiki</b> is able to reach the IPFS network with multiple providers:
@@ -29,8 +33,5 @@ type: text/vnd.tiddlywiki
 </ul>
 <p>
   When the [[Verbose]] property is selected, the console shows which provider has been selected.
-</p>
-<p>
-  The <b>IPFS Companion</b> support is <a href="http://docs-beta.ipfs.io.ipns.localhost:8080/how-to/companion-window-ipfs/#window-ipfs-is-currently-disabled">temporarily disabled</a>.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/provider/console]]
