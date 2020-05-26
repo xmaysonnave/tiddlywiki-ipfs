@@ -13,7 +13,6 @@
     "tiddlywiki/codemirror-mode-xml",
     "tiddlywiki/codemirror-search-replace",
     "tiddlywiki/highlight",
-    "tiddlywiki/menubar",
     "tiddlywiki/markdown",
     "tiddlywiki/railroad"
   ],

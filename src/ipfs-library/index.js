@@ -116,10 +116,11 @@ import root from 'window-or-global'
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
-            protocol: apiUrl.protocol,
-            host: apiUrl.host,
-            port: port,
-            timeout: '2m'
+            apiAddress: apiUrl.toString()
+            // protocol: apiUrl.protocol,
+            // host: apiUrl.host,
+            // port: port,
+            // timeout: '2m'
           })
         ]
       })

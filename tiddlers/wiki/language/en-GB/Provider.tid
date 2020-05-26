@@ -5,8 +5,9 @@ tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>IPFS Provider Setting</h2>
-<span style="color:red">Warning</span>
 <p>
+  <span style="color:red">Warning</span>
+  <br/>
   The <b>IPFS Companion</b> support is <a href="https://docs-beta.ipfs.io/how-to/companion-window-ipfs/">temporarily disabled</a>.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/provider]]
