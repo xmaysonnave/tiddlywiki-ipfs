@@ -49,19 +49,20 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 <a name="using-ipfs-with-tiddlywiki"/>
 
-- With a capable [ENS](https://ens.domains/) browser:
+With a capable [ENS](https://ens.domains/) browser:
+
 - [IPFS with TiddlyWiki](https://bluelightav.eth)
 - [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
 - [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
 
+With a non capable [ENS](https://ens.domains/) browser
 
-- With a non capable [ENS](https://ens.domains/) browser:
 - [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 - [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
 - [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
 
+Recommended TiddlyWiki Plugins:
 
-- Recommended TiddlyWiki Plugins:
 - [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
 - [Relink](https://flibbles.github.io/tw5-relink/)
 
@@ -85,21 +86,25 @@ These instructions will get you a copy of the project up and running on your loc
 
 Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
 
-- To resolve https://bluelightav.eth you need an [ENS](https://ens.domains/) capable browser:
+To resolve https://bluelightav.eth you need an [ENS](https://ens.domains/) capable browser:
+
 - Use [Metamask](https://metamask.io) as a browser extension
 - Use [Metamask](https://metamask.io) as an Android mobile application
 - Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 
-- To use [ENS](https://app.ens.domains/) you need an Ethereum wallet:
+To use [ENS](https://app.ens.domains/) you need an Ethereum wallet:
+
 - Use [Metamask](https://metamask.io) as a browser extension
 - Use [Metamask](https://metamask.io) as an Android mobile application
 
-- To run a local IPFS node, install:
+To run a local IPFS node, install:
+
 - [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
 - [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
 - [GO IPFS](https://github.com/ipfs/go-ipfs)
 
-- More informations about IPFS are avalaible here:
+More informations about IPFS are avalaible here:
+
 - [IPFS](https://ipfs.io/)
 
 Remarks:
