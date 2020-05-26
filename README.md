@@ -1,8 +1,8 @@
+<h1 align="center">IPFS with TiddyWiki</h1>
+
 <h1 align="center">
   <a href="https://bluelightav.eth"><img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light Logo"/></a>
 </h1>
-
-<h1 align="center">IPFS with TiddyWiki</h1>
 
 <p align="center">
   <a href="https://github.com/ContributorCovenant/contributor_covenant"><img alt="An ethical open source project" src="https://img.shields.io/badge/open-ethical-%234baaaa"/></a>
