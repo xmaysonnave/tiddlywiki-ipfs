@@ -1,7 +1,7 @@
 <h1 align="center">IPFS with TiddyWiki</h1>
 
 <p align="center">
-  <img alt="An ethical open source project" src="https://img.shields.io/badge/open-ethical-%234baaaa"/>
+  <a href="https://github.com/ContributorCovenant/contributor_covenant"><img alt="An ethical open source project" src="https://img.shields.io/badge/open-ethical-%234baaaa"/></a>
 </p>
 
 <p align="center">
