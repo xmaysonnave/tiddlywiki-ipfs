@@ -27,7 +27,7 @@ This plugin provides the following features:
 - Publish and Manage IPNS Keys and Names
 - Interact with [Metamask](https://metamask.io) Ethereum wallets
 - Publish to [ENS](https://ens.domains)
-- Import/Export `TiddlyWiki's` and attachments
+- Share over [IPFS](https://ipfs.io/) `TiddlyWiki's Tiddlers` and attachments
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
