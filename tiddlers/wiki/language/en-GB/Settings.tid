@@ -1,6 +1,5 @@
 title: Settings
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200526094915385
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
@@ -10,7 +9,7 @@ type: text/vnd.tiddlywiki
 </ul>
 <h2>Settings</h2>
 <p>
-The [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
+  The [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/settings]]
 <<locator-view baseTitle:"Settings">>

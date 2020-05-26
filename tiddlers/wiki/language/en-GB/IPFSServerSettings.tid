@@ -1,13 +1,12 @@
 title: IPFS Server Settings
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200526094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>IPFS Server Settings</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/settings/ipfs]]
+[img class="tc-image-documentation" [$:/ipfs/image/settings/server/ipfs]]
 <p>
-To save your wiki over IPFS, you need to select:
+  To save your wiki over IPFS, you need to select:
 </p>
 <ul>
 <li>The [ext[API URL|https://docs.ipfs.io/reference/api/http/]] where the IPFS commands are sent</li>
@@ -24,7 +23,7 @@ While saving the plugin will:
 </ul>
 <h3>URL Selection</h3>
 <p>
-The plugin eases URL selections through drop-down lists.
+  The plugin eases URL selections through drop-down lists.
 </p>
 <h4>API URL</h4>
 <p>

@@ -1,26 +1,25 @@
 title: IPNS Settings
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200526094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>IPNS Settings</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns]]
 <p>
-The plugin is able to publish your <b>IPNS name</b> with a new IPFS identifier everytime you save your wiki.
+  The plugin is able to publish your <b>IPNS name</b> with a new IPFS identifier everytime you save your wiki.
 </p>
 <p>
-To publish to IPNS while saving:
+  To publish to IPNS while saving:
 </p>
 <ul>
-<li>The [[IPNS|Protocol]] protocol must be selected</li>
-<li>The <b>IPNS name</b> field must be filled</li>
+  <li>The [[IPNS|Protocol]] protocol must be selected</li>
+  <li>The <b>IPNS name</b> field must be filled</li>
 </ul>
 <p>
-To publish without saving see [[Publish TiddlyWiki to IPNS]].
+  To publish without saving see [[Publish TiddlyWiki to IPNS]].
 </p>
 <p>
-While saving the plugin will:
+  While saving the plugin will:
 </p>
 <ul>
   <li>Save the wiki over IPFS</li>
@@ -32,7 +31,7 @@ While saving the plugin will:
   <li>Or redirect to the IPFS saved wiki if the IPNS update do not succeed.</li>
 </ul>
 <p>
-This feature do not work with IPFS Companion or the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]].
+  This feature do not work with IPFS Companion or the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]].
 </p>
 <ul>
   <li>The default IPNS name is stored in the following Tiddler [[$:/ipfs/saver/ipns/name]]</li>
@@ -41,25 +40,25 @@ This feature do not work with IPFS Companion or the <b>https://ipfs.infura.io:50
 <h3>Rename IPNS name</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/rename]]
 <p>
-This command rename the default <b>IPNS name</b>.
+  This command rename the default <b>IPNS name</b>.
 </p>
 <h3>Generate IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/generate]]
 <p>
-This command generates an <b>IPNS key</b> linked to a new <b>IPNS name</b>.
+  This command generates an <b>IPNS key</b> linked to a new <b>IPNS name</b>.
 </p>
 <h3>Remove IPNS Name and IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/remove]]
 <p>
-This command removes an <b>IPNS name</b> and its linked <b>IPNS key</b>.
+  This command removes an <b>IPNS name</b> and its linked <b>IPNS key</b>.
 </p>
 <h3>Fetch IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/fetch]]
 <p>
-This command fetch the <b>IPNS key</b> linked to an <b>IPNS name</b>.
+  This command fetch the <b>IPNS key</b> linked to an <b>IPNS name</b>.
 </p>
 <h3>Open resolved IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/resolve]]
 <p>
-This command resolves and opens an <b>IPNS key</b>.
+  This command resolves and opens an <b>IPNS key</b>.
 </p>

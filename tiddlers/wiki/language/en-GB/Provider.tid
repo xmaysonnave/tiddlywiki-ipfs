@@ -1,5 +1,4 @@
 title: IPFS Provider
-created: 20200420094915385
 modified: 20200420094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
@@ -21,17 +20,17 @@ type: text/vnd.tiddlywiki
 <p>
   Options:
 </p>
-<ul>
+<ol>
   <li>
     <b>Default</b>
-    <ol>
-      <li>Use the <b>IPFS Companion</b> provider if available otherwise fallback to <b>HTTP Client</b></li>
-      <li>Use the <b>HTTP Client</b> provider</li>
-    </ol>
+    <ul>
+      <li>Use <b>IPFS Companion</b> if available</li>
+      <li>Otherwise use the <b>HTTP Client</b> provider</li>
+    </ul>
   </li>
-  <li>Use the <b>IPFS Companion</b> provider if available</li>
-  <li>Use the <b>HTTP Client</b> provider</li>
-</ul>
+  <li>Use only the <b>IPFS Companion</b> provider if available</li>
+  <li>Use only the <b>HTTP Client</b> provider</li>
+</ol>
 <p>
   When the [[Verbose]] property is selected, the console shows which provider has been selected.
 </p>

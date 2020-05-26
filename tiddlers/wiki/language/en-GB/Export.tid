@@ -1,13 +1,12 @@
 title: Export
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200526094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>Export Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/export]]
 <p>
-The <b>Export</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> export your Tiddler over IPFS.
+  The <b>Export</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> export your Tiddler over IPFS.
 </p>
 <h3>JSON</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/export/json]]
