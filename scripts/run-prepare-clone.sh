@@ -10,7 +10,7 @@ cd ..
 # tw5-relink
 git clone https://github.com/flibbles/tw5-relink
 cd tw5-relink
-git checkout tags/v1.9.2 > /dev/null 2>&1
+git checkout tags/v1.10.0 > /dev/null 2>&1
 cd ..
 
 exit 0
