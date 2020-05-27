@@ -1,0 +1,32 @@
+title: Unencrypt External Resource
+modified: 20200527094915385
+tags: $:/ipfs/documentation [[Tiddler Commands]]
+type: text/vnd.tiddlywiki
+
+<h2>Unencrypt External Resource</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/unencrypt]]
+<p>
+  If the locker is closed your wiki is encrypted or will be encrypted once saved.
+</p>
+<p>
+  A password will be requested to unlock your wiki when loaded.
+</p>
+<p>
+  External resources are automatically unencrypted when their host Tiddlers are displayed.
+</p>
+<p>
+  While unencrypting an external resource, a password could be requested:
+</p>
+<ul>
+  <li>When the wiki is unencrypted but its external resource is encrypted</li>
+  <li>When the wiki is encrypted but the encrypted external resource uses a different password</li>
+</ul>
+<p>
+</p>
+[img class="tc-image-documentation" [$:/ipfs/image/unencrypt/password]]
+<p>
+[[IPFS - Encrypted - The Little Prince]] describes this behaviour.
+</p>
+<p>
+  Edit the this Tiddler as it contains a <b>password</b> field . Its value when used will unencrypt the external resource.
+</p>

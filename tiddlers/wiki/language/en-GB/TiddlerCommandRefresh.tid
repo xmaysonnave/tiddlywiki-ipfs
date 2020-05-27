@@ -1,22 +1,25 @@
 title: Refresh Tiddler from IPFS
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
 <h2>Refresh Tiddler from IPFS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/view/refresh]]
 <p>
-The <b>refresh</b> action reloads the current Tiddler from IPFS.
+  The <b>refresh</b> action reloads the current Tiddler.
 </p>
 <p>
-It implements the following behaviour:
+  It implements the following behaviour:
 </p>
 <ul>
-<li>External Tiddlers are merged.</li>
-<li>
-External attachments are reloaded.
-It is a useful behaviour when you declined to unencrypt an encrypted external resource.
-The unencrypt password dialog box will be displayed again.
-</li>
+  <li>Imported Tiddlers are reloaded.</li>
+  <li>
+    External attachments are reloaded.
+    It is a useful behaviour when you declined to unencrypt an encrypted external resource.
+    The unencrypt password dialog box will be displayed again.
+  </li>
+  <li>
+    Regular Tiddler are removed from the <b>~TiddlyWiki</b> cache and reloaded.
+    It is a useful behaviour when you want to load content from a different IPFS gateway.
+  </li>
 </ul>

@@ -1,15 +1,10 @@
 title: Unpin External Resource from IPFS
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
 <h2>Unpin External Resource from IPFS</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/view/unpin]]
 <p>
-The <b>unpin from IPFS</b> command unpin the following Tiddler fields using the [[Default API URL|$:/ipfs/saver/api]]:
+The <b>unpin from IPFS</b> command immediately unpins all the fields who contain an IPFS URL using the [[Default API URL|$:/ipfs/saver/api]]:
 </p>
-<ul>
-  <li>_canonical_uri</li>
-  <li>_export_uri</li>
-</ul>
