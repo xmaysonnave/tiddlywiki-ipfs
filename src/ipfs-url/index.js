@@ -41,7 +41,7 @@ import { URL } from 'universal-url'
   }
 
   IpfsUrl.prototype.getIpfsDefaultGateway = function () {
-    return 'https://gateway.ipfs.io'
+    return 'https://ipfs.infura.io'
   }
 
   /**

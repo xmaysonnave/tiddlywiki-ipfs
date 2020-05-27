@@ -1,12 +1,11 @@
 title: Console
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
 <h2>Desktop Console</h2>
 <p>
-On desktop the [[Verbose]] mode output feedbacks to the browser console and the Mobile console.
+  On desktop the [[Verbose]] mode output feedbacks to the browser console and the Mobile console.
 </p>
 <ul>
   <li>[[Chrome or Chromium Console|https://developers.google.com/web/tools/chrome-devtools/open]]</li>
@@ -15,6 +14,6 @@ On desktop the [[Verbose]] mode output feedbacks to the browser console and the 
 [img class="tc-image-documentation" [$:/ipfs/image/console]]
 <h2>Mobile Console</h2>
 <p>
-<b>IPFS with ~TiddlyWiki</b> embeds a light console who provides feedback on mobile and desktop.
+  <b>IPFS with ~TiddlyWiki</b> embeds a light console who provides feedback on mobile and desktop.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/mobile/console]]

@@ -60,9 +60,9 @@ describe("Document URL", () => {
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
     ipfsUrl.getDocumentUrl = jest.fn();
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://gateway.ipfs.io/ipfs/cid");
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://ipfs.infura.io/ipfs/cid");
     const parsed = ipfsUrl.getDocumentUrl();
-    expect(parsed === "https://gateway.ipfs.io/ipfs/cid").toBeTruthy();
+    expect(parsed === "https://ipfs.infura.io/ipfs/cid").toBeTruthy();
   });
   it("Invalid", () => {
     const ipfsBundle = new IpfsBundle();
@@ -81,14 +81,14 @@ describe("Gateway URL", () => {
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
     const parsed = ipfsUrl.getIpfsDefaultGatewayUrl();
-    expect(parsed.toString() === "https://gateway.ipfs.io/").toBeTruthy();
+    expect(parsed.toString() === "https://ipfs.infura.io/").toBeTruthy();
   });
   it("Valid Safe", () => {
     const ipfsBundle = new IpfsBundle();
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
     const parsed = ipfsUrl.getIpfsGatewayUrl();
-    expect(parsed.toString() === "https://gateway.ipfs.io/").toBeTruthy();
+    expect(parsed.toString() === "https://ipfs.infura.io/").toBeTruthy();
   });
   it("Invalid", () => {
     const ipfsBundle = new IpfsBundle();
@@ -128,7 +128,7 @@ describe("Base URL", () => {
     ipfsUrl.getDocumentUrl = jest.fn();
     ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://gateway.ipfs.io/ipfs/cid");
     const base = ipfsUrl.getIpfsBaseUrl();
-    expect(base.toString() === "https://gateway.ipfs.io/").toBeTruthy();
+    expect(base.toString() === "https://ipfs.infura.io/").toBeTruthy();
   });
 
   it("Fallback to default Gateway", () => {
@@ -138,7 +138,7 @@ describe("Base URL", () => {
     ipfsUrl.getDocumentUrl = jest.fn();
     ipfsUrl.getDocumentUrl.mockReturnValueOnce("file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json");
     const base = ipfsUrl.getIpfsBaseUrl();
-    expect(base.toString() === "https://gateway.ipfs.io/").toBeTruthy();
+    expect(base.toString() === "https://ipfs.infura.io/").toBeTruthy();
   });
 });
 describe("Normalize URL", () => {
@@ -164,9 +164,9 @@ describe("Normalize URL", () => {
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
     ipfsUrl.getDocumentUrl = jest.fn();
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://gateway.ipfs.io/ipfs/cid");
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://ipfs.infura.io/ipfs/cid");
     const parsed = ipfsUrl.normalizeUrl("/ipfs/cid");
-    expect(parsed.toString() === "https://gateway.ipfs.io/ipfs/cid").toBeTruthy();
+    expect(parsed.toString() === "https://ipfs.infura.io/ipfs/cid").toBeTruthy();
   });
   it("Relative. Fallback to default Gateway...", () => {
     const ipfsBundle = new IpfsBundle();
@@ -175,7 +175,7 @@ describe("Normalize URL", () => {
     ipfsUrl.getDocumentUrl = jest.fn();
     ipfsUrl.getDocumentUrl.mockReturnValueOnce("file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json");
     const parsed = ipfsUrl.normalizeUrl("/ipfs/cid");
-    expect(parsed.toString() === "https://gateway.ipfs.io/ipfs/cid").toBeTruthy();
+    expect(parsed.toString() === "https://ipfs.infura.io/ipfs/cid").toBeTruthy();
   });
   it("Relative. File system...", () => {
     const ipfsBundle = new IpfsBundle();
@@ -201,7 +201,7 @@ describe("Normalize URL", () => {
     ipfsBundle.init();
     const ipfsUrl = ipfsBundle.ipfsUrl;
     ipfsUrl.getDocumentUrl = jest.fn();
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://gateway.ipfs.io/ipfs/cid");
+    ipfsUrl.getDocumentUrl.mockReturnValueOnce("https://ipfs.infura.io/ipfs/cid");
     const parsed = ipfsUrl.normalizeUrl("https://bluelightav.eth.link/ipfs/cid");
     expect(parsed.toString() === "https://bluelightav.eth/ipfs/cid").toBeTruthy();
   });
