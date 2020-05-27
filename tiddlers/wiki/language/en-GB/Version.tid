@@ -1,10 +1,12 @@
 title: Version
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
 [img class="tc-image-documentation" [$:/ipfs/image/version]]
 <p>
-You can get the current <b>~TidlyWiki</b> and <b>IPFS with ~TiddlyWiki</b> version within the Tools tab.
+  You can get the current <b>~TidlyWiki</b> and <b>IPFS with ~TiddlyWiki</b> version within the Tools tab.
+</p>
+<p>
+  The plugin version is also available in the [[IPFS with TiddlyWiki|$:/plugins/ipfs]] plugin Tiddler.
 </p>

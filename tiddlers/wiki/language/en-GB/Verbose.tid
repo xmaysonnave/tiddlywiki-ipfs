@@ -1,22 +1,21 @@
 title: Verbose
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>Verbose Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/verbose]]
 <p>
-The plugin displays common errors through dialog boxes.
+  The plugin provide feedback through dialog boxes.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/error]]
 <p>
-Errors are always detailed in the [[Console]]. Useful when you need to fill a bug report.
+  Errors are always detailed in the [[Console]]. Useful when you need to fill a bug report.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/error/console]]
 <p>
-Processing content over [[IPFS|IPFS Server Settings]] could be a lengthy process.
+  Processing content over [[IPFS|IPFS Server Settings]] could be a lengthy process.
 </p>
 <p>
-Every logical step gives a detailed output to the [[Console]].
+  Every logical steps are detailed and logged to the [[Console]].
 </p>

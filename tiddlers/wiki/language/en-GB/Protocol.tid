@@ -1,5 +1,4 @@
 title: Protocol
-created: 20200420094915385
 modified: 20200420094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
@@ -7,7 +6,7 @@ type: text/vnd.tiddlywiki
 <h2>Protocol Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/protocol]]
 <p>
-The <b>Protocol</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> saves your wiki over IPFS.
+  The <b>Protocol</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> saves your wiki over IPFS.
 </p>
 <h3>IPFS</h3>
 <p>
@@ -18,18 +17,21 @@ The <b>Protocol</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> saves 
 </p>
 <h3>IPNS</h3>
 <p>
-  The [[IPNS|IPNS Settings]] protocol enhances the IPFS protocol and publish an <b>IPNS name</b> with a new [[IPFS|IPFS Server Settings]] identifier.
+  The [[IPNS|IPNS Settings]] protocol enhances the IPFS protocol and publishes an <b>IPNS name</b> with a new [[IPFS|IPFS Server Settings]] identifier.
+</p>
+<p>
+  The [[IPNS|IPNS Settings]] protocol uses the <b>IPNS name</b> and <b>IPNS key</b> defined in your [[IPNS Settings]].
 </p>
 <p>
   Once your wiki is saved you'll be redirected to the new IPNS identifier location.
 </p>
 <h3>ENS</h3>
 <p>
-  The [[ENS|ENS Settings]] protocol enhances the IPFS protocol and publish an [[ENS|ENS Settings]] domain or [[ENS|ENS Settings]] subdomain with a new [[IPFS|IPFS Server Settings]] identifier.
+  The [[ENS|ENS Settings]] protocol enhances the IPFS protocol and publishes a new [[IPFS|IPFS Server Settings]] identifier to an [[ENS|ENS Settings]] domain or [[ENS|ENS Settings]] subdomain.
 </p>
 <p>
   Once your wiki is saved you'll be redirected to your [[ENS|ENS Settings]] domain or [[ENS|ENS Settings]] subdomain.
 </p>
 <p>
-  If you comes from an [[IPNS|IPNS Settings]] location the [[ENS|ENS Settings]] protocol always updates your previous [[IPNS|IPNS Settings]] location.
+  If you comes from an [[IPNS|IPNS Settings]] identifier the [[ENS|ENS Settings]] protocol always updates your previous [[IPNS|IPNS Settings]] identifier.
 </p>

@@ -1,25 +1,22 @@
 title: Unpin
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>Unpin Setting</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/unpin]]
 <p>
-  The <b>Unpin</b> checkbox when selected try to unpin the previous content while saving.
+  The <b>Unpin</b> checkbox when selected try to unpin previous contents while saving.
 </p>
 <p>
-  Each time you save your wiki or publish an [[IPNS|IPNS Settings]] Name, the previous content will be unpined.
+  Each time you save your wiki, publish to [[IPNS|IPNS Settings]] or publish to [[ENS|ENS Settings]] the previous content will be unpined.
 </p>
 <p>
   When you embed in your wiki a previously saved IPFS attachment, an <b>Unpin</b> request will be recorded and processed while saving.
 </p>
 <p>
-  Unpinning is not allowed with the [[API URL|IPFS Server Settings]] <b>ipfs.infura.io:5001</b>.
+  The same mechanism applies to exported contents.
 </p>
 <p>
-  In some situations <b>Unpining</b> is an unwanted mechanism. If you [[Publish TiddlyWiki to IPNS]] an existing [[IPNS name|IPNS Settings]]
-  to a different <b>IPNS name</b>, unpining the previous document will break the former <b>IPNS name</b>. This behaviour also applies to [[ENS|ENS Settings]]
-  if you <b>Unpin</b> a content referenced with [[ENS|ENS Settings]].
+  Unpinning is not allowed with the [[API URL|IPFS Server Settings]] <b>ipfs.infura.io:5001</b>.
 </p>
