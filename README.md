@@ -90,24 +90,24 @@ These instructions will get you a copy of the project up and running on your loc
 
 Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
 
-To resolve https://bluelightav.eth you need an [ENS](https://ens.domains/) capable browser:
+To resolve <b>.eth</b> domains you need an [Ethereum](https://ethereum.org/) capable browser:
 
 - Use [Metamask](https://metamask.io) as a browser extension
 - Use [Metamask](https://metamask.io) as an Android mobile application
 - Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 
-To use [ENS](https://app.ens.domains/) you need an Ethereum wallet:
+To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
 - Use [Metamask](https://metamask.io) as a browser extension
 - Use [Metamask](https://metamask.io) as an Android mobile application
 
-To run a local IPFS node, install:
+To run a local IPFS node, you need:
 
-- [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
-- [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
-- [GO IPFS](https://github.com/ipfs/go-ipfs)
+- [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/) and
+- [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
+- [IPFS Server](https://github.com/ipfs/go-ipfs)
 
-More informations about IPFS are avalaible here:
+More informations about IPFS:
 
 - [IPFS](https://ipfs.io/)
 
@@ -337,7 +337,7 @@ Open `wiki/index.html` file in your favorite browser.
 
 <a name="contributing"/>
 
-Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct.
 
 ## Authors
 

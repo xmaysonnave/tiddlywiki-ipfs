@@ -56,12 +56,12 @@ describe("WHATWG-URL", () => {
     const parsed = ipfsUrl.getUrl(baseHttp);
     expect(
       parsed.protocol === "https:" &&
-        parsed.origin == baseHttp.origin &&
-        parsed.pathname === "/" &&
-        parsed.search === "" &&
-        parsed.hash === "" &&
-        parsed.href == baseHttp.href &&
-        parsed.toString() == baseHttp.toString()
+      parsed.origin == baseHttp.origin &&
+      parsed.pathname === "/" &&
+      parsed.search === "" &&
+      parsed.hash === "" &&
+      parsed.href == baseHttp.href &&
+      parsed.toString() == baseHttp.toString()
     ).toBeTruthy();
   });
   it("File protocol URL", () => {
@@ -71,11 +71,11 @@ describe("WHATWG-URL", () => {
     const parsed = ipfsUrl.getUrl(baseFile);
     expect(
       parsed.protocol === "file:" &&
-        parsed.origin === "null" &&
-        parsed.host === "" &&
-        parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html" &&
-        parsed.href === baseFile.href &&
-        parsed.toString() === baseFile.toString()
+      parsed.origin === "null" &&
+      parsed.host === "" &&
+      parsed.pathname === "/work/tiddly/tiddlywiki-ipfs/wiki/index.html" &&
+      parsed.href === baseFile.href &&
+      parsed.toString() === baseFile.toString()
     ).toBeTruthy();
   });
   it("Useless base HTTP URL", () => {
@@ -85,11 +85,11 @@ describe("WHATWG-URL", () => {
     const parsed = ipfsUrl.getUrl(absolute, baseHttp);
     expect(
       parsed.protocol === "https:" &&
-        parsed.protocol === baseHttp.protocol &&
-        parsed.hostname === "bluelightav.eth" &&
-        parsed !== absolute &&
-        parsed.href === absolute.href &&
-        parsed.toString() === absolute.toString()
+      parsed.protocol === baseHttp.protocol &&
+      parsed.hostname === "bluelightav.eth" &&
+      parsed !== absolute &&
+      parsed.href === absolute.href &&
+      parsed.toString() === absolute.toString()
     ).toBeTruthy();
   });
   it("Relative URL", () => {

@@ -41,8 +41,8 @@ describe("CID", () => {
     );
     expect(
       ipnsIdentifier == null &&
-        protocol === "ipfs" &&
-        cid === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau"
+      protocol === "ipfs" &&
+      cid === "bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau"
     ).toBeTruthy();
   });
   it("Decode IPNS key", async () => {
