@@ -1,5 +1,5 @@
 title: IPFS Server Settings
-modified: 20200526094915385
+modified: 20200527094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
@@ -9,8 +9,8 @@ type: text/vnd.tiddlywiki
   To save your wiki over IPFS, you need to select:
 </p>
 <ul>
-<li>The [ext[API URL|https://docs.ipfs.io/reference/api/http/]] where the IPFS commands are sent</li>
-<li>The [ext[Gateway URL|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] where the IPFS content is retrieved</li>
+<li>An [ext[API URL|https://docs.ipfs.io/reference/api/http/]] where the IPFS commands are sent</li>
+<li>A [ext[Gateway URL|https://github.com/ipfs/go-ipfs/blob/master/docs/gateway.md]] where IPFS contents are retrieved</li>
 </ul>
 <p>
 While saving the plugin will:

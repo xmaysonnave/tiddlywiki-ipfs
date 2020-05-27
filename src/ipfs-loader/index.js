@@ -64,6 +64,16 @@ import root from 'window-or-global'
     }
   }
 
+  /*eslint no-new: "off", no-new-func: "off"*/
+  IpfsLoader.prototype.supportDynamicImport = function () {
+    try {
+      new Function('import("")')
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
   IpfsLoader.prototype.loadLibrary = function (id, url, sri, asModule) {
     // Dynamic import

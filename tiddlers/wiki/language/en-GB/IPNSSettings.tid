@@ -40,25 +40,31 @@ type: text/vnd.tiddlywiki
 <h3>Rename IPNS name</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/rename]]
 <p>
-  This command rename the default <b>IPNS name</b>.
+  This command rename an existing <b>IPNS name</b>.
 </p>
+<ul>
+  <li>Fetch an existing <b>IPNS name</b></li>
+  <li>The associated <b>IPNS key</b> is displayed</li>
+  <li>Update the current <b>IPNS name</b> in the input field</li>
+  <li>Use the rename command</li>
+</ul>
 <h3>Generate IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/generate]]
 <p>
-  This command generates an <b>IPNS key</b> linked to a new <b>IPNS name</b>.
+  This command generates a new <b>IPNS key</b> associated to an <b>IPNS name</b>.
 </p>
 <h3>Remove IPNS Name and IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/remove]]
 <p>
-  This command removes an <b>IPNS name</b> and its linked <b>IPNS key</b>.
+  This command removes an <b>IPNS name</b> and its associated <b>IPNS key</b>.
 </p>
 <h3>Fetch IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/fetch]]
 <p>
-  This command fetch the <b>IPNS key</b> linked to an <b>IPNS name</b>.
+  This command fetch an <b>IPNS key</b> associated to an <b>IPNS name</b>.
 </p>
 <h3>Open resolved IPNS key</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/ipns/resolve]]
 <p>
-  This command resolves and opens an <b>IPNS key</b>.
+  This command resolves an <b>IPNS key</b> to an IPFS identifier and displays its content in a new browser tab.
 </p>

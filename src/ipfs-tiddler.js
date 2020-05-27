@@ -354,11 +354,6 @@ IPFS Tiddler
       importUri === undefined || importUri == null || importUri.trim() === ''
         ? null
         : importUri.trim()
-    // Nothing to do
-    if (canonicalUri == null && importUri === null) {
-      $tw.utils.alert(name, 'Nothing to refresh here...')
-      return true
-    }
     // Reload Attachment
     if (
       (info.encoding === 'base64' || type === 'image/svg+xml') &&
@@ -373,12 +368,16 @@ IPFS Tiddler
       return true
     }
     // Async Import
-    var ipfsImport = new IpfsImport()
     if (canonicalUri !== null || importUri !== null) {
+      var ipfsImport = new IpfsImport()
       ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
         self.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
+    } else {
+      $tw.wiki.clearCache(title)
+      const changedTiddler = $tw.utils.getChangedTiddler(title)
+      $tw.rootWidget.refresh(changedTiddler)
     }
     return true
   }
