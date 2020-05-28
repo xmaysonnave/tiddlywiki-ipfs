@@ -68,7 +68,6 @@ With a non capable [ENS](https://ens.domains/) browser
 Recommended TiddlyWiki Plugins:
 
 - [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
-- [Relink](https://flibbles.github.io/tw5-relink/)
 
 ### Getting Started
 
@@ -331,7 +330,7 @@ This project is integrated with Travis CI:
 
 <a name="developer-running"/>
 
-Open `wiki/index.html` file in your favorite browser.
+Open [wiki/index.html](https://html.imst.xyz/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html) file in your favorite browser.
 
 ## Contributor Covenant Code of Conduct
 
