@@ -1,6 +1,5 @@
 title: Imported Tiddlers
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200528094915385
 tags: $:/ipfs/documentation Explorers
 type: text/vnd.tiddlywiki
 
@@ -11,8 +10,8 @@ type: text/vnd.tiddlywiki
 <h3>IPFS Imported Tiddlers</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/imported/tiddlers]]
 <p>
-The specialized [[IPFS Imported Tiddlers]] displays the <<tag-pill "$:/isImported">>.
+  The specialized [[IPFS Imported Tiddlers]] displays the <<tag-pill "$:/isImported">> tag.
 </p>
 <p>
-The [[IPFS Imported Tiddlers]] is available in the [[TableOfContents]].
+  The [[IPFS Imported Tiddlers]] is available in the [[TableOfContents]].
 </p>

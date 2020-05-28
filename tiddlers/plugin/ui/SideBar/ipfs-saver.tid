@@ -1,6 +1,5 @@
 title: $:/core/ui/ControlPanel/Saving/Ipfs
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200528094915385
 tags: $:/ipfs/core $:/tags/ControlPanel/Saving
 caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 

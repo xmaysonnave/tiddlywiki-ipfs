@@ -1,6 +1,5 @@
 title: $:/core/ui/EditTemplate
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200528094915385
 
 \define save-tiddler-actions()
 <$action-sendmessage $message="tm-add-tag" $param={{{ [<newTagNameTiddler>get[text]] }}}/>

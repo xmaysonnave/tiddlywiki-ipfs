@@ -35,7 +35,7 @@ type: text/vnd.tiddlywiki
   For faster transaction 5 to 10 gwei could be a maximum.
 </p>
 <p>
-  Check the [ext[Ethereum Gas Station|https://ethgasstation.info/]] for further details about the current gas price.
+  Check the [[Networks]] for further details about the current gas price.
 </p>
 <p>
   Publishing to ENS is a lengthy process. The [[Console]] will provide an URL to check the ongoing transaction.

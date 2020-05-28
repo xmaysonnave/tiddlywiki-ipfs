@@ -1,20 +1,30 @@
 title: Networks
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200528094915385
 tags: $:/ipfs/documentation Explorers
 type: text/vnd.tiddlywiki
 
 <p>
-You can check the IPFS network with the following tools:
+  You can check the <b>IPFS</b> network with the following tools:
 </p>
 <ul>
-<li>[ext[Infura Status|https://status.infura.io]]</li>
-<li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
+  <li>[ext[Infura Status|https://status.infura.io]]</li>
+  <li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
 </ul>
 <p>
-And their respective [ext[GitHub|https://github.com/]] repositories:
+  And their respective [ext[GitHub|https://github.com/]] repositories:
 </p>
 <ul>
-<li>[ext[Infura|https://github.com/INFURA/]]</li>
-<li>[ext[IPFS Public Gateway Checker|https://github.com/ipfs/public-gateway-checker/]]</li>
+  <li>[ext[Infura|https://github.com/INFURA/]]</li>
+  <li>[ext[IPFS Public Gateway Checker|https://github.com/ipfs/public-gateway-checker/]]</li>
+</ul>
+<p>
+  You can check the <b>Ethereum</b> networks with the following tools:
+</p>
+<ul>
+  <li>[ext[Ethereum Gas Station|https://ethgasstation.info/]]</li>
+  <li>[ext[Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
+  <li>[ext[Ethereum Network Stats|https://2miners.com/eth-stats/]]</li>
+  <li>[ext[Goerli: Ethereum Testnet|https://stats.goerli.net/]]</li>
+  <li>[ext[Rinkeby: Ethereum Testnet|https://www.rinkeby.io/#stats]]</li>
+  <li>[ext[Ropsten: Ethereum Testnet|https://ropsten-stats.parity.io/]]</li>
 </ul>

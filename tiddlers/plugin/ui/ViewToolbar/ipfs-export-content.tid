@@ -1,6 +1,5 @@
 title: $:/core/ui/Buttons/ipfs/export/content
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200528094915385
 tags: $:/ipfs/core $:/tags/ViewToolbar
 caption: {{$:/core/images/excise}} {{$:/language/Buttons/Ipfs/Export/Content/Caption}}
 description: {{$:/language/Buttons/Ipfs/Export/Content/Hint}}

@@ -1,6 +1,5 @@
 title: Attachments
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200528094915385
 tags: $:/ipfs/documentation Explorers
 type: text/vnd.tiddlywiki
 
@@ -11,8 +10,8 @@ type: text/vnd.tiddlywiki
 <h3>IPFS Attachments</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/attachment]]
 <p>
-The specialized [[IPFS Attachments]] Tiddler displays the <<tag-pill "$:/isAttachment">>tag.
+  The specialized [[IPFS Attachments]] Tiddler displays the <<tag-pill "$:/isAttachment">> tag.
 </p>
 <p>
-The [[IPFS Attachments]] Tiddler is available in the [[TableOfContents]].
+  The [[IPFS Attachments]] Tiddler is available in the [[TableOfContents]].
 </p>

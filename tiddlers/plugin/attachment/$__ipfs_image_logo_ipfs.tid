@@ -1,8 +1,7 @@
-created: 20200120044634920
-modified: 20200120044634920
+modified: 20200528044634920
 source: https://github.com/ipfs/logo/blob/master/vector/ipfs-logo-vector-black.svg
 license: https://github.com/ipfs/logo/blob/master/LICENSE
-tags: $:/tags/Image $:/ipfs/core $:/isAttachment
+tags: $:/tags/Image $:/ipfs/core $:/isAttachment $:/isEmbedded
 title: $:/core/images/ipfs
 type: image/svg+xml
 

@@ -34,8 +34,8 @@ IPFS Import
     var endH2 = strings[5]
     var endL2 = strings[6]
     if (
-      parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-      parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+      parentUrl.hostname === $tw.ipfs.getIpfsBaseUrl().hostname &&
+      parentUrl.pathname === $tw.ipfs.getIpfsBaseUrl().pathname
     ) {
       return `${msg}${space}${remote}${key}${endH1}${field}${endL1}${parentField}${from}${local}${parentUrl}${endH2}${parentTitle}${endL2}`
     } else {
@@ -49,8 +49,8 @@ IPFS Import
     var endH = strings[3]
     var endL = strings[4]
     if (
-      url.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-      url.pathname === $tw.ipfs.getDocumentUrl().pathname
+      url.hostname === $tw.ipfs.getIpfsBaseUrl().hostname &&
+      url.pathname === $tw.ipfs.getIpfsBaseUrl().pathname
     ) {
       return `${msg}${failed}${field}${from}${local}${url}${endH}${title}${endL}`
     } else {
@@ -73,8 +73,8 @@ IPFS Import
     var endH2 = strings[5]
     var endL2 = strings[6]
     if (
-      parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname &&
-      parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname
+      parentUrl.hostname === $tw.ipfs.getIpfsBaseUrl().hostname &&
+      parentUrl.pathname === $tw.ipfs.getIpfsBaseUrl().pathname
     ) {
       return `${msg}${space}${condition}${from}${remote}${key}${endH1}${title}${endL1}${local}${parentUrl}${endH2}${title}${endL2}`
     } else {
@@ -198,7 +198,7 @@ IPFS Import
     this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
-      const url = $tw.ipfs.getDocumentUrl()
+      const url = $tw.ipfs.getIpfsBaseUrl()
       url.hash = tiddler.fields.title
       if (canonicalUri !== null || importUri !== null) {
         this.getLogger().info('*** Begin Import ***')

@@ -21,9 +21,12 @@ Startup initialisation
     // Logger name
     const name = 'ipfs-startup'
     // Missing Media Types
-    $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
-    $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
+    $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
+    $tw.utils.registerFileType('image/jpg', 'base64', ['.jpg', '.jpeg'], {
+      flags: ['image']
+    })
+    $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
     // Log
     const logger = window.log.getLogger(name)
     logger.info('ipfs-startup is starting up...')
