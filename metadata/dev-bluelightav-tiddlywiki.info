@@ -15,8 +15,7 @@
     "tiddlywiki/highlight",
     "tiddlywiki/internals",
     "tiddlywiki/menubar",
-    "tiddlywiki/markdown",
-    "tiddlywiki/railroad"
+    "tiddlywiki/markdown"
   ],
   "includeWikis": [
   ],

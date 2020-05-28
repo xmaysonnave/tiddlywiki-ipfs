@@ -26,6 +26,10 @@
   "rules": {
     "spaced-comment": 0,
     "no-redeclare": 0,
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
     "flowtype/boolean-style": [
       2,
       "boolean"

@@ -3,6 +3,7 @@ npx prettier-standard \
   --lint \
   --format \
 || exit 1
+
 npx browserify \
   src/ipfs-bundle.js \
   -s IpfsBundle \
