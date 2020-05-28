@@ -312,9 +312,9 @@ Use the `build` script to build `IPFS with TiddlyWiki`.
 
 The `wiki` directory contains several runnable `TiddlyWikis`:
 
-- [index.html](https://html.imst.xyz/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
-- [dev.html](https://html.imst.xyz/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/dev.html)
-- [empty.html](https://html.imst.xyz/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
+- [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
+- [dev.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/dev.html)
+- [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
 
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
@@ -330,7 +330,7 @@ This project is integrated with Travis CI:
 
 <a name="developer-running"/>
 
-Open [wiki/index.html](https://html.imst.xyz/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html) file in your favorite browser.
+Open [wiki/index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html) file in your favorite browser.
 
 ## Contributor Covenant Code of Conduct
 
