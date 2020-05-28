@@ -1,0 +1,51 @@
+title: Export Attachment
+modified: 20200527094915385
+tags: $:/ipfs/documentation [[Tiddler Commands]]
+type: text/vnd.tiddlywiki
+
+<h2>Export Attachment</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/export/attachment]]
+<p>
+  Exporting an embedded attachment means exporting to IPFS a content from your wiki.
+</p>
+<p>
+  <b>IPFS with ~TiddlyWiki</b> lets you export to IPFS the following supported [[Media Types]].
+</p>
+<p>
+  Uploading to IPFS an attachment could be a slow process. It depends its size and/or which server your are using.
+</p>
+<p>
+  Use the [[https://ipfs.infura.io:5001 API URL|IPFS Server Settings]] and the
+  [[https://ipfs.infura.io Gateway URL|IPFS Server Settings]] and experiment with [[Embedded - The Little Prince]].
+</p>
+[img class="tc-image-documentation" [$:/ipfs/image/console]]
+<p>
+  Another good experiment is to use the [[https://ipfs.infura.io:5001 API URL|IPFS Server Settings]] and the
+  [[https://gateway.ipfs.io Gateway URL|IPFS Server Settings]]. You upload your attachment on <b>infura</b>
+  and spread its content to another server.
+</p>
+<p>
+  Attachment once exported to IPFS are not immediately pinned. The pinning process occurs when you save your wiki.
+</p>
+<p>
+  While exporting an attachment to IPFS the plugin will:
+</p>
+<ul>
+  <li>Verify if the current Tiddler contains an attachment</li>
+  <li>Verify if the current attachment is already exported</li>
+  <li>Extract the attachment from your wiki</li>
+  <li>Encrypt the attachment if applicable</li>
+  <li>Upload the attachment to IPFS</li>
+  <li>Request to Pin the new IPFS identifier</li>
+  <li>Update or create the Tiddler <b>_canonical_uri</b> field with the new IPFS identifier</li>
+  <li>Update the Tiddler tags</li>
+</ul>
+<h3>tags</h3>
+<p>
+  The export command manages some tags to highlight the Tiddler semantic:
+</p>
+<ul>
+  <li><<tag-pill "$:/isAttachment">></li>
+  <li><<tag-pill "$:/isEmbedded">></li>
+  <li><<tag-pill "$:/isIpfs">></li>
+</ul>

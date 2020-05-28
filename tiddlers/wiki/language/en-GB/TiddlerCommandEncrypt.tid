@@ -21,7 +21,7 @@ type: text/vnd.tiddlywiki
   Once you've locked and password protected your wiki, uploaded resources will be encrypted.
 </p>
 <p>
-  Read the [[Export Embedded Attachment]] reference for more informations.
+  Read the [[Export Attachment]] reference for more informations.
 </p>
 <p>
   Beware that even you've locked your wiki and didn't save it immediately already uploaded external resources are encrypted.

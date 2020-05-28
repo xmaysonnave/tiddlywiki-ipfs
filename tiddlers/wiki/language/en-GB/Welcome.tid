@@ -50,6 +50,15 @@ type: text/vnd.tiddlywiki
       </li>
     </ul>
   </li>
+  <li><b>Ethereum</b>:
+    <ul>
+      <li><b>Forum</b>:
+        <ul>
+          <li>[ext[Community|https://forum.ethereum.org/]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li><b>IPFS</b>:
     <ul>
       <li><b>Forum</b>:

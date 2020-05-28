@@ -1,32 +1,55 @@
-title: Export Embedded Attachment
-modified: 20200527094915385
+title: Export Tiddler
+modified: 20200528094915385
 tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
-<h2>Export Embedded Attachment</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/export/embedded]]
+<h2>Export Tiddler</h2>
+[img class="tc-image-documentation" [$:/ipfs/image/export/tiddler]]
 <p>
-  Exporting an embedded attachment means exporting to IPFS a content from your wiki.
+  Exporting a Tiddler means exporting to IPFS a Tiddler content from your wiki.
 </p>
 <p>
-  <b>IPFS with ~TiddlyWiki</b> lets you export to IPFS the following supported [[Media Types]].
+  <b>IPFS with ~TiddlyWiki</b> lets you [[Export]] to IPFS with the following format:
 </p>
+<ul>
+  <li><b>JSON</b> [[$:/ipfs/image/settings/export/json]]</li>
+  <li><b>Static</b> [[$:/ipfs/image/settings/export/static]]</li>
+  <li><b>TID</b> [[$:/ipfs/image/settings/export/tid]]</li>
+</ul>
 <p>
-  Uploading to IPFS an attachment could be a slow process. It depends its size and/or which server your are using.
+  While exporting to IPFS the plugin will:
 </p>
+<ul>
+  <li>Resolve an IPNS name and IPNS key if applicable</li>
+  <li>Resolve an ENS domain if applicable</li>
+  <li>Encrypt the content if applicable</li>
+  <li>Export the content</li>
+  <li>Pin the content</li>
+  <li>Update or create the Tiddler <b>_export_uri</b> field with the new IPFS identifier</li>
+  <li>Publish to IPNS the new IPFS identifier if applicable</li>
+  <li>Publish to ENS the new IPFS identifier if applicable</li>
+  <li>Unpin the previous IPFS identifier if applicable</li>
+  <li>Update the Tiddler <b>_export_uri</b> field with the previous IPNS name or key if applicable</li>
+  <li>Update the Tiddler <b>_export_uri</b> field with the previous ENS domain if applicable</li>
+  <li>Update the Tiddler tags</li>
+</ul>
+<h3>_export_uri</h3>
 <p>
-  Use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]] and the <b>https://ipfs.infura.io</b> [[Gateway URL|IPFS Server Settings]] and experiment with the following Tiddler:
+  The field <b>_export_uri</b> store your IPFS identifier. If you want to export to
+  a specific IPNS identifier or ENS domain you need to create manually and fill up
+  the field with an appropriate content before exporting.
 </p>
-[[Embedded - The Little Prince]]
+<h4>_export_uri content examples</h4>
+<ul>
+  <li><b>/ipns/name</b></li>
+  <li><b>/ipns/key</b></li>
+  <li><b>doc.bluelightav.eth</b></li>
+</ul>
+<h3>tags</h3>
 <p>
-  Be sure to setup the [[Verbose]] property and watch the console output.
+  The export command manages some tags to highlight the Tiddler semantic:
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/console]]
-<p>
-  Another good experiment is to use the <b>https://ipfs.infura.io:5001</b> [[API URL|IPFS Server Settings]] and the <b>https://gateway.ipfs.io</b> [[Gateway URL|IPFS Server Settings]].
-  That way you upload your attachment on infura and retrieve it through another server.
-  It helps spreading your attachment on another IPFS server increasing its resilience.
-</p>
-<p>
-  Attachment once exported to IPFS are not immediately pinned. The pinning process occurs when you save your wiki.
-</p>
+<ul>
+  <li><<tag-pill "$:/isExported">></li>
+  <li><<tag-pill "$:/isIpfs">></li>
+</ul>
