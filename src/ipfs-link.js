@@ -343,7 +343,10 @@ IPFS link widget
       this.getAttribute('tiddler') !== undefined
         ? this.getAttribute('tiddler')
         : this.getVariable('currentTiddler')
-    this.value = this.getAttribute('value')
+    this.value =
+      this.getAttribute('value') !== undefined
+        ? this.getAttribute('value')
+        : this.tiddler
     this.tooltip = this.getAttribute('tooltip')
     this['aria-label'] = this.getAttribute('aria-label')
     this.linkClasses = this.getAttribute('class') || 'tc-ipfs-link-external'
@@ -362,7 +365,7 @@ IPFS link widget
     if (this.parseTreeNode.children && this.parseTreeNode.children.length > 0) {
       templateTree = this.parseTreeNode.children
     } else {
-      templateTree = [{ type: 'text', text: this.caption }]
+      templateTree = [{ type: 'text', text: this.value }]
     }
     this.makeChildWidgets(templateTree)
   }
