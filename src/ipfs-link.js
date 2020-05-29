@@ -81,7 +81,11 @@ IPFS link widget
     } else {
       this.renderText(parent, nextSibling)
       $tw.ipfs
-        .resolveUrl(false, false, this.value)
+        .resolveUrl(
+          false,
+          false,
+          this.url !== undefined ? this.url : this.value
+        )
         .then(data => {
           var { normalizedUrl } = data
           if (normalizedUrl !== null) {
@@ -288,7 +292,7 @@ IPFS link widget
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     var self = this
     $tw.ipfs
-      .resolveUrl(true, true, this.value)
+      .resolveUrl(true, true, this.url !== undefined ? this.url : this.value)
       .then(data => {
         var { resolvedUrl } = data
         if (resolvedUrl !== null) {
@@ -343,10 +347,20 @@ IPFS link widget
       this.getAttribute('tiddler') !== undefined
         ? this.getAttribute('tiddler')
         : this.getVariable('currentTiddler')
+    const tiddler = $tw.wiki.getTiddler(this.tiddler)
+    this.field = this.getAttribute('field')
     this.value =
       this.getAttribute('value') !== undefined
         ? this.getAttribute('value')
+        : tiddler.getFieldString(this.field) !== ''
+        ? tiddler.getFieldString(this.field)
         : this.tiddler
+    if (
+      this.getAttribute('value') !== undefined &&
+      tiddler.getFieldString(this.getAttribute('value')) !== ''
+    ) {
+      this.url = tiddler.getFieldString(this.getAttribute('value'))
+    }
     this.tooltip = this.getAttribute('tooltip')
     this['aria-label'] = this.getAttribute('aria-label')
     this.linkClasses = this.getAttribute('class') || 'tc-ipfs-link-external'
@@ -354,13 +368,6 @@ IPFS link widget
     this.tabIndex = this.getAttribute('tabindex')
     this.draggable = this.getAttribute('draggable', 'yes')
     this.linkTag = this.getAttribute('tag', 'a')
-    // External link
-    this.caption = this.getAttribute('caption')
-    this.field = this.getAttribute('field')
-    const tiddler = $tw.wiki.getTiddler(this.tiddler)
-    if (this.value === undefined) {
-      this.value = tiddler.getFieldString(this.field)
-    }
     var templateTree
     if (this.parseTreeNode.children && this.parseTreeNode.children.length > 0) {
       templateTree = this.parseTreeNode.children
@@ -381,8 +388,6 @@ IPFS link widget
       value = tiddler.getFieldString(this.field)
     }
     if (
-      changedAttributes.caption ||
-      changedTiddlers[this.caption] ||
       changedAttributes.field ||
       changedTiddlers[this.field] ||
       changedAttributes.value ||
