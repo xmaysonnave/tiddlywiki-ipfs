@@ -22,6 +22,9 @@ cp ./metadata/bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 
+# tw5-relink
+cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
+
 # build prod wiki
 npx tiddlywiki build \
   --output wiki \

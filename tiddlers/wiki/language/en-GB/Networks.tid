@@ -1,8 +1,9 @@
 title: Networks
-modified: 20200528094915385
-tags: $:/ipfs/documentation Explorers
+modified: 20200529094915385
+tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
+<h3>IPFS</h3>
 <p>
   You can check the <b>IPFS</b> network with the following tools:
 </p>
@@ -10,21 +11,17 @@ type: text/vnd.tiddlywiki
   <li>[ext[Infura Status|https://status.infura.io]]</li>
   <li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
 </ul>
-<p>
-  And their respective [ext[GitHub|https://github.com/]] repositories:
-</p>
-<ul>
-  <li>[ext[Infura|https://github.com/INFURA/]]</li>
-  <li>[ext[IPFS Public Gateway Checker|https://github.com/ipfs/public-gateway-checker/]]</li>
-</ul>
+<h3>Ethereum</h3>
 <p>
   You can check the <b>Ethereum</b> networks with the following tools:
 </p>
 <ul>
   <li>[ext[Ethereum Gas Station|https://ethgasstation.info/]]</li>
   <li>[ext[Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
-  <li>[ext[Ethereum Network Stats|https://2miners.com/eth-stats/]]</li>
-  <li>[ext[Goerli: Ethereum Testnet|https://stats.goerli.net/]]</li>
-  <li>[ext[Rinkeby: Ethereum Testnet|https://www.rinkeby.io/#stats]]</li>
-  <li>[ext[Ropsten: Ethereum Testnet|https://ropsten-stats.parity.io/]]</li>
+  <li>[ext[Etherchain Charts|https://www.etherchain.org/charts]]</li>
+  <li>[ext[Etherscan|https://etherscan.io/]]</li>
+  <li>[ext[Ethstats|https://ethstats.net/]]</li>
+  <li>[ext[Goerli: Ethereum Test Network (PoA)|https://stats.goerli.net/]]</li>
+  <li>[ext[Rinkeby: Ethereum Test Network (PoA)|https://www.rinkeby.io/#stats]]</li>
+  <li>[ext[Ropsten: Ethereum Test Network (PoW)|https://ropsten-stats.parity.io/]]</li>
 </ul>

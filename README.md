@@ -27,7 +27,7 @@ This plugin provides the following features:
 
 - Store `TiddlyWiki's` and attachments on [IPFS](https://ipfs.io/)
 - Access `TiddlyWiki's` and attachments from [IPFS](https://ipfs.io/)
-- Encrypt and Decrypt `TiddlyWiki's` and attachments
+- Encrypt and Unencrypt `TiddlyWiki's` and attachments
 - Publish and Manage IPNS Keys and Names
 - Interact with [Metamask](https://metamask.io) Ethereum wallets
 - Publish to [ENS](https://ens.domains)
@@ -231,20 +231,20 @@ load-nvmrc
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 
 ```
-v12.16.3
+v12.17.0
 ```
 
 Install the recommended version.
 
 ```
-nvm install v12.16.3
+nvm install v12.17.0
 ```
 
 Check:
 
 ```
 node -v
-v12.16.3
+v12.17.0
 ```
 
 We update npm to use the latest:
@@ -259,7 +259,7 @@ At this stage your environment should look like this:
 
 ```
 npm -g ls --depth=0
-/home/user/.nvm/versions/node/v12.16.3/lib
+/home/user/.nvm/versions/node/v12.17.0/lib
 └── npm@6.14.5
 ```
 
@@ -299,7 +299,6 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 - eslint
 - eslint:fix
 - format
-- lint
 - run-build-number
 - run-browserify
 - run-prepare-clone

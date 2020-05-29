@@ -9,7 +9,7 @@ type: text/vnd.tiddlywiki
   Exporting a Tiddler means exporting to IPFS a Tiddler content from your wiki.
 </p>
 <p>
-  <b>IPFS with ~TiddlyWiki</b> lets you [[Export]] to IPFS with the following format:
+  <b>IPFS with ~TiddlyWiki</b> lets you [[Export]] to IPFS the following format:
 </p>
 <ul>
   <li><b>JSON</b> [[$:/ipfs/image/settings/export/json]]</li>
@@ -22,8 +22,9 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>Resolve an IPNS name and IPNS key if applicable</li>
   <li>Resolve an ENS domain if applicable</li>
+  <li>Extract the content</li>
   <li>Encrypt the content if applicable</li>
-  <li>Export the content</li>
+  <li>Export the content to <b>IPFS</b></li>
   <li>Pin the content</li>
   <li>Update or create the Tiddler <b>_export_uri</b> field with the new IPFS identifier</li>
   <li>Publish to IPNS the new IPFS identifier if applicable</li>

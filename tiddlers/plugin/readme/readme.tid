@@ -9,7 +9,7 @@ Features:
 
 * Store `TiddlyWiki's` and attachments on [ext[IPFS|https://ipfs.io/]]
 * Access `TiddlyWiki's` and attachments from [ext[IPFS|https://ipfs.io/]]
-* Encrypt and Decrypt `TiddlyWiki` and attachments
+* Encrypt and Unencrypt `TiddlyWiki` and attachments
 * Publish and Manage IPNS Keys and Names
 * Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
 * Publish to [ext[ENS|https://ens.domains]]

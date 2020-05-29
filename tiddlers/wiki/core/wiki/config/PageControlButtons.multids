@@ -1,6 +1,0 @@
-title: $:/config/PageControlButtons/Visibility/$:/
-modified: 20200528094915385
-tags: bluelightav.eth
-
-core/ui/Buttons/home: show
-core/ui/Buttons/more-page-actions: show

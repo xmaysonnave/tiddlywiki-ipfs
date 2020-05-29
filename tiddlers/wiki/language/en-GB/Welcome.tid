@@ -1,18 +1,29 @@
 title: Welcome
-created: 20200420094915385
-modified: 20200420094915385
+modified: 20200529094915385
 tags: bluelightav.eth TableOfContents
 type: text/vnd.tiddlywiki
 
+<h2>Welcome</h2>
 <p>
   Welcome to <b>IPFS with ~TiddlyWiki</b>, the Unstoppable Wiki.
 </p>
 <p>
-  [ext[Blue Light|https://wiki.bluelightav.org]] is happy to provide this [ext[Open Source|https://spdx.org/licenses/GPL-3.0-or-later.html]] <b>~TiddlyWiki</b> plugin.
+  [ext[Blue Light|https://wiki.bluelightav.org]] is thrilled to provide this [ext[Open Source|https://spdx.org/licenses/GPL-3.0-or-later.html]] <b>~TiddlyWiki</b> plugin.
 </p>
 <p>
   <b>IPFS with ~TiddlyWiki</b>
 </p>
+<h3>Features</h3>
+<ul>
+  <li>Store ~TiddlyWiki's and attachments on [ext[IPFS|https://ipfs.io/]]</li>
+  <li>Access ~TiddlyWiki's and attachments from [ext[IPFS|https://ipfs.io/]]</li>
+  <li>Encrypt and Unencrypt ~TiddlyWiki's and attachments</li>
+  <li>Publish and Manage IPNS Names and Keys</li>
+  <li>Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets</li>
+  <li>Publish to [ext[ENS|https://ens.domains]]</li>
+  <li>Share over [ext[IPFS|https://ipfs.io/]] ~TiddlyWiki's [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments</li>
+</ul>
+<h3>Project</h3>
 <ul>
   <li>Project
     <ul><li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li></ul>
@@ -37,9 +48,7 @@ type: text/vnd.tiddlywiki
 <p>
   See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for additional details.
 </p>
-<p>
-  <b>Community</b>
-</p>
+<h3>Community</h3>
 <ul>
   <li><b>ENS</b>:
     <ul>
@@ -92,5 +101,5 @@ type: text/vnd.tiddlywiki
   </li>
 </ul>
 <p>
-  See the [[control panel|$:/ControlPanel]] for more options.
+  See the [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] for more options.
 </p>
