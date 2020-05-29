@@ -13,7 +13,8 @@
     "tiddlywiki/codemirror-mode-xml",
     "tiddlywiki/codemirror-search-replace",
     "tiddlywiki/highlight",
-    "tiddlywiki/markdown"
+    "tiddlywiki/markdown",
+    "tiddlywiki/menubar"
   ],
   "includeWikis": [
   ],

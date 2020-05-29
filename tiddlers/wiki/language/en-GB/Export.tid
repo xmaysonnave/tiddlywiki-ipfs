@@ -7,6 +7,8 @@ type: text/vnd.tiddlywiki
 [img class="tc-image-documentation" [$:/ipfs/image/settings/export]]
 <p>
   The <b>Export</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> export your Tiddler over IPFS.
+  This setting only applies to the [[Export Tiddler]] command as the [[Export Content]] always uses the
+  [ext[JSON|https://www.json.org/]] lightweight data-interchange format.
 </p>
 <h3>JSON</h3>
 [img class="tc-image-documentation" [$:/ipfs/image/settings/export/json]]

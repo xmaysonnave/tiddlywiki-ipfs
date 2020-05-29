@@ -36,7 +36,7 @@ type: text/vnd.tiddlywiki
 </p>
 <h3>Resolve ENS with IPFS with ~TiddlyWiki</h3>
 <p>
-<$ipfslink value="https://bluelightav.eth">https://bluelightav.eth</$ipfslink>
+<$ipfslink value="bluelightav.eth"/>
 </p>
 <h3>Resolve ENS with a browser extension</h3>
 <p>

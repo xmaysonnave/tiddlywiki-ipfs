@@ -29,7 +29,9 @@ type: text/vnd.tiddlywiki
     <ul><li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li></ul>
   </li>
   <li>Resolve ENS with IPFS with ~TiddlyWiki
-    <ul><li><$ipfslink value="https://bluelightav.eth">https://bluelightav.eth</$ipfslink></li></ul>
+    <ul>
+			<li><$ipfslink value="bluelightav.eth"/></li>
+		</ul>
   </li>
   <li>Resolve ENS with a browser extension
     <ul><li>[ext[https://bluelightav.eth]]</li></ul>

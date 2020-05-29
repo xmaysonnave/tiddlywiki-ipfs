@@ -1,0 +1,32 @@
+title: IpfsLinkWidget
+modified: 20200527094915385
+tags: $:/ipfs/documentation [[IPFS Documentation]]
+type: text/vnd.tiddlywiki
+
+The `ipfslink` widget generates links to tiddlers and external resources. It resolves <b>IPNS</b> and <b>ENS</b> domain if applicable.
+If no tiddlers are found or the value cannot be resolved as an URL the content will be rendered as text.
+
+! Content and Attributes
+
+The content of the ipfslink widget is rendered within the `<a>` tag representing the link.
+
+`<$ipfslink/>` is equivalent to `<$ipfslink value=<<currentTiddler>>><$view field="title"/></$ipfslink>`.
+
+`<$ipfslink value="blueligtav.eth"/>` is equivalent to `<$ipfslink value="bluelightav.eth">bluelightav.eth</$ipfslink>`.
+
+Example: [[Welcome]]
+
+`<$ipfslink field="_canonical_uri" tiddler=<<currentTiddler>>/>`.
+
+Example: [[$:/core/ui/EditTemplate/body]]
+
+`<$ipfslink value=<<currentField>> field=<<currentField>> tiddler=<<currentTiddler>>/>`.
+
+Example: [[$:/core/ui/EditTemplate/fields]]
+
+|!Attribute |!Description |
+|value |Optional Tiddler Title, URL or field processed as a link if possible|
+|field |Optional Tiddler field from which the value will be extracted|
+|tiddler |Optional Tiddler Title from which the field will be extracted|
+
+See [ext[LinkWidget|https://tiddlywiki.com/#LinkWidget]] for more details.
