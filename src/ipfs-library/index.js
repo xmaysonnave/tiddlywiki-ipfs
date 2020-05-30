@@ -121,7 +121,7 @@ import root from 'window-or-global'
               protocol: protocol,
               host: apiUrl.hostname,
               port: port,
-              timeout: '2m'
+              timeout: '4m'
             }
           })
         ]
