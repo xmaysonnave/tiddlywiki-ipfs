@@ -1,4 +1,4 @@
-title: IpfsLinkWidget
+title: IPFS Link Widget
 modified: 20200527094915385
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
@@ -29,4 +29,4 @@ Example: [[$:/core/ui/EditTemplate/fields]]
 |field |Optional Tiddler field from which the value will be extracted|
 |tiddler |Optional Tiddler Title from which the field will be extracted|
 
-See [ext[LinkWidget|https://tiddlywiki.com/#LinkWidget]] for more details.
+The <b>IPFS Link Widget</b> inherits the [ext[LinkWidget|https://tiddlywiki.com/#LinkWidget]] characteristics.
