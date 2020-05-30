@@ -75,17 +75,14 @@ IPFS link widget
     // Execute our logic
     this.execute()
     // Tiddler link
-    var tiddler = $tw.wiki.getTiddler(this.value)
+    var value = this.url !== undefined ? this.url : this.value
+    var tiddler = $tw.wiki.getTiddler(value)
     if (tiddler !== undefined && tiddler !== null) {
       this.renderTiddlerLink(parent, nextSibling)
     } else {
       this.renderText(parent, nextSibling)
       $tw.ipfs
-        .resolveUrl(
-          false,
-          false,
-          this.url !== undefined ? this.url : this.value
-        )
+        .resolveUrl(false, false, value)
         .then(data => {
           var { normalizedUrl } = data
           if (normalizedUrl !== null) {
@@ -155,8 +152,9 @@ IPFS link widget
     if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
       tag = 'a'
     }
-    var isMissing = !this.wiki.tiddlerExists(this.value)
-    var isShadow = this.wiki.isShadowTiddler(this.value)
+    var value = this.url !== undefined ? this.url : this.value
+    var isMissing = !this.wiki.tiddlerExists(value)
+    var isShadow = this.wiki.isShadowTiddler(value)
     // Create our element
     var namespace = this.getVariable('namespace', {
       defaultValue: 'http://www.w3.org/1999/xhtml'
@@ -194,7 +192,7 @@ IPFS link widget
         wikilinkTransformFilter,
         this,
         function (iterator) {
-          iterator(self.wiki.getTiddler(self.value), self.value)
+          iterator(self.wiki.getTiddler(value), value)
         }
       )[0]
     } else {
@@ -206,17 +204,17 @@ IPFS link widget
       wikiLinkText = $tw.utils.replaceString(
         wikiLinkTemplate,
         '$uri_encoded$',
-        encodeURIComponent(this.value)
+        encodeURIComponent(value)
       )
       wikiLinkText = $tw.utils.replaceString(
         wikiLinkText,
         '$uri_doubleencoded$',
-        encodeURIComponent(encodeURIComponent(this.value))
+        encodeURIComponent(encodeURIComponent(value))
       )
     }
     // Override with the value of tv-get-export-link if defined
     wikiLinkText = this.getVariable('tv-get-export-link', {
-      params: [{ name: 'to', value: this.value }],
+      params: [{ name: 'to', value: value }],
       defaultValue: wikiLinkText
     })
     if (tag === 'a') {
@@ -242,7 +240,7 @@ IPFS link widget
         {
           parseAsInline: true,
           variables: {
-            currentTiddler: this.value
+            currentTiddler: value
           },
           parentWidget: this
         }
@@ -265,7 +263,7 @@ IPFS link widget
       $tw.utils.makeDraggable({
         domNode: domNode,
         dragTiddlerFn: function () {
-          return self.value
+          return value
         },
         widget: this
       })
@@ -281,7 +279,7 @@ IPFS link widget
    * Render this widget into the DOM
    */
   IpfsLinkWidget.prototype.renderText = function (parent, nextSibling) {
-    var domNode = this.document.createElement('span')
+    const domNode = this.document.createElement('span')
     // Insert the text into the DOM and render any children
     parent.insertBefore(domNode, nextSibling)
     // Process
@@ -290,11 +288,12 @@ IPFS link widget
   }
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
-    var self = this
+    const self = this
+    const value = this.url !== undefined ? this.url : this.value
     $tw.ipfs
-      .resolveUrl(true, true, this.url !== undefined ? this.url : this.value)
+      .resolveUrl(true, true, value)
       .then(data => {
-        var { resolvedUrl } = data
+        const { resolvedUrl } = data
         if (resolvedUrl !== null) {
           window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
         }
@@ -310,10 +309,11 @@ IPFS link widget
 
   IpfsLinkWidget.prototype.handleTiddlerClickEvent = function (event) {
     // Send the click on its way as a navigate event
-    var bounds = this.domNodes[0].getBoundingClientRect()
+    const bounds = this.domNodes[0].getBoundingClientRect()
+    const value = this.url !== undefined ? this.url : this.value
     this.dispatchEvent({
       type: 'tm-navigate',
-      navigateTo: this.value,
+      navigateTo: value,
       navigateFromTitle: this.getVariable('storyTiddler'),
       navigateFromNode: this,
       navigateFromClientRect: {
@@ -343,6 +343,7 @@ IPFS link widget
    */
   IpfsLinkWidget.prototype.execute = function () {
     // Pick up our attributes
+    this.url = undefined
     this.tiddler =
       this.getAttribute('tiddler') !== undefined
         ? this.getAttribute('tiddler')
