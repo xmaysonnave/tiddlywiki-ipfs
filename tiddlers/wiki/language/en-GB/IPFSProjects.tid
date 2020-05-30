@@ -28,6 +28,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]]</li>
   <li>[ext[IPFS Infra|https://github.com/ipfs/infra]]</li>
   <li>[ext[IPFS Provider|https://github.com/ipfs-shipyard/ipfs-provider]]</li>
+  <li>[ext[JavaScript Standard Style|https://github.com/standard/standard]]</li>
   <li>[ext[Jest|https://github.com/facebook/jest]]</li>
   <li>[ext[JS-IPFS|https://github.com/ipfs/js-ipfs]]</li>
   <li>[ext[Let's Encrypt|https://letsencrypt.org/]]</li>
@@ -41,6 +42,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[Oh My Zsh|https://github.com/ohmyzsh/ohmyzsh]]</li>
   <li>[ext[Prettier|https://github.com/prettier/prettier]]</li>
   <li>[ext[Prettier Standard|https://github.com/sheerun/prettier-standard]]</li>
+  <li>[ext[Prettierx|https://github.com/brodybits/prettierx]]</li>
   <li>[ext[Sablier|https://github.com/sablierhq]]</li>
   <li>[ext[Snyk|https://snyk.io/]]</li>
   <li>[ext[TiddlyWiki5|https://github.com/Jermolene/TiddlyWiki5]]</li>

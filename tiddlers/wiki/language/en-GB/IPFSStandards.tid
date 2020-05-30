@@ -11,7 +11,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[Open Source Projects|https://www.fsf.org/]]</li>
   <li>[ext[Linting with Eslint|https://github.com/eslint/eslint]]</li>
   <li>[ext[Testing with Jest|https://github.com/facebook/jest]]</li>
-  <li>[ext[Code formatter with Prettier Standard|https://github.com/sheerun/prettier-standard]]</li>
+  <li>[ext[JavaScript Standard Style|https://github.com/standard/standard]]</li>
   <li>[ext[DevSecOps with Snyk|https://snyk.io/]]</li>
   <li>[ext[Continuous Integration with Travis CI|https://travis-ci.com/]]</li>
   <li>[ext[WHATWG Standard support with Universal URL|https://github.com/stevenvachon/universal-url]]</li>
