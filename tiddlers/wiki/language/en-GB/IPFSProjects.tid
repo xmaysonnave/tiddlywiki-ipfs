@@ -37,6 +37,8 @@ type: text/vnd.tiddlywiki
   <li>[ext[Nginx|https://www.nginx.com/]]</li>
   <li>[ext[Node.js|https://github.com/nodejs]]</li>
   <li>[ext[Npm|https://github.com/npm/cli]]</li>
+  <li>[ext[Nvm|https://github.com/nvm-sh/nvm]]</li>
+  <li>[ext[Oh My Zsh|https://github.com/ohmyzsh/ohmyzsh]]</li>
   <li>[ext[Prettier|https://github.com/prettier/prettier]]</li>
   <li>[ext[Prettier Standard|https://github.com/sheerun/prettier-standard]]</li>
   <li>[ext[Sablier|https://github.com/sablierhq]]</li>
