@@ -191,16 +191,16 @@ IPFS Saver
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setEns(ensDomain, added)
-          const chainId = $tw.ipfs.getChainId()
-          if (chainId !== null && chainId === 1) {
-            nextWiki.protocol = 'https:'
-            nextWiki.host = ensDomain
-          } else {
-            const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
-            nextWiki.protocol = resolvedUrl.protocol
-            nextWiki.host = resolvedUrl.host
-            nextWiki.pathname = resolvedUrl.pathname
-          }
+          // const chainId = $tw.ipfs.getChainId()
+          // if (chainId !== null && chainId === 1) {
+          //   nextWiki.protocol = 'https:'
+          //   nextWiki.host = ensDomain
+          // } else {
+          const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
+          nextWiki.protocol = resolvedUrl.protocol
+          nextWiki.host = resolvedUrl.host
+          nextWiki.pathname = resolvedUrl.pathname
+          // }
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
           this.getLogger().warn(error)
