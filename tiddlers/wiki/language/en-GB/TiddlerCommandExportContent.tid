@@ -43,7 +43,7 @@ type: text/vnd.tiddlywiki
 [img class="tc-image-documentation" [$:/ipfs/image/documentation/asset/content]]
 <p>
   Notice the transclusion notation available in the <b>text</b> field.
-  Close your the Tiddler and execute the following command.
+  Close the Tiddler and execute the following command.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/export/content]]
 <p>

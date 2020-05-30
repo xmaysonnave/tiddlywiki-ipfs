@@ -102,7 +102,7 @@ To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
 To run a local IPFS node, you need:
 
-- [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/) and
+- [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
 - [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
 - [IPFS Server](https://github.com/ipfs/go-ipfs)
 
