@@ -1,0 +1,12 @@
+title: IPFS Technical
+modified: 20200528094915385
+tags: blueligtav.eth $:/ipfs/documentation [[IPFS Documentation]]
+type: text/vnd.tiddlywiki
+
+<h2>Requirements</h2>
+<ul>
+  <li>[ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]</li>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+</ul>
+<h2>Technical</h2>
+<<locator-view baseTitle:"IPFS Technical">>

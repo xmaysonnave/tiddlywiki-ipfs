@@ -173,11 +173,17 @@ Setup a nodejs environment to build tiddlywiki instances bundled with `IPFS with
 
 <a name="developer-nodejs-resource"/>
 
-Official Node documentation:
+jsDelivr, A free CDN for Open Source:
+https://www.jsdelivr.com/
+
+Node Documentation:
 https://nodejs.org/en/docs/
 
-Official npm repository
+Npm Repository:
 https://www.npmjs.com/
+
+SriHash:
+https://www.srihash.org/
 
 ##### Install
 
