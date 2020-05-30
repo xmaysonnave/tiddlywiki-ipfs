@@ -8,9 +8,12 @@ type: text/vnd.tiddlywiki
   Here is an exhaustive list of involved projects with <b>IPFS with ~TiddlyWiki</b>
 </p>
 <ul>
-  <li>[ext[Babelify|https://github.com/babel/babelify]]</li>
+  <li>[ext[Babel|https://github.com/babel]]</li>
+  <li>[ext[Buffer|https://github.com/feross/buffer]]</li>
   <li>[ext[Chromium|https://www.chromium.org/]]</li>
   <li>[ext[Chrome|https://www.google.com/chrome/]]</li>
+  <li>[ext[Cid|https://github.com/multiformats/js-cid]]</li>
+  <li>[ext[Content Hash|https://github.com/pldespaigne/content-hash]]</li>
   <li>[ext[Contributor Covenant|https://github.com/ContributorCovenant]]</li>
   <li>[ext[Debian|https://www.debian.org/]]</li>
   <li>[ext[ENS|https://github.com/ensdomains]]</li>
