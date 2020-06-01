@@ -87,6 +87,7 @@ IPFS Action
     var normalizedUrl = null
     var added = null
     var fields = []
+    const self = this
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
     var exportUri = tiddler.getFieldString('_export_uri')
@@ -553,11 +554,11 @@ IPFS Action
   }
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
-    const self = this
     var cid = null
     var ipnsKey = null
     var wikiCid = null
     var wikiIpnsKey = null
+    const self = this
     const wiki = $tw.ipfs.getDocumentUrl()
     if (wiki.protocol === fileProtocol) {
       $tw.utils.alert(name, 'Undefined IPFS identifier...')
