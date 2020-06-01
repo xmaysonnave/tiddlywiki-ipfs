@@ -1048,7 +1048,6 @@ IPFS Import
     if (tiddler === undefined) {
       return null
     }
-    var tags = tiddler.tags !== undefined ? tiddler.tags : ''
     // Retrieve target host Tiddler
     if (this.host !== null && this.host.fields.title === title) {
       currentTiddler = this.host
@@ -1061,6 +1060,8 @@ IPFS Import
       merged = {}
       this.merged.set(title, merged)
     }
+    // Tags
+    var tags = tiddler.tags !== undefined ? tiddler.tags : ''
     // Fields
     var hasModified = false
     for (var field in tiddler) {
@@ -1085,14 +1086,23 @@ IPFS Import
     if (hasModified === false) {
       merged.modified = new Date()
     }
-    // Tags,
-    // We use the target tiddler to manage complex tags like [[IPFS Documentation]]
+    // Merge current Tiddler Tags
     if (currentTiddler !== undefined && currentTiddler !== null) {
-      var currentTags = (currentTiddler.fields.tags || []).slice(0)
+      const currentTags = (currentTiddler.fields.tags || []).slice(0)
       for (var i = 0; i < currentTags.length; i++) {
-        var tag = currentTags[i]
-        if (tags.includes(tag) === false) {
-          tags = `${tags} ${tag}`
+        const currentTag = currentTags[i]
+        if (tags.includes(currentTag) === false) {
+          tags = `${tags} ${currentTag}`
+        }
+      }
+    }
+    // Merge merged Tags
+    if (merged.tags !== undefined && merged.tags !== null) {
+      const mergedTags = $tw.utils.parseStringArray(merged.tags, false)
+      for (var i = 0; i < mergedTags.length; i++) {
+        const mergedTag = mergedTags[i]
+        if (tags.includes(mergedTag) === false) {
+          tags = `${tags} ${mergedTag}`
         }
       }
     }
