@@ -198,7 +198,7 @@ ENS Wrapper
           protocol: protocol
         }
       }
-      this.getLogger().warn('Unassigned ENS domain content...')
+      $tw.utils.alert(name, 'Unassigned ENS domain content...')
       return {
         content: null,
         protocol: null
