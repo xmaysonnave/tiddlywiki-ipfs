@@ -284,7 +284,7 @@ IPFS Import
         if (
           value !== undefined &&
           value !== null &&
-          value === self.importUri &&
+          value === self.rootUri &&
           self.merged.get(title) === undefined
         ) {
           if (
@@ -302,7 +302,7 @@ IPFS Import
         if (
           value !== undefined &&
           value !== null &&
-          value === self.importUri &&
+          value === self.rootUri &&
           self.merged.get(title) === undefined
         ) {
           if (
