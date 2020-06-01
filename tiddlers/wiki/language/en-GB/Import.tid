@@ -1,0 +1,62 @@
+title: Import
+modified: 20200528094915385
+tags: blueligtav.eth $:/ipfs/documentation [[IPFS Documentation]]
+type: text/vnd.tiddlywiki
+
+<h2>Import</h2>
+<p>
+  Besides the <b>_canonical_uri</b> field, <b>IPFS with ~TiddlyWiki</b> introduces a new special field <b>_import_uri</b>.
+  The <b>_canonical_uri</b> references either an attachment or a Tiddler while the <b>_import_uri</b> references the imported file.
+  When the imported file directly hosts an imported Tiddler only the <b>_canonical_uri</b> is present.
+<p>
+<p>
+  This technic lets you import and re-export
+  Tiddlers giving the flexibility to exchange Tiddlers between users.
+</p>
+<p>
+  The <b>import</b> is not limited to <b>IPFS</b> as [[URL]] lets you import <b>JSON</b> Tiddlers from wherever you want.
+</p>
+<p>
+  Create a Tiddler and defines a <b>_canonical_uri</b> field. Fill up the <b>canonical_uri</b> field
+  with the following URL [ext[Sample|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/root.json]].
+  Save your Tiddler. You should see the following result.
+</p>
+[img class="tc-image-documentation" [$:/ipfs/image/import]]
+<p>
+  Check the output from the browser [[Console]] for further details.
+<p>
+[img class="tc-image-documentation" [$:/ipfs/image/import/console]]
+<p>
+  Edit the imported Tiddlers and browse the [[URL]] associated with fields <b>_canonical_uri</b> or <b>_import_uri</b>.
+<p/>
+<p>
+  The [[Refresh Tiddler]] command forces an import refresh. Deleted Tiddlers could occur.
+<p>
+[img class="tc-image-documentation" [$:/ipfs/image/import/deleted]]
+<p>
+  This imported sample references multiple files with relative [[URL]].
+</p>
+<ul>
+  <li>[ext[Root|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/root.json]]</li>
+  <li>[ext[Level_1_2|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_1_2.json]]</li>
+  <li>[ext[Level_2_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_2_1.json]]</li>
+  <li>[ext[Level_3_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_3_1.json]]</li>
+  <li>[ext[Level_4_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_4_1.json]]</li>
+</ul>
+<p>
+  Importing is a four steps process:
+</p>
+<ul>
+  <li>Load external resources (attachments are not loaded)</li>
+  <li>Process imported Tiddlers and discard duplicates</li>
+  <li>Merge imported Tiddlers</li>
+  <li>Delete previous non-existing imported Tiddlers</li>
+</ul>
+<p>
+  You can experiment the errors processed with the <b>load</b> and import <b>process</b> with the following samples.
+  Beware that multiple dialog boxes will popup with specific errors.
+</p>
+<ul>
+  <li>[ext[Load|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/load/root.json]]</li>
+  <li>[ext[Process|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/process/root.json]]</li>
+</ul>

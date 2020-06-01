@@ -22,4 +22,5 @@ type: text/vnd.tiddlywiki
     Regular Tiddler are removed from the <b>~TiddlyWiki</b> cache and reloaded.
     It is a useful behaviour when you want to load content from a different IPFS gateway.
   </li>
+  <li>[[Imported|Import]] Tiddlers are reloaded.</li>
 </ul>
