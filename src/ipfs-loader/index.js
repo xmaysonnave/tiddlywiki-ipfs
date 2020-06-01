@@ -14,9 +14,9 @@ import root from 'window-or-global'
     'sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5'
 
   const ipfsHttpClient =
-    'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.1.0/dist/index.min.js'
+    'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.1.1/dist/index.min.js'
   const ipfsHttpClientSri =
-    'sha384-XM/m03twISxLXe8YfqF608r2BJO8wHg2iAuPq2xRKxE42CIEn+9c61x9HcgqD0QI'
+    'sha384-NvfAKWfwAGQtt53C6QkNMM2whGsF9BeeXkfOWkFV3qmyh1VLVmfxxUrvLcgw0ZYr'
 
   var IpfsLoader = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle

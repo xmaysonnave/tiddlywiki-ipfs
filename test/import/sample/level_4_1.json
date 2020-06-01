@@ -1,0 +1,22 @@
+[
+    {
+        "text": "{{{[tag[$:/level_4_1]]}}}",
+        "title": "$:/level_4_1 Assets",
+        "modified": "20200601094915385",
+        "tags": "[[$:/level_4_1]]"
+    },
+    {
+        "text": "Content from 'Node 1' @  4_1",
+        "tags": "[[$:/level_4_1]]",
+        "title": "Node 1",
+        "modified": "20200601085428678"
+    },
+    {
+        "text": "",
+        "type": "image/png",
+        "title": "$:/ipfs/image/publish/ipns",
+        "modified": "20200601060549543",
+        "_canonical_uri": "/ipfs/bafybeifyugx7bfx6cna4mmgfcnt6u3xgxtspincvahfjlqhwjmu66yg6cm",
+        "tags": "[[$:/ipfs/documentation]] [[$:/isAttachment]] [[$:/isIpfs]] [[$:/level_4_1]]"
+    }
+]

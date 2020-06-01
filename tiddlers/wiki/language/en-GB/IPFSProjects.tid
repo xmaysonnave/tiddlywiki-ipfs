@@ -7,7 +7,7 @@ type: text/vnd.tiddlywiki
 <p>
   Here is an exhaustive list of involved projects with <b>IPFS with ~TiddlyWiki</b>
 </p>
-<ul>
+<ol>
   <li>[ext[Babel|https://github.com/babel]]</li>
   <li>[ext[Buffer|https://github.com/feross/buffer]]</li>
   <li>[ext[Chromium|https://www.chromium.org/]]</li>
@@ -15,24 +15,30 @@ type: text/vnd.tiddlywiki
   <li>[ext[Cid|https://github.com/multiformats/js-cid]]</li>
   <li>[ext[Content Hash|https://github.com/pldespaigne/content-hash]]</li>
   <li>[ext[Contributor Covenant|https://github.com/ContributorCovenant]]</li>
+  <li>[ext[CSS|https://www.w3schools.com/css/]]</li>
   <li>[ext[Debian|https://www.debian.org/]]</li>
   <li>[ext[ENS|https://github.com/ensdomains]]</li>
   <li>[ext[Eruda|https://github.com/liriliri/eruda]]</li>
   <li>[ext[Eslint|https://github.com/eslint/eslint]]</li>
   <li>[ext[Ethers|https://github.com/ethers-io/ethers.js/]]</li>
   <li>[ext[Ethereum|https://ethereum.org/]]</li>
+  <li>[ext[Git|https://github.com/git]]</li>
+  <li>[ext[GitHub|https://github.com/]]</li>
   <li>[ext[GitHub Repo Size|https://github.com/harshjv/github-repo-size]]</li>
   <li>[ext[Go IPFS|https://github.com/ipfs/go-ipfs]]</li>
+  <li>[ext[HTML|https://www.w3schools.com/html/]]</li>
   <li>[ext[Infura|https://github.com/INFURA]]</li>
   <li>[ext[IPFS Companion|https://github.com/ipfs-shipyard/ipfs-companion]]</li>
   <li>[ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]]</li>
   <li>[ext[IPFS Infra|https://github.com/ipfs/infra]]</li>
   <li>[ext[IPFS Provider|https://github.com/ipfs-shipyard/ipfs-provider]]</li>
+  <li>[ext[JavaScript|https://www.w3schools.com/js/]]</li>
   <li>[ext[JavaScript Standard Style|https://github.com/standard/standard]]</li>
   <li>[ext[Jest|https://github.com/facebook/jest]]</li>
   <li>[ext[JS-IPFS|https://github.com/ipfs/js-ipfs]]</li>
   <li>[ext[Let's Encrypt|https://letsencrypt.org/]]</li>
   <li>[ext[Loglevel|https://github.com/pimterry/loglevel]]</li>
+  <li>[ext[Markdown|https://commonmark.org/]]</li>
   <li>[ext[Metamask|https://github.com/MetaMask]]</li>
   <li>[ext[Mozilla|https://www.mozilla.org/]]</li>
   <li>[ext[Nginx|https://www.nginx.com/]]</li>
@@ -53,4 +59,4 @@ type: text/vnd.tiddlywiki
   <li>[ext[Universal URL|https://github.com/stevenvachon/universal-url]]</li>
   <li>[ext[Universal URL Lite|https://github.com/stevenvachon/universal-url-lite]]</li>
   <li>[ext[Visual Studio Code|https://github.com/Microsoft/vscode/]]</li>
-</ul>
+</ol>
