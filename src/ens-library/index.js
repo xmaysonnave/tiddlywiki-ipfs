@@ -9,6 +9,7 @@ import root from 'window-or-global'
 
   const name = 'ens-library'
 
+  // https://github.com/ensdomains/resolvers
   var EnsLibrary = function (ipfsLoader) {
     this.ipfsLoader = ipfsLoader
     this.network = {
@@ -457,7 +458,7 @@ import root from 'window-or-global'
     if (eip1577 === false) {
       throw new Error('ENS domain resolver do not conform to EIP1577...')
     }
-    // retrieve content hash
+    // Retrieve content hash
     this.getLogger().info('Processing ENS domain content...')
     const abi = [
       { name: 'contenthash', type: 'function', inputs: [{ type: 'bytes32' }] }
@@ -484,12 +485,57 @@ import root from 'window-or-global'
         protocol: null
       }
     }
-    // decode content hash
+    // Decode content hash
     var { decoded, protocol } = this.decodeContenthash(content[0])
     return {
       content: decoded,
       protocol: protocol
     }
+  }
+
+  EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
+    if (root.ethers === undefined || root.ethers == null) {
+      await this.loadEthers()
+    }
+    domain =
+      domain === undefined || domain == null || domain.trim() === ''
+        ? null
+        : domain.trim()
+    if (domain == null) {
+      throw new Error('Undefined ENS domain...')
+    }
+    if (web3 === undefined || account === undefined) {
+      var { web3, account } = await this.getEnabledWeb3Provider()
+    }
+    // Resolve domain as namehash
+    const domainHash = root.ethers.utils.namehash(domain)
+    // Fetch ens registry address
+    const { chainId, registry } = await this.getRegistry(web3)
+    // Log
+    this.getLogger().info(
+      `ENS registry: \n ${this.etherscan[chainId]}/address/${registry}`
+    )
+    this.getLogger().info('Processing owner...')
+    const abi = [
+      { name: 'owner', type: 'function', inputs: [{ type: 'bytes32' }] }
+    ]
+    const iface = new root.ethers.utils.Interface(abi)
+    const data = iface.functions.owner.encode([domainHash])
+    const result = await web3.call({ to: registry, data: data })
+    if (result === undefined || result == null || result === '0x') {
+      return false
+    }
+    // decode if applicable
+    try {
+      const decoded = root.ethers.utils.defaultAbiCoder.decode(
+        ['address'],
+        result
+      )
+      return decoded[0].toLowerCase() === account.toLowerCase()
+    } catch (error) {
+      this.getLogger().error(error)
+    }
+    return false
   }
 
   EnsLibrary.prototype.setContentHash = async function (

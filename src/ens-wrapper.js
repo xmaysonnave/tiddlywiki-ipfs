@@ -184,7 +184,6 @@ ENS Wrapper
 
   EnsWrapper.prototype.getContentHash = async function (domain, web3) {
     try {
-      // Retrieve
       var { content, protocol } = await this.ensLibrary.getContentHash(
         domain,
         web3
@@ -216,6 +215,10 @@ ENS Wrapper
     account
   ) {
     try {
+      const isOwner = await this.ensLibrary.isOwner(domain, web3, account)
+      if (isOwner === false) {
+        throw new Error('Unauthorized to set ENS domain content...')
+      }
       const cidV0 = this.ipfsBundle.cidV1ToCidV0(cid)
       await this.ensLibrary.setContentHash(domain, cidV0, web3, account)
       return {
