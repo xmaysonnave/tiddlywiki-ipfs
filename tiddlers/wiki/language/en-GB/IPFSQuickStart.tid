@@ -35,7 +35,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[Firefox - Set up a Local Testing Server|https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server]]</li>
 </ul>
 <p>
-  As a convenience here is our [[server configuration|IPFS Server Config]] suitable for [ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]] and the
+  As a convenience here is our [[Node Configuration|IPFS Server Config]] suitable for [ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]] and the
   [ext[IPFS Go Server|https://github.com/ipfs/go-ipfs]]. This configuration is based on the [ext[v0.5.1|https://github.com/ipfs/go-ipfs/releases/tag/v0.5.1]] version.
   More informations about the configuration parameters are available [ext[here|https://github.com/ipfs/go-ipfs/blob/master/docs/config.md]]
 </p>
