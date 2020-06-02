@@ -217,7 +217,11 @@ ENS Wrapper
     try {
       const isOwner = await this.ensLibrary.isOwner(domain, web3, account)
       if (isOwner === false) {
-        throw new Error('Unauthorized to set ENS domain content...')
+        const error = new Error(
+          'Unauthorized Owner. Unable to set ENS domain content...'
+        )
+        error.name = 'OwnerError'
+        throw error
       }
       const cidV0 = this.ipfsBundle.cidV1ToCidV0(cid)
       await this.ensLibrary.setContentHash(domain, cidV0, web3, account)
@@ -225,6 +229,9 @@ ENS Wrapper
         cidV0: cidV0
       }
     } catch (error) {
+      if (error.name === 'OwnerError') {
+        throw error
+      }
       this.getLogger().error(error)
       throw new Error('Unable to set ENS domain content...')
     }
