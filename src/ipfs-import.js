@@ -1092,7 +1092,7 @@ IPFS Import
       for (var i = 0; i < currentTags.length; i++) {
         const currentTag = currentTags[i]
         if (tags.includes(currentTag) === false) {
-          tags = `${tags} ${currentTag}`
+          tags = `${tags} [[${currentTag}]]`
         }
       }
     }
@@ -1102,7 +1102,7 @@ IPFS Import
       for (var i = 0; i < mergedTags.length; i++) {
         const mergedTag = mergedTags[i]
         if (tags.includes(mergedTag) === false) {
-          tags = `${tags} ${mergedTag}`
+          tags = `${tags} [[${mergedTag}]]`
         }
       }
     }
