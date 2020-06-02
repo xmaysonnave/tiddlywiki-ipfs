@@ -33,8 +33,13 @@ type: text/vnd.tiddlywiki
 			<li><$ipfslink value="bluelightav.eth"/></li>
 		</ul>
   </li>
-  <li>Resolve ENS with a browser extension
+  <li>Resolve ENS with [ext[Metamask|https://metamask.io]]
     <ul><li>[ext[https://bluelightav.eth]]</li></ul>
+  </li>
+  <li>Resolve ENS without a browser extension
+    <ul>
+			<li>[ext[https://bluelightav.eth.link]]</li>
+		</ul>
   </li>
 </ul>
 <p>

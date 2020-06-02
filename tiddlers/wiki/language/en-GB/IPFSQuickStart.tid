@@ -1,0 +1,40 @@
+title: IPFS Quick Start
+modified: 20200602094915385
+tags: $:/ipfs/documentation TableOfContents
+type: text/vnd.tiddlywiki
+
+<h2>Requirements</h2>
+<ul>
+  <li>[ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]</li>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+  <li>[ext[Metamask|https://metamask.io]]</li>
+</ul>
+<h2>IPFS Quick Start</h2>
+<p>
+  The easiest way to start with <b>IPFS with ~TiddlyWiki</b> is to save over <b>IPFS</b> a live version from <b>IPFS</b>
+  and use the default [[Settings]].
+</p>
+<ul>
+  <li><$ipfslink value="bluelightav.eth"/></li>
+  <li><$ipfslink value="empty.bluelightav.eth"/></li>
+  <li><$ipfslink value="tiddly.bluelightav.eth"/></li>
+  <li><$ipfslink value="doc.bluelightav.eth"/></li>
+</ul>
+<p>
+  We do not recommmend to work at the file system level as modern browsers limits interactions from the file system and web servers.
+</p>
+<ul>
+  <li>[ext[Chrome Cross-Origin XMLHttpRequest|https://developer.chrome.com/extensions/xhr]]</li>
+  <li>[ext[Firefox Cross-Origin Resource Sharing|https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]]</li>
+</ul>
+<p>
+  However if you want to work at the file system level an easy solution is to install a local web server.
+</p>
+<ul>
+  <li>[ext[Web Server for Chrome|https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb]]</li>
+  <li>[ext[Firefox - Set up a Local Testing Server|https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server]]</li>
+</ul>
+<p>
+  As a convenience here is our [[server configuration|IPFS Server Config]] suitable for [ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]] and the
+  [ext[IPFS Go Server|https://github.com/ipfs/go-ipfs]]. This configuration is based on the [ext[v0.5.1|https://github.com/ipfs/go-ipfs/releases/tag/v0.5.1]] version.
+</p>
