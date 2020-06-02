@@ -4,6 +4,16 @@ title: IPFS Server Config
 type: application/json
 
 {
+  "Addresses": {
+    "API": "/ip4/127.0.0.1/tcp/5001",
+    "Announce": [],
+    "Gateway": "/ip4/127.0.0.1/tcp/8080",
+    "NoAnnounce": [],
+    "Swarm": [
+      "/ip4/0.0.0.0/tcp/4001",
+      "/ip6/::/tcp/4001"
+    ]
+  },
   "API": {
     "HTTPHeaders": {
       "Access-Control-Allow-Headers": [
@@ -27,15 +37,8 @@ type: application/json
       ]
     }
   },
-  "Addresses": {
-    "API": "/ip4/127.0.0.1/tcp/5001",
-    "Announce": [],
-    "Gateway": "/ip4/127.0.0.1/tcp/8080",
-    "NoAnnounce": [],
-    "Swarm": [
-      "/ip4/0.0.0.0/tcp/4001",
-      "/ip6/::/tcp/4001"
-    ]
+  "AutoNAT": {
+    "ServiceMode": "enabled"
   },
   "Bootstrap": [
     "/dnsaddr/bootstrap.libp2p.io/ipfs/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
@@ -89,17 +92,17 @@ type: application/json
     "MDNS": {
       "Enabled": true,
       "Interval": 10,
-      "enabled": true
+    "enabled": true
     }
   },
   "Experimental": {
     "FilestoreEnabled": false,
-    "GraphsyncEnabled": false,
+  "GraphsyncEnabled": false,
     "Libp2pStreamMounting": false,
     "P2pHttpProxy": false,
     "QUIC": false,
     "ShardingEnabled": false,
-    "StrategicProviding": false,
+  "StrategicProviding": false,
     "UrlstoreEnabled": false
   },
   "Gateway": {
@@ -124,16 +127,17 @@ type: application/json
         "X-Stream-Output"
       ]
     },
-    "NoDNSLink": false,
+  "NoDNSLink": false,
     "NoFetch": false,
     "PathPrefixes": [],
-    "PublicGateways": null,
+     "PublicGateways": null,
+    "RootRedirect": "",
     "RootRedirect": "",
     "Writable": false
   },
   "Identity": {
-    "PeerID": "Specific to your installation",
-    "PrivKey": "Specific to your installation"
+    "PeerID": "QmZLTGyFGnbmYJoitU6cRCb8SwWEkgTz4EQgbKydxWyDsJ",
+    "PrivKey": "CAASpwkwggSjAgEAAoIBAQCmo10YTyN3dhC+fVnVBjgAPhzUvewS9mDbrQ1qFwFRbzHCi/sGIaRK3ptaG+TRwzCa8AS/w4EGXK8h8ovanFT19qgfQWwWKPLwV0HKbYfrqJdiF/zxOg8JRsU3kfIhbckL7HYUlgNQCFlhLd3aZHuC+hN+bjdSaDfyeN2QFBYU3ObAqK/gaDvchu1HAYiP84DYZRswBC5axVrvN4vtxL9ZKoVKD89OggSu7a6v4P/UCtEJhadG6LmYIS9HPLYmAFoChP9fFjEnYPQAN244w8gEGpoCgsdt9AgX180lko+nu1bvqazoBuPRz06vUEqKGo2XANuUkDrB4hkz8VtwD17hAgMBAAECggEAMtcmwRLsFDd+Vk/yR28VSOWqcDHdw89Nr9g1foe0TD8rpFqG5NEAyiLurOhTwLfXrX3LRSKFzAYdHLNeff0yYrS1iIuySXSG4lMM7JDMZlbSkQgWkRaQndjstM6fXBmdvDiRsigurI1Pj7mptUbw8/4OUoWX9Vl8sEq19o5aSlS5FOe2rcJfXTvZFkj88bm7ciUb8voGS8xRkTL4MwpoAi5qpoLFVsvC0Aq/7Ux3LllahwfSt1U8H2Vp4X8rCDEyyM9YA48otP/yVSYvynNH9C9kv7rHoLiFo+g9YnfVoav/k1iBaWLf7bb7ZriIk1Tsov/30GKgvwTZWIzXyjDwAQKBgQDEV6wjPB9E9N3rEvobd5E5fjZZoWKC+V/s9vNaBP5G5ZYZC3iEDw4ZSpiuWlACisqRdTg57nUt0a71HmjZnX+pNpfCYi6NZbYfLHTCAuRV9768tM2wP+FW0QLd6FKjq9MLgbTn/zvnItVV2RNZh8izbnZDFcD+acWypHB9CR7zYQKBgQDZRSpw/lrZVaZXaCZeWYFPvW0K3f+34O8PLlpgt7fs6ihXIgjSZCU/tBoBKnP1WbwR12MA9uQ/KmGREZoZdYM514meaKD2bLw9TNIjxXj9No3CZwZ9HNaGj0lgOzLI0eejdb1Lx5cuZ1Ft3+5QLU51sU9r8tBL9K+8NXgHuvubgQKBgD+PokpFzFmma7EOE6mQq5LRKQcbF6kO0d8EkwMxWp/Y8x5oeDtIJGhLneHTmtM32xv7tpgKeiS7HMh9b7QDKLC+26Ix5qAfrTWqTqIADatG6Jhub6f/BhP01djAvP//P/MZqlbwaZQJ0sZX38u8CV0NBXvyLugtlbKfSUsxCLQBAoGAU9a9ttZfpifHxUi6LYQqQuPclOnvSDwy40/GrjWWcoQ0xtKqRs1AFmHf+v0vu8hBqzzKxk9+6eTnuzvok9Rlq8dBInBLVGvHA3yGRiloM4V+lDp/JX4gRdI6xThys01ULh47ymcdLlnN8TEM28Fv2jhuZkBPIlAsE9sqEwmTF4ECgYEAsLomiB/GyW+VTrF7WTVIkhMvYMmdlxnhfbKVOK9s0BhTdzxt/dSIrFBmIZ+ApwLIyNo6/uHgSNOHukFA4tRZHVsdahvpgB+JlDgMCxUgpI9WrtmefAmisphoTGdni4rzz4Nxg/AYq62P4LiNtuc9GuqRtJciNrmWM0paoMenBRQ="
   },
   "Ipns": {
     "RecordLifetime": "",
@@ -189,8 +193,7 @@ type: application/json
     "DisableBandwidthMetrics": false,
     "DisableNatPortMap": false,
     "DisableRelay": false,
-    "EnableAutoNATService": true,
     "EnableAutoRelay": true,
-    "EnableRelayHop": true
+    "EnableRelayHop": false
   }
 }
