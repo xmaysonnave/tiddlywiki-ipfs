@@ -37,7 +37,7 @@ IPFS Saver
     // Loglevel
     if (window.log === undefined || window.log == null) {
       // Init
-      window.log = log
+      window.log = log.noConflict()
       if ($tw.utils.getIpfsVerbose()) {
         log.setLevel('info', false)
       } else {
