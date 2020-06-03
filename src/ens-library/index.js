@@ -52,10 +52,6 @@ import root from 'window-or-global'
     return this.registry
   }
 
-  EnsLibrary.prototype.getLogger = function () {
-    return root.log.getLogger(name)
-  }
-
   EnsLibrary.prototype.loadEthers = async function () {
     if (root.ethers === undefined || root.ethers == null) {
       try {
