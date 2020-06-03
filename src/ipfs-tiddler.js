@@ -248,21 +248,23 @@ IPFS Tiddler
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
           self.getLogger().info(`Unpinning: "${field}\n ${resolvedUrl}`)
-          $tw.ipfs
-            .unpinFromIpfs(cid)
-            .then(data => {
-              if (data !== undefined && data !== null) {
-                $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
-                $tw.utils.alert(
-                  name,
-                  `Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
-                )
-              }
-            })
-            .catch(error => {
-              self.getLogger().error(error)
-              $tw.utils.alert(name, error.message)
-            })
+          if ($tw.utils.getIpfsUnpin()) {
+            $tw.ipfs
+              .unpinFromIpfs(cid)
+              .then(data => {
+                if (data !== undefined && data !== null) {
+                  $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
+                  $tw.utils.alert(
+                    name,
+                    `Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
+                  )
+                }
+              })
+              .catch(error => {
+                self.getLogger().error(error)
+                $tw.utils.alert(name, error.message)
+              })
+          }
         }
       })
       .catch(error => {

@@ -144,17 +144,19 @@ IPFS Action
                 name,
                 `Successfully Published IPNS name: ${ipnsName}`
               )
-              $tw.ipfs
-                .unpinFromIpfs(cid)
-                .then(data => {
-                  if (data !== undefined && data !== null) {
-                    $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
-                  }
-                })
-                .catch(error => {
-                  self.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
-                })
+              if ($tw.utils.getIpfsUnpin()) {
+                $tw.ipfs
+                  .unpinFromIpfs(cid)
+                  .then(data => {
+                    if (data !== undefined && data !== null) {
+                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
+                    }
+                  })
+                  .catch(error => {
+                    self.getLogger().error(error)
+                    $tw.utils.alert(name, error.message)
+                  })
+              }
             })
             .catch(error => {
               $tw.ipfs.requestToUnpin(added)
@@ -185,17 +187,19 @@ IPFS Action
               })
               $tw.wiki.addTiddler(tiddler)
               $tw.utils.alert(name, 'Successfully Published to ENS...')
-              $tw.ipfs
-                .unpinFromIpfs(cid)
-                .then(data => {
-                  if (data !== undefined && data !== null) {
-                    $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
-                  }
-                })
-                .catch(error => {
-                  self.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
-                })
+              if ($tw.utils.getIpfsUnpin()) {
+                $tw.ipfs
+                  .unpinFromIpfs(cid)
+                  .then(data => {
+                    if (data !== undefined && data !== null) {
+                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
+                    }
+                  })
+                  .catch(error => {
+                    self.getLogger().error(error)
+                    $tw.utils.alert(name, error.message)
+                  })
+              }
             })
             .catch(error => {
               $tw.ipfs.requestToUnpin(added)
