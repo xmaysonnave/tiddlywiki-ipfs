@@ -91,7 +91,7 @@ documentation: https://github.com/ipfs/go-ipfs/blob/master/docs/config.md
   },
   "Discovery": {
     "MDNS": {
-      "Enabled": true,
+      "Enabled": false,
       "Interval": 10
     }
   },

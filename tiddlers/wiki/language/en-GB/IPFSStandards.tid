@@ -7,13 +7,14 @@ type: text/vnd.tiddlywiki
 <p>
   Here is an exhaustive list of standards followed by <b>IPFS with ~TiddlyWiki</b>
 </p>
-<ul>
-  <li>[ext[Open Source Projects|https://www.fsf.org/]]</li>
+<ol>
+  <li>[ext[Console|https://console.spec.whatwg.org/]] with [ext[Eruda|https://github.com/liriliri/eruda]]</li>
+  <li>[ext[Continuous Integration|https://en.wikipedia.org/wiki/Continuous_integration]] with [ext[Travis|https://travis-ci.com/]]</li>
+  <li>[ext[DevSecOps|https://www.devsecops.org/]] with [ext[Snyk|https://snyk.io/]]</li>
+  <li>[ext[JavaScript Standard|https://standardjs.com/]]</li>
   <li>[ext[Linting with Eslint|https://eslint.org/]]</li>
+  <li>[ext[Open Source Projects|https://www.fsf.org/]]</li>
   <li>[ext[Testing with Jest|https://jestjs.io/]]</li>
-  <li>[ext[JavaScript Standard Style|https://standardjs.com/]]</li>
-  <li>[ext[DevSecOps with Snyk|https://snyk.io/]]</li>
-  <li>[ext[Continuous Integration with Travis CI|https://travis-ci.com/]]</li>
-  <li>[ext[WHATWG Standard support with Universal URL|https://url.spec.whatwg.org/]]</li>
   <li>Transparency with [ext[Ethereum|https://ethereum.org]] and [ext[GitHub|https://github.com/]]</li>
-</ul>
+  <li>[ext[WHATWG URL|https://url.spec.whatwg.org/]] with [ext[Universal URL|https://github.com/stevenvachon/universal-url]]</li>
+</ol>

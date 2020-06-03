@@ -9,6 +9,7 @@ type: text/vnd.tiddlywiki
 </p>
 <ol>
   <li>[ext[Babel|https://github.com/babel]]</li>
+  <li>[ext[Beyond Compare|https://www.scootersoftware.com/]]</li>
   <li>[ext[Buffer|https://github.com/feross/buffer]]</li>
   <li>[ext[Chromium|https://www.chromium.org/]]</li>
   <li>[ext[Chrome|https://www.google.com/chrome/]]</li>
