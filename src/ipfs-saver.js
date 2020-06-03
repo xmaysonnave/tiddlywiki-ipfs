@@ -88,6 +88,7 @@ IPFS Saver
       const nextWiki = $tw.ipfs.getUrl(wiki)
       nextWiki.protocol = base.protocol
       nextWiki.host = base.host
+      nextWiki.port = base.port
       try {
         var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki)
         if (cid != null) {
