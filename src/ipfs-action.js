@@ -517,15 +517,16 @@ IPFS Action
         this.getLogger().error(error)
         throw new Error(error.message)
       }
-      const eruda = window.document.createElement('div')
-      window.document.body.appendChild(eruda)
+      const erudaContainer = window.document.createElement('div')
+      window.document.body.appendChild(erudaContainer)
       window.eruda.init({
-        container: eruda,
+        container: erudaContainer,
         tool: ['console'],
-        useShadowDom: false
+        useShadowDom: true,
+        autoScale: true
       })
       // Inherit font
-      eruda.style.fontFamily = 'inherit'
+      erudaContainer.style.fontFamily = 'inherit'
       // Preserve user preference if any, default is 80
       if (window.eruda.get().config.get('displaySize') === 80) {
         window.eruda.get().config.set('displaySize', 40)
@@ -534,16 +535,26 @@ IPFS Action
       if (window.eruda.get().config.get('transparency') === 0.95) {
         window.eruda.get().config.set('transparency', 1)
       }
-      // Remove the button
-      const buttons = document.getElementsByClassName('eruda-entry-btn')
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].remove()
+      // Hide Eruda button
+      if (window.eruda._shadowRoot !== undefined) {
+        const btn = window.eruda._shadowRoot.querySelector('.eruda-entry-btn')
+        if (btn !== undefined) {
+          btn.style.display = 'none'
+        }
       }
-      // The first output line is eaten...
+      // Console settings
+      const console = window.eruda.get('console')
+      console.config.set('asyncRender', true)
+      console.config.set('catchGlobalErr', true)
+      console.config.set('displayExtraInfo', false)
+      console.config.set('displayGetterVal', true)
+      console.config.set('displayUnenumerable', true)
+      console.config.set('jsExecution', true)
+      console.config.set('maxLogNum', 'infinite')
+      console.config.set('overrideConsole', true)
       this.getLogger().info('Mobile console has been loaded...')
     }
     if (this.console === false) {
-      // Show
       window.eruda.show()
       window.eruda.show('console')
       this.console = true
