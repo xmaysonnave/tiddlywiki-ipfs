@@ -23,6 +23,8 @@ type: text/vnd.tiddlywiki
   <li>[ext[Eslint|https://github.com/eslint/eslint]]</li>
   <li>[ext[Ethers|https://github.com/ethers-io/ethers.js/]]</li>
   <li>[ext[Ethereum|https://ethereum.org/]]</li>
+  <li>[ext[Font Awesome|https://fontawesome.com/]]</li>
+  <li>[ext[Font Awesome 5 Free SVGs for TiddlyWiki|http://fa5-free-svg.tiddlyspot.com/]]</li>
   <li>[ext[Git|https://github.com/git]]</li>
   <li>[ext[GitHub|https://github.com/]]</li>
   <li>[ext[GitHub Repo Size|https://github.com/harshjv/github-repo-size]]</li>
