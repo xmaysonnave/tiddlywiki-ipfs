@@ -49,11 +49,11 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.loadToBase64 = async function (url) {
-    return this.ipfsLoader.loadToBase64(url)
+    return await this.ipfsLoader.loadToBase64(url)
   }
 
   IpfsBundle.prototype.loadToUtf8 = async function (url) {
-    return this.ipfsLoader.loadToUtf8(url)
+    return await this.ipfsLoader.loadToUtf8(url)
   }
 
   IpfsBundle.prototype.decodeCid = function (pathname) {
