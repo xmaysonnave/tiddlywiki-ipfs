@@ -41,12 +41,16 @@ IPFS Controller
     return this.ipfsBundle.isCid(cid)
   }
 
+  IpfsController.prototype.load3BoxProfile = async function () {
+    return await this.ensWrapper.load3BoxProfile()
+  }
+
   IpfsController.prototype.loadToBase64 = async function (url) {
-    return this.ipfsBundle.loadToBase64(url)
+    return await this.ipfsBundle.loadToBase64(url)
   }
 
   IpfsController.prototype.loadToUtf8 = async function (url) {
-    return this.ipfsBundle.loadToUtf8(url)
+    return await this.ipfsBundle.loadToUtf8(url)
   }
 
   IpfsController.prototype.Base64ToUint8Array = function (base64) {

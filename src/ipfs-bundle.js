@@ -15,6 +15,7 @@ import EnsLibrary from './ens-library'
 import IpfsLibrary from './ipfs-library'
 import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
+import BoxLibrary from './box-library'
 ;(function () {
   /*jslint node: true, browser: true*/
   'use strict'
@@ -40,6 +41,7 @@ import IpfsUrl from './ipfs-url'
     this.ensLibrary = new EnsLibrary(this.ipfsLoader)
     this.ipfsLibrary = new IpfsLibrary(this)
     this.ipfsUrl = new IpfsUrl()
+    this.boxLibrary = new BoxLibrary(this.ipfsLoader)
     // Init once
     this.once = true
   }
@@ -49,11 +51,11 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.loadToBase64 = async function (url) {
-    return this.ipfsLoader.loadToBase64(url)
+    return await this.ipfsLoader.loadToBase64(url)
   }
 
   IpfsBundle.prototype.loadToUtf8 = async function (url) {
-    return this.ipfsLoader.loadToUtf8(url)
+    return await this.ipfsLoader.loadToUtf8(url)
   }
 
   IpfsBundle.prototype.decodeCid = function (pathname) {

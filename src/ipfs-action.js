@@ -37,6 +37,9 @@ IPFS Action
     }
     const self = this
     // Widget
+    $tw.rootWidget.addEventListener('tm-3box-profile', async function (event) {
+      return await self.handle3BoxProfile(event)
+    })
     $tw.rootWidget.addEventListener('tm-ipfs-export', async function (event) {
       return await self.handleExportToIpfs(event, false)
     })
@@ -78,6 +81,17 @@ IPFS Action
     })
     // Init once
     this.once = true
+  }
+
+  IpfsAction.prototype.handle3BoxProfile = async function (event) {
+    try {
+      await $tw.ipfs.load3BoxProfile()
+    } catch (error) {
+      this.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
+      return false
+    }
+    return true
   }
 
   IpfsAction.prototype.handleExportToIpfs = async function (event, child) {

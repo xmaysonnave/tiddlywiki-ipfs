@@ -18,6 +18,19 @@ import root from 'window-or-global'
   const ipfsHttpClientSri =
     'sha384-NvfAKWfwAGQtt53C6QkNMM2whGsF9BeeXkfOWkFV3qmyh1VLVmfxxUrvLcgw0ZYr'
 
+  const react = 'https://cdn.jsdelivr.net/npm/react@16.13.1/index.min.js'
+  const reactSri =
+    'sha384-tJZghk8WS6CmqUSDnhTaMhgcW1ugVL+tICSVl9SKvnxyMxeSPC2i5yL8lNMggV+4'
+
+  const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.19.0/dist/3box.min.js'
+  const threeBoxSri =
+    'sha384-tbBobUw5fP4CqNpLpF3UHPGHmaCFjUPlgcZP1Oq7Uo+QspWkAx1bT6jXsq87y5vG'
+
+  const threeBoxProfile =
+    'https://cdn.jsdelivr.net/npm/profile-hover@1.1.2/dist/reactBundle.min.js'
+  const threeBoxProfileSri =
+    'sha384-Rta8n7/RH5Fw3LzGDoGIu0Sskn/laKq9RKpWz2MzxPh/XVxPOd2HInosBPq1vukJ'
+
   var IpfsLoader = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle
   }
@@ -60,6 +73,45 @@ import root from 'window-or-global'
       )
       if (typeof root.IpfsHttpClient !== 'undefined') {
         this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfsHttpClient}`)
+      }
+    }
+  }
+
+  // https://www.srihash.org/
+  IpfsLoader.prototype.loadReactLibrary = async function () {
+    if (typeof root.React === 'undefined') {
+      await this.loadLibrary('ReactLibrary', react, reactSri, true)
+      if (typeof root.React !== 'undefined') {
+        this.getLogger().info(`Loaded React:\n ${react}`)
+      }
+    }
+  }
+
+  // https://www.srihash.org/
+  // https://github.com/3box
+  IpfsLoader.prototype.loadThreeBoxLibrary = async function () {
+    if (typeof root.Box === 'undefined') {
+      await this.loadLibrary('ThreeBoxLibrary', threeBox, threeBoxSri, true)
+      if (typeof root.Box !== 'undefined') {
+        this.getLogger().info(`Loaded ThreeBoxLibrary:\n ${threeBox}`)
+      }
+    }
+  }
+
+  // https://www.srihash.org/
+  // https://github.com/3box
+  IpfsLoader.prototype.loadThreeBoxProfileLibrary = async function () {
+    if (typeof root.ProfileHover === 'undefined') {
+      await this.loadLibrary(
+        'ThreeBoxProfileLibrary',
+        threeBoxProfile,
+        threeBoxProfileSri,
+        true
+      )
+      if (typeof root.ProfileHover !== 'undefined') {
+        this.getLogger().info(
+          `Loaded ThreeBoxProfileLibrary:\n ${threeBoxProfile}`
+        )
       }
     }
   }

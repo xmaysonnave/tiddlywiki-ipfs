@@ -32,11 +32,20 @@ ENS Wrapper
     this.provider = null
     this.web3 = null
     this.ipfsBundle = ipfsBundle
+    this.boxLibrary = ipfsBundle.boxLibrary
     this.ensLibrary = ipfsBundle.ensLibrary
   }
 
   EnsWrapper.prototype.getLogger = function () {
     return root.log.getLogger(name)
+  }
+
+  EnsWrapper.prototype.load3BoxProfile = async function () {
+    const { account } = await this.getEnabledWeb3Provider()
+    return await this.boxLibrary.load3BoxProfile(
+      this.getEthereumProvider(),
+      account
+    )
   }
 
   EnsWrapper.prototype.getChainId = function () {

@@ -2,6 +2,7 @@ title: $:/config/PageControlButtons/Visibility/$:/
 modified: 20200529094915385
 tags: $:/ipfs/core
 
+core/ui/Buttons/3box/profile: show
 core/ui/Buttons/encryption: show
 core/ui/Buttons/home: show
 core/ui/Buttons/ipfs/pin: hide
