@@ -23,18 +23,28 @@
     "tiddlywiki/snowwhite"
   ],
   "build": {
-    "index": [
-      "--rendertiddler",
-      "$:/core/save/all",
-      "index.html",
-      "text/plain"
+		"index": [
+			"--compress", "true",
+			"--rendertiddler", "$:/core/save/all", "index.html", "text/plain"
+    ],
+		"index-encrypted": [
+			"--compress", "true",
+      "--password", "blue",
+			"--rendertiddler", "$:/core/save/all", "index-encrypted.html", "text/plain",
+      "--clearpassword"
+    ],
+    "index-plain": [
+			"--compress", "false",
+      "--rendertiddler", "$:/core/save/all", "index-plain.html", "text/plain"
+    ],
+		"index-plain-and-encrypted": [
+			"--compress", "false",
+      "--password", "blue",
+			"--rendertiddler", "$:/core/save/all", "index-plain-and-encrypted.html", "text/plain",
+      "--clearpassword"
     ],
     "plugin": [
-      "--render",
-      "$:/plugins/ipfs",
-      "tiddlywiki-ipfs-plugin.json",
-      "text/plain",
-      "$:/core/templates/json-tiddler"
+      "--render", "$:/plugins/ipfs", "tiddlywiki-ipfs-plugin.json", "text/plain", "$:/core/templates/json-tiddler"
     ]
   }
 }

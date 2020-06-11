@@ -6,7 +6,8 @@
         "type": "application/javascript",
         "title": "$:/plugins/ipfs/loglevel/loglevel.js",
         "global-module": "true",
-        "module-type": "library"
+        "module-type": "library",
+        "version": "1.6.8"
       }
     },
     {

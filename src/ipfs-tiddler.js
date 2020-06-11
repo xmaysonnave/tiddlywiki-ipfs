@@ -137,6 +137,10 @@ IPFS Tiddler
         this.updateLoggers('warn')
       }
     }
+    // Compress
+    if ($tw.utils.hop(changes, '$:/isCompressed')) {
+      $tw.compress.updateCompressStateTiddler()
+    }
   }
 
   IpfsTiddler.prototype.handleIpfsPin = function (event) {

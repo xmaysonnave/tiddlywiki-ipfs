@@ -2,7 +2,7 @@
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
 
-# plugin directory
+# build plugin directory
 mkdir -p ./build/plugins/ipfs/core > /dev/null 2>&1
 mkdir -p ./build/plugins/ipfs/files > /dev/null 2>&1
 

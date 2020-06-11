@@ -48,8 +48,8 @@ npx tiddlywiki build \
 # compress
 cd wiki
 npx gzipper ./empty.html
-npx gzipper ./index.html
 npx gzipper ./dev.html
+npx gzipper ./index.html
 npx gzipper ./tiddlywiki-ipfs-plugin.json
 cd ..
 

@@ -18,10 +18,6 @@ import root from 'window-or-global'
   const ipfsHttpClientSri =
     'sha384-NvfAKWfwAGQtt53C6QkNMM2whGsF9BeeXkfOWkFV3qmyh1VLVmfxxUrvLcgw0ZYr'
 
-  const react = 'https://cdn.jsdelivr.net/npm/react@16.13.1/index.min.js'
-  const reactSri =
-    'sha384-tJZghk8WS6CmqUSDnhTaMhgcW1ugVL+tICSVl9SKvnxyMxeSPC2i5yL8lNMggV+4'
-
   const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.19.0/dist/3box.min.js'
   const threeBoxSri =
     'sha384-tbBobUw5fP4CqNpLpF3UHPGHmaCFjUPlgcZP1Oq7Uo+QspWkAx1bT6jXsq87y5vG'
@@ -73,16 +69,6 @@ import root from 'window-or-global'
       )
       if (typeof root.IpfsHttpClient !== 'undefined') {
         this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfsHttpClient}`)
-      }
-    }
-  }
-
-  // https://www.srihash.org/
-  IpfsLoader.prototype.loadReactLibrary = async function () {
-    if (typeof root.React === 'undefined') {
-      await this.loadLibrary('ReactLibrary', react, reactSri, true)
-      if (typeof root.React !== 'undefined') {
-        this.getLogger().info(`Loaded React:\n ${react}`)
       }
     }
   }
@@ -235,22 +221,22 @@ import root from 'window-or-global'
    * Load to Base64
    */
   IpfsLoader.prototype.loadToBase64 = async function (url) {
-    const array = await this.httpGetToUint8Array(url)
-    if (array.length === 0) {
+    const ua = await this.httpGetToUint8Array(url)
+    if (ua.length === 0) {
       return {
         data: '',
         decrypted: false
       }
     }
     // Decrypt
-    if (this.isUtf8ArrayEncrypted(array)) {
-      const decrypted = await this.decryptUint8ArrayToBase64(array)
+    if (this.isUint8ArrayEncrypted(ua)) {
+      const decrypted = await this.decryptUint8ArrayToBase64(ua)
       return {
         data: decrypted,
         decrypted: true
       }
     }
-    const data = this.ipfsBundle.Uint8ArrayToBase64(array)
+    const data = this.ipfsBundle.Uint8ArrayToBase64(ua)
     return {
       data: data,
       decrypted: false
@@ -261,21 +247,21 @@ import root from 'window-or-global'
    * Load to UTF-8
    */
   IpfsLoader.prototype.loadToUtf8 = async function (url) {
-    var array = await this.httpGetToUint8Array(url)
-    if (array.length === 0) {
+    var ua = await this.httpGetToUint8Array(url)
+    if (ua.length === 0) {
       return {
         data: '',
         decrypted: false
       }
     }
-    if (this.isUtf8ArrayEncrypted(array)) {
+    if (this.isUint8ArrayEncrypted(ua)) {
       return {
-        data: await this.decryptUint8ArrayToUtf8(array),
+        data: await this.decryptUint8ArrayToUtf8(ua),
         decrypted: true
       }
     }
     return {
-      data: this.ipfsBundle.Utf8ArrayToStr(array),
+      data: this.ipfsBundle.Utf8ArrayToStr(ua),
       decrypted: false
     }
   }
@@ -331,16 +317,14 @@ import root from 'window-or-global'
     })
   }
 
-  IpfsLoader.prototype.isUtf8ArrayEncrypted = function (content) {
-    // Check
-    if (content instanceof Uint8Array === false || content.length === 0) {
+  IpfsLoader.prototype.isUint8ArrayEncrypted = function (ua) {
+    if (ua instanceof Uint8Array === false || ua.length === 0) {
       return false
     }
-    // Process
-    const standford = this.ipfsBundle.StringToUint8Array('{"iv":"')
+    const header = this.ipfsBundle.StringToUint8Array('{"iv":"')
     var encrypted = false
-    for (var i = 0; i < content.length && i < standford.length; i++) {
-      if (content[i] === standford[i]) {
+    for (var i = 0; i < ua.length && i < header.length; i++) {
+      if (ua[i] === header[i]) {
         encrypted = true
       } else {
         encrypted = false

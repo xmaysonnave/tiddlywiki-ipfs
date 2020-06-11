@@ -174,8 +174,8 @@ import BoxLibrary from './box-library'
     return cidv1.toString()
   }
 
-  IpfsBundle.prototype.Base64ToUint8Array = function (base64) {
-    var raw = atob(base64)
+  IpfsBundle.prototype.Base64ToUint8Array = function (b64) {
+    var raw = atob(b64)
     var ua = new Uint8Array(raw.length)
     for (var i = 0; i < raw.length; i++) {
       ua[i] = raw.charCodeAt(i)

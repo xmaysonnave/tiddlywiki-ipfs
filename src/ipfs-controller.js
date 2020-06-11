@@ -53,12 +53,12 @@ IPFS Controller
     return await this.ipfsBundle.loadToUtf8(url)
   }
 
-  IpfsController.prototype.Base64ToUint8Array = function (base64) {
-    return this.ipfsBundle.Base64ToUint8Array(base64)
+  IpfsController.prototype.Base64ToUint8Array = function (b64) {
+    return this.ipfsBundle.Base64ToUint8Array(b64)
   }
 
-  IpfsController.prototype.Uint8ArrayToBase64 = function (uint8) {
-    return this.ipfsBundle.Uint8ArrayToBase64(uint8)
+  IpfsController.prototype.Uint8ArrayToBase64 = function (ua) {
+    return this.ipfsBundle.Uint8ArrayToBase64(ua)
   }
 
   IpfsController.prototype.StringToUint8Array = function (string) {
