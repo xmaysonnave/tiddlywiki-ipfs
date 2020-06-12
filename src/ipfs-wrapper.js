@@ -26,6 +26,7 @@ IPFS Wrapper
   const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-wrapper'
 
   var IpfsWrapper = function (ipfsBundle) {
@@ -35,7 +36,10 @@ IPFS Wrapper
   }
 
   IpfsWrapper.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsWrapper.prototype.getWindowIpfsClient = async function () {

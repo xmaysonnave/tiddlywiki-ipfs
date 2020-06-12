@@ -3,6 +3,7 @@ import root from 'window-or-global'
   /*jslint node: true, browser: true*/
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = '3box-library'
 
   // https://github.com/ensdomains/resolvers
@@ -11,7 +12,10 @@ import root from 'window-or-global'
   }
 
   BoxLibrary.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   BoxLibrary.prototype.loadThreeBox = async function () {
@@ -46,7 +50,7 @@ import root from 'window-or-global'
     }
   }
 
-  /*eslint no-empty-pattern: "off",*/
+  /*eslint no-empty-pattern: "off"*/
   BoxLibrary.prototype.load3BoxProfile = async function (provider, account) {
     if (root.Box === undefined || root.Box == null) {
       await this.loadThreeBox()

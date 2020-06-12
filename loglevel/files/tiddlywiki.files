@@ -1,0 +1,23 @@
+{
+  "tiddlers": [
+    {
+      "file": "../loglevel.min.js",
+      "fields": {
+        "type": "application/javascript",
+        "title": "$:/plugins/loglevel/loglevel.min.js",
+        "global-module": "true",
+        "module-type": "library",
+        "_project_uri": "https://github.com/pimterry/loglevel",
+        "_source_uri": "https://www.npmjs.com/package/loglevel"
+      }
+    },
+    {
+      "file": "../LICENSE-MIT",
+      "fields": {
+        "type": "text/plain",
+        "title": "$:/plugins/loglevel/license",
+        "_canonical_uri": "https://github.com/pimterry/loglevel/blob/master/LICENSE-MIT"
+      }
+    }
+  ]
+}

@@ -18,8 +18,6 @@ Startup initialisation
   exports.synchronous = true
 
   exports.startup = function () {
-    // Logger name
-    const name = 'ipfs-startup'
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
@@ -27,8 +25,10 @@ Startup initialisation
       flags: ['image']
     })
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
-    // Log
-    const logger = window.log.getLogger(name)
-    logger.info('ipfs-startup is starting up...')
+    if (window.logger !== undefined && window.logger !== null) {
+      window.logger.info('ipfs-startup is starting up...')
+    } else {
+      console.info('ipfs-startup is starting up...')
+    }
   }
 })()

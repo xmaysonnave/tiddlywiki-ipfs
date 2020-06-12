@@ -22,7 +22,10 @@ ENS Action
   }
 
   EnsAction.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   EnsAction.prototype.init = function () {

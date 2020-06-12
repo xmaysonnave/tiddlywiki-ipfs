@@ -7,6 +7,7 @@ import root from 'window-or-global'
   /*jslint node: true, browser: true*/
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ens-library'
 
   // https://github.com/ensdomains/resolvers
@@ -37,7 +38,10 @@ import root from 'window-or-global'
   }
 
   EnsLibrary.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   EnsLibrary.prototype.getEtherscanRegistry = function () {

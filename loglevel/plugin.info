@@ -1,0 +1,7 @@
+{
+  "title": "$:/plugins/loglevel/loglevel",
+  "description": "Minimal lightweight logging",
+  "core-version": ">=5.0.0",
+  "_project_uri": "https://github.com/pimterry/loglevel",
+  "_source_uri": "https://www.npmjs.com/package/loglevel"
+}

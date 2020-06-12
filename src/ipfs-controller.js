@@ -34,7 +34,10 @@ IPFS Controller
   }
 
   IpfsController.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsController.prototype.isCid = function (cid) {

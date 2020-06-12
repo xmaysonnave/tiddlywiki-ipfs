@@ -111,8 +111,8 @@ The image parser parses an image into an embeddable HTML element
   }
 
   ImageParser.prototype.getLogger = function () {
-    if (window.log) {
-      return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
     }
     return console
   }

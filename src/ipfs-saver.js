@@ -13,7 +13,7 @@ IPFS Saver
   /*global $tw: false */
   'use strict'
 
-  const log = require('$:/plugins/ipfs/loglevel/loglevel.js')
+  const log = require('$:/plugins/loglevel/loglevel.min.js')
 
   const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
   const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
@@ -35,13 +35,13 @@ IPFS Saver
     this.apiUrl = null
     this.ipfsProvider = null
     // Loglevel
-    if (window.log === undefined || window.log == null) {
+    if (window.logger === undefined || window.logger == null) {
       // Init
-      window.log = log.noConflict()
+      window.logger = log.noConflict()
       if ($tw.utils.getIpfsVerbose()) {
-        log.setLevel('info', false)
+        log.setLevel('info', true)
       } else {
-        log.setLevel('warn', false)
+        log.setLevel('warn', true)
       }
     }
     // Controller
@@ -54,21 +54,22 @@ IPFS Saver
     this.ensAction.init()
     this.ipfsAction.init()
     this.ipfsTiddler.init()
-    // Logger
-    const logger = window.log.getLogger(name)
     // Log
-    logger.info('ipfs-saver is starting up...')
+    log.info('ipfs-saver is starting up...')
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      logger.info(`Origin base URL: ${base}`)
+      log.info(`Origin base URL: ${base}`)
     } else {
-      logger.info(`Gateway base URL: ${base}`)
+      log.info(`Gateway base URL: ${base}`)
     }
   }
 
   IpfsSaver.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsSaver.prototype.save = async function (text, method, callback, options) {

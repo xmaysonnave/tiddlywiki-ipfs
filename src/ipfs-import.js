@@ -85,7 +85,10 @@ IPFS Import
   var IpfsImport = function () {}
 
   IpfsImport.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsImport.prototype.removeTiddlers = function (keys, title) {

@@ -63,7 +63,10 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsTiddler.prototype.init = function () {
@@ -131,15 +134,13 @@ IPFS Tiddler
     // Verbose preference
     const verbose = changes['$:/ipfs/saver/verbose']
     if (verbose !== undefined && verbose.modified) {
-      if ($tw.utils.getIpfsVerbose()) {
-        this.updateLoggers('info')
-      } else {
-        this.updateLoggers('warn')
+      if (window.logger !== undefined && window.logger !== null) {
+        if ($tw.utils.getIpfsVerbose()) {
+          window.logger.setLevel('info', true)
+        } else {
+          window.logger.setLevel('warn', true)
+        }
       }
-    }
-    // Compress
-    if ($tw.utils.hop(changes, '$:/isCompressed')) {
-      $tw.compress.updateCompressStateTiddler()
     }
   }
 
@@ -275,17 +276,6 @@ IPFS Tiddler
         self.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
-  }
-
-  IpfsTiddler.prototype.updateLoggers = function (level) {
-    window.log.setLevel(level, false)
-    const loggers = window.log.getLoggers()
-    for (var property in loggers) {
-      if (Object.prototype.hasOwnProperty.call(loggers, property)) {
-        const logger = window.log.getLogger(property)
-        logger.setLevel(level, false)
-      }
-    }
   }
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {

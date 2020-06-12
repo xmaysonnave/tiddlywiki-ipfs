@@ -4,6 +4,7 @@ import root from 'window-or-global'
   /*jslint node: true, browser: true */
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-library'
 
   const { httpClient, windowIpfs } = providers
@@ -17,7 +18,10 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   IpfsLibrary.prototype.loadIpfsHttpClient = async function () {

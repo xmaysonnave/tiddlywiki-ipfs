@@ -27,7 +27,10 @@ IPFS Action
   }
 
   IpfsAction.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsAction.prototype.init = function () {

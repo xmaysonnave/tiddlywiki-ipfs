@@ -3,6 +3,7 @@ import root from 'window-or-global'
   /*jslint node: true, browser: true */
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-loader'
 
   const eruda = 'https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js'
@@ -32,7 +33,10 @@ import root from 'window-or-global'
   }
 
   IpfsLoader.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   // https://www.srihash.org/

@@ -46,6 +46,7 @@ The HTML parser displays text as raw HTML
   /*global $tw: false */
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-binaryparser'
 
   var HtmlParser = function (type, text, options) {
@@ -101,8 +102,8 @@ The HTML parser displays text as raw HTML
   }
 
   HtmlParser.prototype.getLogger = function () {
-    if (window.log) {
-      return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
     }
     return console
   }

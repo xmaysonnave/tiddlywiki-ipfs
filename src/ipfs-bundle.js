@@ -22,6 +22,7 @@ import BoxLibrary from './box-library'
 
   const cidAnalyser = 'https://cid.ipfs.io/#'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-bundle'
 
   var IpfsBundle = function () {
@@ -29,7 +30,10 @@ import BoxLibrary from './box-library'
   }
 
   IpfsBundle.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   IpfsBundle.prototype.init = function () {

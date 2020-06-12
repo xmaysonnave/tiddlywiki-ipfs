@@ -60,7 +60,10 @@ IPFS link widget
   IpfsLinkWidget.prototype = new Widget()
 
   IpfsLinkWidget.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   /*
