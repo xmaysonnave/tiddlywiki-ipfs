@@ -529,60 +529,67 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleMobileConsole = async function (tiddler) {
-    // Load mobile console if applicable
-    if (typeof window.eruda === 'undefined') {
-      try {
-        // Load eruda
-        await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
-      } catch (error) {
-        this.getLogger().error(error)
-        throw new Error(error.message)
+    // Show or Hide
+    if (typeof window.eruda !== 'undefined') {
+      if (this.console === false) {
+        window.eruda.show()
+        window.eruda.show('console')
+        this.console = true
+      } else {
+        window.eruda.hide()
+        this.console = false
       }
-      const erudaContainer = window.document.createElement('div')
-      window.document.body.appendChild(erudaContainer)
-      window.eruda.init({
-        container: erudaContainer,
-        tool: ['console'],
-        useShadowDom: true,
-        autoScale: true
-      })
-      // Inherit font
-      erudaContainer.style.fontFamily = 'inherit'
-      // Preserve user preference if any, default is 80
-      if (window.eruda.get().config.get('displaySize') === 80) {
-        window.eruda.get().config.set('displaySize', 40)
-      }
-      // Preserve user preference if any, default is 0.95
-      if (window.eruda.get().config.get('transparency') === 0.95) {
-        window.eruda.get().config.set('transparency', 1)
-      }
-      // Hide Eruda button
-      if (window.eruda._shadowRoot !== undefined) {
-        const btn = window.eruda._shadowRoot.querySelector('.eruda-entry-btn')
-        if (btn !== undefined) {
-          btn.style.display = 'none'
-        }
-      }
-      // Console settings
-      const console = window.eruda.get('console')
-      console.config.set('asyncRender', true)
-      console.config.set('catchGlobalErr', true)
-      console.config.set('displayExtraInfo', false)
-      console.config.set('displayGetterVal', true)
-      console.config.set('displayUnenumerable', true)
-      console.config.set('jsExecution', true)
-      console.config.set('maxLogNum', 'infinite')
-      console.config.set('overrideConsole', true)
-      this.getLogger().info('Mobile console has been loaded...')
+      return
     }
-    if (this.console === false) {
-      window.eruda.show()
-      window.eruda.show('console')
-      this.console = true
-    } else {
-      window.eruda.hide()
-      this.console = false
+    // Load mobile console
+    try {
+      // Load eruda
+      await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
+    } catch (error) {
+      this.getLogger().error(error)
+      throw new Error(error.message)
     }
+    const erudaContainer = window.document.createElement('div')
+    window.document.body.appendChild(erudaContainer)
+    window.eruda.init({
+      container: erudaContainer,
+      tool: ['console'],
+      useShadowDom: false,
+      autoScale: false
+    })
+    // Inherit font
+    erudaContainer.style.fontFamily = 'inherit'
+    // Preserve user preference if any, default is 80
+    if (window.eruda.get().config.get('displaySize') === 80) {
+      window.eruda.get().config.set('displaySize', 40)
+    }
+    // Preserve user preference if any, default is 0.95
+    if (window.eruda.get().config.get('transparency') === 0.95) {
+      window.eruda.get().config.set('transparency', 1)
+    }
+    // Hide Eruda button
+    if (window.eruda._shadowRoot !== undefined) {
+      const btn = window.eruda._shadowRoot.querySelector('.eruda-entry-btn')
+      if (btn !== undefined) {
+        btn.style.display = 'none'
+      }
+    }
+    // Console settings
+    const erudaConsole = window.eruda.get('console')
+    erudaConsole.config.set('asyncRender', true)
+    erudaConsole.config.set('catchGlobalErr', true)
+    erudaConsole.config.set('displayExtraInfo', false)
+    erudaConsole.config.set('displayGetterVal', true)
+    erudaConsole.config.set('displayUnenumerable', true)
+    erudaConsole.config.set('jsExecution', true)
+    erudaConsole.config.set('maxLogNum', 'infinite')
+    erudaConsole.config.set('overrideConsole', true)
+    // Show
+    window.eruda.show()
+    window.eruda.show('console')
+    this.console = true
+    // Log
+    this.getLogger().info('Mobile console has been loaded...')
   }
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {

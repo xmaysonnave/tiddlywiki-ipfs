@@ -25,7 +25,7 @@ const root = require("window-or-global");
 const text = "text";
 const resourceRelative = "../../import/cleanup/root.json";
 beforeAll(() => {
-  root.log = log;
+  root.logger = log;
   log.setLevel("silent", false);
 });
 describe("API URL", () => {

@@ -5,7 +5,7 @@ const IpfsBundle = require("../build/plugins/ipfs/ipfs-bundle.js").IpfsBundle;
 const log = require("loglevel");
 const root = require("window-or-global");
 beforeAll(() => {
-  root.log = log;
+  root.logger = log;
   log.setLevel("silent", false);
 });
 describe("CID", () => {

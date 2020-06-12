@@ -3,5 +3,5 @@
   "description": "Minimal lightweight logging",
   "core-version": ">=5.0.0",
   "_project_uri": "https://github.com/pimterry/loglevel",
-  "_source_uri": "https://www.npmjs.com/package/loglevel"
+  "_source_uri": "https://cdn.jsdelivr.net/npm/loglevel@1.6.8/lib/loglevel.min.js"
 }

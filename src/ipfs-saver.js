@@ -34,16 +34,6 @@ IPFS Saver
     this.wiki = wiki
     this.apiUrl = null
     this.ipfsProvider = null
-    // Loglevel
-    if (window.logger === undefined || window.logger == null) {
-      // Init
-      window.logger = log.noConflict()
-      if ($tw.utils.getIpfsVerbose()) {
-        log.setLevel('info', true)
-      } else {
-        log.setLevel('warn', true)
-      }
-    }
     // Controller
     $tw.ipfs = new IpfsController()
     // Listener

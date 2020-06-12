@@ -1,7 +1,0 @@
-{
-  "title": "$:/plugins/eruda/eruda",
-  "description": "Console for mobile browsers",
-  "core-version": ">=5.0.0",
-  "_project_uri": "https://github.com/liriliri/eruda",
-  "_source_uri": "https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js"
-}

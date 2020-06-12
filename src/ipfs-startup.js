@@ -13,6 +13,16 @@ Startup initialisation
   /*global $tw: false */
   'use strict'
 
+  /**
+   * https://github.com/purposeindustries/window-or-global
+   * The MIT License (MIT) Copyright (c) Purpose Industries
+   * version: 1.0.1
+   */
+  const root =
+    (typeof self === 'object' && self.self === self && self) ||
+    (typeof global === 'object' && global.global === global && global) ||
+    this
+
   exports.platforms = ['browser']
   exports.after = ['startup']
   exports.synchronous = true
@@ -25,10 +35,6 @@ Startup initialisation
       flags: ['image']
     })
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
-    if (window.logger !== undefined && window.logger !== null) {
-      window.logger.info('ipfs-startup is starting up...')
-    } else {
-      console.info('ipfs-startup is starting up...')
-    }
+    root.logger.info('ipfs-startup is starting up...')
   }
 })()
