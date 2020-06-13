@@ -581,13 +581,12 @@ IPFS Action
     } else {
       window.logger.setLevel('warn', false)
     }
-    window.logger.info('LogLevel has been set...')
+    // Log
+    window.logger.info('Mobile console has been loaded...')
     // Show
     window.eruda.show()
     window.eruda.show('console')
     this.console = true
-    // Log
-    this.getLogger().info('Mobile console has been loaded...')
   }
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {

@@ -21,9 +21,9 @@ Load the loglevel library on startup
     if (window.logger === undefined || window.logger == null) {
       window.logger = $tw.modules.execute('$:/plugins/loglevel/loglevel.min.js')
       if ($tw.utils.getIpfsVerbose()) {
-        window.logger.setLevel('info', true)
+        window.logger.setLevel('info', false)
       } else {
-        window.logger.setLevel('warn', true)
+        window.logger.setLevel('warn', false)
       }
       window.logger.info('LogLevel is starting up...')
     }
