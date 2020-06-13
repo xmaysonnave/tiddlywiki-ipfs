@@ -13,8 +13,6 @@ IPFS Saver
   /*global $tw: false */
   'use strict'
 
-  const log = require('$:/plugins/loglevel/loglevel.min.js')
-
   const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
   const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
   const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js')
@@ -45,13 +43,13 @@ IPFS Saver
     this.ipfsAction.init()
     this.ipfsTiddler.init()
     // Log
-    log.info('ipfs-saver is starting up...')
+    this.getLogger().info('ipfs-saver is starting up...')
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      log.info(`Origin base URL: ${base}`)
+      this.getLogger().info(`Origin base URL: ${base}`)
     } else {
-      log.info(`Gateway base URL: ${base}`)
+      this.getLogger().info(`Gateway base URL: ${base}`)
     }
   }
 

@@ -35,6 +35,10 @@ Startup initialisation
       flags: ['image']
     })
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
-    root.logger.info('ipfs-startup is starting up...')
+    if (root.logger !== undefined && root.logger !== null) {
+      root.logger.info('ipfs-startup is starting up...')
+    } else {
+      console.info('ipfs-startup is starting up...')
+    }
   }
 })()

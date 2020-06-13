@@ -35,11 +35,9 @@
       "--clearpassword"
     ],
     "dev-plain": [
-			"--compress", "false",
       "--rendertiddler", "$:/core/save/all", "dev-plain.html", "text/plain"
     ],
     "dev-plain-and-encrypted": [
-			"--compress", "false",
       "--password", "blue",
       "--rendertiddler", "$:/core/save/all", "dev-plain-and-encrypted.html", "text/plain",
       "--clearpassword"

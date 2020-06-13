@@ -528,7 +528,7 @@ IPFS Action
     return true
   }
 
-  IpfsAction.prototype.handleMobileConsole = async function (tiddler) {
+  IpfsAction.prototype.handleMobileConsole = async function (event) {
     // Show or Hide
     if (typeof window.eruda !== 'undefined') {
       if (this.console === false) {
@@ -554,8 +554,8 @@ IPFS Action
     window.eruda.init({
       container: erudaContainer,
       tool: ['console'],
-      useShadowDom: false,
-      autoScale: false
+      useShadowDom: true,
+      autoScale: true
     })
     // Inherit font
     erudaContainer.style.fontFamily = 'inherit'
@@ -574,16 +574,14 @@ IPFS Action
         btn.style.display = 'none'
       }
     }
-    // Console settings
-    const erudaConsole = window.eruda.get('console')
-    erudaConsole.config.set('asyncRender', true)
-    erudaConsole.config.set('catchGlobalErr', true)
-    erudaConsole.config.set('displayExtraInfo', false)
-    erudaConsole.config.set('displayGetterVal', true)
-    erudaConsole.config.set('displayUnenumerable', true)
-    erudaConsole.config.set('jsExecution', true)
-    erudaConsole.config.set('maxLogNum', 'infinite')
-    erudaConsole.config.set('overrideConsole', true)
+    // Init Logger
+    window.logger = window.logger.getLogger('eruda')
+    if ($tw.utils.getIpfsVerbose()) {
+      window.logger.setLevel('info', false)
+    } else {
+      window.logger.setLevel('warn', false)
+    }
+    window.logger.info('LogLevel has been set...')
     // Show
     window.eruda.show()
     window.eruda.show('console')

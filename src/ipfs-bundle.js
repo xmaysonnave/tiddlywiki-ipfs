@@ -9,6 +9,7 @@ IPFS Bundle
 \*/
 
 import CID from 'cids'
+import log from 'loglevel'
 import root from 'window-or-global'
 
 import EnsLibrary from './ens-library'

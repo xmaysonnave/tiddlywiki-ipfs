@@ -34,11 +34,9 @@
       "--clearpassword"
     ],
     "index-plain": [
-			"--compress", "false",
       "--rendertiddler", "$:/core/save/all", "index-plain.html", "text/plain"
     ],
 		"index-plain-and-encrypted": [
-			"--compress", "false",
       "--password", "blue",
 			"--rendertiddler", "$:/core/save/all", "index-plain-and-encrypted.html", "text/plain",
       "--clearpassword"
