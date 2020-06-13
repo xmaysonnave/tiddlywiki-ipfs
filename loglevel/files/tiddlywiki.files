@@ -13,8 +13,7 @@
       "file": "../LICENSE-MIT",
       "fields": {
         "type": "text/plain",
-        "title": "$:/plugins/loglevel/license",
-        "_canonical_uri": "https://raw.githubusercontent.com/pimterry/loglevel/master/LICENSE-MIT"
+        "title": "$:/plugins/loglevel/license"
       }
     }
   ]
