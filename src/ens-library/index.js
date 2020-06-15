@@ -290,22 +290,17 @@ import root from 'window-or-global'
     if (root.ethers === undefined || root.ethers == null) {
       await this.loadEthers()
     }
-    // Low level call
     const abi = [
-      { name: 'resolver', type: 'function', inputs: [{ type: 'bytes32' }] }
+      'function resolver(bytes32 node) external view returns (address)'
     ]
     const iface = new root.ethers.utils.Interface(abi)
-    const data = iface.functions.resolver.encode([node])
+    const data = iface.encodeFunctionData('resolver', [node])
     const result = await web3.call({ to: registry, data: data })
     if (result === undefined || result == null || result === '0x') {
       return null
     }
-    // decode if applicable
     try {
-      const decoded = root.ethers.utils.defaultAbiCoder.decode(
-        ['address'],
-        result
-      )
+      const decoded = iface.decodeFunctionResult('resolver', result)
       return decoded[0]
     } catch (error) {
       this.getLogger().error(error)
@@ -329,23 +324,17 @@ import root from 'window-or-global'
     if (root.ethers === undefined || root.ethers == null) {
       await this.loadEthers()
     }
-    // true when interfaceID is 0x01ffc9a7
     var abi = [
-      {
-        name: 'supportsInterface',
-        type: 'function',
-        inputs: [{ type: 'bytes4' }]
-      }
+      'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
     ]
     var iface = new root.ethers.utils.Interface(abi)
-    var data = iface.functions.supportsInterface.encode(['0x01ffc9a7'])
+    var data = iface.encodeFunctionData('supportsInterface', ['0x01ffc9a7'])
     var result = await web3.call({ to: address, data: data })
     if (result === undefined || result == null || result === '0x') {
       return false
     }
-    // decode
     try {
-      var decoded = root.ethers.utils.defaultAbiCoder.decode(['bool'], result)
+      var decoded = iface.decodeFunctionResult('supportsInterface', result)
       if (decoded[0] === false) {
         return false
       }
@@ -353,15 +342,13 @@ import root from 'window-or-global'
       this.getLogger().error(error)
       return false
     }
-    // false when interfaceID is 0xffffffff
-    var data = iface.functions.supportsInterface.encode(['0xffffffff'])
+    var data = iface.encodeFunctionData('supportsInterface', ['0xffffffff'])
     var result = await web3.call({ to: address, data: data })
     if (result === undefined || result == null || result === '0x') {
       return false
     }
-    // decode
     try {
-      var decoded = root.ethers.utils.defaultAbiCoder.decode(['bool'], result)
+      var decoded = iface.decodeFunctionResult('supportsInterface', result)
       // conform to spec
       if (decoded[0] === false) {
         return true
@@ -390,30 +377,27 @@ import root from 'window-or-global'
     }
     // contenthash, true when interfaceID is 0xbc1c58d1
     var abi = [
-      {
-        name: 'supportsInterface',
-        type: 'function',
-        inputs: [{ type: 'bytes4' }]
-      }
+      'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
     ]
     var iface = new root.ethers.utils.Interface(abi)
-    var data = iface.functions.supportsInterface.encode(['0xbc1c58d1'])
+    var data = iface.encodeFunctionData('supportsInterface', ['0xbc1c58d1'])
     var result = await web3.call({ to: address, data: data })
     if (result === undefined || result == null || result === '0x') {
       return false
     }
     try {
       // decode
-      var decoded = root.ethers.utils.defaultAbiCoder.decode(['bool'], result)
-      if (decoded[0] === false) {
-        return false
+      var decoded = iface.decodeFunctionResult('supportsInterface', result)
+      // conform to spec
+      if (decoded[0] === true) {
+        return true
       }
     } catch (error) {
       this.getLogger().error(error)
       return false
     }
-    // return
-    return true
+    // do not conform to spec
+    return false
   }
 
   EnsLibrary.prototype.getContentHash = async function (domain, web3) {
@@ -461,10 +445,10 @@ import root from 'window-or-global'
     // Retrieve content hash
     this.getLogger().info('Processing ENS domain content...')
     const abi = [
-      { name: 'contenthash', type: 'function', inputs: [{ type: 'bytes32' }] }
+      'function contenthash(bytes32 node) external view returns (bytes memory)'
     ]
     const iface = new root.ethers.utils.Interface(abi)
-    const data = iface.functions.contenthash.encode([domainHash])
+    const data = iface.encodeFunctionData('contenthash', [domainHash])
     const result = await web3.call({ to: resolver, data: data })
     if (result === undefined || result == null || result === '0x') {
       return {
@@ -473,7 +457,7 @@ import root from 'window-or-global'
       }
     }
     // decode bytes result
-    var content = root.ethers.utils.defaultAbiCoder.decode(['bytes'], result)
+    var content = iface.decodeFunctionResult('contenthash', result)
     if (
       content === undefined ||
       content == null ||

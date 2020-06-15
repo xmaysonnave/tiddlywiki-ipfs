@@ -10,14 +10,15 @@ import root from 'window-or-global'
   const erudaSri =
     'sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP'
 
-  const ethers = 'https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js'
+  const ethers =
+    'https://cdn.jsdelivr.net/npm/ethers@5.0.2/dist/ethers.umd.min.js'
   const ethersSri =
-    'sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5'
+    'sha384-XR63rSjgEtGAUiPqyr3lc6BAyN9JgrFKLrbnivkRp+xv3fE5XexgjsVM0x11x+9o'
 
   const ipfsHttpClient =
-    'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.1.1/dist/index.min.js'
+    'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.2.0/dist/index.min.js'
   const ipfsHttpClientSri =
-    'sha384-NvfAKWfwAGQtt53C6QkNMM2whGsF9BeeXkfOWkFV3qmyh1VLVmfxxUrvLcgw0ZYr'
+    'sha384-3sSgHRREOld0O9S98mtIiJPvjhwVGtvmzRz4UjPcvACW4EnZasEpDONBWcsRF4y2'
 
   const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.19.0/dist/3box.min.js'
   const threeBoxSri =
