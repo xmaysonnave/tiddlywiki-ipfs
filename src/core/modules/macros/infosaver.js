@@ -1,10 +1,9 @@
 /*\
-title: $:/plugins/ipfs/macro/ipfs-info-saver.js
+title: $:/core/modules/macros/infosaver.js
 type: application/javascript
-tags: $:/ipfs/core
 module-type: macro
 
-IPFS info saver
+Display saver info name
 
 \*/
 
@@ -16,7 +15,7 @@ IPFS info saver
   /*
    * Information about this macro
    */
-  exports.name = 'ipfs-info-saver'
+  exports.name = 'infosaver'
 
   exports.params = [{ name: 'tiddler' }]
 

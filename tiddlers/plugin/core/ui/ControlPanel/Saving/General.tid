@@ -6,8 +6,8 @@ list-before:
 
 \define lingo-base() $:/language/ControlPanel/Settings/
 
-\define ipfs-saver()
-<$text text=<<ipfs-info-saver "$(currentTiddler)$">>/>
+\define preferred-saver()
+<$text text=<<infosaver "$(currentTiddler)$">>/>
 \end
 
 {{$:/language/ControlPanel/Saving/General/Hint}}
@@ -16,7 +16,7 @@ list-before:
 
 <$select tiddler="$:/config/PreferredSaver">
 <$list filter="[savers[]]">
-<option value=<<currentTiddler>>><<ipfs-saver>></option>
+<option value=<<currentTiddler>>><<preferred-saver>></option>
 </$list>
 </$select>
 

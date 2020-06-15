@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/operator/ipfs-savers.js
+title: $:/core/modules/filters/savers.js
 type: application/javascript
 module-type: filteroperator
 
