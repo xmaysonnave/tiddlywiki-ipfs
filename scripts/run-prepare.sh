@@ -1,9 +1,13 @@
 #!/bin/bash
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
+rm -f -R ./output > /dev/null 2>&1
 
-# build plugin directory
+# build directory
 mkdir -p ./build/plugins/ipfs/core > /dev/null 2>&1
+
+# temp output directory
+mkdir -p ./build/output > /dev/null 2>&1
 
 # core scripts
 cp -R ./src/core/* ./build/plugins/ipfs/core > /dev/null 2>&1

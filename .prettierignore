@@ -2,6 +2,7 @@ build
 boot
 metadata
 node_modules
+output
 test
 tiddlers
 tw5-locator

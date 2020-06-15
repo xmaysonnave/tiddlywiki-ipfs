@@ -31,15 +31,15 @@
 		"dev-encrypted": [
 			"--compress", "true",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "dev-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../output/dev-encrypted.html", "text/plain",
       "--clearpassword"
     ],
     "dev-plain": [
-      "--rendertiddler", "$:/core/save/all", "dev-plain.html", "text/plain"
+      "--rendertiddler", "$:/core/save/all", "../output/dev-plain.html", "text/plain"
     ],
     "dev-plain-and-encrypted": [
       "--password", "blue",
-      "--rendertiddler", "$:/core/save/all", "dev-plain-and-encrypted.html", "text/plain",
+      "--rendertiddler", "$:/core/save/all", "../output/dev-plain-and-encrypted.html", "text/plain",
       "--clearpassword"
     ]
   }
