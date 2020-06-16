@@ -245,7 +245,7 @@ ENS Wrapper
       const isOwner = await this.ensLibrary.isOwner(domain, web3, account)
       if (isOwner === false) {
         const error = new Error(
-          'Unauthorized Owner. Unable to set ENS domain content...'
+          'Unauthorized Account. Unable to set ENS domain content...'
         )
         error.name = 'OwnerError'
         throw error

@@ -301,7 +301,14 @@ import root from 'window-or-global'
     }
     try {
       const decoded = iface.decodeFunctionResult('resolver', result)
-      return decoded[0]
+      if (
+        decoded !== undefined &&
+        decoded !== null &&
+        Array.isArray(decoded) &&
+        decoded.length > 0
+      ) {
+        return decoded[0]
+      }
     } catch (error) {
       this.getLogger().error(error)
     }
@@ -335,8 +342,15 @@ import root from 'window-or-global'
     }
     try {
       var decoded = iface.decodeFunctionResult('supportsInterface', result)
-      if (decoded[0] === false) {
-        return false
+      if (
+        decoded !== undefined &&
+        decoded !== null &&
+        Array.isArray(decoded) &&
+        decoded.length > 0
+      ) {
+        if (decoded[0] === false) {
+          return false
+        }
       }
     } catch (error) {
       this.getLogger().error(error)
@@ -349,9 +363,16 @@ import root from 'window-or-global'
     }
     try {
       var decoded = iface.decodeFunctionResult('supportsInterface', result)
-      // conform to spec
-      if (decoded[0] === false) {
-        return true
+      if (
+        decoded !== undefined &&
+        decoded !== null &&
+        Array.isArray(decoded) &&
+        decoded.length > 0
+      ) {
+        // conform to spec
+        if (decoded[0] === false) {
+          return true
+        }
       }
     } catch (error) {
       this.getLogger().error(error)
@@ -386,17 +407,18 @@ import root from 'window-or-global'
       return false
     }
     try {
-      // decode
       var decoded = iface.decodeFunctionResult('supportsInterface', result)
-      // conform to spec
-      if (decoded[0] === true) {
-        return true
+      if (
+        decoded !== undefined &&
+        decoded !== null &&
+        Array.isArray(decoded) &&
+        decoded.length > 0
+      ) {
+        return decoded[0]
       }
     } catch (error) {
       this.getLogger().error(error)
-      return false
     }
-    // do not conform to spec
     return false
   }
 
@@ -456,24 +478,22 @@ import root from 'window-or-global'
         protocol: null
       }
     }
-    // decode bytes result
     var content = iface.decodeFunctionResult('contenthash', result)
     if (
-      content === undefined ||
-      content == null ||
-      Array.isArray(content) === false ||
-      content[0] === '0x'
+      content !== undefined &&
+      content !== null &&
+      Array.isArray(content) &&
+      content.length > 0
     ) {
+      var { decoded, protocol } = this.decodeContenthash(content[0])
       return {
-        content: null,
-        protocol: null
+        content: decoded,
+        protocol: protocol
       }
     }
-    // Decode content hash
-    var { decoded, protocol } = this.decodeContenthash(content[0])
     return {
-      content: decoded,
-      protocol: protocol
+      content: null,
+      protocol: null
     }
   }
 
@@ -500,22 +520,24 @@ import root from 'window-or-global'
       `ENS registry: \n ${this.etherscan[chainId]}/address/${registry}`
     )
     this.getLogger().info('Processing owner...')
-    const abi = [
-      { name: 'owner', type: 'function', inputs: [{ type: 'bytes32' }] }
-    ]
+    const abi = ['function owner(bytes32 node) internal view returns(bool)']
     const iface = new root.ethers.utils.Interface(abi)
-    const data = iface.functions.owner.encode([domainHash])
+    const data = iface.encodeFunctionData('owner', [domainHash])
     const result = await web3.call({ to: registry, data: data })
     if (result === undefined || result == null || result === '0x') {
       return false
     }
     // decode if applicable
     try {
-      const decoded = root.ethers.utils.defaultAbiCoder.decode(
-        ['address'],
-        result
-      )
-      return decoded[0].toLowerCase() === account.toLowerCase()
+      var decoded = iface.decodeFunctionResult('owner', result)
+      if (
+        decoded !== undefined &&
+        decoded !== null &&
+        Array.isArray(decoded) &&
+        decoded.length > 0
+      ) {
+        return decoded[0]
+      }
     } catch (error) {
       this.getLogger().error(error)
     }
@@ -573,15 +595,12 @@ import root from 'window-or-global'
     const { encoded } = this.encodeContenthash('ipfs://' + cid)
     // Set Contenthash
     this.getLogger().info('Processing ENS domain content...')
-    const abi = [
-      {
-        name: 'setContenthash',
-        type: 'function',
-        inputs: [{ type: 'bytes32' }, { type: 'bytes' }]
-      }
-    ]
+    const abi = ['function setContenthash(bytes32 node, bytes calldata hash)']
     const iface = new root.ethers.utils.Interface(abi)
-    const data = iface.functions.setContenthash.encode([domainHash, encoded])
+    const data = iface.encodeFunctionData('setContenthash', [
+      domainHash,
+      encoded
+    ])
     const signer = web3.getSigner()
     const tx = await signer.sendTransaction({ to: resolver, data: data })
     this.getLogger().info(
