@@ -296,8 +296,8 @@ IPFS Action
       $tw.utils.alert(name, 'Unsupported Tiddler Content-Type...')
       return null
     }
-    var text = tiddler.getFieldString('text')
-    if (text === undefined || text == null || text === '') {
+    var content = tiddler.getFieldString('text')
+    if (content === undefined || content == null || content === '') {
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
@@ -305,10 +305,10 @@ IPFS Action
       try {
         // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
         if (info.encoding === 'base64') {
-          text = atob(text)
+          content = atob(content)
         }
-        text = $tw.crypto.encrypt(text, $tw.crypto.currentPassword)
-        text = $tw.ipfs.StringToUint8Array(text)
+        content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword)
+        content = $tw.ipfs.StringToUint8Array(content)
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(
@@ -320,9 +320,9 @@ IPFS Action
     } else {
       try {
         if (info.encoding === 'base64') {
-          text = $tw.ipfs.Base64ToUint8Array(text)
+          content = $tw.ipfs.Base64ToUint8Array(content)
         } else {
-          text = $tw.ipfs.StringToUint8Array(text)
+          content = $tw.ipfs.StringToUint8Array(content)
         }
       } catch (error) {
         this.getLogger().error(error)
@@ -330,7 +330,7 @@ IPFS Action
         return null
       }
     }
-    return text
+    return content
   }
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
