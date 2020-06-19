@@ -14,26 +14,26 @@ import root from 'window-or-global'
   var EnsLibrary = function (ipfsLoader) {
     this.ipfsLoader = ipfsLoader
     this.network = {
-      '0x1': 'Ethereum Main Network: "Mainnet", chainId: "1"',
-      '0x3': 'Ethereum Test Network (PoW): "Ropsten", chainId: "3"',
-      '0x4': 'Ethereum Test Network (PoA): "Rinkeby", chainId: "4"',
-      '0x5': 'Ethereum Test Network (PoA): "Goerli", chainId: "5"',
-      '0x42': 'Ethereum Test Network (PoA): "Kovan", chainId: "42"'
+      0x1: 'Ethereum Main Network: "Mainnet", chainId: "1"',
+      0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "3"',
+      0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "4"',
+      0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "5"',
+      0x42: 'Ethereum Test Network (PoA): "Kovan", chainId: "42"'
     }
     this.etherscan = {
-      '0x1': 'https://etherscan.io',
-      '0x3': 'https://ropsten.etherscan.io',
-      '0x4': 'https://rinkeby.etherscan.io',
-      '0x5': 'https://goerli.etherscan.io',
-      '0x42': 'https://kovan.etherscan.io'
+      0x1: 'https://etherscan.io',
+      0x3: 'https://ropsten.etherscan.io',
+      0x4: 'https://rinkeby.etherscan.io',
+      0x5: 'https://goerli.etherscan.io',
+      0x42: 'https://kovan.etherscan.io'
     }
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
     this.registry = {
-      '0x1': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-      '0x3': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-      '0x4': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-      '0x5': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+      0x1: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      0x3: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      0x4: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      0x5: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
     }
   }
 
@@ -142,18 +142,22 @@ import root from 'window-or-global'
     // Enable Provider
     var accounts = null
     // Handle connection, per EIP 1102
-    if (typeof provider.send === 'function') {
+    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
+    if (typeof provider.request === 'function') {
       try {
-        await provider.send('eth_requestAccounts')
+        await provider.request({ method: 'eth_requestAccounts' })
       } catch (error) {
-        // EIP 1193 userRejectedRequest error
+        // EIP 1193 user Rejected Request
         if (error.code === 4001) {
-          throw new Error('User rejected request...')
+          const err = new Error(error.message)
+          err.name = 'UserRejectedRequest'
+          throw err
         }
-        throw new Error(error.message)
+        throw error
       }
       // Handle user accounts per EIP 1193
-      accounts = await provider.send('eth_accounts')
+      // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+      accounts = await provider.request({ method: 'eth_accounts' })
       // https://medium.com/metamask/breaking-changes-to-the-metamask-inpage-provider-b4dde069dd0a
       // Metamask returns accounts.results rather than an array as described in their above communication
       if (
@@ -520,7 +524,7 @@ import root from 'window-or-global'
       `ENS registry: \n ${this.etherscan[chainId]}/address/${registry}`
     )
     this.getLogger().info('Processing owner...')
-    const abi = ['function owner(bytes32 node) internal view returns(bool)']
+    const abi = ['function owner(bytes32 node) public view returns(address)']
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('owner', [domainHash])
     const result = await web3.call({ to: registry, data: data })
@@ -536,7 +540,7 @@ import root from 'window-or-global'
         Array.isArray(decoded) &&
         decoded.length > 0
       ) {
-        return decoded[0]
+        return decoded[0].toLowerCase() === account.toLowerCase()
       }
     } catch (error) {
       this.getLogger().error(error)

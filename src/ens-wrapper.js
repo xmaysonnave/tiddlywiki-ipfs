@@ -141,9 +141,11 @@ ENS Wrapper
       const network = this.getNetworkRegistry()
       try {
         this.web3 = null
-        this.chainId = chainId
+        this.chainId = parseInt(chainId, 16)
         this.account = null
-        this.getLogger().info(`Current Ethereum network: ${network[chainId]}`)
+        this.getLogger().info(
+          `Current Ethereum network: ${network[this.chainId]}`
+        )
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(name, error.message)
@@ -167,6 +169,9 @@ ENS Wrapper
           account
         } = await this.ensLibrary.getEnabledWeb3Provider(provider)
       } catch (error) {
+        if (error.name === 'UserRejectedRequest') {
+          throw error
+        }
         this.getLogger().error(error)
         throw new Error('Unable to retrieve an enabled Ethereum Provider...')
       }
