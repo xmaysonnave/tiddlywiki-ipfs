@@ -26,7 +26,6 @@ IPFS Controller
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
     this.ensWrapper = new EnsWrapper(this.ipfsBundle)
-    this.ensWrapper.init()
     this.ipfsUrl = this.ipfsBundle.ipfsUrl
     this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle)
     this.ipfsClients = new Map()
