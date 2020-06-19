@@ -61,10 +61,6 @@ ENS Wrapper
     this.ethereum.on('connect', chainId => {
       self.chainChanged(chainId)
     })
-    // Deprecated soon, probably Metamask 8.0.0
-    this.ethereum.on('networkChanged', chainId => {
-      self.chainChanged(chainId)
-    })
     this.ethereum.on('disconnect', (code, reason) => {
       self.disconnectedFromAllChains(code, reason)
     })
