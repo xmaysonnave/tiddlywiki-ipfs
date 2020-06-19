@@ -29,6 +29,27 @@ import BoxLibrary from './box-library'
     this.once = false
   }
 
+  IpfsBundle.prototype.getLogger = function () {
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
+  }
+
+  IpfsBundle.prototype.init = function () {
+    // Init once
+    if (this.once) {
+      return
+    }
+    this.ipfsLoader = new IpfsLoader(this)
+    this.ensLibrary = new EnsLibrary(this.ipfsLoader)
+    this.ipfsLibrary = new IpfsLibrary(this)
+    this.ipfsUrl = new IpfsUrl()
+    this.boxLibrary = new BoxLibrary(this.ipfsLoader)
+    // Init once
+    this.once = true
+  }
+
   // https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer/21797381
   // https://github.com/danguer/blog-examples/blob/master/js/base64-binary.js
   /*
@@ -80,18 +101,18 @@ import BoxLibrary from './box-library'
       }
       return input
     },
-    decode: function (input, arrayBuffer) {
+    decode: function (input, ab) {
       //get last chars to see if are valid
       input = this.removePaddingChars(input)
       input = this.removePaddingChars(input)
       var bytes = parseInt((input.length / 4) * 3, 10)
-      var uarray
+      var ua
       var chr1, chr2, chr3
       var enc1, enc2, enc3, enc4
       var i = 0
       var j = 0
-      if (arrayBuffer) uarray = new Uint8Array(arrayBuffer)
-      else uarray = new Uint8Array(bytes)
+      if (ab) ua = new Uint8Array(ab)
+      else ua = new Uint8Array(bytes)
       input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '')
       for (i = 0; i < bytes; i += 3) {
         //get the 3 octects in 4 ascii chars
@@ -102,33 +123,12 @@ import BoxLibrary from './box-library'
         chr1 = (enc1 << 2) | (enc2 >> 4)
         chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
         chr3 = ((enc3 & 3) << 6) | enc4
-        uarray[i] = chr1
-        if (enc3 !== 64) uarray[i + 1] = chr2
-        if (enc4 !== 64) uarray[i + 2] = chr3
+        ua[i] = chr1
+        if (enc3 !== 64) ua[i + 1] = chr2
+        if (enc4 !== 64) ua[i + 2] = chr3
       }
-      return uarray
+      return ua
     }
-  }
-
-  IpfsBundle.prototype.getLogger = function () {
-    if (root.logger !== undefined && root.logger !== null) {
-      return root.logger
-    }
-    return console
-  }
-
-  IpfsBundle.prototype.init = function () {
-    // Init once
-    if (this.once) {
-      return
-    }
-    this.ipfsLoader = new IpfsLoader(this)
-    this.ensLibrary = new EnsLibrary(this.ipfsLoader)
-    this.ipfsLibrary = new IpfsLibrary(this)
-    this.ipfsUrl = new IpfsUrl()
-    this.boxLibrary = new BoxLibrary(this.ipfsLoader)
-    // Init once
-    this.once = true
   }
 
   IpfsBundle.prototype.isJson = function (content) {
