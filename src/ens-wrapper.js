@@ -35,6 +35,7 @@ ENS Wrapper
     this.ipfsBundle = ipfsBundle
     this.boxLibrary = ipfsBundle.boxLibrary
     this.ensLibrary = ipfsBundle.ensLibrary
+    this.once = false
   }
 
   EnsWrapper.prototype.getLogger = function () {
@@ -42,6 +43,36 @@ ENS Wrapper
       return window.logger
     }
     return console
+  }
+
+  EnsWrapper.prototype.init = function () {
+    // Init once
+    if (this.once) {
+      return
+    }
+    const self = this
+    this.ethereum = this.ensLibrary.getProvider()
+    this.ethereum.on('accountsChanged', accounts => {
+      self.accountChanged(accounts)
+    })
+    this.ethereum.on('chainChanged', chainId => {
+      self.chainChanged(chainId)
+    })
+    this.ethereum.on('connect', chainId => {
+      self.chainChanged(chainId)
+    })
+    // Deprecated soon, probably Metamask 8.0.0
+    this.ethereum.on('networkChanged', chainId => {
+      self.chainChanged(chainId)
+    })
+    this.ethereum.on('disconnect', (code, reason) => {
+      self.disconnectedFromAllChains(code, reason)
+    })
+    this.ethereum.on('message', message => {
+      self.providerMessage(message)
+    })
+    // Init once
+    this.once = true
   }
 
   EnsWrapper.prototype.load3BoxProfile = async function () {
@@ -61,29 +92,6 @@ ENS Wrapper
    * https://eips.ethereum.org/EIPS/eip-1193
    */
   EnsWrapper.prototype.getEthereumProvider = function () {
-    if (this.ethereum == null) {
-      const self = this
-      this.ethereum = this.ensLibrary.getProvider()
-      this.ethereum.on('accountsChanged', accounts => {
-        self.accountChanged(accounts)
-      })
-      this.ethereum.on('chainChanged', chainId => {
-        self.chainChanged(chainId)
-      })
-      this.ethereum.on('connect', chainId => {
-        self.chainChanged(chainId)
-      })
-      // Deprecated soon, probably Metamask 8.0.0
-      this.ethereum.on('networkChanged', chainId => {
-        self.chainChanged(chainId)
-      })
-      this.ethereum.on('disconnect', (code, reason) => {
-        self.disconnectedFromAllChains(code, reason)
-      })
-      this.ethereum.on('message', message => {
-        self.providerMessage(message)
-      })
-    }
     return this.ethereum
   }
 
