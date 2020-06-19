@@ -14,26 +14,26 @@ import root from 'window-or-global'
   var EnsLibrary = function (ipfsLoader) {
     this.ipfsLoader = ipfsLoader
     this.network = {
-      1: 'Ethereum Main Network: "Mainnet", chainId: "1"',
-      3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "3"',
-      4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "4"',
-      5: 'Ethereum Test Network (PoA): "Goerli", chainId: "5"',
-      42: 'Ethereum Test Network (PoA): "Kovan", chainId: "42"'
+      '0x1': 'Ethereum Main Network: "Mainnet", chainId: "1"',
+      '0x3': 'Ethereum Test Network (PoW): "Ropsten", chainId: "3"',
+      '0x4': 'Ethereum Test Network (PoA): "Rinkeby", chainId: "4"',
+      '0x5': 'Ethereum Test Network (PoA): "Goerli", chainId: "5"',
+      '0x42': 'Ethereum Test Network (PoA): "Kovan", chainId: "42"'
     }
     this.etherscan = {
-      1: 'https://etherscan.io',
-      3: 'https://ropsten.etherscan.io',
-      4: 'https://rinkeby.etherscan.io',
-      5: 'https://goerli.etherscan.io',
-      42: 'https://kovan.etherscan.io'
+      '0x1': 'https://etherscan.io',
+      '0x3': 'https://ropsten.etherscan.io',
+      '0x4': 'https://rinkeby.etherscan.io',
+      '0x5': 'https://goerli.etherscan.io',
+      '0x42': 'https://kovan.etherscan.io'
     }
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
     this.registry = {
-      1: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-      3: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-      4: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-      5: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+      '0x1': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      '0x3': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      '0x4': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      '0x5': '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
     }
   }
 
@@ -48,7 +48,7 @@ import root from 'window-or-global'
     return this.etherscan
   }
 
-  EnsLibrary.prototype.getNetwork = function () {
+  EnsLibrary.prototype.getNetworkRegistry = function () {
     return this.network
   }
 

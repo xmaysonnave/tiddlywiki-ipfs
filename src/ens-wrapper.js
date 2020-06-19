@@ -138,7 +138,7 @@ ENS Wrapper
 
   EnsWrapper.prototype.chainChanged = function (chainId) {
     if (this.chainId !== chainId) {
-      const network = this.getNetwork()
+      const network = this.getNetworkRegistry()
       try {
         this.web3 = null
         this.chainId = chainId
@@ -156,7 +156,7 @@ ENS Wrapper
     var chainId = null
     var account = null
     const provider = this.getEthereumProvider()
-    const network = this.getNetwork()
+    const network = this.getNetworkRegistry()
     const etherscan = this.getEtherscanRegistry()
     var msg = 'Reuse Web3 provider:'
     if (this.account == null) {
@@ -192,7 +192,7 @@ ENS Wrapper
     var web3 = null
     var chainId = null
     const provider = this.getEthereumProvider()
-    const network = this.getNetwork()
+    const network = this.getNetworkRegistry()
     var info = 'Reuse Web3 provider:'
     if (this.web3 == null) {
       try {
@@ -272,8 +272,8 @@ ENS Wrapper
     return this.ensLibrary.getEtherscanRegistry()
   }
 
-  EnsWrapper.prototype.getNetwork = function () {
-    return this.ensLibrary.getNetwork()
+  EnsWrapper.prototype.getNetworkRegistry = function () {
+    return this.ensLibrary.getNetworkRegistry()
   }
 
   EnsWrapper.prototype.getENSRegistry = function () {
