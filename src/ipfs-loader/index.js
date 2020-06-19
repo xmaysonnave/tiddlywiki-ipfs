@@ -20,9 +20,9 @@ import root from 'window-or-global'
   const ipfsHttpClientSri =
     'sha384-3sSgHRREOld0O9S98mtIiJPvjhwVGtvmzRz4UjPcvACW4EnZasEpDONBWcsRF4y2'
 
-  const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.19.0/dist/3box.min.js'
+  const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.20.0/dist/3box.min.js'
   const threeBoxSri =
-    'sha384-tbBobUw5fP4CqNpLpF3UHPGHmaCFjUPlgcZP1Oq7Uo+QspWkAx1bT6jXsq87y5vG'
+    'sha384-VzJu0TkEIXQxpZoop25QZD9aggaqMVFzWA6GxwdwOjSG/D+4/BaEn8xHmz5otHP7'
 
   const threeBoxProfile =
     'https://cdn.jsdelivr.net/npm/profile-hover@1.1.2/dist/reactBundle.min.js'
