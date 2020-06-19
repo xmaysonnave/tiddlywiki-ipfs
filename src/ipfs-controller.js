@@ -45,8 +45,8 @@ IPFS Controller
     return this.ipfsBundle.isCid(cid)
   }
 
-  IpfsController.prototype.load3BoxProfile = async function () {
-    return await this.ensWrapper.load3BoxProfile()
+  IpfsController.prototype.load3Box = async function () {
+    return await this.ensWrapper.load3Box()
   }
 
   IpfsController.prototype.loadToBase64 = async function (url) {
