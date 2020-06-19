@@ -8,6 +8,7 @@ type: text/vnd.tiddlywiki
   Here is an exhaustive list of involved projects with <b>IPFS with ~TiddlyWiki</b>
 </p>
 <ol>
+  <li>[ext[3Box|https://github.com/3box/3box-js]]</li>
   <li>[ext[Babel|https://github.com/babel]]</li>
   <li>[ext[Beyond Compare|https://www.scootersoftware.com/]]</li>
   <li>[ext[Buffer|https://github.com/feross/buffer]]</li>
@@ -49,11 +50,13 @@ type: text/vnd.tiddlywiki
   <li>[ext[Npm|https://github.com/npm/cli]]</li>
   <li>[ext[Nvm|https://github.com/nvm-sh/nvm]]</li>
   <li>[ext[Oh My Zsh|https://github.com/ohmyzsh/ohmyzsh]]</li>
+  <li>[ext[Pako|https://github.com/nodeca/pako]]</li>
   <li>[ext[Prettier|https://github.com/prettier/prettier]]</li>
   <li>[ext[Prettier Standard|https://github.com/sheerun/prettier-standard]]</li>
   <li>[ext[Prettierx|https://github.com/brodybits/prettierx]]</li>
   <li>[ext[Sablier|https://github.com/sablierhq]]</li>
   <li>[ext[Snyk|https://snyk.io/]]</li>
+  <li>[ext[Stanford Javascript Crypto Library|https://github.com/bitwiseshiftleft/sjcl]]</li>
   <li>[ext[TiddlyWiki5|https://github.com/Jermolene/TiddlyWiki5]]</li>
   <li>[ext[Travis CI|https://travis-ci.com/]]</li>
   <li>[ext[IPFS with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs]]</li>
