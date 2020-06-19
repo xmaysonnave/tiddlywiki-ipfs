@@ -364,7 +364,10 @@ IPFS Tiddler
       return true
     }
     // Async Import
-    if (canonicalUri !== null || importUri !== null) {
+    if (
+      type === 'text/vnd.tiddlywiki' &&
+      (canonicalUri !== null || importUri !== null)
+    ) {
       var ipfsImport = new IpfsImport()
       ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
         self.getLogger().error(error)
