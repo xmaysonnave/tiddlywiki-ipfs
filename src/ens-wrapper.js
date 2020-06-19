@@ -253,11 +253,9 @@ ENS Wrapper
     try {
       const isOwner = await this.ensLibrary.isOwner(domain, web3, account)
       if (isOwner === false) {
-        const error = new Error(
-          'Unauthorized Account. Unable to set ENS domain content...'
-        )
-        error.name = 'OwnerError'
-        throw error
+        const err = new Error('Unauthorized Account...')
+        err.name = 'OwnerError'
+        throw err
       }
       const cidV0 = this.ipfsBundle.cidV1ToCidV0(cid)
       await this.ensLibrary.setContentHash(domain, cidV0, web3, account)
@@ -265,7 +263,11 @@ ENS Wrapper
         cidV0: cidV0
       }
     } catch (error) {
-      if (error.name === 'OwnerError') {
+      if (
+        error.name === 'OwnerError' ||
+        error.name === 'RejectedUserRequest' ||
+        error.name === 'UnauthorizedUserAccount'
+      ) {
         throw error
       }
       this.getLogger().error(error)

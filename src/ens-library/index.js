@@ -605,14 +605,31 @@ import root from 'window-or-global'
       domainHash,
       encoded
     ])
-    const signer = web3.getSigner()
-    const tx = await signer.sendTransaction({ to: resolver, data: data })
-    this.getLogger().info(
-      `Processing Transaction:\n ${this.etherscan[chainId]}/tx/${tx.hash}`
-    )
-    // Wait for transaction completion
-    await tx.wait()
-    this.getLogger().info('Processed ENS domain content...')
+    try {
+      const signer = web3.getSigner()
+      const tx = await signer.sendTransaction({ to: resolver, data: data })
+      this.getLogger().info(
+        `Processing Transaction:\n ${this.etherscan[chainId]}/tx/${tx.hash}`
+      )
+      // Wait for transaction completion
+      await tx.wait()
+      this.getLogger().info('Processed ENS domain content...')
+    } catch (error) {
+      // EIP 1193 user Rejected Request
+      if (error.code === 4001) {
+        const err = new Error('Rejected User Request...')
+        err.name = 'RejectedUserRequest'
+        this.getLogger().error(error)
+        throw err
+      }
+      if (error.code === 4100) {
+        const err = new Error('Unauthorized User Account...')
+        err.name = 'UnauthorizedUserAccount'
+        this.getLogger().error(error)
+        throw err
+      }
+      throw error
+    }
   }
 
   module.exports = EnsLibrary
