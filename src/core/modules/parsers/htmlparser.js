@@ -47,7 +47,7 @@ The HTML parser displays text as raw HTML
   'use strict'
 
   /*eslint no-unused-vars: "off"*/
-  const name = 'ipfs-binaryparser'
+  const name = 'ipfs-htmlparser'
 
   var HtmlParser = function (type, text, options) {
     var self = this
