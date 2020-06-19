@@ -237,20 +237,20 @@ load-nvmrc
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 
 ```
-v12.18.0
+v12.18.1
 ```
 
 Install the recommended version.
 
 ```
-nvm install v12.18.0
+nvm install v12.18.1
 ```
 
 Check:
 
 ```
 node -v
-v12.18.0
+v12.18.1
 ```
 
 We update npm to use the latest:
@@ -265,7 +265,7 @@ At this stage your environment should look like this:
 
 ```
 npm -g ls --depth=0
-/home/user/.nvm/versions/node/v12.18.0/lib
+/home/user/.nvm/versions/node/v12.18.1/lib
 └── npm@6.14.5
 ```
 
