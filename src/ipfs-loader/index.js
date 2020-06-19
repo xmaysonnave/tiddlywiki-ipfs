@@ -6,16 +6,16 @@ import root from 'window-or-global'
   /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-loader'
 
-  const eruda = 'https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js'
+  const erudaUrl = 'https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js'
   const erudaSri =
     'sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP'
 
-  const ethers =
+  const ethersUrl =
     'https://cdn.jsdelivr.net/npm/ethers@5.0.2/dist/ethers.umd.min.js'
   const ethersSri =
     'sha384-XR63rSjgEtGAUiPqyr3lc6BAyN9JgrFKLrbnivkRp+xv3fE5XexgjsVM0x11x+9o'
 
-  const ipfsHttpClient =
+  const ipfsHttpClientUrl =
     'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.2.0/dist/index.min.js'
   const ipfsHttpClientSri =
     'sha384-3sSgHRREOld0O9S98mtIiJPvjhwVGtvmzRz4UjPcvACW4EnZasEpDONBWcsRF4y2'
@@ -23,11 +23,6 @@ import root from 'window-or-global'
   const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.20.0/dist/3box.min.js'
   const threeBoxSri =
     'sha384-VzJu0TkEIXQxpZoop25QZD9aggaqMVFzWA6GxwdwOjSG/D+4/BaEn8xHmz5otHP7'
-
-  const threeBoxProfile =
-    'https://cdn.jsdelivr.net/npm/profile-hover@1.1.2/dist/reactBundle.min.js'
-  const threeBoxProfileSri =
-    'sha384-Rta8n7/RH5Fw3LzGDoGIu0Sskn/laKq9RKpWz2MzxPh/XVxPOd2HInosBPq1vukJ'
 
   var IpfsLoader = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle
@@ -44,9 +39,17 @@ import root from 'window-or-global'
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === 'undefined') {
-      await this.loadLibrary('ErudaLibrary', eruda, erudaSri, true)
+      var sourceUri = erudaUrl
+      var sourceSri = erudaSri
+      var title = '$:/ipfs/library/eruda'
+      var tiddler = $tw.wiki.getTiddler(title)
+      if (tiddler) {
+        sourceUri = tiddler.getFieldString('_source_uri')
+        sourceSri = tiddler.getFieldString('_source_sri')
+      }
+      await this.loadLibrary(title, sourceUri, sourceSri, true)
       if (typeof root.eruda !== 'undefined') {
-        this.getLogger().info(`Loaded ErudaLibrary:\n ${eruda}`)
+        this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
       }
     }
   }
@@ -55,9 +58,17 @@ import root from 'window-or-global'
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === 'undefined') {
-      await this.loadLibrary('EtherJsLibrary', ethers, ethersSri, true)
+      var sourceUri = ethersUrl
+      var sourceSri = ethersSri
+      var title = '$:/ipfs/library/ethers'
+      var tiddler = $tw.wiki.getTiddler(title)
+      if (tiddler) {
+        sourceUri = tiddler.getFieldString('_source_uri')
+        sourceSri = tiddler.getFieldString('_source_sri')
+      }
+      await this.loadLibrary(title, sourceUri, sourceSri, true)
       if (typeof root.ethers !== 'undefined') {
-        this.getLogger().info(`Loaded EtherJsLibrary:\n ${ethers}`)
+        this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
       }
     }
   }
@@ -66,14 +77,17 @@ import root from 'window-or-global'
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
     if (typeof root.IpfsHttpClient === 'undefined') {
-      await this.loadLibrary(
-        'IpfsHttpLibrary',
-        ipfsHttpClient,
-        ipfsHttpClientSri,
-        true
-      )
+      var sourceUri = ipfsHttpClientUrl
+      var sourceSri = ipfsHttpClientSri
+      var title = '$:/ipfs/library/ipfs-http-client'
+      var tiddler = $tw.wiki.getTiddler(title)
+      if (tiddler) {
+        sourceUri = tiddler.getFieldString('_source_uri')
+        sourceSri = tiddler.getFieldString('_source_sri')
+      }
+      await this.loadLibrary(title, sourceUri, sourceSri, true)
       if (typeof root.IpfsHttpClient !== 'undefined') {
-        this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfsHttpClient}`)
+        this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
       }
     }
   }
@@ -85,24 +99,6 @@ import root from 'window-or-global'
       await this.loadLibrary('ThreeBoxLibrary', threeBox, threeBoxSri, true)
       if (typeof root.Box !== 'undefined') {
         this.getLogger().info(`Loaded ThreeBoxLibrary:\n ${threeBox}`)
-      }
-    }
-  }
-
-  // https://www.srihash.org/
-  // https://github.com/3box
-  IpfsLoader.prototype.loadThreeBoxProfileLibrary = async function () {
-    if (typeof root.ProfileHover === 'undefined') {
-      await this.loadLibrary(
-        'ThreeBoxProfileLibrary',
-        threeBoxProfile,
-        threeBoxProfileSri,
-        true
-      )
-      if (typeof root.ProfileHover !== 'undefined') {
-        this.getLogger().info(
-          `Loaded ThreeBoxProfileLibrary:\n ${threeBoxProfile}`
-        )
       }
     }
   }

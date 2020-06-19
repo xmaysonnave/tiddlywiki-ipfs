@@ -1,0 +1,7 @@
+title: $:/ipfs/library/ethers
+modified: 20200619094915385
+tags: $:/ipfs/core
+_license_uri: https://raw.githubusercontent.com/ethers-io/ethers.js/master/LICENSE.md
+_project_uri: https://github.com/ethers-io/ethers.js/
+_source_uri: https://cdn.jsdelivr.net/npm/ethers@5.0.2/dist/ethers.umd.min.js
+_source_sri: sha384-XR63rSjgEtGAUiPqyr3lc6BAyN9JgrFKLrbnivkRp+xv3fE5XexgjsVM0x11x+9o
