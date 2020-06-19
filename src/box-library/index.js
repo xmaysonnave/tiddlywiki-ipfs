@@ -34,24 +34,8 @@ import root from 'window-or-global'
     }
   }
 
-  BoxLibrary.prototype.loadThreeBoxProfile = async function () {
-    if (root.ProfileHover === undefined || root.ProfileHover == null) {
-      try {
-        // Load 3box profile hover
-        await this.ipfsLoader.loadThreeBoxProfileLibrary()
-        if (root.ProfileHover !== undefined && root.ProfileHover !== null) {
-          return
-        }
-      } catch (error) {
-        this.getLogger().error(error)
-      }
-      // Should not happen...
-      throw new Error('Unavailable 3box profile hover library...')
-    }
-  }
-
   /*eslint no-empty-pattern: "off"*/
-  BoxLibrary.prototype.load3BoxProfile = async function (provider, account) {
+  BoxLibrary.prototype.load3Box = async function (provider, account) {
     if (root.Box === undefined || root.Box == null) {
       await this.loadThreeBox()
       const box = await root.Box.openBox(account, provider)

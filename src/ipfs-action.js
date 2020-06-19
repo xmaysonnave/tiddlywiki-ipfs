@@ -88,7 +88,7 @@ IPFS Action
 
   IpfsAction.prototype.handle3BoxProfile = async function (event) {
     try {
-      await $tw.ipfs.load3BoxProfile()
+      await $tw.ipfs.load3Box()
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(name, error.message)

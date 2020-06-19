@@ -71,12 +71,9 @@ ENS Wrapper
     this.once = true
   }
 
-  EnsWrapper.prototype.load3BoxProfile = async function () {
+  EnsWrapper.prototype.load3Box = async function () {
     const { account } = await this.getEnabledWeb3Provider()
-    return await this.boxLibrary.load3BoxProfile(
-      this.getEthereumProvider(),
-      account
-    )
+    return await this.boxLibrary.load3Box(this.getEthereumProvider(), account)
   }
 
   EnsWrapper.prototype.getChainId = function () {
