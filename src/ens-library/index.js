@@ -221,7 +221,7 @@ import root from 'window-or-global'
     // https://github.com/ethers-io/ethers.js/issues/433
     const account = await this.enableProvider(provider)
     // Instantiate a Web3Provider
-    const web3 = new root.ethers.providers.Web3Provider(provider)
+    const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
     const network = await web3.getNetwork()
     return {
@@ -239,7 +239,7 @@ import root from 'window-or-global'
       await this.loadEthers()
     }
     // Instantiate an ethers Web3Provider
-    const web3 = new root.ethers.providers.Web3Provider(provider)
+    const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve the current network
     const network = await web3.getNetwork()
     return {
