@@ -24,7 +24,7 @@ Startup initialisation
     this
 
   exports.platforms = ['browser']
-  exports.after = ['startup']
+  exports.after = ['load-modules']
   exports.synchronous = true
 
   exports.startup = function () {
