@@ -1,7 +1,5 @@
 import CID from 'cids'
-
 import contentHash from 'content-hash'
-
 import root from 'window-or-global'
 ;(function () {
   /*jslint node: true, browser: true*/
@@ -291,9 +289,6 @@ import root from 'window-or-global'
     if (registry == null) {
       throw new Error('Undefined ENS registry address...')
     }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
-    }
     const abi = [
       'function resolver(bytes32 node) external view returns (address)'
     ]
@@ -331,9 +326,6 @@ import root from 'window-or-global'
         : address.trim()
     if (address == null) {
       throw new Error('Undefined Ethereum address...')
-    }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
     }
     var abi = [
       'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
@@ -397,9 +389,6 @@ import root from 'window-or-global'
     if (address == null) {
       throw new Error('Undefined Ethereum address...')
     }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
-    }
     // contenthash, true when interfaceID is 0xbc1c58d1
     var abi = [
       'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
@@ -427,9 +416,6 @@ import root from 'window-or-global'
   }
 
   EnsLibrary.prototype.getContentHash = async function (domain, web3) {
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
-    }
     domain =
       domain === undefined || domain == null || domain.trim() === ''
         ? null
@@ -502,9 +488,6 @@ import root from 'window-or-global'
   }
 
   EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
-    }
     domain =
       domain === undefined || domain == null || domain.trim() === ''
         ? null

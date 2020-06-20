@@ -13,28 +13,17 @@ ENS Wrapper
   /*global $tw: false */
   'use strict'
 
-  /**
-   * https://github.com/purposeindustries/window-or-global
-   * The MIT License (MIT) Copyright (c) Purpose Industries
-   * version: 1.0.1
-   */
-  const root =
-    (typeof self === 'object' && self.self === self && self) ||
-    (typeof global === 'object' && global.global === global && global) ||
-    this
-
   /*eslint no-unused-vars: "off"*/
   const name = 'ens-wrapper'
 
   var EnsWrapper = function (ipfsBundle) {
     this.account = null
     this.chainId = null
-    this.ethereum = null
     this.provider = null
     this.web3 = null
-    this.ipfsBundle = ipfsBundle
     this.boxLibrary = ipfsBundle.boxLibrary
     this.ensLibrary = ipfsBundle.ensLibrary
+    this.ipfsBundle = ipfsBundle
   }
 
   EnsWrapper.prototype.getLogger = function () {
@@ -45,8 +34,10 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.load3Box = async function () {
-    const { account } = await this.getEnabledWeb3Provider()
-    return await this.boxLibrary.load3Box(this.getEthereumProvider(), account)
+    if (window.Box === undefined) {
+      const { account, provider } = await this.getEnabledWeb3Provider()
+      return await this.boxLibrary.load3Box(provider, account)
+    }
   }
 
   EnsWrapper.prototype.getChainId = function () {
@@ -58,26 +49,26 @@ ENS Wrapper
    * https://eips.ethereum.org/EIPS/eip-1193
    */
   EnsWrapper.prototype.getEthereumProvider = function () {
-    if (this.ethereum === undefined) {
+    if (this.provider === null) {
       const self = this
-      this.ethereum = this.ensLibrary.getProvider()
-      this.ethereum.on('accountsChanged', accounts => {
+      this.provider = this.ensLibrary.getProvider()
+      this.provider.on('accountsChanged', accounts => {
         self.accountChanged(accounts)
       })
-      this.ethereum.on('chainChanged', chainId => {
+      this.provider.on('chainChanged', chainId => {
         self.chainChanged(chainId)
       })
-      this.ethereum.on('connect', chainId => {
+      this.provider.on('connect', chainId => {
         self.chainChanged(chainId)
       })
-      this.ethereum.on('disconnect', (code, reason) => {
+      this.provider.on('disconnect', (code, reason) => {
         self.disconnectedFromAllChains(code, reason)
       })
-      this.ethereum.on('message', message => {
+      this.provider.on('message', message => {
         self.providerMessage(message)
       })
     }
-    return this.ethereum
+    return this.provider
   }
 
   EnsWrapper.prototype.accountChanged = async function (accounts) {
@@ -87,9 +78,9 @@ ENS Wrapper
       Array.isArray(accounts) === false ||
       accounts.length === 0
     ) {
-      this.web3 = null
-      this.chainId = null
       this.account = null
+      this.chainId = null
+      this.web3 = null
       this.getLogger().info('Closing Ethereum connection...')
     } else if (this.account !== accounts[0]) {
       try {
@@ -113,9 +104,9 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.disconnectedFromAllChains = function (code, reason) {
-    this.web3 = null
-    this.chainId = null
     this.account = null
+    this.chainId = null
+    this.web3 = null
     this.getLogger().info(
       `Ethereum Provider is disconnected: ${reason}. Code: ${code}`
     )
@@ -129,9 +120,9 @@ ENS Wrapper
     if (this.chainId !== chainId) {
       const network = this.getNetworkRegistry()
       try {
-        this.web3 = null
-        this.chainId = parseInt(chainId, 16)
         this.account = null
+        this.chainId = parseInt(chainId, 16)
+        this.web3 = null
         this.getLogger().info(
           `Current Ethereum network: ${network[this.chainId]}`
         )
@@ -164,9 +155,9 @@ ENS Wrapper
         this.getLogger().error(error)
         throw new Error('Unable to retrieve an enabled Ethereum Provider...')
       }
-      this.web3 = web3
-      this.chainId = chainId
       this.account = account
+      this.chainId = chainId
+      this.web3 = web3
       msg = 'New Web3 provider:'
     }
     // Log
@@ -176,15 +167,16 @@ ENS Wrapper
       }/address/${this.account}`
     )
     return {
-      web3: this.web3,
+      account: this.account,
       chainId: this.chainId,
-      account: this.account
+      provider: provider,
+      web3: this.web3
     }
   }
 
   EnsWrapper.prototype.getWeb3Provider = async function () {
-    var web3 = null
     var chainId = null
+    var web3 = null
     const provider = this.getEthereumProvider()
     const network = this.getNetworkRegistry()
     var info = 'Reuse Web3 provider:'
@@ -195,15 +187,16 @@ ENS Wrapper
         this.getLogger().error(error)
         throw new Error('Unable to retrieve an Ethereum Provider...')
       }
-      this.web3 = web3
       this.chainId = chainId
+      this.web3 = web3
       info = 'New Web3 provider:'
     }
     // Log
     this.getLogger().info(`${info}\n network: ${network[this.chainId]}`)
     return {
-      web3: this.web3,
-      chainId: this.chainId
+      chainId: this.chainId,
+      provider: provider,
+      web3: this.web3
     }
   }
 

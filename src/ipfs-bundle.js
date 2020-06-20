@@ -7,10 +7,8 @@ module-type: library
 IPFS Bundle
 
 \*/
-
 import CID from 'cids'
 import root from 'window-or-global'
-
 import EnsLibrary from './ens-library'
 import IpfsLibrary from './ipfs-library'
 import IpfsLoader from './ipfs-loader'

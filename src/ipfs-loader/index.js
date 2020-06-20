@@ -6,24 +6,6 @@ import root from 'window-or-global'
   /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-loader'
 
-  const erudaUrl = 'https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js'
-  const erudaSri =
-    'sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP'
-
-  const ethersUrl =
-    'https://cdn.jsdelivr.net/npm/ethers@5.0.2/dist/ethers.umd.min.js'
-  const ethersSri =
-    'sha384-XR63rSjgEtGAUiPqyr3lc6BAyN9JgrFKLrbnivkRp+xv3fE5XexgjsVM0x11x+9o'
-
-  const ipfsHttpClientUrl =
-    'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.2.0/dist/index.min.js'
-  const ipfsHttpClientSri =
-    'sha384-3sSgHRREOld0O9S98mtIiJPvjhwVGtvmzRz4UjPcvACW4EnZasEpDONBWcsRF4y2'
-
-  const threeBox = 'https://cdn.jsdelivr.net/npm/3box@1.20.0/dist/3box.min.js'
-  const threeBoxSri =
-    'sha384-VzJu0TkEIXQxpZoop25QZD9aggaqMVFzWA6GxwdwOjSG/D+4/BaEn8xHmz5otHP7'
-
   var IpfsLoader = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle
   }
@@ -36,70 +18,51 @@ import root from 'window-or-global'
   }
 
   // https://www.srihash.org/
+  IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj) {
+    if (root[obj] === undefined) {
+      const tiddler = $tw.wiki.getTiddler(title)
+      if (tiddler) {
+        const sourceUri = tiddler.getFieldString('_source_uri')
+        const sourceSri = tiddler.getFieldString('_source_sri')
+        await this.loadLibrary(title, sourceUri, sourceSri, true)
+        if (root[obj] !== undefined) {
+          this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
+          return
+        }
+        throw new Error(`Unable to load Library: ${title}`)
+      }
+      throw new Error(`Undefined Library: ${title}`)
+    }
+  }
+
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === 'undefined') {
-      var sourceUri = erudaUrl
-      var sourceSri = erudaSri
-      var title = '$:/ipfs/library/eruda'
-      var tiddler = $tw.wiki.getTiddler(title)
-      if (tiddler) {
-        sourceUri = tiddler.getFieldString('_source_uri')
-        sourceSri = tiddler.getFieldString('_source_sri')
-      }
-      await this.loadLibrary(title, sourceUri, sourceSri, true)
-      if (typeof root.eruda !== 'undefined') {
-        this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
-      }
+      await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda')
     }
   }
 
-  // https://www.srihash.org/
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === 'undefined') {
-      var sourceUri = ethersUrl
-      var sourceSri = ethersSri
-      var title = '$:/ipfs/library/ethers'
-      var tiddler = $tw.wiki.getTiddler(title)
-      if (tiddler) {
-        sourceUri = tiddler.getFieldString('_source_uri')
-        sourceSri = tiddler.getFieldString('_source_sri')
-      }
-      await this.loadLibrary(title, sourceUri, sourceSri, true)
-      if (typeof root.ethers !== 'undefined') {
-        this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
-      }
+      await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers')
     }
   }
 
-  // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
     if (typeof root.IpfsHttpClient === 'undefined') {
-      var sourceUri = ipfsHttpClientUrl
-      var sourceSri = ipfsHttpClientSri
-      var title = '$:/ipfs/library/ipfs-http-client'
-      var tiddler = $tw.wiki.getTiddler(title)
-      if (tiddler) {
-        sourceUri = tiddler.getFieldString('_source_uri')
-        sourceSri = tiddler.getFieldString('_source_sri')
-      }
-      await this.loadLibrary(title, sourceUri, sourceSri, true)
-      if (typeof root.IpfsHttpClient !== 'undefined') {
-        this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
-      }
+      await this.loadTiddlerLibrary(
+        '$:/ipfs/library/ipfs-http-client',
+        'IpfsHttpClient'
+      )
     }
   }
 
-  // https://www.srihash.org/
   // https://github.com/3box
   IpfsLoader.prototype.loadThreeBoxLibrary = async function () {
     if (typeof root.Box === 'undefined') {
-      await this.loadLibrary('ThreeBoxLibrary', threeBox, threeBoxSri, true)
-      if (typeof root.Box !== 'undefined') {
-        this.getLogger().info(`Loaded ThreeBoxLibrary:\n ${threeBox}`)
-      }
+      await this.loadTiddlerLibrary('$:/ipfs/library/3box', 'Box')
     }
   }
 
