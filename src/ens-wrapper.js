@@ -34,9 +34,10 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.load3Box = async function () {
-    if (window.Box === undefined) {
-      const { account, provider } = await this.getEnabledWeb3Provider()
-      return await this.boxLibrary.load3Box(provider, account)
+    const { account, provider } = await this.getEnabledWeb3Provider()
+    await this.boxLibrary.load3Box(provider, account)
+    return {
+      account: account
     }
   }
 
