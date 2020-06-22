@@ -139,10 +139,10 @@ The `IPFS Companion` support is [Temporarily Disabled](https://docs-beta.ipfs.io
 
 <a name="ens-ethereum-network"/>
 
-- `Mainnet`: Ethereum Main Network
-- `Ropsten`: Ethereum Test Network (PoW)
-- `Rinkeby`: Ethereum Test Network (PoA)
 - `Goerli`: Ethereum Test Network (PoA)
+- `Mainnet`: Ethereum Main Network
+- `Rinkeby`: Ethereum Test Network (PoA)
+- `Ropsten`: Ethereum Test Network (PoW)
 
 ## Developer
 

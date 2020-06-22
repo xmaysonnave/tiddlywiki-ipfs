@@ -1,5 +1,5 @@
 title: Welcome
-modified: 20200529094915385
+modified: 20200622094915385
 tags: bluelightav.eth TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -30,7 +30,7 @@ type: text/vnd.tiddlywiki
   </li>
   <li>Resolve ENS with IPFS with ~TiddlyWiki
     <ul>
-			<li><$ipfslink value="bluelightav.eth"/></li>
+      <li><$ipfslink value="bluelightav.eth"/> on "[ext[Mainnet|https://etherscan.io/]]" or "[ext[Rinkeby|https://www.rinkeby.io/]]"</li>
 		</ul>
   </li>
   <li>Resolve ENS with [ext[Metamask|https://metamask.io]]
