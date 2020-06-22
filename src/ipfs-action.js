@@ -125,7 +125,7 @@ IPFS Action
     if (content == null) {
       return false
     }
-    this.getLogger().info(`Uploading Tiddler: ${content.length} bytes`)
+    this.getLogger().info(`Uploading Tiddler: ${content.length}`)
     try {
       var { added } = await $tw.ipfs.addToIpfs(content)
     } catch (error) {

@@ -447,7 +447,7 @@ IPFS Tiddler
                 fields: [{ key: 'text', value: content.data }]
               })
               this.getLogger().info(
-                `Embed attachment: ${content.data.length} bytes\n ${oldResolvedUrl}`
+                `Embed attachment: ${content.data.length}\n ${oldResolvedUrl}`
               )
             } catch (error) {
               this.getLogger().error(error)
