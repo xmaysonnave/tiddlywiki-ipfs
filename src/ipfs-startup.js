@@ -13,18 +13,8 @@ Startup initialisation
   /*global $tw: false */
   'use strict'
 
-  /**
-   * https://github.com/purposeindustries/window-or-global
-   * The MIT License (MIT) Copyright (c) Purpose Industries
-   * version: 1.0.1
-   */
-  const root =
-    (typeof self === 'object' && self.self === self && self) ||
-    (typeof global === 'object' && global.global === global && global) ||
-    this
-
   exports.platforms = ['browser']
-  exports.after = ['load-modules']
+  exports.before = ['startup']
   exports.synchronous = true
 
   exports.startup = function () {
@@ -35,10 +25,17 @@ Startup initialisation
       flags: ['image']
     })
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
-    if (root.logger !== undefined && root.logger !== null) {
-      root.logger.info('ipfs-startup is starting up...')
-    } else {
-      console.info('ipfs-startup is starting up...')
+    // Logger
+    if (window.logger === undefined || window.logger == null) {
+      window.logger = $tw.modules.execute('$:/plugins/loglevel/loglevel.min.js')
+      if ($tw.utils.getIpfsVerbose()) {
+        window.logger.setLevel('info', false)
+      } else {
+        window.logger.setLevel('warn', false)
+      }
+      window.logger.info('LogLevel is starting up...')
     }
+    // Log
+    window.logger.info('ipfs-startup is starting up...')
   }
 })()
