@@ -16,12 +16,12 @@ type: text/vnd.tiddlywiki
   You can check the <b>Ethereum</b> networks with the following tools:
 </p>
 <ul>
-  <li>[ext[Goerli|https://stats.goerli.net/]]: Ethereum Test Network (PoA)</li>
+  <li>[ext[Goerli|https://stats.goerli.net/]]: Ethereum Test Network (~PoA)</li>
   <li>[ext[Mainnet: Etherchain Charts|https://www.etherchain.org/charts]]</li>
   <li>[ext[Mainnet: Ethereum Gas Station|https://ethgasstation.info/]]</li>
   <li>[ext[Mainnet: Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
   <li>[ext[Mainnet: Etherscan|https://etherscan.io/]]</li>
   <li>[ext[Mainnet: Ethstats|https://ethstats.net/]]</li>
-  <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (PoA)</li>
-  <li>[ext[Ropsten|https://ropsten-stats.parity.io/]]: Ethereum Test Network (PoW)</li>
+  <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (~PoA)</li>
+  <li>[ext[Ropsten|https://ropsten-stats.parity.io/]]: Ethereum Test Network (~PoW)</li>
 </ul>
