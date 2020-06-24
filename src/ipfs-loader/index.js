@@ -24,8 +24,8 @@ import root from 'window-or-global'
       if (tiddler) {
         const sourceUri = tiddler.getFieldString('_source_uri')
         const sourceSri = tiddler.getFieldString('_source_sri')
-        await this.loadLibrary(title, sourceUri, sourceSri, true)
-        if (root[obj] !== undefined) {
+        const loaded = await this.loadLibrary(title, sourceUri, sourceSri, true)
+        if (loaded !== undefined && root[obj] !== undefined) {
           this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
           return
         }
