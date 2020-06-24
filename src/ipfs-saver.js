@@ -29,9 +29,6 @@ IPFS Saver
    * Select the appropriate saver module and set it up
    */
   var IpfsSaver = function (wiki) {
-    this.wiki = wiki
-    this.apiUrl = null
-    this.ipfsProvider = null
     // Controller
     $tw.ipfs = new IpfsController()
     // Listener
