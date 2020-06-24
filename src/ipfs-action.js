@@ -539,7 +539,7 @@ IPFS Action
         window.eruda.hide()
         this.console = false
       }
-      return
+      return true
     }
     // Load mobile console
     try {
@@ -547,7 +547,8 @@ IPFS Action
       await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
     } catch (error) {
       this.getLogger().error(error)
-      throw new Error(error.message)
+      $tw.utils.alert(name, error.message)
+      return false
     }
     const erudaContainer = window.document.createElement('div')
     window.document.body.appendChild(erudaContainer)
@@ -587,6 +588,7 @@ IPFS Action
     window.eruda.show()
     window.eruda.show('console')
     this.console = true
+    return true
   }
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
