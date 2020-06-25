@@ -1,0 +1,7 @@
+title: $:/ipfs/library/react-dom
+modified: 20200625094915385
+tags: $:/ipfs/core
+_license_uri: https://raw.githubusercontent.com/facebook/react/master/LICENSE
+_project_uri: https://github.com/facebook/react/tree/master/packages/react-dom
+_source_uri: https://cdn.jsdelivr.net/npm/react-dom@16.13.1/umd/react-dom.production.min.js
+_source_sri: sha384-T6Etav7ShYqIZe+prlqxX/h04T1Iu9ynDpcgx0iBgcl5u+AVlStV2kv3mMxfnV1C

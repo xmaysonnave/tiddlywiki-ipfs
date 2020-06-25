@@ -18,13 +18,22 @@ import root from 'window-or-global'
   }
 
   // https://www.srihash.org/
-  IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj) {
+  IpfsLoader.prototype.loadTiddlerLibrary = async function (
+    title,
+    obj,
+    module
+  ) {
     if (root[obj] === undefined) {
       const tiddler = $tw.wiki.getTiddler(title)
       if (tiddler) {
         const sourceUri = tiddler.getFieldString('_source_uri')
         const sourceSri = tiddler.getFieldString('_source_sri')
-        const loaded = await this.loadLibrary(title, sourceUri, sourceSri, true)
+        const loaded = await this.loadLibrary(
+          title,
+          sourceUri,
+          sourceSri,
+          module
+        )
         if (loaded !== undefined && root[obj] !== undefined) {
           this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
           return
@@ -38,14 +47,14 @@ import root from 'window-or-global'
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda')
+      await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda', true)
     }
   }
 
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers')
+      await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
     }
   }
 
@@ -54,15 +63,51 @@ import root from 'window-or-global'
     if (typeof root.IpfsHttpClient === 'undefined') {
       await this.loadTiddlerLibrary(
         '$:/ipfs/library/ipfs-http-client',
-        'IpfsHttpClient'
+        'IpfsHttpClient',
+        true
       )
     }
   }
 
-  // https://github.com/3box
+  // https://github.com/3box/3box-js
   IpfsLoader.prototype.loadThreeBoxLibrary = async function () {
     if (typeof root.Box === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/3box', 'Box')
+      await this.loadTiddlerLibrary('$:/ipfs/library/3box', 'Box', true)
+    }
+  }
+
+  // https://github.com/3box/profile-hover
+  IpfsLoader.prototype.loadProfileHoverLibrary = async function () {
+    if (typeof root.ReactDOM === 'undefined') {
+      await this.loadReactDomLibrary()
+    }
+    if (typeof root.ProfileHover === 'undefined') {
+      await this.loadTiddlerLibrary(
+        '$:/ipfs/library/profile-hover',
+        'ProfileHover',
+        true
+      )
+    }
+  }
+
+  // https://github.com/facebook/react
+  IpfsLoader.prototype.loadReactLibrary = async function () {
+    if (typeof root.React === 'undefined') {
+      await this.loadTiddlerLibrary('$:/ipfs/library/react', 'React', true)
+    }
+  }
+
+  // https://github.com/facebook/react/tree/master/packages/react-dom
+  IpfsLoader.prototype.loadReactDomLibrary = async function () {
+    if (typeof root.React === 'undefined') {
+      await this.loadReactLibrary()
+    }
+    if (typeof root.ReactDOM === 'undefined') {
+      await this.loadTiddlerLibrary(
+        '$:/ipfs/library/react-dom',
+        'ReactDOM',
+        true
+      )
     }
   }
 

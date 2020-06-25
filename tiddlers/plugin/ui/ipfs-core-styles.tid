@@ -33,7 +33,7 @@ a.tc-ipfs-link-external:hover {
   cursor: pointer;
 }
 
-#ethAddress {
-  padding: 14px 0px 14px 14px;
+.ethAddress {
+  padding: 20px 0px 0px 40px;
   height: 80px;
 }

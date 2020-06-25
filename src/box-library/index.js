@@ -1,4 +1,7 @@
 import root from 'window-or-global'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import ProfileHover from 'profile-hover'
 ;(function () {
   /*jslint node: true, browser: true*/
   'use strict'
@@ -33,6 +36,20 @@ import root from 'window-or-global'
     }
   }
 
+  BoxLibrary.prototype.loadProfileHover = async function () {
+    if (root.ProfileHover === undefined || root.ProfileHover == null) {
+      try {
+        // Load Profile Hover
+        await this.ipfsLoader.loadProfileHoverLibrary()
+        return
+      } catch (error) {
+        this.getLogger().error(error)
+      }
+      // Should not happen...
+      throw new Error('Unavailable Profile Hover library...')
+    }
+  }
+
   /*eslint no-empty-pattern: "off"*/
   BoxLibrary.prototype.load3Box = async function (provider, account) {
     if (provider === undefined || provider == null) {
@@ -48,21 +65,31 @@ import root from 'window-or-global'
     if (root.Box === undefined || root.Box == null) {
       await this.loadThreeBox()
     }
-    // if (this.account !== undefined && this.account !== null) {
-    //   if (this.account.toLowerCase() !== account.toLowercase()) {
-    //     await this.box.logout()
-    //   }
+    if (this.account !== undefined && this.account !== null) {
+      if (this.box !== undefined && root.Box.isLoggedIn(account) === false) {
+        await this.box.logout()
+      }
+    }
+    if (this.account === undefined || this.account !== account) {
+      this.account = account
+      this.box = await root.Box.openBox(this.account, provider)
+      await this.box.syncDone
+    }
+    const element = (
+      <div className="ethAddress">
+        <ProfileHover showName address={account} fullDisplay />
+      </div>
+    )
+    const container = document.getElementById('reactApp')
+    ReactDOM.render(element, container)
+    // if (this.account !== undefined) {
+    //   const config = await root.Box.getConfig(this.account)
+    //   this.getLogger().info(JSON.stringify(config))
+    //   const profile = await root.Box.getProfile(this.account)
+    //   this.getLogger().info(JSON.stringify(profile))
+    //   const all = await this.box.public.all()
+    //   this.getLogger().info(all)
     // }
-    // if (
-    //   this.account === undefined ||
-    //   this.account.toLowerCase() !== account.toLowercase()
-    // ) {
-    //   this.account = account
-    //   this.box = await root.Box.openBox(account, provider)
-    //   await this.box.syncDone
-    // }
-    const profile = await root.Box.getProfile(account)
-    this.getLogger().info(profile)
   }
 
   module.exports = BoxLibrary
