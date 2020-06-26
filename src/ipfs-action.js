@@ -539,6 +539,9 @@ IPFS Action
         window.eruda.hide()
         this.console = false
       }
+      $tw.rootWidget.refresh(
+        $tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile')
+      )
       return true
     }
     // Load mobile console
@@ -588,6 +591,9 @@ IPFS Action
     window.eruda.show()
     window.eruda.show('console')
     this.console = true
+    $tw.rootWidget.refresh(
+      $tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile')
+    )
     return true
   }
 

@@ -4,7 +4,7 @@ tags: $:/ipfs/core  $:/tags/PageControls
 caption: {{$:/core/images/preview-open}} {{$:/language/Buttons/Console/Mobile/Caption}}
 description: {{$:/language/Buttons/Console/Mobile/Hint}}
 
-<$button message="tm-console-mobile" tooltip={{$:/language/Buttons/Console/Mobile/Hint}} aria-label={{$:/language/Buttons/Console/Mobile/Caption}} class=<<tv-config-toolbar-class>>>
+<$button message="tm-console-mobile" tooltip=<<ipfs-console-tooltip>> aria-label={{$:/language/Buttons/Console/Mobile/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
 {{$:/core/images/preview-open}}
 </$list>

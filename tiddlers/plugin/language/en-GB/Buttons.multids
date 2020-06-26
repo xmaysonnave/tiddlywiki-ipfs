@@ -36,7 +36,10 @@ Ipfs/Unpin/Caption: unpin from IPFS
 Ipfs/Unpin/Hint: Unpin this wiki from IPFS
 
 Console/Mobile/Caption: mobile console
-Console/Mobile/Hint: Load/Unload Mobile Console
+Console/Mobile/Hint: Load/Show/Hide Mobile Console
+Console/Mobile/Hide: Hide Mobile Console
+Console/Mobile/Load: Load Mobile Console
+Console/Mobile/Show: Show Mobile Console
 
 Ens/Manager/Open/Caption: open ENS Manager
 Ens/Manager/Open/Hint: Open ENS Domain Manager
