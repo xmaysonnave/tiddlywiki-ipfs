@@ -139,6 +139,7 @@ import root from 'window-or-global'
     }
     // Enable Provider
     var accounts = null
+    var publicKey = null
     // Handle connection, per EIP 1102
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
     if (typeof provider.request === 'function') {
@@ -178,8 +179,25 @@ import root from 'window-or-global'
     ) {
       throw new Error('Unable to retrieve an Ethereum account...')
     }
+    provider.sendAsync(
+      {
+        jsonrpc: '2.0',
+        method: 'eth_getEncryptionPublicKey',
+        params: [accounts[0]],
+        from: accounts[0]
+      },
+      function (error, encryptionpublickey) {
+        if (!error) {
+          console.log(encryptionpublickey)
+        } else {
+          console.log(error)
+        }
+      }
+    )
     // Return First account
-    return accounts[0]
+    return {
+      account: accounts[0]
+    }
   }
 
   EnsLibrary.prototype.getProvider = function () {
@@ -219,7 +237,7 @@ import root from 'window-or-global'
     }
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
-    const account = await this.enableProvider(provider)
+    const { account } = await this.enableProvider(provider)
     // Instantiate a Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
