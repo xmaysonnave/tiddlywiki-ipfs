@@ -76,41 +76,6 @@ import root from 'window-or-global'
     }
   }
 
-  // https://github.com/3box/profile-hover
-  IpfsLoader.prototype.loadProfileHoverLibrary = async function () {
-    if (typeof root.ReactDOM === 'undefined') {
-      await this.loadReactDomLibrary()
-    }
-    if (typeof root.ProfileHover === 'undefined') {
-      await this.loadTiddlerLibrary(
-        '$:/ipfs/library/profile-hover',
-        'ProfileHover',
-        true
-      )
-    }
-  }
-
-  // https://github.com/facebook/react
-  IpfsLoader.prototype.loadReactLibrary = async function () {
-    if (typeof root.React === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/react', 'React', true)
-    }
-  }
-
-  // https://github.com/facebook/react/tree/master/packages/react-dom
-  IpfsLoader.prototype.loadReactDomLibrary = async function () {
-    if (typeof root.React === 'undefined') {
-      await this.loadReactLibrary()
-    }
-    if (typeof root.ReactDOM === 'undefined') {
-      await this.loadTiddlerLibrary(
-        '$:/ipfs/library/react-dom',
-        'ReactDOM',
-        true
-      )
-    }
-  }
-
   /*eslint no-new: "off", no-new-func: "off"*/
   IpfsLoader.prototype.supportDynamicImport = function () {
     try {
