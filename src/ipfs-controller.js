@@ -13,8 +13,12 @@ IPFS Controller
   /*global $tw: false */
   'use strict'
 
+  const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
   const EnsWrapper = require('$:/plugins/ipfs/ens-wrapper.js').EnsWrapper
+
+  const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
   const IpfsBundle = require('$:/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+  const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
   const IpfsWrapper = require('$:/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
 
   const ipfsKeyword = 'ipfs'
@@ -23,14 +27,31 @@ IPFS Controller
   const name = 'ipfs-controller'
 
   var IpfsController = function () {
+    this.ipfsClients = new Map()
+    this.pin = []
+    this.unpin = []
+  }
+
+  IpfsController.prototype.init = function () {
+    // Init once
+    if (this.once) {
+      return
+    }
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
     this.ensWrapper = new EnsWrapper(this.ipfsBundle)
     this.ipfsUrl = this.ipfsBundle.ipfsUrl
     this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle)
-    this.ipfsClients = new Map()
-    this.pin = []
-    this.unpin = []
+    // Listener
+    this.ensAction = new EnsAction()
+    this.ipfsAction = new IpfsAction()
+    this.ipfsTiddler = new IpfsTiddler()
+    // Init
+    this.ensAction.init()
+    this.ipfsAction.init()
+    this.ipfsTiddler.init()
+    // Init once
+    this.once = true
   }
 
   IpfsController.prototype.getLogger = function () {

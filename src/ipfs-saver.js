@@ -13,11 +13,8 @@ IPFS Saver
   /*global $tw: false */
   'use strict'
 
-  const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
-  const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
   const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js')
     .IpfsController
-  const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
 
   const ensKeyword = 'ens'
   const ipfsKeyword = 'ipfs'
@@ -31,14 +28,7 @@ IPFS Saver
   var IpfsSaver = function (wiki) {
     // Controller
     $tw.ipfs = new IpfsController()
-    // Listener
-    this.ensAction = new EnsAction()
-    this.ipfsAction = new IpfsAction()
-    this.ipfsTiddler = new IpfsTiddler()
-    // Init
-    this.ensAction.init()
-    this.ipfsAction.init()
-    this.ipfsTiddler.init()
+    $tw.ipfs.init()
     // Log
     this.getLogger().info('ipfs-saver is starting up...')
     // Log url policy
