@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200626364",
+  "version": "v0.3.0-200629438",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/ipfs-bundle.js",
   "directories": {
@@ -22,13 +22,13 @@
     "eslint": "eslint \"src/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix",
     "format": "prettier-standard --lint --format",
+    "prepare": "npm run snyk-protect",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "test": "./scripts/test.sh",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "test": "./scripts/test.sh"
   },
   "husky": {
     "hooks": {
@@ -60,8 +60,6 @@
     "buffer": "^5.6.0",
     "cids": "^0.8.3",
     "content-hash": "^2.5.2",
-    "eth-sig-util": "^2.5.3",
-    "gzipper": "^3.7.0",
     "ipfs-provider": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -76,7 +74,6 @@
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/polyfill": "^7.10.1",
     "@babel/preset-env": "^7.10.3",
-    "@babel/preset-react": "^7.10.1",
     "acorn": "^7.3.1",
     "babel-eslint": "^10.1.0",
     "babelify": "^10.0.0",
@@ -88,11 +85,13 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-flowtype": "^5.1.3",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "eth-sig-util": "^2.5.3",
+    "gzipper": "^3.7.0",
     "husky": "^4.2.5",
     "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
@@ -102,7 +101,7 @@
     "prettier-standard": "^16.3.0",
     "pretty-quick": "^2.0.1",
     "snyk": "^1.349.0",
-    "tiddlywiki": "file:../TiddlyWiki5",
+    "tiddlywiki": "git://github.com/Jermolene/TiddlyWiki5.git",
     "typescript": "^3.9.5"
   },
   "engines": {

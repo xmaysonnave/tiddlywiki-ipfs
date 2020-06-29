@@ -179,24 +179,16 @@ import root from 'window-or-global'
     ) {
       throw new Error('Unable to retrieve an Ethereum account...')
     }
-    provider.sendAsync(
-      {
-        jsonrpc: '2.0',
+    if (typeof provider.request === 'function') {
+      publicKey = await provider.request({
         method: 'eth_getEncryptionPublicKey',
-        params: [accounts[0]],
-        from: accounts[0]
-      },
-      function (error, encryptionpublickey) {
-        if (!error) {
-          console.log(encryptionpublickey)
-        } else {
-          console.log(error)
-        }
-      }
-    )
-    // Return First account
+        params: [accounts[0]]
+      })
+      this.getLogger().info(`Public Key: ${publicKey}`)
+    }
     return {
-      account: accounts[0]
+      account: accounts[0],
+      publicKey: publicKey
     }
   }
 

@@ -674,7 +674,9 @@ the password, and to encrypt/decrypt a block of text
 */
 $tw.utils.Crypto = function() {
   var sjcl = $tw.node ? (global.sjcl || require("./sjcl.js")) : window.sjcl,
+    sigUtil = $tw.node ? (global.sigUtil || require("eth-sig-util")) : window.SigUtil,
     currentPassword = null,
+    currentPublicKey = null,
     callSjcl = function(method,inputText,password) {
       password = password || currentPassword;
       var outputText;
@@ -696,9 +698,13 @@ $tw.utils.Crypto = function() {
     currentPassword = newPassword;
     this.updateCryptoStateTiddler();
   };
+  this.setPublicKey = function(newPublicKey) {
+    currentPublicKey = newPublicKey;
+    this.updateCryptoStateTiddler();
+  };
   this.updateCryptoStateTiddler = function() {
     if($tw.wiki) {
-      var state = currentPassword ? "yes" : "no",
+      var state = currentPassword || currentPublicKey ? "yes" : "no",
         tiddler = $tw.wiki.getTiddler("$:/isEncrypted");
       if(!tiddler || tiddler.fields.text !== state) {
         $tw.wiki.addTiddler(new $tw.Tiddler({title: "$:/isEncrypted", text: state}));
@@ -709,7 +715,21 @@ $tw.utils.Crypto = function() {
     return !!currentPassword;
   }
   this.encrypt = function(text,password) {
-    return callSjcl("encrypt",text,password);
+    if (currentPublicKey) {
+      var tStart = new Date();
+      var outputText = sigUtil.encrypt(
+        currentPublicKey,
+        {data: text},
+        'x25519-xsalsa20-poly1305'
+      )
+      outputText = JSON.stringify({"ethereum":outputText});
+      var tStop = new Date()-tStart;
+      var ratio = Math.floor(outputText.length*100/text.length);
+      console.log(`Encrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      return outputText
+    } else {
+      return callSjcl("encrypt",text,password);
+    }
   };
   this.decrypt = function(text,password) {
     return callSjcl("decrypt",text,password);

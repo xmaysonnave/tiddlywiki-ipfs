@@ -1,6 +1,0 @@
-title: $:/library/eth-sig-util.js
-type: application/javascript
-library: yes
-_license_uri: https://raw.githubusercontent.com/MetaMask/eth-sig-util/master/LICENSE
-_project_uri: https://github.com/MetaMask/eth-sig-util
-_source_uri: https://cdn.jsdelivr.net/npm/eth-sig-util@2.5.3/index.min.js
