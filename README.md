@@ -27,7 +27,7 @@ This plugin provides the following features:
 
 - Store `TiddlyWiki's` and attachments on [IPFS](https://ipfs.io/)
 - Access `TiddlyWiki's` and attachments from [IPFS](https://ipfs.io/)
-- Encrypt and Unencrypt `TiddlyWiki's` and attachments
+- Encrypt and Decrypt `TiddlyWiki's` and attachments
 - Publish and Manage IPNS Keys and Names
 - Interact with [Metamask](https://metamask.io) Ethereum wallets
 - Publish to [ENS](https://ens.domains)

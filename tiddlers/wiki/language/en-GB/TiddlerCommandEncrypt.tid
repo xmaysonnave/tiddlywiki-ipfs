@@ -27,5 +27,5 @@ type: text/vnd.tiddlywiki
   Beware that even you've locked your wiki and didn't save it immediately already uploaded external resources are encrypted.
 </p>
 <p>
-  Read the [[Unencrypt External Resource]] to manage this behaviour.
+  Read the [[Decrypt External Resource]] to manage this behaviour.
 </p>

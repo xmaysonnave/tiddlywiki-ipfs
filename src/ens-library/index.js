@@ -177,7 +177,7 @@ import root from 'window-or-global'
       Array.isArray(accounts) === false ||
       accounts.length === 0
     ) {
-      throw new Error('Unable to retrieve an Ethereum account...')
+      throw new Error('Unable to retrieve any Ethereum accounts...')
     }
     if (typeof provider.request === 'function') {
       publicKey = await provider.request({
@@ -190,34 +190,6 @@ import root from 'window-or-global'
       account: accounts[0],
       publicKey: publicKey
     }
-  }
-
-  EnsLibrary.prototype.getProvider = function () {
-    // Retrieve an available Ethereum provider
-    var provider = null
-    if (typeof root.ethereum !== 'undefined') {
-      provider = root.ethereum
-      this.getLogger().info('Ethereum provider: "window.ethereum"...')
-    }
-    if (
-      provider == null &&
-      root.web3 !== undefined &&
-      root.web3.currentProvider !== undefined
-    ) {
-      provider = root.web3.currentProvider
-      this.getLogger().info(
-        'Ethereum provider: "window.web3.currentProvider"...'
-      )
-    }
-    if (provider == null) {
-      throw new Error('Unable to retrieve an Ethereum provider...')
-    }
-    // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
-    if (provider.isMetaMask) {
-      provider.autoRefreshOnNetworkChange = false
-    }
-    // return provider
-    return provider
   }
 
   EnsLibrary.prototype.getEnabledWeb3Provider = async function (provider) {

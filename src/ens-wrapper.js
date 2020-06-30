@@ -52,7 +52,7 @@ ENS Wrapper
   EnsWrapper.prototype.getEthereumProvider = function () {
     if (this.provider === null) {
       const self = this
-      this.provider = this.ensLibrary.getProvider()
+      this.provider = $tw.utils.getEthereumProvider()
       this.provider.on('accountsChanged', accounts => {
         self.accountChanged(accounts)
       })

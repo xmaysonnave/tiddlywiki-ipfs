@@ -6,9 +6,6 @@ rm -f -R ./output > /dev/null 2>&1
 # build directories
 mkdir -p ./build/plugins/ipfs/core > /dev/null 2>&1
 
-# TiddlyWiki5
-cp -R ./TiddlyWiki5/* ./node_modules/tiddlywiki > /dev/null 2>&1
-
 # core scripts
 cp -R ./src/core/* ./build/plugins/ipfs/core > /dev/null 2>&1
 

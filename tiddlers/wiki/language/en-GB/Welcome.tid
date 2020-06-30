@@ -17,7 +17,7 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>Store ~TiddlyWiki's and attachments on [ext[IPFS|https://ipfs.io/]]</li>
   <li>Access ~TiddlyWiki's and attachments from [ext[IPFS|https://ipfs.io/]]</li>
-  <li>Encrypt and Unencrypt ~TiddlyWiki's and attachments</li>
+  <li>Encrypt and Decrypt ~TiddlyWiki's and attachments</li>
   <li>Publish and Manage IPNS Names and Keys</li>
   <li>Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets</li>
   <li>Publish to [ext[ENS|https://ens.domains]]</li>

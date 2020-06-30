@@ -7,6 +7,7 @@ output/*
 test/*
 tiddlers/*
 TiddlyWiki5/*
+eth-sig-util/
 tw5-locator/*
 tw5-relink/*
 wiki/*

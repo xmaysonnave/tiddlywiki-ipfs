@@ -1,6 +1,7 @@
-#!/bin/zsh
-node -v
-npm -v
+#!/usr/bin/zsh
+. ~/.nvm/nvm.sh
+. ~/.zshrc
+nvm run node --version
 
 ./scripts/run-prepare-clone.sh || exit 1
 

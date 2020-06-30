@@ -1,9 +1,9 @@
-title: Unencrypt External Resource
+title: Decrypt External Resource
 modified: 20200527094915385
 tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
-<h2>Unencrypt External Resource</h2>
+<h2>Decrypt External Resource</h2>
 [img class="tc-image-documentation" [$:/ipfs/image/unencrypt]]
 <p>
   If the locker is closed your wiki is encrypted or will be encrypted once saved.

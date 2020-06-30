@@ -1,7 +1,18 @@
-#!/bin/bash
+#!/usr/bin/zsh
 # cleanup
+rm -f -R ./eth-sig-util > /dev/null 2>&1
 rm -f -R ./tw5-locator > /dev/null 2>&1
 rm -f -R ./tw5-relink > /dev/null 2>&1
+
+# eth-sig-util
+git clone https://github.com/xmaysonnave/eth-sig-util --depth 1
+cd eth-sig-util
+. ~/.nvm/nvm.sh
+. ~/.zshrc
+nvm use
+npm install
+npm run browser
+cd ..
 
 # tw5-locator
 git clone https://github.com/bimlas/tw5-locator

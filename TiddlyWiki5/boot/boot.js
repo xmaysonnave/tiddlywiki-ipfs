@@ -532,6 +532,29 @@ $tw.utils.evalSandboxed = $tw.browser ? $tw.utils.evalGlobal : function(code,con
 };
 
 /*
+Retrieve an Ethereum provider
+*/
+$tw.utils.getEthereumProvider = function () {
+  var provider = null;
+  if (!$tw.node) {
+    if (typeof window.ethereum !== 'undefined') {
+      provider = window.ethereum;
+    }
+    if (provider == null && window.web3 !== undefined && window.web3.currentProvider !== undefined) {
+      provider = window.web3.currentProvider;
+    }
+    if (provider == null) {
+      throw new Error('Unable to retrieve an Ethereum provider...');
+    }
+    // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
+    if (provider.isMetaMask) {
+      provider.autoRefreshOnNetworkChange = false;
+    }
+  }
+  return provider;
+}
+
+/*
 Creates a PasswordPrompt object
 */
 $tw.utils.PasswordPrompt = function() {
@@ -674,7 +697,7 @@ the password, and to encrypt/decrypt a block of text
 */
 $tw.utils.Crypto = function() {
   var sjcl = $tw.node ? (global.sjcl || require("./sjcl.js")) : window.sjcl,
-    sigUtil = $tw.node ? (global.sigUtil || require("eth-sig-util")) : window.SigUtil,
+    sigUtil = $tw.node ? (global.sigUtil || require("eth-sig-util")) : window.sigUtil,
     currentPassword = null,
     currentPublicKey = null,
     callSjcl = function(method,inputText,password) {
@@ -722,10 +745,10 @@ $tw.utils.Crypto = function() {
         {data: text},
         'x25519-xsalsa20-poly1305'
       )
-      outputText = JSON.stringify({"ethereum":outputText});
+      outputText = JSON.stringify(outputText);
       var tStop = new Date()-tStart;
       var ratio = Math.floor(outputText.length*100/text.length);
-      console.log(`Encrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      console.log(`Encrypt with Public Key: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
       return outputText
     } else {
       return callSjcl("encrypt",text,password);
@@ -1778,6 +1801,30 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 
 if($tw.browser && !$tw.node) {
 
+$tw.boot.enableProvider = async function(text, callback) {
+  var provider = $tw.utils.getEthereumProvider();
+  try {
+    await provider.request({method:"eth_requestAccounts"});
+    var accounts = await provider.request({method:"eth_accounts"});
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+      throw new Error("Unable to retrieve any Ethereum accounts...");
+    }
+    var outputText = await provider.request({method:"eth_decrypt",params:[text,accounts[0]]});
+    if (outputText !== undefined || outputText !== null) {
+      callback(outputText);
+      return;
+    }
+  } catch (error) {
+    if (error.code === 4001) {
+      const err = new Error(error.message);
+      err.name = "UserRejectedRequest";
+      throw err;
+    }
+    throw error;
+  }
+  throw new Error("Unable to Decrypt content...");
+}
+
 $tw.boot.passwordPrompt = function(text, callback) {
   var prompt = "Enter a password to decrypt this TiddlyWiki";
   // Prompt for the password
@@ -1819,16 +1866,21 @@ $tw.boot.inflateTiddlers = function(callback) {
       var text = $tw.compress.inflate(b64);
       $tw.boot.preloadTiddler(text,callback)
     }
-    var text = compressedArea.innerHTML;
-    if(text.startsWith('{"pako":"')) {
-      var json = JSON.parse(text);
-      if(json.pako.startsWith('{"iv":"')) {
-        $tw.boot.passwordPrompt(json.pako, function(decrypted) {
+    var json = JSON.parse(compressedArea.innerHTML);
+    if(json.pako) {
+      if(json.pako.startsWith('{"iv":')) {
+        $tw.boot.passwordPrompt(json.pako,function(decrypted) {
+          inflate(decrypted);
+        });
+      } else if(json.pako.startsWith('{"version":')) {
+        $tw.boot.enableProvider(json.pako,function(decrypted) {
           inflate(decrypted);
         });
       } else {
         inflate(json.pako);
       }
+    } else {
+      throw new Error('Unable to process the "compressedStoreArea"...')
     }
   } else {
     // Preload any encrypted tiddlers
