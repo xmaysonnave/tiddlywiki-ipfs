@@ -28,7 +28,7 @@ Command.prototype.execute = function() {
 	if(this.params.length > 0) {
 		compress = (this.params[0] === "true");
 	}
-	$tw.compress.setState(compress);
+	$tw.compress.setCompressState(compress);
 	return null;
 };
 

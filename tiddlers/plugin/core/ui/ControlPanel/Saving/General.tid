@@ -12,14 +12,6 @@ list-before:
 
 {{$:/language/ControlPanel/Saving/General/Hint}}
 
-!! <$link to="$:/config/PreferredSaver"><<lingo PreferredSaver/Caption>></$link>
-
-<$select tiddler="$:/config/PreferredSaver">
-<$list filter="[savers[]]">
-<option value=<<currentTiddler>>><<preferred-saver>></option>
-</$list>
-</$select>
-
 !! <$link to="$:/config/AutoSave"><<lingo AutoSave/Caption>></$link>
 
 <<lingo AutoSave/Hint>>
@@ -27,3 +19,19 @@ list-before:
 <$radio tiddler="$:/config/AutoSave" value="yes"> <<lingo AutoSave/Enabled/Description>> </$radio>
 
 <$radio tiddler="$:/config/AutoSave" value="no"> <<lingo AutoSave/Disabled/Description>> </$radio>
+
+!! <$link to="$:/config/Standford"><<lingo Encryption/Caption>></$link>
+
+<<lingo Encryption/Hint>>
+
+<$radio tiddler="$:/config/Standford" value="yes"> <<lingo Encryption/Standford/Description>> </$radio>
+
+<$radio tiddler="$:/config/Standford" value="no"> <<lingo Encryption/Ethereum/Description>> </$radio>
+
+!! <$link to="$:/config/PreferredSaver"><<lingo PreferredSaver/Caption>></$link>
+
+<$select tiddler="$:/config/PreferredSaver">
+<$list filter="[savers[]]">
+<option value=<<currentTiddler>>><<preferred-saver>></option>
+</$list>
+</$select>

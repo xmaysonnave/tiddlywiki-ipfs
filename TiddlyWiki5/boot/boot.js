@@ -544,7 +544,7 @@ $tw.utils.getEthereumProvider = function () {
       provider = window.web3.currentProvider;
     }
     if (provider == null) {
-      throw new Error('Unable to retrieve an Ethereum provider...');
+      throw new Error("Unable to retrieve an Ethereum provider...");
     }
     // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
     if (provider.isMetaMask) {
@@ -700,6 +700,7 @@ $tw.utils.Crypto = function() {
     sigUtil = $tw.node ? (global.sigUtil || require("eth-sig-util")) : window.sigUtil,
     currentPassword = null,
     currentPublicKey = null,
+    fromPublicKey = false,
     callSjcl = function(method,inputText,password) {
       password = password || currentPassword;
       var outputText;
@@ -717,20 +718,37 @@ $tw.utils.Crypto = function() {
       }
       return outputText;
     };
+  this.setFromPublicKey = function() {
+    fromPublicKey = true;
+  };
   this.setPassword = function(newPassword) {
+    fromPublicKey = false;
     currentPassword = newPassword;
     this.updateCryptoStateTiddler();
+    if($tw.wiki) {
+      var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
+      if(!tiddler || tiddler.fields.text === "no") {
+        $tw.wiki.addTiddler(new $tw.Tiddler({title:"$:/config/Standford",text:"yes"}));
+      }
+    }
   };
   this.setPublicKey = function(newPublicKey) {
+    fromPublicKey = true;
     currentPublicKey = newPublicKey;
     this.updateCryptoStateTiddler();
+    if($tw.wiki) {
+      var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
+      if(!tiddler || tiddler.fields.text === "yes") {
+        $tw.wiki.addTiddler(new $tw.Tiddler({title:"$:/config/Standford",text:"no"}));
+      }
+    }
   };
   this.updateCryptoStateTiddler = function() {
     if($tw.wiki) {
-      var state = currentPassword || currentPublicKey ? "yes" : "no",
+      var state = fromPublicKey || currentPassword || currentPublicKey ? "yes" : "no",
         tiddler = $tw.wiki.getTiddler("$:/isEncrypted");
       if(!tiddler || tiddler.fields.text !== state) {
-        $tw.wiki.addTiddler(new $tw.Tiddler({title: "$:/isEncrypted", text: state}));
+        $tw.wiki.addTiddler(new $tw.Tiddler({title:"$:/isEncrypted",text:state,publickey:fromPublicKey||currentPublicKey?"yes":"no"}));
       }
     }
   };
@@ -748,7 +766,7 @@ $tw.utils.Crypto = function() {
       outputText = JSON.stringify(outputText);
       var tStop = new Date()-tStart;
       var ratio = Math.floor(outputText.length*100/text.length);
-      console.log(`Encrypt with Public Key: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      console.log(`Encrypt with public key: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
       return outputText
     } else {
       return callSjcl("encrypt",text,password);
@@ -765,7 +783,7 @@ Compress helper object for compressed content.
 $tw.utils.Compress = function() {
   var pako = $tw.node ? (global.pako || require("./pako.min.js")) : window.pako;
   var currentState = null;
-  this.setState = function(state) {
+  this.setCompressState = function(state) {
     currentState = state;
     this.updateCompressStateTiddler();
   };
@@ -774,7 +792,7 @@ $tw.utils.Compress = function() {
       var state = currentState ? "yes" : "no";
       var tiddler = $tw.wiki.getTiddler("$:/isCompressed");
       if(!tiddler || tiddler.fields.text !== state) {
-        $tw.wiki.addTiddler(new $tw.Tiddler({title: "$:/isCompressed", text: state}));
+        $tw.wiki.addTiddler(new $tw.Tiddler({title: "$:/isCompressed",text: state}));
       }
     }
   };
@@ -1801,28 +1819,32 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 
 if($tw.browser && !$tw.node) {
 
-$tw.boot.enableProvider = async function(text, callback) {
+$tw.boot.enableProvider = function(text, callback) {
   var provider = $tw.utils.getEthereumProvider();
-  try {
-    await provider.request({method:"eth_requestAccounts"});
-    var accounts = await provider.request({method:"eth_accounts"});
-    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-      throw new Error("Unable to retrieve any Ethereum accounts...");
-    }
-    var outputText = await provider.request({method:"eth_decrypt",params:[text,accounts[0]]});
-    if (outputText !== undefined || outputText !== null) {
-      callback(outputText);
-      return;
-    }
-  } catch (error) {
-    if (error.code === 4001) {
-      const err = new Error(error.message);
-      err.name = "UserRejectedRequest";
-      throw err;
-    }
-    throw error;
-  }
-  throw new Error("Unable to Decrypt content...");
+  provider.request({method:"eth_requestAccounts"})
+  .then(() => {
+    provider.request({method:"eth_accounts"})
+    .then(accounts => {
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+        $tw.utils.error("Unable to retrieve any Ethereum accounts...");
+        return;
+      }
+      provider.request({method:"eth_decrypt",params:[text,accounts[0]]})
+      .then(outputText => {
+        if (outputText !== undefined || outputText !== null) {
+          callback(outputText);
+          return;
+        }
+        $tw.utils.error("Unable to decrypt content...");
+      })
+      .catch(error => {
+        $tw.utils.error(error.message);
+      });
+    });
+  })
+  .catch(error => {
+    $tw.utils.error(error.message);
+  });
 }
 
 $tw.boot.passwordPrompt = function(text, callback) {
@@ -1873,6 +1895,7 @@ $tw.boot.inflateTiddlers = function(callback) {
           inflate(decrypted);
         });
       } else if(json.pako.startsWith('{"version":')) {
+        $tw.crypto.setFromPublicKey();
         $tw.boot.enableProvider(json.pako,function(decrypted) {
           inflate(decrypted);
         });

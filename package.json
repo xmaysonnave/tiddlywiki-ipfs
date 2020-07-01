@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200630414",
+  "version": "v0.3.0-200701431",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/ipfs-bundle.js",
   "directories": {
@@ -56,7 +56,7 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "@babel/runtime": "^7.10.3",
+    "@babel/runtime": "^7.10.4",
     "buffer": "^5.6.0",
     "cids": "^0.8.3",
     "content-hash": "^2.5.2",
@@ -68,12 +68,12 @@
     "window-or-global": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
-    "@babel/plugin-transform-runtime": "^7.10.3",
-    "@babel/polyfill": "^7.10.1",
-    "@babel/preset-env": "^7.10.3",
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
     "acorn": "^7.3.1",
     "babel-eslint": "^10.1.0",
     "babelify": "^10.0.0",
@@ -84,7 +84,7 @@
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-flowtype": "^5.1.4",
+    "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -100,7 +100,7 @@
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.3.0",
     "pretty-quick": "^2.0.1",
-    "snyk": "^1.352.1",
+    "snyk": "^1.355.0",
     "tiddlywiki": "git://github.com/Jermolene/TiddlyWiki5.git",
     "typescript": "^3.9.5"
   },
