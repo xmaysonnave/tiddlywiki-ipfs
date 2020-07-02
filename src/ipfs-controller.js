@@ -479,6 +479,10 @@ IPFS Controller
     return false
   }
 
+  IpfsController.prototype.getPublicEncryptionKey = async function (provider) {
+    return await this.ensWrapper.getPublicEncryptionKey(provider)
+  }
+
   IpfsController.prototype.getEthereumProvider = function () {
     return this.ensWrapper.getEthereumProvider()
   }

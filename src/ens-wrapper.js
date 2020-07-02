@@ -45,6 +45,10 @@ ENS Wrapper
     return this.chainId
   }
 
+  EnsWrapper.prototype.getPublicEncryptionKey = async function (provider) {
+    return await this.ensLibrary.getPublicEncryptionKey(provider)
+  }
+
   /*
    * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
    * https://eips.ethereum.org/EIPS/eip-1193
@@ -52,7 +56,7 @@ ENS Wrapper
   EnsWrapper.prototype.getEthereumProvider = function () {
     if (this.provider === null) {
       const self = this
-      this.provider = $tw.utils.getEthereumProvider()
+      this.provider = this.ensLibrary.getEthereumProvider()
       this.provider.on('accountsChanged', accounts => {
         self.accountChanged(accounts)
       })

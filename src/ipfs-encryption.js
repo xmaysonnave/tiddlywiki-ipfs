@@ -61,12 +61,14 @@ Compression handling
       if (!$tw.crypto.hasPassword() && standford.fields.text === 'yes') {
         setPassword()
       } else {
-        const encryptionKey = $tw.ipfs.getPublicEncryptionKey()
+        const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
         getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
         $tw.crypto.setPublicKey(encryptionKey)
       }
     })
-    $tw.rootWidget.addEventListener('tm-clear-password', function (event) {
+    $tw.rootWidget.addEventListener('tm-clear-password', async function (
+      event
+    ) {
       const hasPassword = $tw.crypto.hasPassword()
       const standford = $tw.wiki.getTiddler('$:/config/Standford')
       if ($tw.browser) {
@@ -80,7 +82,7 @@ Compression handling
       }
       $tw.crypto.setPassword(null)
       if (hasPassword && standford.fields.text === 'no') {
-        const encryptionKey = $tw.ipfs.getPublicEncryptionKey()
+        const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
         getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
         $tw.crypto.setPublicKey(encryptionKey)
       }

@@ -719,27 +719,37 @@ $tw.utils.Crypto = function() {
       return outputText;
     };
   this.setFromPublicKey = function() {
+    currentPassword = null;
     fromPublicKey = true;
+    if($tw.wiki) {
+      this.updateCryptoStateTiddler();
+      var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
+      if(!tiddler || tiddler.fields.text === "yes") {
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "no" }));
+      }
+    }
   };
   this.setPassword = function(newPassword) {
+    currentPassword = newPassword === undefined || newPassword == null ? null : newPassword;
+    currentPublicKey = null;
     fromPublicKey = false;
-    currentPassword = newPassword;
-    this.updateCryptoStateTiddler();
     if($tw.wiki) {
+      this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(!tiddler || tiddler.fields.text === "no") {
-        $tw.wiki.addTiddler(new $tw.Tiddler({title:"$:/config/Standford",text:"yes"}));
+      if(currentPassword !== null && (!tiddler || tiddler.fields.text === "no")) {
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "yes" }));
       }
     }
   };
   this.setPublicKey = function(newPublicKey) {
+    currentPassword = null;
+    currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey;
     fromPublicKey = true;
-    currentPublicKey = newPublicKey;
-    this.updateCryptoStateTiddler();
     if($tw.wiki) {
+      this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(!tiddler || tiddler.fields.text === "yes") {
-        $tw.wiki.addTiddler(new $tw.Tiddler({title:"$:/config/Standford",text:"no"}));
+      if(currentPublicKey !== null && (!tiddler || tiddler.fields.text === "yes")) {
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "no" }));
       }
     }
   };
@@ -748,12 +758,15 @@ $tw.utils.Crypto = function() {
       var state = fromPublicKey || currentPassword || currentPublicKey ? "yes" : "no",
         tiddler = $tw.wiki.getTiddler("$:/isEncrypted");
       if(!tiddler || tiddler.fields.text !== state) {
-        $tw.wiki.addTiddler(new $tw.Tiddler({title:"$:/isEncrypted",text:state,publickey:fromPublicKey||currentPublicKey?"yes":"no"}));
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isEncrypted", text: state }));
       }
     }
   };
   this.hasPassword = function() {
     return !!currentPassword;
+  }
+  this.hasPublicKey = function() {
+    return !!currentPublicKey;
   }
   this.encrypt = function(text,password) {
     if (currentPublicKey) {
@@ -792,7 +805,7 @@ $tw.utils.Compress = function() {
       var state = currentState ? "yes" : "no";
       var tiddler = $tw.wiki.getTiddler("$:/isCompressed");
       if(!tiddler || tiddler.fields.text !== state) {
-        $tw.wiki.addTiddler(new $tw.Tiddler({title: "$:/isCompressed",text: state}));
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isCompressed", text: state}));
       }
     }
   };
@@ -1819,7 +1832,7 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 
 if($tw.browser && !$tw.node) {
 
-$tw.boot.enableProvider = function(text, callback) {
+$tw.boot.metamaskPrompt = function(text, callback) {
   var provider = $tw.utils.getEthereumProvider();
   provider.request({method:"eth_requestAccounts"})
   .then(() => {
@@ -1896,7 +1909,7 @@ $tw.boot.inflateTiddlers = function(callback) {
         });
       } else if(json.pako.startsWith('{"version":')) {
         $tw.crypto.setFromPublicKey();
-        $tw.boot.enableProvider(json.pako,function(decrypted) {
+        $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
           inflate(decrypted);
         });
       } else {

@@ -18,6 +18,27 @@ Startup initialisation
   exports.synchronous = true
 
   exports.startup = function () {
+    var getLogger = function () {
+      if (window.logger === undefined || window.logger == null) {
+        try {
+          window.logger = $tw.modules.execute(
+            '$:/plugins/loglevel/loglevel.min.js'
+          )
+          if ($tw.utils.getIpfsVerbose()) {
+            window.logger.setLevel('info', false)
+          } else {
+            window.logger.setLevel('warn', false)
+          }
+          window.logger.info('LogLevel is starting up...')
+        } catch (error) {
+          console.error(error)
+        }
+      }
+      if (window.logger !== undefined && window.logger !== null) {
+        return window.logger
+      }
+      return console
+    }
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
@@ -25,17 +46,7 @@ Startup initialisation
       flags: ['image']
     })
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
-    // Logger
-    if (window.logger === undefined || window.logger == null) {
-      window.logger = $tw.modules.execute('$:/plugins/loglevel/loglevel.min.js')
-      if ($tw.utils.getIpfsVerbose()) {
-        window.logger.setLevel('info', false)
-      } else {
-        window.logger.setLevel('warn', false)
-      }
-      window.logger.info('LogLevel is starting up...')
-    }
     // Log
-    window.logger.info('ipfs-startup is starting up...')
+    getLogger().info('ipfs-startup is starting up...')
   }
 })()

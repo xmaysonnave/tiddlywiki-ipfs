@@ -133,44 +133,71 @@ import root from 'window-or-global'
     }
   }
 
+  EnsLibrary.prototype.getPublicEncryptionKey = async function (
+    provider,
+    account
+  ) {
+    if (provider === undefined || provider == null) {
+      provider = this.getEthereumProvider()
+    }
+    if (account === undefined) {
+      account = await this.enableProvider(provider)
+    }
+    const encryptionKey = await provider.request({
+      method: 'eth_getEncryptionPublicKey',
+      params: [account]
+    })
+    return encryptionKey
+  }
+
+  /*
+   * Retrieve an Ethereum provider
+   */
+  EnsLibrary.prototype.getEthereumProvider = function () {
+    var provider = null
+    if (!$tw.node) {
+      if (typeof window.ethereum !== 'undefined') {
+        provider = window.ethereum
+      }
+      if (
+        provider == null &&
+        window.web3 !== undefined &&
+        window.web3.currentProvider !== undefined
+      ) {
+        provider = window.web3.currentProvider
+      }
+      if (provider == null) {
+        throw new Error('Unable to retrieve an Ethereum provider...')
+      }
+      // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
+      if (provider.isMetaMask) {
+        provider.autoRefreshOnNetworkChange = false
+      }
+    }
+    return provider
+  }
+
   EnsLibrary.prototype.enableProvider = async function (provider) {
     if (provider === undefined || provider == null) {
-      throw new Error('Undefined Ethereum provider...')
+      provider = this.getEthereumProvider()
     }
-    // Enable Provider
-    var accounts = null
-    var publicKey = null
     // Handle connection, per EIP 1102
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-    if (typeof provider.request === 'function') {
-      try {
-        await provider.request({ method: 'eth_requestAccounts' })
-      } catch (error) {
-        // EIP 1193 user Rejected Request
-        if (error.code === 4001) {
-          const err = new Error(error.message)
-          err.name = 'UserRejectedRequest'
-          throw err
-        }
-        throw error
+    try {
+      await provider.request({ method: 'eth_requestAccounts' })
+    } catch (error) {
+      // EIP 1193 user Rejected Request
+      if (error.code === 4001) {
+        const err = new Error(error.message)
+        err.name = 'UserRejectedRequest'
+        throw err
       }
-      // Handle user accounts per EIP 1193
-      // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-      accounts = await provider.request({ method: 'eth_accounts' })
-      // https://medium.com/metamask/breaking-changes-to-the-metamask-inpage-provider-b4dde069dd0a
-      // Metamask returns accounts.results rather than an array as described in their above communication
-      if (
-        accounts !== undefined &&
-        accounts !== null &&
-        typeof accounts.result !== 'undefined' &&
-        Array.isArray(accounts.result)
-      ) {
-        accounts = accounts.result
-      }
-      // Legacy
-    } else if (typeof provider.enable === 'function') {
-      accounts = await provider.enable()
+      throw error
     }
+    // Handle user accounts per EIP 1193
+    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+    const accounts = await provider.request({ method: 'eth_accounts' })
+    // https://medium.com/metamask/breaking-changes-to-the-metamask-inpage-provider-b4dde069dd0a
     if (
       accounts === undefined ||
       accounts == null ||
@@ -179,29 +206,19 @@ import root from 'window-or-global'
     ) {
       throw new Error('Unable to retrieve any Ethereum accounts...')
     }
-    if (typeof provider.request === 'function') {
-      publicKey = await provider.request({
-        method: 'eth_getEncryptionPublicKey',
-        params: [accounts[0]]
-      })
-      this.getLogger().info(`Public Key: ${publicKey}`)
-    }
-    return {
-      account: accounts[0],
-      publicKey: publicKey
-    }
+    return accounts[0]
   }
 
   EnsLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
     if (provider === undefined || provider == null) {
-      throw new Error('Undefined Ethereum provider...')
+      provider = this.getEthereumProvider()
     }
     if (root.ethers === undefined || root.ethers == null) {
       await this.loadEthers()
     }
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
-    const { account } = await this.enableProvider(provider)
+    const account = await this.enableProvider(provider)
     // Instantiate a Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
@@ -215,7 +232,7 @@ import root from 'window-or-global'
 
   EnsLibrary.prototype.getWeb3Provider = async function (provider) {
     if (provider === undefined || provider == null) {
-      throw new Error('Undefined Ethereum provider...')
+      provider = this.getEthereumProvider()
     }
     if (root.ethers === undefined || root.ethers == null) {
       await this.loadEthers()
