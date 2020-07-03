@@ -62,7 +62,9 @@ Compression handling
         setPassword()
       } else {
         const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-        getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+        if (encryptionKey !== undefined && encryptionKey !== null) {
+          getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+        }
         $tw.crypto.setPublicKey(encryptionKey)
       }
     })
@@ -83,7 +85,9 @@ Compression handling
       $tw.crypto.setPassword(null)
       if (hasPassword && standford.fields.text === 'no') {
         const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-        getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+        if (encryptionKey !== undefined && encryptionKey !== null) {
+          getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+        }
         $tw.crypto.setPublicKey(encryptionKey)
       }
     })

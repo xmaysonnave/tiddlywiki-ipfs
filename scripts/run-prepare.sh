@@ -19,9 +19,8 @@ cp -R ./tiddlers/plugin/* ./build/plugins/ipfs > /dev/null 2>&1
 cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
 
 # loglevel
-cp -R ./loglevel ./build/plugins > /dev/null 2>&1
-wget https://cdn.jsdelivr.net/npm/loglevel@1.6.8/lib/loglevel.min.js -P ./build/plugins/loglevel
-wget https://raw.githubusercontent.com/pimterry/loglevel/master/LICENSE-MIT -P ./build/plugins/loglevel
+cp -R ./loglevel ./build/plugins/loglevel > /dev/null 2>&1
+cp -R ./metadata/loglevel ./build/plugins/loglevel > /dev/null 2>&1
 
 # generate build number
 ./scripts/run-build-number.sh \

@@ -718,7 +718,7 @@ $tw.utils.Crypto = function() {
       }
       return outputText;
     };
-  this.setFromPublicKey = function() {
+  this.fromPublicKey = function() {
     currentPassword = null;
     fromPublicKey = true;
     if($tw.wiki) {
@@ -744,7 +744,7 @@ $tw.utils.Crypto = function() {
   this.setPublicKey = function(newPublicKey) {
     currentPassword = null;
     currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey;
-    fromPublicKey = true;
+    fromPublicKey = newPublicKey === undefined || newPublicKey == null ? false : true;
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
@@ -1908,7 +1908,7 @@ $tw.boot.inflateTiddlers = function(callback) {
           inflate(decrypted);
         });
       } else if(json.pako.startsWith('{"version":')) {
-        $tw.crypto.setFromPublicKey();
+        $tw.crypto.fromPublicKey();
         $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
           inflate(decrypted);
         });
