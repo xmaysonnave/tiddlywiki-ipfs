@@ -1,6 +1,7 @@
 build
 boot
 eth-sig-util
+loglevel
 metadata
 node_modules
 output

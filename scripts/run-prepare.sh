@@ -20,7 +20,7 @@ cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
 
 # loglevel
 cp -R ./loglevel ./build/plugins/loglevel > /dev/null 2>&1
-cp -R ./metadata/loglevel ./build/plugins/loglevel > /dev/null 2>&1
+cp -R ./metadata/loglevel ./build/plugins > /dev/null 2>&1
 
 # generate build number
 ./scripts/run-build-number.sh \
