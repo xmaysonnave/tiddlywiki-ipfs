@@ -22,8 +22,6 @@ list-before:
 
 !! <$link to="$:/config/Standford"><<lingo Encryption/Caption>></$link>
 
-<<lingo Encryption/Hint>>
-
 <$radio tiddler="$:/config/Standford" value="yes"> <<lingo Encryption/Standford/Description>> </$radio>
 
 <$radio tiddler="$:/config/Standford" value="no"> <<lingo Encryption/Ethereum/Description>> </$radio>

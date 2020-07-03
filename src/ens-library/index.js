@@ -42,16 +42,6 @@ import root from 'window-or-global'
     return console
   }
 
-  EnsLibrary.prototype.hexValueIsEmpty = function (value) {
-    return [
-      undefined,
-      null,
-      '0x',
-      '0x0',
-      '0x0000000000000000000000000000000000000000000000000000000000000000'
-    ].includes(value)
-  }
-
   EnsLibrary.prototype.getEtherscanRegistry = function () {
     return this.etherscan
   }
@@ -160,9 +150,15 @@ import root from 'window-or-global'
       })
       return encryptionKey
     } catch (error) {
-      this.getLogger().error(error)
+      // EIP 1193 user Rejected Request
+      if (error.code === 4001) {
+        const err = new Error('Rejected User Request...')
+        err.name = 'RejectedUserRequest'
+        this.getLogger().error(error)
+        throw err
+      }
+      throw error
     }
-    return null
   }
 
   /*
@@ -203,8 +199,9 @@ import root from 'window-or-global'
     } catch (error) {
       // EIP 1193 user Rejected Request
       if (error.code === 4001) {
-        const err = new Error(error.message)
-        err.name = 'UserRejectedRequest'
+        const err = new Error('Rejected User Request...')
+        err.name = 'RejectedUserRequest'
+        this.getLogger().error(error)
         throw err
       }
       throw error
@@ -309,7 +306,7 @@ import root from 'window-or-global'
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('resolver', [node])
     const result = await web3.call({ to: registry, data: data })
-    if (this.hexValueIsEmpty(result)) {
+    if (result === undefined || result == null || result === '0x') {
       return null
     }
     try {
@@ -347,7 +344,7 @@ import root from 'window-or-global'
     var iface = new root.ethers.utils.Interface(abi)
     var data = iface.encodeFunctionData('supportsInterface', ['0x01ffc9a7'])
     var result = await web3.call({ to: address, data: data })
-    if (this.hexValueIsEmpty(result)) {
+    if (result === undefined || result == null || result === '0x') {
       return false
     }
     try {
@@ -368,7 +365,7 @@ import root from 'window-or-global'
     }
     var data = iface.encodeFunctionData('supportsInterface', ['0xffffffff'])
     var result = await web3.call({ to: address, data: data })
-    if (this.hexValueIsEmpty(result)) {
+    if (result === undefined || result == null || result === '0x') {
       return false
     }
     try {
@@ -410,7 +407,7 @@ import root from 'window-or-global'
     var iface = new root.ethers.utils.Interface(abi)
     var data = iface.encodeFunctionData('supportsInterface', ['0xbc1c58d1'])
     var result = await web3.call({ to: address, data: data })
-    if (this.hexValueIsEmpty(result)) {
+    if (result === undefined || result == null || result === '0x') {
       return false
     }
     try {
@@ -476,7 +473,7 @@ import root from 'window-or-global'
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('contenthash', [domainHash])
     const result = await web3.call({ to: resolver, data: data })
-    if (this.hexValueIsEmpty(result)) {
+    if (result === undefined || result == null || result === '0x') {
       return {
         content: null,
         protocol: null
@@ -525,7 +522,7 @@ import root from 'window-or-global'
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('owner', [domainHash])
     const result = await web3.call({ to: registry, data: data })
-    if (this.hexValueIsEmpty(result)) {
+    if (result === undefined || result == null || result === '0x') {
       return false
     }
     // decode if applicable

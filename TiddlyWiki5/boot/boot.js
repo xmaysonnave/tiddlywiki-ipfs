@@ -700,7 +700,6 @@ $tw.utils.Crypto = function() {
     sigUtil = $tw.node ? (global.sigUtil || require("eth-sig-util")) : window.sigUtil,
     currentPassword = null,
     currentPublicKey = null,
-    fromPublicKey = false,
     callSjcl = function(method,inputText,password) {
       password = password || currentPassword;
       var outputText;
@@ -718,21 +717,9 @@ $tw.utils.Crypto = function() {
       }
       return outputText;
     };
-  this.fromPublicKey = function() {
-    currentPassword = null;
-    fromPublicKey = true;
-    if($tw.wiki) {
-      this.updateCryptoStateTiddler();
-      var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(!tiddler || tiddler.fields.text === "yes") {
-        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "no" }));
-      }
-    }
-  };
   this.setPassword = function(newPassword) {
     currentPassword = newPassword === undefined || newPassword == null ? null : newPassword;
     currentPublicKey = null;
-    fromPublicKey = false;
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
@@ -744,7 +731,6 @@ $tw.utils.Crypto = function() {
   this.setPublicKey = function(newPublicKey) {
     currentPassword = null;
     currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey;
-    fromPublicKey = newPublicKey === undefined || newPublicKey == null ? false : true;
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
@@ -755,7 +741,7 @@ $tw.utils.Crypto = function() {
   };
   this.updateCryptoStateTiddler = function() {
     if($tw.wiki) {
-      var state = fromPublicKey || currentPassword || currentPublicKey ? "yes" : "no",
+      var state = currentPassword || currentPublicKey ? "yes" : "no",
         tiddler = $tw.wiki.getTiddler("$:/isEncrypted");
       if(!tiddler || tiddler.fields.text !== state) {
         $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isEncrypted", text: state }));
@@ -1833,6 +1819,13 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 if($tw.browser && !$tw.node) {
 
 $tw.boot.metamaskPrompt = function(text, callback) {
+  var name = "boot.js";
+  var getLogger = function () {
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger;
+    }
+    return console;
+  }
   var provider = $tw.utils.getEthereumProvider();
   provider.request({method:"eth_requestAccounts"})
   .then(() => {
@@ -1846,6 +1839,19 @@ $tw.boot.metamaskPrompt = function(text, callback) {
       .then(outputText => {
         if (outputText !== undefined || outputText !== null) {
           callback(outputText);
+          // Load the encryption key
+          $tw.ipfs.getPublicEncryptionKey()
+          .then(encryptionKey => {
+            if (encryptionKey !== undefined && encryptionKey !== null) {
+              getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+            }
+            $tw.crypto.setPublicKey(encryptionKey)
+          })
+          .catch (error => {
+            getLogger().error(error)
+            $tw.utils.alert(name, error.message)
+            $tw.crypto.setPublicKey(null)
+          });
           return;
         }
         $tw.utils.error("Unable to decrypt content...");
@@ -1908,7 +1914,6 @@ $tw.boot.inflateTiddlers = function(callback) {
           inflate(decrypted);
         });
       } else if(json.pako.startsWith('{"version":')) {
-        $tw.crypto.fromPublicKey();
         $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
           inflate(decrypted);
         });
@@ -1932,8 +1937,12 @@ $tw.boot.decryptEncryptedTiddlers = function(callback) {
   var encryptedArea = document.getElementById("encryptedStoreArea");
   if(encryptedArea) {
     var text = encryptedArea.innerHTML
-    if(text.startsWith('{"iv":"')) {
+    if(text.startsWith('{"iv":')) {
       $tw.boot.passwordPrompt(text, function(decrypted) {
+        $tw.boot.preloadTiddler(decrypted, callback)
+      });
+    } else if(json.pako.startsWith('{"version":')) {
+      $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
         $tw.boot.preloadTiddler(decrypted, callback)
       });
     } else {

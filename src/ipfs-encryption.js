@@ -61,11 +61,19 @@ Compression handling
       if (!$tw.crypto.hasPassword() && standford.fields.text === 'yes') {
         setPassword()
       } else {
-        const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-        if (encryptionKey !== undefined && encryptionKey !== null) {
-          getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+        try {
+          const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
+          if (encryptionKey !== undefined && encryptionKey !== null) {
+            getLogger().info(
+              `Current Ethereum Public Encryption Key: ${encryptionKey}`
+            )
+          }
+          $tw.crypto.setPublicKey(encryptionKey)
+        } catch (error) {
+          getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+          $tw.crypto.setPublicKey(null)
         }
-        $tw.crypto.setPublicKey(encryptionKey)
       }
     })
     $tw.rootWidget.addEventListener('tm-clear-password', async function (
@@ -84,11 +92,17 @@ Compression handling
       }
       $tw.crypto.setPassword(null)
       if (hasPassword && standford.fields.text === 'no') {
-        const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-        if (encryptionKey !== undefined && encryptionKey !== null) {
-          getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+        try {
+          const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
+          if (encryptionKey !== undefined && encryptionKey !== null) {
+            getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+          }
+          $tw.crypto.setPublicKey(encryptionKey)
+        } catch (error) {
+          getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+          $tw.crypto.setPublicKey(null)
         }
-        $tw.crypto.setPublicKey(encryptionKey)
       }
     })
   }

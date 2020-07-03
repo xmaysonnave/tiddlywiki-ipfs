@@ -295,7 +295,7 @@ import root from 'window-or-global'
     if (ua instanceof Uint8Array === false || ua.length === 0) {
       return false
     }
-    const header = this.ipfsBundle.StringToUint8Array('{"iv":"')
+    const header = this.ipfsBundle.StringToUint8Array('{"iv":')
     var encrypted = false
     for (var i = 0; i < ua.length && i < header.length; i++) {
       if (ua[i] === header[i]) {

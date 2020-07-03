@@ -5,7 +5,7 @@ description: {{$:/language/Buttons/Encryption/Hint}}
 
 \whitespace trim
 <$reveal type="match" state="$:/isEncrypted" text="yes">
-<$button message="tm-clear-password" tooltip={{$:/language/Buttons/Encryption/ClearPassword/Hint}} aria-label={{$:/language/Buttons/Encryption/ClearPassword/Caption}} class=<<tv-config-toolbar-class>>>
+<$button message="tm-clear-password" tooltip=<<ipfs-encryption-tooltip>> aria-label={{$:/language/Buttons/Encryption/ClearPassword/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
 {{$:/core/images/locked-padlock}}
 </$list>
@@ -15,7 +15,7 @@ description: {{$:/language/Buttons/Encryption/Hint}}
 </$button>
 </$reveal>
 <$reveal type="nomatch" state="$:/isEncrypted" text="yes">
-<$button message="tm-set-password" tooltip={{$:/language/Buttons/Encryption/SetPassword/Hint}} aria-label={{$:/language/Buttons/Encryption/SetPassword/Caption}} class=<<tv-config-toolbar-class>>>
+<$button message="tm-set-password" tooltip=<<ipfs-encryption-tooltip>> aria-label={{$:/language/Buttons/Encryption/SetPassword/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
 {{$:/core/images/unlocked-padlock}}
 </$list>

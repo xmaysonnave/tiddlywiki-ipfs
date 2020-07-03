@@ -46,7 +46,15 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.getPublicEncryptionKey = async function (provider) {
-    return await this.ensLibrary.getPublicEncryptionKey(provider)
+    try {
+      return await this.ensLibrary.getPublicEncryptionKey(provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an Ethereum Public Encryption Key...')
+    }
   }
 
   /*
@@ -154,7 +162,7 @@ ENS Wrapper
           account
         } = await this.ensLibrary.getEnabledWeb3Provider(provider)
       } catch (error) {
-        if (error.name === 'UserRejectedRequest') {
+        if (error.name === 'RejectedUserRequest') {
           throw error
         }
         this.getLogger().error(error)

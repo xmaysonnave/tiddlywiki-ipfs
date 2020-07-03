@@ -29,7 +29,7 @@ Startup initialisation
           } else {
             window.logger.setLevel('warn', false)
           }
-          window.logger.info('LogLevel is starting up...')
+          window.logger.info('loglevel is starting up...')
         } catch (error) {
           console.error(error)
         }
