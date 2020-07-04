@@ -170,11 +170,9 @@ import detectEthereumProvider from '@metamask/detect-provider'
   EnsLibrary.prototype.getEthereumProvider = async function () {
     var provider = null
     try {
-      provider = await detectEthereumProvider()
+      provider = await detectEthereumProvider({ mustBeMetaMask: true })
       if (provider !== undefined && provider !== null) {
-        if (provider.isMetaMask) {
-          provider.autoRefreshOnNetworkChange = false
-        }
+        provider.autoRefreshOnNetworkChange = false
       }
     } catch (error) {
       this.getLogger().error(error)
@@ -185,17 +183,36 @@ import detectEthereumProvider from '@metamask/detect-provider'
     return provider
   }
 
+  /*
+   * https://docs.metamask.io/guide/provider-migration.html#migrating-to-the-new-provider-api
+   */
   EnsLibrary.prototype.enableProvider = async function (provider) {
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
-    const chainId = await provider.request({
-      method: 'eth_chainId'
-    })
-    // Handle connection, per EIP 1102
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
     try {
-      await provider.request({ method: 'eth_requestAccounts' })
+      var accounts = await provider.request({ method: 'eth_accounts' })
+      if (
+        accounts === undefined ||
+        accounts == null ||
+        Array.isArray(accounts) === false ||
+        accounts.length === 0
+      ) {
+        accounts = await provider.request({ method: 'eth_requestAccounts' })
+      }
+      if (
+        accounts === undefined ||
+        accounts == null ||
+        Array.isArray(accounts) === false ||
+        accounts.length === 0
+      ) {
+        throw new Error('Unable to retrieve any Ethereum accounts...')
+      }
+      const chainId = parseInt(provider.chainId, 16)
+      this.getLogger().info(
+        `Account: ${this.etherscan[chainId]}/address/${accounts[0]}`
+      )
+      return accounts[0]
     } catch (error) {
       // EIP 1193 user Rejected Request
       if (error.code === 4001) {
@@ -206,22 +223,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
       }
       throw error
     }
-    // Handle user accounts per EIP 1193
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-    const accounts = await provider.request({ method: 'eth_accounts' })
-    // https://medium.com/metamask/breaking-changes-to-the-metamask-inpage-provider-b4dde069dd0a
-    if (
-      accounts === undefined ||
-      accounts == null ||
-      Array.isArray(accounts) === false ||
-      accounts.length === 0
-    ) {
-      throw new Error('Unable to retrieve any Ethereum accounts...')
-    }
-    this.getLogger().info(
-      `Account: ${this.etherscan[chainId]}/address/${accounts[0]}`
-    )
-    return accounts[0]
   }
 
   EnsLibrary.prototype.getEnabledWeb3Provider = async function (provider) {

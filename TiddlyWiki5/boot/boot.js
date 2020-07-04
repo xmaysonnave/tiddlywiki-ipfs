@@ -742,7 +742,7 @@ $tw.utils.Crypto = function() {
       outputText = JSON.stringify(outputText);
       var tStop = new Date()-tStart;
       var ratio = Math.floor(outputText.length*100/text.length);
-      console.log(`Encrypt with public key: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      console.log(`Ethereum Encrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
       return outputText
     } else {
       return callSjcl("encrypt",text,password);
@@ -1795,57 +1795,39 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 
 if($tw.browser && !$tw.node) {
 
-$tw.boot.metamaskPrompt = function(text, callback) {
-  window.detectEthereumProvider()
-  .then(provider => {
+$tw.boot.metamaskPrompt = async function(text, callback) {
+  try {
+    const provider = await window.detectEthereumProvider({ mustBeMetaMask: true });
     if (provider === undefined || provider == null) {
-      throw new Error('Please install MetaMask...')
+      throw new Error('Please install MetaMask...');
     }
-    if (provider.isMetaMask) {
-      provider.autoRefreshOnNetworkChange = false
+    provider.autoRefreshOnNetworkChange = false;
+    var accounts = await provider.request({ method: "eth_accounts" });
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+      accounts = await provider.request({ method: "eth_requestAccounts" });
     }
-    provider.request({ method: "eth_requestAccounts" })
-    .then(() => {
-      provider.request({ method: "eth_accounts" })
-      .then(accounts => {
-        if (accounts !== undefined && accounts !== null && accounts.result !== 'undefined' && Array.isArray(accounts.result)) {
-          accounts = accounts.result
-        }
-        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-          $tw.utils.error("Unable to retrieve any Ethereum accounts...");
-          return;
-        }
-        provider.request({method: 'eth_chainId'})
-        .then(chainId => {
-          console.info(`Chain: ${chainId}, Account: ${accounts[0]}`);
-        })
-        .catch(error => {
-          $tw.utils.error(error.message);
-        });
-        provider.request({ method: "eth_decrypt",params: [text,accounts[0]] })
-        .then(outputText => {
-          if (outputText !== undefined || outputText !== null) {
-            callback(outputText);
-            return;
-          }
-          $tw.utils.error("Unable to decrypt content...");
-        })
-        .catch(error => {
-          $tw.utils.error(error.message);
-        });
-      });
-    })
-    .catch(error => {
-      if (error.code === 4001) {
-        $tw.utils.error('Rejected User Request...');
-      } else {
-        $tw.utils.error(error.message);
-      }
-    });
-  })
-  .catch(error => {
-    $tw.utils.error(error.message);
-  });
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+      throw new Error("Unable to retrieve any Ethereum accounts...");
+    }
+    console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
+    var tStart = new Date();
+    const outputText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
+    if (outputText !== undefined || outputText !== null) {
+      var tStop = new Date()-tStart;
+      var ratio = Math.floor(outputText.length*100/text.length);
+      console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      callback(outputText);
+      return;
+    }
+  } catch(error) {
+    if (error.code === 4001) {
+      $tw.utils.error('Rejected User Request...');
+    } else {
+      console.error(error);
+      $tw.utils.error(error.message);
+    }
+  }
+  $tw.utils.error("Unable to decrypt content...");
 }
 
 $tw.boot.passwordPrompt = function(text, callback) {
