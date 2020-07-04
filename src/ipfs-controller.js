@@ -483,8 +483,8 @@ IPFS Controller
     return await this.ensWrapper.getPublicEncryptionKey(provider)
   }
 
-  IpfsController.prototype.getEthereumProvider = function () {
-    return this.ensWrapper.getEthereumProvider()
+  IpfsController.prototype.getEthereumProvider = async function () {
+    return await this.ensWrapper.getEthereumProvider()
   }
 
   IpfsController.prototype.getEnabledWeb3Provider = async function () {

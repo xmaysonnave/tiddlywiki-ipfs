@@ -532,29 +532,6 @@ $tw.utils.evalSandboxed = $tw.browser ? $tw.utils.evalGlobal : function(code,con
 };
 
 /*
-Retrieve an Ethereum provider
-*/
-$tw.utils.getEthereumProvider = function () {
-  var provider = null;
-  if (!$tw.node) {
-    if (typeof window.ethereum !== 'undefined') {
-      provider = window.ethereum;
-    }
-    if (provider == null && window.web3 !== undefined && window.web3.currentProvider !== undefined) {
-      provider = window.web3.currentProvider;
-    }
-    if (provider == null) {
-      throw new Error("Unable to retrieve an Ethereum provider...");
-    }
-    // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
-    if (provider.isMetaMask) {
-      provider.autoRefreshOnNetworkChange = false;
-    }
-  }
-  return provider;
-}
-
-/*
 Creates a PasswordPrompt object
 */
 $tw.utils.PasswordPrompt = function() {
@@ -1819,46 +1796,51 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 if($tw.browser && !$tw.node) {
 
 $tw.boot.metamaskPrompt = function(text, callback) {
-  var name = "boot.js";
-  var getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger;
+  window.detectEthereumProvider()
+  .then(provider => {
+    if (provider === undefined || provider == null) {
+      throw new Error('Please install MetaMask...')
     }
-    return console;
-  }
-  var provider = $tw.utils.getEthereumProvider();
-  provider.request({method:"eth_requestAccounts"})
-  .then(() => {
-    provider.request({method:"eth_accounts"})
-    .then(accounts => {
-      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-        $tw.utils.error("Unable to retrieve any Ethereum accounts...");
-        return;
-      }
-      provider.request({method:"eth_decrypt",params:[text,accounts[0]]})
-      .then(outputText => {
-        if (outputText !== undefined || outputText !== null) {
-          callback(outputText);
-          // Load the encryption key
-          $tw.ipfs.getPublicEncryptionKey()
-          .then(encryptionKey => {
-            if (encryptionKey !== undefined && encryptionKey !== null) {
-              getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
-            }
-            $tw.crypto.setPublicKey(encryptionKey)
-          })
-          .catch (error => {
-            getLogger().error(error)
-            $tw.utils.alert(name, error.message)
-            $tw.crypto.setPublicKey(null)
-          });
+    if (provider.isMetaMask) {
+      provider.autoRefreshOnNetworkChange = false
+    }
+    provider.request({ method: "eth_requestAccounts" })
+    .then(() => {
+      provider.request({ method: "eth_accounts" })
+      .then(accounts => {
+        if (accounts !== undefined && accounts !== null && accounts.result !== 'undefined' && Array.isArray(accounts.result)) {
+          accounts = accounts.result
+        }
+        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+          $tw.utils.error("Unable to retrieve any Ethereum accounts...");
           return;
         }
-        $tw.utils.error("Unable to decrypt content...");
-      })
-      .catch(error => {
-        $tw.utils.error(error.message);
+        provider.request({method: 'eth_chainId'})
+        .then(chainId => {
+          console.info(`Chain: ${chainId}, Account: ${accounts[0]}`);
+        })
+        .catch(error => {
+          $tw.utils.error(error.message);
+        });
+        provider.request({ method: "eth_decrypt",params: [text,accounts[0]] })
+        .then(outputText => {
+          if (outputText !== undefined || outputText !== null) {
+            callback(outputText);
+            return;
+          }
+          $tw.utils.error("Unable to decrypt content...");
+        })
+        .catch(error => {
+          $tw.utils.error(error.message);
+        });
       });
+    })
+    .catch(error => {
+      if (error.code === 4001) {
+        $tw.utils.error('Rejected User Request...');
+      } else {
+        $tw.utils.error(error.message);
+      }
     });
   })
   .catch(error => {

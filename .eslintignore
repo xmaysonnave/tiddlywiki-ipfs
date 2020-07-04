@@ -1,7 +1,6 @@
 .github/*
 boot/*
 build/*
-loglevel/*
 metadata/*
 node_modules/*
 output/*

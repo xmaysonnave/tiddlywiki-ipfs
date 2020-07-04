@@ -3,6 +3,9 @@
 # TiddlyWiki5
 cp -R ./TiddlyWiki5/* ./node_modules/tiddlywiki > /dev/null 2>&1
 cp ./eth-sig-util/eth-sig-util.min.js ./node_modules/tiddlywiki/boot > /dev/null 2>&1
+cp ./node_modules/@metamask/detect-provider/dist/detect-provider.min.js ./node_modules/tiddlywiki/boot > /dev/null 2>&1
+cp ./node_modules/pako/dist/pako.min.js ./node_modules/tiddlywiki/boot > /dev/null 2>&1
+cp ./node_modules/sjcl/sjcl.js ./node_modules/tiddlywiki/boot > /dev/null 2>&1
 
 # metadata
 cp ./metadata/empty-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1

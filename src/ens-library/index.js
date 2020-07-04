@@ -1,6 +1,7 @@
 import CID from 'cids'
 import contentHash from 'content-hash'
-import root from 'window-or-global'
+import root, { SVGPathSegClosePath } from 'window-or-global'
+import detectEthereumProvider from '@metamask/detect-provider'
 ;(function () {
   /*jslint node: true, browser: true*/
   'use strict'
@@ -12,18 +13,18 @@ import root from 'window-or-global'
   var EnsLibrary = function (ipfsLoader) {
     this.ipfsLoader = ipfsLoader
     this.network = {
-      0x1: 'Ethereum Main Network: "Mainnet", chainId: "1"',
-      0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "3"',
-      0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "4"',
-      0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "5"',
-      0x42: 'Ethereum Test Network (PoA): "Kovan", chainId: "42"'
+      0x1: 'Ethereum Main Network: "Mainnet", chainId: "0x1"',
+      0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3"',
+      0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "0x4"',
+      0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "0x5"',
+      0x2a: 'Ethereum Test Network (PoA): "Kovan", chainId: "0x2a"'
     }
     this.etherscan = {
       0x1: 'https://etherscan.io',
       0x3: 'https://ropsten.etherscan.io',
       0x4: 'https://rinkeby.etherscan.io',
       0x5: 'https://goerli.etherscan.io',
-      0x42: 'https://kovan.etherscan.io'
+      0x2a: 'https://kovan.etherscan.io'
     }
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
@@ -139,7 +140,7 @@ import root from 'window-or-global'
   ) {
     try {
       if (provider === undefined || provider == null) {
-        provider = this.getEthereumProvider()
+        provider = await this.getEthereumProvider()
       }
       if (account === undefined) {
         account = await this.enableProvider(provider)
@@ -162,36 +163,35 @@ import root from 'window-or-global'
   }
 
   /*
-   * Retrieve an Ethereum provider
+   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+   * https://eips.ethereum.org/EIPS/eip-1193
+   * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
    */
-  EnsLibrary.prototype.getEthereumProvider = function () {
+  EnsLibrary.prototype.getEthereumProvider = async function () {
     var provider = null
-    if (!$tw.node) {
-      if (typeof window.ethereum !== 'undefined') {
-        provider = window.ethereum
+    try {
+      provider = await detectEthereumProvider()
+      if (provider !== undefined && provider !== null) {
+        if (provider.isMetaMask) {
+          provider.autoRefreshOnNetworkChange = false
+        }
       }
-      if (
-        provider == null &&
-        window.web3 !== undefined &&
-        window.web3.currentProvider !== undefined
-      ) {
-        provider = window.web3.currentProvider
-      }
-      if (provider == null) {
-        throw new Error('Unable to retrieve an Ethereum provider...')
-      }
-      // https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
-      if (provider.isMetaMask) {
-        provider.autoRefreshOnNetworkChange = false
-      }
+    } catch (error) {
+      this.getLogger().error(error)
+    }
+    if (provider === undefined || provider == null) {
+      throw new Error('Please install MetaMask...')
     }
     return provider
   }
 
   EnsLibrary.prototype.enableProvider = async function (provider) {
     if (provider === undefined || provider == null) {
-      provider = this.getEthereumProvider()
+      provider = await this.getEthereumProvider()
     }
+    const chainId = await provider.request({
+      method: 'eth_chainId'
+    })
     // Handle connection, per EIP 1102
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
     try {
@@ -218,12 +218,15 @@ import root from 'window-or-global'
     ) {
       throw new Error('Unable to retrieve any Ethereum accounts...')
     }
+    this.getLogger().info(
+      `Account: ${this.etherscan[chainId]}/address/${accounts[0]}`
+    )
     return accounts[0]
   }
 
   EnsLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
     if (provider === undefined || provider == null) {
-      provider = this.getEthereumProvider()
+      provider = await this.getEthereumProvider()
     }
     if (root.ethers === undefined || root.ethers == null) {
       await this.loadEthers()
@@ -244,7 +247,7 @@ import root from 'window-or-global'
 
   EnsLibrary.prototype.getWeb3Provider = async function (provider) {
     if (provider === undefined || provider == null) {
-      provider = this.getEthereumProvider()
+      provider = await this.getEthereumProvider()
     }
     if (root.ethers === undefined || root.ethers == null) {
       await this.loadEthers()

@@ -19,8 +19,9 @@ cp -R ./tiddlers/plugin/* ./build/plugins/ipfs > /dev/null 2>&1
 cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
 
 # loglevel
-cp -R ./loglevel ./build/plugins/loglevel > /dev/null 2>&1
 cp -R ./metadata/loglevel ./build/plugins > /dev/null 2>&1
+cp ./node_modules/loglevel/dist/loglevel.min.js ./build/plugins/loglevel > /dev/null 2>&1
+cp ./node_modules/loglevel/LICENSE-MIT ./build/plugins/loglevel > /dev/null 2>&1
 
 # generate build number
 ./scripts/run-build-number.sh \

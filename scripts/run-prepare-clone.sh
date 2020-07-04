@@ -1,14 +1,8 @@
 #!/usr/bin/zsh
 # cleanup
 rm -f -R ./eth-sig-util > /dev/null 2>&1
-rm -f -R ./loglevel > /dev/null 2>&1
 rm -f -R ./tw5-locator > /dev/null 2>&1
 rm -f -R ./tw5-relink > /dev/null 2>&1
-
-# loglevel
-mkdir loglevel
-wget https://cdn.jsdelivr.net/npm/loglevel@1.6.8/lib/loglevel.min.js -P ./loglevel
-wget https://raw.githubusercontent.com/pimterry/loglevel/master/LICENSE-MIT -P ./loglevel
 
 # eth-sig-util
 git clone https://github.com/xmaysonnave/eth-sig-util --depth 1

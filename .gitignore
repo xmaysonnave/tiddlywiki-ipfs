@@ -2,6 +2,5 @@ build/
 node_modules/
 output/
 eth-sig-util/
-loglevel/
 tw5-locator/
 tw5-relink/

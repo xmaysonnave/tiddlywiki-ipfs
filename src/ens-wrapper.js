@@ -60,11 +60,19 @@ ENS Wrapper
   /*
    * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
    * https://eips.ethereum.org/EIPS/eip-1193
+   * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
    */
-  EnsWrapper.prototype.getEthereumProvider = function () {
+  EnsWrapper.prototype.getEthereumProvider = async function () {
     if (this.provider === null) {
       const self = this
-      this.provider = this.ensLibrary.getEthereumProvider()
+      // Retrieve Ethereum Provider
+      this.provider = await this.ensLibrary.getEthereumProvider()
+      // Current network
+      const chainId = await this.provider.request({
+        method: 'eth_chainId'
+      })
+      this.chainChanged(chainId)
+      // Init Ethereum listener
       this.provider.on('accountsChanged', accounts => {
         self.accountChanged(accounts)
       })
@@ -105,9 +113,7 @@ ENS Wrapper
         this.account = accounts[0]
         const etherscan = this.getEtherscanRegistry()
         this.getLogger().info(
-          `Current Ethereum account:\n ${etherscan[this.chainId]}/address/${
-            this.account
-          }`
+          `Account: ${etherscan[this.chainId]}/address/${this.account}`
         )
       } catch (error) {
         this.getLogger().error(error)
@@ -136,9 +142,7 @@ ENS Wrapper
         this.account = null
         this.chainId = parseInt(chainId, 16)
         this.web3 = null
-        this.getLogger().info(
-          `Current Ethereum network: ${network[this.chainId]}`
-        )
+        this.getLogger().info(`Chain: ${network[this.chainId]}`)
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(name, error.message)
@@ -150,7 +154,7 @@ ENS Wrapper
     var web3 = null
     var chainId = null
     var account = null
-    const provider = this.getEthereumProvider()
+    const provider = await this.getEthereumProvider()
     const network = this.getNetworkRegistry()
     const etherscan = this.getEtherscanRegistry()
     var msg = 'Reuse Web3 provider:'
@@ -175,7 +179,7 @@ ENS Wrapper
     }
     // Log
     this.getLogger().info(
-      `${msg}\n network: ${network[this.chainId]}\n account: ${
+      `${msg}\n Chain: ${network[this.chainId]}\n Account: ${
         etherscan[this.chainId]
       }/address/${this.account}`
     )
@@ -190,7 +194,7 @@ ENS Wrapper
   EnsWrapper.prototype.getWeb3Provider = async function () {
     var chainId = null
     var web3 = null
-    const provider = this.getEthereumProvider()
+    const provider = await this.getEthereumProvider()
     const network = this.getNetworkRegistry()
     var info = 'Reuse Web3 provider:'
     if (this.web3 == null) {
@@ -205,7 +209,7 @@ ENS Wrapper
       info = 'New Web3 provider:'
     }
     // Log
-    this.getLogger().info(`${info}\n network: ${network[this.chainId]}`)
+    this.getLogger().info(`${info}\n ${network[this.chainId]}`)
     return {
       chainId: this.chainId,
       provider: provider,
