@@ -35,7 +35,7 @@ ENS Wrapper
 
   EnsWrapper.prototype.load3Box = async function () {
     const { account, provider } = await this.getEnabledWeb3Provider()
-    await this.boxLibrary.load3Box(provider, account)
+    await this.boxLibrary.load3Box(account, provider)
     return {
       account: account
     }
@@ -150,6 +150,10 @@ ENS Wrapper
     }
   }
 
+  EnsWrapper.prototype.isOwner = async function (domain, web3, account) {
+    return await this.ensLibrary.isOwner(domain, web3, account)
+  }
+
   EnsWrapper.prototype.getEnabledWeb3Provider = async function () {
     var web3 = null
     var chainId = null
@@ -157,13 +161,13 @@ ENS Wrapper
     const provider = await this.getEthereumProvider()
     const network = this.getNetworkRegistry()
     const etherscan = this.getEtherscanRegistry()
-    var msg = 'Reuse Web3 provider:'
+    var msg = 'Reuse Enabled Web3 provider:'
     if (this.account == null) {
       try {
         var {
-          web3,
+          account,
           chainId,
-          account
+          web3
         } = await this.ensLibrary.getEnabledWeb3Provider(provider)
       } catch (error) {
         if (error.name === 'RejectedUserRequest') {
@@ -175,7 +179,7 @@ ENS Wrapper
       this.account = account
       this.chainId = chainId
       this.web3 = web3
-      msg = 'New Web3 provider:'
+      msg = 'New Enabled Web3 provider:'
     }
     // Log
     this.getLogger().info(
@@ -253,7 +257,7 @@ ENS Wrapper
     account
   ) {
     try {
-      const isOwner = await this.ensLibrary.isOwner(domain, web3, account)
+      const isOwner = await this.isOwner(domain, web3, account)
       if (isOwner === false) {
         const err = new Error('Unauthorized Account...')
         err.name = 'OwnerError'

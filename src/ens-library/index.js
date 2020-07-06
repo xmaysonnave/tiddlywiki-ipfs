@@ -240,9 +240,9 @@ import detectEthereumProvider from '@metamask/detect-provider'
     // Retrieve current network
     const network = await web3.getNetwork()
     return {
-      web3: web3,
+      account: account,
       chainId: network.chainId,
-      account: account
+      web3: web3
     }
   }
 
@@ -512,19 +512,18 @@ import detectEthereumProvider from '@metamask/detect-provider'
     if (domain == null) {
       throw new Error('Undefined ENS domain...')
     }
-    if (web3 === undefined || account === undefined) {
-      var { web3, account } = await this.getEnabledWeb3Provider()
+    if (
+      account === undefined ||
+      account == null ||
+      web3 === undefined ||
+      web3 == null
+    ) {
+      var { account, web3 } = await this.getEnabledWeb3Provider()
     }
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
-    const { chainId, registry } = await this.getRegistry(web3)
-    // Log
-    this.getLogger().info(
-      `ENS registry:
- ${this.etherscan[chainId]}/address/${registry}`
-    )
-    this.getLogger().info('Processing owner...')
+    const { registry } = await this.getRegistry(web3)
     const abi = ['function owner(bytes32 node) public view returns(address)']
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('owner', [domainHash])
@@ -569,8 +568,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
     if (domain == null) {
       throw new Error('Undefined ENS domain...')
     }
-    if (web3 === undefined || account === undefined) {
-      var { web3, account } = await this.getEnabledWeb3Provider()
+    if (account === undefined || web3 === undefined) {
+      var { account, web3 } = await this.getEnabledWeb3Provider()
     }
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)

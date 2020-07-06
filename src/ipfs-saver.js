@@ -52,13 +52,15 @@ IPFS Saver
       return false
     }
     try {
+      var account = null
       var cid = null
+      var ensCid = null
+      var ensDomain = null
       var ipnsCid = null
       var ipnsKey = null
       var ipnsName = null
-      var ensDomain = null
-      var ensCid = null
       var options = options || {}
+      var web3 = null
       const wiki = $tw.ipfs.getDocumentUrl()
       const base = $tw.ipfs.getIpfsBaseUrl()
       const nextWiki = $tw.ipfs.getUrl(wiki)
@@ -132,7 +134,20 @@ IPFS Saver
           callback(null, 'Undefined ENS domain...')
           return true
         }
-        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain)
+        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
+        if (isOwner === false) {
+          const err = new Error('Unauthorized Account...')
+          err.name = 'OwnerError'
+          throw err
+        }
+        var { cid: ensCid } = await $tw.ipfs.resolveUrl(
+          false,
+          true,
+          ensDomain,
+          null,
+          web3
+        )
         if (ensCid != null) {
           await $tw.ipfs.requestToUnpin(ensCid)
         }
@@ -167,13 +182,13 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-          await $tw.ipfs.setEns(ensDomain, added)
+          await $tw.ipfs.setContentHash(ensDomain, added, web3, account)
           // const chainId = $tw.ipfs.getChainId()
           // if (chainId !== null && chainId === 1) {
           //   nextWiki.protocol = 'https:'
           //   nextWiki.host = ensDomain
           // } else {
-          const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
+          const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain, web3)
           nextWiki.protocol = resolvedUrl.protocol
           nextWiki.host = resolvedUrl.host
           nextWiki.pathname = resolvedUrl.pathname
@@ -214,7 +229,13 @@ IPFS Saver
         window.location.assign(nextWiki.toString())
       }
     } catch (error) {
-      this.getLogger().error(error)
+      if (
+        error.name !== 'OwnerError' &&
+        error.name !== 'RejectedUserRequest' &&
+        error.name !== 'UnauthorizedUserAccount'
+      ) {
+        this.getLogger().error(error)
+      }
       callback(error.message)
       return true
     }

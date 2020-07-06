@@ -308,7 +308,8 @@ IPFS Controller
     resolveIpns,
     resolveEns,
     value,
-    base
+    base,
+    web3
   ) {
     var cid = null
     var ipnsKey = null
@@ -379,7 +380,8 @@ IPFS Controller
       }
     } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
       var { content: cid, resolvedUrl } = await this.resolveEns(
-        normalizedUrl.hostname
+        normalizedUrl.hostname,
+        web3
       )
     } else {
       resolvedUrl = normalizedUrl
@@ -459,8 +461,10 @@ IPFS Controller
     }
   }
 
-  IpfsController.prototype.resolveEns = async function (ensDomain) {
-    const { web3 } = await this.getWeb3Provider()
+  IpfsController.prototype.resolveEns = async function (ensDomain, web3) {
+    if (web3 === undefined || web3 == null) {
+      var { web3 } = await this.getWeb3Provider()
+    }
     const { content, protocol } = await this.ensWrapper.getContentHash(
       ensDomain,
       web3
@@ -484,8 +488,20 @@ IPFS Controller
     }
   }
 
-  IpfsController.prototype.setEns = async function (ensDomain, cid) {
-    const { web3, account } = await this.getEnabledWeb3Provider()
+  IpfsController.prototype.setContentHash = async function (
+    ensDomain,
+    cid,
+    web3,
+    account
+  ) {
+    if (
+      account === undefined ||
+      account == null ||
+      web3 === undefined ||
+      web3 == null
+    ) {
+      var { account, web3 } = await this.getEnabledWeb3Provider()
+    }
     const { cidV0 } = await this.ensWrapper.setContentHash(
       ensDomain,
       cid,
@@ -502,6 +518,10 @@ IPFS Controller
       return true
     }
     return false
+  }
+
+  IpfsController.prototype.isOwner = async function (domain, web3, account) {
+    return await this.ensWrapper.isOwner(domain, web3, account)
   }
 
   IpfsController.prototype.getPublicEncryptionKey = async function (provider) {

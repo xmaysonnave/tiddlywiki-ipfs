@@ -33,7 +33,7 @@ import root from 'window-or-global'
   }
 
   /*eslint no-empty-pattern: "off"*/
-  BoxLibrary.prototype.load3Box = async function (provider, account) {
+  BoxLibrary.prototype.load3Box = async function (account, provider) {
     if (provider === undefined || provider == null) {
       throw new Error('Undefined Ethereum provider...')
     }

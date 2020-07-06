@@ -98,12 +98,14 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleExportToIpfs = async function (event, child) {
+    var account = null
+    var added = null
     var cid = null
+    var fields = []
     var ipnsKey = null
     var ipnsName = null
     var normalizedUrl = null
-    var added = null
-    var fields = []
+    var web3 = null
     const self = this
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
@@ -114,8 +116,23 @@ IPFS Action
         true,
         exportUri
       )
+      if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
+        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        const isOwner = await $tw.ipfs.isOwner(
+          normalizedUrl.hostname,
+          web3,
+          account
+        )
+        if (isOwner === false) {
+          const err = new Error('Unauthorized Account...')
+          err.name = 'OwnerError'
+          throw err
+        }
+      }
     } catch (error) {
-      this.getLogger().error(error)
+      if (error.name !== 'OwnerError') {
+        this.getLogger().error(error)
+      }
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -194,7 +211,7 @@ IPFS Action
         .pinToIpfs(added)
         .then(data => {
           $tw.ipfs
-            .setEns(normalizedUrl.hostname, added)
+            .setContentHash(normalizedUrl.hostname, added, web3, account)
             .then(data => {
               fields.push({ key: '_export_uri', value: exportUri })
               tiddler = $tw.utils.updateTiddler({
@@ -220,7 +237,13 @@ IPFS Action
             })
             .catch(error => {
               $tw.ipfs.requestToUnpin(added)
-              self.getLogger().error(error)
+              if (
+                error.name !== 'OwnerError' &&
+                error.name !== 'RejectedUserRequest' &&
+                error.name !== 'UnauthorizedUserAccount'
+              ) {
+                self.getLogger().error(error)
+              }
               $tw.utils.alert(name, error.message)
             })
         })
