@@ -9,8 +9,8 @@ IPFS Tiddler
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport

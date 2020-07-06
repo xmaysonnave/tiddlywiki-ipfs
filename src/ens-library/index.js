@@ -1,12 +1,11 @@
 import CID from 'cids'
 import contentHash from 'content-hash'
-import root, { SVGPathSegClosePath } from 'window-or-global'
+import root from 'window-or-global'
 import detectEthereumProvider from '@metamask/detect-provider'
 ;(function () {
-  /*jslint node: true, browser: true*/
   'use strict'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ens-library'
 
   // https://github.com/ensdomains/resolvers
@@ -208,10 +207,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
       ) {
         throw new Error('Unable to retrieve any Ethereum accounts...')
       }
-      const chainId = parseInt(provider.chainId, 16)
-      this.getLogger().info(
-        `Account: ${this.etherscan[chainId]}/address/${accounts[0]}`
-      )
+      this.getLogger().info(`Account: ${accounts[0]}`)
       return accounts[0]
     } catch (error) {
       // EIP 1193 user Rejected Request
@@ -239,9 +235,10 @@ import detectEthereumProvider from '@metamask/detect-provider'
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
     const network = await web3.getNetwork()
+    const chainId = parseInt(network.chainId)
     return {
       account: account,
-      chainId: network.chainId,
+      chainId: chainId,
       web3: web3
     }
   }
@@ -255,11 +252,12 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     // Instantiate an ethers Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
-    // Retrieve the current network
+    // Retrieve current network
     const network = await web3.getNetwork()
+    const chainId = parseInt(network.chainId)
     return {
       web3: web3,
-      chainId: network.chainId
+      chainId: chainId
     }
   }
 
@@ -269,19 +267,20 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     // Retrieve network
     const network = await web3.getNetwork()
+    const chainId = parseInt(network.chainId)
     // Retrieve an Ethereum ENS Registry address
     var registry = null
     try {
-      registry = this.registry[network.chainId]
+      registry = this.registry[chainId]
     } catch (error) {
       this.getLogger().error(error)
     }
     if (registry === undefined || registry == null) {
-      throw new Error(`Unsupported Ethereum network: ${network.chainId}`)
+      throw new Error(`Unsupported Ethereum network: ${chainId}`)
     }
     // Return registry address
     return {
-      chainId: network.chainId,
+      chainId: chainId,
       registry: registry
     }
   }
@@ -445,7 +444,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
-    // Log
     this.getLogger().info(
       `ENS registry:
  ${this.etherscan[chainId]}/address/${registry}`
@@ -523,7 +521,11 @@ import detectEthereumProvider from '@metamask/detect-provider'
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
-    const { registry } = await this.getRegistry(web3)
+    const { chainId, registry } = await this.getRegistry(web3)
+    this.getLogger().info(
+      `ENS registry:
+ ${this.etherscan[chainId]}/address/${registry}`
+    )
     const abi = ['function owner(bytes32 node) public view returns(address)']
     const iface = new root.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('owner', [domainHash])
@@ -608,12 +610,15 @@ import detectEthereumProvider from '@metamask/detect-provider'
       encoded
     ])
     try {
+      this.getLogger().info('Before get Signer...')
       const signer = web3.getSigner()
+      this.getLogger().info('Got Signer...')
       const tx = await signer.sendTransaction({ to: resolver, data: data })
       this.getLogger().info(
         `Processing Transaction:
  ${this.etherscan[chainId]}/tx/${tx.hash}`
       )
+      this.getLogger().info('Transaction sent...')
       // Wait for transaction completion
       await tx.wait()
       this.getLogger().info('Processed ENS domain content...')

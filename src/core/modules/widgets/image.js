@@ -58,8 +58,8 @@ The width and height attributes are interpreted as a number of pixels, and do no
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget

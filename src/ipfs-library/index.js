@@ -1,10 +1,9 @@
 import { getIpfs, providers } from 'ipfs-provider'
 import root from 'window-or-global'
 ;(function () {
-  /*jslint node: true, browser: true */
   'use strict'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-library'
 
   const { httpClient, windowIpfs } = providers

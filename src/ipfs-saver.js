@@ -9,8 +9,8 @@ IPFS Saver
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js')
@@ -53,6 +53,7 @@ IPFS Saver
     }
     try {
       var account = null
+      var chainId = null
       var cid = null
       var ensCid = null
       var ensDomain = null
@@ -134,7 +135,8 @@ IPFS Saver
           callback(null, 'Undefined ENS domain...')
           return true
         }
-        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        /*eslint no-unused-vars:"off"*/
+        var { account, chainId, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
         const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
         if (isOwner === false) {
           const err = new Error('Unauthorized Account...')
@@ -183,7 +185,6 @@ IPFS Saver
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setContentHash(ensDomain, added, web3, account)
-          // const chainId = $tw.ipfs.getChainId()
           // if (chainId !== null && chainId === 1) {
           //   nextWiki.protocol = 'https:'
           //   nextWiki.host = ensDomain

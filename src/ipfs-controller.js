@@ -9,8 +9,8 @@ IPFS Controller
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
@@ -538,10 +538,6 @@ IPFS Controller
 
   IpfsController.prototype.getWeb3Provider = async function () {
     return await this.ensWrapper.getWeb3Provider()
-  }
-
-  IpfsController.prototype.getChainId = function () {
-    return this.ensWrapper.getChainId()
   }
 
   exports.IpfsController = IpfsController

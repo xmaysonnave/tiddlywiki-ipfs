@@ -15,12 +15,11 @@ import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
 import BoxLibrary from './box-library'
 ;(function () {
-  /*jslint node: true, browser: true*/
   'use strict'
 
   const cidAnalyser = 'https://cid.ipfs.io/#'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-bundle'
 
   var IpfsBundle = function () {
@@ -81,7 +80,7 @@ import BoxLibrary from './box-library'
    * https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer
    * https://developer.mozilla.org/en/JavaScript_typed_arrays/Uint8Array
    */
-  /*eslint no-useless-escape: "off"*/
+  /*eslint no-useless-escape:"off"*/
   var Base64Binary = {
     _keyStr:
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',

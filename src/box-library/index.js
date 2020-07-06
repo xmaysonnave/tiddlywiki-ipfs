@@ -1,9 +1,8 @@
 import root from 'window-or-global'
 ;(function () {
-  /*jslint node: true, browser: true*/
   'use strict'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = '3box-library'
 
   var BoxLibrary = function (ipfsLoader) {
@@ -32,7 +31,7 @@ import root from 'window-or-global'
     }
   }
 
-  /*eslint no-empty-pattern: "off"*/
+  /*eslint no-empty-pattern:"off"*/
   BoxLibrary.prototype.load3Box = async function (account, provider) {
     if (provider === undefined || provider == null) {
       throw new Error('Undefined Ethereum provider...')

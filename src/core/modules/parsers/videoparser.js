@@ -43,8 +43,8 @@ The video parser parses a video tiddler into an embeddable HTML element
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const name = 'ipfs-videoparser'

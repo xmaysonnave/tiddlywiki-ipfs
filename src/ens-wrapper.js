@@ -9,18 +9,15 @@ ENS Wrapper
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ens-wrapper'
 
   var EnsWrapper = function (ipfsBundle) {
-    this.account = null
-    this.chainId = null
     this.provider = null
-    this.web3 = null
     this.boxLibrary = ipfsBundle.boxLibrary
     this.ensLibrary = ipfsBundle.ensLibrary
     this.ipfsBundle = ipfsBundle
@@ -39,10 +36,6 @@ ENS Wrapper
     return {
       account: account
     }
-  }
-
-  EnsWrapper.prototype.getChainId = function () {
-    return this.chainId
   }
 
   EnsWrapper.prototype.getPublicEncryptionKey = async function (provider) {
@@ -94,26 +87,17 @@ ENS Wrapper
 
   EnsWrapper.prototype.accountChanged = async function (accounts) {
     if (
-      accounts === undefined ||
-      accounts == null ||
-      Array.isArray(accounts) === false ||
-      accounts.length === 0
+      accounts !== undefined &&
+      accounts !== null &&
+      Array.isArray(accounts) === true &&
+      accounts.length > 0
     ) {
-      this.account = null
-      this.chainId = null
-      this.web3 = null
-      this.getLogger().info('Closing Ethereum connection...')
-    } else if (this.account !== accounts[0]) {
       try {
-        if (this.web3 == null && this.chainId == null) {
-          const { web3, chainId } = await this.getWeb3Provider()
-          this.web3 = web3
-          this.chainId = chainId
-        }
-        this.account = accounts[0]
+        const { chainId } = await this.getWeb3Provider()
+        const account = accounts[0]
         const etherscan = this.getEtherscanRegistry()
         this.getLogger().info(
-          `Account: ${etherscan[this.chainId]}/address/${this.account}`
+          `Account: ${etherscan[chainId]}/address/${account}`
         )
       } catch (error) {
         this.getLogger().error(error)
@@ -123,9 +107,6 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.disconnectedFromAllChains = function (code, reason) {
-    this.account = null
-    this.chainId = null
-    this.web3 = null
     this.getLogger().info(
       `Ethereum Provider is disconnected: ${reason}. Code: ${code}`
     )
@@ -136,17 +117,13 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.chainChanged = function (chainId) {
-    if (this.chainId !== chainId) {
-      const network = this.getNetworkRegistry()
-      try {
-        this.account = null
-        this.chainId = parseInt(chainId, 16)
-        this.web3 = null
-        this.getLogger().info(`Chain: ${network[this.chainId]}`)
-      } catch (error) {
-        this.getLogger().error(error)
-        $tw.utils.alert(name, error.message)
-      }
+    const network = this.getNetworkRegistry()
+    try {
+      var chainId = parseInt(chainId, 16)
+      this.getLogger().info(`Chain: ${network[chainId]}`)
+    } catch (error) {
+      this.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
     }
   }
 
@@ -155,72 +132,59 @@ ENS Wrapper
   }
 
   EnsWrapper.prototype.getEnabledWeb3Provider = async function () {
-    var web3 = null
-    var chainId = null
     var account = null
-    const provider = await this.getEthereumProvider()
-    const network = this.getNetworkRegistry()
+    var chainId = null
+    var web3 = null
     const etherscan = this.getEtherscanRegistry()
-    var msg = 'Reuse Enabled Web3 provider:'
-    if (this.account == null) {
-      try {
-        var {
-          account,
-          chainId,
-          web3
-        } = await this.ensLibrary.getEnabledWeb3Provider(provider)
-      } catch (error) {
-        if (error.name === 'RejectedUserRequest') {
-          throw error
-        }
-        this.getLogger().error(error)
-        throw new Error('Unable to retrieve an enabled Ethereum Provider...')
+    const network = this.getNetworkRegistry()
+    const provider = await this.getEthereumProvider()
+    try {
+      var {
+        account,
+        chainId,
+        web3
+      } = await this.ensLibrary.getEnabledWeb3Provider(provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
       }
-      this.account = account
-      this.chainId = chainId
-      this.web3 = web3
-      msg = 'New Enabled Web3 provider:'
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an enabled Ethereum Provider...')
     }
     // Log
     this.getLogger().info(
-      `${msg}
- Chain: ${network[this.chainId]}
- Account: ${etherscan[this.chainId]}/address/${this.account}`
+      `New Enabled Web3 provider:
+ Chain: ${network[chainId]}
+ Account: ${etherscan[chainId]}/address/${account}`
     )
     return {
-      account: this.account,
-      chainId: this.chainId,
+      account: account,
+      chainId: chainId,
       provider: provider,
-      web3: this.web3
+      web3: web3
     }
   }
 
   EnsWrapper.prototype.getWeb3Provider = async function () {
     var chainId = null
     var web3 = null
-    const provider = await this.getEthereumProvider()
     const network = this.getNetworkRegistry()
-    var info = 'Reuse Web3 provider:'
-    if (this.web3 == null) {
-      try {
-        var { web3, chainId } = await this.ensLibrary.getWeb3Provider(provider)
-      } catch (error) {
-        this.getLogger().error(error)
-        throw new Error('Unable to retrieve an Ethereum Provider...')
-      }
-      this.chainId = chainId
-      this.web3 = web3
-      info = 'New Web3 provider:'
+    const provider = await this.getEthereumProvider()
+    try {
+      var { web3, chainId } = await this.ensLibrary.getWeb3Provider(provider)
+    } catch (error) {
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an Ethereum Provider...')
     }
     // Log
     this.getLogger().info(
-      `${info}
- ${network[this.chainId]}`
+      `New Web3 provider:
+ ${network[chainId]}`
     )
     return {
-      chainId: this.chainId,
+      chainId: chainId,
       provider: provider,
-      web3: this.web3
+      web3: web3
     }
   }
 

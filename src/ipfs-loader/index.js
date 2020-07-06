@@ -1,9 +1,8 @@
 import root from 'window-or-global'
 ;(function () {
-  /*jslint node: true, browser: true */
   'use strict'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-loader'
 
   var IpfsLoader = function (ipfsBundle) {
@@ -79,7 +78,7 @@ import root from 'window-or-global'
     }
   }
 
-  /*eslint no-new: "off", no-new-func: "off"*/
+  /*eslint no-new:"off",no-new-func:"off"*/
   IpfsLoader.prototype.supportDynamicImport = function () {
     try {
       new Function('import("")')

@@ -42,11 +42,11 @@ The binary parser parses a binary tiddler into a warning message and download li
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-binaryparser'
 
   var BINARY_WARNING_MESSAGE = '$:/core/ui/BinaryWarning'

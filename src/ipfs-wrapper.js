@@ -9,24 +9,14 @@ IPFS Wrapper
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
-
-  /**
-   * https://github.com/purposeindustries/window-or-global
-   * The MIT License (MIT) Copyright (c) Purpose Industries
-   * version: 1.0.1
-   */
-  const root =
-    (typeof self === 'object' && self.self === self && self) ||
-    (typeof global === 'object' && global.global === global && global) ||
-    this
 
   const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
 
-  /*eslint no-unused-vars: "off"*/
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-wrapper'
 
   var IpfsWrapper = function (ipfsBundle) {

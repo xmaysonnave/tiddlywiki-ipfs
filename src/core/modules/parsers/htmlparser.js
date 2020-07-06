@@ -42,8 +42,8 @@ The HTML parser displays text as raw HTML
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   /*eslint no-unused-vars: "off"*/
