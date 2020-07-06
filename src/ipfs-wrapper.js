@@ -162,11 +162,13 @@ IPFS Wrapper
     normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}`)
     if (found) {
       this.getLogger().info(
-        `Successfully Fetched IPNS identifiers: ${ipnsName}\n ${normalizedUrl}`
+        `Successfully Fetched IPNS identifiers: ${ipnsName}
+ ${normalizedUrl}`
       )
     } else {
       this.getLogger().info(
-        `Unable to Fetch IPNS identifiers, default to\n ${normalizedUrl}`
+        `Unable to Fetch IPNS identifiers, default to
+ ${normalizedUrl}`
       )
     }
     return {
@@ -181,7 +183,8 @@ IPFS Wrapper
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName)
       const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${key}`)
       this.getLogger().info(
-        `Successfully generated IPNS key with IPNS name: ${ipnsName}\n ${url}`
+        `Successfully generated IPNS key with IPNS name: ${ipnsName}
+ ${url}`
       )
       return key
     } catch (error) {
@@ -248,7 +251,8 @@ IPFS Wrapper
     try {
       const fetched = await this.ipfsLibrary.cat(ipfs, pathname)
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info(`Successfully fetched:\n ${url}`)
+      this.getLogger().info(`Successfully fetched:
+ ${url}`)
       return fetched
     } catch (error) {
       this.getLogger().error(error)
@@ -261,7 +265,8 @@ IPFS Wrapper
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content)
       const pathname = '/' + ipfsKeyword + '/' + hash
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info(`Successfully added ${size}:\n ${url}`)
+      this.getLogger().info(`Successfully added ${size}:
+ ${url}`)
       return {
         added: hash,
         size: size
@@ -288,7 +293,9 @@ IPFS Wrapper
       if (cid !== null) {
         const parsed = this.ipfsUrl.normalizeUrl(resolved)
         this.getLogger().info(
-          `Successfully resolved IPNS key:\n ${url} \n ${parsed}`
+          `Successfully resolved IPNS key:
+ ${url}
+ ${parsed}`
         )
         return cid
       }
@@ -334,7 +341,9 @@ IPFS Wrapper
       const keyParsed = this.ipfsUrl.normalizeUrl(key)
       const url = this.ipfsUrl.normalizeUrl(pathname)
       this.getLogger().info(
-        `Successfully published IPNS name: ${ipnsName}\n ${keyParsed}\n ${url}`
+        `Successfully published IPNS name: ${ipnsName}
+ ${keyParsed}
+ ${url}`
       )
       return result
     } catch (error) {
@@ -355,7 +364,10 @@ IPFS Wrapper
     try {
       const pinned = await this.ipfsLibrary.pin(ipfs, pathname)
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info(`Successfully pinned:\n ${url}`)
+      this.getLogger().info(
+        `Successfully pinned:
+ ${url}`
+      )
       return pinned
     } catch (error) {
       this.getLogger().error(error)
@@ -375,7 +387,10 @@ IPFS Wrapper
     try {
       const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname)
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info(`Successfully unpinned:\n ${url}`)
+      this.getLogger().info(
+        `Successfully unpinned:
+ ${url}`
+      )
       return unpinned
     } catch (error) {
       this.getLogger().error(error)

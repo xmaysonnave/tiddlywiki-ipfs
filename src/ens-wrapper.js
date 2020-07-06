@@ -179,9 +179,9 @@ ENS Wrapper
     }
     // Log
     this.getLogger().info(
-      `${msg}\n Chain: ${network[this.chainId]}\n Account: ${
-        etherscan[this.chainId]
-      }/address/${this.account}`
+      `${msg}
+ Chain: ${network[this.chainId]}
+ Account: ${etherscan[this.chainId]}/address/${this.account}`
     )
     return {
       account: this.account,
@@ -209,7 +209,10 @@ ENS Wrapper
       info = 'New Web3 provider:'
     }
     // Log
-    this.getLogger().info(`${info}\n ${network[this.chainId]}`)
+    this.getLogger().info(
+      `${info}
+ ${network[this.chainId]}`
+    )
     return {
       chainId: this.chainId,
       provider: provider,

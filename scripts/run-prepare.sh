@@ -20,7 +20,7 @@ cp ./metadata/tiddlywiki.files ./build/plugins/ipfs/files > /dev/null 2>&1
 
 # loglevel
 cp -R ./metadata/loglevel ./build/plugins > /dev/null 2>&1
-cp ./node_modules/loglevel/dist/loglevel.min.js ./build/plugins/loglevel > /dev/null 2>&1
+wget https://cdn.jsdelivr.net/npm/loglevel@1.6.8/lib/loglevel.min.js -O ./build/plugins/loglevel/loglevel.min.js
 cp ./node_modules/loglevel/LICENSE-MIT ./build/plugins/loglevel > /dev/null 2>&1
 
 # generate build number

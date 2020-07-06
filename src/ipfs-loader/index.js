@@ -35,7 +35,10 @@ import root from 'window-or-global'
           module
         )
         if (loaded !== undefined && root[obj] !== undefined) {
-          this.getLogger().info(`Loaded ${title}:\n ${sourceUri}`)
+          this.getLogger().info(
+            `Loaded ${title}:
+ ${sourceUri}`
+          )
           return
         }
         throw new Error(`Unable to load Library: ${title}`)
@@ -172,7 +175,10 @@ import root from 'window-or-global'
           }
           try {
             const array = new Uint8Array(this.response)
-            self.getLogger().info(`[${xhr.status}] Loaded:\n ${url}`)
+            self.getLogger().info(
+              `[${xhr.status}] Loaded:
+ ${url}`
+            )
             resolve(array)
           } catch (error) {
             reject(error)

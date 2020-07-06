@@ -108,7 +108,8 @@ import root from 'window-or-global'
         await this.loadIpfsHttpClient()
       }
       this.getLogger().info(
-        `Processing connection to IPFS API URL:\n ${apiUrl}`
+        `Processing connection to IPFS API URL:
+ ${apiUrl}`
       )
       var protocol = apiUrl.protocol.slice(0, -1)
       var port = apiUrl.port

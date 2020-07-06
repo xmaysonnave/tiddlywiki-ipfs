@@ -112,7 +112,10 @@ IPFS Tiddler
     if (gateway !== undefined && gateway.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'gateway') {
-        this.getLogger().info(`Gateway Relative URL:\n ${base}`)
+        this.getLogger().info(
+          `Gateway Relative URL:
+ ${base}`
+        )
       }
     }
     // Policy preference
@@ -179,7 +182,10 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info(`Pinning: "${field}"\n ${resolvedUrl}`)
+          self.getLogger().info(
+            `Pinning: "${field}"
+ ${resolvedUrl}`
+          )
           $tw.ipfs
             .pinToIpfs(cid)
             .then(data => {
@@ -255,7 +261,10 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info(`Unpinning: "${field}\n ${resolvedUrl}`)
+          self.getLogger().info(
+            `Unpinning: "${field}
+ ${resolvedUrl}`
+          )
           if ($tw.utils.getIpfsUnpin()) {
             $tw.ipfs
               .unpinFromIpfs(cid)
@@ -451,7 +460,8 @@ IPFS Tiddler
                 fields: [{ key: 'text', value: content.data }]
               })
               this.getLogger().info(
-                `Embed attachment: ${content.data.length}\n ${oldResolvedUrl}`
+                `Embed attachment: ${content.data.length}
+ ${oldResolvedUrl}`
               )
             } catch (error) {
               this.getLogger().error(error)

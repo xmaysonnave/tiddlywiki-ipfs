@@ -143,7 +143,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
         provider = await this.getEthereumProvider()
       }
       if (account === undefined) {
-        account = await this.enableProvider(provider)
+        account = await this.getAccount(provider)
       }
       const encryptionKey = await provider.request({
         method: 'eth_getEncryptionPublicKey',
@@ -186,7 +186,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
   /*
    * https://docs.metamask.io/guide/provider-migration.html#migrating-to-the-new-provider-api
    */
-  EnsLibrary.prototype.enableProvider = async function (provider) {
+  EnsLibrary.prototype.getAccount = async function (provider) {
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
@@ -234,7 +234,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
-    const account = await this.enableProvider(provider)
+    const account = await this.getAccount(provider)
     // Instantiate a Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
@@ -447,7 +447,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
     const { chainId, registry } = await this.getRegistry(web3)
     // Log
     this.getLogger().info(
-      `ENS registry: \n ${this.etherscan[chainId]}/address/${registry}`
+      `ENS registry:
+ ${this.etherscan[chainId]}/address/${registry}`
     )
     // Fetch resolver address
     var resolver = await this.getResolver(web3, registry, domainHash)
@@ -457,7 +458,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     // Log
     this.getLogger().info(
-      `ENS domain resolver:\n ${this.etherscan[chainId]}/address/${resolver}`
+      `ENS domain resolver:
+ ${this.etherscan[chainId]}/address/${resolver}`
     )
     // Check if resolver is EIP165
     const eip165 = await this.checkEip165(web3, resolver)
@@ -519,7 +521,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
     const { chainId, registry } = await this.getRegistry(web3)
     // Log
     this.getLogger().info(
-      `ENS registry: \n ${this.etherscan[chainId]}/address/${registry}`
+      `ENS registry:
+ ${this.etherscan[chainId]}/address/${registry}`
     )
     this.getLogger().info('Processing owner...')
     const abi = ['function owner(bytes32 node) public view returns(address)']
@@ -574,14 +577,16 @@ import detectEthereumProvider from '@metamask/detect-provider'
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
-      `ENS registry:\n ${this.etherscan[chainId]}/address/${registry}`
+      `ENS registry:
+ ${this.etherscan[chainId]}/address/${registry}`
     )
     var resolver = await this.getResolver(web3, registry, domainHash)
     if (resolver == null || /^0x0+$/.test(resolver) === true) {
       throw new Error('Undefined ENS resolver...')
     }
     this.getLogger().info(
-      `ENS domain resolver:\n ${this.etherscan[chainId]}/address/${resolver}`
+      `ENS domain resolver:
+ ${this.etherscan[chainId]}/address/${resolver}`
     )
     // Check if resolver is EIP165
     const eip165 = await this.checkEip165(web3, resolver)
@@ -607,7 +612,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
       const signer = web3.getSigner()
       const tx = await signer.sendTransaction({ to: resolver, data: data })
       this.getLogger().info(
-        `Processing Transaction:\n ${this.etherscan[chainId]}/tx/${tx.hash}`
+        `Processing Transaction:
+ ${this.etherscan[chainId]}/tx/${tx.hash}`
       )
       // Wait for transaction completion
       await tx.wait()

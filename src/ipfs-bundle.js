@@ -229,11 +229,16 @@ import BoxLibrary from './box-library'
       cidv0 = cidv0.toV0()
       // Log
       this.getLogger().info(
-        `Converted:\n "cidv1" (Base32): ${cidAnalyser}${cidv1} \n to "cidv0" (Base58): ${cidAnalyser}${cidv0}`
+        `Converted:
+ "cidv1" (Base32): ${cidAnalyser}${cidv1}
+ to "cidv0" (Base58): ${cidAnalyser}${cidv0}`
       )
     } else {
       // Log
-      this.getLogger().info(`"cidv0" (Base58):\n ${cidAnalyser}${cidv0}`)
+      this.getLogger().info(
+        `"cidv0" (Base58):
+ ${cidAnalyser}${cidv0}`
+      )
     }
     return cidv0.toString()
   }
@@ -248,11 +253,16 @@ import BoxLibrary from './box-library'
     if (cidv1.version === 0) {
       cidv1 = cidv1.toV1()
       this.getLogger().info(
-        `Converted:\n "cidv0" (Base58): ${cidAnalyser}${cidv0} \n to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
+        `Converted:
+ "cidv0" (Base58): ${cidAnalyser}${cidv0}
+ to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
       )
     } else {
       // Log
-      this.getLogger().info(`"cidv1" (Base32):\n ${cidAnalyser}${cidv1}`)
+      this.getLogger().info(
+        `"cidv1" (Base32):
+ ${cidAnalyser}${cidv1}`
+      )
     }
     return cidv1.toString()
   }
