@@ -1796,18 +1796,55 @@ $tw.modules.define("$:/boot/tiddlerdeserializer/json","tiddlerdeserializer",{
 if($tw.browser && !$tw.node) {
 
 $tw.boot.metamaskPrompt = async function(text, callback) {
+  var checkAccountPermission = async function (provider) {
+    const permissions = await provider.request({
+      method: 'wallet_getPermissions'
+    });
+    const accountsPermission = permissions.find(
+      permission => permission.parentCapability === 'eth_accounts'
+    );
+    if (accountsPermission) {
+      return true;
+    }
+    return false;
+  }
+  var requestAccountPermission = async function (provider) {
+    const permissions = await provider.request({
+      method: 'wallet_requestPermissions',
+      params: [{ eth_accounts: {} }]
+    });
+    const accountsPermission = permissions.find(
+      permission => permission.parentCapability === 'eth_accounts'
+    );
+    if (accountsPermission) {
+      return true;
+    }
+    return false;
+  }
   try {
     const provider = await window.detectEthereumProvider({ mustBeMetaMask: true });
     if (provider === undefined || provider == null) {
       throw new Error('Please install MetaMask...');
     }
     provider.autoRefreshOnNetworkChange = false;
-    var accounts = await provider.request({ method: "eth_accounts" });
-    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-      accounts = await provider.request({ method: "eth_requestAccounts" });
+    var permission = false;
+    var accounts = null;
+    try {
+      permission = await checkAccountPermission(provider)
+      if (permission === false) {
+        permission = await requestAccountPermission(provider);
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        throw error;
+      }
     }
+    if (permission === false || await provider._metamask.isUnlocked() === false) {
+      await provider.request({ method: 'eth_requestAccounts' });
+    }
+    accounts = await provider.request({ method: 'eth_accounts' });
     if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-      throw new Error("Unable to retrieve any Ethereum accounts...");
+      throw new Error('Unable to retrieve any Ethereum accounts...')
     }
     console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
     var tStart = new Date();

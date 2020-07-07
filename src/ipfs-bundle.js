@@ -41,6 +41,7 @@ import BoxLibrary from './box-library'
     }
     this.ipfsLoader = new IpfsLoader(this)
     this.ethereumLibrary = new EthereumLibrary(this.ipfsLoader)
+    this.ethereumLibrary.init()
     this.ensLibrary = new EnsLibrary(this.ethereumLibrary)
     this.ipfsLibrary = new IpfsLibrary(this)
     this.ipfsUrl = new IpfsUrl()

@@ -57,7 +57,7 @@ Compress widget
     if(tiddler && tiddler.fields.text === "yes") {
       content = $tw.crypto.encrypt(content);
     }
-    content = JSON.stringify({"pako":content});
+    content = JSON.stringify({ "pako": content });
     this.compressedText = $tw.utils.htmlEncode(content);
   }
 

@@ -23,6 +23,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
       0x5: 'https://goerli.etherscan.io',
       0x2a: 'https://kovan.etherscan.io'
     }
+    this.once = false
     this.provider = null
   }
 
@@ -33,39 +34,52 @@ import detectEthereumProvider from '@metamask/detect-provider'
     return console
   }
 
+  EthereumLibrary.prototype.getEthereumProvider = async function () {
+    if (this.provider == null) {
+      this.provider = await this.detectEthereumProvider()
+    }
+    return this.provider
+  }
+
   /*
    * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
    * https://eips.ethereum.org/EIPS/eip-1193
    * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
    */
-  EthereumLibrary.prototype.getEthereumProvider = async function () {
-    if (this.provider === null) {
-      const self = this
-      // Retrieve Ethereum Provider
-      this.provider = await this.ethereumLibrary.getEthereumProvider()
+  EthereumLibrary.prototype.init = async function () {
+    // Init once
+    if (this.once) {
+      return
+    }
+    const self = this
+    try {
+      const provider = await this.getEthereumProvider()
       // Current network
       const chainId = await this.provider.request({
         method: 'eth_chainId'
       })
       this.chainChanged(chainId)
       // Init Ethereum listener
-      this.provider.on('accountsChanged', accounts => {
+      provider.on('accountsChanged', accounts => {
         self.accountChanged(accounts)
       })
-      this.provider.on('chainChanged', chainId => {
+      provider.on('chainChanged', chainId => {
         self.chainChanged(chainId)
       })
-      this.provider.on('connect', chainId => {
+      provider.on('connect', chainId => {
         self.chainChanged(chainId)
       })
-      this.provider.on('disconnect', (code, reason) => {
+      provider.on('disconnect', (code, reason) => {
         self.disconnectedFromAllChains(code, reason)
       })
-      this.provider.on('message', message => {
+      provider.on('message', message => {
         self.providerMessage(message)
       })
+    } catch (error) {
+      this.getLogger().error(error)
     }
-    return this.provider
+    // Init once
+    this.once = true
   }
 
   EthereumLibrary.prototype.accountChanged = async function (accounts) {
@@ -77,15 +91,19 @@ import detectEthereumProvider from '@metamask/detect-provider'
     ) {
       try {
         const { chainId } = await this.getWeb3Provider()
-        const account = accounts[0]
-        const etherscan = this.getEtherscanRegistry()
-        this.getLogger().info(
-          `Account: ${etherscan[chainId]}/address/${account}`
-        )
+        this.getLogger().info('Available Ethereum account:')
+        for (var i = 0; i < accounts.length; i++) {
+          const account = accounts[i]
+          this.getLogger().info(
+            ` ${this.etherscan[chainId]}/address/${account}`
+          )
+        }
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       }
+    } else {
+      this.getLogger().info('No available Ethereum account...')
     }
   }
 
@@ -103,10 +121,9 @@ import detectEthereumProvider from '@metamask/detect-provider'
   }
 
   EthereumLibrary.prototype.chainChanged = function (chainId) {
-    const network = this.getNetworkRegistry()
     try {
       var chainId = parseInt(chainId, 16)
-      this.getLogger().info(`Chain: ${network[chainId]}`)
+      this.getLogger().info(`Chain: ${this.network[chainId]}`)
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -167,10 +184,12 @@ import detectEthereumProvider from '@metamask/detect-provider'
 
   /*
    * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+   * https://eips.ethereum.org/EIPS/eip-1102
    * https://eips.ethereum.org/EIPS/eip-1193
+   * https://eips.ethereum.org/EIPS/eip-2255
    * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
    */
-  EthereumLibrary.prototype.getEthereumProvider = async function () {
+  EthereumLibrary.prototype.detectEthereumProvider = async function () {
     var provider = null
     try {
       provider = await detectEthereumProvider({ mustBeMetaMask: true })
@@ -186,7 +205,25 @@ import detectEthereumProvider from '@metamask/detect-provider'
     return provider
   }
 
-  EthereumLibrary.prototype.requestPermissions = async function (provider) {
+  EthereumLibrary.prototype.checkAccountPermission = async function (provider) {
+    if (provider === undefined || provider == null) {
+      provider = await this.getEthereumProvider()
+    }
+    const permissions = await provider.request({
+      method: 'wallet_getPermissions'
+    })
+    const accountsPermission = permissions.find(
+      permission => permission.parentCapability === 'eth_accounts'
+    )
+    if (accountsPermission) {
+      return true
+    }
+    return false
+  }
+
+  EthereumLibrary.prototype.requestAccountPermission = async function (
+    provider
+  ) {
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
@@ -194,9 +231,13 @@ import detectEthereumProvider from '@metamask/detect-provider'
       method: 'wallet_requestPermissions',
       params: [{ eth_accounts: {} }]
     })
-    return permissions.find(
+    const accountsPermission = permissions.find(
       permission => permission.parentCapability === 'eth_accounts'
     )
+    if (accountsPermission) {
+      return true
+    }
+    return false
   }
 
   /*
@@ -207,15 +248,25 @@ import detectEthereumProvider from '@metamask/detect-provider'
       provider = await this.getEthereumProvider()
     }
     try {
-      var accounts = await provider.request({ method: 'eth_accounts' })
-      if (
-        accounts === undefined ||
-        accounts == null ||
-        Array.isArray(accounts) === false ||
-        accounts.length === 0
-      ) {
-        accounts = await provider.request({ method: 'eth_requestAccounts' })
+      var permission = false
+      var accounts = null
+      try {
+        permission = await this.checkAccountPermission(provider)
+        if (permission === false) {
+          permission = await this.requestAccountPermission(provider)
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
       }
+      if (
+        permission === false ||
+        (await provider._metamask.isUnlocked()) === false
+      ) {
+        await provider.request({ method: 'eth_requestAccounts' })
+      }
+      accounts = await provider.request({ method: 'eth_accounts' })
       if (
         accounts === undefined ||
         accounts == null ||
@@ -231,7 +282,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
       if (error.code === 4001) {
         const err = new Error('Rejected User Request...')
         err.name = 'RejectedUserRequest'
-        this.getLogger().error(error)
         throw err
       }
       throw error

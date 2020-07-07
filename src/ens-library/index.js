@@ -273,7 +273,7 @@ import root from 'window-or-global'
     if (web3 === undefined) {
       var { web3 } = await this.ethereumLibrary.getWeb3Provider()
     }
-    const etherscan = this.getEtherscanRegistry()
+    const etherscan = this.ethereumLibrary.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
@@ -355,7 +355,7 @@ import root from 'window-or-global'
         web3
       } = await this.ethereumLibrary.getEnabledWeb3Provider()
     }
-    const etherscan = this.getEtherscanRegistry()
+    const etherscan = this.ethereumLibrary.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
@@ -414,7 +414,7 @@ import root from 'window-or-global'
         web3
       } = await this.ethereumLibrary.getEnabledWeb3Provider()
     }
-    const etherscan = this.getEtherscanRegistry()
+    const etherscan = this.ethereumLibrary.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
