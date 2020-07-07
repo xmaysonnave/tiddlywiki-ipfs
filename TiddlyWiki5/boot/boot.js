@@ -1798,10 +1798,10 @@ if($tw.browser && !$tw.node) {
 $tw.boot.metamaskPrompt = async function(text, callback) {
   var checkAccountPermission = async function (provider) {
     const permissions = await provider.request({
-      method: 'wallet_getPermissions'
+      method: "wallet_getPermissions"
     });
     const accountsPermission = permissions.find(
-      permission => permission.parentCapability === 'eth_accounts'
+      permission => permission.parentCapability === "eth_accounts"
     );
     if (accountsPermission) {
       return true;
@@ -1810,11 +1810,11 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
   }
   var requestAccountPermission = async function (provider) {
     const permissions = await provider.request({
-      method: 'wallet_requestPermissions',
+      method: "wallet_requestPermissions",
       params: [{ eth_accounts: {} }]
     });
     const accountsPermission = permissions.find(
-      permission => permission.parentCapability === 'eth_accounts'
+      permission => permission.parentCapability === "eth_accounts"
     );
     if (accountsPermission) {
       return true;
@@ -1824,7 +1824,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
   try {
     const provider = await window.detectEthereumProvider({ mustBeMetaMask: true });
     if (provider === undefined || provider == null) {
-      throw new Error('Please install MetaMask...');
+      throw new Error("Please install MetaMask...");
     }
     provider.autoRefreshOnNetworkChange = false;
     var permission = false;
@@ -1840,11 +1840,11 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       }
     }
     if (permission === false || await provider._metamask.isUnlocked() === false) {
-      await provider.request({ method: 'eth_requestAccounts' });
+      await provider.request({ method: "eth_requestAccounts" });
     }
-    accounts = await provider.request({ method: 'eth_accounts' });
+    accounts = await provider.request({ method: "eth_accounts" });
     if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-      throw new Error('Unable to retrieve any Ethereum accounts...')
+      throw new Error("Unable to retrieve any Ethereum accounts...")
     }
     console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
     var tStart = new Date();
@@ -1908,19 +1908,15 @@ $tw.boot.inflateTiddlers = function(callback) {
       var text = $tw.compress.inflate(b64);
       $tw.boot.preloadTiddler(text,callback)
     }
-    var json = JSON.parse(compressedArea.innerHTML);
-    if(json.pako) {
-      if(json.pako.startsWith('{"iv":')) {
-        $tw.boot.passwordPrompt(json.pako,function(decrypted) {
-          inflate(decrypted);
-        });
-      } else if(json.pako.startsWith('{"version":')) {
-        $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
-          inflate(decrypted);
-        });
-      } else {
-        inflate(json.pako);
-      }
+    var text = compressedArea.innerHTML;
+    if(text.startsWith('{"iv":')) {
+      $tw.boot.passwordPrompt(text,function(decrypted) {
+        inflate(decrypted);
+      });
+    } else if(text.startsWith('{"version":')) {
+      $tw.boot.metamaskPrompt(text,function(decrypted) {
+        inflate(decrypted);
+      });
     } else {
       throw new Error('Unable to process the "compressedStoreArea"...')
     }
@@ -1942,8 +1938,8 @@ $tw.boot.decryptEncryptedTiddlers = function(callback) {
       $tw.boot.passwordPrompt(text, function(decrypted) {
         $tw.boot.preloadTiddler(decrypted, callback)
       });
-    } else if(json.pako.startsWith('{"version":')) {
-      $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
+    } else if(text.startsWith('{"version":')) {
+      $tw.boot.metamaskPrompt(text,function(decrypted) {
         $tw.boot.preloadTiddler(decrypted, callback)
       });
     } else {

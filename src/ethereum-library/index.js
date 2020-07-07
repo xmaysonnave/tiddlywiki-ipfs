@@ -264,8 +264,10 @@ import detectEthereumProvider from '@metamask/detect-provider'
         permission === false ||
         (await provider._metamask.isUnlocked()) === false
       ) {
+        // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
         await provider.request({ method: 'eth_requestAccounts' })
       }
+      // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
       accounts = await provider.request({ method: 'eth_accounts' })
       if (
         accounts === undefined ||

@@ -1,3 +1,4 @@
+
 /*\
 title: $:/core/modules/widgets/compress.js
 type: application/javascript
@@ -57,7 +58,6 @@ Compress widget
     if(tiddler && tiddler.fields.text === "yes") {
       content = $tw.crypto.encrypt(content);
     }
-    content = JSON.stringify({ "pako": content });
     this.compressedText = $tw.utils.htmlEncode(content);
   }
 
