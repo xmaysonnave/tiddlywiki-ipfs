@@ -1,7 +1,6 @@
 import CID from 'cids'
 import contentHash from 'content-hash'
 import root from 'window-or-global'
-import detectEthereumProvider from '@metamask/detect-provider'
 ;(function () {
   'use strict'
 
@@ -9,22 +8,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
   const name = 'ens-library'
 
   // https://github.com/ensdomains/resolvers
-  var EnsLibrary = function (ipfsLoader) {
-    this.ipfsLoader = ipfsLoader
-    this.network = {
-      0x1: 'Ethereum Main Network: "Mainnet", chainId: "0x1"',
-      0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3"',
-      0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "0x4"',
-      0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "0x5"',
-      0x2a: 'Ethereum Test Network (PoA): "Kovan", chainId: "0x2a"'
-    }
-    this.etherscan = {
-      0x1: 'https://etherscan.io',
-      0x3: 'https://ropsten.etherscan.io',
-      0x4: 'https://rinkeby.etherscan.io',
-      0x5: 'https://goerli.etherscan.io',
-      0x2a: 'https://kovan.etherscan.io'
-    }
+  var EnsLibrary = function (ethereumLibrary) {
+    this.ethereumLibrary = ethereumLibrary
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
     this.registry = {
@@ -42,32 +27,8 @@ import detectEthereumProvider from '@metamask/detect-provider'
     return console
   }
 
-  EnsLibrary.prototype.getEtherscanRegistry = function () {
-    return this.etherscan
-  }
-
-  EnsLibrary.prototype.getNetworkRegistry = function () {
-    return this.network
-  }
-
   EnsLibrary.prototype.getENSRegistry = function () {
     return this.registry
-  }
-
-  EnsLibrary.prototype.loadEthers = async function () {
-    if (root.ethers === undefined || root.ethers == null) {
-      try {
-        // Load ethers
-        await this.ipfsLoader.loadEtherJsLibrary()
-        if (root.ethers !== undefined && root.ethers !== null) {
-          return
-        }
-      } catch (error) {
-        this.getLogger().error(error)
-      }
-      // Should not happen...
-      throw new Error('Unavailable Ethereum library...')
-    }
   }
 
   // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
@@ -130,134 +91,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     return {
       encoded: encoded
-    }
-  }
-
-  EnsLibrary.prototype.getPublicEncryptionKey = async function (
-    provider,
-    account
-  ) {
-    try {
-      if (provider === undefined || provider == null) {
-        provider = await this.getEthereumProvider()
-      }
-      if (account === undefined) {
-        account = await this.getAccount(provider)
-      }
-      const encryptionKey = await provider.request({
-        method: 'eth_getEncryptionPublicKey',
-        params: [account]
-      })
-      return encryptionKey
-    } catch (error) {
-      // EIP 1193 user Rejected Request
-      if (error.code === 4001) {
-        const err = new Error('Rejected User Request...')
-        err.name = 'RejectedUserRequest'
-        this.getLogger().error(error)
-        throw err
-      }
-      throw error
-    }
-  }
-
-  /*
-   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-   * https://eips.ethereum.org/EIPS/eip-1193
-   * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
-   */
-  EnsLibrary.prototype.getEthereumProvider = async function () {
-    var provider = null
-    try {
-      provider = await detectEthereumProvider({ mustBeMetaMask: true })
-      if (provider !== undefined && provider !== null) {
-        provider.autoRefreshOnNetworkChange = false
-      }
-    } catch (error) {
-      this.getLogger().error(error)
-    }
-    if (provider === undefined || provider == null) {
-      throw new Error('Please install MetaMask...')
-    }
-    return provider
-  }
-
-  /*
-   * https://docs.metamask.io/guide/provider-migration.html#migrating-to-the-new-provider-api
-   */
-  EnsLibrary.prototype.getAccount = async function (provider) {
-    if (provider === undefined || provider == null) {
-      provider = await this.getEthereumProvider()
-    }
-    try {
-      var accounts = await provider.request({ method: 'eth_accounts' })
-      if (
-        accounts === undefined ||
-        accounts == null ||
-        Array.isArray(accounts) === false ||
-        accounts.length === 0
-      ) {
-        accounts = await provider.request({ method: 'eth_requestAccounts' })
-      }
-      if (
-        accounts === undefined ||
-        accounts == null ||
-        Array.isArray(accounts) === false ||
-        accounts.length === 0
-      ) {
-        throw new Error('Unable to retrieve any Ethereum accounts...')
-      }
-      this.getLogger().info(`Account: ${accounts[0]}`)
-      return accounts[0]
-    } catch (error) {
-      // EIP 1193 user Rejected Request
-      if (error.code === 4001) {
-        const err = new Error('Rejected User Request...')
-        err.name = 'RejectedUserRequest'
-        this.getLogger().error(error)
-        throw err
-      }
-      throw error
-    }
-  }
-
-  EnsLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
-    if (provider === undefined || provider == null) {
-      provider = await this.getEthereumProvider()
-    }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
-    }
-    // Enable provider
-    // https://github.com/ethers-io/ethers.js/issues/433
-    const account = await this.getAccount(provider)
-    // Instantiate a Web3Provider
-    const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
-    // Retrieve current network
-    const network = await web3.getNetwork()
-    const chainId = parseInt(network.chainId)
-    return {
-      account: account,
-      chainId: chainId,
-      web3: web3
-    }
-  }
-
-  EnsLibrary.prototype.getWeb3Provider = async function (provider) {
-    if (provider === undefined || provider == null) {
-      provider = await this.getEthereumProvider()
-    }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
-    }
-    // Instantiate an ethers Web3Provider
-    const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
-    // Retrieve current network
-    const network = await web3.getNetwork()
-    const chainId = parseInt(network.chainId)
-    return {
-      web3: web3,
-      chainId: chainId
     }
   }
 
@@ -438,15 +271,16 @@ import detectEthereumProvider from '@metamask/detect-provider'
       throw new Error('Undefined ENS domain...')
     }
     if (web3 === undefined) {
-      var { web3 } = await this.getWeb3Provider()
+      var { web3 } = await this.ethereumLibrary.getWeb3Provider()
     }
+    const etherscan = this.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
       `ENS registry:
- ${this.etherscan[chainId]}/address/${registry}`
+ ${etherscan[chainId]}/address/${registry}`
     )
     // Fetch resolver address
     var resolver = await this.getResolver(web3, registry, domainHash)
@@ -457,7 +291,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
     // Log
     this.getLogger().info(
       `ENS domain resolver:
- ${this.etherscan[chainId]}/address/${resolver}`
+ ${etherscan[chainId]}/address/${resolver}`
     )
     // Check if resolver is EIP165
     const eip165 = await this.checkEip165(web3, resolver)
@@ -516,15 +350,19 @@ import detectEthereumProvider from '@metamask/detect-provider'
       web3 === undefined ||
       web3 == null
     ) {
-      var { account, web3 } = await this.getEnabledWeb3Provider()
+      var {
+        account,
+        web3
+      } = await this.ethereumLibrary.getEnabledWeb3Provider()
     }
+    const etherscan = this.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
       `ENS registry:
- ${this.etherscan[chainId]}/address/${registry}`
+ ${etherscan[chainId]}/address/${registry}`
     )
     const abi = ['function owner(bytes32 node) public view returns(address)']
     const iface = new root.ethers.utils.Interface(abi)
@@ -571,15 +409,19 @@ import detectEthereumProvider from '@metamask/detect-provider'
       throw new Error('Undefined ENS domain...')
     }
     if (account === undefined || web3 === undefined) {
-      var { account, web3 } = await this.getEnabledWeb3Provider()
+      var {
+        account,
+        web3
+      } = await this.ethereumLibrary.getEnabledWeb3Provider()
     }
+    const etherscan = this.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
       `ENS registry:
- ${this.etherscan[chainId]}/address/${registry}`
+ ${etherscan[chainId]}/address/${registry}`
     )
     var resolver = await this.getResolver(web3, registry, domainHash)
     if (resolver == null || /^0x0+$/.test(resolver) === true) {
@@ -587,7 +429,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     this.getLogger().info(
       `ENS domain resolver:
- ${this.etherscan[chainId]}/address/${resolver}`
+ ${etherscan[chainId]}/address/${resolver}`
     )
     // Check if resolver is EIP165
     const eip165 = await this.checkEip165(web3, resolver)
@@ -610,15 +452,12 @@ import detectEthereumProvider from '@metamask/detect-provider'
       encoded
     ])
     try {
-      this.getLogger().info('Before get Signer...')
       const signer = web3.getSigner()
-      this.getLogger().info('Got Signer...')
       const tx = await signer.sendTransaction({ to: resolver, data: data })
       this.getLogger().info(
         `Processing Transaction:
- ${this.etherscan[chainId]}/tx/${tx.hash}`
+ ${etherscan[chainId]}/tx/${tx.hash}`
       )
-      this.getLogger().info('Transaction sent...')
       // Wait for transaction completion
       await tx.wait()
       this.getLogger().info('Processed ENS domain content...')

@@ -39,7 +39,7 @@ IPFS Controller
     }
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
-    this.ensWrapper = new EnsWrapper(this.ipfsBundle)
+    this.ensWrapper = new EnsWrapper(this.ipfsBundle.ensLibrary)
     this.ipfsUrl = this.ipfsBundle.ipfsUrl
     this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle)
     // Listener
@@ -61,12 +61,8 @@ IPFS Controller
     return console
   }
 
-  IpfsController.prototype.isCid = function (cid) {
-    return this.ipfsBundle.isCid(cid)
-  }
-
   IpfsController.prototype.load3Box = async function () {
-    return await this.ensWrapper.load3Box()
+    return await this.ipfsBundle.load3Box()
   }
 
   IpfsController.prototype.loadToBase64 = async function (url) {
@@ -248,10 +244,6 @@ IPFS Controller
   ) {
     const { ipfs } = await this.getIpfsClient()
     return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName)
-  }
-
-  IpfsController.prototype.decodeCid = function (pathname) {
-    return this.ipfsBundle.decodeCid(pathname)
   }
 
   IpfsController.prototype.getIpnsIdentifiers = async function (
@@ -520,24 +512,52 @@ IPFS Controller
     return false
   }
 
+  IpfsController.prototype.decodeCid = function (pathname) {
+    return this.ipfsBundle.decodeCid(pathname)
+  }
+
+  IpfsController.prototype.isCid = function (cid) {
+    return this.ipfsBundle.isCid(cid)
+  }
+
+  IpfsController.prototype.cidV1ToCidV0 = function (cidv1) {
+    return this.ipfsBundle.cidV1ToCidV0(cidv1)
+  }
+
+  IpfsController.prototype.cidV0ToCidV1 = function (cidv0) {
+    return this.ipfsBundle.cidV0ToCidV1(cidv0)
+  }
+
   IpfsController.prototype.isOwner = async function (domain, web3, account) {
-    return await this.ensWrapper.isOwner(domain, web3, account)
+    return await this.ipfsBundle.isOwner(domain, web3, account)
   }
 
   IpfsController.prototype.getPublicEncryptionKey = async function (provider) {
-    return await this.ensWrapper.getPublicEncryptionKey(provider)
+    return await this.ipfsBundle.getPublicEncryptionKey(provider)
   }
 
   IpfsController.prototype.getEthereumProvider = async function () {
-    return await this.ensWrapper.getEthereumProvider()
+    return await this.ipfsBundle.getEthereumProvider()
   }
 
   IpfsController.prototype.getEnabledWeb3Provider = async function () {
-    return await this.ensWrapper.getEnabledWeb3Provider()
+    return await this.ipfsBundle.getEnabledWeb3Provider()
   }
 
   IpfsController.prototype.getWeb3Provider = async function () {
-    return await this.ensWrapper.getWeb3Provider()
+    return await this.ipfsBundle.getWeb3Provider()
+  }
+
+  IpfsController.prototype.getEtherscanRegistry = function () {
+    return this.ipfsBundle.getEtherscanRegistry()
+  }
+
+  IpfsController.prototype.getNetworkRegistry = function () {
+    return this.ipfsBundle.getNetworkRegistry()
+  }
+
+  IpfsController.prototype.getENSRegistry = function () {
+    return this.ipfsBundle.getENSRegistry()
   }
 
   exports.IpfsController = IpfsController

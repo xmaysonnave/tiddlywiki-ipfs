@@ -10,6 +10,7 @@ IPFS Bundle
 import CID from 'cids'
 import root from 'window-or-global'
 import EnsLibrary from './ens-library'
+import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
 import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
@@ -39,12 +40,117 @@ import BoxLibrary from './box-library'
       return
     }
     this.ipfsLoader = new IpfsLoader(this)
-    this.ensLibrary = new EnsLibrary(this.ipfsLoader)
+    this.ethereumLibrary = new EthereumLibrary(this.ipfsLoader)
+    this.ensLibrary = new EnsLibrary(this.ethereumLibrary)
     this.ipfsLibrary = new IpfsLibrary(this)
     this.ipfsUrl = new IpfsUrl()
     this.boxLibrary = new BoxLibrary(this.ipfsLoader)
     // Init once
     this.once = true
+  }
+
+  IpfsBundle.prototype.load3Box = async function () {
+    const { account, provider } = await this.getEnabledWeb3Provider()
+    await this.boxLibrary.load3Box(account, provider)
+    return {
+      account: account
+    }
+  }
+
+  IpfsBundle.prototype.getENSRegistry = function () {
+    return this.ensLibrary.getENSRegistry()
+  }
+
+  IpfsBundle.prototype.getEtherscanRegistry = function () {
+    return this.ethereumLibrary.getEtherscanRegistry()
+  }
+
+  IpfsBundle.prototype.getNetworkRegistry = function () {
+    return this.ethereumLibrary.getNetworkRegistry()
+  }
+
+  IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {
+    try {
+      return await this.ethereumLibrary.getPublicEncryptionKey(provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an Ethereum Public Encryption Key...')
+    }
+  }
+
+  IpfsBundle.prototype.isOwner = async function (domain, web3, account) {
+    return await this.ensLibrary.isOwner(domain, web3, account)
+  }
+
+  /*
+   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+   * https://eips.ethereum.org/EIPS/eip-1193
+   * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
+   */
+  IpfsBundle.prototype.getEthereumProvider = async function () {
+    return await this.ethereumLibrary.getEthereumProvider()
+  }
+
+  IpfsBundle.prototype.getEnabledWeb3Provider = async function () {
+    var account = null
+    var chainId = null
+    var web3 = null
+    const etherscan = this.getEtherscanRegistry()
+    const network = this.getNetworkRegistry()
+    const provider = await this.getEthereumProvider()
+    try {
+      var {
+        account,
+        chainId,
+        web3
+      } = await this.ethereumLibrary.getEnabledWeb3Provider(provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an enabled Ethereum Provider...')
+    }
+    // Log
+    this.getLogger().info(
+      `New Enabled Web3 provider:
+ Chain: ${network[chainId]}
+ Account: ${etherscan[chainId]}/address/${account}`
+    )
+    return {
+      account: account,
+      chainId: chainId,
+      provider: provider,
+      web3: web3
+    }
+  }
+
+  IpfsBundle.prototype.getWeb3Provider = async function () {
+    var chainId = null
+    var web3 = null
+    const network = this.getNetworkRegistry()
+    const provider = await this.getEthereumProvider()
+    try {
+      var { web3, chainId } = await this.ethereumLibrary.getWeb3Provider(
+        provider
+      )
+    } catch (error) {
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an Ethereum Provider...')
+    }
+    // Log
+    this.getLogger().info(
+      `New Web3 provider:
+ ${network[chainId]}`
+    )
+    return {
+      chainId: chainId,
+      provider: provider,
+      web3: web3
+    }
   }
 
   // https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer/21797381

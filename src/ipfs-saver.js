@@ -53,7 +53,6 @@ IPFS Saver
     }
     try {
       var account = null
-      var chainId = null
       var cid = null
       var ensCid = null
       var ensDomain = null
@@ -135,8 +134,7 @@ IPFS Saver
           callback(null, 'Undefined ENS domain...')
           return true
         }
-        /*eslint no-unused-vars:"off"*/
-        var { account, chainId, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
         const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
         if (isOwner === false) {
           const err = new Error('Unauthorized Account...')
@@ -189,10 +187,10 @@ IPFS Saver
           //   nextWiki.protocol = 'https:'
           //   nextWiki.host = ensDomain
           // } else {
-          const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain, web3)
-          nextWiki.protocol = resolvedUrl.protocol
-          nextWiki.host = resolvedUrl.host
-          nextWiki.pathname = resolvedUrl.pathname
+          //   const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain, web3)
+          //   nextWiki.protocol = resolvedUrl.protocol
+          //   nextWiki.host = resolvedUrl.host
+          //   nextWiki.pathname = resolvedUrl.pathname
           // }
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
