@@ -58,7 +58,7 @@
   "dependencies": {
     "@babel/runtime": "^7.10.2",
     "buffer": "^5.6.0",
-    "cids": "^0.8.1",
+    "cids": "^0.8.2",
     "content-hash": "^2.5.2",
     "ipfs-provider": "^1.0.0",
     "universal-url": "^2.0.0",
