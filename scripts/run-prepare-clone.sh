@@ -7,7 +7,6 @@ rm -f -R ./tw5-relink > /dev/null 2>&1
 # eth-sig-util
 git clone https://github.com/xmaysonnave/eth-sig-util --depth 1
 cd eth-sig-util
-nvm use
 npm install
 npm run browser
 cd ..

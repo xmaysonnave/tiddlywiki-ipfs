@@ -18,7 +18,7 @@ describe('Encrypt', () => {
       'x25519-xsalsa20-poly1305'
     )
     const result = sigUtil.decrypt(outputText, privateKey)
-    expect(text === result).toBeTruthy()
+    expect(message === result).toBeTruthy()
   })
   it('Encrypt Safely', async () => {
     var outputText = sigUtil.encryptSafely(
@@ -27,7 +27,7 @@ describe('Encrypt', () => {
       'x25519-xsalsa20-poly1305'
     )
     const result = sigUtil.decryptSafely(outputText, privateKey)
-    expect(text === result).toBeTruthy()
+    expect(message === result).toBeTruthy()
   })
 })
 describe('personalSign', () => {
@@ -38,7 +38,7 @@ describe('personalSign', () => {
       'x25519-xsalsa20-poly1305'
     )
     const result = sigUtil.decrypt(outputText, privateKey)
-    expect(text === result).toBeTruthy()
+    expect(message === result).toBeTruthy()
   })
   it('Encrypt Safely', async () => {
     var outputText = sigUtil.encryptSafely(
@@ -47,6 +47,6 @@ describe('personalSign', () => {
       'x25519-xsalsa20-poly1305'
     )
     const result = sigUtil.decryptSafely(outputText, privateKey)
-    expect(text === result).toBeTruthy()
+    expect(message === result).toBeTruthy()
   })
 })
