@@ -36,8 +36,22 @@ describe('EncryptionPublicKey', () => {
   })
 })
 describe('PersonalSign', () => {
-  it('personalSign', async () => {
+  it('String personalSign', async () => {
     const msgParams = { data: message }
+    const privateKey = Buffer.from(privateKeyHex, 'hex')
+    const signed = sigUtil.personalSign(privateKey, msgParams)
+    msgParams.sig = signed
+    const recovered = sigUtil.recoverPersonalSignature(msgParams)
+    const result = sigUtil.normalize(recovered)
+    expect(result === publicKey.toLowerCase()).toBeTruthy()
+  })
+  it('Encrypted personalSign', async () => {
+    const outputText = sigUtil.encrypt(
+      derivedPublicKey,
+      { data: message },
+      'x25519-xsalsa20-poly1305'
+    )
+    const msgParams = { data: JSON.stringify(outputText) }
     const privateKey = Buffer.from(privateKeyHex, 'hex')
     const signed = sigUtil.personalSign(privateKey, msgParams)
     msgParams.sig = signed

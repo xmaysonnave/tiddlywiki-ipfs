@@ -736,7 +736,7 @@ $tw.utils.Crypto = function() {
       var tStart = new Date();
       var outputText = sigUtil.encrypt(
         currentPublicKey,
-        {data: text},
+        { data: text },
         'x25519-xsalsa20-poly1305'
       )
       outputText = JSON.stringify(outputText);
@@ -1918,7 +1918,7 @@ $tw.boot.inflateTiddlers = function(callback) {
         inflate(decrypted);
       });
     } else {
-      throw new Error('Unable to process the "compressedStoreArea"...')
+      inflate(text);
     }
   } else {
     // Preload any encrypted tiddlers
@@ -1935,7 +1935,7 @@ $tw.boot.decryptEncryptedTiddlers = function(callback) {
   if(encryptedArea) {
     var text = encryptedArea.innerHTML
     if(text.startsWith('{"iv":')) {
-      $tw.boot.passwordPrompt(text, function(decrypted) {
+      $tw.boot.passwordPrompt(text,function(decrypted) {
         $tw.boot.preloadTiddler(decrypted, callback)
       });
     } else if(text.startsWith('{"version":')) {
