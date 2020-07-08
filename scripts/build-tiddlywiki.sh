@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # TiddlyWiki5
 cp -R ./TiddlyWiki5/* ./node_modules/tiddlywiki > /dev/null 2>&1
 

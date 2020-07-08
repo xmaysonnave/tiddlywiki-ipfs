@@ -1,6 +1,4 @@
-#!/usr/bin/zsh
-. ~/.nvm/nvm.sh
-. ~/.zshrc
+#!/bin/bash
 nvm run node --version
 
 ./scripts/run-prepare.sh || exit 1

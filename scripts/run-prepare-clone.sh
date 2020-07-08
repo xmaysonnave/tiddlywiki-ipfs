@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/bash
 # cleanup
 rm -f -R ./eth-sig-util > /dev/null 2>&1
 rm -f -R ./tw5-locator > /dev/null 2>&1
