@@ -29,6 +29,10 @@
       "--publickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
 			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain"
     ],
+		"dev-compressed": [
+			"--compress", "true",
+			"--rendertiddler", "$:/core/save/all", "../output/dev-compressed.html", "text/plain"
+    ],
 		"dev-encrypted": [
 			"--compress", "true",
       "--password", "blue",

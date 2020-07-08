@@ -17,6 +17,10 @@
 			"--rendertiddler", "$:/core/save/all", "../output/empty-encrypted.html", "text/plain",
       "--clearpassword"
     ],
+		"empty-compressed": [
+			"--compress", "true",
+			"--rendertiddler", "$:/core/save/all", "../output/empty-plain.html", "text/plain"
+		],
 		"empty-plain": [
 			"--compress", "false",
 			"--rendertiddler", "$:/core/save/all", "../output/empty-plain.html", "text/plain"
