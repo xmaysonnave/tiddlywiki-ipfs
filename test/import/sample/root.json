@@ -1,32 +1,32 @@
 [
-    {
-        "text": "{{{[tag[$:/root]]}}}",
-        "title": "$:/root Assets",
-        "modified": "20200601094915385",
-        "tags": "[[$:/root]]"
-    },
-    {
-        "text": "Content from Node 1",
-        "tags": "[[$:/root]]",
-        "title": "Node 1",
-        "modified": "20200601085428678",
-        "_canonical_uri": "./level_4_1.json",
-        "_import_uri": "./level_2_1.json"
-    },
-    {
-        "text": "Content from Node 2",
-        "tags": "[[$:/root]]",
-        "title": "Node 2",
-        "modified": "20200601085428678",
-        "_canonical_uri": "./level_1_2.json"
-    },
-    {
-        "text": "",
-        "tags": "[[$:/root]]",
-        "type": "image/png",
-        "title": "$:/ipfs/image/publish/ipns",
-        "modified": "20200601060549543",
-        "_canonical_uri": "/ipfs/bafybeifyugx7bfx6cna4mmgfcnt6u3xgxtspincvahfjlqhwjmu66yg6cm",
-        "_import_uri": "./level_2_1.json"
-    }
+  {
+    "text": "{{{[tag[$:/root]]}}}",
+    "title": "$:/root Assets",
+    "modified": "20200601094915385",
+    "tags": "[[$:/root]]"
+  },
+  {
+    "text": "Content from Node 1",
+    "tags": "[[$:/root]]",
+    "title": "Node 1",
+    "modified": "20200601085428678",
+    "_canonical_uri": "./level_4_1.json",
+    "_import_uri": "./level_2_1.json"
+  },
+  {
+    "text": "Content from Node 2",
+    "tags": "[[$:/root]]",
+    "title": "Node 2",
+    "modified": "20200601085428678",
+    "_canonical_uri": "./level_1_2.json"
+  },
+  {
+    "text": "",
+    "tags": "[[$:/root]]",
+    "type": "image/png",
+    "title": "$:/ipfs/image/publish/ipns",
+    "modified": "20200601060549543",
+    "_canonical_uri": "/ipfs/bafybeifyugx7bfx6cna4mmgfcnt6u3xgxtspincvahfjlqhwjmu66yg6cm",
+    "_import_uri": "./level_2_1.json"
+  }
 ]

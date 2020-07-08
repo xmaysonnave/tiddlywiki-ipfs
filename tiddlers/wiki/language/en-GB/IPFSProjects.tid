@@ -8,7 +8,6 @@ type: text/vnd.tiddlywiki
   Here is an exhaustive list of involved projects with <b>IPFS with ~TiddlyWiki</b>
 </p>
 <ol>
-  <li>[ext[3Box|https://github.com/3box/3box-js]]</li>
   <li>[ext[Babel|https://github.com/babel]]</li>
   <li>[ext[Beyond Compare|https://www.scootersoftware.com/]]</li>
   <li>[ext[Buffer|https://github.com/feross/buffer]]</li>

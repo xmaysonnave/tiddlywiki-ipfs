@@ -3,5 +3,5 @@ modified: 20200706094915385
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/ethers-io/ethers.js/master/LICENSE.md
 _project_uri: https://github.com/ethers-io/ethers.js/
-_source_uri: https://cdn.jsdelivr.net/npm/ethers@5.0.4/dist/ethers.umd.min.js
-_source_sri: sha384-1o/lwl1lI8yVy5nugfaDOtv1OZy4qjx5HTTzDueTxpBJa/k/c9LPkjH+UC59vsdC
+_source_uri: https://cdn.jsdelivr.net/npm/ethers@5.0.5/dist/ethers.umd.min.js
+_source_sri: sha384-NdM0ElaWRs5r57X33JWZZs7yaE3KTyD2IXHjKEvTqo6Wxg0i5eS8zmGJBnx12mAk

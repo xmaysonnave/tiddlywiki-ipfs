@@ -71,13 +71,6 @@ import root from 'window-or-global'
     }
   }
 
-  // https://github.com/3box/3box-js
-  IpfsLoader.prototype.loadThreeBoxLibrary = async function () {
-    if (typeof root.Box === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/3box', 'Box', true)
-    }
-  }
-
   /*eslint no-new:"off",no-new-func:"off"*/
   IpfsLoader.prototype.supportDynamicImport = function () {
     try {

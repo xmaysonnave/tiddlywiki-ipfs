@@ -1,62 +1,62 @@
 [
-    {
-        "text": "Content from Node 1",
-        "title": "Node 1",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_4_1.json",
-        "_import_uri": "./level_2_1.json"
-    },
-    {
-        "text": "Content from Node 2",
-        "title": "Node 2",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_1_2.json"
-    },
-    {
-        "text": "Missing '_canonical_uri' from Node 3",
-        "title": "Node 3",
-        "modified": "20200320085428678",
-        "_import_uri": "./level_1_2.json"
-    },
-    {
-        "text": "Cycle '_canonical_uri' from Node 4",
-        "title": "Node 4",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./root.json"
-    },
-    {
-        "text": "Cycle '_import_uri' from Node 5",
-        "title": "Node 5",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_1_2.json",
-        "_import_uri": "./root.json"
-    },
-    {
-        "text": "Matching '_canonical_uri' and '_import_uri' from Node 6",
-        "title": "Node 6",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_1_2.json",
-        "_import_uri": "./level_1_2.json"
-    },
-    {
-        "text": "Content from Node 7",
-        "title": "Node 7",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_3_1.json",
-        "_import_uri": "./level_2_1.json"
-    },
-    {
-        "text": "Content from Node 8",
-        "title": "Node 8",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_3_1.json",
-        "_import_uri": "./level_2_1.json"
-    },
-    {
-        "text": "Content from Node 9",
-        "title": "Node 9",
-        "modified": "20200320085428678",
-        "_canonical_uri": "./level_3_1.json",
-        "_import_uri": "./level_2_1.json"
-    }
+  {
+    "text": "Content from Node 1",
+    "title": "Node 1",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_4_1.json",
+    "_import_uri": "./level_2_1.json"
+  },
+  {
+    "text": "Content from Node 2",
+    "title": "Node 2",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_1_2.json"
+  },
+  {
+    "text": "Missing '_canonical_uri' from Node 3",
+    "title": "Node 3",
+    "modified": "20200320085428678",
+    "_import_uri": "./level_1_2.json"
+  },
+  {
+    "text": "Cycle '_canonical_uri' from Node 4",
+    "title": "Node 4",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./root.json"
+  },
+  {
+    "text": "Cycle '_import_uri' from Node 5",
+    "title": "Node 5",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_1_2.json",
+    "_import_uri": "./root.json"
+  },
+  {
+    "text": "Matching '_canonical_uri' and '_import_uri' from Node 6",
+    "title": "Node 6",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_1_2.json",
+    "_import_uri": "./level_1_2.json"
+  },
+  {
+    "text": "Content from Node 7",
+    "title": "Node 7",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_3_1.json",
+    "_import_uri": "./level_2_1.json"
+  },
+  {
+    "text": "Content from Node 8",
+    "title": "Node 8",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_3_1.json",
+    "_import_uri": "./level_2_1.json"
+  },
+  {
+    "text": "Content from Node 9",
+    "title": "Node 9",
+    "modified": "20200320085428678",
+    "_canonical_uri": "./level_3_1.json",
+    "_import_uri": "./level_2_1.json"
+  }
 ]

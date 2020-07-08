@@ -1,14 +1,14 @@
 [
-    {
-        "text": "{{{[tag[$:/level_1_2]]}}}",
-        "title": "$:/level_1_2 Assets",
-        "modified": "20200601094915385",
-        "tags": "[[$:/level_1_2]]"
-    },
-    {
-        "text": "Content from 'Node 2' @ 1_2",
-        "tags": "[[$:/level_1_2]]",
-        "title": "Node 2",
-        "modified": "20200601085428678"
-    }
+  {
+    "text": "{{{[tag[$:/level_1_2]]}}}",
+    "title": "$:/level_1_2 Assets",
+    "modified": "20200601094915385",
+    "tags": "[[$:/level_1_2]]"
+  },
+  {
+    "text": "Content from 'Node 2' @ 1_2",
+    "tags": "[[$:/level_1_2]]",
+    "title": "Node 2",
+    "modified": "20200601085428678"
+  }
 ]

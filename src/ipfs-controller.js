@@ -61,10 +61,6 @@ IPFS Controller
     return console
   }
 
-  IpfsController.prototype.load3Box = async function () {
-    return await this.ipfsBundle.load3Box()
-  }
-
   IpfsController.prototype.loadToBase64 = async function (url) {
     return await this.ipfsBundle.loadToBase64(url)
   }

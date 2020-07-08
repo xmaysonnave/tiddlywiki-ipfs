@@ -4,7 +4,6 @@ build/*
 metadata/*
 node_modules/*
 output/*
-test/*
 tiddlers/*
 TiddlyWiki5/*
 eth-sig-util/

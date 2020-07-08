@@ -14,7 +14,6 @@ import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
 import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
-import BoxLibrary from './box-library'
 ;(function () {
   'use strict'
 
@@ -45,17 +44,8 @@ import BoxLibrary from './box-library'
     this.ensLibrary = new EnsLibrary(this.ethereumLibrary)
     this.ipfsLibrary = new IpfsLibrary(this)
     this.ipfsUrl = new IpfsUrl()
-    this.boxLibrary = new BoxLibrary(this.ipfsLoader)
     // Init once
     this.once = true
-  }
-
-  IpfsBundle.prototype.load3Box = async function () {
-    const { account, provider } = await this.getEnabledWeb3Provider()
-    await this.boxLibrary.load3Box(account, provider)
-    return {
-      account: account
-    }
   }
 
   IpfsBundle.prototype.getENSRegistry = function () {

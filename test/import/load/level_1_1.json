@@ -1,79 +1,79 @@
 [
-    {
-        "text": "Content from 'Node 1' @ 1_1",
-        "title": "Node 1",
-        "modified": "20200320085428678"
-    },
-    {
-        "text": "Unkwown IPNS name 'Node 2' @ 1_1",
-        "title": "Node 2",
-        "modified": "20200320085428678",
-        "_canonical_uri": "/ipns/unknown"
-    },
-    {
-        "text": "Invalid IPFS key 'Node 3' @ 1_1",
-        "title": "Node 3",
-        "modified": "20200320085428678",
-        "_canonical_uri": "/ipfs/unknown"
-    },
-    {
-        "text": "Unkwown ENS domain 'Node 4' @1_1",
-        "title": "Node 4",
-        "modified": "20200320085428678",
-        "_canonical_uri": "test.eth"
-    },
-    {
-        "text": "Empty _canonical_uri 'Node 5' @ 1_1",
-        "title": "Node 5",
-        "modified": "20200320085428678",
-        "_canonical_uri": ""
-    },
-    {
-        "text": "Failed to resolve _canonical_uri 'Node 6' @ 1_1",
-        "title": "Node 6",
-        "modified": "20200320085428678",
-        "_canonical_uri": "not_an_url"
-    },
-    {
-        "text": "Empty document",
-        "title": "Node 7",
-        "modified": "20200320085428678",
-        "_canonical_uri": "/ipfs/bafybeif7ztnhq65lumvvtr4ekcwd2ifwgm3awq4zfr3srh462rwyinlb4y"
-    },
-    {
-        "text": "Empty document on Ropsten",
-        "title": "Node 8",
-        "modified": "20200320085428678",
-        "_canonical_uri": "empty.bluelightav.eth"
-    },
-    {
-        "text": "Empty Content",
-        "title": "Node 9",
-        "modified": "20200320085428678",
-        "_canonical_uri": "https://tiddlywiki.com/"
-    },
-    {
-        "text": "Empty IPFS directory",
-        "title": "Node 10",
-        "modified": "20200320085428678",
-        "_canonical_uri": "/ipfs/bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354"
-    },
-    {
-        "text": "Unknown Content-Type",
-        "type": "wrong/type",
-        "title": "Node 11",
-        "modified": "20200320085428678"
-    },
-    {
-        "text": "CORS",
-        "title": "Node 12",
-        "modified": "20200320085428678",
-        "_canonical_uri": "https://www.fsf.org/"
-    },
-    {
-        "text": "Bad Request",
-        "title": "Node 13",
-        "modified": "20200320085428678",
-        "_canonical_uri": "https://ipfs.infura.io:5001/"
-    }
+  {
+    "text": "Content from 'Node 1' @ 1_1",
+    "title": "Node 1",
+    "modified": "20200320085428678"
+  },
+  {
+    "text": "Unkwown IPNS name 'Node 2' @ 1_1",
+    "title": "Node 2",
+    "modified": "20200320085428678",
+    "_canonical_uri": "/ipns/unknown"
+  },
+  {
+    "text": "Invalid IPFS key 'Node 3' @ 1_1",
+    "title": "Node 3",
+    "modified": "20200320085428678",
+    "_canonical_uri": "/ipfs/unknown"
+  },
+  {
+    "text": "Unkwown ENS domain 'Node 4' @1_1",
+    "title": "Node 4",
+    "modified": "20200320085428678",
+    "_canonical_uri": "test.eth"
+  },
+  {
+    "text": "Empty _canonical_uri 'Node 5' @ 1_1",
+    "title": "Node 5",
+    "modified": "20200320085428678",
+    "_canonical_uri": ""
+  },
+  {
+    "text": "Failed to resolve _canonical_uri 'Node 6' @ 1_1",
+    "title": "Node 6",
+    "modified": "20200320085428678",
+    "_canonical_uri": "not_an_url"
+  },
+  {
+    "text": "Empty document",
+    "title": "Node 7",
+    "modified": "20200320085428678",
+    "_canonical_uri": "/ipfs/bafybeif7ztnhq65lumvvtr4ekcwd2ifwgm3awq4zfr3srh462rwyinlb4y"
+  },
+  {
+    "text": "Empty document on Ropsten",
+    "title": "Node 8",
+    "modified": "20200320085428678",
+    "_canonical_uri": "empty.bluelightav.eth"
+  },
+  {
+    "text": "Empty Content",
+    "title": "Node 9",
+    "modified": "20200320085428678",
+    "_canonical_uri": "https://tiddlywiki.com/"
+  },
+  {
+    "text": "Empty IPFS directory",
+    "title": "Node 10",
+    "modified": "20200320085428678",
+    "_canonical_uri": "/ipfs/bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354"
+  },
+  {
+    "text": "Unknown Content-Type",
+    "type": "wrong/type",
+    "title": "Node 11",
+    "modified": "20200320085428678"
+  },
+  {
+    "text": "CORS",
+    "title": "Node 12",
+    "modified": "20200320085428678",
+    "_canonical_uri": "https://www.fsf.org/"
+  },
+  {
+    "text": "Bad Request",
+    "title": "Node 13",
+    "modified": "20200320085428678",
+    "_canonical_uri": "https://ipfs.infura.io:5001/"
+  }
 ]
