@@ -9,8 +9,8 @@ ENS Action
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const fileProtocol = 'file:'
@@ -22,7 +22,10 @@ ENS Action
   }
 
   EnsAction.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   EnsAction.prototype.init = function () {
@@ -93,10 +96,12 @@ ENS Action
       $tw.utils.alert(name, 'Unknown IPFS identifier...')
       return false
     }
+    var account = null
     var cid = null
     var ensCid = null
     var ensResolvedUrl = null
     var ipnsKey = null
+    var web3 = null
     try {
       var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(true, false, wiki)
     } catch (error) {
@@ -114,10 +119,11 @@ ENS Action
       return false
     }
     try {
+      var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
       var {
         cid: ensCid,
         resolvedUrl: ensResolvedUrl
-      } = await $tw.ipfs.resolveUrl(false, true, ensDomain)
+      } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
       if (cid !== null && ensCid !== null && cid === ensCid) {
         $tw.utils.alert(
           name,
@@ -125,8 +131,16 @@ ENS Action
         )
         return false
       }
+      const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
+      if (isOwner === false) {
+        const err = new Error('Unauthorized Account...')
+        err.name = 'OwnerError'
+        throw err
+      }
     } catch (error) {
-      this.getLogger().error(error)
+      if (error.name !== 'OwnerError') {
+        this.getLogger().error(error)
+      }
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -139,13 +153,19 @@ ENS Action
             $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
           }
           $tw.ipfs
-            .setEns(ensDomain, cid)
+            .setContentHash(ensDomain, cid, web3, account)
             .then(data => {
               $tw.utils.alert(name, 'Successfully published to ENS...')
             })
             .catch(error => {
               $tw.ipfs.requestToPin(ensCid)
-              self.getLogger().error(error)
+              if (
+                error.name !== 'OwnerError' &&
+                error.name !== 'RejectedUserRequest' &&
+                error.name !== 'UnauthorizedUserAccount'
+              ) {
+                self.getLogger().error(error)
+              }
               $tw.utils.alert(name, error.message)
             })
         })
@@ -166,13 +186,19 @@ ENS Action
                 $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
               }
               $tw.ipfs
-                .setEns(ensDomain, ipnsCid)
+                .setContentHash(ensDomain, ipnsCid, web3, account)
                 .then(data => {
                   $tw.utils.alert(name, 'Successfully Published to ENS...')
                 })
                 .catch(error => {
                   $tw.ipfs.requestToPin(ensCid)
-                  self.getLogger().error(error)
+                  if (
+                    error.name !== 'OwnerError' &&
+                    error.name !== 'RejectedUserRequest' &&
+                    error.name !== 'UnauthorizedUserAccount'
+                  ) {
+                    self.getLogger().error(error)
+                  }
                   $tw.utils.alert(name, error.message)
                 })
             })

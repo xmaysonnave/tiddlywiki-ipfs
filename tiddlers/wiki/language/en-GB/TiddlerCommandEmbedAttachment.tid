@@ -34,7 +34,7 @@ type: text/vnd.tiddlywiki
 </p>
 <ul>
   <li>Download the attachment from IPFS</li>
-  <li>Unencrypt the attachment if applicable</li>
+  <li>Decrypt the attachment if applicable</li>
   <li>Embed the attachment in your wiki</li>
   <li>Request to Unpin the previous IPFS identifier</li>
   <li>Update the Tiddler tags</li>

@@ -1,70 +1,84 @@
 import root from 'window-or-global'
 ;(function () {
-  /*jslint node: true, browser: true */
   'use strict'
 
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-loader'
-
-  const eruda = 'https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js'
-  const erudaSri =
-    'sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP'
-
-  const ethers = 'https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js'
-  const ethersSri =
-    'sha384-Gqf9kLa8S94/ZNsQCadoW0KeT6tg+fapxds7gOiSL72KeOtfgTOmHvJENrQljse5'
-
-  const ipfsHttpClient =
-    'https://cdn.jsdelivr.net/npm/ipfs-http-client@44.1.1/dist/index.min.js'
-  const ipfsHttpClientSri =
-    'sha384-NvfAKWfwAGQtt53C6QkNMM2whGsF9BeeXkfOWkFV3qmyh1VLVmfxxUrvLcgw0ZYr'
 
   var IpfsLoader = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle
   }
 
   IpfsLoader.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   // https://www.srihash.org/
+  IpfsLoader.prototype.loadTiddlerLibrary = async function (
+    title,
+    obj,
+    module
+  ) {
+    if (root[obj] === undefined) {
+      const tiddler = $tw.wiki.getTiddler(title)
+      if (tiddler) {
+        const sourceUri = tiddler.getFieldString('_source_uri')
+        const sourceSri = tiddler.getFieldString('_source_sri')
+        const loaded = await this.loadLibrary(
+          title,
+          sourceUri,
+          sourceSri,
+          module
+        )
+        if (loaded !== undefined && root[obj] !== undefined) {
+          this.getLogger().info(
+            `Loaded ${title}:
+ ${sourceUri}`
+          )
+          return
+        }
+        throw new Error(`Unable to load Library: ${title}`)
+      }
+      throw new Error(`Undefined Library: ${title}`)
+    }
+  }
+
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === 'undefined') {
-      await this.loadLibrary('ErudaLibrary', eruda, erudaSri, true)
-      if (typeof root.eruda !== 'undefined') {
-        this.getLogger().info(`Loaded ErudaLibrary:\n ${eruda}`)
-      }
+      await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda', true)
     }
   }
 
-  // https://www.srihash.org/
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === 'undefined') {
-      await this.loadLibrary('EtherJsLibrary', ethers, ethersSri, true)
-      if (typeof root.ethers !== 'undefined') {
-        this.getLogger().info(`Loaded EtherJsLibrary:\n ${ethers}`)
-      }
+      await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
     }
   }
 
-  // https://www.srihash.org/
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
     if (typeof root.IpfsHttpClient === 'undefined') {
-      await this.loadLibrary(
-        'IpfsHttpLibrary',
-        ipfsHttpClient,
-        ipfsHttpClientSri,
+      await this.loadTiddlerLibrary(
+        '$:/ipfs/library/ipfs-http-client',
+        'IpfsHttpClient',
         true
       )
-      if (typeof root.IpfsHttpClient !== 'undefined') {
-        this.getLogger().info(`Loaded IpfsHttpLibrary:\n ${ipfsHttpClient}`)
-      }
     }
   }
 
-  /*eslint no-new: "off", no-new-func: "off"*/
+  // https://github.com/3box/3box-js
+  IpfsLoader.prototype.loadThreeBoxLibrary = async function () {
+    if (typeof root.Box === 'undefined') {
+      await this.loadTiddlerLibrary('$:/ipfs/library/3box', 'Box', true)
+    }
+  }
+
+  /*eslint no-new:"off",no-new-func:"off"*/
   IpfsLoader.prototype.supportDynamicImport = function () {
     try {
       new Function('import("")')
@@ -160,7 +174,10 @@ import root from 'window-or-global'
           }
           try {
             const array = new Uint8Array(this.response)
-            self.getLogger().info(`[${xhr.status}] Loaded:\n ${url}`)
+            self.getLogger().info(
+              `[${xhr.status}] Loaded:
+ ${url}`
+            )
             resolve(array)
           } catch (error) {
             reject(error)
@@ -183,22 +200,22 @@ import root from 'window-or-global'
    * Load to Base64
    */
   IpfsLoader.prototype.loadToBase64 = async function (url) {
-    const array = await this.httpGetToUint8Array(url)
-    if (array.length === 0) {
+    const ua = await this.httpGetToUint8Array(url)
+    if (ua.length === 0) {
       return {
         data: '',
         decrypted: false
       }
     }
     // Decrypt
-    if (this.isUtf8ArrayEncrypted(array)) {
-      const decrypted = await this.decryptUint8ArrayToBase64(array)
+    if (this.isUint8ArrayEncrypted(ua)) {
+      const decrypted = await this.decryptUint8ArrayToBase64(ua)
       return {
         data: decrypted,
         decrypted: true
       }
     }
-    const data = this.ipfsBundle.Uint8ArrayToBase64(array)
+    const data = this.ipfsBundle.Uint8ArrayToBase64(ua)
     return {
       data: data,
       decrypted: false
@@ -209,21 +226,21 @@ import root from 'window-or-global'
    * Load to UTF-8
    */
   IpfsLoader.prototype.loadToUtf8 = async function (url) {
-    var array = await this.httpGetToUint8Array(url)
-    if (array.length === 0) {
+    var ua = await this.httpGetToUint8Array(url)
+    if (ua.length === 0) {
       return {
         data: '',
         decrypted: false
       }
     }
-    if (this.isUtf8ArrayEncrypted(array)) {
+    if (this.isUint8ArrayEncrypted(ua)) {
       return {
-        data: await this.decryptUint8ArrayToUtf8(array),
+        data: await this.decryptUint8ArrayToUtf8(ua),
         decrypted: true
       }
     }
     return {
-      data: this.ipfsBundle.Utf8ArrayToStr(array),
+      data: this.ipfsBundle.Utf8ArrayToStr(ua),
       decrypted: false
     }
   }
@@ -279,16 +296,14 @@ import root from 'window-or-global'
     })
   }
 
-  IpfsLoader.prototype.isUtf8ArrayEncrypted = function (content) {
-    // Check
-    if (content instanceof Uint8Array === false || content.length === 0) {
+  IpfsLoader.prototype.isUint8ArrayEncrypted = function (ua) {
+    if (ua instanceof Uint8Array === false || ua.length === 0) {
       return false
     }
-    // Process
-    const standford = this.ipfsBundle.StringToUint8Array('{"iv":"')
+    const header = this.ipfsBundle.StringToUint8Array('{"iv":')
     var encrypted = false
-    for (var i = 0; i < content.length && i < standford.length; i++) {
-      if (content[i] === standford[i]) {
+    for (var i = 0; i < ua.length && i < header.length; i++) {
+      if (ua[i] === header[i]) {
         encrypted = true
       } else {
         encrypted = false

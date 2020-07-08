@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# TiddlyWiki5
+cp -R ./TiddlyWiki5/* ./node_modules/tiddlywiki > /dev/null 2>&1
+
+cp ./eth-sig-util/eth-sig-util.min.js ./node_modules/tiddlywiki/boot > /dev/null 2>&1
+
+wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.1.0/dist/detect-provider.min.js -O ./node_modules/tiddlywiki/boot/detect-provider.min.js
+
+wget https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js -O ./node_modules/tiddlywiki/boot/pako.min.js
+
 # metadata
 cp ./metadata/empty-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
 
@@ -47,10 +56,10 @@ npx tiddlywiki build \
 
 # compress
 cd wiki
-npx gzipper ./empty.html
-npx gzipper ./index.html
-npx gzipper ./dev.html
-npx gzipper ./tiddlywiki-ipfs-plugin.json
+npx gzipper ./empty.html ../output
+npx gzipper ./dev.html ../output
+npx gzipper ./index.html ../output
+npx gzipper ./tiddlywiki-ipfs-plugin.json ../output
 cd ..
 
 exit 0

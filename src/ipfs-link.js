@@ -42,8 +42,8 @@ IPFS link widget
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
@@ -60,7 +60,10 @@ IPFS link widget
   IpfsLinkWidget.prototype = new Widget()
 
   IpfsLinkWidget.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   /*
@@ -86,8 +89,13 @@ IPFS link widget
         .then(data => {
           var { normalizedUrl } = data
           if (normalizedUrl !== null) {
+            const sibling = self.findNextSiblingDomNode()
             self.removeChildDomNodes()
-            self.renderExternalLink(parent, nextSibling, normalizedUrl)
+            self.renderExternalLink(
+              parent,
+              nextSibling !== null ? nextSibling : sibling,
+              normalizedUrl
+            )
           }
         })
         .catch(error => {
@@ -134,9 +142,7 @@ IPFS link widget
     if (this['aria-label']) {
       domNode.setAttribute('aria-label', this['aria-label'])
     }
-    // Insert the URL into the DOM and render any children
     parent.insertBefore(domNode, nextSibling)
-    // Process
     this.renderChildren(domNode, null)
     this.domNodes.push(domNode)
   }
@@ -268,9 +274,7 @@ IPFS link widget
         widget: this
       })
     }
-    // Insert the link into the DOM and render any children
     parent.insertBefore(domNode, nextSibling)
-    // Process
     this.renderChildren(domNode, null)
     this.domNodes.push(domNode)
   }
@@ -280,9 +284,7 @@ IPFS link widget
    */
   IpfsLinkWidget.prototype.renderText = function (parent, nextSibling) {
     const domNode = this.document.createElement('span')
-    // Insert the text into the DOM and render any children
     parent.insertBefore(domNode, nextSibling)
-    // Process
     this.renderChildren(domNode, null)
     this.domNodes.push(domNode)
   }

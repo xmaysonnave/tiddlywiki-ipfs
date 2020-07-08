@@ -9,12 +9,16 @@ IPFS Controller
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
+  const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
   const EnsWrapper = require('$:/plugins/ipfs/ens-wrapper.js').EnsWrapper
+
+  const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
   const IpfsBundle = require('$:/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+  const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
   const IpfsWrapper = require('$:/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
 
   const ipfsKeyword = 'ipfs'
@@ -23,22 +27,42 @@ IPFS Controller
   const name = 'ipfs-controller'
 
   var IpfsController = function () {
-    this.ipfsBundle = new IpfsBundle()
-    this.ipfsBundle.init()
-    this.ensWrapper = new EnsWrapper(this.ipfsBundle)
-    this.ipfsUrl = this.ipfsBundle.ipfsUrl
-    this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle)
     this.ipfsClients = new Map()
     this.pin = []
     this.unpin = []
   }
 
-  IpfsController.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+  IpfsController.prototype.init = function () {
+    // Init once
+    if (this.once) {
+      return
+    }
+    this.ipfsBundle = new IpfsBundle()
+    this.ipfsBundle.init()
+    this.ensWrapper = new EnsWrapper(this.ipfsBundle.ensLibrary)
+    this.ipfsUrl = this.ipfsBundle.ipfsUrl
+    this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle)
+    // Listener
+    this.ensAction = new EnsAction()
+    this.ipfsAction = new IpfsAction()
+    this.ipfsTiddler = new IpfsTiddler()
+    // Init
+    this.ensAction.init()
+    this.ipfsAction.init()
+    this.ipfsTiddler.init()
+    // Init once
+    this.once = true
   }
 
-  IpfsController.prototype.isCid = function (cid) {
-    return this.ipfsBundle.isCid(cid)
+  IpfsController.prototype.getLogger = function () {
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
+  }
+
+  IpfsController.prototype.load3Box = async function () {
+    return await this.ipfsBundle.load3Box()
   }
 
   IpfsController.prototype.loadToBase64 = async function (url) {
@@ -49,12 +73,12 @@ IPFS Controller
     return await this.ipfsBundle.loadToUtf8(url)
   }
 
-  IpfsController.prototype.Base64ToUint8Array = function (base64) {
-    return this.ipfsBundle.Base64ToUint8Array(base64)
+  IpfsController.prototype.Base64ToUint8Array = function (b64) {
+    return this.ipfsBundle.Base64ToUint8Array(b64)
   }
 
-  IpfsController.prototype.Uint8ArrayToBase64 = function (uint8) {
-    return this.ipfsBundle.Uint8ArrayToBase64(uint8)
+  IpfsController.prototype.Uint8ArrayToBase64 = function (ua) {
+    return this.ipfsBundle.Uint8ArrayToBase64(ua)
   }
 
   IpfsController.prototype.StringToUint8Array = function (string) {
@@ -96,12 +120,18 @@ IPFS Controller
       var index = this.unpin.indexOf(cid)
       if (index !== -1) {
         this.unpin.splice(index, 1)
-        this.getLogger().info(`Cancel request to Unpin:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Cancel request to Unpin:
+ ${normalizedUrl}`
+        )
         return false
       }
       if (this.pin.indexOf(cid) === -1) {
         this.pin.push(cid)
-        this.getLogger().info(`Request to Pin:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Request to Pin:
+ ${normalizedUrl}`
+        )
         return true
       }
     }
@@ -143,13 +173,19 @@ IPFS Controller
       var index = this.pin.indexOf(cid)
       if (index !== -1) {
         this.pin.splice(index, 1)
-        this.getLogger().info(`Cancel request to Pin:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Cancel request to Pin:
+ ${normalizedUrl}`
+        )
         return false
       }
       // Add to unpin
       if (this.unpin.indexOf(cid) === -1) {
         this.unpin.push(cid)
-        this.getLogger().info(`Request to unpin:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Request to unpin:
+ ${normalizedUrl}`
+        )
         return true
       }
     }
@@ -161,12 +197,18 @@ IPFS Controller
       var index = this.pin.indexOf(cid)
       if (index !== -1) {
         this.pin.splice(index, 1)
-        this.getLogger().info(`Cancel request to Pin:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Cancel request to Pin:
+ ${normalizedUrl}`
+        )
       }
       var index = this.unpin.indexOf(cid)
       if (index !== -1) {
         this.unpin.splice(index, 1)
-        this.getLogger().info(`Cancel request to Unpin:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Cancel request to Unpin:
+ ${normalizedUrl}`
+        )
       }
     }
   }
@@ -202,10 +244,6 @@ IPFS Controller
   ) {
     const { ipfs } = await this.getIpfsClient()
     return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName)
-  }
-
-  IpfsController.prototype.decodeCid = function (pathname) {
-    return this.ipfsBundle.decodeCid(pathname)
   }
 
   IpfsController.prototype.getIpnsIdentifiers = async function (
@@ -262,7 +300,8 @@ IPFS Controller
     resolveIpns,
     resolveEns,
     value,
-    base
+    base,
+    web3
   ) {
     var cid = null
     var ipnsKey = null
@@ -308,14 +347,18 @@ IPFS Controller
         ipnsIdentifier
       )
       if (resolveIpns) {
-        this.getLogger().info(`Resolving IPNS key:\n ${normalizedUrl}`)
+        this.getLogger().info(
+          `Resolving IPNS key:
+ ${normalizedUrl}`
+        )
         $tw.utils.alert(name, 'Resolving an IPNS key...')
         try {
           cid = await this.resolveIpnsKey(ipnsKey)
           if (cid !== null) {
             resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}`, base)
             this.getLogger().info(
-              `Successfully resolved IPNS key:\n ${normalizedUrl}`
+              `Successfully resolved IPNS key:
+ ${normalizedUrl}`
             )
             $tw.utils.alert(name, 'Successfully resolved an IPNS key...')
           }
@@ -329,7 +372,8 @@ IPFS Controller
       }
     } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
       var { content: cid, resolvedUrl } = await this.resolveEns(
-        normalizedUrl.hostname
+        normalizedUrl.hostname,
+        web3
       )
     } else {
       resolvedUrl = normalizedUrl
@@ -409,8 +453,10 @@ IPFS Controller
     }
   }
 
-  IpfsController.prototype.resolveEns = async function (ensDomain) {
-    const { web3 } = await this.getWeb3Provider()
+  IpfsController.prototype.resolveEns = async function (ensDomain, web3) {
+    if (web3 === undefined || web3 == null) {
+      var { web3 } = await this.getWeb3Provider()
+    }
     const { content, protocol } = await this.ensWrapper.getContentHash(
       ensDomain,
       web3
@@ -418,7 +464,8 @@ IPFS Controller
     if (content !== null && protocol !== null) {
       const url = this.normalizeUrl(`/${protocol}/${content}`)
       this.getLogger().info(
-        `Successfully fetched ENS domain content: "${ensDomain}"\n ${url}`
+        `Successfully fetched ENS domain content: "${ensDomain}"
+ ${url}`
       )
       return {
         content: content,
@@ -433,8 +480,20 @@ IPFS Controller
     }
   }
 
-  IpfsController.prototype.setEns = async function (ensDomain, cid) {
-    const { web3, account } = await this.getEnabledWeb3Provider()
+  IpfsController.prototype.setContentHash = async function (
+    ensDomain,
+    cid,
+    web3,
+    account
+  ) {
+    if (
+      account === undefined ||
+      account == null ||
+      web3 === undefined ||
+      web3 == null
+    ) {
+      var { account, web3 } = await this.getEnabledWeb3Provider()
+    }
     const { cidV0 } = await this.ensWrapper.setContentHash(
       ensDomain,
       cid,
@@ -444,27 +503,61 @@ IPFS Controller
     if (cidV0 !== null) {
       const url = this.normalizeUrl(`/ipfs/${cidV0}`)
       this.getLogger().info(
-        `Successfully set ENS domain content:\n ${url} \n to: "${ensDomain}"`
+        `Successfully set ENS domain content:
+ ${url}
+ to: "${ensDomain}"`
       )
       return true
     }
     return false
   }
 
+  IpfsController.prototype.decodeCid = function (pathname) {
+    return this.ipfsBundle.decodeCid(pathname)
+  }
+
+  IpfsController.prototype.isCid = function (cid) {
+    return this.ipfsBundle.isCid(cid)
+  }
+
+  IpfsController.prototype.cidV1ToCidV0 = function (cidv1) {
+    return this.ipfsBundle.cidV1ToCidV0(cidv1)
+  }
+
+  IpfsController.prototype.cidV0ToCidV1 = function (cidv0) {
+    return this.ipfsBundle.cidV0ToCidV1(cidv0)
+  }
+
+  IpfsController.prototype.isOwner = async function (domain, web3, account) {
+    return await this.ipfsBundle.isOwner(domain, web3, account)
+  }
+
+  IpfsController.prototype.getPublicEncryptionKey = async function (provider) {
+    return await this.ipfsBundle.getPublicEncryptionKey(provider)
+  }
+
   IpfsController.prototype.getEthereumProvider = async function () {
-    return await this.ensWrapper.getEthereumProvider()
+    return await this.ipfsBundle.getEthereumProvider()
   }
 
   IpfsController.prototype.getEnabledWeb3Provider = async function () {
-    return await this.ensWrapper.getEnabledWeb3Provider()
+    return await this.ipfsBundle.getEnabledWeb3Provider()
   }
 
   IpfsController.prototype.getWeb3Provider = async function () {
-    return await this.ensWrapper.getWeb3Provider()
+    return await this.ipfsBundle.getWeb3Provider()
   }
 
-  IpfsController.prototype.getChainId = function () {
-    return this.ensWrapper.getChainId()
+  IpfsController.prototype.getEtherscanRegistry = function () {
+    return this.ipfsBundle.getEtherscanRegistry()
+  }
+
+  IpfsController.prototype.getNetworkRegistry = function () {
+    return this.ipfsBundle.getNetworkRegistry()
+  }
+
+  IpfsController.prototype.getENSRegistry = function () {
+    return this.ipfsBundle.getENSRegistry()
   }
 
   exports.IpfsController = IpfsController

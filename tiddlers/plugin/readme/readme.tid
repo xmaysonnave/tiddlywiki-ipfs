@@ -1,5 +1,5 @@
 title: $:/plugins/ipfs/readme
-modified: 20200525094915385
+modified: 20200622094915385
 tags: $:/ipfs/core
 type: text/vnd.tiddlywiki
 
@@ -9,7 +9,7 @@ Features:
 
 * Store `TiddlyWiki's` and attachments on [ext[IPFS|https://ipfs.io/]]
 * Access `TiddlyWiki's` and attachments from [ext[IPFS|https://ipfs.io/]]
-* Encrypt and Unencrypt `TiddlyWiki` and attachments
+* Encrypt and Decrypt `TiddlyWiki` and attachments
 * Publish and Manage IPNS Keys and Names
 * Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
 * Publish to [ext[ENS|https://ens.domains]]
@@ -44,7 +44,7 @@ Resources:
 !! With a capable ENS browser:
 
 * [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
-* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on [ext[Rinkeby|https://www.rinkeby.io/]] (~PoA): Ethereum Test Network
+* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on [ext[Rinkeby|https://www.rinkeby.io/]]: Ethereum Test Network (~PoA)
 * [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
 * [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#IPFS%20Documentation]]
 

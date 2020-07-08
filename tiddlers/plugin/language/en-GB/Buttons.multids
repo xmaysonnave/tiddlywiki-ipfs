@@ -1,6 +1,9 @@
 title: $:/language/Buttons/
-modified: 20200528094915385
+modified: 20200606094915385
 tags: $:/ipfs/core
+
+3Box/Profile/Caption: 3Box profile
+3Box/Profile/Hint: Load 3Box profile
 
 Ipfs/Export/Caption: export to IPFS
 Ipfs/Export/Hint: Export this tiddler to IPFS
@@ -33,7 +36,18 @@ Ipfs/Unpin/Caption: unpin from IPFS
 Ipfs/Unpin/Hint: Unpin this wiki from IPFS
 
 Console/Mobile/Caption: mobile console
-Console/Mobile/Hint: Load/Unload Mobile Console
+Console/Mobile/Hint: Load/Show/Hide Mobile Console
+Console/Mobile/Hide: Hide Mobile Console
+Console/Mobile/Load: Load Mobile Console
+Console/Mobile/Show: Show Mobile Console
+
+Encryption/Hint: Set or clear a password or a public key for saving this wiki
+Encryption/ClearPassword/Caption: clear password or public key
+Encryption/ClearPassword/Hint: Clear the password and save this wiki without encryption
+Encryption/ClearPublicKey/Hint: Clear the public key and save this wiki without encryption
+Encryption/SetPassword/Caption: set password or public key
+Encryption/SetPassword/Hint: Set a password for saving this wiki with encryption
+Encryption/SetPublicKey/Hint: Set a public key for saving this wiki with encryption
 
 Ens/Manager/Open/Caption: open ENS Manager
 Ens/Manager/Open/Hint: Open ENS Domain Manager

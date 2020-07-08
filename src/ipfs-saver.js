@@ -9,17 +9,12 @@ IPFS Saver
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
-  const log = require('$:/plugins/ipfs/loglevel/loglevel.js')
-
-  const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
-  const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
   const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js')
     .IpfsController
-  const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
 
   const ensKeyword = 'ens'
   const ipfsKeyword = 'ipfs'
@@ -31,44 +26,25 @@ IPFS Saver
    * Select the appropriate saver module and set it up
    */
   var IpfsSaver = function (wiki) {
-    this.wiki = wiki
-    this.apiUrl = null
-    this.ipfsProvider = null
-    // Loglevel
-    if (window.log === undefined || window.log == null) {
-      // Init
-      window.log = log.noConflict()
-      if ($tw.utils.getIpfsVerbose()) {
-        log.setLevel('info', false)
-      } else {
-        log.setLevel('warn', false)
-      }
-    }
     // Controller
     $tw.ipfs = new IpfsController()
-    // Listener
-    this.ensAction = new EnsAction()
-    this.ipfsAction = new IpfsAction()
-    this.ipfsTiddler = new IpfsTiddler()
-    // Init
-    this.ensAction.init()
-    this.ipfsAction.init()
-    this.ipfsTiddler.init()
-    // Logger
-    const logger = window.log.getLogger(name)
+    $tw.ipfs.init()
     // Log
-    logger.info('ipfs-saver is starting up...')
+    this.getLogger().info('ipfs-saver is starting up...')
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      logger.info(`Origin base URL: ${base}`)
+      this.getLogger().info(`Origin base URL: ${base}`)
     } else {
-      logger.info(`Gateway base URL: ${base}`)
+      this.getLogger().info(`Gateway base URL: ${base}`)
     }
   }
 
   IpfsSaver.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsSaver.prototype.save = async function (text, method, callback, options) {
@@ -76,13 +52,15 @@ IPFS Saver
       return false
     }
     try {
+      var account = null
       var cid = null
+      var ensCid = null
+      var ensDomain = null
       var ipnsCid = null
       var ipnsKey = null
       var ipnsName = null
-      var ensDomain = null
-      var ensCid = null
       var options = options || {}
+      var web3 = null
       const wiki = $tw.ipfs.getDocumentUrl()
       const base = $tw.ipfs.getIpfsBaseUrl()
       const nextWiki = $tw.ipfs.getUrl(wiki)
@@ -156,13 +134,26 @@ IPFS Saver
           callback(null, 'Undefined ENS domain...')
           return true
         }
-        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain)
+        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
+        if (isOwner === false) {
+          const err = new Error('Unauthorized Account...')
+          err.name = 'OwnerError'
+          throw err
+        }
+        var { cid: ensCid } = await $tw.ipfs.resolveUrl(
+          false,
+          true,
+          ensDomain,
+          null,
+          web3
+        )
         if (ensCid != null) {
           await $tw.ipfs.requestToUnpin(ensCid)
         }
       }
       // Upload  current document
-      this.getLogger().info(`Uploading wiki: ${text.length} bytes`)
+      this.getLogger().info(`Uploading wiki: ${text.length}`)
       // Add
       const { added } = await $tw.ipfs.addToIpfs(text)
       // Default next
@@ -191,16 +182,15 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-          await $tw.ipfs.setEns(ensDomain, added)
-          // const chainId = $tw.ipfs.getChainId()
+          await $tw.ipfs.setContentHash(ensDomain, added, web3, account)
           // if (chainId !== null && chainId === 1) {
           //   nextWiki.protocol = 'https:'
           //   nextWiki.host = ensDomain
           // } else {
-          const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
-          nextWiki.protocol = resolvedUrl.protocol
-          nextWiki.host = resolvedUrl.host
-          nextWiki.pathname = resolvedUrl.pathname
+          //   const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain, web3)
+          //   nextWiki.protocol = resolvedUrl.protocol
+          //   nextWiki.host = resolvedUrl.host
+          //   nextWiki.pathname = resolvedUrl.pathname
           // }
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
@@ -238,7 +228,13 @@ IPFS Saver
         window.location.assign(nextWiki.toString())
       }
     } catch (error) {
-      this.getLogger().error(error)
+      if (
+        error.name !== 'OwnerError' &&
+        error.name !== 'RejectedUserRequest' &&
+        error.name !== 'UnauthorizedUserAccount'
+      ) {
+        this.getLogger().error(error)
+      }
       callback(error.message)
       return true
     }

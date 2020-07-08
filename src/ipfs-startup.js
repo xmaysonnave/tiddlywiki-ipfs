@@ -9,17 +9,36 @@ Startup initialisation
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   exports.platforms = ['browser']
-  exports.after = ['startup']
+  exports.before = ['startup']
   exports.synchronous = true
 
   exports.startup = function () {
-    // Logger name
-    const name = 'ipfs-startup'
+    var getLogger = function () {
+      if (window.logger === undefined || window.logger == null) {
+        try {
+          window.logger = $tw.modules.execute(
+            '$:/plugins/loglevel/loglevel.min.js'
+          )
+          if ($tw.utils.getIpfsVerbose()) {
+            window.logger.setLevel('info', false)
+          } else {
+            window.logger.setLevel('warn', false)
+          }
+          window.logger.info('loglevel is starting up...')
+        } catch (error) {
+          console.error(error)
+        }
+      }
+      if (window.logger !== undefined && window.logger !== null) {
+        return window.logger
+      }
+      return console
+    }
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
@@ -28,7 +47,6 @@ Startup initialisation
     })
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
     // Log
-    const logger = window.log.getLogger(name)
-    logger.info('ipfs-startup is starting up...')
+    getLogger().info('ipfs-startup is starting up...')
   }
 })()

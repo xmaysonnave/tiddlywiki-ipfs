@@ -9,8 +9,8 @@ IPFS Import
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const name = 'ipfs-import'
@@ -85,7 +85,10 @@ IPFS Import
   var IpfsImport = function () {}
 
   IpfsImport.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsImport.prototype.removeTiddlers = function (keys, title) {
@@ -98,7 +101,10 @@ IPFS Import
       if (imported.delete(title)) {
         const msg = 'Remove:'
         const field = ''
-        this.getLogger().info(`${msg} ${field}"${title}"\n ${resolvedKey}`)
+        this.getLogger().info(
+          `${msg} ${field}"${title}"
+ ${resolvedKey}`
+        )
         $tw.utils.alert(
           name,
           alertFieldFailed`${msg} ${field}${resolvedKey}">${title}</a>`
@@ -354,13 +360,25 @@ IPFS Import
           const reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
           var value = `${reportImportedMsg}`
           if (reportAdded.trim() !== '') {
-            value = `${value}\n\n${reportAddedMsg}\n\n{{{${reportAdded}}}}`
+            value = `${value}
+
+ ${reportAddedMsg}
+
+ {{{${reportAdded}}}}`
           }
           if (reportDeleted.trim() !== '') {
-            value = `${value}\n\n${reportDeletedMsg}\n\n{{{${reportDeleted}}}}`
+            value = `${value}
+
+ ${reportDeletedMsg}
+
+ {{{${reportDeleted}}}}`
           }
           if (reportUpdated.trim() !== '') {
-            value = `${value}\n\n${reportUpdatedMsg}\n\n{{{${reportUpdated}}}}`
+            value = `${value}
+
+ ${reportUpdatedMsg}
+
+ {{{${reportUpdated}}}}`
           }
           updatedTiddler = $tw.utils.updateTiddler({
             tiddler: updatedTiddler,
@@ -489,7 +507,10 @@ IPFS Import
             const msg = 'Ignore Unknown:'
             const field = 'Title'
             this.getLogger().info(
-              `${msg} "${field}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
+              `${msg} "${field}"
+ ${resolvedKey}
+ from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
             )
             $tw.utils.alert(
               name,
@@ -501,7 +522,10 @@ IPFS Import
           if (imported.get(title) !== undefined) {
             const msg = 'Ignore Duplicate:'
             this.getLogger().info(
-              `${msg} "${title}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
+              `${msg} "${title}"
+ ${resolvedKey}
+ from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
             )
             $tw.utils.alert(
               name,
@@ -519,7 +543,8 @@ IPFS Import
             const msg = 'Unknown:'
             const field = 'Content-Type'
             this.getLogger().info(
-              `${msg} "${field}": "${title}"\n ${resolvedKey}`
+              `${msg} "${field}": "${title}"
+ ${resolvedKey}`
             )
             $tw.utils.alert(
               name,
@@ -593,7 +618,10 @@ IPFS Import
         const msg = 'Empty:'
         const field = 'Resource'
         this.getLogger().info(
-          `${msg} "${field}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
+          `${msg} "${field}"
+ ${resolvedKey}
+ from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
         )
         $tw.utils.alert(
           name,
@@ -605,7 +633,10 @@ IPFS Import
       const msg = 'Failed to Load:'
       const field = 'Resource'
       this.getLogger().info(
-        `${msg} "${field}"\n ${resolvedKey} \n from "${parentField}", "${parentTitle}"\n ${parentUrl}`
+        `${msg} "${field}"
+ ${resolvedKey}
+ from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
       )
       this.getLogger().error(error)
       $tw.utils.alert(
@@ -653,7 +684,8 @@ IPFS Import
           const msg = 'Missing:'
           const field = '_canonical_uri'
           this.getLogger().info(
-            `${msg} "${field}" from ${title}"\n ${resolvedKey}`
+            `${msg} "${field}" from ${title}"
+ ${resolvedKey}`
           )
           $tw.utils.alert(
             name,
@@ -672,7 +704,8 @@ IPFS Import
               const msg = 'Cycle Graph:'
               const field = '_canonical_uri'
               this.getLogger().info(
-                `${msg} "${field}" from ${title}"\n ${resolvedKey}`
+                `${msg} "${field}" from ${title}"
+ ${resolvedKey}`
               )
               $tw.utils.alert(
                 name,
@@ -702,7 +735,8 @@ IPFS Import
                   const msg = 'Matching:'
                   const field = '"_canonical_uri" and "_import_uri"'
                   this.getLogger().info(
-                    `${msg} ${field} from "${title}"\n ${resolvedKey}`
+                    `${msg} ${field} from "${title}"
+ ${resolvedKey}`
                   )
                   $tw.utils.alert(
                     name,
@@ -712,7 +746,8 @@ IPFS Import
                   const msg = 'Cycle Graph:'
                   const field = '_import_uri'
                   this.getLogger().info(
-                    `${msg} "${field}" from "${title}"\n ${resolvedKey}`
+                    `${msg} "${field}" from "${title}"
+ ${resolvedKey}`
                   )
                   $tw.utils.alert(
                     name,
@@ -777,7 +812,9 @@ IPFS Import
       const msg = 'Inconsistency:'
       const field = '_canonical_uri'
       this.getLogger().info(
-        `${msg} "${field}" from "${title}"\n ${resolvedKey} \n and ${parentResolvedKey}`
+        `${msg} "${field}" from "${title}"
+ ${resolvedKey}
+ and ${parentResolvedKey}`
       )
       $tw.utils.alert(
         name,
@@ -794,7 +831,9 @@ IPFS Import
       const msg = 'Inconsistency:'
       const field = '_import_uri'
       this.getLogger().info(
-        `${msg} "${field}" from "${title}"\n ${resolvedKey} \n and ${parentResolvedKey}`
+        `${msg} "${field}" from "${title}"
+ ${resolvedKey}
+ and ${parentResolvedKey}`
       )
       $tw.utils.alert(
         name,
@@ -848,7 +887,9 @@ IPFS Import
       const msg = 'Inconsistency:'
       const field = '_canonical_uri'
       this.getLogger().info(
-        `${msg} "${field}" from "${title}"\n ${importResolvedKey} \n and ${parentResolvedKey}`
+        `${msg} "${field}" from "${title}"
+ ${importResolvedKey}
+ and ${parentResolvedKey}`
       )
       $tw.utils.alert(
         name,
@@ -867,7 +908,8 @@ IPFS Import
       const msg = 'Missing:'
       const field = '_canonical_uri'
       this.getLogger().info(
-        `${msg} "${field}" from "${title}"\n ${importResolvedKey}`
+        `${msg} "${field}" from "${title}"
+ ${importResolvedKey}`
       )
       $tw.utils.alert(
         name,
@@ -890,7 +932,8 @@ IPFS Import
           const msg = 'Matching:'
           const field = '"_canonical_uri" and "_import_uri"'
           this.getLogger().info(
-            `${msg} ${field} from "${title}"\n ${importResolvedKey}`
+            `${msg} ${field} from "${title}"
+ ${importResolvedKey}`
           )
           $tw.utils.alert(
             name,
@@ -900,7 +943,8 @@ IPFS Import
           const msg = 'Cycle Graph:'
           const field = '_import_uri'
           this.getLogger().info(
-            `${msg} "${field}" from "${title}"\n ${importResolvedKey}`
+            `${msg} "${field}" from "${title}"
+ ${importResolvedKey}`
           )
           $tw.utils.alert(
             name,

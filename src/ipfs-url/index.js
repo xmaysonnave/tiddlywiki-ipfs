@@ -1,15 +1,18 @@
 import root from 'window-or-global'
 import { URL } from 'universal-url'
 ;(function () {
-  /*jslint node: true, browser: true */
   'use strict'
 
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-url'
 
   var IpfsUrl = function () {}
 
   IpfsUrl.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {

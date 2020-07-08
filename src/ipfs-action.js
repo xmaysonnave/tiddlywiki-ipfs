@@ -9,8 +9,8 @@ IPFS Action
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const fileProtocol = 'file:'
@@ -27,7 +27,10 @@ IPFS Action
   }
 
   IpfsAction.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsAction.prototype.init = function () {
@@ -37,6 +40,9 @@ IPFS Action
     }
     const self = this
     // Widget
+    $tw.rootWidget.addEventListener('tm-3box-profile', async function (event) {
+      return await self.handle3BoxProfile(event)
+    })
     $tw.rootWidget.addEventListener('tm-ipfs-export', async function (event) {
       return await self.handleExportToIpfs(event, false)
     })
@@ -80,13 +86,26 @@ IPFS Action
     this.once = true
   }
 
+  IpfsAction.prototype.handle3BoxProfile = async function (event) {
+    try {
+      await $tw.ipfs.load3Box()
+    } catch (error) {
+      this.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
+      return false
+    }
+    return true
+  }
+
   IpfsAction.prototype.handleExportToIpfs = async function (event, child) {
+    var account = null
+    var added = null
     var cid = null
+    var fields = []
     var ipnsKey = null
     var ipnsName = null
     var normalizedUrl = null
-    var added = null
-    var fields = []
+    var web3 = null
     const self = this
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
@@ -97,8 +116,23 @@ IPFS Action
         true,
         exportUri
       )
+      if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
+        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        const isOwner = await $tw.ipfs.isOwner(
+          normalizedUrl.hostname,
+          web3,
+          account
+        )
+        if (isOwner === false) {
+          const err = new Error('Unauthorized Account...')
+          err.name = 'OwnerError'
+          throw err
+        }
+      }
     } catch (error) {
-      this.getLogger().error(error)
+      if (error.name !== 'OwnerError') {
+        this.getLogger().error(error)
+      }
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -108,7 +142,7 @@ IPFS Action
     if (content == null) {
       return false
     }
-    this.getLogger().info(`Uploading Tiddler: ${content.length} bytes`)
+    this.getLogger().info(`Uploading Tiddler: ${content.length}`)
     try {
       var { added } = await $tw.ipfs.addToIpfs(content)
     } catch (error) {
@@ -177,7 +211,7 @@ IPFS Action
         .pinToIpfs(added)
         .then(data => {
           $tw.ipfs
-            .setEns(normalizedUrl.hostname, added)
+            .setContentHash(normalizedUrl.hostname, added, web3, account)
             .then(data => {
               fields.push({ key: '_export_uri', value: exportUri })
               tiddler = $tw.utils.updateTiddler({
@@ -203,7 +237,13 @@ IPFS Action
             })
             .catch(error => {
               $tw.ipfs.requestToUnpin(added)
-              self.getLogger().error(error)
+              if (
+                error.name !== 'OwnerError' &&
+                error.name !== 'RejectedUserRequest' &&
+                error.name !== 'UnauthorizedUserAccount'
+              ) {
+                self.getLogger().error(error)
+              }
               $tw.utils.alert(name, error.message)
             })
         })
@@ -279,8 +319,8 @@ IPFS Action
       $tw.utils.alert(name, 'Unsupported Tiddler Content-Type...')
       return null
     }
-    var text = tiddler.getFieldString('text')
-    if (text === undefined || text == null || text === '') {
+    var content = tiddler.getFieldString('text')
+    if (content === undefined || content == null || content === '') {
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
@@ -288,10 +328,10 @@ IPFS Action
       try {
         // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
         if (info.encoding === 'base64') {
-          text = atob(text)
+          content = atob(content)
         }
-        text = $tw.crypto.encrypt(text, $tw.crypto.currentPassword)
-        text = $tw.ipfs.StringToUint8Array(text)
+        content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword)
+        content = $tw.ipfs.StringToUint8Array(content)
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(
@@ -303,9 +343,9 @@ IPFS Action
     } else {
       try {
         if (info.encoding === 'base64') {
-          text = $tw.ipfs.Base64ToUint8Array(text)
+          content = $tw.ipfs.Base64ToUint8Array(content)
         } else {
-          text = $tw.ipfs.StringToUint8Array(text)
+          content = $tw.ipfs.StringToUint8Array(content)
         }
       } catch (error) {
         this.getLogger().error(error)
@@ -313,7 +353,7 @@ IPFS Action
         return null
       }
     }
-    return text
+    return content
   }
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
@@ -511,61 +551,73 @@ IPFS Action
     return true
   }
 
-  IpfsAction.prototype.handleMobileConsole = async function (tiddler) {
-    // Load mobile console if applicable
-    if (typeof window.eruda === 'undefined') {
-      try {
-        // Load eruda
-        await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
-      } catch (error) {
-        this.getLogger().error(error)
-        throw new Error(error.message)
+  IpfsAction.prototype.handleMobileConsole = async function (event) {
+    // Show or Hide
+    if (typeof window.eruda !== 'undefined') {
+      if (this.console === false) {
+        window.eruda.show()
+        window.eruda.show('console')
+        this.console = true
+      } else {
+        window.eruda.hide()
+        this.console = false
       }
-      const erudaContainer = window.document.createElement('div')
-      window.document.body.appendChild(erudaContainer)
-      window.eruda.init({
-        container: erudaContainer,
-        tool: ['console'],
-        useShadowDom: true,
-        autoScale: true
-      })
-      // Inherit font
-      erudaContainer.style.fontFamily = 'inherit'
-      // Preserve user preference if any, default is 80
-      if (window.eruda.get().config.get('displaySize') === 80) {
-        window.eruda.get().config.set('displaySize', 40)
-      }
-      // Preserve user preference if any, default is 0.95
-      if (window.eruda.get().config.get('transparency') === 0.95) {
-        window.eruda.get().config.set('transparency', 1)
-      }
-      // Hide Eruda button
-      if (window.eruda._shadowRoot !== undefined) {
-        const btn = window.eruda._shadowRoot.querySelector('.eruda-entry-btn')
-        if (btn !== undefined) {
-          btn.style.display = 'none'
-        }
-      }
-      // Console settings
-      const console = window.eruda.get('console')
-      console.config.set('asyncRender', true)
-      console.config.set('catchGlobalErr', true)
-      console.config.set('displayExtraInfo', false)
-      console.config.set('displayGetterVal', true)
-      console.config.set('displayUnenumerable', true)
-      console.config.set('jsExecution', true)
-      console.config.set('maxLogNum', 'infinite')
-      console.config.set('overrideConsole', true)
-      this.getLogger().info('Mobile console has been loaded...')
+      $tw.rootWidget.refresh(
+        $tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile')
+      )
+      return true
     }
-    if (this.console === false) {
-      window.eruda.show()
-      window.eruda.show('console')
-      this.console = true
+    // Load mobile console
+    try {
+      // Load eruda
+      await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
+    } catch (error) {
+      this.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
+      return false
+    }
+    const erudaContainer = window.document.createElement('div')
+    window.document.body.appendChild(erudaContainer)
+    window.eruda.init({
+      container: erudaContainer,
+      tool: ['console'],
+      useShadowDom: true,
+      autoScale: true
+    })
+    // Inherit font
+    erudaContainer.style.fontFamily = 'inherit'
+    // Preserve user preference if any, default is 80
+    if (window.eruda.get().config.get('displaySize') === 80) {
+      window.eruda.get().config.set('displaySize', 40)
+    }
+    // Preserve user preference if any, default is 0.95
+    if (window.eruda.get().config.get('transparency') === 0.95) {
+      window.eruda.get().config.set('transparency', 1)
+    }
+    // Hide Eruda button
+    if (window.eruda._shadowRoot !== undefined) {
+      const btn = window.eruda._shadowRoot.querySelector('.eruda-entry-btn')
+      if (btn !== undefined) {
+        btn.style.display = 'none'
+      }
+    }
+    // Init Logger
+    window.logger = window.logger.getLogger('eruda')
+    if ($tw.utils.getIpfsVerbose()) {
+      window.logger.setLevel('info', false)
     } else {
-      window.eruda.hide()
-      this.console = false
+      window.logger.setLevel('warn', false)
     }
+    // Log
+    window.logger.info('Mobile console has been loaded...')
+    // Show
+    window.eruda.show()
+    window.eruda.show('console')
+    this.console = true
+    $tw.rootWidget.refresh(
+      $tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile')
+    )
+    return true
   }
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {

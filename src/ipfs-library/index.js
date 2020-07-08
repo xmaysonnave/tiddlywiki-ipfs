@@ -1,9 +1,9 @@
 import { getIpfs, providers } from 'ipfs-provider'
 import root from 'window-or-global'
 ;(function () {
-  /*jslint node: true, browser: true */
   'use strict'
 
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-library'
 
   const { httpClient, windowIpfs } = providers
@@ -17,7 +17,10 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   IpfsLibrary.prototype.loadIpfsHttpClient = async function () {
@@ -104,7 +107,8 @@ import root from 'window-or-global'
         await this.loadIpfsHttpClient()
       }
       this.getLogger().info(
-        `Processing connection to IPFS API URL:\n ${apiUrl}`
+        `Processing connection to IPFS API URL:
+ ${apiUrl}`
       )
       var protocol = apiUrl.protocol.slice(0, -1)
       var port = apiUrl.port

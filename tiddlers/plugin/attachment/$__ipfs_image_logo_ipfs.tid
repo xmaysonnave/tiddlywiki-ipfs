@@ -1,11 +1,11 @@
-modified: 20200528044634920
-source: https://github.com/ipfs/logo/blob/master/vector/ipfs-logo-vector-black.svg
-license: https://github.com/ipfs/logo/blob/master/LICENSE
+modified: 20200619044634920
+_license_uri: https://raw.githubusercontent.com/ipfs-inactive/logo/master/LICENSE
+_project_uri: https://github.com/ipfs-inactive/logo/
+_source_uri: https://github.com/ipfs-inactive/logo/blob/master/vector/ipfs-logo-vector-black.svg
 tags: $:/tags/Image $:/ipfs/core $:/isAttachment $:/isEmbedded
 title: $:/core/images/ipfs
 type: image/svg+xml
 
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"

@@ -43,8 +43,8 @@ wikiparser
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
@@ -152,8 +152,8 @@ wikiparser
   }
 
   WikiParser.prototype.getLogger = function () {
-    if (window.log) {
-      return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
     }
     return console
   }
@@ -469,7 +469,7 @@ Push a text widget onto an array, respecting the configTrimWhiteSpace setting
   /*
 Parse zero or more class specifiers `.classname`
 */
-  /*eslint no-useless-escape: "off"*/
+  /*eslint no-useless-escape:"off"*/
   WikiParser.prototype.parseClasses = function () {
     var classRegExp = /\.([^\s\.]+)/gm
     var classNames = []

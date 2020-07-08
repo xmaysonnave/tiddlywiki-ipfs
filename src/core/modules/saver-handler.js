@@ -42,8 +42,8 @@ The saver handler tracks changes to the store and handles saving the entire wiki
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   /*
@@ -234,26 +234,22 @@ downloadType: the content type for the saved file
     // Process preferred if any
     var ignorePreferred = null
     var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')
-    if (preferredSaver !== null && preferredSaver !== undefined) {
+    if (preferredSaver !== undefined && preferredSaver !== null) {
       var title = preferredSaver.getFieldString('text')
       title =
         title === undefined || title == null || title.trim() === ''
           ? null
           : title.trim()
       if (title !== null) {
-        ignorePreferred = title
-        // Process preferred saver
-        if (
-          await this.save(
-            this.getSaver(title).module,
-            method,
-            variables,
-            text,
-            callback
-          )
-        ) {
-          return true
+        var saver = this.getSaver(title)
+        if (saver !== null && saver.module !== undefined) {
+          if (
+            await this.save(saver.module, method, variables, text, callback)
+          ) {
+            return true
+          }
         }
+        ignorePreferred = title
       }
     }
 

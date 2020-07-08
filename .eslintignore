@@ -1,10 +1,13 @@
 .github/*
+boot/*
 build/*
 metadata/*
 node_modules/*
-scripts/*
+output/*
 test/*
 tiddlers/*
+TiddlyWiki5/*
+eth-sig-util/
 tw5-locator/*
 tw5-relink/*
 wiki/*

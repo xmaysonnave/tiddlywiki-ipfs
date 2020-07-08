@@ -42,10 +42,11 @@ The binary parser parses a binary tiddler into a warning message and download li
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-binaryparser'
 
   var BINARY_WARNING_MESSAGE = '$:/core/ui/BinaryWarning'
@@ -138,8 +139,8 @@ The binary parser parses a binary tiddler into a warning message and download li
   }
 
   BinaryParser.prototype.getLogger = function () {
-    if (window.log) {
-      return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
     }
     return console
   }

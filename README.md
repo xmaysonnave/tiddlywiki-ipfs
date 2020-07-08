@@ -27,7 +27,7 @@ This plugin provides the following features:
 
 - Store `TiddlyWiki's` and attachments on [IPFS](https://ipfs.io/)
 - Access `TiddlyWiki's` and attachments from [IPFS](https://ipfs.io/)
-- Encrypt and Unencrypt `TiddlyWiki's` and attachments
+- Encrypt and Decrypt `TiddlyWiki's` and attachments
 - Publish and Manage IPNS Keys and Names
 - Interact with [Metamask](https://metamask.io) Ethereum wallets
 - Publish to [ENS](https://ens.domains)
@@ -139,10 +139,10 @@ The `IPFS Companion` support is [Temporarily Disabled](https://docs-beta.ipfs.io
 
 <a name="ens-ethereum-network"/>
 
-- `Mainnet`: Ethereum Main Network
-- `Ropsten`: Ethereum Test Network (PoW)
-- `Rinkeby`: Ethereum Test Network (PoA)
 - `Goerli`: Ethereum Test Network (PoA)
+- `Mainnet`: Ethereum Main Network
+- `Rinkeby`: Ethereum Test Network (PoA)
+- `Ropsten`: Ethereum Test Network (PoW)
 
 ## Developer
 
@@ -237,20 +237,20 @@ load-nvmrc
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 
 ```
-v12.18.0
+v12.18.1
 ```
 
 Install the recommended version.
 
 ```
-nvm install v12.18.0
+nvm install v12.18.1
 ```
 
 Check:
 
 ```
 node -v
-v12.18.0
+v12.18.1
 ```
 
 We update npm to use the latest:
@@ -265,7 +265,7 @@ At this stage your environment should look like this:
 
 ```
 npm -g ls --depth=0
-/home/user/.nvm/versions/node/v12.18.0/lib
+/home/user/.nvm/versions/node/v12.18.1/lib
 └── npm@6.14.5
 ```
 

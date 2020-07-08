@@ -1,5 +1,5 @@
 title: Networks
-modified: 20200529094915385
+modified: 20200622094915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
@@ -16,12 +16,12 @@ type: text/vnd.tiddlywiki
   You can check the <b>Ethereum</b> networks with the following tools:
 </p>
 <ul>
-  <li>[ext[Ethereum Gas Station|https://ethgasstation.info/]]</li>
-  <li>[ext[Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
-  <li>[ext[Etherchain Charts|https://www.etherchain.org/charts]]</li>
-  <li>[ext[Etherscan|https://etherscan.io/]]</li>
-  <li>[ext[Ethstats|https://ethstats.net/]]</li>
-  <li>[ext[Goerli: Ethereum Test Network (PoA)|https://stats.goerli.net/]]</li>
-  <li>[ext[Rinkeby: Ethereum Test Network (PoA)|https://www.rinkeby.io/#stats]]</li>
-  <li>[ext[Ropsten: Ethereum Test Network (PoW)|https://ropsten-stats.parity.io/]]</li>
+  <li>[ext[Goerli|https://stats.goerli.net/]]: Ethereum Test Network (~PoA)</li>
+  <li>[ext[Mainnet: Etherchain Charts|https://www.etherchain.org/charts]]</li>
+  <li>[ext[Mainnet: Ethereum Gas Station|https://ethgasstation.info/]]</li>
+  <li>[ext[Mainnet: Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
+  <li>[ext[Mainnet: Etherscan|https://etherscan.io/]]</li>
+  <li>[ext[Mainnet: Ethstats|https://ethstats.net/]]</li>
+  <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (~PoA)</li>
+  <li>[ext[Ropsten|https://ropsten-stats.parity.io/]]: Ethereum Test Network (~PoW)</li>
 </ul>

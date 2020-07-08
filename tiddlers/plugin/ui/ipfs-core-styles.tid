@@ -1,5 +1,5 @@
 title: $:/plugins/ipfs/styles
-modified: 20200528094915385
+modified: 20200608094915385
 tags: $:/ipfs/core $:/tags/Stylesheet
 type: text/css
 
@@ -31,4 +31,9 @@ a.tc-ipfs-link-external:hover {
 	color: <<colour external-link-foreground-hover>>;
 	background-color: <<colour external-link-background-hover>>;
   cursor: pointer;
+}
+
+.ethAddress {
+  padding: 20px 0px 0px 40px;
+  height: 80px;
 }

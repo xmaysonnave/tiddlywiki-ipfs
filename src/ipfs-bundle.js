@@ -7,20 +7,20 @@ module-type: library
 IPFS Bundle
 
 \*/
-
 import CID from 'cids'
 import root from 'window-or-global'
-
 import EnsLibrary from './ens-library'
+import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
 import IpfsLoader from './ipfs-loader'
 import IpfsUrl from './ipfs-url'
+import BoxLibrary from './box-library'
 ;(function () {
-  /*jslint node: true, browser: true*/
   'use strict'
 
   const cidAnalyser = 'https://cid.ipfs.io/#'
 
+  /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-bundle'
 
   var IpfsBundle = function () {
@@ -28,7 +28,10 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.getLogger = function () {
-    return root.log.getLogger(name)
+    if (root.logger !== undefined && root.logger !== null) {
+      return root.logger
+    }
+    return console
   }
 
   IpfsBundle.prototype.init = function () {
@@ -37,11 +40,199 @@ import IpfsUrl from './ipfs-url'
       return
     }
     this.ipfsLoader = new IpfsLoader(this)
-    this.ensLibrary = new EnsLibrary(this.ipfsLoader)
+    this.ethereumLibrary = new EthereumLibrary(this.ipfsLoader)
+    this.ethereumLibrary.init()
+    this.ensLibrary = new EnsLibrary(this.ethereumLibrary)
     this.ipfsLibrary = new IpfsLibrary(this)
     this.ipfsUrl = new IpfsUrl()
+    this.boxLibrary = new BoxLibrary(this.ipfsLoader)
     // Init once
     this.once = true
+  }
+
+  IpfsBundle.prototype.load3Box = async function () {
+    const { account, provider } = await this.getEnabledWeb3Provider()
+    await this.boxLibrary.load3Box(account, provider)
+    return {
+      account: account
+    }
+  }
+
+  IpfsBundle.prototype.getENSRegistry = function () {
+    return this.ensLibrary.getENSRegistry()
+  }
+
+  IpfsBundle.prototype.getEtherscanRegistry = function () {
+    return this.ethereumLibrary.getEtherscanRegistry()
+  }
+
+  IpfsBundle.prototype.getNetworkRegistry = function () {
+    return this.ethereumLibrary.getNetworkRegistry()
+  }
+
+  IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {
+    try {
+      return await this.ethereumLibrary.getPublicEncryptionKey(provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an Ethereum Public Encryption Key...')
+    }
+  }
+
+  IpfsBundle.prototype.isOwner = async function (domain, web3, account) {
+    return await this.ensLibrary.isOwner(domain, web3, account)
+  }
+
+  /*
+   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+   * https://eips.ethereum.org/EIPS/eip-1193
+   * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
+   */
+  IpfsBundle.prototype.getEthereumProvider = async function () {
+    return await this.ethereumLibrary.getEthereumProvider()
+  }
+
+  IpfsBundle.prototype.getEnabledWeb3Provider = async function () {
+    var account = null
+    var chainId = null
+    var web3 = null
+    const etherscan = this.getEtherscanRegistry()
+    const network = this.getNetworkRegistry()
+    const provider = await this.getEthereumProvider()
+    try {
+      var {
+        account,
+        chainId,
+        web3
+      } = await this.ethereumLibrary.getEnabledWeb3Provider(provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an enabled Ethereum Provider...')
+    }
+    // Log
+    this.getLogger().info(
+      `New Enabled Web3 provider:
+ Chain: ${network[chainId]}
+ Account: ${etherscan[chainId]}/address/${account}`
+    )
+    return {
+      account: account,
+      chainId: chainId,
+      provider: provider,
+      web3: web3
+    }
+  }
+
+  IpfsBundle.prototype.getWeb3Provider = async function () {
+    var chainId = null
+    var web3 = null
+    const network = this.getNetworkRegistry()
+    const provider = await this.getEthereumProvider()
+    try {
+      var { web3, chainId } = await this.ethereumLibrary.getWeb3Provider(
+        provider
+      )
+    } catch (error) {
+      this.getLogger().error(error)
+      throw new Error('Unable to retrieve an Ethereum Provider...')
+    }
+    // Log
+    this.getLogger().info(
+      `New Web3 provider:
+ ${network[chainId]}`
+    )
+    return {
+      chainId: chainId,
+      provider: provider,
+      web3: web3
+    }
+  }
+
+  // https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer/21797381
+  // https://github.com/danguer/blog-examples/blob/master/js/base64-binary.js
+  /*
+   * Copyright (c) 2011, Daniel Guerrero
+   * All rights reserved.
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   * Redistributions of source code must retain the above copyright
+   * notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright
+   * notice, this list of conditions and the following disclaimer in the
+   * documentation and/or other materials provided with the distribution.
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL DANIEL GUERRERO BE LIABLE FOR ANY
+   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   */
+  /**
+   * Uses the new array typed in javascript to binary base64 encode/decode
+   * at the moment just decodes a binary base64 encoded
+   * into either an ArrayBuffer (decodeArrayBuffer)
+   * or into an Uint8Array (decode)
+   *
+   * References:
+   * https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer
+   * https://developer.mozilla.org/en/JavaScript_typed_arrays/Uint8Array
+   */
+  /*eslint no-useless-escape:"off"*/
+  var Base64Binary = {
+    _keyStr:
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+    /* will return a  Uint8Array type */
+    decodeArrayBuffer: function (input) {
+      var bytes = (input.length / 4) * 3
+      var ab = new ArrayBuffer(bytes)
+      this.decode(input, ab)
+      return ab
+    },
+    removePaddingChars: function (input) {
+      var lkey = this._keyStr.indexOf(input.charAt(input.length - 1))
+      if (lkey === 64) {
+        return input.substring(0, input.length - 1)
+      }
+      return input
+    },
+    decode: function (input, ab) {
+      //get last chars to see if are valid
+      input = this.removePaddingChars(input)
+      input = this.removePaddingChars(input)
+      var bytes = parseInt((input.length / 4) * 3, 10)
+      var ua
+      var chr1, chr2, chr3
+      var enc1, enc2, enc3, enc4
+      var i = 0
+      var j = 0
+      if (ab) ua = new Uint8Array(ab)
+      else ua = new Uint8Array(bytes)
+      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '')
+      for (i = 0; i < bytes; i += 3) {
+        //get the 3 octects in 4 ascii chars
+        enc1 = this._keyStr.indexOf(input.charAt(j++))
+        enc2 = this._keyStr.indexOf(input.charAt(j++))
+        enc3 = this._keyStr.indexOf(input.charAt(j++))
+        enc4 = this._keyStr.indexOf(input.charAt(j++))
+        chr1 = (enc1 << 2) | (enc2 >> 4)
+        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
+        chr3 = ((enc3 & 3) << 6) | enc4
+        ua[i] = chr1
+        if (enc3 !== 64) ua[i + 1] = chr2
+        if (enc4 !== 64) ua[i + 2] = chr3
+      }
+      return ua
+    }
   }
 
   IpfsBundle.prototype.isJson = function (content) {
@@ -144,11 +335,16 @@ import IpfsUrl from './ipfs-url'
       cidv0 = cidv0.toV0()
       // Log
       this.getLogger().info(
-        `Converted:\n "cidv1" (Base32): ${cidAnalyser}${cidv1} \n to "cidv0" (Base58): ${cidAnalyser}${cidv0}`
+        `Converted:
+ "cidv1" (Base32): ${cidAnalyser}${cidv1}
+ to "cidv0" (Base58): ${cidAnalyser}${cidv0}`
       )
     } else {
       // Log
-      this.getLogger().info(`"cidv0" (Base58):\n ${cidAnalyser}${cidv0}`)
+      this.getLogger().info(
+        `"cidv0" (Base58):
+ ${cidAnalyser}${cidv0}`
+      )
     }
     return cidv0.toString()
   }
@@ -163,24 +359,25 @@ import IpfsUrl from './ipfs-url'
     if (cidv1.version === 0) {
       cidv1 = cidv1.toV1()
       this.getLogger().info(
-        `Converted:\n "cidv0" (Base58): ${cidAnalyser}${cidv0} \n to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
+        `Converted:
+ "cidv0" (Base58): ${cidAnalyser}${cidv0}
+ to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
       )
     } else {
       // Log
-      this.getLogger().info(`"cidv1" (Base32):\n ${cidAnalyser}${cidv1}`)
+      this.getLogger().info(
+        `"cidv1" (Base32):
+ ${cidAnalyser}${cidv1}`
+      )
     }
     return cidv1.toString()
   }
 
-  IpfsBundle.prototype.Base64ToUint8Array = function (base64) {
-    var raw = atob(base64)
-    var ua = new Uint8Array(raw.length)
-    for (var i = 0; i < raw.length; i++) {
-      ua[i] = raw.charCodeAt(i)
-    }
-    return ua
+  IpfsBundle.prototype.Base64ToUint8Array = function (b64) {
+    return Base64Binary.decode(b64)
   }
 
+  // https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
   IpfsBundle.prototype.Uint8ArrayToBase64 = function (uint8) {
     var CHUNK_SIZE = 0x8000 //arbitrary number
     var index = 0
@@ -209,7 +406,6 @@ import IpfsUrl from './ipfs-url'
   }
 
   // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
-
   /*
    * utf.js - UTF-8 <=> UTF-16 convertion
    *

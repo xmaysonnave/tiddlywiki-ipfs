@@ -1,11 +1,11 @@
-modified: 20200528040053586
-source: https://github.com/ipfs/logo/blob/master/vector/ipfs-logo-vector-ice-text.svg
-license: https://github.com/ipfs/logo/blob/master/LICENSE
+modified: 20200619040053586
+_license_uri: https://raw.githubusercontent.com/ipfs-inactive/logo/master/LICENSE
+_project_uri: https://github.com/ipfs-inactive/logo/
+_source_uri: https://github.com/ipfs-inactive/logo/blob/master/vector/ipfs-logo-vector-ice-text.svg
 tags: $:/isAttachment $:/isEmbedded
 title: $:/ipfs/logo/vector/ice/text
 type: image/svg+xml
 
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   style="enable-background:new" xmlns="http://www.w3.org/2000/svg"

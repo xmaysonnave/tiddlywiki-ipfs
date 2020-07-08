@@ -9,8 +9,8 @@ IPFS Tiddler
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
@@ -63,7 +63,10 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.getLogger = function () {
-    return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
   }
 
   IpfsTiddler.prototype.init = function () {
@@ -83,7 +86,10 @@ IPFS Tiddler
     $tw.hooks.addHook('th-importing-tiddler', function (tiddler) {
       return self.handleFileImport(tiddler)
     })
-    $tw.hooks.addHook('th-saving-tiddler', async function (tiddler) {
+    $tw.hooks.addHook('th-saving-tiddler', async function (
+      tiddler,
+      oldTiddler
+    ) {
       return await self.handleSaveTiddler(tiddler)
     })
     // Widget
@@ -106,7 +112,10 @@ IPFS Tiddler
     if (gateway !== undefined && gateway.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'gateway') {
-        this.getLogger().info(`Gateway Relative URL:\n ${base}`)
+        this.getLogger().info(
+          `Gateway Relative URL:
+ ${base}`
+        )
       }
     }
     // Policy preference
@@ -131,10 +140,12 @@ IPFS Tiddler
     // Verbose preference
     const verbose = changes['$:/ipfs/saver/verbose']
     if (verbose !== undefined && verbose.modified) {
-      if ($tw.utils.getIpfsVerbose()) {
-        this.updateLoggers('info')
-      } else {
-        this.updateLoggers('warn')
+      if (window.logger !== undefined && window.logger !== null) {
+        if ($tw.utils.getIpfsVerbose()) {
+          window.logger.setLevel('info', false)
+        } else {
+          window.logger.setLevel('warn', false)
+        }
       }
     }
   }
@@ -171,7 +182,10 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info(`Pinning: "${field}"\n ${resolvedUrl}`)
+          self.getLogger().info(
+            `Pinning: "${field}"
+ ${resolvedUrl}`
+          )
           $tw.ipfs
             .pinToIpfs(cid)
             .then(data => {
@@ -247,7 +261,10 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info(`Unpinning: "${field}\n ${resolvedUrl}`)
+          self.getLogger().info(
+            `Unpinning: "${field}
+ ${resolvedUrl}`
+          )
           if ($tw.utils.getIpfsUnpin()) {
             $tw.ipfs
               .unpinFromIpfs(cid)
@@ -271,17 +288,6 @@ IPFS Tiddler
         self.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
-  }
-
-  IpfsTiddler.prototype.updateLoggers = function (level) {
-    window.log.setLevel(level, false)
-    const loggers = window.log.getLoggers()
-    for (var property in loggers) {
-      if (Object.prototype.hasOwnProperty.call(loggers, property)) {
-        const logger = window.log.getLogger(property)
-        logger.setLevel(level, false)
-      }
-    }
   }
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
@@ -370,7 +376,10 @@ IPFS Tiddler
       return true
     }
     // Async Import
-    if (canonicalUri !== null || importUri !== null) {
+    if (
+      type === 'text/vnd.tiddlywiki' &&
+      (canonicalUri !== null || importUri !== null)
+    ) {
       var ipfsImport = new IpfsImport()
       ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
         self.getLogger().error(error)
@@ -384,9 +393,10 @@ IPFS Tiddler
     return true
   }
 
-  IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
-    // Previous tiddler
-    const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
+  IpfsTiddler.prototype.handleSaveTiddler = async function (
+    tiddler,
+    oldTiddler
+  ) {
     const { type, info } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
@@ -450,7 +460,8 @@ IPFS Tiddler
                 fields: [{ key: 'text', value: content.data }]
               })
               this.getLogger().info(
-                `Embed attachment: ${content.data.length} bytes\n ${oldResolvedUrl}`
+                `Embed attachment: ${content.data.length}
+ ${oldResolvedUrl}`
               )
             } catch (error) {
               this.getLogger().error(error)

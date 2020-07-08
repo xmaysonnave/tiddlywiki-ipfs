@@ -1,11 +1,11 @@
-modified: 20200528044634920
-source: https://github.com/ensdomains/ens-app/blob/dev/public/safari-pinned-tab.svg
-license: https://github.com/ensdomains/ens-app/blob/dev/LICENSE
+modified: 20200619044634920
+_license_uri: https://raw.githubusercontent.com/ensdomains/ens-app/dev/LICENSE
+_project_uri: https://github.com/ensdomains/ens-app/
+_source_uri: https://github.com/ensdomains/ens-app/blob/dev/public/safari-pinned-tab.svg
 tags: $:/tags/Image $:/ipfs/core $:/isAttachment $:/isEmbedded
 title: $:/core/images/ens
 type: image/svg+xml
 
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"

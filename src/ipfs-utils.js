@@ -9,8 +9,8 @@ IPFS utils
 \*/
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   /**
@@ -199,7 +199,8 @@ IPFS utils
       const url = $tw.ipfs.getDocumentUrl()
       url.hash = title
       this.getLogger().info(
-        `Unknown Content-Type: "${type}", default: "text/vnd.tiddlywiki":\n ${url}`
+        `Unknown Content-Type: "${type}", default: "text/vnd.tiddlywiki":
+ ${url}`
       )
       type = 'text/vnd.tiddlywiki'
       info = $tw.config.contentTypeInfo[type]

@@ -58,8 +58,8 @@ The width and height attributes are interpreted as a number of pixels, and do no
  */
 
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
@@ -76,8 +76,8 @@ Inherit from the base widget class
   ImageWidget.prototype = new Widget()
 
   ImageWidget.prototype.getLogger = function () {
-    if (window.log) {
-      return window.log.getLogger(name)
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
     }
     return console
   }

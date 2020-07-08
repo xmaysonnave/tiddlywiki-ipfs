@@ -8,10 +8,24 @@
 	],
 	"build": {
 		"empty": [
-			"--rendertiddler",
-			"$:/core/save/all",
-			"empty.html",
-			"text/plain"
-		]
+			"--compress", "true",
+			"--rendertiddler", "$:/core/save/all", "empty.html", "text/plain"
+		],
+		"empty-encrypted": [
+			"--compress", "true",
+      "--password", "blue",
+			"--rendertiddler", "$:/core/save/all", "../output/empty-encrypted.html", "text/plain",
+      "--clearpassword"
+    ],
+		"empty-plain": [
+			"--compress", "false",
+			"--rendertiddler", "$:/core/save/all", "../output/empty-plain.html", "text/plain"
+		],
+		"empty-plain-and-encrypted": [
+			"--compress", "false",
+      "--password", "blue",
+			"--rendertiddler", "$:/core/save/all", "../output/empty-plain-and-encrypted.html", "text/plain",
+      "--clearpassword"
+    ]
 	}
 }
