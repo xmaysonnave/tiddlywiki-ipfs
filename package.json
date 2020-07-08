@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200708345",
+  "version": "v0.3.0-200708352",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/ipfs-bundle.js",
   "directories": {
@@ -16,19 +16,19 @@
   },
   "prettier": "prettier-config-standard",
   "scripts": {
-    "build-all-noclone": "scripts/build-all-noclone.sh",
-    "build": "scripts/build.sh",
-    "build-tiddlywiki": "scripts/build-tiddlywiki.sh",
+    "build-all-noclone": "./scripts/build-all-noclone.sh",
+    "build": "./scripts/build.sh",
+    "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
     "eslint": "eslint \"src/**/*.js\" && eslint \"test/**/*.js\" && eslint \"scripts/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix && eslint \"scripts/**/*.js\" --fix",
     "format": "prettier-standard --eslint --format",
     "prepare": "npm run snyk-protect",
-    "run-build-number": "scripts/run-build-number.sh",
-    "run-browserify": "scripts/run-browserify.sh",
-    "run-prepare-clone": "scripts/run-prepare-clone.sh",
-    "run-prepare": "scripts/run-prepare.sh",
+    "run-build-number": "./scripts/run-build-number.sh",
+    "run-browserify": "./scripts/run-browserify.sh",
+    "run-prepare-clone": "./scripts/run-prepare-clone.sh",
+    "run-prepare": "./scripts/run-prepare.sh",
     "snyk-protect": "snyk protect",
-    "test": "scripts/test.sh"
+    "test": "./scripts/test.sh"
   },
   "husky": {
     "hooks": {

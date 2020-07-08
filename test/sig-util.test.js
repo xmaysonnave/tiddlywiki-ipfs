@@ -35,3 +35,14 @@ describe('EncryptionPublicKey', () => {
     expect(encryptionPublicKey === derivedPublicKey).toBeTruthy()
   })
 })
+describe('PersonalSign', () => {
+  it('personalSign', async () => {
+    const msgParams = { data: message }
+    const privateKey = Buffer.from(privateKeyHex, 'hex')
+    const signed = sigUtil.personalSign(privateKey, msgParams)
+    msgParams.sig = signed
+    const recovered = sigUtil.recoverPersonalSignature(msgParams)
+    const result = sigUtil.normalize(recovered)
+    expect(result === publicKey.toLowerCase()).toBeTruthy()
+  })
+})
