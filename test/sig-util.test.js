@@ -8,45 +8,30 @@ const derivedPublicKey = '6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI='
 const privateKey =
   '63c350a479ced6783e76c68668d7b639f8dd38bdf3d83f68d1a77a41feab26e7'
 const message = 'Hello, world!'
-const msgParams = { data: message }
 beforeAll(() => {})
 describe('Encrypt', () => {
-  it('Encrypt', async () => {
-    var outputText = sigUtil.encrypt(
+  it('encrypt', async () => {
+    const outputText = sigUtil.encrypt(
       derivedPublicKey,
-      msgParams,
+      { data: message },
       'x25519-xsalsa20-poly1305'
     )
     const result = sigUtil.decrypt(outputText, privateKey)
     expect(message === result).toBeTruthy()
   })
-  it('Encrypt Safely', async () => {
-    var outputText = sigUtil.encryptSafely(
+  it('encrypt Safely', async () => {
+    const outputText = sigUtil.encryptSafely(
       derivedPublicKey,
-      msgParams,
+      { data: message },
       'x25519-xsalsa20-poly1305'
     )
     const result = sigUtil.decryptSafely(outputText, privateKey)
     expect(message === result).toBeTruthy()
   })
 })
-describe('personalSign', () => {
-  it('Encrypt', async () => {
-    var outputText = sigUtil.encrypt(
-      derivedPublicKey,
-      msgParams,
-      'x25519-xsalsa20-poly1305'
-    )
-    const result = sigUtil.decrypt(outputText, privateKey)
-    expect(message === result).toBeTruthy()
-  })
-  it('Encrypt Safely', async () => {
-    var outputText = sigUtil.encryptSafely(
-      derivedPublicKey,
-      msgParams,
-      'x25519-xsalsa20-poly1305'
-    )
-    const result = sigUtil.decryptSafely(outputText, privateKey)
-    expect(message === result).toBeTruthy()
+describe('EncryptionPublicKey', () => {
+  it('getEncryptionPublicKey', async () => {
+    const encryptionPublicKey = sigUtil.getEncryptionPublicKey(privateKey)
+    expect(encryptionPublicKey === derivedPublicKey).toBeTruthy()
   })
 })
