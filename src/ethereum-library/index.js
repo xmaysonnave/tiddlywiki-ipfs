@@ -221,7 +221,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
       this.getLogger().error(error)
     }
     if (provider === undefined || provider == null) {
-      throw new Error('Please install MetaMask...')
+      throw new Error('Please install ~MetaMask...')
     }
     return provider
   }

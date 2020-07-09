@@ -1824,7 +1824,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
   try {
     const provider = await window.detectEthereumProvider({ mustBeMetaMask: true });
     if (provider === undefined || provider == null) {
-      throw new Error("Please install MetaMask...");
+      throw new Error("Please install ~MetaMask...");
     }
     provider.autoRefreshOnNetworkChange = false;
     var permission = false;
