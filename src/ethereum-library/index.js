@@ -77,6 +77,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
       })
     } catch (error) {
       this.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
     }
     // Init once
     this.once = true
