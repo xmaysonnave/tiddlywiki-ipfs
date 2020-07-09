@@ -259,6 +259,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
         if (error.code === 4001) {
           throw error
         }
+        this.getLogger().error(error)
       }
       if (
         permission === false ||

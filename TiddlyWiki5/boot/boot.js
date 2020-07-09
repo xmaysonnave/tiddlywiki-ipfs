@@ -1838,6 +1838,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       if (error.code === 4001) {
         throw error;
       }
+      console.error(error);
     }
     if (permission === false || await provider._metamask.isUnlocked() === false) {
       await provider.request({ method: "eth_requestAccounts" });
