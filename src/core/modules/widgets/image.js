@@ -151,16 +151,11 @@ Render this widget into the DOM
                     domNode = this.document.createElement('embed')
                     $tw.ipfs
                       .loadToBase64(url)
-                      .then(loaded => {
-                        if (
-                          loaded !== undefined &&
-                          loaded !== null &&
-                          loaded.data !== undefined &&
-                          loaded.data !== null
-                        ) {
+                      .then(data => {
+                        if (data !== undefined && data !== null) {
                           domNode.setAttribute(
                             'src',
-                            'data:application/pdf;base64,' + loaded.data
+                            'data:application/pdf;base64,' + data
                           )
                         }
                       })
@@ -172,17 +167,11 @@ Render this widget into the DOM
                   case 'image/svg+xml':
                     $tw.ipfs
                       .loadToUtf8(url)
-                      .then(loaded => {
-                        if (
-                          loaded !== undefined &&
-                          loaded !== null &&
-                          loaded.data !== undefined &&
-                          loaded.data !== null
-                        ) {
+                      .then(data => {
+                        if (data !== undefined && data !== null) {
                           domNode.setAttribute(
                             'src',
-                            'data:image/svg+xml,' +
-                              encodeURIComponent(loaded.data)
+                            'data:image/svg+xml,' + encodeURIComponent(data)
                           )
                         }
                       })
@@ -194,16 +183,11 @@ Render this widget into the DOM
                   default:
                     $tw.ipfs
                       .loadToBase64(url)
-                      .then(loaded => {
-                        if (
-                          loaded !== undefined &&
-                          loaded !== null &&
-                          loaded.data !== undefined &&
-                          loaded.data !== null
-                        ) {
+                      .then(data => {
+                        if (data !== undefined && data !== null) {
                           domNode.setAttribute(
                             'src',
-                            'data:' + type + ';base64,' + loaded.data
+                            'data:' + type + ';base64,' + data
                           )
                         }
                       })

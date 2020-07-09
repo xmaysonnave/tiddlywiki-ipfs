@@ -24,27 +24,27 @@ IPFS plugin version
    * Run the macro
    */
   exports.run = function () {
-    var isEncrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+    var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
     if (
-      isEncrypted !== undefined &&
-      isEncrypted !== null &&
-      isEncrypted.fields.text === 'yes'
+      encrypted !== undefined &&
+      encrypted !== null &&
+      encrypted.fields.text === 'yes'
     ) {
-      isEncrypted = true
+      encrypted = true
     } else {
-      isEncrypted = false
+      encrypted = false
     }
-    var isStandford = $tw.wiki.getTiddler('$:/config/Standford')
-    if (isStandford.fields.text === 'yes') {
-      isStandford = true
+    var standford = $tw.wiki.getTiddler('$:/config/Standford')
+    if (standford.fields.text === 'yes') {
+      standford = true
     } else {
-      isStandford = false
+      standford = false
     }
     var tiddler = $tw.wiki.getTiddler(
       '$:/language/Buttons/Encryption/SetPublicKey/Hint'
     )
-    if (isEncrypted) {
-      if (isStandford) {
+    if (encrypted) {
+      if (standford) {
         tiddler = $tw.wiki.getTiddler(
           '$:/language/Buttons/Encryption/ClearPassword/Hint'
         )
@@ -54,7 +54,7 @@ IPFS plugin version
         )
       }
     } else {
-      if (isStandford) {
+      if (standford) {
         tiddler = $tw.wiki.getTiddler(
           '$:/language/Buttons/Encryption/SetPassword/Hint'
         )

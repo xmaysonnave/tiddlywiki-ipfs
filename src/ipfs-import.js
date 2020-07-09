@@ -484,16 +484,16 @@ IPFS Import
     try {
       // Load
       content = await $tw.ipfs.loadToUtf8(resolvedKey.toString())
-      if ($tw.ipfs.isJson(content.data)) {
+      if ($tw.ipfs.isJson(content)) {
         tiddlers = $tw.wiki.deserializeTiddlers(
           '.json',
-          content.data,
+          content,
           $tw.wiki.getCreationFields()
         )
       } else {
         tiddlers = $tw.wiki.deserializeTiddlers(
           '.tid',
-          content.data,
+          content,
           $tw.wiki.getCreationFields()
         )
       }

@@ -86,10 +86,7 @@ IPFS Tiddler
     $tw.hooks.addHook('th-importing-tiddler', function (tiddler) {
       return self.handleFileImport(tiddler)
     })
-    $tw.hooks.addHook('th-saving-tiddler', async function (
-      tiddler,
-      oldTiddler
-    ) {
+    $tw.hooks.addHook('th-saving-tiddler', async function (tiddler) {
       return await self.handleSaveTiddler(tiddler)
     })
     // Widget
@@ -393,10 +390,8 @@ IPFS Tiddler
     return true
   }
 
-  IpfsTiddler.prototype.handleSaveTiddler = async function (
-    tiddler,
-    oldTiddler
-  ) {
+  IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
+    const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
     const { type, info } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
@@ -444,23 +439,23 @@ IPFS Tiddler
             ? null
             : oldResolvedUrl.toString().trim()
         if (oldResolvedUrl !== null && field === '_canonical_uri') {
-          var content = tiddler.getFieldString('text')
+          var data = tiddler.getFieldString('text')
           // Attachment
           if (info.encoding === 'base64' || type === 'image/svg+xml') {
             // Embed
             try {
               if (info.encoding === 'base64') {
-                content = await $tw.ipfs.loadToBase64(oldResolvedUrl)
+                data = await $tw.ipfs.loadToBase64(oldResolvedUrl)
               } else {
-                content = await $tw.ipfs.loadToUtf8(oldResolvedUrl)
+                data = await $tw.ipfs.loadToUtf8(oldResolvedUrl)
               }
               updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: updatedTiddler,
                 addTags: ['$:/isAttachment', '$:/isEmbedded'],
-                fields: [{ key: 'text', value: content.data }]
+                fields: [{ key: 'text', value: data }]
               })
               this.getLogger().info(
-                `Embed attachment: ${content.data.length}
+                `Embed attachment: ${data.length}
  ${oldResolvedUrl}`
               )
             } catch (error) {

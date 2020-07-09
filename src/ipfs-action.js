@@ -310,13 +310,21 @@ IPFS Action
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
-    if ($tw.crypto.hasPassword()) {
+    const compressed = $tw.wiki.getTiddler('$:/isCompressed')
+    const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+    if (encrypted.fields.text === 'yes') {
       try {
-        // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
-        if (info.encoding === 'base64') {
-          content = atob(content)
+        if (compressed.fields.text === 'yes') {
+          content = $tw.compress.deflate(content)
+          content = $tw.crypto.encrypt(content)
+          content = JSON.stringify({ pako: content })
+        } else {
+          // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
+          if (info.encoding === 'base64') {
+            content = atob(content)
+          }
+          content = $tw.crypto.encrypt(content)
         }
-        content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword)
         content = $tw.ipfs.StringToUint8Array(content)
       } catch (error) {
         this.getLogger().error(error)
@@ -328,10 +336,16 @@ IPFS Action
       }
     } else {
       try {
-        if (info.encoding === 'base64') {
-          content = $tw.ipfs.Base64ToUint8Array(content)
-        } else {
+        if (compressed.fields.text === 'yes') {
+          content = $tw.compress.deflate(content)
+          content = JSON.stringify({ pako: content })
           content = $tw.ipfs.StringToUint8Array(content)
+        } else {
+          if (info.encoding === 'base64') {
+            content = $tw.ipfs.Base64ToUint8Array(content)
+          } else {
+            content = $tw.ipfs.StringToUint8Array(content)
+          }
         }
       } catch (error) {
         this.getLogger().error(error)

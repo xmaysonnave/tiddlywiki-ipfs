@@ -528,6 +528,10 @@ IPFS Controller
     return await this.ipfsBundle.isOwner(domain, web3, account)
   }
 
+  IpfsController.prototype.decrypt = async function (text, provider) {
+    return await this.ipfsBundle.decrypt(text, provider)
+  }
+
   IpfsController.prototype.getPublicEncryptionKey = async function (provider) {
     return await this.ipfsBundle.getPublicEncryptionKey(provider)
   }

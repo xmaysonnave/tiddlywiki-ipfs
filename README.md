@@ -258,7 +258,7 @@ We update npm to use the latest:
 ```
 npm install -g npm@latest
 npm -v
-6.14.5
+6.14.6
 ```
 
 At this stage your environment should look like this:
@@ -266,7 +266,7 @@ At this stage your environment should look like this:
 ```
 npm -g ls --depth=0
 /home/user/.nvm/versions/node/v12.18.1/lib
-└── npm@6.14.5
+└── npm@6.14.6
 ```
 
 #### Repository install

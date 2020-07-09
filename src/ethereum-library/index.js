@@ -154,6 +154,26 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
   }
 
+  EthereumLibrary.prototype.decrypt = async function (text, provider) {
+    if (provider === undefined || provider == null) {
+      provider = await this.getEthereumProvider()
+    }
+    const account = await this.getAccount(provider)
+    var tStart = new Date()
+    const outputText = await provider.request({
+      method: 'eth_decrypt',
+      params: [text, account]
+    })
+    if (outputText !== undefined || outputText !== null) {
+      var tStop = new Date() - tStart
+      var ratio = Math.floor((outputText.length * 100) / text.length)
+      this.getLogger().info(
+        `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`
+      )
+    }
+    return outputText
+  }
+
   EthereumLibrary.prototype.getPublicEncryptionKey = async function (
     provider,
     account

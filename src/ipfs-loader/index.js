@@ -195,24 +195,38 @@ import root from 'window-or-global'
   IpfsLoader.prototype.loadToBase64 = async function (url) {
     const ua = await this.httpGetToUint8Array(url)
     if (ua.length === 0) {
-      return {
-        data: '',
-        decrypted: false
+      return ''
+    }
+    var data = this.ipfsBundle.Utf8ArrayToStr(ua)
+    if (data.startsWith('{"pako":')) {
+      const json = JSON.parse(data)
+      if (json.pako.startsWith('{"iv":')) {
+        if ($tw.crypto.hasPassword() === false) {
+          data = await this.decryptFromPasswordPrompt(json.pako)
+        } else {
+          data = $tw.crypto.decrypt(json.pako, $tw.crypto.currentPassword)
+        }
+        data = $tw.compress.inflate(data)
+      } else if (json.pako.startsWith('{"version":')) {
+        data = await $tw.ipfs.decrypt(json.pako)
+        data = $tw.compress.inflate(data)
+      } else {
+        data = $tw.compress.inflate(json.pako)
       }
-    }
-    // Decrypt
-    if (this.isUint8ArrayEncrypted(ua)) {
-      const decrypted = await this.decryptUint8ArrayToBase64(ua)
-      return {
-        data: decrypted,
-        decrypted: true
+    } else if (data.startsWith('{"iv":')) {
+      if ($tw.crypto.hasPassword() === false) {
+        data = await this.decryptFromPasswordPrompt(data)
+      } else {
+        data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
       }
+      data = btoa(data)
+    } else if (data.startsWith('{"version":')) {
+      data = await $tw.ipfs.decrypt(data)
+      data = btoa(data)
+    } else {
+      data = this.ipfsBundle.Uint8ArrayToBase64(ua)
     }
-    const data = this.ipfsBundle.Uint8ArrayToBase64(ua)
-    return {
-      data: data,
-      decrypted: false
-    }
+    return data
   }
 
   /*
@@ -221,45 +235,32 @@ import root from 'window-or-global'
   IpfsLoader.prototype.loadToUtf8 = async function (url) {
     var ua = await this.httpGetToUint8Array(url)
     if (ua.length === 0) {
-      return {
-        data: '',
-        decrypted: false
+      return ''
+    }
+    var data = this.ipfsBundle.Utf8ArrayToStr(ua)
+    if (data.startsWith('{"pako":')) {
+      const json = JSON.parse(data)
+      if (json.pako.startsWith('{"iv":')) {
+        if ($tw.crypto.hasPassword() === false) {
+          data = await this.decryptFromPasswordPrompt(json.pako)
+        } else {
+          data = $tw.crypto.decrypt(json.pako, $tw.crypto.currentPassword)
+        }
+        data = $tw.compress.inflate(data)
+      } else if (json.pako.startsWith('{"version":')) {
+        data = await $tw.ipfs.decrypt(json.pako)
+        data = $tw.compress.inflate(data)
+      } else {
+        data = $tw.compress.inflate(json.pako)
       }
-    }
-    if (this.isUint8ArrayEncrypted(ua)) {
-      return {
-        data: await this.decryptUint8ArrayToUtf8(ua),
-        decrypted: true
+    } else if (data.startsWith('{"iv":')) {
+      if ($tw.crypto.hasPassword() === false) {
+        data = await this.decryptFromPasswordPrompt(data)
+      } else {
+        data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
       }
-    }
-    return {
-      data: this.ipfsBundle.Utf8ArrayToStr(ua),
-      decrypted: false
-    }
-  }
-
-  /*
-   * Decrypt Uint8 Array to Base64 String
-   */
-  IpfsLoader.prototype.decryptUint8ArrayToBase64 = async function (array) {
-    var data = this.ipfsBundle.Utf8ArrayToStr(array)
-    if ($tw.crypto.hasPassword() === false) {
-      data = await this.decryptFromPasswordPrompt(data)
-    } else {
-      data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
-    }
-    return btoa(data)
-  }
-
-  /*
-   * Decrypt Uint8 Array to UTF-8 String
-   */
-  IpfsLoader.prototype.decryptUint8ArrayToUtf8 = async function (array) {
-    var data = this.ipfsBundle.Utf8ArrayToStr(array)
-    if ($tw.crypto.hasPassword() === false) {
-      data = await this.decryptFromPasswordPrompt(data)
-    } else {
-      data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
+    } else if (data.startsWith('{"version":')) {
+      data = await $tw.ipfs.decrypt(data)
     }
     return data
   }
@@ -287,23 +288,6 @@ import root from 'window-or-global'
         }
       })
     })
-  }
-
-  IpfsLoader.prototype.isUint8ArrayEncrypted = function (ua) {
-    if (ua instanceof Uint8Array === false || ua.length === 0) {
-      return false
-    }
-    const header = this.ipfsBundle.StringToUint8Array('{"iv":')
-    var encrypted = false
-    for (var i = 0; i < ua.length && i < header.length; i++) {
-      if (ua[i] === header[i]) {
-        encrypted = true
-      } else {
-        encrypted = false
-        break
-      }
-    }
-    return encrypted
   }
 
   module.exports = IpfsLoader

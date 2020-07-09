@@ -86,10 +86,10 @@ The video parser parses a video tiddler into an embeddable HTML element
             if (url !== null) {
               $tw.ipfs
                 .loadToBase64(url)
-                .then(loaded => {
+                .then(data => {
                   element.attributes.src = {
                     type: 'string',
-                    value: value + loaded.data
+                    value: value + data
                   }
                   var parsedTiddler = $tw.utils.getChangedTiddler(
                     options.tiddler

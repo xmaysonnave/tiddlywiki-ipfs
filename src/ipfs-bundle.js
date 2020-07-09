@@ -72,6 +72,18 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
+  IpfsBundle.prototype.decrypt = async function (text, provider) {
+    try {
+      return await this.ethereumLibrary.decrypt(text, provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to decrypt content...')
+    }
+  }
+
   IpfsBundle.prototype.isOwner = async function (domain, web3, account) {
     return await this.ensLibrary.isOwner(domain, web3, account)
   }

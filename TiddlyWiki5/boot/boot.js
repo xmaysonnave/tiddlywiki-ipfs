@@ -700,7 +700,7 @@ $tw.utils.Crypto = function() {
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(currentPassword !== null && (!tiddler || tiddler.fields.text === "no")) {
+      if(currentPassword !== null && tiddler.fields.text === "no") {
         $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "yes" }));
       }
     }
@@ -711,7 +711,7 @@ $tw.utils.Crypto = function() {
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
       var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(currentPublicKey !== null && (!tiddler || tiddler.fields.text === "yes")) {
+      if(currentPublicKey !== null && tiddler.fields.text === "yes") {
         $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "no" }));
       }
     }
@@ -1909,17 +1909,22 @@ $tw.boot.inflateTiddlers = function(callback) {
       var text = $tw.compress.inflate(b64);
       $tw.boot.preloadTiddler(text,callback)
     }
-    var text = compressedArea.innerHTML;
-    if(text.startsWith('{"iv":')) {
-      $tw.boot.passwordPrompt(text,function(decrypted) {
-        inflate(decrypted);
-      });
-    } else if(text.startsWith('{"version":')) {
-      $tw.boot.metamaskPrompt(text,function(decrypted) {
-        inflate(decrypted);
-      });
+    var text = compressedArea.innerHTML
+    if (text.startsWith('{"pako":')) {
+      var json = JSON.parse(text);
+      if(json.pako.startsWith('{"iv":')) {
+        $tw.boot.passwordPrompt(json.pako,function(decrypted) {
+          inflate(decrypted);
+        });
+      } else if(json.pako.startsWith('{"version":')) {
+        $tw.boot.metamaskPrompt(json.pako,function(decrypted) {
+          inflate(decrypted);
+        });
+      } else {
+        inflate(json.pako);
+      }
     } else {
-      inflate(text);
+      $tw.boot.preloadTiddler(text,callback)
     }
   } else {
     // Preload any encrypted tiddlers

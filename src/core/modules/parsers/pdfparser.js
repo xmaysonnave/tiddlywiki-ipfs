@@ -83,10 +83,10 @@ The PDF parser embeds a PDF viewer
             if (url !== null) {
               $tw.ipfs
                 .loadToBase64(url)
-                .then(loaded => {
+                .then(data => {
                   element.attributes.src = {
                     type: 'string',
-                    value: value + loaded.data
+                    value: value + data
                   }
                   var parsedTiddler = $tw.utils.getChangedTiddler(
                     options.tiddler
