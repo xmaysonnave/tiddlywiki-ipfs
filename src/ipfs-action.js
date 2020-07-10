@@ -273,15 +273,8 @@ IPFS Action
       $tw.utils.alert(name, error.message)
       return false
     }
-    var addTags = []
-    var removeTags = []
-    if ($tw.crypto.hasPassword()) {
-      addTags = ['$:/isAttachment', '$:/isIpfs']
-      removeTags = ['$:/isEmbedded']
-    } else {
-      addTags = ['$:/isAttachment', '$:/isIpfs']
-      removeTags = ['$:/isEmbedded']
-    }
+    const addTags = ['$:/isAttachment', '$:/isIpfs']
+    const removeTags = ['$:/isEmbedded']
     // Update
     tiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,

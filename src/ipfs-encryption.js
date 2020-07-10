@@ -41,7 +41,7 @@ Compression handling
         }
       })
     }
-    // Ensure that $:/isCompressed is maintained properly
+    // Ensure that $:/isEncrypted is maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/config/Standford')) {
         const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
@@ -68,11 +68,11 @@ Compression handling
               `Current Ethereum Public Encryption Key: ${encryptionKey}`
             )
           }
-          $tw.crypto.setPublicKey(encryptionKey)
+          $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
           getLogger().error(error)
           $tw.utils.alert(name, error.message)
-          $tw.crypto.setPublicKey(null)
+          $tw.crypto.setEncryptionKey(null)
         }
       }
     })
@@ -97,11 +97,11 @@ Compression handling
           if (encryptionKey !== undefined && encryptionKey !== null) {
             getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
           }
-          $tw.crypto.setPublicKey(encryptionKey)
+          $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
           getLogger().error(error)
           $tw.utils.alert(name, error.message)
-          $tw.crypto.setPublicKey(null)
+          $tw.crypto.setEncryptionKey(null)
         }
       }
     })

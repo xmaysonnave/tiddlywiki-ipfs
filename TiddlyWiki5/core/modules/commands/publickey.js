@@ -27,7 +27,7 @@ Command.prototype.execute = function() {
 	if(this.params.length < 1) {
 		return "Missing publickey";
 	}
-	$tw.crypto.setPublicKey(this.params[0]);
+	$tw.crypto.setEncryptionKey(this.params[0]);
 	return null;
 };
 

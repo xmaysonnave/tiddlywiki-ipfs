@@ -161,18 +161,18 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     const account = await this.getAccount(provider)
     var tStart = new Date()
-    const outputText = await provider.request({
+    const decryptedText = await provider.request({
       method: 'eth_decrypt',
       params: [text, account]
     })
-    if (outputText !== undefined || outputText !== null) {
+    if (decryptedText !== undefined || decryptedText !== null) {
       var tStop = new Date() - tStart
-      var ratio = Math.floor((outputText.length * 100) / text.length)
+      var ratio = Math.floor((decryptedText.length * 100) / text.length)
       this.getLogger().info(
-        `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`
+        `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
       )
     }
-    return outputText
+    return decryptedText
   }
 
   EthereumLibrary.prototype.getPublicEncryptionKey = async function (
@@ -196,7 +196,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
       if (error.code === 4001) {
         const err = new Error('Rejected User Request...')
         err.name = 'RejectedUserRequest'
-        this.getLogger().error(error)
         throw err
       }
       throw error

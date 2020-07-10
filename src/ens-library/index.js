@@ -466,13 +466,11 @@ import root from 'window-or-global'
       if (error.code === 4001) {
         const err = new Error('Rejected User Request...')
         err.name = 'RejectedUserRequest'
-        this.getLogger().error(error)
         throw err
       }
       if (error.code === 4100) {
         const err = new Error('Unauthorized User Account...')
         err.name = 'UnauthorizedUserAccount'
-        this.getLogger().error(error)
         throw err
       }
       throw error

@@ -705,7 +705,7 @@ $tw.utils.Crypto = function() {
       }
     }
   };
-  this.setPublicKey = function(newPublicKey) {
+  this.setEncryptionKey = function(newPublicKey) {
     currentPassword = null;
     currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey;
     if($tw.wiki) {
@@ -1849,12 +1849,12 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
     }
     console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
     var tStart = new Date();
-    const outputText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
-    if (outputText !== undefined || outputText !== null) {
+    const decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
+    if (decryptedText !== undefined || decryptedText !== null) {
       var tStop = new Date()-tStart;
-      var ratio = Math.floor(outputText.length*100/text.length);
-      console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
-      callback(outputText);
+      var ratio = Math.floor(decryptedText.length*100/text.length);
+      console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`);
+      callback(decryptedText);
       return;
     }
   } catch(error) {
