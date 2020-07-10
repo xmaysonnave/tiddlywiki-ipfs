@@ -18,12 +18,6 @@ Compression handling
   exports.synchronous = true
 
   exports.startup = function () {
-    var getLogger = function () {
-      if (window.logger !== undefined && window.logger !== null) {
-        return window.logger
-      }
-      return console
-    }
     var setPassword = function () {
       $tw.passwordPrompt.createPrompt({
         serviceName: $tw.language.getString('Encryption/PromptSetPassword'),
@@ -64,13 +58,13 @@ Compression handling
         try {
           const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
           if (encryptionKey !== undefined && encryptionKey !== null) {
-            getLogger().info(
-              `Current Ethereum Public Encryption Key: ${encryptionKey}`
-            )
+            $tw.utils.alert(name, `Public Encryption Key: ${encryptionKey}`)
           }
           $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
-          getLogger().error(error)
+          if (error.name !== 'RejectedUserRequest') {
+            this.getLogger().error(error)
+          }
           $tw.utils.alert(name, error.message)
           $tw.crypto.setEncryptionKey(null)
         }
@@ -95,11 +89,13 @@ Compression handling
         try {
           const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
           if (encryptionKey !== undefined && encryptionKey !== null) {
-            getLogger().info(`Ethereum Public Encryption Key: ${encryptionKey}`)
+            $tw.utils.alert(name, `Public Encryption Key: "${encryptionKey}"`)
           }
           $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
-          getLogger().error(error)
+          if (error.name !== 'RejectedUserRequest') {
+            this.getLogger().error(error)
+          }
           $tw.utils.alert(name, error.message)
           $tw.crypto.setEncryptionKey(null)
         }

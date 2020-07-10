@@ -728,8 +728,11 @@ $tw.utils.Crypto = function() {
   this.hasPassword = function() {
     return !!currentPassword;
   }
-  this.hasPublicKey = function() {
+  this.hasEncryptionKey = function() {
     return !!currentPublicKey;
+  }
+  this.shouldSetEncryptionKey = function() {
+    return currentPublicKey === "EncryptionKeyNeedsToBeSet";
   }
   this.encrypt = function(text,password) {
     if (currentPublicKey) {
@@ -1848,6 +1851,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       throw new Error("Unable to retrieve any Ethereum accounts...")
     }
     console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
+    $tw.crypto.setEncryptionKey("EncryptionKeyNeedsToBeSet");
     var tStart = new Date();
     const decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
     if (decryptedText !== undefined || decryptedText !== null) {
