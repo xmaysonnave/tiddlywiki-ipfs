@@ -39,21 +39,24 @@ Compression handling
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/config/Standford')) {
         const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        if (encrypted && encrypted.fields.text === 'yes') {
-          const hasPassword = $tw.crypto.hasPassword()
+        if (encrypted.fields.text === 'yes') {
           const standford = $tw.wiki.getTiddler('$:/config/Standford')
-          if (!hasPassword && standford.fields.text === 'yes') {
-            setPassword()
-          } else if (hasPassword) {
-            $tw.rootWidget.dispatchEvent({ type: 'tm-clear-password' })
+          if (standford.fields.text === 'yes') {
+            if ($tw.crypto.hasPassword()) {
+              $tw.rootWidget.dispatchEvent({ type: 'tm-clear-password' })
+            } else {
+              setPassword()
+            }
           }
         }
       }
     })
     $tw.rootWidget.addEventListener('tm-set-password', async function (event) {
       const standford = $tw.wiki.getTiddler('$:/config/Standford')
-      if (!$tw.crypto.hasPassword() && standford.fields.text === 'yes') {
-        setPassword()
+      if (standford.fields.text === 'yes') {
+        if ($tw.crypto.hasPassword() === false) {
+          setPassword()
+        }
       } else {
         try {
           const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
@@ -73,31 +76,31 @@ Compression handling
     $tw.rootWidget.addEventListener('tm-clear-password', async function (
       event
     ) {
-      const hasPassword = $tw.crypto.hasPassword()
-      const standford = $tw.wiki.getTiddler('$:/config/Standford')
       if ($tw.browser) {
+        const hadPassword = $tw.crypto.hasPassword()
+        const standford = $tw.wiki.getTiddler('$:/config/Standford')
         if (
-          hasPassword &&
+          hadPassword &&
           standford.fields.text === 'yes' &&
           !confirm($tw.language.getString('Encryption/ConfirmClearPassword'))
         ) {
           return
         }
-      }
-      $tw.crypto.setPassword(null)
-      if (hasPassword && standford.fields.text === 'no') {
-        try {
-          const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-          if (encryptionKey !== undefined && encryptionKey !== null) {
-            $tw.utils.alert(name, `Public Encryption Key: "${encryptionKey}"`)
+        $tw.crypto.setPassword(null)
+        if (standford.fields.text === 'no' && hadPassword) {
+          try {
+            const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
+            if (encryptionKey !== undefined && encryptionKey !== null) {
+              $tw.utils.alert(name, `Public Encryption Key: "${encryptionKey}"`)
+            }
+            $tw.crypto.setEncryptionKey(encryptionKey)
+          } catch (error) {
+            if (error.name !== 'RejectedUserRequest') {
+              this.getLogger().error(error)
+            }
+            $tw.utils.alert(name, error.message)
+            $tw.crypto.setEncryptionKey(null)
           }
-          $tw.crypto.setEncryptionKey(encryptionKey)
-        } catch (error) {
-          if (error.name !== 'RejectedUserRequest') {
-            this.getLogger().error(error)
-          }
-          $tw.utils.alert(name, error.message)
-          $tw.crypto.setEncryptionKey(null)
         }
       }
     })

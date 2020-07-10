@@ -731,21 +731,24 @@ $tw.utils.Crypto = function() {
   this.hasEncryptionKey = function() {
     return !!currentPublicKey;
   }
-  this.shouldSetEncryptionKey = function() {
-    return currentPublicKey === "EncryptionKeyNeedsToBeSet";
-  }
   this.encrypt = function(text,password) {
     if (currentPublicKey) {
+      var outputText;
       var tStart = new Date();
-      var outputText = sigUtil.encrypt(
-        currentPublicKey,
-        { data: text },
-        'x25519-xsalsa20-poly1305'
-      )
-      outputText = JSON.stringify(outputText);
-      var tStop = new Date()-tStart;
-      var ratio = Math.floor(outputText.length*100/text.length);
-      console.log(`Ethereum Encrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      try {
+        outputText = sigUtil.encrypt(
+          currentPublicKey,
+          { data: text },
+          'x25519-xsalsa20-poly1305'
+        )
+        outputText = JSON.stringify(outputText);
+        var tStop = new Date()-tStart;
+        var ratio = Math.floor(outputText.length*100/text.length);
+        console.log(`Ethereum Encrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+      } catch (error) {
+        console.log("Crypto error:" + error);
+        outputText = null;
+      }
       return outputText
     } else {
       return callSjcl("encrypt",text,password);
@@ -1851,7 +1854,6 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       throw new Error("Unable to retrieve any Ethereum accounts...")
     }
     console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
-    $tw.crypto.setEncryptionKey("EncryptionKeyNeedsToBeSet");
     var tStart = new Date();
     const decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
     if (decryptedText !== undefined || decryptedText !== null) {

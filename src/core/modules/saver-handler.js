@@ -213,21 +213,6 @@ downloadType: the content type for the saved file
       return false
     }
     var variables = options.variables || {}
-    if ($tw.crypto.hasEncryptionKey() && $tw.crypto.shouldSetEncryptionKey()) {
-      try {
-        const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-        if (encryptionKey !== undefined && encryptionKey !== null) {
-          $tw.utils.alert(name, `Public Encryption Key: "${encryptionKey}"`)
-        }
-        $tw.crypto.setEncryptionKey(encryptionKey)
-      } catch (error) {
-        if (error.name !== 'RejectedUserRequest') {
-          this.getLogger().error(error)
-        }
-        $tw.utils.alert(name, error.message)
-        return false
-      }
-    }
     var template = options.template || '$:/core/save/all'
     var downloadType = options.downloadType || 'text/plain'
     var text = this.wiki.renderTiddler(downloadType, template, options)
