@@ -40,13 +40,12 @@ Compression handling
       if ($tw.utils.hop(changes, '$:/config/Standford')) {
         const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
         if (encrypted.fields.text === 'yes') {
+          const hasPassword = $tw.crypto.hasPassword()
           const standford = $tw.wiki.getTiddler('$:/config/Standford')
-          if (standford.fields.text === 'yes') {
-            if ($tw.crypto.hasPassword()) {
-              $tw.rootWidget.dispatchEvent({ type: 'tm-clear-password' })
-            } else {
-              setPassword()
-            }
+          if (!hasPassword && standford.fields.text === 'yes') {
+            setPassword()
+          } else if (hasPassword) {
+            $tw.rootWidget.dispatchEvent({ type: 'tm-clear-password' })
           }
         }
       }
