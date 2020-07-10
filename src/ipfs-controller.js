@@ -85,6 +85,56 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array)
   }
 
+  IpfsController.prototype.processContent = function (content, encoding) {
+    if (content === undefined || content == null) {
+      return null
+    }
+    if (encoding === undefined || encoding == null) {
+      encoding = 'utf8'
+    }
+    const compressed = $tw.wiki.getTiddler('$:/isCompressed')
+    const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+    if (encrypted.fields.text === 'yes') {
+      try {
+        if (compressed.fields.text === 'yes') {
+          content = $tw.compress.deflate(content)
+          content = $tw.crypto.encrypt(content)
+          content = JSON.stringify({ pako: content })
+        } else {
+          // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
+          if (encoding === 'base64') {
+            content = atob(content)
+          }
+          content = $tw.crypto.encrypt(content)
+        }
+        content = this.StringToUint8Array(content)
+      } catch (error) {
+        this.getLogger().error(error)
+        $tw.utils.alert(name, 'Failed to process encrypted content...')
+        return null
+      }
+    } else {
+      try {
+        if (compressed.fields.text === 'yes') {
+          content = $tw.compress.deflate(content)
+          content = JSON.stringify({ pako: content })
+          content = this.StringToUint8Array(content)
+        } else {
+          if (encoding === 'base64') {
+            content = this.Base64ToUint8Array(content)
+          } else {
+            content = this.StringToUint8Array(content)
+          }
+        }
+      } catch (error) {
+        this.getLogger().error(error)
+        $tw.utils.alert(name, 'Failed to process content...')
+        return null
+      }
+    }
+    return content
+  }
+
   IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
     const self = this
     return new Promise((resolve, reject) => {

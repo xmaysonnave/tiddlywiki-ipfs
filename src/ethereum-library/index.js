@@ -204,9 +204,9 @@ import detectEthereumProvider from '@metamask/detect-provider'
   }
 
   /*
-   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
    * https://eips.ethereum.org/EIPS/eip-1102
    * https://eips.ethereum.org/EIPS/eip-1193
+   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
    * https://eips.ethereum.org/EIPS/eip-2255
    * https://docs.metamask.io/guide/ethereum-provider.html#methods-current-api
    */

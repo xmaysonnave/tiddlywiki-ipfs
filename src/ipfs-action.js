@@ -310,50 +310,7 @@ IPFS Action
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
-    const compressed = $tw.wiki.getTiddler('$:/isCompressed')
-    const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-    if (encrypted.fields.text === 'yes') {
-      try {
-        if (compressed.fields.text === 'yes') {
-          content = $tw.compress.deflate(content)
-          content = $tw.crypto.encrypt(content)
-          content = JSON.stringify({ pako: content })
-        } else {
-          // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
-          if (info.encoding === 'base64') {
-            content = atob(content)
-          }
-          content = $tw.crypto.encrypt(content)
-        }
-        content = $tw.ipfs.StringToUint8Array(content)
-      } catch (error) {
-        this.getLogger().error(error)
-        $tw.utils.alert(
-          name,
-          'Failed to process encrypted Attachment content...'
-        )
-        return null
-      }
-    } else {
-      try {
-        if (compressed.fields.text === 'yes') {
-          content = $tw.compress.deflate(content)
-          content = JSON.stringify({ pako: content })
-          content = $tw.ipfs.StringToUint8Array(content)
-        } else {
-          if (info.encoding === 'base64') {
-            content = $tw.ipfs.Base64ToUint8Array(content)
-          } else {
-            content = $tw.ipfs.StringToUint8Array(content)
-          }
-        }
-      } catch (error) {
-        this.getLogger().error(error)
-        $tw.utils.alert(name, 'Failed to process Attachment content...')
-        return null
-      }
-    }
-    return content
+    return $tw.ipfs.processContent(content, info.encoding)
   }
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
@@ -778,12 +735,12 @@ IPFS Action
       }
     }
     var content = null
+    var contentType = 'text/plain'
     if (child || $tw.utils.getIpfsExport() === 'json') {
       content = await this.exportTiddlersAsJson(exportFilter, exportUri)
     } else if ($tw.utils.getIpfsExport() === 'static') {
-      // Export Tiddler as Static River
       const options = {
-        downloadType: 'text/plain',
+        downloadType: contentType,
         method: 'download',
         template: '$:/core/templates/exporters/StaticRiver',
         variables: {
@@ -791,14 +748,13 @@ IPFS Action
         }
       }
       content = $tw.wiki.renderTiddler(
-        'text/plain',
+        contentType,
         '$:/core/templates/exporters/StaticRiver',
         options
       )
     } else {
-      // Export Tiddler as tid
       const options = {
-        downloadType: 'text/plain',
+        downloadType: contentType,
         method: 'download',
         template: '$:/core/templates/exporters/TidFile',
         variables: {
@@ -806,31 +762,12 @@ IPFS Action
         }
       }
       content = $tw.wiki.renderTiddler(
-        'text/plain',
+        contentType,
         '$:/core/templates/exporters/TidFile',
         options
       )
     }
-    if (content !== undefined && content !== null) {
-      // Encrypt
-      if ($tw.crypto.hasPassword()) {
-        try {
-          content = $tw.crypto.encrypt(content, $tw.crypto.currentPassword)
-        } catch (error) {
-          this.getLogger().error(error)
-          $tw.utils.alert(name, 'Failed to encrypt content...')
-          return null
-        }
-      }
-      try {
-        content = $tw.ipfs.StringToUint8Array(content)
-      } catch (error) {
-        this.getLogger().error(error)
-        $tw.utils.alert(name, 'Failed to convert content...')
-        return null
-      }
-    }
-    return content
+    return $tw.ipfs.processContent(content)
   }
 
   IpfsAction.prototype.transcludeContent = function (title) {
