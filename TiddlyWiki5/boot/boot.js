@@ -689,7 +689,7 @@ $tw.utils.Crypto = function() {
           console.log(`${method}: ${tStop}ms, In: ${inputText.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
         }
       } catch(ex) {
-        console.log("Crypto error:" + ex);
+        console.error("Crypto error:" + ex);
         outputText = null;
       }
       return outputText;
@@ -1915,9 +1915,15 @@ $tw.boot.passwordPrompt = function(text, callback) {
 }
 
 $tw.boot.preloadTiddler = function(text, callback) {
-  var json = JSON.parse(text);
-  for(var title in json) {
-    $tw.preloadTiddler(json[title]);
+  try {
+    if (text !== undefined && text !== null) {
+      var json = JSON.parse(text);
+      for(var title in json) {
+        $tw.preloadTiddler(json[title]);
+      }
+    }
+  } catch (error) {
+    console.error(error)
   }
   callback();
 }
@@ -1926,7 +1932,10 @@ $tw.boot.inflateTiddlers = function(callback) {
   var compressedArea = document.getElementById("compressedStoreArea");
   if(compressedArea) {
     var inflate = function(b64) {
-      var text = $tw.compress.inflate(b64);
+      var text = null;
+      if (b64 !== undefined && b64 !== null) {
+        text = $tw.compress.inflate(b64);
+      }
       $tw.boot.preloadTiddler(text,callback)
     }
     var text = compressedArea.innerHTML
