@@ -268,25 +268,29 @@ import detectEthereumProvider from '@metamask/detect-provider'
       provider = await this.getEthereumProvider()
     }
     try {
-      var permission = false
       var accounts = null
-      try {
-        permission = await this.checkAccountPermission(provider)
-        if (permission === false) {
-          permission = await this.requestAccountPermission(provider)
+      if (typeof provider.enable === 'function') {
+        accounts = await provider.enable()
+      } else {
+        var permission = false
+        try {
+          permission = await this.checkAccountPermission(provider)
+          if (permission === false) {
+            permission = await this.requestAccountPermission(provider)
+          }
+        } catch (error) {
+          if (error.code === 4001) {
+            throw error
+          }
+          this.getLogger().error(error)
         }
-      } catch (error) {
-        if (error.code === 4001) {
-          throw error
+        if (
+          permission === false ||
+          (await provider._metamask.isUnlocked()) === false
+        ) {
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
+          await provider.request({ method: 'eth_requestAccounts' })
         }
-        this.getLogger().error(error)
-      }
-      if (
-        permission === false ||
-        (await provider._metamask.isUnlocked()) === false
-      ) {
-        // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-        await provider.request({ method: 'eth_requestAccounts' })
       }
       // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
       accounts = await provider.request({ method: 'eth_accounts' })

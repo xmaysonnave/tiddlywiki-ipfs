@@ -699,8 +699,8 @@ $tw.utils.Crypto = function() {
     currentPublicKey = null;
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
-      var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(currentPassword !== null && tiddler.fields.text === "no") {
+      var standford = $tw.wiki.getTiddler("$:/config/Standford");
+      if (!standford || (currentPassword !== null && standford.fields.text === "no")) {
         $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "yes" }));
       }
     }
@@ -710,18 +710,22 @@ $tw.utils.Crypto = function() {
     currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey;
     if($tw.wiki) {
       this.updateCryptoStateTiddler();
-      var tiddler = $tw.wiki.getTiddler("$:/config/Standford");
-      if(currentPublicKey !== null && tiddler.fields.text === "yes") {
-        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "no" }));
+      var standford = $tw.wiki.getTiddler("$:/config/Standford");
+      if (!standford) {
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "yes" }));
+      } else {
+        if(currentPublicKey !== null && standford.fields.text === "yes") {
+          $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/config/Standford", text: "no" }));
+        }
       }
     }
   };
   this.updateCryptoStateTiddler = function() {
     if($tw.wiki) {
       var state = currentPassword || currentPublicKey ? "yes" : "no",
-        tiddler = $tw.wiki.getTiddler("$:/isEncrypted");
-      if(!tiddler || tiddler.fields.text !== state) {
-        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isEncrypted", text: state }));
+        encrypted = $tw.wiki.getTiddler("$:/isEncrypted");
+      if(!encrypted || encrypted.fields.text !== state) {
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isEncrypted", publicKey: currentPublicKey !== null ? currentPublicKey : undefined, text: state }));
       }
     }
   };
@@ -1833,27 +1837,35 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       throw new Error('Please install MetaMask...');
     }
     provider.autoRefreshOnNetworkChange = false;
-    var permission = false;
     var accounts = null;
-    try {
-      permission = await checkAccountPermission(provider)
-      if (permission === false) {
-        permission = await requestAccountPermission(provider);
+    if (typeof provider.enable === 'function') {
+      accounts = await provider.enable()
+    } else {
+      var permission = false;
+      try {
+        permission = await checkAccountPermission(provider)
+        if (permission === false) {
+          permission = await requestAccountPermission(provider);
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error;
+        }
+        console.error(error);
       }
-    } catch (error) {
-      if (error.code === 4001) {
-        throw error;
+      if (permission === false || await provider._metamask.isUnlocked() === false) {
+        await provider.request({ method: "eth_requestAccounts" });
       }
-      console.error(error);
+      accounts = await provider.request({ method: "eth_accounts" });
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+        throw new Error("Unable to retrieve any Ethereum accounts...")
+      }
     }
-    if (permission === false || await provider._metamask.isUnlocked() === false) {
-      await provider.request({ method: "eth_requestAccounts" });
+    if (provider.chainId !== undefined) {
+      console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
+    } else {
+      console.log(`Account: ${accounts[0]}`);
     }
-    accounts = await provider.request({ method: "eth_accounts" });
-    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-      throw new Error("Unable to retrieve any Ethereum accounts...")
-    }
-    console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
     var tStart = new Date();
     const decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
     if (decryptedText !== undefined || decryptedText !== null) {
@@ -2649,7 +2661,12 @@ $tw.boot.startup = function(options) {
   $tw.wiki.defineShadowModules();
   // Make sure the crypto state tiddler is up to date
   if($tw.crypto) {
-    $tw.crypto.updateCryptoStateTiddler();
+    var encrypted = $tw.wiki.getTiddler("$:/isEncrypted");
+    if(encrypted && encrypted.fields.publicKey) {
+      $tw.crypto.setEncryptionKey(encrypted.fields.publicKey);
+    } else {
+      $tw.crypto.updateCryptoStateTiddler();
+    }
   }
   // Gather up any startup modules
   $tw.boot.remainingStartupModules = []; // Array of startup modules

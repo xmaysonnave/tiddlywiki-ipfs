@@ -59,9 +59,6 @@ Compression handling
       } else {
         try {
           const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-          if (encryptionKey !== undefined && encryptionKey !== null) {
-            $tw.utils.alert(name, `Public Encryption Key: ${encryptionKey}`)
-          }
           $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
           if (error.name !== 'RejectedUserRequest') {
@@ -89,9 +86,6 @@ Compression handling
         if (standford.fields.text === 'no' && hadPassword) {
           try {
             const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-            if (encryptionKey !== undefined && encryptionKey !== null) {
-              $tw.utils.alert(name, `Public Encryption Key: "${encryptionKey}"`)
-            }
             $tw.crypto.setEncryptionKey(encryptionKey)
           } catch (error) {
             if (error.name !== 'RejectedUserRequest') {

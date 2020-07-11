@@ -24,10 +24,10 @@ var Command = function(params,commander,callback) {
 };
 
 Command.prototype.execute = function() {
-	if(this.params.length < 1) {
-		return "Missing publickey";
-	}
-	$tw.crypto.setEncryptionKey(this.params[0]);
+  if(this.params.length < 1) {
+    return "Missing publickey";
+  }
+  $tw.crypto.setEncryptionKey(this.params[0]);
 	return null;
 };
 
