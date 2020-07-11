@@ -269,31 +269,39 @@ import detectEthereumProvider from '@metamask/detect-provider'
     }
     try {
       var accounts = null
-      if (typeof provider.enable === 'function') {
-        accounts = await provider.enable()
-      } else {
+      if (typeof provider.request === 'function') {
         var permission = false
         try {
           permission = await this.checkAccountPermission(provider)
           if (permission === false) {
             permission = await this.requestAccountPermission(provider)
           }
+          if (
+            permission === false ||
+            (await provider._metamask.isUnlocked()) === false
+          ) {
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
+            await provider.request({ method: 'eth_requestAccounts' })
+          }
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+          accounts = await provider.request({ method: 'eth_accounts' })
         } catch (error) {
           if (error.code === 4001) {
             throw error
           }
           this.getLogger().error(error)
         }
-        if (
-          permission === false ||
-          (await provider._metamask.isUnlocked()) === false
-        ) {
-          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-          await provider.request({ method: 'eth_requestAccounts' })
+      }
+      if (
+        accounts === undefined ||
+        accounts == null ||
+        Array.isArray(accounts) === false ||
+        accounts.length === 0
+      ) {
+        if (typeof provider.enable === 'function') {
+          accounts = await provider.enable()
         }
       }
-      // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-      accounts = await provider.request({ method: 'eth_accounts' })
       if (
         accounts === undefined ||
         accounts == null ||
@@ -302,7 +310,13 @@ import detectEthereumProvider from '@metamask/detect-provider'
       ) {
         throw new Error('Unable to retrieve any Ethereum accounts...')
       }
-      this.getLogger().info(`Account: ${accounts[0]}`)
+      if (provider.chainId !== undefined) {
+        this.getLogger().info(
+          `Chain: ${provider.chainId}, Connected Account: ${accounts[0]}`
+        )
+      } else {
+        this.getLogger().info(`Connected Account: ${accounts[0]}`)
+      }
       return accounts[0]
     } catch (error) {
       // EIP 1193 user Rejected Request

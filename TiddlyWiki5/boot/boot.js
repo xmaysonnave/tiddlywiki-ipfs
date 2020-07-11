@@ -1831,6 +1831,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
     }
     return false;
   }
+  var decryptedText = null;
   try {
     const provider = await window.detectEthereumProvider({ mustBeMetaMask: true });
     if (provider === undefined || provider == null) {
@@ -1838,42 +1839,43 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
     }
     provider.autoRefreshOnNetworkChange = false;
     var accounts = null;
-    if (typeof provider.enable === 'function') {
-      accounts = await provider.enable()
-    } else {
+    if (typeof provider.request === "function") {
       var permission = false;
       try {
         permission = await checkAccountPermission(provider)
         if (permission === false) {
           permission = await requestAccountPermission(provider);
         }
+        if (permission === false || await provider._metamask.isUnlocked() === false) {
+          await provider.request({ method: "eth_requestAccounts" });
+        }
+        accounts = await provider.request({ method: "eth_accounts" });
       } catch (error) {
         if (error.code === 4001) {
           throw error;
         }
         console.error(error);
       }
-      if (permission === false || await provider._metamask.isUnlocked() === false) {
-        await provider.request({ method: "eth_requestAccounts" });
+    }
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+      if (typeof provider.enable === "function") {
+        accounts = await provider.enable();
       }
-      accounts = await provider.request({ method: "eth_accounts" });
-      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-        throw new Error("Unable to retrieve any Ethereum accounts...")
-      }
+    }
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+      throw new Error("Unable to retrieve any Ethereum accounts...")
     }
     if (provider.chainId !== undefined) {
-      console.log(`Chain: ${provider.chainId}, Account: ${accounts[0]}`);
+      console.log(`Chain: ${provider.chainId}, Connected Account: ${accounts[0]}`);
     } else {
-      console.log(`Account: ${accounts[0]}`);
+      console.log(`Connected Account: ${accounts[0]}`);
     }
     var tStart = new Date();
-    const decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
+    decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
     if (decryptedText !== undefined || decryptedText !== null) {
       var tStop = new Date()-tStart;
       var ratio = Math.floor(decryptedText.length*100/text.length);
       console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`);
-      callback(decryptedText);
-      return;
     }
   } catch(error) {
     if (error.code === 4001) {
@@ -1883,6 +1885,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       $tw.utils.error(error.message);
     }
   }
+  callback(decryptedText);
 }
 
 $tw.boot.passwordPrompt = function(text, callback) {

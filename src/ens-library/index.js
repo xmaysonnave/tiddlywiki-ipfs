@@ -452,7 +452,7 @@ import root from 'window-or-global'
       encoded
     ])
     try {
-      const signer = web3.getSigner()
+      const signer = web3.getSigner(account)
       const tx = await signer.sendTransaction({ to: resolver, data: data })
       this.getLogger().info(
         `Processing Transaction:
