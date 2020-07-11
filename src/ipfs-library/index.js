@@ -183,11 +183,11 @@ import root from 'window-or-global'
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
-        hash: this.ipfsBundle.cidV0ToCidV1(lastResult.path),
+        hash: this.ipfsBundle.cidToCidV1(lastResult.path),
         size: lastResult.size
       }
     }
-    throw new Error('Undefined IPFS command add...')
+    throw new Error('Undefined IPFS add...')
   }
 
   IpfsLibrary.prototype.pin = async function (client, cid) {
@@ -271,7 +271,7 @@ import root from 'window-or-global'
       client.name !== undefined &&
       client.name.publish !== undefined
     ) {
-      this.getLogger().info('Processing IPNS name publish...')
+      this.getLogger().info('Processing IPFS name publish...')
       const result = await client.name.publish(cid, {
         resolve: true,
         key: ipnsName,
@@ -285,7 +285,7 @@ import root from 'window-or-global'
         value: result.value
       }
     }
-    throw new Error('Undefined IPNS name publish...')
+    throw new Error('Undefined IPFS name publish...')
   }
 
   IpfsLibrary.prototype.resolve = async function (client, id) {
@@ -305,7 +305,7 @@ import root from 'window-or-global'
       client.name !== undefined &&
       client.name.resolve !== undefined
     ) {
-      this.getLogger().info('Processing IPNS name resolve...')
+      this.getLogger().info('Processing IPFS name resolve...')
       const resolvedSource = await client.name.resolve(id, {
         nocache: false,
         recursive: true
@@ -320,7 +320,7 @@ import root from 'window-or-global'
       }
       return lastResult
     }
-    throw new Error('Undefined IPNS name resolve...')
+    throw new Error('Undefined IPFS name resolve...')
   }
 
   IpfsLibrary.prototype.getKeys = async function (client) {
@@ -336,7 +336,7 @@ import root from 'window-or-global'
       client.key !== undefined &&
       client.key.list !== undefined
     ) {
-      this.getLogger().info('Processing IPNS key list...')
+      this.getLogger().info('Processing IPFS key list...')
       const result = await client.key.list()
       if (
         result === undefined ||
@@ -347,7 +347,7 @@ import root from 'window-or-global'
       }
       return result
     }
-    throw new Error('Undefined IPNS key list...')
+    throw new Error('Undefined IPFS key list...')
   }
 
   // Only rsa is supported yet...
@@ -373,10 +373,9 @@ import root from 'window-or-global'
       client.key !== undefined &&
       client.key.gen !== undefined
     ) {
-      this.getLogger().info('Processing IPNS key gen...')
+      this.getLogger().info('Processing IPFS key gen...')
       const key = await client.key.gen(ipnsName, {
-        type: 'rsa',
-        size: 2048
+        type: 'ed25519'
       })
       if (
         key === undefined ||
@@ -388,7 +387,7 @@ import root from 'window-or-global'
       }
       return key.id
     }
-    throw new Error('Undefined IPNS key gen...')
+    throw new Error('Undefined IPFS key gen...')
   }
 
   IpfsLibrary.prototype.rmKey = async function (client, ipnsName) {
@@ -411,7 +410,7 @@ import root from 'window-or-global'
       client.key !== undefined &&
       client.key.rm !== undefined
     ) {
-      this.getLogger().info('Processing IPNS key rm...')
+      this.getLogger().info('Processing IPFS key rm...')
       const key = await client.key.rm(ipnsName)
       if (
         key === undefined ||
@@ -423,7 +422,7 @@ import root from 'window-or-global'
       }
       return key.id
     }
-    throw new Error('Undefined IPNS key rm...')
+    throw new Error('Undefined IPFS key rm...')
   }
 
   IpfsLibrary.prototype.renameKey = async function (
@@ -461,7 +460,7 @@ import root from 'window-or-global'
       client.key !== undefined &&
       client.key.rename !== undefined
     ) {
-      this.getLogger().info('Processing IPNS key rename...')
+      this.getLogger().info('Processing IPFS key rename...')
       const key = await client.key.rename(oldIpnsName, newIpnsName)
       if (key === undefined || key == null) {
         throw new Error('IPFS client returned an unknown result...')
@@ -489,7 +488,7 @@ import root from 'window-or-global'
         overwrite: overwrite
       }
     }
-    throw new Error('Undefined IPNS key rename...')
+    throw new Error('Undefined IPFS key rename...')
   }
 
   module.exports = IpfsLibrary

@@ -566,12 +566,12 @@ IPFS Controller
     return this.ipfsBundle.isCid(cid)
   }
 
-  IpfsController.prototype.cidV1ToCidV0 = function (cidv1) {
-    return this.ipfsBundle.cidV1ToCidV0(cidv1)
+  IpfsController.prototype.cidToCidV0 = function (cid) {
+    return this.ipfsBundle.cidToCidV0(cid)
   }
 
-  IpfsController.prototype.cidV0ToCidV1 = function (cidv0) {
-    return this.ipfsBundle.cidV0ToCidV1(cidv0)
+  IpfsController.prototype.cidToCidV1 = function (cid) {
+    return this.ipfsBundle.cidToCidV1(cid)
   }
 
   IpfsController.prototype.isOwner = async function (domain, web3, account) {

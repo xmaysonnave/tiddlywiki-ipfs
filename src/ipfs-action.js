@@ -497,7 +497,9 @@ IPFS Action
       $tw.wiki.addTiddler(tiddler)
     }
     this.ipnsName = ipnsName
-    window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
+    if (resolvedUrl !== null) {
+      window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
+    }
     return true
   }
 

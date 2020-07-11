@@ -326,8 +326,8 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
-  IpfsBundle.prototype.cidV1ToCidV0 = function (cidv1) {
-    var cidv0 = new CID(cidv1)
+  IpfsBundle.prototype.cidToCidV0 = function (cid) {
+    var cidv0 = new CID(cid)
     if (cidv0.codec !== 'dag-pb') {
       throw new Error(
         `This "cid" is not "dag-pb" encoded: ${cidAnalyser}${cidv0}`
@@ -338,21 +338,18 @@ import IpfsUrl from './ipfs-url'
       // Log
       this.getLogger().info(
         `Converted:
- "cidv1" (Base32): ${cidAnalyser}${cidv1}
+ "cidv1" (Base32): ${cidAnalyser}${cid}
  to "cidv0" (Base58): ${cidAnalyser}${cidv0}`
       )
     } else {
       // Log
-      this.getLogger().info(
-        `"cidv0" (Base58):
- ${cidAnalyser}${cidv0}`
-      )
+      this.getLogger().info(`"cidv0" (Base58): ${cidAnalyser}${cidv0}`)
     }
     return cidv0.toString()
   }
 
-  IpfsBundle.prototype.cidV0ToCidV1 = function (cidv0) {
-    var cidv1 = new CID(cidv0)
+  IpfsBundle.prototype.cidToCidV1 = function (cid) {
+    var cidv1 = new CID(cid)
     if (cidv1.codec !== 'dag-pb') {
       throw new Error(
         `This "cid" is not "dag-pb" encoded: ${cidAnalyser}${cidv1}`
@@ -362,15 +359,12 @@ import IpfsUrl from './ipfs-url'
       cidv1 = cidv1.toV1()
       this.getLogger().info(
         `Converted:
- "cidv0" (Base58): ${cidAnalyser}${cidv0}
+ "cidv0" (Base58): ${cidAnalyser}${cid}
  to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
       )
     } else {
       // Log
-      this.getLogger().info(
-        `"cidv1" (Base32):
- ${cidAnalyser}${cidv1}`
-      )
+      this.getLogger().info(`"cidv1" (Base32): ${cidAnalyser}${cidv1}`)
     }
     return cidv1.toString()
   }
