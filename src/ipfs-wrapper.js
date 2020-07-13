@@ -109,7 +109,7 @@ IPFS Wrapper
     if (ipnsName !== null && identifier !== null) {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          const key = $tw.ipfs.cidToLibp2pKeyCidV1(keys[index].id)
+          const key = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id)
           if (key === identifier && keys[index].name === ipnsName) {
             ipnsKey = identifier
             found = true
@@ -120,7 +120,7 @@ IPFS Wrapper
     } else if (ipnsName !== null) {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          const key = $tw.ipfs.cidToLibp2pKeyCidV1(keys[index].id)
+          const key = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id)
           if (keys[index].name === ipnsName) {
             ipnsKey = key
             found = true
@@ -131,7 +131,7 @@ IPFS Wrapper
     } else {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          const key = $tw.ipfs.cidToLibp2pKeyCidV1(keys[index].id)
+          const key = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id)
           if (key === identifier || keys[index].name === identifier) {
             ipnsKey = key
             ipnsName = keys[index].name
@@ -171,7 +171,7 @@ IPFS Wrapper
   IpfsWrapper.prototype.generateIpnsKey = async function (ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName)
-      const cid = $tw.ipfs.cidToLibp2pKeyCidV1(key)
+      const cid = this.ipfsBundle.cidToLibp2pKeyCidV1(key)
       const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${cid}`)
       this.getLogger().info(
         `Successfully generated IPNS key with IPNS name: ${ipnsName}
@@ -209,7 +209,7 @@ IPFS Wrapper
       this.getLogger().info(
         `Successfully renamed IPNS name: ${was} with ${now}`
       )
-      const key = $tw.ipfs.cidToLibp2pKeyCidV1(id)
+      const key = this.ipfsBundle.cidToLibp2pKeyCidV1(id)
       return {
         ipnsKey: key,
         ipnsName: now

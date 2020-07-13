@@ -9,10 +9,10 @@ const root = require('window-or-global')
 const { URL } = require('universal-url')
 const base = new URL('https://ipfs.infura.io/')
 const resolvedTiddly =
-  '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
+  '/ipfs/bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
 const decodedCid = {
   protocol: 'ipfs',
-  cid: 'bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
+  cid: 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
 }
 const keys = [
   {
@@ -24,7 +24,7 @@ const keys = [
     name: 'documentation'
   },
   {
-    id: 'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf',
+    id: '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP',
     name: 'tiddly'
   }
 ]
@@ -77,12 +77,13 @@ describe('IPNS key and IPNS name', () => {
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys)
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(
       null,
-      'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf',
+      'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0',
       'tiddly'
     )
     expect(
       ipnsName === 'tiddly' &&
-        ipnsKey === 'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+        ipnsKey ===
+          'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
     ).toBeTruthy()
   })
 })
@@ -112,7 +113,8 @@ describe('IPNS name', () => {
     )
     expect(
       ipnsName === 'tiddly' &&
-        ipnsKey === 'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+        ipnsKey ===
+          'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
     ).toBeTruthy()
   })
 })
@@ -137,11 +139,12 @@ describe('IPNS identifier', () => {
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys)
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(
       null,
-      'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+      'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
     )
     expect(
       ipnsName === 'tiddly' &&
-        ipnsKey === 'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+        ipnsKey ===
+          'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
     ).toBeTruthy()
   })
   it('Fetch IPNS key and IPNS name from an IPNS name', async () => {
@@ -156,7 +159,8 @@ describe('IPNS identifier', () => {
     )
     expect(
       ipnsName === 'tiddly' &&
-        ipnsKey === 'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+        ipnsKey ===
+          'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
     ).toBeTruthy()
   })
 })
@@ -171,10 +175,11 @@ describe('Resolve IPNS', () => {
     ipfsWrapper.ipfsBundle.decodeCid.mockReturnValue(decodedCid)
     const resolved = await ipfsWrapper.resolveIpnsKey(
       null,
-      'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+      '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP'
     )
     expect(
-      resolved === 'bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
+      resolved ===
+        'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
     ).toBeTruthy()
   })
   it('Unassigned IPNS key.', async () => {
@@ -188,7 +193,7 @@ describe('Resolve IPNS', () => {
     try {
       await ipfsWrapper.resolveIpnsKey(
         null,
-        'QmbegBzeBEtohaAPpUYwmkFURtDHEXm7KcdNjASUw1RrZf'
+        '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP'
       )
     } catch (error) {
       expect(error.message).toBe('Failed to resolve an IPNS key...')
