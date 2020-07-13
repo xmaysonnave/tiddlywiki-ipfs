@@ -74,7 +74,7 @@ IPFS Saver
         }
       } catch (error) {
         this.getLogger().error(error)
-        callback(error.message)
+        callback(error)
         return true
       }
       // IPNS
@@ -104,7 +104,7 @@ IPFS Saver
               ? null
               : ipnsName.trim()
           if (ipnsKey == null && ipnsName == null) {
-            callback(null, 'Unknown default IPNS identifiers...')
+            callback(new Error('Unknown default IPNS identifiers...'))
             return true
           }
           this.getLogger().info('Processing default IPNS identifiers...')
@@ -131,7 +131,7 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         ensDomain = $tw.utils.getIpfsEnsDomain()
         if (ensDomain == null) {
-          callback(null, 'Undefined ENS domain...')
+          callback(new Error('Undefined ENS domain...'))
           return true
         }
         var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
@@ -235,7 +235,7 @@ IPFS Saver
       ) {
         this.getLogger().error(error)
       }
-      callback(error.message)
+      callback(error)
       return true
     }
     callback(null)
