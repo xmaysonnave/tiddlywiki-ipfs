@@ -48,6 +48,10 @@ import IpfsUrl from './ipfs-url'
     this.once = true
   }
 
+  IpfsBundle.prototype.xhrToJson = async function (url) {
+    return await this.ipfsLoader.xhrToJson(url)
+  }
+
   IpfsBundle.prototype.getENSRegistry = function () {
     return this.ensLibrary.getENSRegistry()
   }
@@ -367,6 +371,33 @@ import IpfsUrl from './ipfs-url'
       this.getLogger().info(`"cidv1" (Base32): ${cidAnalyser}${cidv1}`)
     }
     return cidv1.toString()
+  }
+
+  IpfsBundle.prototype.cidToLibp2pKeyCidV1 = function (cid) {
+    var cidv1 = new CID(cid)
+    if (cidv1.codec !== 'dag-pb') {
+      throw new Error(
+        `This "cid" is not "dag-pb" encoded: ${cidAnalyser}${cidv1}`
+      )
+    }
+    if (cidv1.version === 0) {
+      cidv1 = cidv1.toV1()
+      this.getLogger().info(
+        `Converted:
+ "cidv0" (Base58): ${cidAnalyser}${cid}
+ to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
+      )
+    } else {
+      // Log
+      this.getLogger().info(`"cidv1" (Base32): ${cidAnalyser}${cidv1}`)
+    }
+    const key = new CID(1, 'libp2p-key', cidv1.multihash, 'base36')
+    this.getLogger().info(
+      `Converted:
+"'dag-pb' cidv1" (Base32): ${cidAnalyser}${cidv1}
+to 'libp2p-key' "cidv1" (Base36): ${cidAnalyser}${key}`
+    )
+    return key.toString()
   }
 
   IpfsBundle.prototype.Base64ToUint8Array = function (b64) {

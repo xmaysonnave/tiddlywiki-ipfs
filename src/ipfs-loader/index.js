@@ -152,11 +152,19 @@ import root from 'window-or-global'
     return false
   }
 
-  IpfsLoader.prototype.httpGetToUint8Array = function (url) {
+  IpfsLoader.prototype.xhrToJson = async function (url) {
+    return await this.httpGet(url, 'post', 'json')
+  }
+
+  IpfsLoader.prototype.xhrToUint8Array = function (url) {
+    return this.httpGet(url, 'get', 'arraybuffer')
+  }
+
+  IpfsLoader.prototype.httpGet = function (url, method, responseType) {
     const self = this
     const xhr = new XMLHttpRequest()
     return new Promise(function (resolve, reject) {
-      xhr.responseType = 'arraybuffer'
+      xhr.responseType = responseType
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status !== 0) {
           if (xhr.status >= 300) {
@@ -166,12 +174,17 @@ import root from 'window-or-global'
             return
           }
           try {
-            const array = new Uint8Array(this.response)
+            var result = null
+            if (responseType === 'arraybuffer') {
+              result = new Uint8Array(this.response)
+            } else {
+              result = this.response
+            }
             self.getLogger().info(
               `[${xhr.status}] Loaded:
  ${url}`
             )
-            resolve(array)
+            resolve(result)
           } catch (error) {
             reject(error)
           }
@@ -181,7 +194,7 @@ import root from 'window-or-global'
         reject(new Error($tw.language.getString('NetworkError/XMLHttpRequest')))
       }
       try {
-        xhr.open('get', url, true)
+        xhr.open(method, url, true)
         xhr.send()
       } catch (error) {
         reject(error)
@@ -193,7 +206,7 @@ import root from 'window-or-global'
    * Load to Base64
    */
   IpfsLoader.prototype.loadToBase64 = async function (url) {
-    const ua = await this.httpGetToUint8Array(url)
+    const ua = await this.xhrToUint8Array(url)
     if (ua.length === 0) {
       return ''
     }
@@ -233,7 +246,7 @@ import root from 'window-or-global'
    * Load to UTF-8
    */
   IpfsLoader.prototype.loadToUtf8 = async function (url) {
-    var ua = await this.httpGetToUint8Array(url)
+    var ua = await this.xhrToUint8Array(url)
     if (ua.length === 0) {
       return ''
     }

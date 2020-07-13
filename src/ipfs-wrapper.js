@@ -109,7 +109,8 @@ IPFS Wrapper
     if (ipnsName !== null && identifier !== null) {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          if (keys[index].id === identifier && keys[index].name === ipnsName) {
+          const key = $tw.ipfs.cidToLibp2pKeyCidV1(keys[index].id)
+          if (key === identifier && keys[index].name === ipnsName) {
             ipnsKey = identifier
             found = true
             break
@@ -119,8 +120,9 @@ IPFS Wrapper
     } else if (ipnsName !== null) {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
+          const key = $tw.ipfs.cidToLibp2pKeyCidV1(keys[index].id)
           if (keys[index].name === ipnsName) {
-            ipnsKey = keys[index].id
+            ipnsKey = key
             found = true
             break
           }
@@ -129,11 +131,9 @@ IPFS Wrapper
     } else {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          if (
-            keys[index].id === identifier ||
-            keys[index].name === identifier
-          ) {
-            ipnsKey = keys[index].id
+          const key = $tw.ipfs.cidToLibp2pKeyCidV1(keys[index].id)
+          if (key === identifier || keys[index].name === identifier) {
+            ipnsKey = key
             ipnsName = keys[index].name
             found = true
             break
@@ -171,12 +171,13 @@ IPFS Wrapper
   IpfsWrapper.prototype.generateIpnsKey = async function (ipfs, ipnsName) {
     try {
       const key = await this.ipfsLibrary.genKey(ipfs, ipnsName)
-      const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${key}`)
+      const cid = $tw.ipfs.cidToLibp2pKeyCidV1(key)
+      const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${cid}`)
       this.getLogger().info(
         `Successfully generated IPNS key with IPNS name: ${ipnsName}
  ${url}`
       )
-      return key
+      return cid
     } catch (error) {
       this.getLogger().error(error)
     }
@@ -200,7 +201,7 @@ IPFS Wrapper
     newIpnsName
   ) {
     try {
-      const { id: key, was, now } = await this.ipfsLibrary.renameKey(
+      const { id, was, now } = await this.ipfsLibrary.renameKey(
         ipfs,
         oldIpnsName,
         newIpnsName
@@ -208,6 +209,7 @@ IPFS Wrapper
       this.getLogger().info(
         `Successfully renamed IPNS name: ${was} with ${now}`
       )
+      const key = $tw.ipfs.cidToLibp2pKeyCidV1(id)
       return {
         ipnsKey: key,
         ipnsName: now

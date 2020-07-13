@@ -558,6 +558,10 @@ IPFS Controller
     return false
   }
 
+  IpfsController.prototype.xhrToJson = async function (url) {
+    return await this.ipfsBundle.xhrToJson(url)
+  }
+
   IpfsController.prototype.decodeCid = function (pathname) {
     return this.ipfsBundle.decodeCid(pathname)
   }
@@ -572,6 +576,10 @@ IPFS Controller
 
   IpfsController.prototype.cidToCidV1 = function (cid) {
     return this.ipfsBundle.cidToCidV1(cid)
+  }
+
+  IpfsController.prototype.cidToLibp2pKeyCidV1 = function (cid) {
+    return this.ipfsBundle.cidToLibp2pKeyCidV1(cid)
   }
 
   IpfsController.prototype.isOwner = async function (domain, web3, account) {
