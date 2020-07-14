@@ -5,6 +5,10 @@
 const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
+// IPFS
+const sha256V0 = 'QmcRQfcRTAa4cqCUSiQr9J1QQS3A3gXzkBKrGLmd8WAHTB'
+const sha256V1 = 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
+// IPNS Key
 const rsa2048V0 = 'Qmbo8QtR4mKpX7zCN8WqTLcbRpifvz83C1ogVV2s1H2uzH'
 const ed25519V0 = '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP'
 const ed25519Base32V1 =
@@ -107,5 +111,17 @@ describe('CID', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     expect(ipfsBundle.isCid(ed25519Base36V1)).toBeTruthy()
+  })
+  it('convert ed25519Base36V1 to ed25519Base32V1 CID', async () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const converted = ipfsBundle.cidToCidV1(ed25519Base36V1)
+    expect(converted === ed25519Base32V1).toBeTruthy()
+  })
+  it('convert sha256V1 to sha256V0 CID', async () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const converted = ipfsBundle.cidToCidV0(sha256V1)
+    expect(converted === sha256V0).toBeTruthy()
   })
 })

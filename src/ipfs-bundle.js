@@ -331,6 +331,10 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.cidToCidV0 = function (cid) {
+    return this.convertCidToCidV0(cid).toString()
+  }
+
+  IpfsBundle.prototype.convertCidToCidV0 = function (cid) {
     var cidv0 = new CID(cid)
     if (cidv0.codec !== 'dag-pb') {
       throw new Error(
@@ -338,66 +342,76 @@ import IpfsUrl from './ipfs-url'
       )
     }
     if (cidv0.version === 1) {
-      cidv0 = cidv0.toV0()
+      const converted = cidv0.toV0()
       // Log
       this.getLogger().info(
         `Converted:
- "cidv1" (Base32): ${cidAnalyser}${cid}
- to "cidv0" (Base58): ${cidAnalyser}${cidv0}`
+ "cidv1" (${cidv0.multibaseName}): ${cidAnalyser}${cidv0}
+ to "cidv0" (${converted.multibaseName}): ${cidAnalyser}${converted}`
       )
-    } else {
-      // Log
-      this.getLogger().info(`"cidv0" (Base58): ${cidAnalyser}${cidv0}`)
+      return converted
     }
-    return cidv0.toString()
+    this.getLogger().info(
+      `"cidv0" (${cidv0.multibaseName}): ${cidAnalyser}${cidv0}`
+    )
+    return cidv0
   }
 
   IpfsBundle.prototype.cidToCidV1 = function (cid) {
+    return this.convertCidToDagPbCidV1(cid).toString()
+  }
+
+  IpfsBundle.prototype.convertCidToDagPbCidV1 = function (cid) {
     var cidv1 = new CID(cid)
-    if (cidv1.codec !== 'dag-pb') {
-      throw new Error(
-        `This "cid" is not "dag-pb" encoded: ${cidAnalyser}${cidv1}`
-      )
-    }
+    // Convert cidv0
     if (cidv1.version === 0) {
-      cidv1 = cidv1.toV1()
+      if (cidv1.codec !== 'dag-pb') {
+        throw new Error(
+          `This "cidv0" is not "dag-pb" encoded: ${cidAnalyser}${cid}`
+        )
+      }
+      const converted = cidv1.toV1()
       this.getLogger().info(
         `Converted:
- "cidv0" (Base58): ${cidAnalyser}${cid}
- to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
+ "cidv0" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}
+ to "cidv1" (${converted.multibaseName}): ${cidAnalyser}${converted}`
       )
-    } else {
-      // Log
-      this.getLogger().info(`"cidv1" (Base32): ${cidAnalyser}${cidv1}`)
+      return converted
     }
-    return cidv1.toString()
+    if (cidv1.codec !== 'dag-pb' && cidv1.codec !== 'libp2p-key') {
+      throw new Error(
+        `This "cidv1" is not "dag-pb" or "libp2p-key" encoded: ${cidAnalyser}${cidv1}`
+      )
+    }
+    // Convert
+    if (cidv1.codec === 'libp2p-key' || cidv1.multibaseName !== 'base32') {
+      return this.convertCidToCid(cid, 'dag-pb', 'base32')
+    }
+    this.getLogger().info(
+      `"cidv1" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}`
+    )
+    return cidv1
   }
 
   IpfsBundle.prototype.cidToLibp2pKeyCidV1 = function (cid) {
+    return this.convertCidToCid(cid, 'libp2p-key', 'base36').toString()
+  }
+
+  IpfsBundle.prototype.convertCidToCid = function (cid, codec, multibaseName) {
     var cidv1 = new CID(cid)
-    if (cidv1.codec !== 'dag-pb') {
-      throw new Error(
-        `This "cid" is not "dag-pb" encoded: ${cidAnalyser}${cidv1}`
-      )
+    if (cidv1.codec === codec && cidv1.multibaseName === multibaseName) {
+      return cidv1
     }
     if (cidv1.version === 0) {
-      cidv1 = cidv1.toV1()
-      this.getLogger().info(
-        `Converted:
- "cidv0" (Base58): ${cidAnalyser}${cid}
- to "cidv1" (Base32): ${cidAnalyser}${cidv1}`
-      )
-    } else {
-      // Log
-      this.getLogger().info(`"cidv1" (Base32): ${cidAnalyser}${cidv1}`)
+      cidv1 = this.convertCidToDagPbCidV1(cid)
     }
-    const key = new CID(1, 'libp2p-key', cidv1.multihash, 'base36')
+    const converted = new CID(1, codec, cidv1.multihash, multibaseName)
     this.getLogger().info(
       `Converted:
-"'dag-pb' cidv1" (Base32): ${cidAnalyser}${cidv1}
-to 'libp2p-key' "cidv1" (Base36): ${cidAnalyser}${key}`
+"'${cidv1.codec}' cidv${cidv1.version}" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}
+to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${converted}`
     )
-    return key.toString()
+    return converted
   }
 
   IpfsBundle.prototype.Base64ToUint8Array = function (b64) {
