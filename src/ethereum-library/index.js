@@ -292,6 +292,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
           this.getLogger().error(error)
         }
       }
+      // Fallback
       if (
         accounts === undefined ||
         accounts == null ||
