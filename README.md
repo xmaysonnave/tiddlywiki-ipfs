@@ -46,8 +46,8 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 - Open Source
 - Decentralized
+- Unhackable
 - Unstoppable
-- Transparency
 
 ## Using `IPFS with TiddlyWiki`:
 
@@ -68,6 +68,7 @@ With a non capable [ENS](https://ens.domains/) browser
 Recommended TiddlyWiki Plugins:
 
 - [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
+- [Relink](https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink)
 
 ### Getting Started
 
