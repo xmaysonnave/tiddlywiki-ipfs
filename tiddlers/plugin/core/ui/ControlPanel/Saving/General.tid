@@ -29,7 +29,7 @@ list-before:
 !! <$link to="$:/config/PreferredSaver"><<lingo PreferredSaver/Caption>></$link>
 
 <$select tiddler="$:/config/PreferredSaver">
-<$list filter="[savers[]]">
+<$list filter="[savers[]sort[]]">
 <option value=<<currentTiddler>>><<preferred-saver>></option>
 </$list>
 </$select>
