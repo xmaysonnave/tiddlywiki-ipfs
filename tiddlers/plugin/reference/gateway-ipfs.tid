@@ -1,5 +1,6 @@
 title: $:/ipfs/saver/gateway/https/ipfs.io
-modified: 20200528094915385
+modified: 20200716094915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
+useSubdomains: no
 
 https://ipfs.io

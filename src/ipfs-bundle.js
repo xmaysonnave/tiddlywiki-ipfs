@@ -9,6 +9,7 @@ IPFS Bundle
 \*/
 import CID from 'cids'
 import root from 'window-or-global'
+import { URL } from 'universal-url'
 import EnsLibrary from './ens-library'
 import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
@@ -253,14 +254,57 @@ import IpfsUrl from './ipfs-url'
     return await this.ipfsLoader.loadToUtf8(url)
   }
 
-  IpfsBundle.prototype.decodeCid = function (pathname) {
+  IpfsBundle.prototype.decodeCid = function (decode) {
     // Check
-    if (
-      pathname === undefined ||
-      pathname == null ||
-      pathname.trim() === '' ||
-      pathname.trim() === '/'
-    ) {
+    if (decode === undefined || decode == null) {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    if (decode instanceof URL === false && typeof decode !== 'string') {
+      throw new Error('Unable to decode CID. "URL" or "string" expected...')
+    }
+    if (decode instanceof URL) {
+      var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(
+        decode.hostname
+      )
+      if (protocol == null && cid == null && ipnsIdentifier == null) {
+        var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(
+          decode.pathname
+        )
+      }
+      return {
+        cid: cid,
+        ipnsIdentifier: ipnsIdentifier,
+        protocol: protocol
+      }
+    }
+    var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(decode)
+    if (protocol == null && cid == null && ipnsIdentifier == null) {
+      var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(decode)
+    }
+    return {
+      cid: cid,
+      ipnsIdentifier: ipnsIdentifier,
+      protocol: protocol
+    }
+  }
+
+  IpfsBundle.prototype.decodePathnameCid = function (pathname) {
+    if (pathname === undefined || pathname == null) {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    if (typeof pathname !== 'string') {
+      throw new Error('Unable to decode CID. "string" expected...')
+    }
+    pathname = pathname.trim() === '' ? null : pathname.trim()
+    if (pathname == null || pathname === '/') {
       return {
         cid: null,
         ipnsIdentifier: null,
@@ -289,7 +333,6 @@ import IpfsUrl from './ipfs-url'
       // Nothing to process
       break
     }
-    // Check
     if (protocol == null || identifier == null) {
       return {
         cid: null,
@@ -297,7 +340,6 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    // Check protocol
     if (protocol !== 'ipfs' && protocol !== 'ipns') {
       return {
         cid: null,
@@ -305,15 +347,86 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    // Check
     var cid = null
     var ipnsIdentifier = null
     if (protocol === 'ipns') {
       ipnsIdentifier = identifier
-    } else if (this.isCid(identifier)) {
+    } else if (protocol === 'ipfs' && this.isCid(identifier)) {
       cid = identifier
+    } else {
+      protocol = null
     }
-    // All good
+    return {
+      cid: cid,
+      ipnsIdentifier: ipnsIdentifier,
+      protocol: protocol
+    }
+  }
+
+  IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
+    if (hostname === undefined || hostname == null) {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    if (typeof hostname !== 'string') {
+      throw new Error('Unable to decode CID. "string" expected...')
+    }
+    hostname = hostname.trim() === '' ? null : hostname.trim()
+    if (hostname == null) {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    var identifier = null
+    var protocol = null
+    // Parse
+    const members = hostname.trim().split('.')
+    for (var i = 0; i < members.length; i++) {
+      // Ignore
+      if (members[i].trim() === '') {
+        continue
+      }
+      // First non empty member
+      if (identifier == null) {
+        identifier = members[i]
+        continue
+      }
+      // Second non empty member
+      if (protocol == null) {
+        protocol = members[i]
+        break
+      }
+      // Nothing to process
+      break
+    }
+    if (protocol == null || identifier == null) {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    if (protocol !== 'ipfs' && protocol !== 'ipns') {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    var cid = null
+    var ipnsIdentifier = null
+    if (protocol === 'ipns') {
+      ipnsIdentifier = identifier
+    } else if (protocol === 'ipfs' && this.isCid(identifier)) {
+      cid = identifier
+    } else {
+      protocol = null
+    }
     return {
       cid: cid,
       ipnsIdentifier: ipnsIdentifier,

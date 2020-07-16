@@ -381,9 +381,7 @@ IPFS Controller
         resolvedUrl: null
       }
     }
-    var { cid, ipnsIdentifier, protocol } = this.decodeCid(
-      normalizedUrl.pathname
-    )
+    var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl)
     if (
       protocol !== null &&
       protocol === ipnsKeyword &&

@@ -162,8 +162,8 @@ IPFS Import
     if (key == null) {
       return false
     }
-    const { cid, ipnsIdentifier } = $tw.ipfs.decodeCid(key)
-    if (cid !== null || ipnsIdentifier !== null) {
+    const { cid, ipnsIdentifier, protocol } = $tw.ipfs.decodeCid(key)
+    if (protocol !== null && (cid !== null || ipnsIdentifier !== null)) {
       return true
     } else if (key.endsWith('.eth')) {
       return true

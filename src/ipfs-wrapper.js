@@ -110,8 +110,11 @@ IPFS Wrapper
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
           const key = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id)
-          if (key === identifier && keys[index].name === ipnsName) {
-            ipnsKey = identifier
+          if (
+            (keys[index].id === identifier || key === identifier) &&
+            keys[index].name === ipnsName
+          ) {
+            ipnsKey = key
             found = true
             break
           }
@@ -132,7 +135,11 @@ IPFS Wrapper
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
           const key = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id)
-          if (key === identifier || keys[index].name === identifier) {
+          if (
+            keys[index].id === identifier ||
+            key === identifier ||
+            keys[index].name === identifier
+          ) {
             ipnsKey = key
             ipnsName = keys[index].name
             found = true
