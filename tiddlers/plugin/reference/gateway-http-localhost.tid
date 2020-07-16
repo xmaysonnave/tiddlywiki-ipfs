@@ -1,6 +1,5 @@
 title: $:/ipfs/saver/gateway/http/localhost
 modified: 20200716094915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
-useSubdomains: yes
 
 http://localhost:8080

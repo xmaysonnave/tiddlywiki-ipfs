@@ -1,6 +1,5 @@
 title: $:/ipfs/saver/gateway/https/dweb.link
 modified: 20200716094915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
-useSubdomains: yes
 
 https://dweb.link

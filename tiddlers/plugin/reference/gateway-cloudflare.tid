@@ -1,6 +1,5 @@
 title: $:/ipfs/saver/gateway/https/cloudflare-ipfs.com
 modified: 20200716094915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
-useSubdomains: no
 
 https://cloudflare-ipfs.com
