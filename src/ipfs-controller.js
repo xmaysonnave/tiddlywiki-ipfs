@@ -568,16 +568,20 @@ IPFS Controller
     return this.ipfsBundle.isCid(cid)
   }
 
-  IpfsController.prototype.cidToCidV0 = function (cid) {
-    return this.ipfsBundle.cidToCidV0(cid)
+  IpfsController.prototype.cidToCidV0 = function (cid, log) {
+    return this.ipfsBundle.cidToCidV0(cid, log)
   }
 
-  IpfsController.prototype.cidToCidV1 = function (cid) {
-    return this.ipfsBundle.cidToCidV1(cid)
+  IpfsController.prototype.cidToCidV1 = function (cid, log) {
+    return this.ipfsBundle.cidToCidV1(cid, log)
   }
 
-  IpfsController.prototype.cidToLibp2pKeyCidV1 = function (cid) {
-    return this.ipfsBundle.cidToLibp2pKeyCidV1(cid)
+  IpfsController.prototype.cidToLibp2pKeyCidV1 = function (
+    cid,
+    multibaseName,
+    log
+  ) {
+    return this.ipfsBundle.cidToLibp2pKeyCidV1(cid, multibaseName, log)
   }
 
   IpfsController.prototype.isOwner = async function (domain, web3, account) {

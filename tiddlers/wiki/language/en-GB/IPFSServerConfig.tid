@@ -5,6 +5,24 @@ type: application/json
 documentation: https://github.com/ipfs/go-ipfs/blob/master/docs/config.md
 
 {
+  "Addresses": {
+    "API": [
+      "/ip4/127.0.0.1/tcp/5001",
+      "/ip6/::1/tcp/5001"
+    ],
+    "Announce": [],
+    "Gateway": [
+      "/ip4/127.0.0.1/tcp/8080",
+      "/ip6/::1/tcp/8080"
+    ],
+    "NoAnnounce": [],
+    "Swarm": [
+      "/ip4/0.0.0.0/tcp/4001",
+      "/ip6/::/tcp/4001",
+      "/ip4/0.0.0.0/udp/4001/quic",
+      "/ip6/::/udp/4001/quic"
+    ]
+  },
   "API": {
     "HTTPHeaders": {
       "Access-Control-Allow-Headers": [
@@ -27,18 +45,6 @@ documentation: https://github.com/ipfs/go-ipfs/blob/master/docs/config.md
         "X-Stream-Output"
       ]
     }
-  },
-  "Addresses": {
-    "API": "/ip4/127.0.0.1/tcp/5001",
-    "Announce": [],
-    "Gateway": "/ip4/127.0.0.1/tcp/8080",
-    "NoAnnounce": [],
-    "Swarm": [
-      "/ip4/0.0.0.0/tcp/4001",
-      "/ip6/::/tcp/4001",
-      "/ip4/0.0.0.0/udp/4001/quic",
-      "/ip6/::/udp/4001/quic"
-    ]
   },
   "AutoNAT": {
     "ServiceMode": "enabled"
@@ -138,8 +144,8 @@ documentation: https://github.com/ipfs/go-ipfs/blob/master/docs/config.md
     "Writable": false
   },
   "Identity": {
-    "PeerID": "QmdDPV5VVpFSYNAKNkRzJFM5HkoDzZRY1Pe71XAQP2CXUK",
-    "PrivKey": "CAASpwkwggSjAgEAAoIBAQDDHt+gWmoemthoC6Y6JIg9poDU/5uCFct+rZ+3tdJYP/jEq+NgnJU4WoW7vSTcssEZKX13/yAGZ4x4t5EAOW9+sZDCpqXNCcThFP6w6qliG7Y+Bg6/fUr3GsLM6IEFDgPrXmOs1YtbMkyLj6t1tmxr3wMJjmOeSBBhIdld+84E5jzFEdQiP5tuD50sVx5ePUtXSa9nrzCuUVVMqI4ulxtbhVTMBHpwhzbEz+UwR+/PQHIiepieF+UiQR2iNc4O6SBGHuYZHqfCBT1y2WX0ZD93KxZ1Ydl0Y3nJ4PxZzk0GJ462FFRG/+MdUy3kbrrIslp9PdpX+yrJ3kWlg4kkkD+TAgMBAAECggEAUUwJzNwfHwVRaXiBF/Skt1sqjpS5jGfcU7mvtHGTZKWy1u7vXA+htMsysVhLhZENF5jL6DVqeICobJu/VKKZq+X79L5OkrGhUE7ZF4mObYwyUIFhn7Nqiq6hv5KYPyzpwSWgziBjYeoBLpz7yZ3qar+OmmqzYv2PpYje8mO6IRu5vYUVPmLBga72wZr61YI60EHmmYY3yoU8u8EwmLP+iD9o42sR491iknIoxSgDearqO5CqIU2Ciq2ahfCkgO396JcCEkYTrgwTKDtQ3t6q3IE/Y7l5v17R85gKR7wPHxFj6BfWrBxnxr+icXmb0qozu9IMXj985tz5jg5wASnqUQKBgQDJ5StAgldpRz5ODBHf/FdED7pMtvg7HejLO7lQEk5gkkuQXkCxuetGwY+Fszt43r/5V6QmHZ/sQqMjrxar21epZVHcpgPA0/eV2RkO+VBJmor63sqExfUGB9uQbe2o3bwEVi1yMu2WLeJXi1jclyLj6Cr4GgP5wcc6H9Cij98ZrwKBgQD3aPCoQU+bDms6O5LZA0riVij2ZJ4fDUum4FWF6DCWEgP2Kn0QVNBEF2HxlGeHl8Vhdlb3PJOcnpbSOMTFXzbys2Dz/LHOYmb4d+vLAcHpMbuUA2kida/vZQAPY9b6Cw1UPzQXH7ljDM88E9u16kCOu5IMLx3YHRd46+hbkZSFXQKBgEtlM4PBqRb9rfzDcSFuQMCABxiC86xP/RF4WjnWvEJAH8voBszYG06vFgPd7QW0WYip+/jn80Ltl7LJvfOr087EsY9ux9QI1Fq3Wi5HWH5EIkaRUJvIuTnpUUtcYfY/5+jOreYJssP0mqQKu8KVBkiJ+RHx1S49+UJxgx5SEAStAoGBAJaKVuy6GLsLUflz6E19sGH59SC/ZmsUhvS6Sa+Z8X5O5fQyNDjssnDMHX+GQlyB38sG27HCPTsuUC0H98r0vZV9yj+LgZFH1MnZBjNXFWtUJIPSc3VRUMUEmr3CjTtF4E1jy8lKN15qm+o9VxHgwHlY7mvVe35VbUPZn1+gPFPNAoGAAoyIGbON7Df+elrt4f3DQOhJpSueioZjSpDbLvtVYIp6wUBNyWxJdZpiHztg0KbArw/IUmkVUwmK+KvgYXEJM6oEhY2WFBi/bqCnJoEKt75gs+suNcuJOwdBqWlHJVvOVZUO1LHxNdx1y+AYuAVmRWlLe4pwjrwbLuNvWSUnEJo="
+    "PeerID": "Specific to your Configuration",
+    "PrivKey": "Specific to your Configuration"
   },
   "Ipns": {
     "RecordLifetime": "",
