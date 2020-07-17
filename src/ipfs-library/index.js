@@ -163,28 +163,27 @@ import root from 'window-or-global'
       // Not a 'dag-pb' but a 'raw' multicodec instead
       // We generate a V0 and convert it to a V1
       // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
-      const addSource = await client.add(buffer, {
+      const added = await client.add(buffer, {
+        chunker: 'rabin-262144-524288-1048576',
         cidVersion: 0,
         hashAlg: 'sha2-256',
-        chunker: 'rabin-262144-524288-1048576',
-        pin: false
+        pin: false,
+        rawLeaves: true
       })
-      // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
-      var lastResult = null
-      for await (const added of addSource) {
-        lastResult = added
-      }
       // Check
       if (
-        lastResult == null ||
-        lastResult.path === undefined ||
-        lastResult.path == null
+        added === undefined ||
+        added == null ||
+        added.path === undefined ||
+        added.path == null ||
+        added.size === undefined ||
+        added.size == null
       ) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
-        hash: this.ipfsBundle.cidToCidV1(lastResult.path, true),
-        size: lastResult.size
+        hash: this.ipfsBundle.cidToCidV1(added.path, true),
+        size: added.size
       }
     }
     throw new Error('Undefined IPFS add...')
