@@ -111,12 +111,20 @@ IPFS Wrapper
     if (ipnsName !== null && identifier !== null) {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          const key = this.ipfsBundle.cidToLibp2pKeyCidV1(
+          const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(
             keys[index].id,
-            'base36'
+            'base32',
+            false
+          )
+          const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(
+            keys[index].id,
+            'base36',
+            false
           )
           if (
-            (keys[index].id === identifier || key === identifier) &&
+            (keys[index].id === identifier ||
+              cidv1b32 === identifier ||
+              cidv1b36 === identifier) &&
             keys[index].name === ipnsName
           ) {
             ipnsKey = keys[index].id
@@ -138,13 +146,20 @@ IPFS Wrapper
     } else {
       if (keys !== null && keys !== undefined && Array.isArray(keys)) {
         for (var index = 0; index < keys.length; index++) {
-          const key = this.ipfsBundle.cidToLibp2pKeyCidV1(
+          const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(
             keys[index].id,
-            'base36'
+            'base32',
+            false
+          )
+          const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(
+            keys[index].id,
+            'base36',
+            false
           )
           if (
             keys[index].id === identifier ||
-            key === identifier ||
+            cidv1b32 === identifier ||
+            cidv1b36 === identifier ||
             keys[index].name === identifier
           ) {
             ipnsKey = keys[index].id
@@ -165,13 +180,17 @@ IPFS Wrapper
     // Lets build an url, the resolver will do the final check, we cannot do more here
     if (found) {
       const cidv0 = ipnsKey
-      const cidv1 = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv0, 'base32', false)
-      ipnsKey = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1, 'base36', false)
+      const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(
+        cidv0,
+        'base32',
+        false
+      )
+      ipnsKey = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1b32, 'base36', false)
       normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}`)
       this.getLogger().info(
         `Successfully Fetched IPNS identifiers: '${ipnsName}':
  'dag-pb' "cidv0" (base58btc): ${cidAnalyser}${cidv0}
- to 'libp2p-key' "cidv1" (base32): ${cidAnalyser}${cidv1}
+ to 'libp2p-key' "cidv1" (base32): ${cidAnalyser}${cidv1b32}
  to 'libp2p-key' "cidv1" (base36): ${cidAnalyser}${ipnsKey}
  ${normalizedUrl}`
       )
