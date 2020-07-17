@@ -1870,18 +1870,22 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
     } else {
       console.log(`Connected Account: ${accounts[0]}`);
     }
-    var tStart = new Date();
-    decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
-    if (decryptedText !== undefined || decryptedText !== null) {
-      var tStop = new Date()-tStart;
-      var ratio = Math.floor(decryptedText.length*100/text.length);
-      console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`);
+    try {
+      var tStart = new Date();
+      decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
+      if (decryptedText !== undefined || decryptedText !== null) {
+        var tStop = new Date()-tStart;
+        var ratio = Math.floor(decryptedText.length*100/text.length);
+        console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error("Unable to Decrypt Ethereum content...");
     }
-  } catch(error) {
+  } catch (error) {
     if (error.code === 4001) {
       $tw.utils.error('Rejected User Request...');
     } else {
-      console.error(error);
       $tw.utils.error(error.message);
     }
   }
