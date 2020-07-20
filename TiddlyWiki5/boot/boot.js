@@ -806,7 +806,7 @@ $tw.utils.Compress = function() {
   this.btoa = function(ua) {
     try {
       return this.Uint8ArrayToBase64(ua);
-    } catch (err) {
+    } catch (error) {
       return Buffer.from(ua).toString("base64");
     }
   };
