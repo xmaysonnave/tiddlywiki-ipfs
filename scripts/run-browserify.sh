@@ -1,10 +1,10 @@
 #!/bin/bash
-npx prettier-standard \
+yarn prettier-standard \
   --lint \
   --format \
 || exit 1
 
-npx browserify \
+yarn browserify \
   src/ipfs-bundle.js \
   -s IpfsBundle \
   -o build/plugins/ipfs/ipfs-bundle.js \

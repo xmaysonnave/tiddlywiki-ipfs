@@ -180,6 +180,9 @@ https://www.jsdelivr.com/
 Node Documentation:
 https://nodejs.org/en/docs/
 
+Yarn Documentation:
+https://classic.yarnpkg.com/en/docs/
+
 Npm Repository:
 https://www.npmjs.com/
 
@@ -241,7 +244,7 @@ This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ip
 v12.18.1
 ```
 
-Install the recommended version.
+Install the recommended `node` version.
 
 ```
 nvm install v12.18.1
@@ -254,20 +257,28 @@ node -v
 v12.18.1
 ```
 
-We update npm to use the latest:
+Install `yarn`.
+https://classic.yarnpkg.com/en/docs/install/#debian-stable
+
+On Debian setup the `yarn` repository:
 
 ```
-npm install -g npm@latest
-npm -v
-6.14.6
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 ```
 
-At this stage your environment should look like this:
+As we are using `nvm`, we avoid the `node` installation:
 
 ```
-npm -g ls --depth=0
-/home/user/.nvm/versions/node/v12.18.1/lib
-└── npm@6.14.6
+sudo apt update
+sudo apt install --no-install-recommends yarn
+```
+
+Check your environment:
+
+```
+yarn --version
+1.22.4
 ```
 
 #### Repository install
@@ -289,7 +300,7 @@ cd tiddlywiki-ipfs
 Install dependencies, [Node.js](https://nodejs.org/) should be installed and setup:
 
 ```
-npm install
+yarn
 ```
 
 #### Building TiddlyWiki
@@ -316,6 +327,10 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 
+```
+yarn build
+```
+
 The `wiki` directory contains several runnable `TiddlyWikis`:
 
 - [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
@@ -327,6 +342,10 @@ and the `IPFS with TiddlyWiki` plugin as a json file:
 - [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/tiddlywiki-ipfs-plugin.json)
 
 Use the `test` script to run the tests.
+
+```
+yarn test
+```
 
 This project is integrated with Travis CI:
 

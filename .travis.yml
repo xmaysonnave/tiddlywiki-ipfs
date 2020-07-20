@@ -8,8 +8,8 @@ node_js:
   - '12'
 
 script:
-  - npm run build
-  - npm test
+  - yarn build
+  - yarn test
 
 branches:
   only:

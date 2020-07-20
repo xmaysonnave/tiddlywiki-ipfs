@@ -1,7 +1,11 @@
 title: $:/plugins/ipfs/changelog
-modified: 20200525094915385
+modified: 20200720094915385
 tags: $:/ipfs/core
 type: text/vnd.tiddlywiki
+
+!! v0.4.0
+
+[[See GitHub for detailed change history of this release|https://github.com/xmaysonnave/tiddlywiki-ipfs/compare/v0.3.0...v0.4.0]]
 
 !! v0.3.0
 

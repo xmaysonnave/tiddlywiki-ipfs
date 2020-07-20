@@ -685,7 +685,7 @@ $tw.utils.Crypto = function() {
           var tStart = new Date();
           outputText = sjcl[method](password,inputText);
           var tStop = new Date()-tStart;
-          var ratio = Math.floor(outputText.length*100/inputText.length);
+          var ratio = Math.floor(outputText.length * 100 / inputText.length);
           console.log(`${method}: ${tStop}ms, In: ${inputText.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
         }
       } catch(ex) {
@@ -737,23 +737,23 @@ $tw.utils.Crypto = function() {
   }
   this.encrypt = function(text,password) {
     if (currentPublicKey) {
-      var outputText;
+      var output;
       var tStart = new Date();
       try {
-        outputText = sigUtil.encrypt(
+        output = sigUtil.encrypt(
           currentPublicKey,
           { data: text },
           'x25519-xsalsa20-poly1305'
         )
-        outputText = JSON.stringify(outputText);
-        var tStop = new Date()-tStart;
-        var ratio = Math.floor(outputText.length*100/text.length);
-        console.log(`Ethereum Encrypt: ${tStop}ms, In: ${text.length}, Out: ${outputText.length}, Ratio: ${ratio}%`);
+        output = JSON.stringify(output);
+        var tStop = new Date() - tStart;
+        var ratio = Math.floor(output.length * 100 / text.length);
+        console.log(`Ethereum Encrypt: ${tStop}ms, In: ${text.length}, Out: ${output.length}, Ratio: ${ratio}%`);
       } catch (error) {
         console.log("Crypto error:" + error);
-        outputText = null;
+        output = null;
       }
-      return outputText
+      return output
     } else {
       return callSjcl("encrypt",text,password);
     }
@@ -784,19 +784,19 @@ $tw.utils.Compress = function() {
   };
   this.deflate = function(str) {
     var tStart = new Date();
-    var ua = pako.deflate(str,{raw:false});
+    var ua = pako.deflate(str, { raw: false });
     var b64 = this.btoa(ua);
-    var tStop = new Date()-tStart;
-    var ratio = Math.floor(b64.length*100/str.length);
+    var tStop = new Date() - tStart;
+    var ratio = Math.floor(b64.length * 100 / str.length);
     console.log(`Deflate: ${tStop}ms, In: ${str.length}, Out: ${b64.length}, Ratio: ${ratio}%`);
     return b64;
   };
   this.inflate = function(b64) {
     var tStart = new Date();
     var ua = this.decode(b64);
-    var str = pako.inflate(ua,{to:"string"});
-    var tStop = new Date()-tStart;
-    var ratio = Math.floor(str.length*100/b64.length);
+    var str = pako.inflate(ua, { to: "string" });
+    var tStop = new Date() - tStart;
+    var ratio = Math.floor(str.length * 100 / b64.length);
     console.log(`Inflate: ${tStop}ms, In: ${b64.length}, Out: ${str.length}, Ratio: ${ratio}%`);
     return str;
   };
@@ -1832,6 +1832,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
     return false;
   }
   var decryptedText = null;
+  var sigUtil = $tw.node ? (global.sigUtil || require("eth-sig-util")) : window.sigUtil;
   try {
     const provider = await window.detectEthereumProvider({ mustBeMetaMask: true });
     if (provider === undefined || provider == null) {
@@ -1841,15 +1842,26 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
     var accounts = null;
     if (typeof provider.request === "function") {
       var permission = false;
+      // Permission Attempt
       try {
         permission = await checkAccountPermission(provider)
         if (permission === false) {
           permission = await requestAccountPermission(provider);
         }
-        if (permission === false || await provider._metamask.isUnlocked() === false) {
-          await provider.request({ method: "eth_requestAccounts" });
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error;
         }
-        accounts = await provider.request({ method: "eth_accounts" });
+        console.error(error);
+      }
+      // Request Accounts attempt
+      try {
+        if (permission === false || await provider._metamask.isUnlocked() === false) {
+          accounts = await provider.request({ method: "eth_requestAccounts" });
+        }
+        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+          accounts = await provider.request({ method: "eth_accounts" });
+        }
       } catch (error) {
         if (error.code === 4001) {
           throw error;
@@ -1857,6 +1869,7 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
         console.error(error);
       }
     }
+    // Enable attempt
     if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
       if (typeof provider.enable === "function") {
         accounts = await provider.enable();
@@ -1874,11 +1887,14 @@ $tw.boot.metamaskPrompt = async function(text, callback) {
       var tStart = new Date();
       decryptedText = await provider.request({ method: "eth_decrypt", params: [text, accounts[0]] })
       if (decryptedText !== undefined || decryptedText !== null) {
-        var tStop = new Date()-tStart;
-        var ratio = Math.floor(decryptedText.length*100/text.length);
+        var tStop = new Date() - tStart;
+        var ratio = Math.floor(decryptedText.length * 100 / text.length);
         console.log(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`);
       }
     } catch (error) {
+      if (error.code === 4001) {
+        throw error
+      }
       console.error(error);
       throw new Error("Unable to Decrypt Ethereum content...");
     }

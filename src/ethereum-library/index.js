@@ -271,20 +271,36 @@ import detectEthereumProvider from '@metamask/detect-provider'
       var accounts = null
       if (typeof provider.request === 'function') {
         var permission = false
+        // Permission Attempt
         try {
           permission = await this.checkAccountPermission(provider)
           if (permission === false) {
             permission = await this.requestAccountPermission(provider)
           }
+        } catch (error) {
+          if (error.code === 4001) {
+            throw error
+          }
+          this.getLogger().error(error)
+        }
+        // Request Accounts attempt
+        try {
           if (
             permission === false ||
             (await provider._metamask.isUnlocked()) === false
           ) {
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-            await provider.request({ method: 'eth_requestAccounts' })
+            accounts = await provider.request({ method: 'eth_requestAccounts' })
           }
-          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-          accounts = await provider.request({ method: 'eth_accounts' })
+          if (
+            accounts === undefined ||
+            accounts == null ||
+            Array.isArray(accounts) === false ||
+            accounts.length === 0
+          ) {
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+            accounts = await provider.request({ method: 'eth_accounts' })
+          }
         } catch (error) {
           if (error.code === 4001) {
             throw error
@@ -292,7 +308,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
           this.getLogger().error(error)
         }
       }
-      // Fallback
+      // Enable attempt
       if (
         accounts === undefined ||
         accounts == null ||
