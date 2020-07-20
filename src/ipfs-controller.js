@@ -97,9 +97,9 @@ IPFS Controller
     if (encrypted.fields.text === 'yes') {
       try {
         if (compressed.fields.text === 'yes') {
-          content = $tw.compress.deflate(content)
-          content = $tw.crypto.encrypt(content)
-          content = JSON.stringify({ pako: content })
+          content = { pako: $tw.compress.deflate(content) }
+          content.pako = $tw.crypto.encrypt(content.pako)
+          content = JSON.stringify(content)
         } else {
           // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
           if (encoding === 'base64') {
@@ -116,8 +116,8 @@ IPFS Controller
     } else {
       try {
         if (compressed.fields.text === 'yes') {
-          content = $tw.compress.deflate(content)
-          content = JSON.stringify({ pako: content })
+          content = { pako: $tw.compress.deflate(content) }
+          content = JSON.stringify(content)
           content = this.StringToUint8Array(content)
         } else {
           if (encoding === 'base64') {
