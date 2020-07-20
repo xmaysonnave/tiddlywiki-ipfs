@@ -15,7 +15,7 @@ describe('Deflate', () => {
     const ua = pako.deflate(plain.toString(), { raw: false })
     const b64 = Buffer.from(ua).toString('base64')
     const compressed = fs.readFileSync('./test/data/compressed.txt')
-    expect(b64 == compressed).toBeTruthy()
+    expect(b64 === compressed.toString()).toBeTruthy()
   })
 })
 
@@ -27,6 +27,6 @@ describe('Inflate', () => {
     const ua = ipfsBundle.decode(b64.toString())
     const content = pako.inflate(ua, { to: 'string' })
     const plain = fs.readFileSync('./test/data/plain.txt')
-    expect(plain == content).toBeTruthy()
+    expect(content === plain.toString()).toBeTruthy()
   })
 })
