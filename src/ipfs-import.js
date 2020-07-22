@@ -209,7 +209,7 @@ IPFS Import
       if (canonicalUri !== null || importUri !== null) {
         this.getLogger().info('*** Begin Import ***')
         this.rootUri = importUri !== null ? importUri : canonicalUri
-        if (this.rootUri !== null) {
+        if (importUri !== null) {
           const {
             loaded: importLoaded,
             removed: importRemoved
@@ -277,6 +277,15 @@ IPFS Import
           } else {
             reportUpdated = `${reportUpdated}[[${title}]]`
           }
+        }
+      }
+      var reportLoaded = ''
+      if (
+        this.host !== null &&
+        this.merged.get(this.host.fields.title) === undefined
+      ) {
+        for (var loaded of this.loaded.values()) {
+          reportLoaded = `${reportLoaded}[[${loaded.url}]]`
         }
       }
       // Process deleted
@@ -357,8 +366,16 @@ IPFS Import
           const reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
           const reportImportedMsg =
             "<p align='center'>''Successfully Imported''</p>"
+          const reportLoadedMsg = `<p align='left'>''Resource Loaded: ${this.loaded.size}''</p>`
           const reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
           var value = `${reportImportedMsg}`
+          if (reportLoaded.trim() !== '') {
+            value = `${value}
+
+ ${reportLoadedMsg}
+
+ {{{${reportLoaded}}}}`
+          }
           if (reportAdded.trim() !== '') {
             value = `${value}
 
@@ -472,7 +489,7 @@ IPFS Import
     parentUrl,
     parentTitle,
     parentField,
-    uri,
+    url,
     key,
     resolvedKey
   ) {
@@ -499,7 +516,11 @@ IPFS Import
       }
       // Loaded
       if (tiddlers !== undefined && tiddlers !== null) {
-        this.loaded.set(key, { imported, resolvedKey, uri })
+        this.loaded.set(key, {
+          imported: imported,
+          resolvedKey: resolvedKey,
+          url: url
+        })
         for (var i in tiddlers) {
           const tiddler = tiddlers[i]
           var title = tiddler.title
@@ -701,7 +722,7 @@ IPFS Import
           }
           if (canonicalKey !== undefined && canonicalKey !== null) {
             if (key === canonicalKey) {
-              const msg = 'Cycle Graph:'
+              const msg = 'Cycle:'
               const field = '_canonical_uri'
               this.getLogger().info(
                 `${msg} "${field}" from ${title}"
@@ -743,7 +764,7 @@ IPFS Import
                     alertFieldFailed`${msg} ${field} from ${resolvedKey}">${title}</a>`
                   )
                 } else if (key === importKey) {
-                  const msg = 'Cycle Graph:'
+                  const msg = 'Cycle:'
                   const field = '_import_uri'
                   this.getLogger().info(
                     `${msg} "${field}" from "${title}"
@@ -791,6 +812,9 @@ IPFS Import
       return true
     }
     if (this.notLoaded.indexOf(canonicalKey) !== -1) {
+      return false
+    }
+    if (this.loaded.get(canonicalKey) === undefined) {
       return false
     }
     const { imported, resolvedKey } = this.loaded.get(canonicalKey)
@@ -853,6 +877,9 @@ IPFS Import
     importKey
   ) {
     if (this.notLoaded.indexOf(importKey) !== -1) {
+      return
+    }
+    if (this.loaded.get(importKey) === undefined) {
       return
     }
     const { imported, resolvedKey: importResolvedKey } = this.loaded.get(
@@ -940,7 +967,7 @@ IPFS Import
             alertFieldFailed`${msg} ${field} from ${importResolvedKey}">${title}</a>`
           )
         } else if (keys.indexOf(nextImportKey) !== -1) {
-          const msg = 'Cycle Graph:'
+          const msg = 'Cycle:'
           const field = '_import_uri'
           this.getLogger().info(
             `${msg} "${field}" from "${title}"
@@ -967,7 +994,7 @@ IPFS Import
   IpfsImport.prototype.importTiddlers = function () {
     var processedTitles = []
     for (var key of this.loaded.keys()) {
-      const { imported, uri } = this.loaded.get(key)
+      const { imported, url } = this.loaded.get(key)
       for (var title of imported.keys()) {
         if (processedTitles.indexOf(title) !== -1) {
           continue
@@ -1001,7 +1028,7 @@ IPFS Import
         ) {
           this.importTiddler(title, canonicalUri)
         }
-        exist = this.mergeTiddler(title, uri)
+        exist = this.mergeTiddler(title, url)
         if (exist !== null) {
           const merged = this.merged.get(title)
           var type = merged.type
@@ -1011,8 +1038,8 @@ IPFS Import
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
-              if (uri !== this.rootUri) {
-                merged._canonical_uri = this.resolved.get(uri)
+              if (url !== this.rootUri) {
+                merged._canonical_uri = this.resolved.get(url)
                 merged._import_uri = this.rootUri
               } else {
                 merged._canonical_uri = this.rootUri
@@ -1038,6 +1065,9 @@ IPFS Import
   IpfsImport.prototype.importTiddler = function (title, uri) {
     const key = this.resolved.get(uri)
     if (key === undefined) {
+      return null
+    }
+    if (this.loaded.get(key) === undefined) {
       return null
     }
     const { imported } = this.loaded.get(key)
@@ -1082,6 +1112,9 @@ IPFS Import
     var currentTiddler = null
     const key = this.resolved.get(uri)
     if (key === undefined) {
+      return null
+    }
+    if (this.loaded.get(key) === undefined) {
       return null
     }
     const { imported } = this.loaded.get(key)
