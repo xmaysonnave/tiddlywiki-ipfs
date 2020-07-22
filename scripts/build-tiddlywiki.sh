@@ -54,10 +54,10 @@ yarn tiddlywiki build \
 || exit 1
 
 # compress
-yarn gzipper ./wiki/empty.html ../output
-yarn gzipper ./wiki/dev.html ../output
-yarn gzipper ./wiki/index.html ../output
-yarn gzipper ./wiki/tiddlywiki-ipfs-plugin.json ../output
+yarn gzipper compress --brotli wiki/empty.html output
+yarn gzipper compress --brotli wiki/dev.html output
+yarn gzipper compress --brotli wiki/index.html output
+yarn gzipper compress --brotli wiki/tiddlywiki-ipfs-plugin.json output
 cd ..
 
 exit 0
