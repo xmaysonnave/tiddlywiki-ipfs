@@ -453,26 +453,22 @@ import IpfsUrl from './ipfs-url'
 
   IpfsBundle.prototype.convertCidToCidV0 = function (cid, log) {
     var cidv0 = new CID(cid)
-    if (cidv0.codec !== 'dag-pb') {
-      throw new Error(
-        `This "cid" is not 'dag-pb' encoded: ${cidAnalyser}${cidv0}`
-      )
-    }
     if (cidv0.version === 1) {
-      const converted = cidv0.toV0()
+      const converted = new CID(0, 'dag-pb', cidv0.multihash, 'base58btc')
       // Log
       if (log) {
         this.getLogger().info(
           `Converted:
- 'dag-pb' "cidv1" (${cidv0.multibaseName}): ${cidAnalyser}${cidv0}
- to 'dag-pb' "cidv0" (${converted.multibaseName}): ${cidAnalyser}${converted}`
+ '${cidv0.codec}' "cidv1" (${cidv0.multibaseName}): ${cidAnalyser}${cidv0}
+ to '${converted.codec}' "cidv0" (${converted.multibaseName}): ${cidAnalyser}${converted}`
         )
       }
       return converted
     }
-    this.getLogger().info(
-      `"cidv0" (${cidv0.multibaseName}): ${cidAnalyser}${cidv0}`
-    )
+    // Convert
+    if (cidv0.codec !== 'dag-pb' && cidv0.multibaseName !== 'base58btc') {
+      cidv0 = this.convertCidToCid(cid, 0, 'dag-pb', 'base58btc', log)
+    }
     return cidv0
   }
 
@@ -484,33 +480,20 @@ import IpfsUrl from './ipfs-url'
     var cidv1 = new CID(cid)
     // Convert cidv0
     if (cidv1.version === 0) {
-      if (cidv1.codec !== 'dag-pb') {
-        throw new Error(
-          `This "cidv0" is not 'dag-pb' encoded: ${cidAnalyser}${cid}`
-        )
-      }
-      const converted = cidv1.toV1()
+      const converted = new CID(1, 'dag-pb', cidv1.multihash, 'base32')
       if (log) {
         this.getLogger().info(
           `Converted:
- 'dag-pb' "cidv0" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}
- to 'dag-pb' "cidv1" (${converted.multibaseName}): ${cidAnalyser}${converted}`
+ '${cidv1.codec}' "cidv0" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}
+ to '${converted.codec}' "cidv1" (${converted.multibaseName}): ${cidAnalyser}${converted}`
         )
       }
       return converted
     }
-    if (cidv1.codec !== 'dag-pb' && cidv1.codec !== 'libp2p-key') {
-      throw new Error(
-        `This "cidv1" is not 'dag-pb' or 'libp2p-key' encoded: ${cidAnalyser}${cidv1}`
-      )
-    }
     // Convert
-    if (cidv1.codec === 'libp2p-key' || cidv1.multibaseName !== 'base32') {
-      return this.convertCidToCid(cid, 'dag-pb', 'base32', log)
+    if (cidv1.codec !== 'dag-pb' && cidv1.multibaseName !== 'base32') {
+      cidv1 = this.convertCidToCid(cid, 1, 'dag-pb', 'base32', log)
     }
-    this.getLogger().info(
-      `'${cidv1.codec}' "cidv1" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}`
-    )
     return cidv1
   }
 
@@ -521,6 +504,7 @@ import IpfsUrl from './ipfs-url'
   ) {
     return this.convertCidToCid(
       cid,
+      1,
       'libp2p-key',
       multibaseName,
       log
@@ -529,22 +513,24 @@ import IpfsUrl from './ipfs-url'
 
   IpfsBundle.prototype.convertCidToCid = function (
     cid,
+    version,
     codec,
     multibaseName,
     log
   ) {
-    var cidv1 = new CID(cid)
-    if (cidv1.codec === codec && cidv1.multibaseName === multibaseName) {
-      return cidv1
+    cid = new CID(cid)
+    if (
+      cid.version === version &&
+      cid.codec === codec &&
+      cid.multibaseName === multibaseName
+    ) {
+      return cid
     }
-    if (cidv1.version === 0) {
-      cidv1 = this.convertCidToDagPbCidV1(cid, log)
-    }
-    const converted = new CID(1, codec, cidv1.multihash, multibaseName)
+    const converted = new CID(version, codec, cid.multihash, multibaseName)
     if (log) {
       this.getLogger().info(
         `Converted:
-'${cidv1.codec}' "cidv${cidv1.version}" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}
+'${cid.codec}' "cidv${cid.version}" (${cid.multibaseName}): ${cidAnalyser}${cid}
 to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${converted}`
       )
     }
