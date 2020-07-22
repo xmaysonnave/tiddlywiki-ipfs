@@ -45,6 +45,7 @@ Startup initialisation
     $tw.utils.registerFileType('image/jpg', 'base64', ['.jpg', '.jpeg'], {
       flags: ['image']
     })
+    $tw.utils.registerFileType('text/csv', 'utf8', '.csv')
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
     // Log
     getLogger().info('ipfs-startup is starting up...')

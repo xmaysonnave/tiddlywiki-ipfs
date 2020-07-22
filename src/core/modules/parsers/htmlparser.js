@@ -81,6 +81,23 @@ The HTML parser displays text as raw HTML
               var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
               $tw.rootWidget.refresh(parsedTiddler)
             }
+            if (url !== null) {
+              $tw.ipfs
+                .loadToUtf8(url)
+                .then(data => {
+                  if (data) {
+                    src = value + encodeURIComponent(data)
+                    var parsedTiddler = $tw.utils.getChangedTiddler(
+                      options.tiddler
+                    )
+                    $tw.rootWidget.refresh(parsedTiddler)
+                  }
+                })
+                .catch(error => {
+                  self.getLogger().error(error)
+                  $tw.utils.alert(name, error.message)
+                })
+            }
           })
           .catch(error => {
             self.getLogger().error(error)

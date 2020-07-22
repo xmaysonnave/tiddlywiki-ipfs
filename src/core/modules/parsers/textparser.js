@@ -47,11 +47,13 @@ The plain text parser processes blocks of source text into a degenerate parse tr
               $tw.ipfs
                 .loadToUtf8(url)
                 .then(data => {
-                  element.attributes.code.value = data
-                  var parsedTiddler = $tw.utils.getChangedTiddler(
-                    options.tiddler
-                  )
-                  $tw.rootWidget.refresh(parsedTiddler)
+                  if (data) {
+                    element.attributes.code.value = data
+                    var parsedTiddler = $tw.utils.getChangedTiddler(
+                      options.tiddler
+                    )
+                    $tw.rootWidget.refresh(parsedTiddler)
+                  }
                 })
                 .catch(error => {
                   self.getLogger().error(error)

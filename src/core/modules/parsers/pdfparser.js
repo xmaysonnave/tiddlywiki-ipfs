@@ -84,14 +84,16 @@ The PDF parser embeds a PDF viewer
               $tw.ipfs
                 .loadToBase64(url)
                 .then(data => {
-                  element.attributes.src = {
-                    type: 'string',
-                    value: value + data
+                  if (data) {
+                    element.attributes.src = {
+                      type: 'string',
+                      value: `${value}${data}`
+                    }
+                    var parsedTiddler = $tw.utils.getChangedTiddler(
+                      options.tiddler
+                    )
+                    $tw.rootWidget.refresh(parsedTiddler)
                   }
-                  var parsedTiddler = $tw.utils.getChangedTiddler(
-                    options.tiddler
-                  )
-                  $tw.rootWidget.refresh(parsedTiddler)
                 })
                 .catch(error => {
                   self.getLogger().error(error)
@@ -103,7 +105,7 @@ The PDF parser embeds a PDF viewer
             self.getLogger().error(error)
           })
       } else if (text) {
-        element.attributes.src = { type: 'string', value: value + text }
+        element.attributes.src = { type: 'string', value: `${value}${text}` }
       }
     }
     // Return the parsed tree

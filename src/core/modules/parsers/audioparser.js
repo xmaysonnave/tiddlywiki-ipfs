@@ -51,7 +51,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
 
   var AudioParser = function (type, text, options) {
     var self = this
-    var value = 'data:' + type + ';base64,'
+    var value = `data:${type};base64,`
     var element = {
       type: 'element',
       tag: 'audio',
@@ -87,14 +87,16 @@ The audio parser parses an audio tiddler into an embeddable HTML element
               $tw.ipfs
                 .loadToBase64(url)
                 .then(data => {
-                  element.attributes.src = {
-                    type: 'string',
-                    value: value + data
+                  if (data) {
+                    element.attributes.src = {
+                      type: 'string',
+                      value: `${value}${data}`
+                    }
+                    var parsedTiddler = $tw.utils.getChangedTiddler(
+                      options.tiddler
+                    )
+                    $tw.rootWidget.refresh(parsedTiddler)
                   }
-                  var parsedTiddler = $tw.utils.getChangedTiddler(
-                    options.tiddler
-                  )
-                  $tw.rootWidget.refresh(parsedTiddler)
                 })
                 .catch(error => {
                   self.getLogger().error(error)
@@ -106,7 +108,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
             self.getLogger().error(error)
           })
       } else if (text) {
-        element.attributes.src = { type: 'string', value: value + text }
+        element.attributes.src = { type: 'string', value: `${value}${text}` }
       }
     }
     // Return the parsed tree

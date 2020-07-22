@@ -54,6 +54,7 @@ The binary parser parses a binary tiddler into a warning message and download li
 
   var BinaryParser = function (type, text, options) {
     var self = this
+    var value = `data:${type};base64,`
     // Transclude the binary data tiddler warning message
     var warn = {
       type: 'element',
@@ -108,12 +109,24 @@ The binary parser parses a binary tiddler into a warning message and download li
                 ? normalizedUrl.toString()
                 : null
             if (url !== null) {
-              link.attributes.href = {
-                type: 'string',
-                value: url
-              }
-              var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
-              $tw.rootWidget.refresh(parsedTiddler)
+              $tw.ipfs
+                .loadToBase64(url)
+                .then(data => {
+                  if (data) {
+                    link.attributes.href = {
+                      type: 'string',
+                      value: `${value}${data}`
+                    }
+                    var parsedTiddler = $tw.utils.getChangedTiddler(
+                      options.tiddler
+                    )
+                    $tw.rootWidget.refresh(parsedTiddler)
+                  }
+                })
+                .catch(error => {
+                  self.getLogger().error(error)
+                  $tw.utils.alert(name, error.message)
+                })
             }
           })
           .catch(error => {
@@ -122,7 +135,7 @@ The binary parser parses a binary tiddler into a warning message and download li
       } else if (text) {
         link.attributes.href = {
           type: 'string',
-          value: 'data:' + type + ';base64,' + text
+          value: `${value}${text}`
         }
       }
     }

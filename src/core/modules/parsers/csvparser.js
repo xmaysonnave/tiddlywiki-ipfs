@@ -62,11 +62,13 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
               $tw.ipfs
                 .loadToUtf8(url)
                 .then(data => {
-                  self.split(text)
-                  var parsedTiddler = $tw.utils.getChangedTiddler(
-                    options.tiddler
-                  )
-                  $tw.rootWidget.refresh(parsedTiddler)
+                  if (data) {
+                    self.split(data)
+                    var parsedTiddler = $tw.utils.getChangedTiddler(
+                      options.tiddler
+                    )
+                    $tw.rootWidget.refresh(parsedTiddler)
+                  }
                 })
                 .catch(error => {
                   self.getLogger().error(error)
