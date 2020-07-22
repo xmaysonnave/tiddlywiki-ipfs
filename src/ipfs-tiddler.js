@@ -440,29 +440,25 @@ IPFS Tiddler
             : oldResolvedUrl.toString().trim()
         if (oldResolvedUrl !== null && field === '_canonical_uri') {
           var data = tiddler.getFieldString('text')
-          // Attachment
-          if (info.encoding === 'base64' || type === 'image/svg+xml') {
-            // Embed
-            try {
-              if (info.encoding === 'base64') {
-                data = await $tw.ipfs.loadToBase64(oldResolvedUrl)
-              } else {
-                data = await $tw.ipfs.loadToUtf8(oldResolvedUrl)
-              }
-              updatedTiddler = $tw.utils.updateTiddler({
-                tiddler: updatedTiddler,
-                addTags: ['$:/isAttachment', '$:/isEmbedded'],
-                fields: [{ key: 'text', value: data }]
-              })
-              this.getLogger().info(
-                `Embed attachment: ${data.length}
- ${oldResolvedUrl}`
-              )
-            } catch (error) {
-              this.getLogger().error(error)
-              $tw.utils.alert(name, error.message)
-              return tiddler
+          try {
+            if (info.encoding === 'base64') {
+              data = await $tw.ipfs.loadToBase64(oldResolvedUrl)
+            } else {
+              data = await $tw.ipfs.loadToUtf8(oldResolvedUrl)
             }
+            updatedTiddler = $tw.utils.updateTiddler({
+              tiddler: updatedTiddler,
+              addTags: ['$:/isAttachment', '$:/isEmbedded'],
+              fields: [{ key: 'text', value: data }]
+            })
+            this.getLogger().info(
+              `Embed attachment: ${data.length}
+ ${oldResolvedUrl}`
+            )
+          } catch (error) {
+            this.getLogger().error(error)
+            $tw.utils.alert(name, error.message)
+            return tiddler
           }
         }
         $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl)

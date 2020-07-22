@@ -244,12 +244,7 @@ IPFS Action
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
-    const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     var added = null
-    if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
-      $tw.utils.alert(name, 'This Tiddler do not contain any Attachment...')
-      return false
-    }
     // Do not process if _canonical_uri is set and the text field is empty
     const canonicalUri = tiddler.getFieldString('_canonical_uri')
     if (
@@ -257,7 +252,7 @@ IPFS Action
       canonicalUri !== null &&
       canonicalUri.trim() !== ''
     ) {
-      $tw.utils.alert(name, 'Attachment is already published...')
+      $tw.utils.alert(name, 'Content is already exported...')
       return false
     }
     try {
@@ -290,14 +285,10 @@ IPFS Action
   }
 
   IpfsAction.prototype.getAttachmentContent = function (tiddler) {
-    const { type, info } = $tw.utils.getContentType(
+    const { info } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
     )
-    if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
-      $tw.utils.alert(name, 'Unsupported Tiddler Content-Type...')
-      return null
-    }
     var content = tiddler.getFieldString('text')
     if (content === undefined || content == null || content === '') {
       $tw.utils.alert(name, 'Empty attachment content...')
