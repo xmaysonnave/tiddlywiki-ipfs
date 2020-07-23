@@ -270,14 +270,84 @@ import IpfsUrl from './ipfs-url'
     if (decode instanceof URL === false && typeof decode !== 'string') {
       throw new Error('Unable to decode CID. "URL" or "string" expected...')
     }
-    if (decode instanceof URL) {
-      var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(
-        decode.hostname
-      )
+    var cid = null
+    var ipnsIdentifier = null
+    var protocol = null
+    var url = null
+    if (decode instanceof URL === false) {
+      try {
+        url = this.ipfsUrl.getUrl(decode)
+      } catch (error) {
+        // Ignore
+      }
+    } else {
+      url = decode
+    }
+    if (url !== null) {
+      var { cid, ipnsIdentifier, protocol } = this.decodeUrlCid(url)
+    } else {
+      var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(decode)
       if (protocol == null && cid == null && ipnsIdentifier == null) {
-        var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(
-          decode.pathname
-        )
+        var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(decode)
+      }
+    }
+    return {
+      cid: cid,
+      ipnsIdentifier: ipnsIdentifier,
+      protocol: protocol
+    }
+  }
+
+  IpfsBundle.prototype.decodeUrlCid = function (url) {
+    // Check
+    if (url === undefined || url == null) {
+      return {
+        cid: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
+    }
+    if (url instanceof URL === false) {
+      throw new Error('Unable to decode CID. "URL" expected...')
+    }
+    var cid = null
+    var ipnsIdentifier = null
+    var protocol = null
+    if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
+      if (url.protocol === 'ipns:') {
+        if (
+          url.hostname !== undefined &&
+          url.hostname !== null &&
+          url.hostname.trim().length > 0
+        ) {
+          ipnsIdentifier = url.hostname
+          protocol = 'ipns'
+        } else if (
+          url.pathname !== undefined &&
+          url.pathname !== null &&
+          url.pathname.trim().length > 1 &&
+          url.pathname.startsWith('//')
+        ) {
+          ipnsIdentifier = url.pathname.slice(2)
+          protocol = 'ipns'
+        }
+      } else if (url.protocol === 'ipfs:') {
+        if (
+          url.hostname !== undefined &&
+          url.hostname !== null &&
+          url.hostname.trim().length > 0
+        ) {
+          cid = url.hostname
+          protocol = 'ipfs'
+        } else if (
+          url.pathname !== undefined &&
+          url.pathname !== null &&
+          url.pathname.trim().length > 1 &&
+          url.pathname.startsWith('//')
+        ) {
+          cid = url.pathname.slice(2)
+          protocol = 'ipfs'
+        }
       }
       return {
         cid: cid,
@@ -285,9 +355,11 @@ import IpfsUrl from './ipfs-url'
         protocol: protocol
       }
     }
-    var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(decode)
+    var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(url.hostname)
     if (protocol == null && cid == null && ipnsIdentifier == null) {
-      var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(decode)
+      var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(
+        url.pathname
+      )
     }
     return {
       cid: cid,
@@ -614,86 +686,6 @@ to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${con
       }
     }
     return out
-  }
-
-  // https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer/21797381
-  // https://github.com/danguer/blog-examples/blob/master/js/base64-binary.js
-  /*
-   * Copyright (c) 2011, Daniel Guerrero
-   * All rights reserved.
-   * Redistribution and use in source and binary forms, with or without
-   * modification, are permitted provided that the following conditions are met:
-   * Redistributions of source code must retain the above copyright
-   * notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above copyright
-   * notice, this list of conditions and the following disclaimer in the
-   * documentation and/or other materials provided with the distribution.
-   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-   * DISCLAIMED. IN NO EVENT SHALL DANIEL GUERRERO BE LIABLE FOR ANY
-   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   */
-  /**
-   * Uses the new array typed in javascript to binary base64 encode/decode
-   * at the moment just decodes a binary base64 encoded
-   * into either an ArrayBuffer (decodeArrayBuffer)
-   * or into an Uint8Array (decode)
-   *
-   * References:
-   * https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer
-   * https://developer.mozilla.org/en/JavaScript_typed_arrays/Uint8Array
-   */
-  var Base64Binary = {
-    _keyStr:
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
-    /* will return a  Uint8Array type */
-    decodeArrayBuffer: function (input) {
-      var bytes = (input.length / 4) * 3
-      var ab = new ArrayBuffer(bytes)
-      this.decode(input, ab)
-      return ab
-    },
-    removePaddingChars: function (input) {
-      var lkey = this._keyStr.indexOf(input.charAt(input.length - 1))
-      if (lkey === 64) {
-        return input.substring(0, input.length - 1)
-      }
-      return input
-    },
-    decode: function (input, ab) {
-      //get last chars to see if are valid
-      input = this.removePaddingChars(input)
-      input = this.removePaddingChars(input)
-      var bytes = parseInt((input.length / 4) * 3, 10)
-      var ua
-      var chr1, chr2, chr3
-      var enc1, enc2, enc3, enc4
-      var i = 0
-      var j = 0
-      if (ab) ua = new Uint8Array(ab)
-      else ua = new Uint8Array(bytes)
-      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '')
-      for (i = 0; i < bytes; i += 3) {
-        //get the 3 octects in 4 ascii chars
-        enc1 = this._keyStr.indexOf(input.charAt(j++))
-        enc2 = this._keyStr.indexOf(input.charAt(j++))
-        enc3 = this._keyStr.indexOf(input.charAt(j++))
-        enc4 = this._keyStr.indexOf(input.charAt(j++))
-        chr1 = (enc1 << 2) | (enc2 >> 4)
-        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
-        chr3 = ((enc3 & 3) << 6) | enc4
-        ua[i] = chr1
-        if (enc3 !== 64) ua[i + 1] = chr2
-        if (enc4 !== 64) ua[i + 2] = chr3
-      }
-      return ua
-    }
   }
 
   module.exports = {

@@ -432,10 +432,7 @@ IPFS Controller
   }
 
   IpfsController.prototype.getUrl = function (url, base) {
-    return this.ipfsUrl.getUrl(
-      url,
-      base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-    )
+    return this.ipfsUrl.getUrl(url, base)
   }
 
   IpfsController.prototype.isJson = function (content) {

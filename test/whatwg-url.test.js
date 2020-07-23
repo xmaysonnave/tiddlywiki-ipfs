@@ -28,6 +28,8 @@ const invalid = 'Wrong URL...'
 const baseFile = new URL('file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html')
 const baseHttp = new URL('https://ipfs.bluelightav.org')
 const absolute = new URL('https://bluelightav.eth')
+const ipfs =
+  'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
 const relative =
   '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
 beforeAll(() => {
@@ -102,5 +104,20 @@ describe('WHATWG-URL', () => {
     const parsed = ipfsUrl.getUrl(relative, base)
     base.pathname = relative
     expect((parsed.pathname = base.pathname)).toBeTruthy()
+  })
+  it('IPFS', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const ipfsUrl = ipfsBundle.ipfsUrl
+    const parsed = ipfsUrl.getUrl(ipfs)
+    expect(
+      parsed.protocol === 'ipfs:' &&
+        (parsed.hostname ===
+          'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' ||
+          parsed.pathname ===
+            '//bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy') &&
+        parsed.href === ipfs &&
+        parsed.toString() === ipfs
+    ).toBeTruthy()
   })
 })

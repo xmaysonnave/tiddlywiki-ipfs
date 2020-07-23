@@ -63,7 +63,7 @@ IPFS Saver
       var web3 = null
       const wiki = $tw.ipfs.getDocumentUrl()
       const base = $tw.ipfs.getIpfsBaseUrl()
-      const nextWiki = $tw.ipfs.getUrl(wiki)
+      const nextWiki = $tw.ipfs.getUrl(wiki, base)
       nextWiki.protocol = base.protocol
       nextWiki.host = base.host
       nextWiki.port = base.port

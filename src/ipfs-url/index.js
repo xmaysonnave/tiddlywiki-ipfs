@@ -142,6 +142,50 @@ import { URL } from 'universal-url'
         value,
         base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
       )
+    } else if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
+      if (url.protocol === 'ipns:') {
+        if (
+          url.hostname !== undefined &&
+          url.hostname !== null &&
+          url.hostname.trim().length > 0
+        ) {
+          url = this.getUrl(
+            `/ipns/${url.hostname}`,
+            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+          )
+        } else if (
+          url.pathname !== undefined &&
+          url.pathname !== null &&
+          url.pathname.trim().length > 1 &&
+          url.pathname.startsWith('//')
+        ) {
+          url = this.getUrl(
+            `/ipns/${url.pathname.slice(2)}`,
+            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+          )
+        }
+      } else if (url.protocol === 'ipfs:') {
+        if (
+          url.hostname !== undefined &&
+          url.hostname !== null &&
+          url.hostname.trim().length > 0
+        ) {
+          url = this.getUrl(
+            `/ipfs/${url.hostname}`,
+            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+          )
+        } else if (
+          url.pathname !== undefined &&
+          url.pathname !== null &&
+          url.pathname.trim().length > 1 &&
+          url.pathname.startsWith('//')
+        ) {
+          url = this.getUrl(
+            `/ipfs/${url.pathname.slice(2)}`,
+            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+          )
+        }
+      }
     }
     // Remove .link from .eth.link
     if (url.hostname.endsWith('.eth.link')) {

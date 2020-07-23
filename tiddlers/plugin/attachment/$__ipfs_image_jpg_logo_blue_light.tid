@@ -1,7 +1,6 @@
-_canonical_uri: /ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq
-_import_uri: /ipfs/bafybeiejplubmcgpkaqwjc23ebo6vorv2p4cwlr7kkhm4cakgtneefjuc4
-modified: 20200526065100279
+modified: 20200723065100279
+_canonical_uri: ipfs://bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq
+_import_uri: ipfs://bafybeiejplubmcgpkaqwjc23ebo6vorv2p4cwlr7kkhm4cakgtneefjuc4
 tags: $:/ipfs/documentation $:/isAttachment $:/isIpfs
 title: $:/ipfs/image/bluelight
 type: image/jpg
-

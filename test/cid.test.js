@@ -176,4 +176,29 @@ describe('CID', () => {
     const converted = ipfsBundle.cidToCidV0(sha256V1)
     expect(converted === sha256V0).toBeTruthy()
   })
+  it('IPFS Protocol', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    var { cid, ipnsIdentifier, protocol } = ipfsBundle.decodeCid(
+      'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
+    )
+    expect(
+      cid === 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' &&
+        ipnsIdentifier == null &&
+        protocol === 'ipfs'
+    ).toBeTruthy()
+  })
+  it('IPNS Protocol', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    var { cid, ipnsIdentifier, protocol } = ipfsBundle.decodeCid(
+      'ipns://bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
+    )
+    expect(
+      cid == null &&
+        ipnsIdentifier ===
+          'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy' &&
+        protocol === 'ipns'
+    ).toBeTruthy()
+  })
 })
