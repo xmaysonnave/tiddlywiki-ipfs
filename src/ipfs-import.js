@@ -142,9 +142,9 @@ IPFS Import
       throw new Error(`Failed to resolve value: "${value}"`)
     }
     if (cid !== null) {
-      key = `/ipfs/${cid}`
+      key = `ipfs://${cid}`
     } else if (ipnsKey !== null) {
-      key = `/ipns/${ipnsKey}`
+      key = `ipns://${ipnsKey}`
     } else if (normalizedUrl.hostname.endsWith('.eth')) {
       key = normalizedUrl.hostname
     } else {
@@ -279,15 +279,6 @@ IPFS Import
           }
         }
       }
-      var reportLoaded = ''
-      if (
-        this.host !== null &&
-        this.merged.get(this.host.fields.title) === undefined
-      ) {
-        for (var loaded of this.loaded.values()) {
-          reportLoaded = `${reportLoaded}[[${loaded.url}]]`
-        }
-      }
       // Process deleted
       var deleted = 0
       var reportDeleted = ''
@@ -366,16 +357,8 @@ IPFS Import
           const reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
           const reportImportedMsg =
             "<p align='center'>''Successfully Imported''</p>"
-          const reportLoadedMsg = `<p align='left'>''Resource Loaded: ${this.loaded.size}''</p>`
           const reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
           var value = `${reportImportedMsg}`
-          if (reportLoaded.trim() !== '') {
-            value = `${value}
-
- ${reportLoadedMsg}
-
- {{{${reportLoaded}}}}`
-          }
           if (reportAdded.trim() !== '') {
             value = `${value}
 

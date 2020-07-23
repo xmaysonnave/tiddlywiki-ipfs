@@ -85,18 +85,38 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array)
   }
 
-  IpfsController.prototype.processContent = function (content, encoding) {
+  IpfsController.prototype.processContent = function (
+    tiddler,
+    content,
+    encoding
+  ) {
     if (content === undefined || content == null) {
       return null
     }
     if (encoding === undefined || encoding == null) {
       encoding = 'utf8'
     }
-    const compressed = $tw.wiki.getTiddler('$:/isCompressed')
-    const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-    if (encrypted.fields.text === 'yes') {
+    var compressed = $tw.wiki.getTiddler('$:/isCompressed')
+    compressed =
+      compressed !== undefined && compressed.fields.text !== undefined
+        ? compressed.fields.text
+        : 'yes'
+    var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+    encrypted =
+      encrypted !== undefined && encrypted.fields.text !== undefined
+        ? encrypted.fields.text
+        : 'no'
+    compressed =
+      tiddler !== undefined && tiddler.fields._is_compressed !== undefined
+        ? tiddler.fields._is_compressed
+        : compressed
+    encrypted =
+      tiddler !== undefined && tiddler.fields._is_encrypted !== undefined
+        ? tiddler.fields._is_encrypted
+        : encrypted
+    if (encrypted === 'yes') {
       try {
-        if (compressed.fields.text === 'yes') {
+        if (compressed === 'yes') {
           content = { pako: $tw.compress.deflate(content) }
           content.pako = $tw.crypto.encrypt(content.pako)
           content = JSON.stringify(content)
@@ -115,7 +135,7 @@ IPFS Controller
       }
     } else {
       try {
-        if (compressed.fields.text === 'yes') {
+        if (compressed === 'yes') {
           content = { pako: $tw.compress.deflate(content) }
           content = JSON.stringify(content)
           content = this.StringToUint8Array(content)

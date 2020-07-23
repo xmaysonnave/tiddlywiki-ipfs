@@ -137,7 +137,7 @@ IPFS Action
       return false
     }
     // Prepare New value
-    fields.push({ key: '_export_uri', value: `/${ipfsKeyword}/${added}` })
+    fields.push({ key: '_export_uri', value: `${ipfsKeyword}://${added}` })
     var tiddler = $tw.wiki.getTiddler(title)
     var updatedTiddler = $tw.utils.updateTiddler({
       tiddler: tiddler,
@@ -277,7 +277,7 @@ IPFS Action
       removeTags: removeTags,
       fields: [
         { key: 'text', value: '' },
-        { key: '_canonical_uri', value: `/${ipfsKeyword}/${added}` }
+        { key: '_canonical_uri', value: `${ipfsKeyword}://${added}` }
       ]
     })
     $tw.wiki.addTiddler(tiddler)
@@ -294,7 +294,7 @@ IPFS Action
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
-    return $tw.ipfs.processContent(content, info.encoding)
+    return $tw.ipfs.processContent(tiddler, content, info.encoding)
   }
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
@@ -471,7 +471,7 @@ IPFS Action
       var { ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(
         true,
         false,
-        `/${ipnsKeyword}/${ipnsName}`
+        `${ipnsKeyword}://${ipnsName}`
       )
     } catch (error) {
       this.getLogger().error(error)
@@ -591,7 +591,7 @@ IPFS Action
       var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(
         true,
         false,
-        `/ipns/${ipnsName}`
+        `${ipnsKeyword}://${ipnsName}`
       )
       var { cid: wikiCid, ipnsKey: wikiIpnsKey } = await $tw.ipfs.resolveUrl(
         true,
@@ -659,7 +659,7 @@ IPFS Action
         }
         // IPNS
         if (ipnsKey !== null) {
-          fieldValue = `/${ipnsKeyword}/${ipnsKey}`
+          fieldValue = `${ipnsKeyword}://${ipnsKey}`
         }
         // Store field
         fields[field] = fieldValue
@@ -753,7 +753,7 @@ IPFS Action
         options
       )
     }
-    return $tw.ipfs.processContent(content)
+    return $tw.ipfs.processContent(tiddler, content, 'utf8')
   }
 
   IpfsAction.prototype.transcludeContent = function (title) {
