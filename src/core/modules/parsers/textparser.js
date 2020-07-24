@@ -72,6 +72,13 @@ The plain text parser processes blocks of source text into a degenerate parse tr
     this.tree = [element]
   }
 
+  TextParser.prototype.getLogger = function () {
+    if (window.logger !== undefined && window.logger !== null) {
+      return window.logger
+    }
+    return console
+  }
+
   exports['text/plain'] = TextParser
   exports['text/x-tiddlywiki'] = TextParser
   exports['application/javascript'] = TextParser
