@@ -23,7 +23,7 @@
 const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
-const { URL } = require('universal-url')
+const { URL } = require('whatwg-url')
 const text = 'text'
 const resourceRelative = '../../import/cleanup/root.json'
 beforeAll(() => {
@@ -131,10 +131,8 @@ describe('URL', () => {
       'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
     )
     expect(
-      (url.hostname ===
-        'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' ||
-        url.pathname ===
-          '//bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy') &&
+      url.hostname ===
+        'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' &&
         url.protocol === 'ipfs:'
     ).toBeTruthy()
   })
@@ -146,10 +144,8 @@ describe('URL', () => {
       'ipns://bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
     )
     expect(
-      (url.hostname ===
-        'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy' ||
-        url.pathname ===
-          '//bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy') &&
+      url.hostname ===
+        'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy' &&
         url.protocol === 'ipns:'
     ).toBeTruthy()
   })

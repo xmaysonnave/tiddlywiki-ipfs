@@ -9,7 +9,7 @@ IPFS Bundle
 \*/
 import CID from 'cids'
 import root from 'window-or-global'
-import { URL } from 'universal-url'
+import { URL } from 'whatwg-url'
 import EnsLibrary from './ens-library'
 import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
@@ -314,38 +314,16 @@ import IpfsUrl from './ipfs-url'
     var ipnsIdentifier = null
     var protocol = null
     if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
-      if (url.protocol === 'ipns:') {
-        if (
-          url.hostname !== undefined &&
-          url.hostname !== null &&
-          url.hostname.trim().length > 0
-        ) {
+      if (
+        url.hostname !== undefined &&
+        url.hostname !== null &&
+        url.hostname.trim().length > 0
+      ) {
+        if (url.protocol === 'ipns:') {
           ipnsIdentifier = url.hostname
           protocol = 'ipns'
-        } else if (
-          url.pathname !== undefined &&
-          url.pathname !== null &&
-          url.pathname.trim().length > 1 &&
-          url.pathname.startsWith('//')
-        ) {
-          ipnsIdentifier = url.pathname.slice(2)
-          protocol = 'ipns'
-        }
-      } else if (url.protocol === 'ipfs:') {
-        if (
-          url.hostname !== undefined &&
-          url.hostname !== null &&
-          url.hostname.trim().length > 0
-        ) {
+        } else if (url.protocol === 'ipfs:' && this.isCid(url.hostname)) {
           cid = url.hostname
-          protocol = 'ipfs'
-        } else if (
-          url.pathname !== undefined &&
-          url.pathname !== null &&
-          url.pathname.trim().length > 1 &&
-          url.pathname.startsWith('//')
-        ) {
-          cid = url.pathname.slice(2)
           protocol = 'ipfs'
         }
       }

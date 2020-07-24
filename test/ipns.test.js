@@ -6,7 +6,7 @@ const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const IpfsWrapper = require('../build/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
 const log = require('loglevel')
 const root = require('window-or-global')
-const { URL } = require('universal-url')
+const { URL } = require('whatwg-url')
 const base = new URL('https://ipfs.infura.io/')
 const resolvedTiddly =
   '/ipfs/bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'

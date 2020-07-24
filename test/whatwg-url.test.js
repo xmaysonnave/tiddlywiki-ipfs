@@ -23,7 +23,7 @@
 const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
-const { URL } = require('universal-url')
+const { URL } = require('whatwg-url')
 const invalid = 'Wrong URL...'
 const baseFile = new URL('file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html')
 const baseHttp = new URL('https://ipfs.bluelightav.org')
@@ -112,10 +112,8 @@ describe('WHATWG-URL', () => {
     const parsed = ipfsUrl.getUrl(ipfs)
     expect(
       parsed.protocol === 'ipfs:' &&
-        (parsed.hostname ===
-          'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' ||
-          parsed.pathname ===
-            '//bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy') &&
+        parsed.hostname ===
+          'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' &&
         parsed.href === ipfs &&
         parsed.toString() === ipfs
     ).toBeTruthy()

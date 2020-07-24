@@ -63,7 +63,6 @@ type: text/vnd.tiddlywiki
   <li>[ext[IPFS with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs]]</li>
   <li>[ext[TW5 Locator|https://gitlab.com/bimlas/tw5-locator]]</li>
   <li>[ext[TW5 Relink|https://github.com/flibbles/tw5-relink]]</li>
-  <li>[ext[Universal URL|https://github.com/stevenvachon/universal-url]]</li>
-  <li>[ext[Universal URL Lite|https://github.com/stevenvachon/universal-url-lite]]</li>
+  <li>[ext[Whatwg-url|https://github.com/jsdom/whatwg-url/tree/v8.1.0]]</li>
   <li>[ext[Visual Studio Code|https://github.com/Microsoft/vscode/]]</li>
 </ol>

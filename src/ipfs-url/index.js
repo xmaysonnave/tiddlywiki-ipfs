@@ -1,5 +1,5 @@
 import root from 'window-or-global'
-import { URL } from 'universal-url'
+import { URL } from 'whatwg-url'
 ;(function () {
   'use strict'
 
@@ -75,6 +75,9 @@ import { URL } from 'universal-url'
 
   IpfsUrl.prototype.getUrl = function (url, base) {
     try {
+      if (url instanceof URL) {
+        return new URL(url.href, base)
+      }
       return new URL(url, base)
     } catch (error) {
       // Ignore
@@ -88,13 +91,15 @@ import { URL } from 'universal-url'
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
         base = this.getDocumentUrl()
         if (base.protocol === 'file:') {
-          return this.getUrl(base.toString())
+          return this.getUrl(base)
         }
       }
     } catch (error) {
       base = this.getIpfsGatewayUrl()
     }
-    return this.getUrl(`${base.protocol}//${base.host}`)
+    const port =
+      base.port !== undefined && base.port !== null ? `:${base.port}` : ''
+    return this.getUrl(`${base.protocol}//${base.host}${port}`)
   }
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
@@ -105,10 +110,12 @@ import { URL } from 'universal-url'
     if (value == null) {
       return null
     }
+    base = this.getUrl(
+      base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
+    )
     // Parse
-    var text = false
     var url = null
-    // Text or ENS
+    // Text or URL
     try {
       url = this.getUrl(value)
     } catch (error) {
@@ -117,7 +124,7 @@ import { URL } from 'universal-url'
         value.startsWith('./') === false &&
         value.startsWith('../') === false
       ) {
-        text = true
+        var text = true
         try {
           url = this.getUrl(`https://${value}`)
           if (
@@ -131,17 +138,14 @@ import { URL } from 'universal-url'
         } catch (error) {
           // ignore
         }
+        if (text) {
+          return null
+        }
       }
-    }
-    if (text) {
-      return null
     }
     // Invalid URL, try to parse with a Base URL
     if (url == null) {
-      url = this.getUrl(
-        value,
-        base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-      )
+      url = this.getUrl(value, base)
     } else if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
       if (url.protocol === 'ipns:') {
         if (
@@ -149,43 +153,23 @@ import { URL } from 'universal-url'
           url.hostname !== null &&
           url.hostname.trim().length > 0
         ) {
-          url = this.getUrl(
-            `/ipns/${url.hostname}`,
-            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-          )
-        } else if (
-          url.pathname !== undefined &&
-          url.pathname !== null &&
-          url.pathname.trim().length > 1 &&
-          url.pathname.startsWith('//')
-        ) {
-          url = this.getUrl(
-            `/ipns/${url.pathname.slice(2)}`,
-            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-          )
+          base.pathname = `/ipns/${url.hostname}`
         }
-      } else if (url.protocol === 'ipfs:') {
+      } else {
         if (
           url.hostname !== undefined &&
           url.hostname !== null &&
           url.hostname.trim().length > 0
         ) {
-          url = this.getUrl(
-            `/ipfs/${url.hostname}`,
-            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-          )
-        } else if (
-          url.pathname !== undefined &&
-          url.pathname !== null &&
-          url.pathname.trim().length > 1 &&
-          url.pathname.startsWith('//')
-        ) {
-          url = this.getUrl(
-            `/ipfs/${url.pathname.slice(2)}`,
-            base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-          )
+          base.pathname = `/ipfs/${url.hostname}`
         }
       }
+      // Unable to set url protocol
+      base.username = url.username
+      base.password = url.password
+      base.search = url.search
+      base.hash = url.hash
+      url = base
     }
     // Remove .link from .eth.link
     if (url.hostname.endsWith('.eth.link')) {

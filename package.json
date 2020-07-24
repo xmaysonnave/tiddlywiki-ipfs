@@ -1,13 +1,10 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200723441",
+  "version": "v0.3.0-200724355",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/ipfs-bundle.js",
   "directories": {
     "test": "test"
-  },
-  "browser": {
-    "universal-url": "universal-url-lite/native"
   },
   "browserify": {
     "transform": [
@@ -62,8 +59,7 @@
     "cids": "^0.8.3",
     "content-hash": "^2.5.2",
     "ipfs-provider": "^1.0.0",
-    "universal-url": "^2.0.0",
-    "universal-url-lite": "^2.0.0",
+    "whatwg-url": "^8.1.0",
     "window-or-global": "^1.0.1"
   },
   "devDependencies": {
@@ -102,7 +98,7 @@
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.4.1",
     "pretty-quick": "^2.0.1",
-    "snyk": "^1.364.2",
+    "snyk": "^1.366.0",
     "tiddlywiki": "git://github.com/Jermolene/TiddlyWiki5.git",
     "typescript": "^3.9.7"
   },

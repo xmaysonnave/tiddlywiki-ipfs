@@ -62,11 +62,15 @@ IPFS Saver
       var options = options || {}
       var web3 = null
       const wiki = $tw.ipfs.getDocumentUrl()
-      const base = $tw.ipfs.getIpfsBaseUrl()
-      const nextWiki = $tw.ipfs.getUrl(wiki, base)
-      nextWiki.protocol = base.protocol
-      nextWiki.host = base.host
-      nextWiki.port = base.port
+      var base = $tw.ipfs.getIpfsBaseUrl()
+      var nextWiki = $tw.ipfs.getUrl(wiki, base)
+      // Unable to set nextWiki protocol
+      base.pathname = nextWiki.pathname
+      base.username = nextWiki.username
+      base.password = nextWiki.password
+      base.search = nextWiki.search
+      base.hash = nextWiki.hash
+      nextWiki = base
       try {
         var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki)
         if (cid != null) {
