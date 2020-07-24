@@ -252,7 +252,7 @@ IPFS Action
       canonicalUri !== null &&
       canonicalUri.trim() !== ''
     ) {
-      $tw.utils.alert(name, 'Content is already exported...')
+      $tw.utils.alert(name, 'Attachment content is already exported...')
       return false
     }
     try {
@@ -260,7 +260,9 @@ IPFS Action
       if (content == null) {
         return false
       }
-      this.getLogger().info(`Uploading attachment: ${content.length} bytes`)
+      this.getLogger().info(
+        `Uploading attachment content: ${content.length} bytes`
+      )
       var { added } = await $tw.ipfs.addToIpfs(content)
       $tw.ipfs.requestToPin(added)
     } catch (error) {

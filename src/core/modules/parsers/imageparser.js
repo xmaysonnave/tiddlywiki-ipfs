@@ -119,12 +119,12 @@ The image parser parses an image into an embeddable HTML element
     return console
   }
 
-  exports['image/jpg'] = ImageParser
-  exports['image/jpeg'] = ImageParser
-  exports['image/png'] = ImageParser
   exports['image/gif'] = ImageParser
-  exports['image/webp'] = ImageParser
   exports['image/heic'] = ImageParser
   exports['image/heif'] = ImageParser
+  exports['image/jpeg'] = ImageParser
+  exports['image/jpg'] = ImageParser
+  exports['image/png'] = ImageParser
+  exports['image/webp'] = ImageParser
   exports['image/x-icon'] = ImageParser
 })()

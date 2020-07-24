@@ -1,14 +1,17 @@
 title: Media Types
-modified: 20200529094915385
+modified: 20200724094915385
 tags: $:/ipfs/documentation Explorers
 type: text/vnd.tiddlywiki
 
 <p>
-  Supported Media Types.
+  Supported [ext[Media Types|https://www.iana.org/assignments/media-types/media-types.xhtml]].
 </p>
 <p>
 <table>
 <tr><th>Media Types</th><th>Extension</th></tr>
+<tr><td>application/javascript</td><td>js</td></tr>
+<tr><td>application/json</td><td>json</td></tr>
+<tr><td>application/octet-stream</td><td>octet-stream</td></tr>
 <tr><td>application/pdf</td><td>pdf</td></tr>
 <tr><td>application/x-tiddler</td><td>tid</td></tr>
 <tr><td>audio/ogg</td><td>ogg</td></tr>
@@ -18,12 +21,16 @@ type: text/vnd.tiddlywiki
 <tr><td>image/gif</td><td>gif</td></tr>
 <tr><td>image/heic</td><td>heic</td></tr>
 <tr><td>image/heif</td><td>heif</td></tr>
-<tr><td>image/jpg</td><td>jpg, jpeg</td></tr>
 <tr><td>image/jpeg</td><td>jpg, jpeg</td></tr>
+<tr><td>image/jpg</td><td>jpg, jpeg</td></tr>
 <tr><td>image/png</td><td>png</td></tr>
 <tr><td>image/svg+xml</td><td>svg</td></tr>
 <tr><td>image/webp</td><td>webp</td></tr>
 <tr><td>image/x-icon</td><td>ico</td></tr>
+<tr><td>text/html</td><td>html, htm</td></tr>
+<tr><td>text/csv</td><td>csv</td></tr>
+<tr><td>text/css</td><td>css</td></tr>
+<tr><td>text/plain</td><td>txt</td></tr>
 <tr><td>video/ogg</td><td>ogm, ogv, ogg</td></tr>
 <tr><td>video/mp4</td><td>mp4</td></tr>
 <tr><td>video/quicktime</td><td>mov, qt</td></tr>

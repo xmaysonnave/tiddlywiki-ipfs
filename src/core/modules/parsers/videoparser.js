@@ -122,8 +122,8 @@ The video parser parses a video tiddler into an embeddable HTML element
     return console
   }
 
-  exports['video/ogg'] = VideoParser
-  exports['video/webm'] = VideoParser
   exports['video/mp4'] = VideoParser
+  exports['video/ogg'] = VideoParser
   exports['video/quicktime'] = VideoParser
+  exports['video/webm'] = VideoParser
 })()

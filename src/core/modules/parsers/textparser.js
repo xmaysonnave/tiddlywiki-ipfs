@@ -79,10 +79,10 @@ The plain text parser processes blocks of source text into a degenerate parse tr
     return console
   }
 
-  exports['text/plain'] = TextParser
-  exports['text/x-tiddlywiki'] = TextParser
   exports['application/javascript'] = TextParser
   exports['application/json'] = TextParser
-  exports['text/css'] = TextParser
   exports['application/x-tiddler-dictionary'] = TextParser
+  exports['text/css'] = TextParser
+  exports['text/plain'] = TextParser
+  exports['text/x-tiddlywiki'] = TextParser
 })()
