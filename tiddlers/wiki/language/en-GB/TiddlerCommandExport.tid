@@ -1,5 +1,5 @@
 title: Export Tiddler
-modified: 20200528094915385
+modified: 20200724094915385
 tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
@@ -42,9 +42,13 @@ type: text/vnd.tiddlywiki
 </p>
 <h4>_export_uri content examples</h4>
 <ul>
-  <li><b>/ipns/name</b></li>
-  <li><b>/ipns/key</b></li>
-  <li><b>doc.bluelightav.eth</b></li>
+  <li>`ipfs://cid</li>
+  <li>`/ipfs/cid</li>
+  <li>`ipns://name</li>
+  <li>`/ipns/name</li>
+  <li>`ipns://cid</li>
+  <li>`/ipns/cid</li>
+  <li>`doc.bluelightav.eth`</li>
 </ul>
 <h3>tags</h3>
 <p>

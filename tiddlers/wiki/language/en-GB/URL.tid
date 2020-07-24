@@ -1,5 +1,5 @@
 title: URL
-modified: 20200530094915385
+modified: 20200724094915385
 tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
@@ -9,36 +9,38 @@ type: text/vnd.tiddlywiki
   Editing a Tiddler is improved while using the [[IPFS Link Widget]]. Fields could be processed as Tiddler links, External Links or plain texts.
 </p>
 <p>
-  URL could be absolute or relative to their default [[Origin or Gateway|Relative URL Policy]].
-  URL follows the [ext[WHATWG-URL|https://wiki.whatwg.org/]] standard.
+  An URL could be absolute or relative to their [[Origin or Gateway|Relative URL Policy]].
+  An URL follows the [ext[WHATWG-URL|https://wiki.whatwg.org/]] standard.
 </p>
 <p>
   However to discriminate any fields content a few rules should be followed:
 </p>
 <p>
-  An absolute URL could use the following [ext[URL Schemes|https://wiki.whatwg.org/wiki/URL]].
+  An absolute URL could use the following [ext[URI Schemes|https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml]].
 </p>
 <ul>
-  <li><b>ftp</b></li>
-  <li><b>http</b></li>
-  <li><b>https</b></li>
-  <li><b>file</b></li>
-  <li><b>data</b></li>
-  <li><b>blob</b></li>
-  <li><b>about</b></li>
-  <li><b>mailto</b></li>
+  <li>`about`</li>
+  <li>`blob`</li>
+  <li>`data`</li>
+  <li>`file`</li>
+  <li>`ftp`</li>
+  <li>`http`</li>
+  <li>`https`</li>
+  <li>`ipfs`</li>
+  <li>`ipns`</li>
+  <li>`mailto`</li>
 </ul>
 <p>
   A relative URL should start with the following:
 </p>
 <ul>
-  <li><b>/</b></li>
-  <li><b>./</b></li>
-  <li><b>../</b></li>
+  <li>`/`</li>
+  <li>`./`</li>
+  <li>`../`</li>
 </ul>
 <p>
   A right-click on any URL field gives users a chance to open a new browser tab and load the URL.
-  However a direct click on the link will fully resolve any IPNS identifiers or ENS domains then open a new browser tab.
+  However a direct click on the link will fully resolve any IPNS identifiers or ENS domains and open a new browser tab.
 </p>
 <p>
   URL analysis steps:
