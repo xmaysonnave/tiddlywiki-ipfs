@@ -19,7 +19,7 @@
     "eslint": "eslint \"src/**/*.js\" && eslint \"test/**/*.js\" && eslint \"scripts/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix && eslint \"scripts/**/*.js\" --fix",
     "format": "prettier-standard --eslint --format",
-    "prepare": "yarn snyk protect",
+    "prepare": "snyk-protect",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
