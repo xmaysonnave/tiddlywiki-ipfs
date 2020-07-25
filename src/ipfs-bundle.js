@@ -42,7 +42,7 @@ import IpfsUrl from './ipfs-url'
     this.ipfsLoader = new IpfsLoader(this)
     this.ethereumLibrary = new EthereumLibrary(this.ipfsLoader)
     this.ethereumLibrary.init()
-    this.ensLibrary = new EnsLibrary(this.ethereumLibrary)
+    this.ensLibrary = new EnsLibrary(this)
     this.ipfsLibrary = new IpfsLibrary(this)
     this.ipfsUrl = new IpfsUrl()
     // Init once
@@ -497,11 +497,11 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
-  IpfsBundle.prototype.cidToCidV0 = function (cid, log) {
-    return this.convertCidToCidV0(cid, log).toString()
+  IpfsBundle.prototype.cidToBase58CidV0 = function (cid, log) {
+    return this.convertCidToBase58CidV0(cid, log).toString()
   }
 
-  IpfsBundle.prototype.convertCidToCidV0 = function (cid, log) {
+  IpfsBundle.prototype.convertCidToBase58CidV0 = function (cid, log) {
     var cidv0 = new CID(cid)
     if (cidv0.version === 1) {
       const converted = new CID(0, 'dag-pb', cidv0.multihash, 'base58btc')
@@ -522,11 +522,11 @@ import IpfsUrl from './ipfs-url'
     return cidv0
   }
 
-  IpfsBundle.prototype.cidToCidV1 = function (cid, log) {
-    return this.convertCidToDagPbCidV1(cid, log).toString()
+  IpfsBundle.prototype.cidToBase32CidV1 = function (cid, log) {
+    return this.convertCidToBase32CidV1(cid, log).toString()
   }
 
-  IpfsBundle.prototype.convertCidToDagPbCidV1 = function (cid, log) {
+  IpfsBundle.prototype.convertCidToBase32CidV1 = function (cid, log) {
     var cidv1 = new CID(cid)
     // Convert cidv0
     if (cidv1.version === 0) {

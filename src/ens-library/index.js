@@ -8,8 +8,9 @@ import root from 'window-or-global'
   const name = 'ens-library'
 
   // https://github.com/ensdomains/resolvers
-  var EnsLibrary = function (ethereumLibrary) {
-    this.ethereumLibrary = ethereumLibrary
+  var EnsLibrary = function (ipfsBundle) {
+    this.ethereumLibrary = ipfsBundle.ethereumLibrary
+    this.ipfsBundle = ipfsBundle
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
     this.registry = {
@@ -32,23 +33,27 @@ import root from 'window-or-global'
   }
 
   // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
-  EnsLibrary.prototype.decodeContenthash = function (content) {
+  EnsLibrary.prototype.decodeContenthash = function (encoded) {
     var decoded = null
     var protocol = null
-    if (content.error) {
-      throw new Error(content.error)
+    if (encoded.error) {
+      throw new Error(encoded.error)
     }
-    if (content) {
-      const codec = contentHash.getCodec(content)
-      decoded = contentHash.decode(content)
+    if (encoded) {
+      const codec = contentHash.getCodec(encoded)
+      decoded = contentHash.decode(encoded)
       if (codec === 'ipfs-ns') {
         protocol = 'ipfs'
+      } else if (codec === 'ipns-ns') {
+        protocol = 'ipns'
       } else if (codec === 'swarm-ns') {
         protocol = 'bzz'
       } else if (codec === 'onion') {
         protocol = 'onion'
       } else if (codec === 'onion3') {
         protocol = 'onion3'
+      } else {
+        decoded = encoded
       }
     }
     return {
@@ -70,21 +75,17 @@ import root from 'window-or-global'
       return null
     }
     const matched =
-      content.match(/^(ipfs|bzz|onion|onion3):\/\/(.*)/) ||
-      content.match(/\/(ipfs)\/(.*)/)
+      content.match(/^(ipfs|ipns|bzz|onion|onion3):\/\/(.*)/) ||
+      content.match(/\/(ipfs)\/(.*)/) ||
+      content.match(/\/(ipns)\/(.*)/)
     if (matched) {
       type = matched[1]
       text = matched[2]
     }
     if (type === 'ipfs') {
       if (text.length >= 4) {
-        const cid = new CID(text)
-        if (cid.version !== 0) {
-          throw new Error(
-            `ENS domain content should be Base58 (CidV0): ${text}`
-          )
-        }
-        encoded = '0x' + contentHash.fromIpfs(text)
+        const cid = this.ipfsBundle.convertCidToIpfsCidV0(text)
+        encoded = '0x' + contentHash.fromIpfs(cid.toString())
       }
     } else {
       throw new Error(`Unsupported ENS domain protocol: ${type}`)

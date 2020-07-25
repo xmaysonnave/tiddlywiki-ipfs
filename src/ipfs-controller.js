@@ -599,12 +599,12 @@ IPFS Controller
     return this.ipfsBundle.isCid(cid)
   }
 
-  IpfsController.prototype.cidToCidV0 = function (cid, log) {
-    return this.ipfsBundle.cidToCidV0(cid, log)
+  IpfsController.prototype.cidToBase58CidV0 = function (cid, log) {
+    return this.ipfsBundle.cidToBase58CidV0(cid, log)
   }
 
-  IpfsController.prototype.cidToCidV1 = function (cid, log) {
-    return this.ipfsBundle.cidToCidV1(cid, log)
+  IpfsController.prototype.cidToBase32CidV1 = function (cid, log) {
+    return this.ipfsBundle.cidToBase32CidV1(cid, log)
   }
 
   IpfsController.prototype.cidToLibp2pKeyCidV1 = function (

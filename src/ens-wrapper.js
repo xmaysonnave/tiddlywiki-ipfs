@@ -35,7 +35,7 @@ ENS Wrapper
       )
       if (content !== null && protocol !== null) {
         // Convert CidV0 to CidV1
-        content = $tw.ipfs.cidToCidV1(content, true)
+        content = $tw.ipfs.cidToBase32CidV1(content, true)
         // Success
         return {
           content: content,
@@ -66,7 +66,7 @@ ENS Wrapper
         err.name = 'OwnerError'
         throw err
       }
-      const cidV0 = $tw.ipfs.cidToCidV0(cid, true)
+      const cidV0 = $tw.ipfs.cidToBase58CidV0(cid, true)
       await this.ensLibrary.setContentHash(domain, cidV0, web3, account)
       return {
         cidV0: cidV0
