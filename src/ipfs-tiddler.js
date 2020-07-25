@@ -396,6 +396,11 @@ IPFS Tiddler
       tiddler.fields.title,
       tiddler.fields.type
     )
+    var password = tiddler.fields._password
+    password =
+      password === undefined || password == null || password.trim() === ''
+        ? null
+        : password.trim()
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler)
     // Process deleted fields
@@ -442,9 +447,9 @@ IPFS Tiddler
           var data = tiddler.getFieldString('text')
           try {
             if (info.encoding === 'base64') {
-              data = await $tw.ipfs.loadToBase64(oldResolvedUrl)
+              data = await $tw.ipfs.loadToBase64(oldResolvedUrl, password)
             } else {
-              data = await $tw.ipfs.loadToUtf8(oldResolvedUrl)
+              data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
             }
             updatedTiddler = $tw.utils.updateTiddler({
               tiddler: updatedTiddler,

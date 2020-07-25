@@ -66,6 +66,11 @@ The HTML parser displays text as raw HTML
           ? null
           : canonicalUri.trim()
       if (canonicalUri !== null) {
+        var password = options.tiddler.fields._password
+        password =
+          password === undefined || password == null || password.trim() === ''
+            ? null
+            : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
@@ -83,7 +88,7 @@ The HTML parser displays text as raw HTML
             }
             if (url !== null) {
               $tw.ipfs
-                .loadToUtf8(url)
+                .loadToUtf8(url, password)
                 .then(data => {
                   if (data) {
                     src = value + encodeURIComponent(data)

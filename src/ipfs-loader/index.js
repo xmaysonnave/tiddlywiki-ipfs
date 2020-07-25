@@ -1,4 +1,5 @@
 import root from 'window-or-global'
+import { URL } from 'whatwg-url'
 ;(function () {
   'use strict'
 
@@ -205,7 +206,17 @@ import root from 'window-or-global'
   /*
    * Load to Base64
    */
-  IpfsLoader.prototype.loadToBase64 = async function (url) {
+  IpfsLoader.prototype.loadToBase64 = async function (url, password) {
+    if (url === undefined || url == null || url.toString().trim() === '') {
+      throw new Error('Undefined URL...')
+    }
+    if (url instanceof URL) {
+      url = url.href
+    }
+    password =
+      password === undefined || password == null || password.trim() === ''
+        ? null
+        : password.trim()
     const ua = await this.xhrToUint8Array(url)
     if (ua.length === 0) {
       return ''
@@ -214,10 +225,10 @@ import root from 'window-or-global'
     if (data.startsWith('{"pako":')) {
       const json = JSON.parse(data)
       if (json.pako.startsWith('{"iv":')) {
-        if ($tw.crypto.hasPassword() === false) {
+        if (password == null && $tw.crypto.hasPassword() === false) {
           data = await this.decryptFromPasswordPrompt(json.pako)
         } else {
-          data = $tw.crypto.decrypt(json.pako, $tw.crypto.currentPassword)
+          data = $tw.crypto.decrypt(json.pako, password)
         }
         data = $tw.compress.inflate(data)
       } else if (json.pako.startsWith('{"version":')) {
@@ -227,10 +238,10 @@ import root from 'window-or-global'
         data = $tw.compress.inflate(json.pako)
       }
     } else if (data.startsWith('{"iv":')) {
-      if ($tw.crypto.hasPassword() === false) {
+      if (password == null && $tw.crypto.hasPassword() === false) {
         data = await this.decryptFromPasswordPrompt(data)
       } else {
-        data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
+        data = $tw.crypto.decrypt(data, password)
       }
       data = btoa(data)
     } else if (data.startsWith('{"version":')) {
@@ -245,7 +256,17 @@ import root from 'window-or-global'
   /*
    * Load to UTF-8
    */
-  IpfsLoader.prototype.loadToUtf8 = async function (url) {
+  IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
+    if (url === undefined || url == null || url.toString().trim() === '') {
+      throw new Error('Undefined URL...')
+    }
+    if (url instanceof URL) {
+      url = url.href
+    }
+    password =
+      password === undefined || password == null || password.trim() === ''
+        ? null
+        : password.trim()
     var ua = await this.xhrToUint8Array(url)
     if (ua.length === 0) {
       return ''
@@ -254,10 +275,10 @@ import root from 'window-or-global'
     if (data.startsWith('{"pako":')) {
       const json = JSON.parse(data)
       if (json.pako.startsWith('{"iv":')) {
-        if ($tw.crypto.hasPassword() === false) {
+        if (password == null && $tw.crypto.hasPassword() === false) {
           data = await this.decryptFromPasswordPrompt(json.pako)
         } else {
-          data = $tw.crypto.decrypt(json.pako, $tw.crypto.currentPassword)
+          data = $tw.crypto.decrypt(json.pako, password)
         }
         data = $tw.compress.inflate(data)
       } else if (json.pako.startsWith('{"version":')) {
@@ -267,10 +288,10 @@ import root from 'window-or-global'
         data = $tw.compress.inflate(json.pako)
       }
     } else if (data.startsWith('{"iv":')) {
-      if ($tw.crypto.hasPassword() === false) {
+      if (password == null && $tw.crypto.hasPassword() === false) {
         data = await this.decryptFromPasswordPrompt(data)
       } else {
-        data = $tw.crypto.decrypt(data, $tw.crypto.currentPassword)
+        data = $tw.crypto.decrypt(data, password)
       }
     } else if (data.startsWith('{"version":')) {
       data = await $tw.ipfs.decrypt(data)

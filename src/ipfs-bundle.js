@@ -250,12 +250,12 @@ import IpfsUrl from './ipfs-url'
     return this.ipfsLoader.isJson(content)
   }
 
-  IpfsBundle.prototype.loadToBase64 = async function (url) {
-    return await this.ipfsLoader.loadToBase64(url)
+  IpfsBundle.prototype.loadToBase64 = async function (url, password) {
+    return await this.ipfsLoader.loadToBase64(url, password)
   }
 
-  IpfsBundle.prototype.loadToUtf8 = async function (url) {
-    return await this.ipfsLoader.loadToUtf8(url)
+  IpfsBundle.prototype.loadToUtf8 = async function (url, password) {
+    return await this.ipfsLoader.loadToUtf8(url, password)
   }
 
   IpfsBundle.prototype.decodeCid = function (decode) {
@@ -317,7 +317,7 @@ import IpfsUrl from './ipfs-url'
       if (
         url.hostname !== undefined &&
         url.hostname !== null &&
-        url.hostname.trim().length > 0
+        url.hostname.trim() !== ''
       ) {
         if (url.protocol === 'ipns:') {
           ipnsIdentifier = url.hostname

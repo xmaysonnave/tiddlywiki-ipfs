@@ -151,7 +151,7 @@ import { URL } from 'whatwg-url'
         if (
           url.hostname !== undefined &&
           url.hostname !== null &&
-          url.hostname.trim().length > 0
+          url.hostname.trim() !== ''
         ) {
           base.pathname = `/ipns/${url.hostname}`
         }
@@ -159,7 +159,7 @@ import { URL } from 'whatwg-url'
         if (
           url.hostname !== undefined &&
           url.hostname !== null &&
-          url.hostname.trim().length > 0
+          url.hostname.trim() !== ''
         ) {
           base.pathname = `/ipfs/${url.hostname}`
         }

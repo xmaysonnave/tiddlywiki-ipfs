@@ -48,6 +48,11 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
           ? null
           : canonicalUri.trim()
       if (canonicalUri !== null) {
+        var password = options.tiddler.fields._password
+        password =
+          password === undefined || password == null || password.trim() === ''
+            ? null
+            : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
@@ -60,7 +65,7 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
                 : null
             if (url !== null) {
               $tw.ipfs
-                .loadToUtf8(url)
+                .loadToUtf8(url, password)
                 .then(data => {
                   if (data) {
                     self.split(data)

@@ -98,6 +98,11 @@ The binary parser parses a binary tiddler into a warning message and download li
           ? null
           : canonicalUri.trim()
       if (canonicalUri !== null) {
+        var password = options.tiddler.fields._password
+        password =
+          password === undefined || password == null || password.trim() === ''
+            ? null
+            : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
@@ -110,7 +115,7 @@ The binary parser parses a binary tiddler into a warning message and download li
                 : null
             if (url !== null) {
               $tw.ipfs
-                .loadToBase64(url)
+                .loadToBase64(url, password)
                 .then(data => {
                   if (data) {
                     link.attributes.href = {

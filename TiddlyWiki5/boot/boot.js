@@ -725,7 +725,7 @@ $tw.utils.Crypto = function() {
       var state = currentPassword || currentPublicKey ? "yes" : "no",
         encrypted = $tw.wiki.getTiddler("$:/isEncrypted");
       if(!encrypted || encrypted.fields.text !== state) {
-        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isEncrypted", publicKey: currentPublicKey !== null ? currentPublicKey : undefined, text: state }));
+        $tw.wiki.addTiddler(new $tw.Tiddler({ title: "$:/isEncrypted", _public_key: currentPublicKey !== null ? currentPublicKey : undefined, text: state }));
       }
     }
   };
@@ -735,13 +735,14 @@ $tw.utils.Crypto = function() {
   this.hasEncryptionKey = function() {
     return !!currentPublicKey;
   }
-  this.encrypt = function(text,password) {
-    if (currentPublicKey) {
+  this.encrypt = function(text,password,publicKey) {
+    publicKey = publicKey || currentPublicKey
+    if (publicKey) {
       var output;
       var tStart = new Date();
       try {
         output = sigUtil.encrypt(
-          currentPublicKey,
+          publicKey,
           { data: text },
           'x25519-xsalsa20-poly1305'
         )
@@ -2694,8 +2695,8 @@ $tw.boot.startup = function(options) {
   // Make sure the crypto state tiddler is up to date
   if($tw.crypto) {
     var encrypted = $tw.wiki.getTiddler("$:/isEncrypted");
-    if(encrypted && encrypted.fields.publicKey) {
-      $tw.crypto.setEncryptionKey(encrypted.fields.publicKey);
+    if(encrypted && encrypted.fields._public_key) {
+      $tw.crypto.setEncryptionKey(encrypted.fields._public_key);
     } else {
       $tw.crypto.updateCryptoStateTiddler();
     }

@@ -33,6 +33,11 @@ The plain text parser processes blocks of source text into a degenerate parse tr
           ? null
           : canonicalUri.trim()
       if (canonicalUri !== null) {
+        var password = options.tiddler.fields._password
+        password =
+          password === undefined || password == null || password.trim() === ''
+            ? null
+            : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
@@ -45,7 +50,7 @@ The plain text parser processes blocks of source text into a degenerate parse tr
                 : null
             if (url !== null) {
               $tw.ipfs
-                .loadToUtf8(url)
+                .loadToUtf8(url, password)
                 .then(data => {
                   if (data) {
                     element.attributes.code.value = data

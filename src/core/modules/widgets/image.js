@@ -135,6 +135,11 @@ Render this widget into the DOM
               break
           }
         } else if (canonicalUri) {
+          var password = tiddler.fields._password
+          password =
+            password === undefined || password == null || password.trim() === ''
+              ? null
+              : password.trim()
           $tw.ipfs
             .resolveUrl(false, true, canonicalUri)
             .then(data => {
@@ -150,7 +155,7 @@ Render this widget into the DOM
                   case 'application/pdf':
                     domNode = this.document.createElement('embed')
                     $tw.ipfs
-                      .loadToBase64(url)
+                      .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
                           domNode.setAttribute(
@@ -166,7 +171,7 @@ Render this widget into the DOM
                     break
                   case 'image/svg+xml':
                     $tw.ipfs
-                      .loadToUtf8(url)
+                      .loadToUtf8(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
                           domNode.setAttribute(
@@ -182,7 +187,7 @@ Render this widget into the DOM
                     break
                   default:
                     $tw.ipfs
-                      .loadToBase64(url)
+                      .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
                           domNode.setAttribute(

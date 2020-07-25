@@ -61,12 +61,12 @@ IPFS Controller
     return console
   }
 
-  IpfsController.prototype.loadToBase64 = async function (url) {
-    return await this.ipfsBundle.loadToBase64(url)
+  IpfsController.prototype.loadToBase64 = async function (url, password) {
+    return await this.ipfsBundle.loadToBase64(url, password)
   }
 
-  IpfsController.prototype.loadToUtf8 = async function (url) {
-    return await this.ipfsBundle.loadToUtf8(url)
+  IpfsController.prototype.loadToUtf8 = async function (url, password) {
+    return await this.ipfsBundle.loadToUtf8(url, password)
   }
 
   IpfsController.prototype.Base64ToUint8Array = function (b64) {
@@ -98,34 +98,48 @@ IPFS Controller
     }
     var compressed = $tw.wiki.getTiddler('$:/isCompressed')
     compressed =
-      compressed !== undefined && compressed.fields.text !== undefined
+      compressed !== undefined &&
+      compressed.fields.text !== undefined &&
+      compressed.fields.text.trim() !== ''
         ? compressed.fields.text
         : 'yes'
+    compressed =
+      tiddler !== undefined &&
+      tiddler.fields._compress !== undefined &&
+      tiddler.fields._compress.trim() !== ''
+        ? tiddler.fields._compress
+        : compressed
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
     encrypted =
-      encrypted !== undefined && encrypted.fields.text !== undefined
+      encrypted !== undefined &&
+      encrypted.fields.text !== undefined &&
+      encrypted.fields.text.trim() !== ''
         ? encrypted.fields.text
         : 'no'
-    compressed =
-      tiddler !== undefined && tiddler.fields._is_compressed !== undefined
-        ? tiddler.fields._is_compressed
-        : compressed
-    encrypted =
-      tiddler !== undefined && tiddler.fields._is_encrypted !== undefined
-        ? tiddler.fields._is_encrypted
-        : encrypted
-    if (encrypted === 'yes') {
+    var password =
+      tiddler !== undefined &&
+      tiddler.fields._password !== undefined &&
+      tiddler.fields._password.trim() !== ''
+        ? tiddler.fields._password
+        : null
+    var publicKey =
+      tiddler !== undefined &&
+      tiddler.fields._public_key !== undefined &&
+      tiddler.fields._public_key.trim() !== ''
+        ? tiddler.fields._public_key
+        : null
+    if (encrypted === 'yes' || password || publicKey) {
       try {
         if (compressed === 'yes') {
           content = { pako: $tw.compress.deflate(content) }
-          content.pako = $tw.crypto.encrypt(content.pako)
+          content.pako = $tw.crypto.encrypt(content.pako, password, publicKey)
           content = JSON.stringify(content)
         } else {
           // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
           if (encoding === 'base64') {
             content = atob(content)
           }
-          content = $tw.crypto.encrypt(content)
+          content = $tw.crypto.encrypt(content, password, publicKey)
         }
         content = this.StringToUint8Array(content)
       } catch (error) {

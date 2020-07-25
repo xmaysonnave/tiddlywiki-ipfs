@@ -70,6 +70,11 @@ The PDF parser embeds a PDF viewer
           ? null
           : canonicalUri.trim()
       if (canonicalUri !== null) {
+        var password = options.tiddler.fields._password
+        password =
+          password === undefined || password == null || password.trim() === ''
+            ? null
+            : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
@@ -82,7 +87,7 @@ The PDF parser embeds a PDF viewer
                 : null
             if (url !== null) {
               $tw.ipfs
-                .loadToBase64(url)
+                .loadToBase64(url, password)
                 .then(data => {
                   if (data) {
                     element.attributes.src = {

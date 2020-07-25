@@ -189,6 +189,11 @@ IPFS Import
       importUri === undefined || importUri == null || importUri.trim() === ''
         ? null
         : importUri.trim()
+    var password = tiddler.fields._password
+    password =
+      password === undefined || password == null || password.trim() === ''
+        ? null
+        : password.trim()
     this.host = tiddler
     const { type, info } = $tw.utils.getContentType(
       tiddler.fields.title,
@@ -218,6 +223,7 @@ IPFS Import
             tiddler.fields.title,
             '_import_uri',
             importUri,
+            password,
             true
           )
           loadedAdded += importLoaded
@@ -236,6 +242,7 @@ IPFS Import
             tiddler.fields.title,
             '_canonical_uri',
             canonicalUri,
+            password,
             load
           )
           loadedAdded += canonicalLoaded
@@ -417,6 +424,7 @@ IPFS Import
     parentTitle,
     field,
     url,
+    password,
     load
   ) {
     var loaded = 0
@@ -457,7 +465,8 @@ IPFS Import
         field,
         url,
         key,
-        resolvedUrl
+        resolvedUrl,
+        password
       )
       loaded = loadedAdded
       removed = loadedRemoved
@@ -474,7 +483,8 @@ IPFS Import
     parentField,
     url,
     key,
-    resolvedKey
+    resolvedKey,
+    password
   ) {
     var loaded = 0
     var removed = 0
@@ -483,7 +493,7 @@ IPFS Import
     var tiddlers = null
     try {
       // Load
-      content = await $tw.ipfs.loadToUtf8(resolvedKey.toString())
+      content = await $tw.ipfs.loadToUtf8(resolvedKey, password)
       if ($tw.ipfs.isJson(content)) {
         tiddlers = $tw.wiki.deserializeTiddlers(
           '.json',
@@ -577,6 +587,13 @@ IPFS Import
               : importUri.trim()
           tiddler._import_uri = importUri
           if (canonicalUri !== null || importUri !== null) {
+            password = tiddler._password
+            password =
+              password === undefined ||
+              password == null ||
+              password.trim() === ''
+                ? null
+                : password.trim()
             if (importUri !== null) {
               const {
                 loaded: loadedAdded,
@@ -586,6 +603,7 @@ IPFS Import
                 title,
                 '_import_uri',
                 importUri,
+                password,
                 true
               )
               loaded += loadedAdded
@@ -607,6 +625,7 @@ IPFS Import
                 title,
                 'canonical_uri',
                 canonicalUri,
+                password,
                 load
               )
               loaded += loadedAdded
