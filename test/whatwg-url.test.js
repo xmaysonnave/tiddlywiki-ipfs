@@ -24,14 +24,19 @@ const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
 const { URL } = require('whatwg-url')
+const { console } = require('window-or-global')
 const invalid = 'Wrong URL...'
 const baseFile = new URL('file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html')
 const baseHttp = new URL('https://ipfs.bluelightav.org')
+const baseHttpPort = new URL('https://ipfs.bluelightav.org:443')
+const baseHttpNonDefaultPort = new URL('https://ipfs.bluelightav.org:4443')
 const absolute = new URL('https://bluelightav.eth')
-const ipfs =
+const ipfs = new URL(
   'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
+)
 const relative =
   '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
+
 beforeAll(() => {
   root.logger = log
   log.setLevel('silent', false)
@@ -53,7 +58,7 @@ describe('WHATWG-URL', () => {
       ipfsUrl.getUrl(invalid)
     }).toThrow()
   })
-  it('HTTPS protocol URL', () => {
+  it('HTTPS no port', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
@@ -61,11 +66,50 @@ describe('WHATWG-URL', () => {
     expect(
       parsed.protocol === 'https:' &&
         parsed.origin === baseHttp.origin &&
+        parsed.host === 'ipfs.bluelightav.org' &&
+        parsed.hostname === 'ipfs.bluelightav.org' &&
+        parsed.port === '' &&
         parsed.pathname === '/' &&
         parsed.search === '' &&
         parsed.hash === '' &&
         parsed.href === baseHttp.href &&
         parsed.toString() === baseHttp.toString()
+    ).toBeTruthy()
+  })
+  it('HTTPS with default port', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const ipfsUrl = ipfsBundle.ipfsUrl
+    const parsed = ipfsUrl.getUrl(baseHttpPort)
+    expect(
+      parsed.protocol === 'https:' &&
+        parsed.origin === baseHttpPort.origin &&
+        parsed.host === 'ipfs.bluelightav.org' &&
+        parsed.hostname === 'ipfs.bluelightav.org' &&
+        parsed.port === '' &&
+        parsed.pathname === '/' &&
+        parsed.search === '' &&
+        parsed.hash === '' &&
+        parsed.href === baseHttpPort.href &&
+        parsed.toString() === baseHttpPort.toString()
+    ).toBeTruthy()
+  })
+  it('HTTPS with non default port', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const ipfsUrl = ipfsBundle.ipfsUrl
+    const parsed = ipfsUrl.getUrl(baseHttpNonDefaultPort)
+    expect(
+      parsed.protocol === 'https:' &&
+        parsed.origin === baseHttpNonDefaultPort.origin &&
+        parsed.host === 'ipfs.bluelightav.org:4443' &&
+        parsed.hostname === 'ipfs.bluelightav.org' &&
+        parsed.port === '4443' &&
+        parsed.pathname === '/' &&
+        parsed.search === '' &&
+        parsed.hash === '' &&
+        parsed.href === baseHttpNonDefaultPort.href &&
+        parsed.toString() === baseHttpNonDefaultPort.toString()
     ).toBeTruthy()
   })
   it('File protocol URL', () => {
@@ -105,7 +149,7 @@ describe('WHATWG-URL', () => {
     base.pathname = relative
     expect((parsed.pathname = base.pathname)).toBeTruthy()
   })
-  it('IPFS', () => {
+  it('Parsing IPFS scheme', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
@@ -114,8 +158,30 @@ describe('WHATWG-URL', () => {
       parsed.protocol === 'ipfs:' &&
         parsed.hostname ===
           'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' &&
-        parsed.href === ipfs &&
-        parsed.toString() === ipfs
+        parsed.href === ipfs.href &&
+        parsed.toString() === ipfs.toString()
+    ).toBeTruthy()
+  })
+  /*
+   * This test shows that whatwg-url is unable to set an URL protocol
+   * The statement 'parsed.protocol = base.protocol' do not work
+   * This test will crash if the behaviour is updated
+   */
+  it('Parsing IPFS scheme', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const ipfsUrl = ipfsBundle.ipfsUrl
+    const base = ipfsUrl.getUrl(baseHttp)
+    const parsed = ipfsUrl.getUrl(ipfs)
+    parsed.pathname = `/ipfs/${parsed.hostname}`
+    parsed.protocol = base.protocol
+    parsed.host = base.host
+    expect(
+      parsed.protocol === 'ipfs:' &&
+        parsed.host === 'ipfs.bluelightav.org' &&
+        parsed.port === '' &&
+        parsed.pathname ===
+          '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
     ).toBeTruthy()
   })
 })
