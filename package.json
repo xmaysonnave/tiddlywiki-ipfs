@@ -26,7 +26,7 @@
     "run-prepare": "./scripts/run-prepare.sh",
     "snyk-protect": "yarn snyk protect",
     "snyk-monitor": "yarn snyk monitor --all-projects",
-    "test": "yarn snyk test --all-projects && ./scripts/test.sh"
+    "test": "./scripts/test.sh"
   },
   "husky": {
     "hooks": {
