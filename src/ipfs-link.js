@@ -297,7 +297,7 @@ IPFS link widget
       .then(data => {
         const { resolvedUrl } = data
         if (resolvedUrl !== null) {
-          window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
+          window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
         }
       })
       .catch(error => {

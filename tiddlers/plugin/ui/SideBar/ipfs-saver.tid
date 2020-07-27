@@ -179,6 +179,16 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 </$list>
 </$button>
 </td>
+<td style="width:10%">
+<$button message="tm-ipns-publish-to-ens" tooltip={{$:/language/Buttons/Ipns/Publish/To/Ens/Hint}} aria-label={{$:/language/Buttons/Ipns/Publish/To/Ens/Caption}} class="tc-btn-invisible tc-ipfs-action">
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/ens}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/Ipns/Publish/To/Ens/Caption}}/></span>
+</$list>
+</$button>
+</td>
 </tr>
 </tbody>
 </table>

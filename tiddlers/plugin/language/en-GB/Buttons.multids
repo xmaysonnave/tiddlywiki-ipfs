@@ -69,3 +69,6 @@ Ipns/Rename/Hint: Rename IPNS name
 
 Ipns/Resolve/And/Open/Caption: resolve and open
 Ipns/Resolve/And/Open/Hint: Open resolved IPNS key
+
+Ipns/Publish/To/Ens/Caption: publish to ENS
+Ipns/Publish/To/Ens/Hint: publish IPNS key to ENS

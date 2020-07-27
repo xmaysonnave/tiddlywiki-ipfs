@@ -34,8 +34,6 @@ ENS Wrapper
         web3
       )
       if (content !== null && protocol !== null) {
-        // Convert CidV0 to CidV1
-        content = $tw.ipfs.cidToBase32CidV1(content, true)
         // Success
         return {
           content: content,
@@ -60,17 +58,7 @@ ENS Wrapper
     account
   ) {
     try {
-      const isOwner = await $tw.ipfs.isOwner(domain, web3, account)
-      if (isOwner === false) {
-        const err = new Error('Unauthorized Account...')
-        err.name = 'OwnerError'
-        throw err
-      }
-      const cidV0 = $tw.ipfs.cidToBase58CidV0(cid, true)
-      await this.ensLibrary.setContentHash(domain, cidV0, web3, account)
-      return {
-        cidV0: cidV0
-      }
+      await this.ensLibrary.setContentHash(domain, cid, web3, account)
     } catch (error) {
       if (
         error.name === 'OwnerError' ||

@@ -1116,9 +1116,9 @@
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
 "@sindresorhus/is@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-3.0.0.tgz#78fabc5e295adb6e1ef57eaafe4cc5d7aa35b183"
-  integrity sha512-kqA5I6Yun7PBHk8WN9BBP1c7FfN2SrD05GuVSEYPqDb4nerv7HqYfgBfMIKmT/EuejURkJKLZuLyGKGs6WEG9w==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-3.1.0.tgz#d8735532635bea69ad39119df5f0f10099bd09dc"
+  integrity sha512-n4J+zu52VdY43kdi/XdI9DzuMr1Mur8zFL5ZRG2opCans9aiFwkPxHYFEb5Xgy7n1Z4K6WfI4FpqUqsh3E8BPQ==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.1"
@@ -2422,7 +2422,7 @@ browserslist@^4.12.0, browserslist@^4.8.5:
     escalade "^3.0.1"
     node-releases "^1.1.58"
 
-bs58@^4.0.0:
+bs58@^4.0.0, bs58@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/bs58/-/bs58-4.0.1.tgz#be161e76c354f6f788ae4071f63f34e8c4f0a42a"
   integrity sha1-vhYedsNU9veIrkBx9j806MTwpCo=
@@ -2580,9 +2580,9 @@ camelcase@^6.0.0:
   integrity sha512-8KMDF1Vz2gzOq54ONPJS65IvTUaB1cHJ2DMM7MbPmLZljDH1qpzzLsWdiN9pHh6qvkRVDTi/07+eNGch/oLU4w==
 
 caniuse-lite@^1.0.30001093:
-  version "1.0.30001105"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001105.tgz#d2cb0b31e5cf2f3ce845033b61c5c01566549abf"
-  integrity sha512-JupOe6+dGMr7E20siZHIZQwYqrllxotAhiaej96y6x00b/48rPt42o+SzOSCPbrpsDWvRja40Hwrj0g0q6LZJg==
+  version "1.0.30001107"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001107.tgz#809360df7a5b3458f627aa46b0f6ed6d5239da9a"
+  integrity sha512-86rCH+G8onCmdN4VZzJet5uPELII59cUzDphko3thQFgAQG1RNa+sVLDoALIhRYmflo5iSIzWY3vu1XTWtNMQQ==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -3477,9 +3477,9 @@ editorconfig@0.15.3:
     sigmund "^1.0.1"
 
 electron-to-chromium@^1.3.488:
-  version "1.3.507"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.507.tgz#cda0bd5727acf6535d908b88e01348281e957c37"
-  integrity sha512-Kfij/d4KvPHpgWVY/lXTwrq/k6zlBhcYOxoi6M7qDx1SPb+Wu+o0dt3yaIbFLXXGJDnOeFHaSHurA/9UlZsQ8w==
+  version "1.3.509"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.509.tgz#830fcb89cd66dc2984d18d794973b99e3f00584c"
+  integrity sha512-cN4lkjNRuTG8rtAqTOVgwpecEC2kbKA04PG6YijcKGHK/kD0xLjiqExcAOmLUwtXZRF8cBeam2I0VZcih919Ug==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -6202,17 +6202,17 @@ listr-verbose-renderer@^0.5.0:
     figures "^2.0.0"
 
 listr2@^2.1.0:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/listr2/-/listr2-2.3.3.tgz#ee9f4d95dd325ad1ae89fe7327f2a4f4498224b5"
-  integrity sha512-vU2eiFEzUEaDjgwRJ/n8RB79K2cBcaTw1DigIGHnXGp/BEeQqxGwiM8R17Itit5l2ykrrST11kw2l9vSpCbqUQ==
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/listr2/-/listr2-2.3.5.tgz#ba88ac8317a9839d517052c4cd98f38ec34c1906"
+  integrity sha512-mka3F7Xw/9YhzmO3tJ8fc5uQgvZyA2LShn9qa02k63APLTTmIDHItKNov7VMS01bg7jcx4Stzfvo1e0nolh/bw==
   dependencies:
-    chalk "^4.0.0"
+    chalk "^4.1.0"
     cli-truncate "^2.1.0"
     figures "^3.2.0"
     indent-string "^4.0.0"
     log-update "^4.0.0"
     p-map "^4.0.0"
-    rxjs "^6.5.5"
+    rxjs "^6.6.0"
     through "^2.3.8"
 
 listr@^0.14.3:
@@ -8340,7 +8340,7 @@ run-parallel@^1.1.9:
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.9.tgz#c9dd3a7cf9f4b2c4b6244e173a6ed866e61dd679"
   integrity sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q==
 
-rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.5, rxjs@^6.6.0:
+rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.0.tgz#af2901eedf02e3a83ffa7f886240ff9018bbec84"
   integrity sha512-3HMA8z/Oz61DUHe+SdOiQyzIf4tOx5oQHmMir7IZEu6TMqCLHT4LRcmNaUS0NwOz8VLvmmBduMsoaUvMaIiqzg==

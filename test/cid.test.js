@@ -12,8 +12,10 @@ const sha256Base32V1 =
 // IPNS Key
 const rsa2048Base58V0 = 'Qmbo8QtR4mKpX7zCN8WqTLcbRpifvz83C1ogVV2s1H2uzH'
 const ed25519Base58V0 = '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP'
-const ed25519Base32V1 =
+const ed25519DagPbBase32V1 =
   'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
+const ed25519Libp2pKeyBase32V1 =
+  'bafzaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
 const ed25519Base36V1 =
   'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
 beforeAll(() => {
@@ -155,10 +157,15 @@ describe('CID', () => {
     ipfsBundle.init()
     expect(ipfsBundle.isCid(ed25519Base58V0)).toBeTruthy()
   })
-  it('ed25519Base32V1 CID', async () => {
+  it('ed25519DagPbBase32V1 CID', async () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    expect(ipfsBundle.isCid(ed25519Base32V1)).toBeTruthy()
+    expect(ipfsBundle.isCid(ed25519DagPbBase32V1)).toBeTruthy()
+  })
+  it('ed25519Libp2pKeyBase32V1 CID', async () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    expect(ipfsBundle.isCid(ed25519Libp2pKeyBase32V1)).toBeTruthy()
   })
   it('ed25519Base36V1 CID', async () => {
     const ipfsBundle = new IpfsBundle()
@@ -168,13 +175,17 @@ describe('CID', () => {
   it('convert ed25519Base36V1 to ed25519Base32V1 CID', async () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const converted = ipfsBundle.cidToBase32CidV1(ed25519Base36V1)
-    expect(converted === ed25519Base32V1).toBeTruthy()
+    const converted = ipfsBundle.cidToLibp2pKeyCidV1(
+      ed25519Base36V1,
+      'base32',
+      false
+    )
+    expect(converted === ed25519Libp2pKeyBase32V1).toBeTruthy()
   })
   it('convert ed25519Base32V1 to ed25519Base58V0 CID', async () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const converted = ipfsBundle.cidToBase58CidV0(ed25519Base32V1)
+    const converted = ipfsBundle.cidToBase58CidV0(ed25519DagPbBase32V1)
     expect(converted === ed25519Base58V0).toBeTruthy()
   })
   it('convert ed25519Base36V1 to ed25519Base58V0 CID', async () => {

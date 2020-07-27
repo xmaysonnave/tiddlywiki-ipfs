@@ -175,6 +175,14 @@ IPFS Saver
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
           nextWiki.pathname = `/${ipnsKeyword}/${ipnsKey}`
+          // Bypass the browser cache
+          if (
+            nextWiki.host !== wiki.host ||
+            nextWiki.pathname !== wiki.pathname
+          ) {
+            var searchParams = nextWiki.searchParams
+            searchParams.set('_c_', new Date().getTime())
+          }
           $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
         } catch (error) {
           this.getLogger().warn(error)
@@ -186,16 +194,12 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-          await $tw.ipfs.setContentHash(ensDomain, added, web3, account)
-          // if (chainId !== null && chainId === 1) {
-          //   nextWiki.protocol = 'https:'
-          //   nextWiki.host = ensDomain
-          // } else {
-          //   const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain, web3)
-          //   nextWiki.protocol = resolvedUrl.protocol
-          //   nextWiki.host = resolvedUrl.host
-          //   nextWiki.pathname = resolvedUrl.pathname
-          // }
+          await $tw.ipfs.setContentHash(
+            ensDomain,
+            `/${ipfsKeyword}/${added}`,
+            web3,
+            account
+          )
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
           this.getLogger().warn(error)
@@ -229,7 +233,7 @@ IPFS Saver
       }
       callback(null)
       if (nextWiki.host !== wiki.host || nextWiki.pathname !== wiki.pathname) {
-        window.location.assign(nextWiki.toString())
+        window.location.assign(nextWiki.href)
       }
     } catch (error) {
       if (

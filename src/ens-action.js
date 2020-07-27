@@ -14,6 +14,8 @@ ENS Action
   'use strict'
 
   const fileProtocol = 'file:'
+  const ipfsKeyword = 'ipfs'
+  const ipnsKeyword = 'ipns'
 
   const name = 'ens-action'
 
@@ -45,13 +47,21 @@ ENS Action
     $tw.rootWidget.addEventListener('tm-ens-publish', async function (event) {
       return await self.handlePublishToEns(event)
     })
+    $tw.rootWidget.addEventListener('tm-ipns-publish-to-ens', async function (
+      event
+    ) {
+      return await self.handlePublishIpnsToEns(event)
+    })
     // Init once
     this.once = true
   }
 
   EnsAction.prototype.handleOpenEnsManager = function (event) {
-    // Retrieve ENS domain
-    const ensDomain = $tw.utils.getIpfsEnsDomain()
+    var ensDomain = $tw.utils.getIpfsEnsDomain()
+    ensDomain =
+      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
+        ? null
+        : ensDomain.trim()
     // Check
     if (ensDomain == null) {
       window.open('https://app.ens.domains', '_blank', 'noopener,noreferrer')
@@ -66,7 +76,11 @@ ENS Action
   }
 
   EnsAction.prototype.handleResolveEnsAndOpen = async function (event) {
-    const ensDomain = $tw.utils.getIpfsEnsDomain()
+    var ensDomain = $tw.utils.getIpfsEnsDomain()
+    ensDomain =
+      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
+        ? null
+        : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
@@ -75,7 +89,7 @@ ENS Action
       this.getLogger().info(`ENS domain: ${ensDomain}`)
       const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
       if (resolvedUrl !== null) {
-        window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
+        window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
       }
     } catch (error) {
       this.getLogger().error(error)
@@ -86,7 +100,6 @@ ENS Action
   }
 
   EnsAction.prototype.handlePublishToEns = async function (event) {
-    const self = this
     const wiki = $tw.ipfs.getDocumentUrl()
     if (wiki.protocol === fileProtocol) {
       $tw.utils.alert(name, 'Undefined IPFS identifier...')
@@ -96,35 +109,77 @@ ENS Action
       $tw.utils.alert(name, 'Unknown IPFS identifier...')
       return false
     }
-    var account = null
+    var ensDomain = $tw.utils.getIpfsEnsDomain()
+    ensDomain =
+      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
+        ? null
+        : ensDomain.trim()
+    if (ensDomain == null) {
+      $tw.utils.alert(name, 'Undefined ENS domain...')
+      return false
+    }
     var cid = null
-    var ensCid = null
-    var ensResolvedUrl = null
-    var ipnsKey = null
-    var web3 = null
     try {
-      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(true, false, wiki)
+      var { cid } = await $tw.ipfs.resolveUrl(true, false, wiki)
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
-    const ensDomain = $tw.utils.getIpfsEnsDomain()
+    if (cid == null) {
+      $tw.utils.alert(name, 'Nothing to publish to ENS...')
+      return false
+    }
+    return await this.publishToEns(ensDomain, `/${ipfsKeyword}/${cid}`)
+  }
+
+  EnsAction.prototype.handlePublishIpnsToEns = async function (event) {
+    var ipnsKey = null
+    var ipnsName = $tw.utils.getIpfsIpnsName()
+    ipnsName =
+      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
+        ? null
+        : ipnsName.trim()
+    if (ipnsName == null) {
+      $tw.utils.alert(name, 'Undefined IPNS name....')
+      return false
+    }
+    var ensDomain = $tw.utils.getIpfsEnsDomain()
+    ensDomain =
+      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
+        ? null
+        : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
     }
-    if (cid == null && ipnsKey !== null) {
-      $tw.utils.alert(name, 'Nothing to publish to ENS...')
+    try {
+      var { ipnsKey } = await $tw.ipfs.resolveUrl(
+        true,
+        false,
+        `/${ipnsKeyword}/${ipnsName}`
+      )
+    } catch (error) {
+      this.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
       return false
     }
+    return await this.publishToEns(ensDomain, `/${ipnsKeyword}/${ipnsKey}`)
+  }
+
+  EnsAction.prototype.publishToEns = async function (ensDomain, cid) {
+    const self = this
+    var account = null
+    var ensCid = null
+    var ensResolvedUrl = null
+    var web3 = null
     try {
       var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
       var {
         cid: ensCid,
         resolvedUrl: ensResolvedUrl
       } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
-      if (cid !== null && ensCid !== null && cid === ensCid) {
+      if (ensCid !== null && cid === ensResolvedUrl.pathname) {
         $tw.utils.alert(
           name,
           'The current resolved ENS domain content is up to date...'
@@ -144,74 +199,34 @@ ENS Action
       $tw.utils.alert(name, error.message)
       return false
     }
-    if (cid !== null) {
-      $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-      $tw.ipfs
-        .requestToUnpin(ensCid)
-        .then(data => {
-          if (data) {
-            $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
-          }
-          $tw.ipfs
-            .setContentHash(ensDomain, cid, web3, account)
-            .then(data => {
-              $tw.utils.alert(name, 'Successfully published to ENS...')
-            })
-            .catch(error => {
-              $tw.ipfs.requestToPin(ensCid)
-              if (
-                error.name !== 'OwnerError' &&
-                error.name !== 'RejectedUserRequest' &&
-                error.name !== 'UnauthorizedUserAccount'
-              ) {
-                self.getLogger().error(error)
-              }
-              $tw.utils.alert(name, error.message)
-            })
-        })
-        .catch(error => {
-          self.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-        })
-    } else if (ipnsKey !== null) {
-      $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-      $tw.ipfs
-        .resolveUrl(true, false, wiki)
-        .then(data => {
-          const { cid: ipnsCid } = data
-          $tw.ipfs
-            .requestToUnpin(ensCid)
-            .then(data => {
-              if (data) {
-                $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
-              }
-              $tw.ipfs
-                .setContentHash(ensDomain, ipnsCid, web3, account)
-                .then(data => {
-                  $tw.utils.alert(name, 'Successfully Published to ENS...')
-                })
-                .catch(error => {
-                  $tw.ipfs.requestToPin(ensCid)
-                  if (
-                    error.name !== 'OwnerError' &&
-                    error.name !== 'RejectedUserRequest' &&
-                    error.name !== 'UnauthorizedUserAccount'
-                  ) {
-                    self.getLogger().error(error)
-                  }
-                  $tw.utils.alert(name, error.message)
-                })
-            })
-            .catch(error => {
+    $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
+    $tw.ipfs
+      .requestToUnpin(ensCid)
+      .then(data => {
+        if (data) {
+          $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
+        }
+        $tw.ipfs
+          .setContentHash(ensDomain, cid, web3, account)
+          .then(data => {
+            $tw.utils.alert(name, 'Successfully published to ENS...')
+          })
+          .catch(error => {
+            $tw.ipfs.requestToPin(ensCid)
+            if (
+              error.name !== 'OwnerError' &&
+              error.name !== 'RejectedUserRequest' &&
+              error.name !== 'UnauthorizedUserAccount'
+            ) {
               self.getLogger().error(error)
-              $tw.utils.alert(name, error.message)
-            })
-        })
-        .catch(error => {
-          self.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-        })
-    }
+            }
+            $tw.utils.alert(name, error.message)
+          })
+      })
+      .catch(error => {
+        self.getLogger().error(error)
+        $tw.utils.alert(name, error.message)
+      })
     return true
   }
 

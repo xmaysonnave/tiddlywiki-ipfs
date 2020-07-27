@@ -1,5 +1,4 @@
 import root from 'window-or-global'
-import { URL } from 'whatwg-url'
 ;(function () {
   'use strict'
 
@@ -207,11 +206,12 @@ import { URL } from 'whatwg-url'
    * Load to Base64
    */
   IpfsLoader.prototype.loadToBase64 = async function (url, password) {
-    if (url === undefined || url == null || url.toString().trim() === '') {
+    url =
+      url === undefined || url == null || url.toString().trim() === ''
+        ? null
+        : url.toString().trim()
+    if (url == null) {
       throw new Error('Undefined URL...')
-    }
-    if (url instanceof URL) {
-      url = url.href
     }
     password =
       password === undefined || password == null || password.trim() === ''
@@ -257,11 +257,12 @@ import { URL } from 'whatwg-url'
    * Load to UTF-8
    */
   IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
-    if (url === undefined || url == null || url.toString().trim() === '') {
+    url =
+      url === undefined || url == null || url.toString().trim() === ''
+        ? null
+        : url.toString().trim()
+    if (url == null) {
       throw new Error('Undefined URL...')
-    }
-    if (url instanceof URL) {
-      url = url.href
     }
     password =
       password === undefined || password == null || password.trim() === ''

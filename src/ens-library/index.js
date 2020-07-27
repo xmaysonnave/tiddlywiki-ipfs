@@ -1,4 +1,4 @@
-import CID from 'cids'
+import bs58 from 'bs58'
 import contentHash from 'content-hash'
 import root from 'window-or-global'
 ;(function () {
@@ -44,8 +44,14 @@ import root from 'window-or-global'
       decoded = contentHash.decode(encoded)
       if (codec === 'ipfs-ns') {
         protocol = 'ipfs'
+        decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
       } else if (codec === 'ipns-ns') {
+        decoded = bs58
+          .decode(decoded)
+          .slice(2)
+          .toString()
         protocol = 'ipns'
+        decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
       } else if (codec === 'swarm-ns') {
         protocol = 'bzz'
       } else if (codec === 'onion') {
@@ -63,6 +69,7 @@ import root from 'window-or-global'
   }
 
   // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1577.md
+  // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
   EnsLibrary.prototype.encodeContenthash = function (content) {
     var type = null
     var text = null
@@ -83,10 +90,13 @@ import root from 'window-or-global'
       text = matched[2]
     }
     if (type === 'ipfs') {
-      if (text.length >= 4) {
-        const cid = this.ipfsBundle.convertCidToIpfsCidV0(text)
-        encoded = '0x' + contentHash.fromIpfs(cid.toString())
-      }
+      const bs58content = this.ipfsBundle.cidToBase58CidV0(text, true)
+      encoded = '0x' + contentHash.encode('ipfs-ns', bs58content)
+    } else if (type === 'ipns') {
+      const bs58content = bs58.encode(
+        Buffer.concat([Buffer.from([0, text.length]), Buffer.from(text)])
+      )
+      encoded = '0x' + contentHash.encode('ipns-ns', bs58content)
     } else {
       throw new Error(`Unsupported ENS domain protocol: ${type}`)
     }
@@ -305,7 +315,7 @@ import root from 'window-or-global'
       throw new Error('ENS domain resolver do not conform to EIP1577...')
     }
     // Retrieve content hash
-    this.getLogger().info('Processing ENS domain content...')
+    this.getLogger().info('Retrieving ENS domain content...')
     const abi = [
       'function contenthash(bytes32 node) external view returns (bytes memory)'
     ]
@@ -443,7 +453,7 @@ import root from 'window-or-global'
       throw new Error('ENS resolver do not conform to EIP1577...')
     }
     // Encode cid
-    const { encoded } = this.encodeContenthash('ipfs://' + cid)
+    const { encoded } = this.encodeContenthash(cid)
     // Set Contenthash
     this.getLogger().info('Processing ENS domain content...')
     const abi = ['function setContenthash(bytes32 node, bytes calldata hash)']

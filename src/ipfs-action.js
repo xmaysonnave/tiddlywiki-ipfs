@@ -197,7 +197,12 @@ IPFS Action
         .pinToIpfs(added)
         .then(data => {
           $tw.ipfs
-            .setContentHash(normalizedUrl.hostname, added, web3, account)
+            .setContentHash(
+              normalizedUrl.hostname,
+              `/${ipfsKeyword}/${added}`,
+              web3,
+              account
+            )
             .then(data => {
               fields.push({ key: '_export_uri', value: exportUri })
               tiddler = $tw.utils.updateTiddler({
@@ -491,7 +496,7 @@ IPFS Action
     }
     this.ipnsName = ipnsName
     if (resolvedUrl !== null) {
-      window.open(resolvedUrl.toString(), '_blank', 'noopener,noreferrer')
+      window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
     }
     return true
   }

@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200725452",
+  "version": "v0.3.0-200727448",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/ipfs-bundle.js",
   "directories": {
@@ -19,7 +19,7 @@
     "eslint": "eslint \"src/**/*.js\" && eslint \"test/**/*.js\" && eslint \"scripts/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix && eslint \"scripts/**/*.js\" --fix",
     "format": "prettier-standard --eslint --format",
-    "prepare": "snyk-protect",
+    "prepare": "yarn snyk protect",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
@@ -56,6 +56,7 @@
   "dependencies": {
     "@babel/runtime": "^7.10.5",
     "@metamask/detect-provider": "^1.1.0",
+    "bs58": "^4.0.1",
     "buffer": "^5.6.0",
     "cids": "^0.8.3",
     "content-hash": "^2.5.2",

@@ -182,7 +182,7 @@ import root from 'window-or-global'
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
-        hash: this.ipfsBundle.cidToBase32CidV1(added.path, true),
+        hash: this.ipfsBundle.cidToCidV1(added.path, 'ipfs', true),
         size: added.size
       }
     }

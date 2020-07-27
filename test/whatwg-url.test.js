@@ -24,7 +24,6 @@ const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
 const { URL } = require('whatwg-url')
-const { console } = require('window-or-global')
 const invalid = 'Wrong URL...'
 const baseFile = new URL('file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html')
 const baseHttp = new URL('https://ipfs.bluelightav.org')
@@ -149,17 +148,19 @@ describe('WHATWG-URL', () => {
     base.pathname = relative
     expect((parsed.pathname = base.pathname)).toBeTruthy()
   })
-  it('Parsing IPFS scheme', () => {
-    const ipfsBundle = new IpfsBundle()
-    ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(ipfs)
+  it('Updating IPFS scheme', () => {
+    const base = new URL('https://ipfs.bluelightav.org')
+    const parsed = new URL(
+      'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
+    )
+    parsed.pathname = `/ipfs/${parsed.hostname}`
+    parsed.protocol = base.protocol
+    parsed.host = base.host
     expect(
       parsed.protocol === 'ipfs:' &&
-        parsed.hostname ===
-          'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' &&
-        parsed.href === ipfs.href &&
-        parsed.toString() === ipfs.toString()
+        parsed.hostname === 'ipfs.bluelightav.org' &&
+        parsed.pathname ===
+          '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
     ).toBeTruthy()
   })
   /*
@@ -167,7 +168,7 @@ describe('WHATWG-URL', () => {
    * The statement 'parsed.protocol = base.protocol' do not work
    * This test will crash if the behaviour is updated
    */
-  it('Parsing IPFS scheme', () => {
+  it('Modifying IPFS scheme', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl

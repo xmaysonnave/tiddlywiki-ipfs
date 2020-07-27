@@ -179,7 +179,7 @@ IPFS Wrapper
     }
     // Lets build an url, the resolver will do the final check, we cannot do more here
     if (found) {
-      const cidv0 = ipnsKey
+      const cidv0 = this.ipfsBundle.cidToBase58CidV0(ipnsKey, false)
       const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(
         cidv0,
         'base32',

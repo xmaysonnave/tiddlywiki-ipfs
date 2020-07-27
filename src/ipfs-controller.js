@@ -416,11 +416,7 @@ IPFS Controller
       }
     }
     var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl)
-    if (
-      protocol !== null &&
-      protocol === ipnsKeyword &&
-      ipnsIdentifier !== null
-    ) {
+    if (protocol === ipnsKeyword && ipnsIdentifier !== null) {
       var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(
         ipnsIdentifier
       )
@@ -449,10 +445,14 @@ IPFS Controller
         }
       }
     } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
-      var { content: cid, resolvedUrl } = await this.resolveEns(
+      var { cid, protocol, resolvedUrl } = await this.resolveEns(
         normalizedUrl.hostname,
         web3
       )
+      if (protocol === 'ipns') {
+        ipnsKey = cid
+        cid = null
+      }
     } else {
       resolvedUrl = normalizedUrl
     }
@@ -543,13 +543,13 @@ IPFS Controller
  ${url}`
       )
       return {
-        content: content,
+        cid: content,
         protocol: protocol,
         resolvedUrl: url
       }
     }
     return {
-      content: null,
+      cid: null,
       protocol: null,
       resolvedUrl: null
     }
@@ -569,22 +569,14 @@ IPFS Controller
     ) {
       var { account, web3 } = await this.getEnabledWeb3Provider()
     }
-    const { cidV0 } = await this.ensWrapper.setContentHash(
-      ensDomain,
-      cid,
-      web3,
-      account
-    )
-    if (cidV0 !== null) {
-      const url = this.normalizeUrl(`/ipfs/${cidV0}`)
-      this.getLogger().info(
-        `Successfully set ENS domain content:
+    await this.ensWrapper.setContentHash(ensDomain, cid, web3, account)
+    const url = this.normalizeUrl(cid)
+    this.getLogger().info(
+      `Successfully set ENS domain content:
  ${url}
  to: "${ensDomain}"`
-      )
-      return true
-    }
-    return false
+    )
+    return true
   }
 
   IpfsController.prototype.xhrToJson = async function (url) {
@@ -603,8 +595,8 @@ IPFS Controller
     return this.ipfsBundle.cidToBase58CidV0(cid, log)
   }
 
-  IpfsController.prototype.cidToBase32CidV1 = function (cid, log) {
-    return this.ipfsBundle.cidToBase32CidV1(cid, log)
+  IpfsController.prototype.cidToCidV1 = function (cid, protocol, log) {
+    return this.ipfsBundle.cidToCidV1(cid, protocol, log)
   }
 
   IpfsController.prototype.cidToLibp2pKeyCidV1 = function (
