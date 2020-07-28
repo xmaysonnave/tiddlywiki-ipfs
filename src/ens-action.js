@@ -101,14 +101,6 @@ ENS Action
 
   EnsAction.prototype.handlePublishToEns = async function (event) {
     const wiki = $tw.ipfs.getDocumentUrl()
-    if (wiki.protocol === fileProtocol) {
-      $tw.utils.alert(name, 'Undefined IPFS identifier...')
-      return false
-    }
-    if (wiki.pathname === '/') {
-      $tw.utils.alert(name, 'Unknown IPFS identifier...')
-      return false
-    }
     var ensDomain = $tw.utils.getIpfsEnsDomain()
     ensDomain =
       ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
@@ -127,7 +119,7 @@ ENS Action
       return false
     }
     if (cid == null || ipnsKey == null) {
-      $tw.utils.alert(name, 'Nothing to publish to ENS...')
+      $tw.utils.alert(name, 'Undefined IPFS identifier...')
       return false
     }
     if (cid !== null) {

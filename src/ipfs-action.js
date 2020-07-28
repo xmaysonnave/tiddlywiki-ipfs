@@ -577,14 +577,6 @@ IPFS Action
     var wikiIpnsKey = null
     const self = this
     const wiki = $tw.ipfs.getDocumentUrl()
-    if (wiki.protocol === fileProtocol) {
-      $tw.utils.alert(name, 'Undefined IPFS identifier...')
-      return false
-    }
-    if (wiki.pathname === '/') {
-      $tw.utils.alert(name, 'Unknown IPFS identifier...')
-      return false
-    }
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
       ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
@@ -595,19 +587,23 @@ IPFS Action
       return false
     }
     try {
-      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(
-        true,
-        false,
-        `${ipnsKeyword}://${ipnsName}`
-      )
       var { cid: wikiCid, ipnsKey: wikiIpnsKey } = await $tw.ipfs.resolveUrl(
         true,
         true,
         wiki
       )
+      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(
+        true,
+        false,
+        `${ipnsKeyword}://${ipnsName}`
+      )
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(name, error.message)
+      return false
+    }
+    if (wikiCid == null || wikiIpnsKey == null) {
+      $tw.utils.alert(name, 'Undefined IPFS identifier...')
       return false
     }
     if (wikiIpnsKey !== null && wikiIpnsKey === ipnsKey) {
