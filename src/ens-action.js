@@ -120,17 +120,20 @@ ENS Action
     }
     var cid = null
     try {
-      var { cid } = await $tw.ipfs.resolveUrl(true, false, wiki)
+      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki)
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
-    if (cid == null) {
+    if (cid == null || ipnsKey == null) {
       $tw.utils.alert(name, 'Nothing to publish to ENS...')
       return false
     }
-    return await this.publishToEns(ensDomain, `/${ipfsKeyword}/${cid}`)
+    if (cid !== null) {
+      return await this.publishToEns(ensDomain, `/${ipfsKeyword}/${cid}`)
+    }
+    return await this.publishToEns(ensDomain, `/${ipnsKeyword}/${ipnsKey}`)
   }
 
   EnsAction.prototype.handlePublishIpnsToEns = async function (event) {
