@@ -99,6 +99,8 @@ ENS Action
   }
 
   EnsAction.prototype.handlePublishToEns = async function (event) {
+    var cid = null
+    var ipnsKey = null
     const wiki = $tw.ipfs.getDocumentUrl()
     var ensDomain = $tw.utils.getIpfsEnsDomain()
     ensDomain =
@@ -109,7 +111,6 @@ ENS Action
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
     }
-    var cid = null
     try {
       var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki)
     } catch (error) {
@@ -117,7 +118,7 @@ ENS Action
       $tw.utils.alert(name, error.message)
       return false
     }
-    if (cid == null || ipnsKey == null) {
+    if (cid == null && ipnsKey == null) {
       $tw.utils.alert(name, 'Undefined IPFS identifier...')
       return false
     }

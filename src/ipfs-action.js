@@ -601,7 +601,7 @@ IPFS Action
       $tw.utils.alert(name, error.message)
       return false
     }
-    if (wikiCid == null || wikiIpnsKey == null) {
+    if (wikiCid == null && wikiIpnsKey == null) {
       $tw.utils.alert(name, 'Undefined IPFS identifier...')
       return false
     }
