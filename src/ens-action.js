@@ -13,7 +13,6 @@ ENS Action
   /*global $tw:false*/
   'use strict'
 
-  const fileProtocol = 'file:'
   const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
 
