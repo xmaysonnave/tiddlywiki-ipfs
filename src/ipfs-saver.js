@@ -175,14 +175,6 @@ IPFS Saver
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
           nextWiki.pathname = `/${ipnsKeyword}/${ipnsKey}`
-          // Bypass the browser cache
-          if (
-            nextWiki.host !== wiki.host ||
-            nextWiki.pathname !== wiki.pathname
-          ) {
-            var searchParams = nextWiki.searchParams
-            searchParams.set('_c_', new Date().getTime())
-          }
           $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
         } catch (error) {
           this.getLogger().warn(error)
