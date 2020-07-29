@@ -1,4 +1,3 @@
-
 /*\
 title: $:/core/modules/widgets/compress.js
 type: application/javascript
@@ -14,8 +13,8 @@ Compress widget
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
-  var CompressWidget = function(parseTreeNode, options) {
-    this.initialise(parseTreeNode,options);
+  var CompressWidget = function (parseTreeNode, options) {
+    this.initialise(parseTreeNode, options)
   }
 
   /*
@@ -26,41 +25,41 @@ Compress widget
   /*
    * Render this widget into the DOM
    */
-  CompressWidget.prototype.render = function(parent,nextSibling) {
-    this.parentDomNode = parent;
-    this.computeAttributes();
-    this.execute();
-    var textNode = this.document.createTextNode(this.compressedText);
-    parent.insertBefore(textNode, nextSibling);
-    this.domNodes.push(textNode);
+  CompressWidget.prototype.render = function (parent, nextSibling) {
+    this.parentDomNode = parent
+    this.computeAttributes()
+    this.execute()
+    var textNode = this.document.createTextNode(this.compressedText)
+    parent.insertBefore(textNode, nextSibling)
+    this.domNodes.push(textNode)
   }
 
   /*
    * Compute the internal state of the widget
    */
-  CompressWidget.prototype.execute = function() {
+  CompressWidget.prototype.execute = function () {
     // Get parameters from our attributes
-    this.filter = this.getAttribute("filter","[!is[system]]");
+    this.filter = this.getAttribute('filter', '[!is[system]]')
     // Compress the filtered tiddlers
-    var tiddlers = this.wiki.filterTiddlers(this.filter);
-    var json = {};
-    var self = this;
-    $tw.utils.each(tiddlers,function(title) {
-      var tiddler = self.wiki.getTiddler(title);
-      var jsonTiddler = {};
+    var tiddlers = this.wiki.filterTiddlers(this.filter)
+    var json = {}
+    var self = this
+    $tw.utils.each(tiddlers, function (title) {
+      var tiddler = self.wiki.getTiddler(title)
+      var jsonTiddler = {}
       for (var f in tiddler.fields) {
-        jsonTiddler[f] = tiddler.getFieldString(f);
+        jsonTiddler[f] = tiddler.getFieldString(f)
       }
-      json[title] = jsonTiddler;
-    });
-    var content = JSON.stringify(json);
-    content = { pako: $tw.compress.deflate(content) };
-    var tiddler = $tw.wiki.getTiddler("$:/isEncrypted");
-    if(tiddler && tiddler.fields.text === "yes") {
-      content.pako = $tw.crypto.encrypt(content.pako);
+      json[title] = jsonTiddler
+    })
+    var content = JSON.stringify(json)
+    content = { pako: $tw.compress.deflate(content) }
+    var tiddler = $tw.wiki.getTiddler('$:/isEncrypted')
+    if (tiddler && tiddler.fields.text === 'yes') {
+      content.pako = $tw.crypto.encrypt(content.pako)
     }
     content = JSON.stringify(content)
-    this.compressedText = $tw.utils.htmlEncode(content);
+    this.compressedText = $tw.utils.htmlEncode(content)
   }
 
   /*
@@ -68,8 +67,8 @@ Compress widget
    */
   CompressWidget.prototype.refresh = function (changedTiddlers) {
     // We don't need to worry about refreshing because the compress widget isn't for interactive use
-    return false;
+    return false
   }
 
   exports.compress = CompressWidget
-})();
+})()
