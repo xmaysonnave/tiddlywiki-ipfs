@@ -1,11 +1,8 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200729320",
+  "version": "v0.3.0-200730397",
   "description": "IPFS with TiddlyWiki",
-  "bin": {
-    "tiddlywiki": "./tiddlywiki.js"
-  },
-  "main": "./boot/boot.js",
+  "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
     "test": "test"
   },
@@ -103,7 +100,8 @@
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.4.1",
     "pretty-quick": "^2.0.1",
-    "snyk": "^1.369.0",
+    "sjcl": "^1.0.8",
+    "snyk": "^1.369.1",
     "tiddlywiki": "git://github.com/Jermolene/TiddlyWiki5.git",
     "typescript": "^3.9.7"
   },

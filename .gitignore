@@ -1,6 +1,7 @@
+boot/
 build/
 node_modules/
-output/
+sample/
 eth-sig-util/
 tw5-locator/
 tw5-relink/

@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const { generate, validate } = require('build-number-generator')
-const sourceMetadata = './metadata/plugin.info'
+const sourceMetadata = './tiddlers/metadata/plugin.info'
 const targetMetadata = './build/plugins/ipfs/plugin.info'
 const sourcePackage = './package.json'
 

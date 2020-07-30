@@ -3,9 +3,8 @@ boot
 eth-sig-util
 metadata
 node_modules
-output
+sample
 tiddlers
-TiddlyWiki5
 tw5-locator
 tw5-relink
-wiki
+production

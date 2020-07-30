@@ -5,7 +5,7 @@ yarn prettier-standard \
 || exit 1
 
 yarn browserify \
-  src/ipfs-bundle.js \
+  src/plugins/ipfs/ipfs-bundle.js \
   -s IpfsBundle \
   -o build/plugins/ipfs/ipfs-bundle.js \
 || exit 1

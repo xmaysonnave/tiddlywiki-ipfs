@@ -13,9 +13,8 @@
     "tiddlywiki/codemirror-mode-xml",
     "tiddlywiki/codemirror-search-replace",
     "tiddlywiki/highlight",
-    "tiddlywiki/internals",
-    "tiddlywiki/menubar",
-    "tiddlywiki/markdown"
+    "tiddlywiki/markdown",
+    "tiddlywiki/menubar"
   ],
   "includeWikis": [
   ],
@@ -24,28 +23,26 @@
     "tiddlywiki/snowwhite"
   ],
   "build": {
-		"dev": [
+		"index": [
 			"--compress", "true",
-      "--publickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain"
+			"--rendertiddler", "$:/core/save/all", "index.html", "text/plain"
     ],
-		"dev-compressed": [
-			"--compress", "true",
-			"--rendertiddler", "$:/core/save/all", "../output/dev-compressed.html", "text/plain"
-    ],
-		"dev-encrypted": [
+		"index-encrypted": [
 			"--compress", "true",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../output/dev-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-encrypted.html", "text/plain",
       "--clearpassword"
     ],
-    "dev-plain": [
-      "--rendertiddler", "$:/core/save/all", "../output/dev-plain.html", "text/plain"
+    "index-plain": [
+      "--rendertiddler", "$:/core/save/all", "../sample/index-plain.html", "text/plain"
     ],
-    "dev-plain-and-encrypted": [
+		"index-plain-and-encrypted": [
       "--password", "blue",
-      "--rendertiddler", "$:/core/save/all", "../output/dev-plain-and-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-encrypted.html", "text/plain",
       "--clearpassword"
+    ],
+    "plugin": [
+      "--render", "$:/plugins/ipfs", "tiddlywiki-ipfs-plugin.json", "text/plain", "$:/core/templates/json-tiddler"
     ]
   }
 }

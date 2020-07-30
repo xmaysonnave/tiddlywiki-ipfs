@@ -181,14 +181,14 @@ https://www.jsdelivr.com/
 Node Documentation:
 https://nodejs.org/en/docs/
 
-Yarn Documentation:
-https://classic.yarnpkg.com/en/docs/
-
 Npm Repository:
 https://www.npmjs.com/
 
 SriHash:
 https://www.srihash.org/
+
+Yarn Documentation:
+https://classic.yarnpkg.com/en/docs/
 
 ##### Install
 
@@ -318,13 +318,14 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 - eslint
 - eslint:fix
 - format
+- prepare
 - run-build-number
 - run-browserify
 - run-prepare-clone
 - run-prepare
-- test
+- snyk-monitor
 - snyk-protect
-- prepare
+- test
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 
@@ -332,7 +333,7 @@ Use the `build` script to build `IPFS with TiddlyWiki`.
 yarn build
 ```
 
-The `wiki` directory contains several runnable `TiddlyWikis`:
+The `production` directory contains production ready runnable `TiddlyWikis`:
 
 - [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
 - [dev.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/dev.html)
@@ -341,6 +342,8 @@ The `wiki` directory contains several runnable `TiddlyWikis`:
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
 - [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/tiddlywiki-ipfs-plugin.json)
+
+The `sample` directory contains several sample runnable `TiddlyWikis`:
 
 Use the `test` script to run the tests.
 

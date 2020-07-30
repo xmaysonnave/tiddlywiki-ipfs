@@ -1,10 +1,10 @@
 #!/bin/bash
 # metadata
-cp ./metadata/empty-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
+cp ./tiddlers/metadata/empty-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
 
 # build empty wiki
 yarn tiddlywiki build \
-  --output wiki \
+  --output production \
   --build \
   --verbose \
 || exit 1
@@ -13,10 +13,10 @@ yarn tiddlywiki build \
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # bluelightav tiddlers
-cp -R ./tiddlers/wiki/* ./build/tiddlers > /dev/null 2>&1
+cp -R ./tiddlers/editions/bluelightav.eth ./build/tiddlers/editions > /dev/null 2>&1
 
 # metadata
-cp ./metadata/bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
+cp ./tiddlers/metadata/bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
 
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
@@ -26,29 +26,29 @@ cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
 
 # build prod wiki
 yarn tiddlywiki build \
-  --output wiki \
+  --output production \
   --build \
   --verbose \
 || exit 1
 
 # dev bluelightav tiddlers
-cp -R ./tiddlers/dev/* ./build/tiddlers > /dev/null 2>&1
+cp -R ./tiddlers/editions/dev ./build/tiddlers/editions > /dev/null 2>&1
 
 # metadata
-cp ./metadata/dev-bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
+cp ./tiddlers/metadata/dev-bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
 
 # build dev wiki
 yarn tiddlywiki build \
-  --output wiki \
+  --output production \
   --build \
   --verbose \
 || exit 1
 
 # compress
-yarn gzipper compress --brotli wiki/empty.html output
-yarn gzipper compress --brotli wiki/dev.html output
-yarn gzipper compress --brotli wiki/index.html output
-yarn gzipper compress --brotli wiki/tiddlywiki-ipfs-plugin.json output
+yarn gzipper compress --brotli production/empty.html sample
+yarn gzipper compress --brotli production/dev.html sample
+yarn gzipper compress --brotli production/index.html sample
+yarn gzipper compress --brotli production/tiddlywiki-ipfs-plugin.json sample
 cd ..
 
 exit 0

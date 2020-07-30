@@ -14,21 +14,21 @@
 		"empty-encrypted": [
 			"--compress", "true",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../output/empty-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/empty-encrypted.html", "text/plain",
       "--clearpassword"
     ],
 		"empty-compressed": [
 			"--compress", "true",
-			"--rendertiddler", "$:/core/save/all", "../output/empty-plain.html", "text/plain"
+			"--rendertiddler", "$:/core/save/all", "../sample/empty-plain.html", "text/plain"
 		],
 		"empty-plain": [
 			"--compress", "false",
-			"--rendertiddler", "$:/core/save/all", "../output/empty-plain.html", "text/plain"
+			"--rendertiddler", "$:/core/save/all", "../sample/empty-plain.html", "text/plain"
 		],
 		"empty-plain-and-encrypted": [
 			"--compress", "false",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../output/empty-plain-and-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/empty-plain-and-encrypted.html", "text/plain",
       "--clearpassword"
     ]
 	}
