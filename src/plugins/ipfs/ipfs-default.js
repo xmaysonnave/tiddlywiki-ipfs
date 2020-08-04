@@ -78,7 +78,7 @@ IPFS Default
     var api = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/api')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.getFieldString('_source_uri')
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -90,7 +90,7 @@ IPFS Default
     if (api !== null) {
       tiddler = $tw.wiki.getTiddler(api)
       if (tiddler !== undefined && tiddler !== null) {
-        var text = tiddler.getFieldString('text')
+        var text = tiddler.getFieldString('_source_uri')
         text =
           text === undefined || text == null || text.trim() === ''
             ? null
@@ -113,7 +113,7 @@ IPFS Default
     var gateway = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/gateway')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.getFieldString('_source_uri')
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -125,7 +125,7 @@ IPFS Default
     if (gateway !== null) {
       tiddler = $tw.wiki.getTiddler(gateway)
       if (tiddler !== undefined && tiddler !== null) {
-        var text = tiddler.getFieldString('text')
+        var text = tiddler.getFieldString('_source_uri')
         text =
           text === undefined || text == null || text.trim() === ''
             ? null

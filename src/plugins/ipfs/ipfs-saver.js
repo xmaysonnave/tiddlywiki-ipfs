@@ -34,9 +34,9 @@ IPFS Saver
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      this.getLogger().info(`Origin base URL: ${base}`)
+      this.getLogger().info(`Origin Policy: ${base}`)
     } else {
-      this.getLogger().info(`Gateway base URL: ${base}`)
+      this.getLogger().info(`Gateway Policy: ${base}`)
     }
   }
 
@@ -64,7 +64,7 @@ IPFS Saver
       const wiki = $tw.ipfs.getDocumentUrl()
       var base = $tw.ipfs.getIpfsBaseUrl()
       var nextWiki = $tw.ipfs.getUrl(wiki, base)
-      // Unable to set nextWiki protocol
+      // https://github.com/jsdom/whatwg-url/issues/163#issuecomment-667732256
       base.pathname = nextWiki.pathname
       base.username = nextWiki.username
       base.password = nextWiki.password
@@ -225,6 +225,7 @@ IPFS Saver
       }
       callback(null)
       if (nextWiki.host !== wiki.host || nextWiki.pathname !== wiki.pathname) {
+        this.getLogger().info(`Loading: '${nextWiki.href}'`)
         window.location.assign(nextWiki.href)
       }
     } catch (error) {

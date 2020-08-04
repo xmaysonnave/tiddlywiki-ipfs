@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/commands/publickey.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: command
 
 Save publickey for crypto operations

@@ -1,6 +1,6 @@
 title: $:/core/ui/EditTemplate/fields
-modified: 20200528094915385
-tags: $:/tags/EditTemplate
+modified: 20200804094915385
+tags: $:/ipfs/core $:/tags/EditTemplate
 
 \define lingo-base() $:/language/EditTemplate/
 \define config-title()
@@ -12,7 +12,7 @@ $:/config/EditTemplateFields/Visibility/$(currentField)$
 \end
 
 \define current-tiddler-new-field-selector()
-[data-tiddler-title="$(currentTiddlerCSSescaped)$"] .tc-edit-field-add-name input
+[data-tiddler-title="$(currentTiddlerCSSescaped)$"] .tc-edit-field-add-name-wrapper input
 \end
 
 \define new-field-actions()

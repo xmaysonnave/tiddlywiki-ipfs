@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/modules/parsers/binaryparser.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: parser
 
 The binary parser parses a binary tiddler into a warning message and download link

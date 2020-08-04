@@ -200,7 +200,6 @@ import IpfsUrl from './ipfs-url'
    * https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer
    * https://developer.mozilla.org/en/JavaScript_typed_arrays/Uint8Array
    */
-  /*eslint no-useless-escape:"off"*/
   var Base64Binary = {
     _keyStr:
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -230,6 +229,7 @@ import IpfsUrl from './ipfs-url'
       var j = 0
       if (ab) ua = new Uint8Array(ab)
       else ua = new Uint8Array(bytes)
+      /*eslint no-useless-escape:"off"*/
       input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '')
       for (i = 0; i < bytes; i += 3) {
         //get the 3 octects in 4 ascii chars

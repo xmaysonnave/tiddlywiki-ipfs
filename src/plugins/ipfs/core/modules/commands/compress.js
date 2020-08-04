@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/commands/compress.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: command
 
 Set compression state

@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/macros/infosaver.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: macro
 
 Display saver info name

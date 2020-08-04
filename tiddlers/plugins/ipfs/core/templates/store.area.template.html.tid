@@ -1,4 +1,6 @@
 title: $:/core/templates/store.area.template.html
+modified: 20200804094915385
+tags: $:/ipfs/core
 
 <$reveal type="nomatch" state="$:/isCompressed" text="yes">
 <$reveal type="nomatch" state="$:/isEncrypted" text="yes">

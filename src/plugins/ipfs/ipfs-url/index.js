@@ -97,9 +97,7 @@ import { URL } from 'whatwg-url'
     } catch (error) {
       base = this.getIpfsGatewayUrl()
     }
-    const port =
-      base.port !== undefined && base.port !== null ? `:${base.port}` : ''
-    return this.getUrl(`${base.protocol}//${base.host}${port}`)
+    return this.getUrl(`${base.protocol}//${base.host}`)
   }
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {

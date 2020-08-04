@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/startup/compress.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: startup
 
 Compression handling
@@ -21,7 +22,8 @@ Compression handling
     // Ensure that $:/isCompressed is maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/isCompressed')) {
-        $tw.compress.updateCompressStateTiddler()
+        var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
+        $tw.compress.setCompressState(tiddler.fields.text)
       }
     })
   }

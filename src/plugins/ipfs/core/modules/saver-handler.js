@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/saver-handler.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: global
 
 The saver handler tracks changes to the store and handles saving the entire wiki via saver modules.

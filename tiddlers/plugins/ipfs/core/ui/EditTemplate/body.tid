@@ -1,6 +1,6 @@
 title: $:/core/ui/EditTemplate/body
-modified: 20200528094915385
-tags: $:/tags/EditTemplate
+modified: 20200804094915385
+tags: $:/ipfs/core $:/tags/EditTemplate
 
 \define lingo-base() $:/language/EditTemplate/Body/
 \define config-visibility-title()

@@ -25,7 +25,9 @@ const log = require('loglevel')
 const root = require('window-or-global')
 const { URL } = require('whatwg-url')
 const invalid = 'Wrong URL...'
-const baseFile = new URL('file:///work/tiddly/tiddlywiki-ipfs/wiki/index.html')
+const baseFile = new URL(
+  'file:///work/tiddly/tiddlywiki-ipfs/production/index.html'
+)
 const baseHttp = new URL('https://ipfs.bluelightav.org')
 const baseHttpPort = new URL('https://ipfs.bluelightav.org:443')
 const baseHttpNonDefaultPort = new URL('https://ipfs.bluelightav.org:4443')
@@ -37,7 +39,7 @@ const relative =
   '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
 
 beforeAll(() => {
-  root.logger = log
+  root.log = log
   log.setLevel('silent', false)
 })
 describe('WHATWG-URL', () => {
@@ -120,7 +122,8 @@ describe('WHATWG-URL', () => {
       parsed.protocol === 'file:' &&
         parsed.origin === 'null' &&
         parsed.host === '' &&
-        parsed.pathname === '/work/tiddly/tiddlywiki-ipfs/wiki/index.html' &&
+        parsed.pathname ===
+          '/work/tiddly/tiddlywiki-ipfs/production/index.html' &&
         parsed.href === baseFile.href &&
         parsed.toString() === baseFile.toString()
     ).toBeTruthy()

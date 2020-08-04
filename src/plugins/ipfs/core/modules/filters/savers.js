@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/filters/savers.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: filteroperator
 
 This Filter operator return savers title

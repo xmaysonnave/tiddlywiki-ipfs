@@ -1,5 +1,4 @@
 title: $:/ipfs/saver/api/http/localhost/5001
-modified: 20200528094915385
+modified: 20200804094915385
 tags: $:/ipfs/core $:/ipfs/saver/api
-
-http://127.0.0.1:5001
+_source_uri: http://localhost:5001

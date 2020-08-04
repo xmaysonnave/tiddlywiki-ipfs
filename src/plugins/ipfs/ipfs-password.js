@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-password.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: startup
 
 Compression handling

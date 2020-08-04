@@ -1,6 +1,6 @@
 title: $:/core/ui/ControlPanel/Saving/General
-modified: 20200528094915385
-tags: $:/tags/ControlPanel/Saving
+modified: 20200804094915385
+tags: $:/ipfs/core $:/tags/ControlPanel/Saving
 caption: {{$:/language/ControlPanel/Saving/General/Caption}}
 list-before:
 
@@ -19,6 +19,10 @@ list-before:
 <$radio tiddler="$:/config/AutoSave" value="yes"> <<lingo AutoSave/Enabled/Description>> </$radio>
 
 <$radio tiddler="$:/config/AutoSave" value="no"> <<lingo AutoSave/Disabled/Description>> </$radio>
+
+!! <$link to="$:/isCompressed"><<lingo Compression/Caption>></$link>
+
+<$checkbox tiddler="$:/isCompressed" field="text" checked="yes" unchecked="no" default="no"> <<lingo Compression/Description>> </$checkbox>
 
 !! <$link to="$:/config/Standford"><<lingo Encryption/Caption>></$link>
 

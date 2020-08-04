@@ -25,27 +25,7 @@
   ],
   "build": {
 		"dev": [
-			"--compress", "true",
-      "--publickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
 			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain"
-    ],
-		"dev-compressed": [
-			"--compress", "true",
-			"--rendertiddler", "$:/core/save/all", "../sample/dev-compressed.html", "text/plain"
-    ],
-		"dev-encrypted": [
-			"--compress", "true",
-      "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/dev-encrypted.html", "text/plain",
-      "--clearpassword"
-    ],
-    "dev-plain": [
-      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain.html", "text/plain"
-    ],
-    "dev-plain-and-encrypted": [
-      "--password", "blue",
-      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-encrypted.html", "text/plain",
-      "--clearpassword"
     ]
   }
 }

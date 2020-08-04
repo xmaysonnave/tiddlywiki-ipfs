@@ -1,5 +1,4 @@
 title: $:/ipfs/saver/gateway/http/localhost
-modified: 20200716094915385
+modified: 20200810494915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
-
-http://localhost:8080
+_source_uri: http://localhost:8080

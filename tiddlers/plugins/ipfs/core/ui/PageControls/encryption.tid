@@ -1,5 +1,6 @@
 title: $:/core/ui/Buttons/encryption
-tags: $:/tags/PageControls
+modified: 20200804094915385
+tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/locked-padlock}} {{$:/language/Buttons/Encryption/Caption}}
 description: {{$:/language/Buttons/Encryption/Hint}}
 

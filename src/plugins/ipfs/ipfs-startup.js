@@ -7,7 +7,6 @@ module-type: startup
 Startup initialisation
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/
@@ -19,25 +18,19 @@ Startup initialisation
 
   exports.startup = function () {
     var getLogger = function () {
-      if (window.logger === undefined || window.logger == null) {
-        try {
-          window.logger = $tw.modules.execute(
-            '$:/plugins/loglevel/loglevel.min.js'
-          )
-          if ($tw.utils.getIpfsVerbose()) {
-            window.logger.setLevel('info', false)
-          } else {
-            window.logger.setLevel('warn', false)
-          }
-          window.logger.info('loglevel is starting up...')
-        } catch (error) {
-          console.error(error)
-        }
-      }
       if (window.logger !== undefined && window.logger !== null) {
         return window.logger
       }
       return console
+    }
+    // Logger
+    if (window.logger !== undefined && window.logger !== null) {
+      if ($tw.utils.getIpfsVerbose()) {
+        window.logger.setLevel('info', false)
+      } else {
+        window.logger.setLevel('warn', false)
+      }
+      window.logger.info('loglevel is set up...')
     }
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')

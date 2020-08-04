@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/commands/savewikifolder.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: command
 
 Command to save the current wiki as a wiki folder

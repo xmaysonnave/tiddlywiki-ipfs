@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/modules/parsers/htmlparser.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: parser
 
 The HTML parser displays text as raw HTML

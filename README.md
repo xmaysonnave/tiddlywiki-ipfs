@@ -335,13 +335,13 @@ yarn build
 
 The `production` directory contains production ready runnable `TiddlyWikis`:
 
-- [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html)
-- [dev.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/dev.html)
-- [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/empty.html)
+- [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/index.html)
+- [dev.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/dev.html)
+- [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/empty.html)
 
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
-- [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/tiddlywiki-ipfs-plugin.json)
+- [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/tiddlywiki-ipfs-plugin.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 
@@ -359,7 +359,7 @@ This project is integrated with Travis CI:
 
 <a name="developer-running"/>
 
-Open [wiki/index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/wiki/index.html) file in your favorite browser.
+Open [production/index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/index.html) file in your favorite browser.
 
 ## Contributor Covenant Code of Conduct
 

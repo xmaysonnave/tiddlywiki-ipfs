@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/widgets/compress.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: widget
 
 Compress widget

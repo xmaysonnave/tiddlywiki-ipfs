@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/modules/widgets/image.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: widget
 
 The image widget displays an image referenced with an external URI or with a local tiddler title.

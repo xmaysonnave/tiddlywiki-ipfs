@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/modules/parsers/csvparser.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: parser
 
 The CSV text parser processes CSV files into a table wrapped in a scrollable widget

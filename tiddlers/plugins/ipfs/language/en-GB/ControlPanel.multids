@@ -42,6 +42,9 @@ Settings/Encryption/Caption: Encryption
 Settings/Encryption/Standford/Description: Use Standford encryption
 Settings/Encryption/Ethereum/Description: Use Ethereum public key
 
+Settings/Compression/Caption: Compression
+Settings/Compression/Description: Use Content Compression
+
 Settings/PreferredSaver/Caption: Preferred Saver
 
 Appearance/Hint: Ways to customise the appearance of your <b>~TiddlyWiki</b>.

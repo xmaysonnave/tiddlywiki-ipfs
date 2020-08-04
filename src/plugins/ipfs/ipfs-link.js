@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/modules/widgets/ipfs-link.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: widget
 
 IPFS link widget

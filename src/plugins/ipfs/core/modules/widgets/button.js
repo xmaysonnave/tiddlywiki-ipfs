@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/widgets/button.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: widget
 
 Button widget
@@ -95,12 +96,7 @@ Render this widget into the DOM
           handled = true
         }
         if (self.actions) {
-          var modifierKey = $tw.keyboardManager.getEventModifierKeyDescriptor(
-            event
-          )
-          self.invokeActionString(self.actions, self, event, {
-            modifier: modifierKey
-          })
+          self.invokeActionString(self.actions, self, event)
         }
         if (handled) {
           event.preventDefault()

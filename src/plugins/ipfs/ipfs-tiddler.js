@@ -105,14 +105,16 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleChangeEvent = function (changes) {
     // Gateway preference
+    const api = changes['$:/ipfs/saver/api']
+    if (api !== undefined && api.modified) {
+      this.getLogger().info(`IPFS API: ${$tw.ipfs.getIpfsApiUrl()}`)
+    }
+    // Gateway preference
     const gateway = changes['$:/ipfs/saver/gateway']
     if (gateway !== undefined && gateway.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'gateway') {
-        this.getLogger().info(
-          `Gateway Relative URL:
- ${base}`
-        )
+        this.getLogger().info(`Gateway Policy: ${base}`)
       }
     }
     // Policy preference
@@ -120,9 +122,9 @@ IPFS Tiddler
     if (policy !== undefined && policy.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-        this.getLogger().info(`Origin base URL: ${base}`)
+        this.getLogger().info(`Origin Policy: ${base}`)
       } else {
-        this.getLogger().info(`Gateway base URL: ${base}`)
+        this.getLogger().info(`Gateway Policy: ${base}`)
       }
     }
     // Unpin preference
