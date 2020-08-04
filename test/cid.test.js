@@ -19,7 +19,7 @@ const ed25519Libp2pKeyBase32V1 =
 const ed25519Base36V1 =
   'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
 beforeAll(() => {
-  root.log = log
+  root.logger = log
   log.setLevel('silent', false)
 })
 describe('CID', () => {

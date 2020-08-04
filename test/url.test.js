@@ -27,7 +27,7 @@ const { URL } = require('whatwg-url')
 const text = 'text'
 const resourceRelative = '../../import/cleanup/root.json'
 beforeAll(() => {
-  root.log = log
+  root.logger = log
   log.setLevel('silent', false)
 })
 describe('API URL', () => {

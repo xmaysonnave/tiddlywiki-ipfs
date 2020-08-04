@@ -7,6 +7,9 @@ arch: amd64
 node_js:
   - '12'
 
+after_success:
+  - snyk monitor
+
 script:
   - yarn build
   - yarn test
