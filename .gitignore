@@ -1,5 +1,6 @@
 build/
 node_modules/
 eth-sig-util/
+sample/
 tw5-locator/
 tw5-relink/

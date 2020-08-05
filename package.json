@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200804483",
+  "version": "v0.3.0-200805373",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -54,18 +54,18 @@
   },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
-    "@babel/runtime": "^7.11.0",
+    "@babel/runtime": "^7.11.1",
     "@metamask/detect-provider": "^1.1.0",
     "bs58": "^4.0.1",
     "buffer": "^5.6.0",
-    "cids": "^0.8.3",
+    "cids": "^1.0.0",
     "content-hash": "^2.5.2",
     "ipfs-provider": "^1.0.0",
     "whatwg-url": "^8.1.0",
     "window-or-global": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.0",
+    "@babel/core": "^7.11.1",
     "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.11.0",
@@ -101,7 +101,7 @@
     "prettier-standard": "^16.4.1",
     "pretty-quick": "^2.0.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.369.2",
+    "snyk": "^1.369.3",
     "tiddlywiki": "^5.1.22",
     "typescript": "^3.9.7"
   },

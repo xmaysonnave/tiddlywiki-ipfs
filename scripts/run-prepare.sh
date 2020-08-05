@@ -1,9 +1,11 @@
 #!/bin/bash
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
+rm -f -R ./sample > /dev/null 2>&1
 
 # build directories
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
+mkdir ./sample > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # default empty metadata
@@ -27,6 +29,9 @@ wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.1.0/dist/detect-pr
 cp ./eth-sig-util/eth-sig-util.min.js ./build/tiddlers/system > /dev/null 2>&1
 wget https://cdn.jsdelivr.net/npm/loglevel@1.6.8/dist/loglevel.min.js -O ./build/tiddlers/system/loglevel.min.js
 wget https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js -O ./build/tiddlers/system/pako.min.js
+
+# boot
+cp ./build/tiddlers/system/boot.js ./node_modules/tiddlywiki/boot
 
 # cp -R ./tiddlers/editions/empty ./build/editions > /dev/null 2>&1
 # cp -R ./tiddlers/editions/full ./build/editions > /dev/null 2>&1

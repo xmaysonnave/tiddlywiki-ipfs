@@ -890,7 +890,7 @@ var _boot = function ($tw) {
     var pako = $tw.node ? global.pako || require('pako') : window.pako
     var currentState = null
     this.setCompressState = function (state) {
-      currentState = state
+      currentState = state ? 'yes' : 'no'
       this.updateCompressStateTiddler()
     }
     this.updateCompressStateTiddler = function () {

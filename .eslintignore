@@ -3,6 +3,7 @@ build/
 eth-sig-util/
 node_modules/
 production/
+sample/
 tiddlers/
 tw5-locator/
 tw5-relink/

@@ -551,7 +551,7 @@ IPFS Action
       }
     }
     // Init Logger
-    window.logger = window.loggger.getLogger('eruda')
+    window.logger = window.logger.getLogger('eruda')
     if ($tw.utils.getIpfsVerbose()) {
       window.logger.setLevel('info', false)
     } else {
