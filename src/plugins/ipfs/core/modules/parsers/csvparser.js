@@ -123,8 +123,8 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
   }
 
   CsvParser.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }

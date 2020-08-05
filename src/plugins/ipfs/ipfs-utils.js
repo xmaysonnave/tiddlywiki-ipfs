@@ -188,8 +188,8 @@ IPFS utils
 
   exports.getContentType = function (title, type) {
     var getLogger = function () {
-      if (window.logger !== undefined && window.logger !== null) {
-        return window.logger
+      if (window.log !== undefined && window.log !== null) {
+        return window.log
       }
       return console
     }

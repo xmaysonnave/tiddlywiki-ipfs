@@ -4,6 +4,7 @@
   "author": "Xavier Maysonnave",
   "version": "v0.3.0",
   "license": "GPL-3.0-or-later",
+  "tags": "$:/ipfs/core",
   "core-version": ">=5.1.2",
   "_project_uri": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "plugin-type": "plugin",

@@ -29,7 +29,7 @@ const keys = [
   }
 ]
 beforeAll(() => {
-  root.logger = log
+  root.log = log
   log.setLevel('silent', false)
 })
 describe('IPNS', () => {

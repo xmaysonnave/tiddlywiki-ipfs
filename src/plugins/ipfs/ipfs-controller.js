@@ -55,8 +55,8 @@ IPFS Controller
   }
 
   IpfsController.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }

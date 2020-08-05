@@ -121,8 +121,8 @@ The audio parser parses an audio tiddler into an embeddable HTML element
   }
 
   AudioParser.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }

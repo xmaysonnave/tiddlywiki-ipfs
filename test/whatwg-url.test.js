@@ -39,7 +39,7 @@ const relative =
   '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
 
 beforeAll(() => {
-  root.logger = log
+  root.log = log
   log.setLevel('silent', false)
 })
 describe('WHATWG-URL', () => {

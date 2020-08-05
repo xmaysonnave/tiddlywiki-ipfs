@@ -26,8 +26,8 @@ IPFS Action
   }
 
   IpfsAction.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }
@@ -551,14 +551,14 @@ IPFS Action
       }
     }
     // Init Logger
-    window.logger = window.logger.getLogger('eruda')
+    window.log = window.log.getLogger('eruda')
     if ($tw.utils.getIpfsVerbose()) {
-      window.logger.setLevel('info', false)
+      window.log.setLevel('info', false)
     } else {
-      window.logger.setLevel('warn', false)
+      window.log.setLevel('warn', false)
     }
     // Log
-    window.logger.info('Mobile console has been loaded...')
+    window.log.info('Mobile console has been loaded...')
     // Show
     window.eruda.show()
     window.eruda.show('console')

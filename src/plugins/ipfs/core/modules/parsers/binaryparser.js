@@ -158,8 +158,8 @@ The binary parser parses a binary tiddler into a warning message and download li
   }
 
   BinaryParser.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }

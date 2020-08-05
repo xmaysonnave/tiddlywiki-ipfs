@@ -18,19 +18,19 @@ Startup initialisation
 
   exports.startup = function () {
     var getLogger = function () {
-      if (window.logger !== undefined && window.logger !== null) {
-        return window.logger
+      if (window.log !== undefined && window.log !== null) {
+        return window.log
       }
       return console
     }
     // Logger
-    if (window.logger !== undefined && window.logger !== null) {
+    if (window.log !== undefined && window.log !== null) {
       if ($tw.utils.getIpfsVerbose()) {
-        window.logger.setLevel('info', false)
+        window.log.setLevel('info', false)
       } else {
-        window.logger.setLevel('warn', false)
+        window.log.setLevel('warn', false)
       }
-      window.logger.info('loglevel is set up...')
+      window.log.info('loglevel is set up...')
     }
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')

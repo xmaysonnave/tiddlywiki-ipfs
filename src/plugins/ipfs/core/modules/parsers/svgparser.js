@@ -121,8 +121,8 @@ The image parser parses an image into an embeddable HTML element
   }
 
   SvgParser.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }

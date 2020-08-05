@@ -63,8 +63,8 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.getLogger = function () {
-    if (window.logger !== undefined && window.logger !== null) {
-      return window.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }
@@ -139,11 +139,11 @@ IPFS Tiddler
     // Verbose preference
     const verbose = changes['$:/ipfs/saver/verbose']
     if (verbose !== undefined && verbose.modified) {
-      if (window.logger !== undefined && window.logger !== null) {
+      if (window.log !== undefined && window.log !== null) {
         if ($tw.utils.getIpfsVerbose()) {
-          window.logger.setLevel('info', false)
+          window.log.setLevel('info', false)
         } else {
-          window.logger.setLevel('warn', false)
+          window.log.setLevel('warn', false)
         }
       }
     }

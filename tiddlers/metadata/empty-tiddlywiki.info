@@ -33,7 +33,7 @@
     ],
     "plugin": [
       "--render",
-        "$:/plugins/ipfs",
+        "[all[shadows+tiddlers]tag[$:/ipfs/core]]",
         "tiddlywiki-ipfs-plugin.json",
         "text/plain",
         "$:/core/templates/json-tiddler",

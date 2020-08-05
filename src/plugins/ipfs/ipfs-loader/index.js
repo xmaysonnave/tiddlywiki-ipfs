@@ -10,8 +10,8 @@ import root from 'window-or-global'
   }
 
   IpfsLoader.prototype.getLogger = function () {
-    if (root.logger !== undefined && root.logger !== null) {
-      return root.logger
+    if (window.log !== undefined && window.log !== null) {
+      return window.log
     }
     return console
   }
