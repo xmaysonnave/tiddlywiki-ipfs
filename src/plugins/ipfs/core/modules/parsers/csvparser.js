@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/modules/parsers/csvparser.js
+title: $:/core/modules/parsers/csvparser.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: parser

@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/modules/widgets/image.js
+title: $:/core/modules/widgets/image.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: widget

@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/modules/parsers/htmlparser.js
+title: $:/core/modules/parsers/htmlparser.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: parser

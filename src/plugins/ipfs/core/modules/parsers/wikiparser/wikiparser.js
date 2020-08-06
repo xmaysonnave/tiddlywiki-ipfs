@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/modules/parsers/wikiparser/wikiparser.js
+title: $:/core/modules/parsers/wikiparser/wikiparser.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: parser

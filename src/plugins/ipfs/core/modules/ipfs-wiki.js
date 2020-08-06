@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/ipfs-wiki.js
+title: $:/core/modules/ipfs-wiki.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: wikimethod
