@@ -150,7 +150,7 @@ IPFS Saver
         }
       }
       // Upload  current document
-      $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length}`)
+      $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
       // Add
       const { added } = await $tw.ipfs.addToIpfs(text)
       // Default next

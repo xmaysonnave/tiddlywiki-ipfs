@@ -296,7 +296,7 @@ IPFS Wrapper
       const { hash, size } = await this.ipfsLibrary.add(ipfs, content)
       const pathname = '/' + ipfsKeyword + '/' + hash
       const url = this.ipfsUrl.normalizeUrl(pathname)
-      this.getLogger().info(`Successfully added ${size}:
+      this.getLogger().info(`Successfully added: ${size} bytes,
  ${url}`)
       return {
         added: hash,

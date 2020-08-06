@@ -20,8 +20,7 @@ tags: bluelightav.eth
 <meta name="format-detection" content="telephone=no" />
 <meta name="copyright" content="`{{$:/core/copyright.txt}}`"/>
 <meta name="Dwebsite" content="bluelightav.eth.eth"/>
-<link id="faviconLink" href="https://bafkreihi27cp35a6gyzwgi3qljmfhnpmio5ysyatpmvfaip7fd3lem7ksq.ipfs.dweb.link" crossorigin="anonymous" rel="prefetch" sizes="32x32" type="image/png"/>
-<link href="https://bafkreie3w4fbd4u2u2hligtimgcgqfmzdqr4gfyyu7rxtmodjc5gqjsutq.ipfs.dweb.link" crossorigin="anonymous" rel="prefetch" sizes="16x16" type="image/png"/>
+<link id="faviconLink" href="https://bafkreihi27cp35a6gyzwgi3qljmfhnpmio5ysyatpmvfaip7fd3lem7ksq.ipfs.dweb.link" crossorigin="anonymous" rel="icon" sizes="32x32" type="image/png"/>
 <title>`{{$:/core/wiki/title}}`</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->
 
