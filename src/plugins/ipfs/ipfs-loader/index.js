@@ -102,7 +102,7 @@ import root from 'window-or-global'
           URL.revokeObjectURL(script.src)
           script.src = ''
         } catch (error) {
-          this.getLogger().error(error)
+          self.getLogger().error(error)
         }
       }
       script.onload = () => {
@@ -177,7 +177,7 @@ import root from 'window-or-global'
             } else {
               result = this.response
             }
-            this.getLogger().info(
+            self.getLogger().info(
               `[${xhr.status}] Loaded:
  ${url}`
             )

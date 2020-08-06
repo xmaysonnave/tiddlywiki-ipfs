@@ -51,7 +51,7 @@ The plain text parser processes blocks of source text into a degenerate parse tr
     var element = {
       type: 'codeblock',
       attributes: {
-        code: { type: 'string', value: '' },
+        code: { type: 'string', value: text },
         language: { type: 'string', value: type }
       }
     }
