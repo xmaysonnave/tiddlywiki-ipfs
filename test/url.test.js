@@ -28,7 +28,8 @@ const text = 'text'
 const resourceRelative = '../../import/cleanup/root.json'
 beforeAll(() => {
   root.log = log
-  log.setLevel('silent', false)
+  const logger = log.getLogger('default')
+  logger.setLevel('silent', false)
 })
 describe('API URL', () => {
   it('Valid Default', () => {

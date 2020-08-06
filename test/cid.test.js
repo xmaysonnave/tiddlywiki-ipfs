@@ -20,7 +20,8 @@ const ed25519Base36V1 =
   'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
 beforeAll(() => {
   root.log = log
-  log.setLevel('silent', false)
+  const logger = log.getLogger('default')
+  logger.setLevel('silent', false)
 })
 describe('CID', () => {
   it('Undefined', async () => {

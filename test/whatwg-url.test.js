@@ -40,7 +40,8 @@ const relative =
 
 beforeAll(() => {
   root.log = log
-  log.setLevel('silent', false)
+  const logger = log.getLogger('default')
+  logger.setLevel('silent', false)
 })
 describe('WHATWG-URL', () => {
   it('Undefined URL', () => {
