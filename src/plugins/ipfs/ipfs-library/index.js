@@ -17,14 +17,10 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
+    return this.ipfsBundle.getLogger()
   }
 
   IpfsLibrary.prototype.loadIpfsHttpClient = async function () {
-    const self = this
     if (typeof root.IpfsHttpClient === 'undefined') {
       try {
         await this.ipfsLoader.loadIpfsHttpLibrary()
@@ -32,7 +28,7 @@ import root from 'window-or-global'
           return
         }
       } catch (error) {
-        self.getLogger().error(error)
+        this.getLogger().error(error)
       }
       // Should not happen...
       throw new Error('Unavailable IPFS HTTP Client library...')
@@ -77,7 +73,6 @@ import root from 'window-or-global'
 
   // IPFS companion
   IpfsLibrary.prototype.getWindowIpfs = async function () {
-    const self = this
     try {
       this.getLogger().info('Processing connection to IPFS Companion...')
       const { ipfs, provider } = await getIpfs({
@@ -88,7 +83,7 @@ import root from 'window-or-global'
         provider: provider
       }
     } catch (error) {
-      self.getLogger().error(error)
+      this.getLogger().error(error)
     }
     throw new Error('Unreachable IPFS Companion...')
   }

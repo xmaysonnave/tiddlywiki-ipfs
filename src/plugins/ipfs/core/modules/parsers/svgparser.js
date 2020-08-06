@@ -50,7 +50,6 @@ The image parser parses an image into an embeddable HTML element
   const name = 'ipfs-svgparser'
 
   var SvgParser = function (type, text, options) {
-    var self = this
     var value = 'data:image/svg+xml,'
     var element = {
       type: 'element',
@@ -101,13 +100,13 @@ The image parser parses an image into an embeddable HTML element
                   }
                 })
                 .catch(error => {
-                  self.getLogger().error(error)
+                  $tw.ipfs.getLogger().error(error)
                   $tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           })
       } else {
         element.attributes.src = {
@@ -118,13 +117,6 @@ The image parser parses an image into an embeddable HTML element
     }
     // Return the parsed tree
     this.tree = [element]
-  }
-
-  SvgParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   exports['image/svg+xml'] = SvgParser

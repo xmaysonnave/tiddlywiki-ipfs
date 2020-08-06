@@ -10,10 +10,7 @@ import root from 'window-or-global'
   }
 
   IpfsLoader.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
+    return this.ipfsBundle.getLogger()
   }
 
   // https://www.srihash.org/
@@ -105,7 +102,7 @@ import root from 'window-or-global'
           URL.revokeObjectURL(script.src)
           script.src = ''
         } catch (error) {
-          self.getLogger().error(error)
+          this.getLogger().error(error)
         }
       }
       script.onload = () => {
@@ -180,7 +177,7 @@ import root from 'window-or-global'
             } else {
               result = this.response
             }
-            self.getLogger().info(
+            this.getLogger().info(
               `[${xhr.status}] Loaded:
  ${url}`
             )

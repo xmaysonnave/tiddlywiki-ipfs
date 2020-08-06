@@ -8,8 +8,8 @@ IPFS Bundle
 
 \*/
 import CID from 'cids'
-import root from 'window-or-global'
 import { URL } from 'whatwg-url'
+import root from 'window-or-global'
 import EnsLibrary from './ens-library'
 import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
@@ -30,8 +30,13 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
+    if (root.log !== undefined && root.log !== null) {
+      const loggers = root.log.getLoggers()
+      const log = loggers.eruda
+      if (log !== undefined && log !== null) {
+        return log
+      }
+      return loggers.default
     }
     return console
   }
@@ -42,11 +47,11 @@ import IpfsUrl from './ipfs-url'
       return
     }
     this.ipfsLoader = new IpfsLoader(this)
-    this.ethereumLibrary = new EthereumLibrary(this.ipfsLoader)
+    this.ethereumLibrary = new EthereumLibrary(this)
     this.ethereumLibrary.init()
     this.ensLibrary = new EnsLibrary(this)
     this.ipfsLibrary = new IpfsLibrary(this)
-    this.ipfsUrl = new IpfsUrl()
+    this.ipfsUrl = new IpfsUrl(this)
     // Init once
     this.once = true
   }

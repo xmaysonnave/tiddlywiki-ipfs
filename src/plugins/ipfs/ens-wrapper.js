@@ -20,13 +20,6 @@ ENS Wrapper
     this.ensLibrary = ensLibrary
   }
 
-  EnsWrapper.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   EnsWrapper.prototype.getContentHash = async function (domain, web3) {
     try {
       var { content, protocol } = await this.ensLibrary.getContentHash(
@@ -46,7 +39,7 @@ ENS Wrapper
         protocol: null
       }
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       throw new Error('Unable to fetch ENS domain content...')
     }
   }
@@ -67,7 +60,7 @@ ENS Wrapper
       ) {
         throw error
       }
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       throw new Error('Unable to set ENS domain content...')
     }
   }

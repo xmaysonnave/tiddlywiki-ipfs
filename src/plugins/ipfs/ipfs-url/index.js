@@ -6,13 +6,12 @@ import { URL } from 'whatwg-url'
   /*eslint no-unused-vars:"off"*/
   const name = 'ipfs-url'
 
-  var IpfsUrl = function () {}
+  var IpfsUrl = function (ipfsBundle) {
+    this.ipfsBundle = ipfsBundle
+  }
 
   IpfsUrl.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
+    return this.ipfsBundle.getLogger()
   }
 
   IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {

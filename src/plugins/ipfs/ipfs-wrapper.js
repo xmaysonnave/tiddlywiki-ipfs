@@ -28,10 +28,7 @@ IPFS Wrapper
   }
 
   IpfsWrapper.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
+    return this.ipfsBundle.getLogger()
   }
 
   IpfsWrapper.prototype.getWindowIpfsClient = async function () {

@@ -84,13 +84,6 @@ IPFS Import
 
   var IpfsImport = function () {}
 
-  IpfsImport.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   IpfsImport.prototype.removeTiddlers = function (keys, title) {
     var removed = 0
     for (var key of this.loaded.keys()) {
@@ -101,7 +94,7 @@ IPFS Import
       if (imported.delete(title)) {
         const msg = 'Remove:'
         const field = ''
-        this.getLogger().info(
+        $tw.ipfs.getLogger().info(
           `${msg} ${field}"${title}"
  ${resolvedKey}`
         )
@@ -212,7 +205,7 @@ IPFS Import
       const url = $tw.ipfs.getIpfsBaseUrl()
       url.hash = tiddler.fields.title
       if (canonicalUri !== null || importUri !== null) {
-        this.getLogger().info('*** Begin Import ***')
+        $tw.ipfs.getLogger().info('*** Begin Import ***')
         this.rootUri = importUri !== null ? importUri : canonicalUri
         if (importUri !== null) {
           const {
@@ -250,25 +243,33 @@ IPFS Import
         }
         const { processed, removed: processedRemoved } = this.processImported()
         this.importTiddlers()
-        this.getLogger().info(`*** Loaded: ${this.loaded.size} Resource(s) ***`)
-        this.getLogger().info(
-          `*** Loaded: ${this.isEmpty.length} Empty Resource(s) ***`
-        )
-        this.getLogger().info(
-          `*** Failed to Load: ${this.notLoaded.length} Resource(s) ***`
-        )
-        this.getLogger().info(
-          `*** Failed to Resolve: ${this.notResolved.length} URL(s) ***`
-        )
-        this.getLogger().info(
-          `*** Loaded: ${loadedAdded}, Removed: ${loadedRemoved} Tiddler(s) ***`
-        )
-        this.getLogger().info(
-          `*** Processed: ${processed}, Removed: ${processedRemoved} Tiddler(s) ***`
-        )
-        this.getLogger().info(
-          `*** Added: ${this.added.length}, Updated: ${this.updated.length} Tiddler(s) ***`
-        )
+        $tw.ipfs
+          .getLogger()
+          .info(`*** Loaded: ${this.loaded.size} Resource(s) ***`)
+        $tw.ipfs
+          .getLogger()
+          .info(`*** Loaded: ${this.isEmpty.length} Empty Resource(s) ***`)
+        $tw.ipfs
+          .getLogger()
+          .info(`*** Failed to Load: ${this.notLoaded.length} Resource(s) ***`)
+        $tw.ipfs
+          .getLogger()
+          .info(`*** Failed to Resolve: ${this.notResolved.length} URL(s) ***`)
+        $tw.ipfs
+          .getLogger()
+          .info(
+            `*** Loaded: ${loadedAdded}, Removed: ${loadedRemoved} Tiddler(s) ***`
+          )
+        $tw.ipfs
+          .getLogger()
+          .info(
+            `*** Processed: ${processed}, Removed: ${processedRemoved} Tiddler(s) ***`
+          )
+        $tw.ipfs
+          .getLogger()
+          .info(
+            `*** Added: ${this.added.length}, Updated: ${this.updated.length} Tiddler(s) ***`
+          )
       }
       // Update Wiki
       var reportAdded = ''
@@ -404,10 +405,10 @@ IPFS Import
         $tw.wiki.addTiddler(updatedTiddler)
       }
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
     }
-    this.getLogger().info('*** End Import ***')
+    $tw.ipfs.getLogger().info('*** End Import ***')
     this.host = null
     this.loaded = null
     this.isEmpty = null
@@ -442,7 +443,7 @@ IPFS Import
       } catch (error) {
         const msg = 'Failed to Resolve:'
         this.notResolved.push(url)
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(
           name,
           alertFieldFailed`${msg} "${field}" from ${parentUrl}">${parentTitle}</a>`
@@ -520,7 +521,7 @@ IPFS Import
           if (title === undefined || title == null || title.trim() === '') {
             const msg = 'Ignore Unknown:'
             const field = 'Title'
-            this.getLogger().info(
+            $tw.ipfs.getLogger().info(
               `${msg} "${field}"
  ${resolvedKey}
  from "${parentField}", "${parentTitle}"
@@ -535,7 +536,7 @@ IPFS Import
           }
           if (imported.get(title) !== undefined) {
             const msg = 'Ignore Duplicate:'
-            this.getLogger().info(
+            $tw.ipfs.getLogger().info(
               `${msg} "${title}"
  ${resolvedKey}
  from "${parentField}", "${parentTitle}"
@@ -556,7 +557,7 @@ IPFS Import
           if (info === undefined || info == null) {
             const msg = 'Unknown:'
             const field = 'Content-Type'
-            this.getLogger().info(
+            $tw.ipfs.getLogger().info(
               `${msg} "${field}": "${title}"
  ${resolvedKey}`
             )
@@ -640,7 +641,7 @@ IPFS Import
         this.isEmpty.push(key)
         const msg = 'Empty:'
         const field = 'Resource'
-        this.getLogger().info(
+        $tw.ipfs.getLogger().info(
           `${msg} "${field}"
  ${resolvedKey}
  from "${parentField}", "${parentTitle}"
@@ -655,13 +656,13 @@ IPFS Import
       this.notLoaded.push(key)
       const msg = 'Failed to Load:'
       const field = 'Resource'
-      this.getLogger().info(
+      $tw.ipfs.getLogger().info(
         `${msg} "${field}"
  ${resolvedKey}
  from "${parentField}", "${parentTitle}"
  ${parentUrl}`
       )
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(
         name,
         alertFailed`${msg} ${resolvedKey}">${field}</a> from "${parentField}", ${parentUrl}">${parentTitle}</a>`
@@ -706,7 +707,7 @@ IPFS Import
         } else if (canonicalUri == null && importUri !== null) {
           const msg = 'Missing:'
           const field = '_canonical_uri'
-          this.getLogger().info(
+          $tw.ipfs.getLogger().info(
             `${msg} "${field}" from ${title}"
  ${resolvedKey}`
           )
@@ -726,7 +727,7 @@ IPFS Import
             if (key === canonicalKey) {
               const msg = 'Cycle:'
               const field = '_canonical_uri'
-              this.getLogger().info(
+              $tw.ipfs.getLogger().info(
                 `${msg} "${field}" from ${title}"
  ${resolvedKey}`
               )
@@ -757,7 +758,7 @@ IPFS Import
                 if (canonicalKey === importKey) {
                   const msg = 'Matching:'
                   const field = '"_canonical_uri" and "_import_uri"'
-                  this.getLogger().info(
+                  $tw.ipfs.getLogger().info(
                     `${msg} ${field} from "${title}"
  ${resolvedKey}`
                   )
@@ -768,7 +769,7 @@ IPFS Import
                 } else if (key === importKey) {
                   const msg = 'Cycle:'
                   const field = '_import_uri'
-                  this.getLogger().info(
+                  $tw.ipfs.getLogger().info(
                     `${msg} "${field}" from "${title}"
  ${resolvedKey}`
                   )
@@ -837,7 +838,7 @@ IPFS Import
     if (canonicalUri !== null) {
       const msg = 'Inconsistency:'
       const field = '_canonical_uri'
-      this.getLogger().info(
+      $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${resolvedKey}
  and ${parentResolvedKey}`
@@ -856,7 +857,7 @@ IPFS Import
     if (importUri !== null) {
       const msg = 'Inconsistency:'
       const field = '_import_uri'
-      this.getLogger().info(
+      $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${resolvedKey}
  and ${parentResolvedKey}`
@@ -915,7 +916,7 @@ IPFS Import
     ) {
       const msg = 'Inconsistency:'
       const field = '_canonical_uri'
-      this.getLogger().info(
+      $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${importResolvedKey}
  and ${parentResolvedKey}`
@@ -936,7 +937,7 @@ IPFS Import
     if (targetCanonicalUri == null && nextImportUri !== null) {
       const msg = 'Missing:'
       const field = '_canonical_uri'
-      this.getLogger().info(
+      $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${importResolvedKey}`
       )
@@ -960,7 +961,7 @@ IPFS Import
         if (canonicalKey === nextImportKey) {
           const msg = 'Matching:'
           const field = '"_canonical_uri" and "_import_uri"'
-          this.getLogger().info(
+          $tw.ipfs.getLogger().info(
             `${msg} ${field} from "${title}"
  ${importResolvedKey}`
           )
@@ -971,7 +972,7 @@ IPFS Import
         } else if (keys.indexOf(nextImportKey) !== -1) {
           const msg = 'Cycle:'
           const field = '_import_uri'
-          this.getLogger().info(
+          $tw.ipfs.getLogger().info(
             `${msg} "${field}" from "${title}"
  ${importResolvedKey}`
           )

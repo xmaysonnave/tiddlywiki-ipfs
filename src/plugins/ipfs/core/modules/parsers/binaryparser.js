@@ -130,13 +130,13 @@ The binary parser parses a binary tiddler into a warning message and download li
                   }
                 })
                 .catch(error => {
-                  self.getLogger().error(error)
+                  $tw.ipfs.getLogger().error(error)
                   $tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           })
       } else if (text) {
         link.attributes.href = {
@@ -155,13 +155,6 @@ The binary parser parses a binary tiddler into a warning message and download li
       children: [warn, link]
     }
     this.tree = [element]
-  }
-
-  BinaryParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   exports['application/octet-stream'] = BinaryParser

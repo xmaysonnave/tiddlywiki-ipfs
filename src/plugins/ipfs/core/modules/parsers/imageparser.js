@@ -50,7 +50,6 @@ The image parser parses an image into an embeddable HTML element
   var name = 'ipfs-imageparser'
 
   var ImageParser = function (type, text, options) {
-    var self = this
     var value = `data:${type};base64,`
     var element = {
       type: 'element',
@@ -101,13 +100,13 @@ The image parser parses an image into an embeddable HTML element
                   }
                 })
                 .catch(error => {
-                  self.getLogger().error(error)
+                  $tw.ipfs.getLogger().error(error)
                   $tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           })
       } else if (text) {
         element.attributes.src = { type: 'string', value: `${value}${text}` }
@@ -115,13 +114,6 @@ The image parser parses an image into an embeddable HTML element
     }
     // Return the parsed tree
     this.tree = [element]
-  }
-
-  ImageParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   exports['image/gif'] = ImageParser

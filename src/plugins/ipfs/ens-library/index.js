@@ -22,10 +22,7 @@ import root from 'window-or-global'
   }
 
   EnsLibrary.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
+    return this.ipfsBundle.getLogger()
   }
 
   EnsLibrary.prototype.getENSRegistry = function () {

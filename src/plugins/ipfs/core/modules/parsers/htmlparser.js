@@ -100,13 +100,13 @@ The HTML parser displays text as raw HTML
                   }
                 })
                 .catch(error => {
-                  self.getLogger().error(error)
+                  $tw.ipfs.getLogger().error(error)
                   $tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           })
       } else if (text) {
         src = value + encodeURIComponent(text)
@@ -122,13 +122,6 @@ The HTML parser displays text as raw HTML
         }
       }
     ]
-  }
-
-  HtmlParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   exports['text/html'] = HtmlParser

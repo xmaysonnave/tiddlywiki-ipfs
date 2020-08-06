@@ -50,7 +50,6 @@ The PDF parser embeds a PDF viewer
   const name = 'ipfs-pdfparser'
 
   var PdfParser = function (type, text, options) {
-    var self = this
     var value = 'data:application/pdf;base64,'
     var element = {
       type: 'element',
@@ -101,13 +100,13 @@ The PDF parser embeds a PDF viewer
                   }
                 })
                 .catch(error => {
-                  self.getLogger().error(error)
+                  $tw.ipfs.getLogger().error(error)
                   $tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           })
       } else if (text) {
         element.attributes.src = { type: 'string', value: `${value}${text}` }
@@ -115,13 +114,6 @@ The PDF parser embeds a PDF viewer
     }
     // Return the parsed tree
     this.tree = [element]
-  }
-
-  PdfParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   exports['application/pdf'] = PdfParser

@@ -62,13 +62,6 @@ IPFS Tiddler
     this.once = false
   }
 
-  IpfsTiddler.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   IpfsTiddler.prototype.init = function () {
     // Init once
     if (this.once) {
@@ -107,14 +100,14 @@ IPFS Tiddler
     // Gateway preference
     const api = changes['$:/ipfs/saver/api']
     if (api !== undefined && api.modified) {
-      this.getLogger().info(`IPFS API: ${$tw.ipfs.getIpfsApiUrl()}`)
+      $tw.ipfs.getLogger().info(`IPFS API: ${$tw.ipfs.getIpfsApiUrl()}`)
     }
     // Gateway preference
     const gateway = changes['$:/ipfs/saver/gateway']
     if (gateway !== undefined && gateway.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'gateway') {
-        this.getLogger().info(`Gateway Policy: ${base}`)
+        $tw.ipfs.getLogger().info(`Gateway Policy: ${base}`)
       }
     }
     // Policy preference
@@ -122,18 +115,18 @@ IPFS Tiddler
     if (policy !== undefined && policy.modified) {
       const base = $tw.ipfs.getIpfsBaseUrl()
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-        this.getLogger().info(`Origin Policy: ${base}`)
+        $tw.ipfs.getLogger().info(`Origin Policy: ${base}`)
       } else {
-        this.getLogger().info(`Gateway Policy: ${base}`)
+        $tw.ipfs.getLogger().info(`Gateway Policy: ${base}`)
       }
     }
     // Unpin preference
     const unpin = changes['$:/ipfs/saver/unpin']
     if (unpin !== undefined && unpin.modified) {
       if ($tw.utils.getIpfsUnpin()) {
-        this.getLogger().info('Unpin previous IPFS content...')
+        $tw.ipfs.getLogger().info('Unpin previous IPFS content...')
       } else {
-        this.getLogger().info('Do not unpin previous IPFS content...')
+        $tw.ipfs.getLogger().info('Do not unpin previous IPFS content...')
       }
     }
     // Verbose preference
@@ -175,13 +168,12 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.ipfsPin = function (value, field) {
-    const self = this
     $tw.ipfs
       .resolveUrl(true, true, value)
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info(
+          $tw.ipfs.getLogger().info(
             `Pinning: "${field}"
  ${resolvedUrl}`
           )
@@ -197,13 +189,13 @@ IPFS Tiddler
               }
             })
             .catch(error => {
-              self.getLogger().error(error)
+              $tw.ipfs.getLogger().error(error)
               $tw.utils.alert(name, error.message)
             })
         }
       })
       .catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
   }
@@ -254,13 +246,12 @@ IPFS Tiddler
     if (field == null) {
       return
     }
-    const self = this
     $tw.ipfs
       .resolveUrl(true, true, value)
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          self.getLogger().info(
+          $tw.ipfs.getLogger().info(
             `Unpinning: "${field}
  ${resolvedUrl}`
           )
@@ -277,14 +268,14 @@ IPFS Tiddler
                 }
               })
               .catch(error => {
-                self.getLogger().error(error)
+                $tw.ipfs.getLogger().error(error)
                 $tw.utils.alert(name, error.message)
               })
           }
         }
       })
       .catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
   }
@@ -322,7 +313,7 @@ IPFS Tiddler
         }
       }
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
     }
     return tiddler
@@ -345,7 +336,6 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
-    const self = this
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
     const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
@@ -381,7 +371,7 @@ IPFS Tiddler
     ) {
       var ipfsImport = new IpfsImport()
       ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
     } else {
@@ -435,7 +425,7 @@ IPFS Tiddler
             resolvedUrl: oldResolvedUrl
           } = await $tw.ipfs.resolveUrl(false, true, oldValue)
         } catch (error) {
-          this.getLogger().error(error)
+          $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
           return tiddler
         }
@@ -458,12 +448,12 @@ IPFS Tiddler
               addTags: ['$:/isAttachment', '$:/isEmbedded'],
               fields: [{ key: 'text', value: data }]
             })
-            this.getLogger().info(
+            $tw.ipfs.getLogger().info(
               `Embed attachment: ${data.length}
  ${oldResolvedUrl}`
             )
           } catch (error) {
-            this.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
             return tiddler
           }
@@ -497,7 +487,7 @@ IPFS Tiddler
           resolvedUrl
         } = await $tw.ipfs.resolveUrl(false, true, value)
       } catch (error) {
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
         return tiddler
       }
@@ -540,7 +530,7 @@ IPFS Tiddler
         } = await $tw.ipfs.resolveUrl(false, true, oldValue)
       } catch (error) {
         // We cannot resolve the previous value
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       }
       // Process _canonical_uri

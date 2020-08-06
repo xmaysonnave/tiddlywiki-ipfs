@@ -52,7 +52,6 @@ wikiparser
   var name = 'ipfs-wikiparser'
 
   var WikiParser = function (type, text, options) {
-    var self = this
     this.wiki = options.wiki
     // Check for an externally linked tiddler
     if (
@@ -78,7 +77,7 @@ wikiparser
         ipfsImport
           .import(canonicalUri, importUri, options.tiddler)
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           })
         text = $tw.language.getRawString('LazyLoadingWarning')
@@ -149,13 +148,6 @@ wikiparser
       topBranch.push.apply(topBranch, this.parseBlocks())
     }
     // Return the parsed tree
-  }
-
-  WikiParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   /*

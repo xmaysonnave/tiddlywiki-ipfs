@@ -60,13 +60,6 @@ IPFS link widget
    */
   IpfsLinkWidget.prototype = new Widget()
 
-  IpfsLinkWidget.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   /*
    * Render this widget into the DOM
    */
@@ -100,7 +93,7 @@ IPFS link widget
           }
         })
         .catch(error => {
-          self.getLogger().error(error)
+          $tw.ipfs.getLogger().error(error)
         })
     }
   }
@@ -291,7 +284,6 @@ IPFS link widget
   }
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
-    const self = this
     const value = this.url !== undefined ? this.url : this.value
     $tw.ipfs
       .resolveUrl(true, true, value)
@@ -302,7 +294,7 @@ IPFS link widget
         }
       })
       .catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
     event.preventDefault()

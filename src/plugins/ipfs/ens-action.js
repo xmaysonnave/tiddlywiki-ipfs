@@ -22,13 +22,6 @@ ENS Action
     this.once = false
   }
 
-  EnsAction.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   EnsAction.prototype.init = function () {
     // Init once
     if (this.once) {
@@ -85,13 +78,13 @@ ENS Action
       return false
     }
     try {
-      this.getLogger().info(`ENS domain: ${ensDomain}`)
+      $tw.ipfs.getLogger().info(`ENS domain: ${ensDomain}`)
       const { resolvedUrl } = await $tw.ipfs.resolveEns(ensDomain)
       if (resolvedUrl !== null) {
         window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
       }
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -114,7 +107,7 @@ ENS Action
     try {
       var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki)
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -155,7 +148,7 @@ ENS Action
         `/${ipnsKeyword}/${ipnsName}`
       )
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -163,7 +156,6 @@ ENS Action
   }
 
   EnsAction.prototype.publishToEns = async function (ensDomain, cid) {
-    const self = this
     var account = null
     var ensCid = null
     var ensResolvedUrl = null
@@ -189,7 +181,7 @@ ENS Action
       }
     } catch (error) {
       if (error.name !== 'OwnerError') {
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
       }
       $tw.utils.alert(name, error.message)
       return false
@@ -213,13 +205,13 @@ ENS Action
               error.name !== 'RejectedUserRequest' &&
               error.name !== 'UnauthorizedUserAccount'
             ) {
-              self.getLogger().error(error)
+              $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)
           })
       })
       .catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
     return true

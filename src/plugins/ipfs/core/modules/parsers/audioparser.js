@@ -50,7 +50,6 @@ The audio parser parses an audio tiddler into an embeddable HTML element
   var name = 'ipfs-audioparser'
 
   var AudioParser = function (type, text, options) {
-    var self = this
     var value = `data:${type};base64,`
     var element = {
       type: 'element',
@@ -104,13 +103,13 @@ The audio parser parses an audio tiddler into an embeddable HTML element
                   }
                 })
                 .catch(error => {
-                  self.getLogger().error(error)
+                  $tw.ipfs.getLogger().error(error)
                   $tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           })
       } else if (text) {
         element.attributes.src = { type: 'string', value: `${value}${text}` }
@@ -118,13 +117,6 @@ The audio parser parses an audio tiddler into an embeddable HTML element
     }
     // Return the parsed tree
     this.tree = [element]
-  }
-
-  AudioParser.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   exports['audio/ogg'] = AudioParser

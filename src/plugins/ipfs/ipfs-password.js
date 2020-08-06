@@ -63,7 +63,7 @@ Compression handling
           $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
           if (error.name !== 'RejectedUserRequest') {
-            this.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
           }
           $tw.utils.alert(name, error.message)
           $tw.crypto.setEncryptionKey(null)
@@ -90,7 +90,7 @@ Compression handling
             $tw.crypto.setEncryptionKey(encryptionKey)
           } catch (error) {
             if (error.name !== 'RejectedUserRequest') {
-              this.getLogger().error(error)
+              $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)
             $tw.crypto.setEncryptionKey(null)

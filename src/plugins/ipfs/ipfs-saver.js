@@ -30,21 +30,14 @@ IPFS Saver
     $tw.ipfs = new IpfsController()
     $tw.ipfs.init()
     // Log
-    this.getLogger().info('ipfs-saver is starting up...')
+    $tw.ipfs.getLogger().info('ipfs-saver is starting up...')
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
-      this.getLogger().info(`Origin Policy: ${base}`)
+      $tw.ipfs.getLogger().info(`Origin Policy: ${base}`)
     } else {
-      this.getLogger().info(`Gateway Policy: ${base}`)
+      $tw.ipfs.getLogger().info(`Gateway Policy: ${base}`)
     }
-  }
-
-  IpfsSaver.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
   }
 
   IpfsSaver.prototype.save = async function (text, method, callback, options) {
@@ -77,7 +70,7 @@ IPFS Saver
           await $tw.ipfs.requestToUnpin(cid)
         }
       } catch (error) {
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         callback(error)
         return true
       }
@@ -92,7 +85,7 @@ IPFS Saver
               wiki
             )
           } catch (error) {
-            this.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           }
         } else {
@@ -111,7 +104,7 @@ IPFS Saver
             callback(new Error('Unknown default IPNS identifiers...'))
             return true
           }
-          this.getLogger().info('Processing default IPNS identifiers...')
+          $tw.ipfs.getLogger().info('Processing default IPNS identifiers...')
           var identifier = ipnsKey
           if (identifier == null) {
             identifier = ipnsName
@@ -123,7 +116,7 @@ IPFS Saver
               `/${ipnsKeyword}/${identifier}`
             )
           } catch (error) {
-            this.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           }
         }
@@ -157,7 +150,7 @@ IPFS Saver
         }
       }
       // Upload  current document
-      this.getLogger().info(`Uploading wiki: ${text.length}`)
+      $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length}`)
       // Add
       const { added } = await $tw.ipfs.addToIpfs(text)
       // Default next
@@ -166,7 +159,7 @@ IPFS Saver
       try {
         await $tw.ipfs.pinToIpfs(added)
       } catch (error) {
-        this.getLogger().warn(error)
+        $tw.ipfs.getLogger().warn(error)
         $tw.utils.alert(name, error.message)
       }
       // Publish to IPNS
@@ -177,7 +170,7 @@ IPFS Saver
           nextWiki.pathname = `/${ipnsKeyword}/${ipnsKey}`
           $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
         } catch (error) {
-          this.getLogger().warn(error)
+          $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
           $tw.ipfs.requestToPin(ipnsCid)
         }
@@ -194,7 +187,7 @@ IPFS Saver
           )
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
-          this.getLogger().warn(error)
+          $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
           $tw.ipfs.requestToPin(ensCid)
         }
@@ -207,7 +200,7 @@ IPFS Saver
             const unpin = $tw.ipfs.unpin[i]
             await $tw.ipfs.unpinFromIpfs(unpin)
           } catch (error) {
-            this.getLogger().warn(error)
+            $tw.ipfs.getLogger().warn(error)
             $tw.utils.alert(name, error.message)
           }
         }
@@ -219,13 +212,13 @@ IPFS Saver
           const pin = $tw.ipfs.pin[i]
           await $tw.ipfs.pinToIpfs(pin)
         } catch (error) {
-          this.getLogger().warn(error)
+          $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
         }
       }
       callback(null)
       if (nextWiki.host !== wiki.host || nextWiki.pathname !== wiki.pathname) {
-        this.getLogger().info(`Loading: '${nextWiki.href}'`)
+        $tw.ipfs.getLogger().info(`Loading: '${nextWiki.href}'`)
         window.location.assign(nextWiki.href)
       }
     } catch (error) {
@@ -234,7 +227,7 @@ IPFS Saver
         error.name !== 'RejectedUserRequest' &&
         error.name !== 'UnauthorizedUserAccount'
       ) {
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
       }
       callback(error)
       return true

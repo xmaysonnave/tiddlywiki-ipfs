@@ -25,13 +25,6 @@ IPFS Action
     this.ipnsKey = $tw.utils.getIpfsIpnsKey()
   }
 
-  IpfsAction.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   IpfsAction.prototype.init = function () {
     // Init once
     if (this.once) {
@@ -91,7 +84,6 @@ IPFS Action
     var ipnsName = null
     var normalizedUrl = null
     var web3 = null
-    const self = this
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
     var exportUri = tiddler.getFieldString('_export_uri')
@@ -116,7 +108,7 @@ IPFS Action
       }
     } catch (error) {
       if (error.name !== 'OwnerError') {
-        this.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
       }
       $tw.utils.alert(name, error.message)
       return false
@@ -127,11 +119,11 @@ IPFS Action
     if (content == null) {
       return false
     }
-    this.getLogger().info(`Uploading Tiddler: ${content.length}`)
+    $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}`)
     try {
       var { added } = await $tw.ipfs.addToIpfs(content)
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -172,19 +164,19 @@ IPFS Action
                     }
                   })
                   .catch(error => {
-                    self.getLogger().error(error)
+                    $tw.ipfs.getLogger().error(error)
                     $tw.utils.alert(name, error.message)
                   })
               }
             })
             .catch(error => {
               $tw.ipfs.requestToUnpin(added)
-              self.getLogger().error(error)
+              $tw.ipfs.getLogger().error(error)
               $tw.utils.alert(name, error.message)
             })
         })
         .catch(error => {
-          self.getLogger().error(error)
+          $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
         })
     } else if (
@@ -220,7 +212,7 @@ IPFS Action
                     }
                   })
                   .catch(error => {
-                    self.getLogger().error(error)
+                    $tw.ipfs.getLogger().error(error)
                     $tw.utils.alert(name, error.message)
                   })
               }
@@ -232,13 +224,13 @@ IPFS Action
                 error.name !== 'RejectedUserRequest' &&
                 error.name !== 'UnauthorizedUserAccount'
               ) {
-                self.getLogger().error(error)
+                $tw.ipfs.getLogger().error(error)
               }
               $tw.utils.alert(name, error.message)
             })
         })
         .catch(error => {
-          self.getLogger().error(error)
+          $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
         })
     }
@@ -264,13 +256,13 @@ IPFS Action
       if (content == null) {
         return false
       }
-      this.getLogger().info(
-        `Uploading attachment content: ${content.length} bytes`
-      )
+      $tw.ipfs
+        .getLogger()
+        .info(`Uploading attachment content: ${content.length} bytes`)
       var { added } = await $tw.ipfs.addToIpfs(content)
       $tw.ipfs.requestToPin(added)
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -321,7 +313,7 @@ IPFS Action
     try {
       var { ipnsKey } = await $tw.ipfs.renameIpnsName(this.ipnsName, ipnsName)
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -352,7 +344,7 @@ IPFS Action
     try {
       var ipnsKey = await $tw.ipfs.generateIpnsKey(ipnsName)
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -372,7 +364,6 @@ IPFS Action
   IpfsAction.prototype.handleRemoveIpnsKey = async function (event) {
     var ipnsKey = null
     var normalizedUrl = null
-    const self = this
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
       ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
@@ -387,7 +378,7 @@ IPFS Action
         ipnsName
       )
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -401,12 +392,12 @@ IPFS Action
             $tw.utils.alert(name, 'Succesfully removed Ipns key....')
           })
           .catch(error => {
-            self.getLogger().error(error)
+            $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           })
       })
       .catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/name')
@@ -444,7 +435,7 @@ IPFS Action
     try {
       var { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsName)
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -480,7 +471,7 @@ IPFS Action
         `${ipnsKeyword}://${ipnsName}`
       )
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -521,7 +512,7 @@ IPFS Action
       // Load eruda
       await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -551,14 +542,14 @@ IPFS Action
       }
     }
     // Init Logger
-    window.log = window.log.getLogger('eruda')
+    const log = window.log.getLogger('eruda')
     if ($tw.utils.getIpfsVerbose()) {
-      window.log.setLevel('info', false)
+      log.setLevel('info', false)
     } else {
-      window.log.setLevel('warn', false)
+      log.setLevel('warn', false)
     }
     // Log
-    window.log.info('Mobile console has been loaded...')
+    log.info('Mobile console has been loaded...')
     // Show
     window.eruda.show()
     window.eruda.show('console')
@@ -574,7 +565,6 @@ IPFS Action
     var ipnsKey = null
     var wikiCid = null
     var wikiIpnsKey = null
-    const self = this
     const wiki = $tw.ipfs.getDocumentUrl()
     var ipnsName = $tw.utils.getIpfsIpnsName()
     ipnsName =
@@ -597,7 +587,7 @@ IPFS Action
         `${ipnsKeyword}://${ipnsName}`
       )
     } catch (error) {
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
@@ -617,7 +607,7 @@ IPFS Action
         $tw.utils.alert(name, 'Successfully Published IPNS name: ' + ipnsName)
       })
       .catch(error => {
-        self.getLogger().error(error)
+        $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
     return true
@@ -655,7 +645,7 @@ IPFS Action
         try {
           var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue)
         } catch (error) {
-          this.getLogger().error(error)
+          $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
           return null
         }
@@ -696,7 +686,7 @@ IPFS Action
     // Check
     if (tiddler === undefined || tiddler == null) {
       const error = new Error('Unknown Tiddler...')
-      this.getLogger().error(error)
+      $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return null
     }
@@ -708,12 +698,12 @@ IPFS Action
     if (child) {
       // Links
       const linked = $tw.wiki.getTiddlerLinks(title)
-      this.getLogger().info(`Found ${linked.length} Tiddler link(s)...`)
+      $tw.ipfs.getLogger().info(`Found ${linked.length} Tiddler link(s)...`)
       // Transcluded
       const transcluded = this.transcludeContent(title)
-      this.getLogger().info(
-        `Found ${transcluded.length} transcluded Tiddler reference(s)...`
-      )
+      $tw.ipfs
+        .getLogger()
+        .info(`Found ${transcluded.length} transcluded Tiddler reference(s)...`)
       const filtered = linked.concat(transcluded)
       // Process filtered content
       for (var i = 0; i < filtered.length; i++) {

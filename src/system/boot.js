@@ -781,7 +781,7 @@ var _boot = function ($tw) {
         window.log !== undefined &&
         window.log !== null
       ) {
-        return window.log
+        return window.log.getLogger('default')
       }
       return console
     }
@@ -907,7 +907,7 @@ var _boot = function ($tw) {
         window.log !== undefined &&
         window.log !== null
       ) {
-        return window.log
+        return window.log.getLogger('default')
       }
       return console
     }
@@ -3377,8 +3377,9 @@ var _boot = function ($tw) {
     if ($tw.browser) {
       if (window.log !== undefined && window.log !== null) {
         try {
-          window.log.setLevel('info', false)
-          window.log.info('loglevel is starting up...')
+          const log = window.log.getLogger('default')
+          log.setLevel('info', false)
+          log.info('loglevel is starting up...')
         } catch (error) {
           console.error(error)
         }

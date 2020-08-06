@@ -76,13 +76,6 @@ Inherit from the base widget class
 */
   ImageWidget.prototype = new Widget()
 
-  ImageWidget.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
-  }
-
   /*
 Render this widget into the DOM
 */
@@ -90,7 +83,6 @@ Render this widget into the DOM
     this.parentDomNode = parent
     this.computeAttributes()
     this.execute()
-    var self = this
     // Create element
     // Determine what type of image it is
     var tiddler = this.wiki.getTiddler(this.imageSource)
@@ -166,7 +158,7 @@ Render this widget into the DOM
                         }
                       })
                       .catch(error => {
-                        self.getLogger().error(error)
+                        $tw.ipfs.getLogger().error(error)
                         $tw.utils.alert(name, error.message)
                       })
                     break
@@ -182,7 +174,7 @@ Render this widget into the DOM
                         }
                       })
                       .catch(error => {
-                        self.getLogger().error(error)
+                        $tw.ipfs.getLogger().error(error)
                         $tw.utils.alert(name, error.message)
                       })
                     break
@@ -198,7 +190,7 @@ Render this widget into the DOM
                         }
                       })
                       .catch(error => {
-                        self.getLogger().error(error)
+                        $tw.ipfs.getLogger().error(error)
                         $tw.utils.alert(name, error.message)
                       })
                     break
@@ -206,7 +198,7 @@ Render this widget into the DOM
               }
             })
             .catch(error => {
-              self.getLogger().error(error)
+              $tw.ipfs.getLogger().error(error)
             })
         } else {
           // Just trigger loading of the tiddler

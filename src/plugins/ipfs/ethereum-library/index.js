@@ -7,8 +7,9 @@ import detectEthereumProvider from '@metamask/detect-provider'
   const name = 'ethereum-library'
 
   // https://github.com/ensdomains/resolvers
-  var EthereumLibrary = function (ipfsLoader) {
-    this.ipfsLoader = ipfsLoader
+  var EthereumLibrary = function (ipfsBundle) {
+    this.ipfsBundle = ipfsBundle
+    this.ipfsLoader = ipfsBundle.ipfsLoader
     this.network = {
       0x1: 'Ethereum Main Network: "Mainnet", chainId: "0x1"',
       0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3"',
@@ -28,10 +29,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
   }
 
   EthereumLibrary.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      return window.log
-    }
-    return console
+    return this.ipfsBundle.getLogger()
   }
 
   EthereumLibrary.prototype.getEthereumProvider = async function () {
