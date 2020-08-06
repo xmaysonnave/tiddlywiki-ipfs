@@ -151,16 +151,12 @@ import root from 'window-or-global'
       // Process
       var buffer = Buffer.from(content)
       this.getLogger().info('Processing IPFS add...')
-      // 1 - https://github.com/ipfs/go-ipfs/issues/5683
+      // https://github.com/ipfs/go-ipfs/issues/5683
       // default chunker: "size-262144"
       // chunker: "rabin-262144-524288-1048576"
-      // 2 - TODO: small content generates a wrong cid when cidVersion: 1 is set:
-      // Not a 'dag-pb' but a 'raw' multicodec instead
-      // We generate a V0 and convert it to a V1
-      // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
       const added = await client.add(buffer, {
         chunker: 'rabin-262144-524288-1048576',
-        cidVersion: 0,
+        cidVersion: 1,
         hashAlg: 'sha2-256',
         pin: false,
         rawLeaves: true
@@ -177,7 +173,7 @@ import root from 'window-or-global'
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
-        hash: this.ipfsBundle.cidToCidV1(added.path, 'ipfs', true),
+        hash: added.path,
         size: added.size
       }
     }
