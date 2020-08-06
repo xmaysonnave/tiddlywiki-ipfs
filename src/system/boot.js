@@ -775,13 +775,12 @@ var _boot = function ($tw) {
     var currentPassword = null
     var currentPublicKey = null
     var getLogger = function () {
-      if (
-        $tw.browser &&
-        window !== undefined &&
-        window.log !== undefined &&
-        window.log !== null
-      ) {
-        return window.log.getLogger('default')
+      if ($tw.browser) {
+        if ($tw.ipfs) {
+          return $tw.ipfs.getLogger()
+        } else {
+          return window.log.getLogger('default')
+        }
       }
       return console
     }
@@ -901,13 +900,12 @@ var _boot = function ($tw) {
     var pako = $tw.node ? global.pako || require('pako') : window.pako
     var currentState = null
     var getLogger = function () {
-      if (
-        $tw.browser &&
-        window !== undefined &&
-        window.log !== undefined &&
-        window.log !== null
-      ) {
-        return window.log.getLogger('default')
+      if ($tw.browser) {
+        if ($tw.ipfs) {
+          return $tw.ipfs.getLogger()
+        } else {
+          return window.log.getLogger('default')
+        }
       }
       return console
     }
@@ -3375,14 +3373,12 @@ var _boot = function ($tw) {
 
   $tw.boot.boot = function (callback) {
     if ($tw.browser) {
-      if (window.log !== undefined && window.log !== null) {
-        try {
-          const log = window.log.getLogger('default')
-          log.setLevel('info', false)
-          log.info('loglevel is starting up...')
-        } catch (error) {
-          console.error(error)
-        }
+      try {
+        const logger = window.log.getLogger('default')
+        logger.setLevel('info', false)
+        logger.info('loglevel is starting up...')
+      } catch (error) {
+        console.error(error)
       }
     }
     // Initialise crypto object

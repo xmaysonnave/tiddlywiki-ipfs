@@ -1,4 +1,5 @@
 title: $:/ipfs/saver/gateway/https/gateway.pinata.cloud
 modified: 20200804094915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
-_source_uri: https://gateway.pinata.cloud
+
+https://gateway.pinata.cloud

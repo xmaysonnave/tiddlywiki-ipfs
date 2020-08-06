@@ -1,4 +1,5 @@
 title: $:/ipfs/saver/gateway/https/ipfs.eternum.io
 modified: 20200804094915385
 tags: $:/ipfs/core $:/ipfs/saver/gateway
-_source_uri: https://ipfs.eternum.io
+
+https://ipfs.eternum.io

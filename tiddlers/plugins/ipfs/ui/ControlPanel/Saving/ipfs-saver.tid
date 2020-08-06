@@ -54,8 +54,8 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <td width="20%">''<$link to="$:/ipfs/saver/api"><<lingo ApiUrl>></$link>''</td>
 <td width="80%">
 <$select tiddler="$:/ipfs/saver/api" default="$:/ipfs/saver/api/https/ipfs.infura.io/5001" class="tc-edit-texteditor">
-<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]sort[_source_uri]]">
-<option value=<<currentTiddler>>><$transclude field="_source_uri"><$text text=<<currentTiddler>>/></$transclude></option>
+<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/api]!has[draft.of]sort[]]">
+<option value=<<currentTiddler>>><$transclude><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>
 </$select>
 </td>
@@ -64,8 +64,8 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <td width="20%">''<$link to="$:/ipfs/saver/gateway"><<lingo GatewayUrl>></$link>''</td>
 <td width="80%">
 <$select tiddler="$:/ipfs/saver/gateway" default="$:/ipfs/saver/gateway/https/ipfs.infura.io" class="tc-edit-texteditor">
-<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]sort[_source_uri]]">
-<option value=<<currentTiddler>>><$transclude field="_source_uri"><$text text=<<currentTiddler>>/></$transclude></option>
+<$list filter="[all[shadows+tiddlers]tag[$:/ipfs/saver/gateway]!has[draft.of]sort[]]">
+<option value=<<currentTiddler>>><$transclude><$text text=<<currentTiddler>>/></$transclude></option>
 </$list>
 </$select>
 </td>
