@@ -151,15 +151,19 @@ import root from 'window-or-global'
       // Process
       var buffer = Buffer.from(content)
       this.getLogger().info('Processing IPFS add...')
-      // https://github.com/ipfs/go-ipfs/issues/5683
+      // 1 - https://github.com/ipfs/go-ipfs/issues/5683
       // default chunker: "size-262144"
       // chunker: "rabin-262144-524288-1048576"
+      // 2 - TODO: small content generates an incnsistent cid when cidVersion: 1 is set.
+      // Not a 'dag-pb' but a 'raw' multicodec instead
+      // We generate a V0 and convert it to a V1
+      // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
       const added = await client.add(buffer, {
         chunker: 'rabin-262144-524288-1048576',
-        cidVersion: 1,
+        cidVersion: 0,
         hashAlg: 'sha2-256',
         pin: false,
-        rawLeaves: true
+        rawLeaves: false
       })
       // Check
       if (
@@ -173,7 +177,7 @@ import root from 'window-or-global'
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
-        hash: added.path,
+        hash: this.ipfsBundle.cidToCidV1(added.path, 'ipfs', true),
         size: added.size
       }
     }
@@ -340,7 +344,6 @@ import root from 'window-or-global'
     throw new Error('Undefined IPFS key list...')
   }
 
-  // Only rsa is supported yet...
   // https://github.com/ipfs/interface-js-ipfs-core/blob/master/SPEC/KEY.md#keygen
   // https://github.com/libp2p/js-libp2p-crypto/issues/145
   IpfsLibrary.prototype.genKey = async function (client, ipnsName) {
