@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# build empty wiki
+# empty edition
+cp -R ./editions/empty/* ./build > /dev/null 2>&1
+
+# build
 yarn tiddlywiki build \
   --output production \
   --build \
   --verbose \
 || exit 1
 
-# bluelightav tiddlers
-cp -R ./tiddlers/editions/bluelightav.eth ./build/tiddlers > /dev/null 2>&1
-
-# metadata
-cp ./tiddlers/metadata/bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
+# bluelightav edition
+cp -R ./editions/bluelightav.eth/* ./build > /dev/null 2>&1
 
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
@@ -19,20 +19,17 @@ cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # tw5-relink
 cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
 
-# build prod wiki
+# build
 yarn tiddlywiki build \
   --output production \
   --build \
   --verbose \
 || exit 1
 
-# dev bluelightav tiddlers
-cp -R ./tiddlers/editions/dev ./build/tiddlers > /dev/null 2>&1
+# dev bluelightav edition
+cp -R ./editions/dev/* ./build > /dev/null 2>&1
 
-# metadata
-cp ./tiddlers/metadata/dev-bluelightav-tiddlywiki.info ./build/tiddlywiki.info > /dev/null 2>&1
-
-# build dev wiki
+# build
 yarn tiddlywiki build \
   --output production \
   --build \

@@ -15,7 +15,7 @@ var _boot = function ($tw) {
 
   // Include bootprefix if we're not given module data
   if (!$tw) {
-    $tw = require('./bootprefix.js.js').bootprefix()
+    $tw = require('./bootprefix.js').bootprefix()
   }
 
   $tw.utils = $tw.utils || Object.create(null)
@@ -36,25 +36,25 @@ var _boot = function ($tw) {
     $tw.boot.logMessages.push(str)
   }
 
-  /*
-  Check if an object has a property
-  */
+  /**
+   * Check if an object has a property
+   */
   $tw.utils.hop = function (object, property) {
     return object
       ? Object.prototype.hasOwnProperty.call(object, property)
       : false
   }
 
-  /*
-  Determine if a value is an array
-  */
+  /**
+   * Determine if a value is an array
+   */
   $tw.utils.isArray = function (value) {
     return Object.prototype.toString.call(value) === '[object Array]'
   }
 
-  /*
-  Check if an array is equal by value and by reference.
-  */
+  /**
+   * Check if an array is equal by value and by reference.
+   */
   $tw.utils.isArrayEqual = function (array1, array2) {
     if (array1 === array2) {
       return true
@@ -69,11 +69,11 @@ var _boot = function ($tw) {
     })
   }
 
-  /*
-  Push entries onto an array, removing them first if they already exist in the array
-    array: array to modify (assumed to be free of duplicates)
-    value: a single value to push or an array of values to push
-  */
+  /**
+   * Push entries onto an array, removing them first if they already exist in the array
+   * array: array to modify (assumed to be free of duplicates)
+   * value: a single value to push or an array of values to push
+   */
   $tw.utils.pushTop = function (array, value) {
     var t, p
     if ($tw.utils.isArray(value)) {
@@ -109,16 +109,16 @@ var _boot = function ($tw) {
     return array
   }
 
-  /*
-  Determine if a value is a date
-  */
+  /**
+   * Determine if a value is a date
+   */
   $tw.utils.isDate = function (value) {
     return Object.prototype.toString.call(value) === '[object Date]'
   }
 
-  /*
-  Iterate through all the own properties of an object or array. Callback is invoked with (element,title,object)
-  */
+  /**
+   * Iterate through all the own properties of an object or array. Callback is invoked with (element,title,object)
+   */
   $tw.utils.each = function (object, callback) {
     var next, f, length
     if (object) {
@@ -142,21 +142,21 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Helper for making DOM elements
-  tag: tag name
-  options: see below
-  Options include:
-  namespace: defaults to http://www.w3.org/1999/xhtml
-  attributes: hashmap of attribute values
-  style: hashmap of styles
-  text: text to add as a child node
-  children: array of further child nodes
-  innerHTML: optional HTML for element
-  class: class name(s)
-  document: defaults to current document
-  eventListeners: array of event listeners (this option won't work until $tw.utils.addEventListeners() has been loaded)
-  */
+  /**
+   * Helper for making DOM elements
+   * tag: tag name
+   * options: see below
+   * Options include:
+   * namespace: defaults to http://www.w3.org/1999/xhtml
+   * attributes: hashmap of attribute values
+   * style: hashmap of styles
+   * text: text to add as a child node
+   * children: array of further child nodes
+   * innerHTML: optional HTML for element
+   * class: class name(s)
+   * document: defaults to current document
+   * eventListeners: array of event listeners (this option won't work until $tw.utils.addEventListeners() has been loaded)
+   */
   $tw.utils.domMaker = function (tag, options) {
     var doc = options.document || document
     var element = doc.createElementNS(
@@ -187,9 +187,9 @@ var _boot = function ($tw) {
     return element
   }
 
-  /*
-  Display an error and exit
-  */
+  /**
+   * Display an error and exit
+   */
   $tw.utils.error = function (err) {
     // Prepare the error message
     var errHeading =
@@ -240,9 +240,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Use our custom error handler if we're in the browser
-  */
+  /**
+   * Use our custom error handler if we're in the browser
+   */
   if ($tw.boot.tasks.trapErrors) {
     window.onerror = function (errorMsg, url, lineNumber) {
       $tw.utils.error(errorMsg)
@@ -250,9 +250,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Extend an object with the properties from a list of source objects
-  */
+  /**
+   * Extend an object with the properties from a list of source objects
+   */
   $tw.utils.extend = function (object /*, sourceObjectList */) {
     $tw.utils.each(Array.prototype.slice.call(arguments, 1), function (source) {
       if (source) {
@@ -264,9 +264,10 @@ var _boot = function ($tw) {
     return object
   }
 
-  /*
-  Fill in any null or undefined properties of an object with the properties from a list of source objects. Each property that is an object is called recursively
-  */
+  /**
+   * Fill in any null or undefined properties of an object with the properties from a list of source objects.
+   * Each property that is an object is called recursively
+   */
   $tw.utils.deepDefaults = function (object /*, sourceObjectList */) {
     $tw.utils.each(Array.prototype.slice.call(arguments, 1), function (source) {
       if (source) {
@@ -283,9 +284,9 @@ var _boot = function ($tw) {
     return object
   }
 
-  /*
-  Convert "&amp;" to &, "&nbsp;" to nbsp, "&lt;" to <, "&gt;" to > and "&quot;" to "
-  */
+  /**
+   * Convert "&amp;" to &, "&nbsp;" to nbsp, "&lt;" to <, "&gt;" to > and "&quot;" to "
+   */
   $tw.utils.htmlDecode = function (s) {
     return s
       .toString()
@@ -296,17 +297,18 @@ var _boot = function ($tw) {
       .replace(/&amp;/gm, '&')
   }
 
-  /*
-  Get the browser location.hash. We don't use location.hash because of the way that Firefox auto-urldecodes it (see http://stackoverflow.com/questions/1703552/encoding-of-window-location-hash)
-  */
+  /**
+   * Get the browser location.hash. We don't use location.hash because of the way that Firefox auto-urldecodes it
+   * (see http://stackoverflow.com/questions/1703552/encoding-of-window-location-hash)
+   */
   $tw.utils.getLocationHash = function () {
     var parts = window.location.href.split('#')
     return '#' + (parts.length > 1 ? parts[1] : '')
   }
 
-  /*
-  Pad a string to a given length with "0"s. Length defaults to 2
-  */
+  /**
+   * Pad a string to a given length with "0"s. Length defaults to 2
+   */
   $tw.utils.pad = function (value, length) {
     length = length || 2
     var s = value.toString()
@@ -414,11 +416,11 @@ var _boot = function ($tw) {
     return fields
   }
 
-  /*
-  Resolves a source filepath delimited with `/` relative to a specified absolute root filepath.
-  In relative paths, the special folder name `..` refers to immediate parent directory, and the
-  name `.` refers to the current directory
-  */
+  /**
+   * Resolves a source filepath delimited with `/` relative to a specified absolute root filepath.
+   * In relative paths, the special folder name `..` refers to immediate parent directory, and the
+   * name `.` refers to the current directory
+   */
   $tw.utils.resolvePath = function (sourcepath, rootpath) {
     // If the source path starts with ./ or ../ then it is relative to the root
     if (sourcepath.substr(0, 2) === './' || sourcepath.substr(0, 3) === '../') {
@@ -453,9 +455,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Parse a semantic version string into its constituent parts -- see https://semver.org
-  */
+  /**
+   * Parse a semantic version string into its constituent parts -- see https://semver.org
+   */
   $tw.utils.parseVersion = function (version) {
     /*eslint no-useless-escape:"off"*/
     var match = /^v?((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?(?:\+([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?$/.exec(
@@ -475,10 +477,10 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Returns +1 if the version string A is greater than the version string B, 0 if they are the same, and +1 if B is greater than A.
-  Missing or malformed version strings are parsed as 0.0.0
-  */
+  /**
+   * Returns +1 if the version string A is greater than the version string B, 0 if they are the same, and +1 if B is greater than A.
+   * Missing or malformed version strings are parsed as 0.0.0
+   */
   $tw.utils.compareVersions = function (versionStringA, versionStringB) {
     var defaultVersion = {
       major: 0,
@@ -509,19 +511,19 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Returns true if the version string A is greater than the version string B. Returns true if the versions are the same
-  */
+  /**
+   * Returns true if the version string A is greater than the version string B. Returns true if the versions are the same
+   */
   $tw.utils.checkVersions = function (versionStringA, versionStringB) {
     return $tw.utils.compareVersions(versionStringA, versionStringB) !== -1
   }
 
-  /*
-  Register file type information
-  options: {flags: flags,deserializerType: deserializerType}
-    flags:"image" for image types
-    deserializerType: defaults to type if not specified
-  */
+  /**
+   * Register file type information
+   * options: {flags: flags,deserializerType: deserializerType}
+   * flags:"image" for image types
+   * deserializerType: defaults to type if not specified
+   */
   $tw.utils.registerFileType = function (type, encoding, extension, options) {
     options = options || {}
     if ($tw.utils.isArray(extension)) {
@@ -540,18 +542,18 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Given an extension, always access the $tw.config.fileExtensionInfo
-  using a lowercase extension only.
-  */
+  /**
+   * Given an extension, always access the $tw.config.fileExtensionInfo
+   *  using a lowercase extension only.
+   */
   $tw.utils.getFileExtensionInfo = function (ext) {
     return ext ? $tw.config.fileExtensionInfo[ext.toLowerCase()] : null
   }
 
-  /*
-  Given an extension, get the correct encoding for that file.
-  defaults to utf8
-  */
+  /**
+   * Given an extension, get the correct encoding for that file.
+   * defaults to utf8
+   */
   $tw.utils.getTypeEncoding = function (ext) {
     var extensionInfo = $tw.utils.getFileExtensionInfo(ext)
     var type = extensionInfo ? extensionInfo.type : null
@@ -559,9 +561,9 @@ var _boot = function ($tw) {
     return typeInfo ? typeInfo.encoding : 'utf8'
   }
 
-  /*
-  Run code globally with specified context variables in scope
-  */
+  /**
+   * Run code globally with specified context variables in scope
+   */
   $tw.utils.evalGlobal = function (code, context, filename) {
     var contextCopy = $tw.utils.extend(Object.create(null), context)
     // Get the context variables as a pair of arrays of names and values
@@ -590,9 +592,9 @@ var _boot = function ($tw) {
     return fn.apply(null, contextValues)
   }
 
-  /*
-  Run code in a sandbox with only the specified context variables in scope
-  */
+  /**
+   * Run code in a sandbox with only the specified context variables in scope
+   */
   $tw.utils.evalSandboxed = $tw.browser
     ? $tw.utils.evalGlobal
     : function (code, context, filename) {
@@ -601,9 +603,9 @@ var _boot = function ($tw) {
         return sandbox.exports
       }
 
-  /*
-  Creates a PasswordPrompt object
-  */
+  /**
+   * Creates a PasswordPrompt object
+   */
   $tw.utils.PasswordPrompt = function () {
     // Store of pending password prompts
     this.passwordPrompts = []
@@ -616,9 +618,9 @@ var _boot = function ($tw) {
     this.setWrapperDisplay()
   }
 
-  /*
-  Hides or shows the wrapper depending on whether there are any outstanding prompts
-  */
+  /**
+   * Hides or shows the wrapper depending on whether there are any outstanding prompts
+   */
   $tw.utils.PasswordPrompt.prototype.setWrapperDisplay = function () {
     if (this.passwordPrompts.length) {
       this.promptWrapper.style.display = 'block'
@@ -627,15 +629,16 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Adds a new password prompt. Options are:
-  submitText: text to use for submit button (defaults to "Login")
-  serviceName: text of the human readable service name
-  noUserName: set true to disable username prompt
-  canCancel: set true to enable a cancel button (callback called with null)
-  repeatPassword: set true to prompt for the password twice
-  callback: function to be called on submission with parameter of object {username:,password:}. Callback must return `true` to remove the password prompt
-  */
+  /**
+   * Adds a new password prompt. Options are:
+   * submitText: text to use for submit button (defaults to "Login")
+   * serviceName: text of the human readable service name
+   * noUserName: set true to disable username prompt
+   * canCancel: set true to enable a cancel button (callback called with null)
+   * repeatPassword: set true to prompt for the password twice
+   * callback: function to be called on submission with parameter of object {username:,password:}.
+   *  Callback must return `true` to remove the password prompt
+   */
   $tw.utils.PasswordPrompt.prototype.createPrompt = function (options) {
     // Create and add the prompt to the DOM
     var self = this
@@ -763,10 +766,10 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Crypto helper object for encrypted content. It maintains the password text in a closure, and provides methods to change
-  the password, and to encrypt/decrypt a block of text
-  */
+  /**
+   * Crypto helper object for encrypted content. It maintains the password text in a closure, and provides methods to change
+   * the password, and to encrypt/decrypt a block of text
+   */
   $tw.utils.Crypto = function () {
     var currentPassword = null
     var currentPublicKey = null
@@ -894,9 +897,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Compress helper object for compressed content.
-  */
+  /**
+   * Compress helper object for compressed content.
+   */
   $tw.utils.Compress = function () {
     var pako = $tw.node ? global.pako || require('pako') : window.pako
     var currentState = null
@@ -1054,9 +1057,9 @@ var _boot = function ($tw) {
 
   /////////////////////////// Module mechanism
 
-  /*
-  Execute the module named 'moduleName'. The name can optionally be relative to the module named 'moduleRoot'
-  */
+  /**
+   * Execute the module named 'moduleName'. The name can optionally be relative to the module named 'moduleRoot'
+   */
   $tw.modules.execute = function (moduleName, moduleRoot) {
     var name = moduleName
     if (moduleName.charAt(0) === '.') {
@@ -1106,11 +1109,11 @@ var _boot = function ($tw) {
         process: process
       })
     } else {
-      /*
-      CommonJS optional require.main property:
-       In a browser we offer a fake main module which points back to the boot function
-       (Theoretically, this may allow TW to eventually load itself as a module in the browser)
-      */
+      /**
+       * CommonJS optional require.main property:
+       * In a browser we offer a fake main module which points back to the boot function
+       * (Theoretically, this may allow TW to eventually load itself as a module in the browser)
+       */
       Object.defineProperty(sandbox.require, 'main', {
         value:
           typeof require !== 'undefined' ? require.main : { TiddlyWiki: _boot },
@@ -1210,11 +1213,11 @@ var _boot = function ($tw) {
     return moduleInfo.exports
   }
 
-  /*
-  Apply a callback to each module of a particular type
-    moduleType: type of modules to enumerate
-    callback: function called as callback(title,moduleExports) for each module
-  */
+  /**
+   * Apply a callback to each module of a particular type
+   * moduleType: type of modules to enumerate
+   * callback: function called as callback(title,moduleExports) for each module
+   */
   $tw.modules.forEachModuleOfType = function (moduleType, callback) {
     var modules = $tw.modules.types[moduleType]
     $tw.utils.each(modules, function (element, title) {
@@ -1222,9 +1225,9 @@ var _boot = function ($tw) {
     })
   }
 
-  /*
-  Get all the modules of a particular type in a hashmap by their `name` field
-  */
+  /**
+   * Get all the modules of a particular type in a hashmap by their `name` field
+   */
   $tw.modules.getModulesByTypeAsHashmap = function (moduleType, nameField) {
     nameField = nameField || 'name'
     var results = Object.create(null)
@@ -1234,9 +1237,9 @@ var _boot = function ($tw) {
     return results
   }
 
-  /*
-  Apply the exports of the modules of a particular type to a target object
-  */
+  /**
+   * Apply the exports of the modules of a particular type to a target object
+   */
   $tw.modules.applyMethods = function (moduleType, targetObject) {
     if (!targetObject) {
       targetObject = Object.create(null)
@@ -1249,9 +1252,10 @@ var _boot = function ($tw) {
     return targetObject
   }
 
-  /*
-  Return an array of classes created from the modules of a specified type. Each module should export the properties to be added to those of the optional base class
-  */
+  /**
+   * Return an array of classes created from the modules of a specified type.
+   * Each module should export the properties to be added to those of the optional base class
+   */
   $tw.modules.createClassesFromModules = function (
     moduleType,
     subType,
@@ -1278,10 +1282,10 @@ var _boot = function ($tw) {
 
   /////////////////////////// Barebones tiddler object
 
-  /*
-  Construct a tiddler object from a hashmap of tiddler fields. If multiple hasmaps are provided they are merged,
-  taking precedence to the right
-  */
+  /**
+   * Construct a tiddler object from a hashmap of tiddler fields.
+   * If multiple hasmaps are provided they are merged, taking precedence to the right
+   */
   $tw.Tiddler = function (/* [fields,] fields */) {
     this.fields = Object.create(null)
     this.cache = Object.create(null)
@@ -1319,11 +1323,11 @@ var _boot = function ($tw) {
     return $tw.utils.hop(this.fields, field)
   }
 
-  /*
-  Compare two tiddlers for equality
-  tiddler: the tiddler to compare
-  excludeFields: array of field names to exclude from the comparison
-  */
+  /**
+   * Compare two tiddlers for equality
+   * tiddler: the tiddler to compare
+   * excludeFields: array of field names to exclude from the comparison
+   */
   $tw.Tiddler.prototype.isEqual = function (tiddler, excludeFields) {
     if (!(tiddler instanceof $tw.Tiddler)) {
       return false
@@ -1386,9 +1390,9 @@ var _boot = function ($tw) {
     return differences.length === 0
   }
 
-  /*
-  Register and install the built in tiddler field modules
-  */
+  /**
+   * Register and install the built in tiddler field modules
+   */
   $tw.modules.define('$:/boot/tiddlerfields/modified', 'tiddlerfield', {
     name: 'modified',
     parse: $tw.utils.parseDate,
@@ -1417,11 +1421,12 @@ var _boot = function ($tw) {
 
   /////////////////////////// Barebones wiki store
 
-  /*
-  Wiki constructor. State is stored in private members that only a small number of privileged accessor methods have direct access. Methods added via the prototype have to use these accessors and cannot access the state data directly.
-  options include:
-  enableIndexers - Array of indexer names to enable, or null to use all available indexers
-  */
+  /**
+   * Wiki constructor. State is stored in private members that only a small number of privileged accessor methods have direct access.
+   * Methods added via the prototype have to use these accessors and cannot access the state data directly.
+   * options include:
+   * enableIndexers - Array of indexer names to enable, or null to use all available indexers
+   */
   $tw.Wiki = function (options) {
     options = options || {}
     var tiddlers = Object.create(null) // Hashmap of tiddlers
@@ -1718,7 +1723,9 @@ var _boot = function ($tw) {
       return pluginInfo[title]
     }
 
-    // Register the plugin tiddlers of a particular type, or null/undefined for any type, optionally restricting registration to an array of tiddler titles. Return the array of titles affected
+    // Register the plugin tiddlers of a particular type, or null/undefined for any type,
+    // optionally restricting registration to an array of tiddler titles.
+    // Return the array of titles affected
     this.registerPluginTiddlers = function (pluginType, titles) {
       var self = this
       var registeredTitles = []
@@ -1755,7 +1762,9 @@ var _boot = function ($tw) {
       return registeredTitles
     }
 
-    // Unregister the plugin tiddlers of a particular type, or null/undefined for any type, optionally restricting unregistering to an array of tiddler titles. Returns an array of the titles affected
+    // Unregister the plugin tiddlers of a particular type, or null/undefined for any type,
+    // optionally restricting unregistering to an array of tiddler titles.
+    // Returns an array of the titles affected
     this.unregisterPluginTiddlers = function (pluginType, titles) {
       var unregisteredTitles = []
       // Remove any previous registered plugins of this type
@@ -1835,9 +1844,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Define all modules stored in ordinary tiddlers
-  */
+  /**
+   * Define all modules stored in ordinary tiddlers
+   */
   $tw.Wiki.prototype.defineTiddlerModules = function () {
     this.each(function (tiddler, title) {
       if (tiddler.hasField('module-type')) {
@@ -1871,9 +1880,9 @@ var _boot = function ($tw) {
     })
   }
 
-  /*
-  Register all the module tiddlers that have a module type
-  */
+  /**
+   * Register all the module tiddlers that have a module type
+   */
   $tw.Wiki.prototype.defineShadowModules = function () {
     var self = this
     this.eachShadow(function (tiddler, title) {
@@ -1889,9 +1898,9 @@ var _boot = function ($tw) {
     })
   }
 
-  /*
-  Enable safe mode by deleting any tiddlers that override a shadow tiddler
-  */
+  /**
+   * Enable safe mode by deleting any tiddlers that override a shadow tiddler
+   */
   $tw.Wiki.prototype.processSafeMode = function () {
     var self = this
     var overrides = []
@@ -1929,9 +1938,9 @@ var _boot = function ($tw) {
     )
   }
 
-  /*
-  Extracts tiddlers from a typed block of text, specifying default field values
-  */
+  /**
+   * Extracts tiddlers from a typed block of text, specifying default field values
+   */
   $tw.Wiki.prototype.deserializeTiddlers = function (
     type,
     text,
@@ -1971,9 +1980,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Register the built in tiddler deserializer modules
-  */
+  /**
+   * Register the built in tiddler deserializer modules
+   */
   var deserializeHeaderComment = function (text, fields) {
     var headerCommentRegExp = new RegExp(
       $tw.config.jsModuleHeaderRegExpString,
@@ -2322,10 +2331,11 @@ var _boot = function ($tw) {
       }
     }
 
-    /*
-  Decrypt any tiddlers stored within the element with the ID "encryptedArea". The function is asynchronous to allow the user to be prompted for a password
-    callback: function to be called the decryption is complete
-  */
+    /**
+     * Decrypt any tiddlers stored within the element with the ID "encryptedArea".
+     * The function is asynchronous to allow the user to be prompted for a password
+     * callback: function to be called the decryption is complete
+     */
     $tw.boot.decryptEncryptedTiddlers = function (callback) {
       var encryptedArea = document.getElementById('encryptedStoreArea')
       if (encryptedArea) {
@@ -2347,9 +2357,9 @@ var _boot = function ($tw) {
       }
     }
 
-    /*
-  Register a deserializer that can extract tiddlers from the DOM
-  */
+    /**
+     * Register a deserializer that can extract tiddlers from the DOM
+     */
     $tw.modules.define(
       '$:/boot/tiddlerdeserializer/dom',
       'tiddlerdeserializer',
@@ -2435,17 +2445,17 @@ var _boot = function ($tw) {
   } else {
     /////////////////////////// Server definitions
 
-    /*
-  Get any compressed tiddlers
-  */
+    /**
+     * Get any compressed tiddlers
+     */
     $tw.boot.inflateTiddlers = function (callback) {
       // Storing compressed tiddlers on the server isn't supported yet
       callback()
     }
 
-    /*
-  Get any encrypted tiddlers
-  */
+    /**
+     * Get any encrypted tiddlers
+     */
     $tw.boot.decryptEncryptedTiddlers = function (callback) {
       // Storing encrypted tiddlers on the server isn't supported yet
       callback()
@@ -2455,9 +2465,10 @@ var _boot = function ($tw) {
   /////////////////////////// Node definitions
 
   if ($tw.node) {
-    /*
-  Load the tiddlers contained in a particular file (and optionally extract fields from the accompanying .meta file) returned as {filepath:,type:,tiddlers:[],hasMetaFile:}
-  */
+    /**
+     * Load the tiddlers contained in a particular file (and optionally extract fields from the accompanying .meta file)
+     * returned as {filepath:,type:,tiddlers:[],hasMetaFile:}
+     */
     $tw.loadTiddlersFromFile = function (filepath, fields) {
       var ext = path.extname(filepath)
       var extensionInfo = $tw.utils.getFileExtensionInfo(ext)
@@ -2483,9 +2494,9 @@ var _boot = function ($tw) {
       }
     }
 
-    /*
-  Load the metadata fields in the .meta file corresponding to a particular file
-  */
+    /**
+     * Load the metadata fields in the .meta file corresponding to a particular file
+     */
     $tw.loadMetadataForFile = function (filepath) {
       var metafilename = filepath + '.meta'
       if (fs.existsSync(metafilename)) {
@@ -2497,16 +2508,18 @@ var _boot = function ($tw) {
       }
     }
 
-    /*
-  A default set of files for TiddlyWiki to ignore during load.
-  This matches what NPM ignores, and adds "*.meta" to ignore tiddler
-  metadata files.
-  */
+    /**
+     * A default set of files for TiddlyWiki to ignore during load.
+     * This matches what NPM ignores, and adds "*.meta" to ignore tiddler
+     * metadata files.
+     */
     $tw.boot.excludeRegExp = /^\.DS_Store$|^.*\.meta$|^\..*\.swp$|^\._.*$|^\.git$|^\.hg$|^\.lock-wscript$|^\.svn$|^\.wafpickle-.*$|^CVS$|^npm-debug\.log$/
 
-    /*
-  Load all the tiddlers recursively from a directory, including honouring `tiddlywiki.files` files for drawing in external files. Returns an array of {filepath:,type:,tiddlers: [{..fields...}],hasMetaFile:}. Note that no file information is returned for externally loaded tiddlers, just the `tiddlers` property.
-  */
+    /**
+     * Load all the tiddlers recursively from a directory, including honouring `tiddlywiki.files` files for drawing in external files.
+     * Returns an array of {filepath:,type:,tiddlers: [{..fields...}],hasMetaFile:}.
+     * Note that no file information is returned for externally loaded tiddlers, just the `tiddlers` property.
+     */
     $tw.loadTiddlersFromPath = function (filepath, excludeRegExp) {
       excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp
       var tiddlers = []
@@ -2541,10 +2554,10 @@ var _boot = function ($tw) {
       return tiddlers
     }
 
-    /*
-  Load all the tiddlers defined by a `tiddlywiki.files` specification file
-  filepath: pathname of the directory containing the specification file
-  */
+    /**
+     * Load all the tiddlers defined by a `tiddlywiki.files` specification file
+     * filepath: pathname of the directory containing the specification file
+     */
     $tw.loadTiddlersFromSpecification = function (filepath, excludeRegExp) {
       var tiddlers = []
       // Read the specification
@@ -2664,9 +2677,9 @@ var _boot = function ($tw) {
       return tiddlers
     }
 
-    /*
-  Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
-  */
+    /**
+     * Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
+     */
     $tw.loadPluginFolder = function (filepath, excludeRegExp) {
       excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp
       var infoPath = filepath + path.sep + 'plugin.info'
@@ -2719,11 +2732,11 @@ var _boot = function ($tw) {
       }
     }
 
-    /*
-  name: Name of the plugin to find
-  paths: array of file paths to search for it
-  Returns the path of the plugin folder
-  */
+    /**
+     * name: Name of the plugin to find
+     * paths: array of file paths to search for it
+     * Returns the path of the plugin folder
+     */
     $tw.findLibraryItem = function (name, paths) {
       var pathIndex = 0
       do {
@@ -2738,10 +2751,10 @@ var _boot = function ($tw) {
       return null
     }
 
-    /*
-  name: Name of the plugin to load
-  paths: array of file paths to search for it
-  */
+    /**
+     * name: Name of the plugin to load
+     * paths: array of file paths to search for it
+     */
     $tw.loadPlugin = function (name, paths) {
       var pluginPath = $tw.findLibraryItem(name, paths)
       if (pluginPath) {
@@ -2754,11 +2767,11 @@ var _boot = function ($tw) {
       console.log("Warning: Cannot find plugin '" + name + "'")
     }
 
-    /*
-  libraryPath: Path of library folder for these plugins (relative to core path)
-  envVar: Environment variable name for these plugins
-  Returns an array of search paths
-  */
+    /**
+     * libraryPath: Path of library folder for these plugins (relative to core path)
+     * envVar: Environment variable name for these plugins
+     * Returns an array of search paths
+     */
     $tw.getLibraryItemSearchPaths = function (libraryPath, envVar) {
       var pluginPaths = [path.resolve($tw.boot.corePath, libraryPath)]
       var env = process.env[envVar]
@@ -2772,11 +2785,11 @@ var _boot = function ($tw) {
       return pluginPaths
     }
 
-    /*
-  plugins: Array of names of plugins (eg, "tiddlywiki/filesystemadaptor")
-  libraryPath: Path of library folder for these plugins (relative to core path)
-  envVar: Environment variable name for these plugins
-  */
+    /**
+     * plugins: Array of names of plugins (eg, "tiddlywiki/filesystemadaptor")
+     * libraryPath: Path of library folder for these plugins (relative to core path)
+     * envVar: Environment variable name for these plugins
+     */
     $tw.loadPlugins = function (plugins, libraryPath, envVar) {
       if (plugins) {
         var pluginPaths = $tw.getLibraryItemSearchPaths(libraryPath, envVar)
@@ -2786,12 +2799,12 @@ var _boot = function ($tw) {
       }
     }
 
-    /*
-  path: path of wiki directory
-  options:
-    parentPaths: array of parent paths that we mustn't recurse into
-    readOnly: true if the tiddler file paths should not be retained
-  */
+    /**
+     * path: path of wiki directory
+     * options:
+     *  parentPaths: array of parent paths that we mustn't recurse into
+     *  readOnly: true if the tiddler file paths should not be retained
+     */
     $tw.loadWikiTiddlers = function (wikiPath, options) {
       options = options || {}
       var parentPaths = options.parentPaths || []
@@ -2980,9 +2993,9 @@ var _boot = function ($tw) {
 
   /////////////////////////// Main startup function called once tiddlers have been decrypted
 
-  /*
-  Startup TiddlyWiki
-  */
+  /**
+   * Startup TiddlyWiki
+   */
   $tw.boot.startup = function (options) {
     options = options || {}
     // Get the URL hash and check for safe mode
@@ -3226,18 +3239,18 @@ var _boot = function ($tw) {
     $tw.boot.executeNextStartupTask(options.callback)
   }
 
-  /*
-  Add another unload task
-  */
+  /**
+   * Add another unload task
+   */
   $tw.addUnloadTask = function (task) {
     if ($tw.unloadTasks.indexOf(task) === -1) {
       $tw.unloadTasks.push(task)
     }
   }
 
-  /*
-  Execute the remaining eligible startup tasks
-  */
+  /**
+   * Execute the remaining eligible startup tasks
+   */
   $tw.boot.executeNextStartupTask = function (callback) {
     // Find the next eligible task
     var taskIndex = 0
@@ -3285,9 +3298,9 @@ var _boot = function ($tw) {
     return false
   }
 
-  /*
-  Returns true if we are running on one platforms specified in a task modules `platforms` array
-  */
+  /**
+   * Returns true if we are running on one platforms specified in a task modules `platforms` array
+   */
   $tw.boot.doesTaskMatchPlatform = function (taskModule) {
     var platforms = taskModule.platforms
     if (platforms) {
@@ -3341,14 +3354,14 @@ var _boot = function ($tw) {
     return true
   }
 
-  /*
-  Global Hooks mechanism which allows plugins to modify default functionality
-  */
+  /**
+   * Global Hooks mechanism which allows plugins to modify default functionality
+   */
   $tw.hooks = $tw.hooks || { names: {} }
 
-  /*
-  Add hooks to the  hashmap
-  */
+  /**
+   * Add hooks to the  hashmap
+   */
   $tw.hooks.addHook = function (hookName, definition) {
     if ($tw.utils.hop($tw.hooks.names, hookName)) {
       $tw.hooks.names[hookName].push(definition)
@@ -3357,9 +3370,9 @@ var _boot = function ($tw) {
     }
   }
 
-  /*
-  Invoke the hook by key
-  */
+  /**
+   * Invoke the hook by key
+   */
   $tw.hooks.invokeHook = function (hookName /*, value,... */) {
     var args = Array.prototype.slice.call(arguments, 1)
     if ($tw.utils.hop($tw.hooks.names, hookName)) {
