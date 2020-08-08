@@ -21,12 +21,11 @@ cp ./src/plugins/ipfs/* ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./tiddlers/plugins/ipfs ./build/plugins > /dev/null 2>&1
 
 # system tiddlers
-cp -R ./src/system ./build/tiddlers > /dev/null 2>&1
+cp -R ./src/boot ./build/tiddlers > /dev/null 2>&1
 cp -R ./tiddlers/system ./build/tiddlers > /dev/null 2>&1
 
 # libraries
 wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.1.0/dist/detect-provider.min.js -O ./build/tiddlers/system/detect-provider.min.js
-cp ./eth-sig-util/eth-sig-util.min.js ./build/tiddlers/system > /dev/null 2>&1
 wget https://cdn.jsdelivr.net/npm/loglevel@1.6.8/dist/loglevel.min.js -O ./build/tiddlers/system/loglevel.min.js
 wget https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js -O ./build/tiddlers/system/pako.min.js
 

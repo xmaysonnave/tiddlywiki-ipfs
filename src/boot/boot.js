@@ -15,7 +15,7 @@ var _boot = function ($tw) {
 
   // Include bootprefix if we're not given module data
   if (!$tw) {
-    $tw = require('./bootprefix.js').bootprefix()
+    $tw = require('./bootprefix.js.js').bootprefix()
   }
 
   $tw.utils = $tw.utils || Object.create(null)
@@ -768,10 +768,6 @@ var _boot = function ($tw) {
   the password, and to encrypt/decrypt a block of text
   */
   $tw.utils.Crypto = function () {
-    var sjcl = $tw.node ? global.sjcl || require('sjcl') : window.sjcl
-    var sigUtil = $tw.node
-      ? global.sigUtil || require('eth-sig-util')
-      : window.sigUtil
     var currentPassword = null
     var currentPublicKey = null
     var getLogger = function () {
@@ -787,6 +783,7 @@ var _boot = function ($tw) {
     var callSjcl = function (method, inputText, password) {
       password = password || currentPassword
       var outputText
+      var sjcl = $tw.node ? global.sjcl || require('sjcl') : window.sjcl
       try {
         if (password) {
           var tStart = new Date()
@@ -867,6 +864,9 @@ var _boot = function ($tw) {
       publicKey = publicKey || currentPublicKey
       if (publicKey) {
         var output
+        var sigUtil = $tw.node
+          ? global.sigUtil || require('eth-sig-util')
+          : window.sigUtil
         var tStart = new Date()
         try {
           output = sigUtil.encrypt(

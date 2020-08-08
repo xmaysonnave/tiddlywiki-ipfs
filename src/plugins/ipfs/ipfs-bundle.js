@@ -72,6 +72,14 @@ import IpfsUrl from './ipfs-url'
     return this.ethereumLibrary.getNetworkRegistry()
   }
 
+  IpfsBundle.prototype.loadErudaLibrary = async function () {
+    return await this.ipfsLoader.loadErudaLibrary()
+  }
+
+  IpfsBundle.prototype.loadEthSigUtilLibrary = async function () {
+    return await this.ipfsLoader.loadEthSigUtilLibrary()
+  }
+
   IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {
     try {
       return await this.ethereumLibrary.getPublicEncryptionKey(provider)

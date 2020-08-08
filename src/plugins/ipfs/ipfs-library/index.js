@@ -21,18 +21,18 @@ import root from 'window-or-global'
   }
 
   IpfsLibrary.prototype.loadIpfsHttpClient = async function () {
-    if (typeof root.IpfsHttpClient === 'undefined') {
-      try {
+    try {
+      if (typeof root.IpfsHttpClient === 'undefined') {
         await this.ipfsLoader.loadIpfsHttpLibrary()
         if (typeof root.IpfsHttpClient !== 'undefined') {
           return
         }
-      } catch (error) {
-        this.getLogger().error(error)
       }
-      // Should not happen...
-      throw new Error('Unavailable IPFS HTTP Client library...')
+    } catch (error) {
+      this.getLogger().error(error)
     }
+    // Should not happen...
+    throw new Error('Unavailable IPFS HTTP Client library...')
   }
 
   // Default

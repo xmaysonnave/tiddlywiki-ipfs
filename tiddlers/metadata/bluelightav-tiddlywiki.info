@@ -1,20 +1,11 @@
 {
   "plugins": [
-    "tiddlywiki/browser-sniff",
-    "tiddlywiki/codemirror",
-    "tiddlywiki/codemirror-closebrackets",
-    "tiddlywiki/codemirror-closetag",
-    "tiddlywiki/codemirror-fullscreen-editing",
-    "tiddlywiki/codemirror-mode-css",
-    "tiddlywiki/codemirror-mode-htmlembedded",
-    "tiddlywiki/codemirror-mode-htmlmixed",
-    "tiddlywiki/codemirror-mode-javascript",
-    "tiddlywiki/codemirror-mode-markdown",
-    "tiddlywiki/codemirror-mode-xml",
-    "tiddlywiki/codemirror-search-replace",
-    "tiddlywiki/highlight",
+		"tiddlywiki/browser-sniff",
+		"tiddlywiki/evernote",
+		"tiddlywiki/internals",
     "tiddlywiki/markdown",
-    "tiddlywiki/menubar"
+    "tiddlywiki/menubar",
+		"tiddlywiki/railroad"
   ],
   "includeWikis": [
   ],

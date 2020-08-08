@@ -47,11 +47,11 @@ The saver handler tracks changes to the store and handles saving the entire wiki
   /*global $tw:false*/
   'use strict'
 
-  /*
-Instantiate the saver handler with the following options:
-wiki: wiki to be synced
-dirtyTracking: true if dirty tracking should be performed
-*/
+  /**
+   * Instantiate the saver handler with the following options:
+   * wiki: wiki to be synced
+   * dirtyTracking: true if dirty tracking should be performed
+   */
   function SaverHandler (options) {
     var self = this
     this.wiki = options.wiki
@@ -162,9 +162,9 @@ dirtyTracking: true if dirty tracking should be performed
   SaverHandler.prototype.titleSavedNotification =
     '$:/language/Notifications/Save/Done'
 
-  /*
-Select the appropriate saver modules and set them up
-*/
+  /**
+   * Select the appropriate saver modules and set them up
+   */
   SaverHandler.prototype.initSavers = function (moduleType) {
     moduleType = moduleType || 'saver'
     // Instantiate the available savers
@@ -196,12 +196,12 @@ Select the appropriate saver modules and set them up
     })
   }
 
-  /*
-Save the wiki contents. Options are:
-method: "save", "autosave" or "download"
-template: the tiddler containing the template to save
-downloadType: the content type for the saved file
-*/
+  /**
+   * Save the wiki contents. Options are:
+   * method: "save", "autosave" or "download"
+   * template: the tiddler containing the template to save
+   * downloadType: the content type for the saved file
+   */
   SaverHandler.prototype.saveWiki = async function (options) {
     options = options || {}
     var self = this
@@ -212,6 +212,9 @@ downloadType: the content type for the saved file
       this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes'
     ) {
       return false
+    }
+    if ($tw.browser && $tw.crypto.hasEncryptionKey()) {
+      await $tw.ipfs.loadEthSigUtilLibrary()
     }
     var variables = options.variables || {}
     var template = options.template || '$:/core/save/all'
@@ -313,16 +316,16 @@ downloadType: the content type for the saved file
     return false
   }
 
-  /*
-Checks whether the wiki is dirty (ie the window shouldn't be closed)
-*/
+  /**
+   * Checks whether the wiki is dirty (ie the window shouldn't be closed)
+   */
   SaverHandler.prototype.isDirty = function () {
     return this.numChanges > 0
   }
 
-  /*
-Update the document body with the class "tc-dirty" if the wiki has unsaved/unsynced changes
-*/
+  /**
+   * Update the document body with the class "tc-dirty" if the wiki has unsaved/unsynced changes
+   */
   SaverHandler.prototype.updateDirtyStatus = function () {
     if ($tw.browser) {
       $tw.utils.toggleClass(document.body, 'tc-dirty', this.isDirty())

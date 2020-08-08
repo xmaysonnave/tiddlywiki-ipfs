@@ -63,7 +63,6 @@ Command to save the current wiki as a wiki folder
     '$:/boot/bootprefix.js',
     '$:/core',
     '$:/library/detect-provider.min.js',
-    '$:/library/eth-sig-util.min.js',
     '$:/library/loglevel.min.js',
     '$:/library/pako.min.js',
     '$:/library/sjcl.js',

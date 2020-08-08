@@ -35,26 +35,49 @@ import root from 'window-or-global'
             `Loaded ${title}:
  ${sourceUri}`
           )
-          return
+          return true
         }
         throw new Error(`Unable to load Library: ${title}`)
       }
       throw new Error(`Undefined Library: ${title}`)
     }
+    return false
   }
 
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
     if (typeof root.eruda === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda', true)
+      return await this.loadTiddlerLibrary(
+        '$:/ipfs/library/eruda',
+        'eruda',
+        true
+      )
     }
+    return false
   }
 
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
     if (typeof root.ethers === 'undefined') {
-      await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
+      return await this.loadTiddlerLibrary(
+        '$:/ipfs/library/ethers',
+        'ethers',
+        true
+      )
     }
+    return false
+  }
+
+  // https://github.com/xmaysonnave/eth-sig-util
+  IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
+    if (typeof root.sigUtil === 'undefined') {
+      return await this.loadTiddlerLibrary(
+        '$:/ipfs/library/eth-sig-util',
+        'sigUtil',
+        true
+      )
+    }
+    return false
   }
 
   // https://github.com/ipfs/js-ipfs-http-client
@@ -66,6 +89,7 @@ import root from 'window-or-global'
         true
       )
     }
+    return false
   }
 
   /*eslint no-new:"off",no-new-func:"off"*/

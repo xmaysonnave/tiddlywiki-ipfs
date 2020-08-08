@@ -74,7 +74,6 @@ wikimethod
     return new Parser(type, text, {
       parseAsInline: options.parseAsInline,
       wiki: this,
-      _canonical_uri: options._canonical_uri,
       tiddler: options.tiddler
     })
   }
@@ -89,9 +88,6 @@ wikimethod
     var self = this
     return tiddler
       ? this.getCacheForTiddler(title, cacheType, function () {
-          if (tiddler.hasField('_canonical_uri')) {
-            options._canonical_uri = tiddler.fields._canonical_uri
-          }
           options.tiddler = tiddler
           return self.parseText(
             tiddler.fields.type,

@@ -252,7 +252,7 @@ IPFS Action
       return false
     }
     try {
-      const content = this.getAttachmentContent(tiddler)
+      const content = await this.getAttachmentContent(tiddler)
       if (content == null) {
         return false
       }
@@ -282,7 +282,7 @@ IPFS Action
     return true
   }
 
-  IpfsAction.prototype.getAttachmentContent = function (tiddler) {
+  IpfsAction.prototype.getAttachmentContent = async function (tiddler) {
     const { info } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
@@ -292,7 +292,7 @@ IPFS Action
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
     }
-    return $tw.ipfs.processContent(tiddler, content, info.encoding)
+    return await $tw.ipfs.processContent(tiddler, content, info.encoding)
   }
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
@@ -492,6 +492,20 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleMobileConsole = async function (event) {
+    var loadEruda = async function () {
+      try {
+        if (typeof window.eruda === 'undefined') {
+          await $tw.ipfs.loadErudaLibrary()
+          if (typeof window.eruda !== 'undefined') {
+            return
+          }
+        }
+      } catch (error) {
+        this.getLogger().error(error)
+      }
+      // Should not happen...
+      throw new Error('Unavailable Eruda library...')
+    }
     // Show or Hide
     if (typeof window.eruda !== 'undefined') {
       if (this.console === false) {
@@ -507,10 +521,9 @@ IPFS Action
       )
       return true
     }
-    // Load mobile console
+    // Load library
     try {
-      // Load eruda
-      await $tw.ipfs.ipfsBundle.ipfsLoader.loadErudaLibrary()
+      await loadEruda()
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -745,7 +758,7 @@ IPFS Action
         options
       )
     }
-    return $tw.ipfs.processContent(tiddler, content, 'utf8')
+    return await $tw.ipfs.processContent(tiddler, content, 'utf8')
   }
 
   IpfsAction.prototype.transcludeContent = function (title) {

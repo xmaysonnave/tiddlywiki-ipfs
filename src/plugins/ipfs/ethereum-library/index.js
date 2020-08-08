@@ -138,19 +138,18 @@ import detectEthereumProvider from '@metamask/detect-provider'
   }
 
   EthereumLibrary.prototype.loadEthers = async function () {
-    if (root.ethers === undefined || root.ethers == null) {
-      try {
-        // Load ethers
+    try {
+      if (typeof root.ethers === 'undefined') {
         await this.ipfsLoader.loadEtherJsLibrary()
-        if (root.ethers !== undefined && root.ethers !== null) {
+        if (typeof root.ethers !== 'undefined') {
           return
         }
-      } catch (error) {
-        this.getLogger().error(error)
       }
-      // Should not happen...
-      throw new Error('Unavailable Ethereum library...')
+    } catch (error) {
+      this.getLogger().error(error)
     }
+    // Should not happen...
+    throw new Error('Unavailable Ethereum library...')
   }
 
   EthereumLibrary.prototype.decrypt = async function (text, provider) {

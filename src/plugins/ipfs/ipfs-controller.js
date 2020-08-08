@@ -90,7 +90,7 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array)
   }
 
-  IpfsController.prototype.processContent = function (
+  IpfsController.prototype.processContent = async function (
     tiddler,
     content,
     encoding
@@ -135,6 +135,9 @@ IPFS Controller
         : null
     if (encrypted === 'yes' || password || publicKey) {
       try {
+        if (publicKey || $tw.crypto.hasEncryptionKey()) {
+          await this.loadEthSigUtilLibrary()
+        }
         if (compressed === 'yes') {
           content = { pako: $tw.compress.deflate(content) }
           content.pako = $tw.crypto.encrypt(content.pako, password, publicKey)
@@ -646,6 +649,14 @@ IPFS Controller
 
   IpfsController.prototype.getENSRegistry = function () {
     return this.ipfsBundle.getENSRegistry()
+  }
+
+  IpfsController.prototype.loadErudaLibrary = async function () {
+    return await this.ipfsBundle.loadErudaLibrary()
+  }
+
+  IpfsController.prototype.loadEthSigUtilLibrary = async function () {
+    return await this.ipfsBundle.loadEthSigUtilLibrary()
   }
 
   exports.IpfsController = IpfsController
