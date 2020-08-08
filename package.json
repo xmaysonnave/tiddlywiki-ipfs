@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200808389",
+  "version": "v0.3.0-200808394",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "bin": {
@@ -77,7 +77,7 @@
     "browserify": "^16.5.2",
     "browserify-transform-tools": "^1.7.0",
     "build-number-generator": "^0.0.6",
-    "core-js": "3",
+    "core-js": "^3.6.5",
     "enquirer": "^2.3.6",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",

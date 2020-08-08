@@ -10,7 +10,7 @@
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/tiddlywiki/tiddlywiki.js",
-      "args": ["build"]
+      "args": ["build --output production --build"]
     }
   ]
 }
