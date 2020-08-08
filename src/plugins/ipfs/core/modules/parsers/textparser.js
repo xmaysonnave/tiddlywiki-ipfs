@@ -104,8 +104,6 @@ The plain text parser processes blocks of source text into a degenerate parse tr
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
           })
-      } else if (text) {
-        element.attributes.code.value = text
       }
     }
     // Return the parsed tree
