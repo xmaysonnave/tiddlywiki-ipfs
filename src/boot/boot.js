@@ -773,16 +773,6 @@ var _boot = function ($tw) {
   $tw.utils.Crypto = function () {
     var currentPassword = null
     var currentPublicKey = null
-    var getLogger = function () {
-      if ($tw.browser) {
-        if ($tw.ipfs) {
-          return $tw.ipfs.getLogger()
-        } else {
-          return window.log.getLogger('default')
-        }
-      }
-      return console
-    }
     var callSjcl = function (method, inputText, password) {
       password = password || currentPassword
       var outputText
@@ -794,12 +784,12 @@ var _boot = function ($tw) {
           var tStop = new Date() - tStart
           var ratio = Math.floor((outputText.length * 100) / inputText.length)
           var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
-          getLogger().info(
+          console.info(
             `Standford ${uMethod}: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`
           )
         }
       } catch (ex) {
-        getLogger().error('Crypto error:' + ex)
+        console.error('Crypto error:' + ex)
         outputText = null
       }
       return outputText
@@ -880,11 +870,11 @@ var _boot = function ($tw) {
           output = JSON.stringify(output)
           var tStop = new Date() - tStart
           var ratio = Math.floor((output.length * 100) / text.length)
-          getLogger().info(
+          console.info(
             `Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`
           )
         } catch (error) {
-          getLogger().error('Crypto error:' + error)
+          console.error('Crypto error:' + error)
           output = null
         }
         return output
@@ -903,16 +893,6 @@ var _boot = function ($tw) {
   $tw.utils.Compress = function () {
     var pako = $tw.node ? global.pako || require('pako') : window.pako
     var currentState = null
-    var getLogger = function () {
-      if ($tw.browser) {
-        if ($tw.ipfs) {
-          return $tw.ipfs.getLogger()
-        } else {
-          return window.log.getLogger('default')
-        }
-      }
-      return console
-    }
     this.setCompressState = function (state) {
       currentState = state ? 'yes' : 'no'
       this.updateCompressStateTiddler()
@@ -934,7 +914,7 @@ var _boot = function ($tw) {
       var b64 = this.btoa(ua)
       var tStop = new Date() - tStart
       var ratio = Math.floor((b64.length * 100) / str.length)
-      getLogger().info(
+      console.info(
         `Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`
       )
       return b64
@@ -945,7 +925,7 @@ var _boot = function ($tw) {
       var str = pako.inflate(ua, { to: 'string' })
       var tStop = new Date() - tStart
       var ratio = Math.floor((str.length * 100) / b64.length)
-      getLogger().info(
+      console.info(
         `Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`
       )
       return str
@@ -2117,17 +2097,6 @@ var _boot = function ($tw) {
 
   if ($tw.browser && !$tw.node) {
     $tw.boot.metamaskPrompt = async function (text, callback) {
-      var getLogger = function () {
-        if (
-          $tw.browser &&
-          window !== undefined &&
-          window.log !== undefined &&
-          window.log !== null
-        ) {
-          return window.log
-        }
-        return console
-      }
       var checkAccountPermission = async function (provider) {
         const permissions = await provider.request({
           method: 'wallet_getPermissions'
@@ -2175,7 +2144,7 @@ var _boot = function ($tw) {
             if (error.code === 4001) {
               throw error
             }
-            getLogger().error(error)
+            console.error(error)
           }
           // Request Accounts attempt
           try {
@@ -2199,7 +2168,7 @@ var _boot = function ($tw) {
             if (error.code === 4001) {
               throw error
             }
-            getLogger().error(error)
+            console.error(error)
           }
         }
         // Enable attempt
@@ -2222,11 +2191,11 @@ var _boot = function ($tw) {
           throw new Error('Unable to retrieve any Ethereum accounts...')
         }
         if (provider.chainId !== undefined) {
-          getLogger().info(
+          console.info(
             `Chain: ${provider.chainId}, Connected Account: ${accounts[0]}`
           )
         } else {
-          getLogger().info(`Connected Account: ${accounts[0]}`)
+          console.info(`Connected Account: ${accounts[0]}`)
         }
         try {
           var tStart = new Date()
@@ -2237,7 +2206,7 @@ var _boot = function ($tw) {
           if (decryptedText !== undefined || decryptedText !== null) {
             var tStop = new Date() - tStart
             var ratio = Math.floor((decryptedText.length * 100) / text.length)
-            getLogger().info(
+            console.info(
               `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
             )
           }
@@ -2245,7 +2214,7 @@ var _boot = function ($tw) {
           if (error.code === 4001) {
             throw error
           }
-          getLogger().error(error)
+          console.error(error)
           throw new Error('Unable to Decrypt Ethereum content...')
         }
       } catch (error) {
@@ -3386,15 +3355,6 @@ var _boot = function ($tw) {
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
 
   $tw.boot.boot = function (callback) {
-    if ($tw.browser) {
-      try {
-        const logger = window.log.getLogger('default')
-        logger.setLevel('info', false)
-        logger.info('loglevel is starting up...')
-      } catch (error) {
-        console.error(error)
-      }
-    }
     // Initialise crypto object
     $tw.crypto = new $tw.utils.Crypto()
     // Initialise password prompter
