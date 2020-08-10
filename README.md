@@ -1,7 +1,7 @@
 <h1 align="center">IPFS with TiddyWiki</h1>
 
 <h1 align="center">
-  <a href="https://bluelightav.eth"><img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light"/></a>
+  <a href="https://bluelightav.eth.link"><img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light"/></a>
 </h1>
 
 <p align="center">
