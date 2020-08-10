@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200808394",
+  "version": "v0.3.0-200810330",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "bin": {
@@ -101,7 +101,7 @@
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.4.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.370.0",
+    "snyk": "^1.370.1",
     "tiddlywiki": "^5.1.22",
     "typescript": "^3.9.7"
   },

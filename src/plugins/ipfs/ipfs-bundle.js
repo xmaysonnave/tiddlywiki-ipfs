@@ -7,8 +7,6 @@ module-type: library
 IPFS Bundle
 
 \*/
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import CID from 'cids'
 import { URL } from 'whatwg-url'
 import root from 'window-or-global'

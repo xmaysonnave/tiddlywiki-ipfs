@@ -5,9 +5,22 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Jest Tests",
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Build",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/tiddlywiki/tiddlywiki.js",
       "args": ["build --output production --build"]

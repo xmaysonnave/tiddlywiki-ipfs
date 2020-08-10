@@ -784,7 +784,7 @@ var _boot = function ($tw) {
           var tStop = new Date() - tStart
           var ratio = Math.floor((outputText.length * 100) / inputText.length)
           var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
-          console.info(
+          console.log(
             `Standford ${uMethod}: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`
           )
         }
@@ -870,7 +870,7 @@ var _boot = function ($tw) {
           output = JSON.stringify(output)
           var tStop = new Date() - tStart
           var ratio = Math.floor((output.length * 100) / text.length)
-          console.info(
+          console.log(
             `Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`
           )
         } catch (error) {
@@ -914,7 +914,7 @@ var _boot = function ($tw) {
       var b64 = this.btoa(ua)
       var tStop = new Date() - tStart
       var ratio = Math.floor((b64.length * 100) / str.length)
-      console.info(
+      console.log(
         `Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`
       )
       return b64
@@ -925,7 +925,7 @@ var _boot = function ($tw) {
       var str = pako.inflate(ua, { to: 'string' })
       var tStop = new Date() - tStart
       var ratio = Math.floor((str.length * 100) / b64.length)
-      console.info(
+      console.log(
         `Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`
       )
       return str
@@ -2191,11 +2191,11 @@ var _boot = function ($tw) {
           throw new Error('Unable to retrieve any Ethereum accounts...')
         }
         if (provider.chainId !== undefined) {
-          console.info(
+          console.log(
             `Chain: ${provider.chainId}, Connected Account: ${accounts[0]}`
           )
         } else {
-          console.info(`Connected Account: ${accounts[0]}`)
+          console.log(`Connected Account: ${accounts[0]}`)
         }
         try {
           var tStart = new Date()
@@ -2206,7 +2206,7 @@ var _boot = function ($tw) {
           if (decryptedText !== undefined || decryptedText !== null) {
             var tStop = new Date() - tStart
             var ratio = Math.floor((decryptedText.length * 100) / text.length)
-            console.info(
+            console.log(
               `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
             )
           }
