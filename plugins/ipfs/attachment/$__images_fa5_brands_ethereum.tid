@@ -1,7 +1,10 @@
 caption: ethereum (Brands)
-modified: 20200626040451692
+modified: 20200811040451692
 tags: $:/tags/Image [[Font Awesome 5]] Brands $:/ipfs/core $:/isAttachment $:/isEmbedded
 title: $:/images/fa5/brands/ethereum
+_license_uri: https://creativecommons.org/licenses/by/4.0
+_project_uri: https://fontawesome.com/
+_source_uri: http://fa5-free-svg.tiddlyspot.com/#%24%3A%2Fimages%2Ffa5%2Fbrands%2Fethereum
 
 <svg class="tc-image-ethereum tc-image-button" width="22pt" height="22pt" viewBox="0 0 320 512">
   <path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/>

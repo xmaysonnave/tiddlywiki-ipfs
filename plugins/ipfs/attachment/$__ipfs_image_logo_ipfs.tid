@@ -1,10 +1,10 @@
-modified: 20200619044634920
-_license_uri: https://raw.githubusercontent.com/ipfs-inactive/logo/master/LICENSE
-_project_uri: https://github.com/ipfs-inactive/logo/
-_source_uri: https://github.com/ipfs-inactive/logo/blob/master/vector/ipfs-logo-vector-black.svg
+modified: 20200811044634920
 tags: $:/tags/Image $:/ipfs/core $:/isAttachment $:/isEmbedded
 title: $:/core/images/ipfs
 type: image/svg+xml
+_license_uri: https://raw.githubusercontent.com/ipfs-inactive/logo/master/LICENSE
+_project_uri: https://github.com/ipfs-inactive/logo/
+_source_uri: https://github.com/ipfs-inactive/logo/blob/master/vector/ipfs-logo-vector-black.svg
 
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"

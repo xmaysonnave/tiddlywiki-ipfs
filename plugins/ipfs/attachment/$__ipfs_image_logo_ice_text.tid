@@ -1,10 +1,10 @@
-modified: 20200804040053586
-_license_uri: https://raw.githubusercontent.com/ipfs-inactive/logo/master/LICENSE
-_project_uri: https://github.com/ipfs-inactive/logo/
-_source_uri: https://github.com/ipfs-inactive/logo/blob/master/vector/ipfs-logo-vector-ice-text.svg
+modified: 20200811040053586
 tags: $:/tags/Image $:/ipfs/core $$:/isAttachment $:/isEmbedded
 title: $:/ipfs/logo/vector/ice/text
 type: image/svg+xml
+_license_uri: https://raw.githubusercontent.com/ipfs-inactive/logo/master/LICENSE
+_project_uri: https://github.com/ipfs-inactive/logo/
+_source_uri: https://github.com/ipfs-inactive/logo/blob/master/vector/ipfs-logo-vector-ice-text.svg
 
 <svg
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
