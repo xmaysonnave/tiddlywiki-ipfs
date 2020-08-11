@@ -2192,10 +2192,10 @@ var _boot = function ($tw) {
         }
         if (provider.chainId !== undefined) {
           console.log(
-            `Chain: ${provider.chainId}, Connected Account: ${accounts[0]}`
+            `Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`
           )
         } else {
-          console.log(`Connected Account: ${accounts[0]}`)
+          console.log(`Ethereum Account: ${accounts[0]}`)
         }
         try {
           var tStart = new Date()
