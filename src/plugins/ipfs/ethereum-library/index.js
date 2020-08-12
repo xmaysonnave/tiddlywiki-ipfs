@@ -277,9 +277,11 @@ import root from 'window-or-global'
   EthereumLibrary.prototype.detectEthereumProvider = async function () {
     var provider = null
     try {
-      provider = await root.detectEthereumProvider({ mustBeMetaMask: true })
-      if (provider !== undefined && provider !== null) {
-        provider.autoRefreshOnNetworkChange = false
+      if (typeof root.detectEthereumProvider === 'function') {
+        provider = await root.detectEthereumProvider({ mustBeMetaMask: true })
+        if (provider !== undefined && provider !== null) {
+          provider.autoRefreshOnNetworkChange = false
+        }
       }
     } catch (error) {
       this.getLogger().error(error)

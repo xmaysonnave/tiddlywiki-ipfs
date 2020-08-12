@@ -32,11 +32,14 @@ import IpfsUrl from './ipfs-url'
   IpfsBundle.prototype.getLogger = function () {
     if (root.log !== undefined && root.log !== null) {
       const loggers = root.log.getLoggers()
-      const log = loggers.eruda
+      var log = loggers.eruda
       if (log !== undefined && log !== null) {
         return log
       }
-      return loggers.default
+      var log = loggers.default
+      if (log !== undefined && log !== null) {
+        return log
+      }
     }
     return console
   }
