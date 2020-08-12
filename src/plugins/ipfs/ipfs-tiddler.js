@@ -184,7 +184,7 @@ IPFS Tiddler
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
                 $tw.utils.alert(
                   name,
-                  `Successfully Pinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
+                  `Successfully Pinned : <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
                 )
               }
             })

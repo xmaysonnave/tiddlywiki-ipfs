@@ -247,7 +247,7 @@ import root from 'window-or-global'
         .info(`Signed from: https://app.ens.domains/address/${recovered}`)
       $tw.utils.alert(
         name,
-        `Signed from: <a rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+        `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
       )
     }
   }
