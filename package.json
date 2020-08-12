@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200810330",
+  "version": "v0.3.0-200812339",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "bin": {
@@ -19,6 +19,7 @@
     "build-all-noclone": "./scripts/build-all-noclone.sh",
     "build": "./scripts/build.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
+    "debug": "yarn tiddlywiki build --output production --build --verbose",
     "eslint": "eslint \"src/**/*.js\" && eslint \"test/**/*.js\" && eslint \"scripts/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix && eslint \"scripts/**/*.js\" --fix",
     "format": "prettier-standard --eslint --format",
@@ -60,7 +61,7 @@
     "@metamask/detect-provider": "^1.1.0",
     "bs58": "^4.0.1",
     "buffer": "^5.6.0",
-    "cids": "0.8.3",
+    "cids": "^0.8.3",
     "content-hash": "^2.5.2",
     "ipfs-provider": "^1.0.0",
     "whatwg-url": "^8.1.0",
@@ -68,6 +69,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
     "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/runtime-corejs3": "^7.11.2",

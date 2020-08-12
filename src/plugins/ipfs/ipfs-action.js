@@ -492,20 +492,6 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleMobileConsole = async function (event) {
-    var loadEruda = async function () {
-      try {
-        if (typeof window.eruda === 'undefined') {
-          await $tw.ipfs.loadErudaLibrary()
-          if (typeof window.eruda !== 'undefined') {
-            return
-          }
-        }
-      } catch (error) {
-        this.getLogger().error(error)
-      }
-      // Should not happen...
-      throw new Error('Unavailable Eruda library...')
-    }
     // Show or Hide
     if (typeof window.eruda !== 'undefined') {
       if (this.console === false) {
@@ -523,7 +509,7 @@ IPFS Action
     }
     // Load library
     try {
-      await loadEruda()
+      await $tw.ipfs.loadErudaLibrary()
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)

@@ -13,26 +13,10 @@ import root from 'window-or-global'
    **/
   var IpfsLibrary = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle
-    this.ipfsLoader = ipfsBundle.ipfsLoader
   }
 
   IpfsLibrary.prototype.getLogger = function () {
     return this.ipfsBundle.getLogger()
-  }
-
-  IpfsLibrary.prototype.loadIpfsHttpClient = async function () {
-    try {
-      if (typeof root.IpfsHttpClient === 'undefined') {
-        await this.ipfsLoader.loadIpfsHttpLibrary()
-        if (typeof root.IpfsHttpClient !== 'undefined') {
-          return
-        }
-      }
-    } catch (error) {
-      this.getLogger().error(error)
-    }
-    // Should not happen...
-    throw new Error('Unavailable IPFS HTTP Client library...')
   }
 
   // Default
@@ -99,7 +83,7 @@ import root from 'window-or-global'
     }
     try {
       if (typeof root.IpfsHttpClient === 'undefined') {
-        await this.loadIpfsHttpClient()
+        await this.ipfsBundle.loadIpfsHttpLibrary()
       }
       this.getLogger().info(
         `Processing connection to IPFS API URL:

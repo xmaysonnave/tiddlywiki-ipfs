@@ -18,12 +18,12 @@ import IpfsUrl from './ipfs-url'
 ;(function () {
   'use strict'
 
+  /*eslint no-unused-vars:"off"*/
+  const name = 'ipfs-bundle'
+
   const cidAnalyser = 'https://cid.ipfs.io/#'
   const libp2pKey = 'libp2p-key'
   const dagPb = 'dag-pb'
-
-  /*eslint no-unused-vars:"off"*/
-  const name = 'ipfs-bundle'
 
   var IpfsBundle = function () {
     this.once = false
@@ -73,11 +73,59 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.loadErudaLibrary = async function () {
-    return await this.ipfsLoader.loadErudaLibrary()
+    try {
+      if (typeof root.eruda === 'undefined') {
+        await this.ipfsLoader.loadErudaLibrary()
+        if (typeof root.eruda !== 'undefined') {
+          return
+        }
+      }
+    } catch (error) {
+      this.getLogger().error(error)
+    }
+    throw new Error('Unavailable Eruda library...')
   }
 
   IpfsBundle.prototype.loadEthSigUtilLibrary = async function () {
-    return await this.ipfsLoader.loadEthSigUtilLibrary()
+    try {
+      if (typeof root.sigUtil === 'undefined') {
+        await this.ipfsLoader.loadEthSigUtilLibrary()
+        if (typeof root.sigUtil !== 'undefined') {
+          return
+        }
+      }
+    } catch (error) {
+      this.getLogger().error(error)
+    }
+    throw new Error('Unavailable Eth-Sig-Util library...')
+  }
+
+  IpfsBundle.prototype.loadEthersJsLibrary = async function () {
+    try {
+      if (typeof root.ethers === 'undefined') {
+        await this.ipfsLoader.loadEtherJsLibrary()
+        if (typeof root.ethers !== 'undefined') {
+          return
+        }
+      }
+    } catch (error) {
+      this.getLogger().error(error)
+    }
+    throw new Error('Unavailable Ethereum library...')
+  }
+
+  IpfsBundle.prototype.loadIpfsHttpLibrary = async function () {
+    try {
+      if (typeof root.IpfsHttpClient === 'undefined') {
+        await this.ipfsLoader.loadIpfsHttpLibrary()
+        if (typeof root.IpfsHttpClient !== 'undefined') {
+          return
+        }
+      }
+    } catch (error) {
+      this.getLogger().error(error)
+    }
+    throw new Error('Unavailable IPFS HTTP Client library...')
   }
 
   IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {
@@ -92,6 +140,22 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
+  IpfsBundle.prototype.personalRecover = function (message, signature) {
+    return this.ethereumLibrary.personalRecover(message, signature)
+  }
+
+  IpfsBundle.prototype.personalSign = async function (message, provider) {
+    try {
+      return await this.ethereumLibrary.personalSign(message, provider)
+    } catch (error) {
+      if (error.name === 'RejectedUserRequest') {
+        throw error
+      }
+      this.getLogger().error(error)
+      throw new Error('Unable to sign content...')
+    }
+  }
+
   IpfsBundle.prototype.decrypt = async function (text, provider) {
     try {
       return await this.ethereumLibrary.decrypt(text, provider)
@@ -102,6 +166,22 @@ import IpfsUrl from './ipfs-url'
       this.getLogger().error(error)
       throw new Error('Unable to decrypt content...')
     }
+  }
+
+  IpfsBundle.prototype.getEtherscanRegistry = function () {
+    return this.ethereumLibrary.getEtherscanRegistry()
+  }
+
+  IpfsBundle.prototype.getEnabledWeb3Provider = async function (provider) {
+    return await this.ethereumLibrary.getEnabledWeb3Provider(provider)
+  }
+
+  IpfsBundle.prototype.getWeb3Provider = async function (provider) {
+    return await this.ethereumLibrary.getWeb3Provider(provider)
+  }
+
+  IpfsBundle.prototype.keccak256 = async function (text) {
+    return await this.ethereumLibrary.keccak256(text)
   }
 
   IpfsBundle.prototype.isOwner = async function (domain, web3, account) {
@@ -686,6 +766,29 @@ to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${con
       }
     }
     return out
+  }
+
+  IpfsBundle.prototype.deflate = function (str) {
+    var tStart = new Date()
+    var ua = root.pako.deflate(str, { raw: false })
+    var b64 = this.Uint8ArrayToBase64(ua)
+    var tStop = new Date() - tStart
+    var ratio = Math.floor((b64.length * 100) / str.length)
+    this.getLogger().info(
+      `Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`
+    )
+    return b64
+  }
+  IpfsBundle.prototype.inflate = function (b64) {
+    var tStart = new Date()
+    var ua = this.decode(b64)
+    var str = root.pako.inflate(ua, { to: 'string' })
+    var tStop = new Date() - tStart
+    var ratio = Math.floor((str.length * 100) / b64.length)
+    this.getLogger().info(
+      `Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`
+    )
+    return str
   }
 
   module.exports = {

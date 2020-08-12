@@ -139,15 +139,37 @@ IPFS Controller
           await this.loadEthSigUtilLibrary()
         }
         if (compressed === 'yes') {
-          content = { pako: $tw.compress.deflate(content) }
-          content.pako = $tw.crypto.encrypt(content.pako, password, publicKey)
+          content = { compressed: this.deflate(content) }
+          content.compressed = $tw.crypto.encrypt(
+            content.compressed,
+            password,
+            publicKey
+          )
+          content.keccak256 = await this.keccak256(content.compressed)
+          if (publicKey && publicKey !== $tw.crypto.currentPublicKey) {
+            content.signature = await this.personalSign(content.keccak256)
+          }
           content = JSON.stringify(content)
         } else {
           // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
           if (encoding === 'base64') {
             content = atob(content)
           }
-          content = $tw.crypto.encrypt(content, password, publicKey)
+          if (publicKey || $tw.crypto.hasEncryptionKey()) {
+            content = { encrypted: content }
+            content.encrypted = $tw.crypto.encrypt(
+              content.encrypted,
+              password,
+              publicKey
+            )
+            content.keccak256 = await this.keccak256(content.encrypted)
+            if (publicKey && publicKey !== $tw.crypto.currentPublicKey) {
+              content.signature = await this.personalSign(content.keccak256)
+            }
+            content = JSON.stringify(content)
+          } else {
+            content = $tw.crypto.encrypt(content, password)
+          }
         }
         content = this.StringToUint8Array(content)
       } catch (error) {
@@ -158,7 +180,7 @@ IPFS Controller
     } else {
       try {
         if (compressed === 'yes') {
-          content = { pako: $tw.compress.deflate(content) }
+          content = { compressed: this.deflate(content) }
           content = JSON.stringify(content)
           content = this.StringToUint8Array(content)
         } else {
@@ -619,8 +641,20 @@ IPFS Controller
     return await this.ipfsBundle.isOwner(domain, web3, account)
   }
 
+  IpfsController.prototype.personalRecover = function (message, signature) {
+    return this.ipfsBundle.personalRecover(message, signature)
+  }
+
+  IpfsController.prototype.personalSign = async function (message, provider) {
+    return await this.ipfsBundle.personalSign(message, provider)
+  }
+
   IpfsController.prototype.decrypt = async function (text, provider) {
     return await this.ipfsBundle.decrypt(text, provider)
+  }
+
+  IpfsController.prototype.keccak256 = async function (text) {
+    return await this.ipfsBundle.keccak256(text)
   }
 
   IpfsController.prototype.getPublicEncryptionKey = async function (provider) {
@@ -657,6 +691,14 @@ IPFS Controller
 
   IpfsController.prototype.loadEthSigUtilLibrary = async function () {
     return await this.ipfsBundle.loadEthSigUtilLibrary()
+  }
+
+  IpfsController.prototype.deflate = function (str) {
+    return this.ipfsBundle.deflate(str)
+  }
+
+  IpfsController.prototype.inflate = function (b64) {
+    return this.ipfsBundle.inflate(b64)
   }
 
   exports.IpfsController = IpfsController

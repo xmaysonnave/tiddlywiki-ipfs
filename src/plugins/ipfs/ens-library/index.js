@@ -9,7 +9,6 @@ import root from 'window-or-global'
 
   // https://github.com/ensdomains/resolvers
   var EnsLibrary = function (ipfsBundle) {
-    this.ethereumLibrary = ipfsBundle.ethereumLibrary
     this.ipfsBundle = ipfsBundle
     // https://docs.ens.domains/ens-deployments
     // https://github.com/ensdomains/ui/blob/master/src/ens.js
@@ -279,9 +278,9 @@ import root from 'window-or-global'
       throw new Error('Undefined ENS domain...')
     }
     if (web3 === undefined) {
-      var { web3 } = await this.ethereumLibrary.getWeb3Provider()
+      var { web3 } = await this.ipfsBundle.getWeb3Provider()
     }
-    const etherscan = this.ethereumLibrary.getEtherscanRegistry()
+    const etherscan = this.ipfsBundle.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
@@ -358,12 +357,9 @@ import root from 'window-or-global'
       web3 === undefined ||
       web3 == null
     ) {
-      var {
-        account,
-        web3
-      } = await this.ethereumLibrary.getEnabledWeb3Provider()
+      var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
     }
-    const etherscan = this.ethereumLibrary.getEtherscanRegistry()
+    const etherscan = this.ipfsBundle.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address
@@ -417,12 +413,9 @@ import root from 'window-or-global'
       throw new Error('Undefined ENS domain...')
     }
     if (account === undefined || web3 === undefined) {
-      var {
-        account,
-        web3
-      } = await this.ethereumLibrary.getEnabledWeb3Provider()
+      var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
     }
-    const etherscan = this.ethereumLibrary.getEtherscanRegistry()
+    const etherscan = this.ipfsBundle.getEtherscanRegistry()
     // Resolve domain as namehash
     const domainHash = root.ethers.utils.namehash(domain)
     // Fetch ens registry address

@@ -1,10 +1,9 @@
 /*\
-title: $:/core/modules/widgets/compress.js
+title: $:/core/modules/widgets/encrypt.js
 type: application/javascript
-tags: $:/ipfs/core
 module-type: widget
 
-Compress widget
+Encrypt widget
 
 \*/
 ;(function () {
@@ -14,34 +13,34 @@ Compress widget
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
-  var CompressWidget = function (parseTreeNode, options) {
+  var EncryptWidget = function (parseTreeNode, options) {
     this.initialise(parseTreeNode, options)
   }
 
-  /*
+  /**
    * Inherit from the base widget class
    */
-  CompressWidget.prototype = new Widget()
+  EncryptWidget.prototype = new Widget()
 
-  /*
+  /**
    * Render this widget into the DOM
    */
-  CompressWidget.prototype.render = function (parent, nextSibling) {
+  EncryptWidget.prototype.render = function (parent, nextSibling) {
     this.parentDomNode = parent
     this.computeAttributes()
     this.execute()
-    var textNode = this.document.createTextNode(this.compressedText)
+    var textNode = this.document.createTextNode(this.encryptedText)
     parent.insertBefore(textNode, nextSibling)
     this.domNodes.push(textNode)
   }
 
-  /*
+  /**
    * Compute the internal state of the widget
    */
-  CompressWidget.prototype.execute = function () {
+  EncryptWidget.prototype.execute = function () {
     // Get parameters from our attributes
     this.filter = this.getAttribute('filter', '[!is[system]]')
-    // Compress the filtered tiddlers
+    // Encrypt the filtered tiddlers
     var tiddlers = this.wiki.filterTiddlers(this.filter)
     var json = {}
     var self = this
@@ -53,23 +52,20 @@ Compress widget
       }
       json[title] = jsonTiddler
     })
-    var content = JSON.stringify(json)
-    content = { compressed: $tw.compress.deflate(content) }
-    var tiddler = $tw.wiki.getTiddler('$:/isEncrypted')
-    if (tiddler && tiddler.fields.text === 'yes') {
-      content.compressed = $tw.crypto.encrypt(content.compressed)
+    var content = $tw.crypto.encrypt(JSON.stringify(json))
+    if ($tw.crypto.hasEncryptionKey()) {
+      content = JSON.stringify({ encrypted: content })
     }
-    content = JSON.stringify(content)
-    this.compressedText = $tw.utils.htmlEncode(content)
+    this.encryptedText = $tw.utils.htmlEncode(content)
   }
 
-  /*
+  /**
    * Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
    */
-  CompressWidget.prototype.refresh = function (changedTiddlers) {
-    // We don't need to worry about refreshing because the compress widget isn't for interactive use
+  EncryptWidget.prototype.refresh = function (changedTiddlers) {
+    // We don't need to worry about refreshing because the encrypt widget isn't for interactive use
     return false
   }
 
-  exports.compress = CompressWidget
+  exports.encrypt = EncryptWidget
 })()

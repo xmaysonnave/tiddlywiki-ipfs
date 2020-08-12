@@ -1,5 +1,4 @@
 import root from 'window-or-global'
-import detectEthereumProvider from '@metamask/detect-provider'
 ;(function () {
   'use strict'
 
@@ -9,7 +8,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
   // https://github.com/ensdomains/resolvers
   var EthereumLibrary = function (ipfsBundle) {
     this.ipfsBundle = ipfsBundle
-    this.ipfsLoader = ipfsBundle.ipfsLoader
     this.network = {
       0x1: 'Ethereum Main Network: "Mainnet", chainId: "0x1"',
       0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3"',
@@ -52,20 +50,19 @@ import detectEthereumProvider from '@metamask/detect-provider'
     const self = this
     try {
       const provider = await this.getEthereumProvider()
-      // Current network
-      const chainId = await this.provider.request({
-        method: 'eth_chainId'
-      })
-      this.chainChanged(chainId)
+      const chainId = await this.getChainId(provider)
+      this.getLogger().info(`Chain: ${this.network[chainId]}`)
       // Init Ethereum listener
       provider.on('accountsChanged', accounts => {
-        self.accountChanged(accounts)
+        self.accounts(provider, accounts)
       })
       provider.on('chainChanged', chainId => {
-        self.chainChanged(chainId)
+        const id = parseInt(chainId, 16)
+        self.getLogger().info(`Chain: ${self.network[id]}`)
       })
       provider.on('connect', chainId => {
-        self.chainChanged(chainId)
+        const id = parseInt(chainId, 16)
+        self.getLogger().info(`Chain: ${self.network[id]}`)
       })
       provider.on('disconnect', (code, reason) => {
         self.disconnectedFromAllChains(code, reason)
@@ -74,14 +71,30 @@ import detectEthereumProvider from '@metamask/detect-provider'
         self.providerMessage(message)
       })
     } catch (error) {
-      this.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
+      if (error.name !== 'InstallMetamask') {
+        this.getLogger().error(error)
+        $tw.utils.alert(name, error.message)
+      }
     }
     // Init once
     this.once = true
   }
 
-  EthereumLibrary.prototype.accountChanged = async function (accounts) {
+  EthereumLibrary.prototype.getChainId = async function (provider) {
+    if (provider === undefined || provider == null) {
+      provider = await this.getEthereumProvider()
+    }
+    var chainId = await provider.request({
+      method: 'eth_chainId'
+    })
+    chainId =
+      chainId === undefined || chainId == null || chainId.trim() === ''
+        ? null
+        : chainId.trim()
+    return chainId !== null ? parseInt(chainId, 16) : null
+  }
+
+  EthereumLibrary.prototype.accounts = async function (provider, accounts) {
     if (
       accounts !== undefined &&
       accounts !== null &&
@@ -89,20 +102,17 @@ import detectEthereumProvider from '@metamask/detect-provider'
       accounts.length > 0
     ) {
       try {
-        const { chainId } = await this.getWeb3Provider()
-        this.getLogger().info('Available Ethereum account:')
-        for (var i = 0; i < accounts.length; i++) {
-          const account = accounts[i]
-          this.getLogger().info(
-            ` ${this.etherscan[chainId]}/address/${account}`
-          )
-        }
+        const chainId = await this.getChainId(provider)
+        this.getLogger().info(`Chain: ${this.network[chainId]}`)
+        this.getLogger().info(
+          `Ethereum account: ${this.etherscan[chainId]}/address/${accounts[0]}`
+        )
       } catch (error) {
         this.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       }
     } else {
-      this.getLogger().info('No available Ethereum account...')
+      this.getLogger().info('Unavailable Ethereum account...')
     }
   }
 
@@ -119,16 +129,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
     this.getLogger().info(`Ethereum Provider message: ${message}`)
   }
 
-  EthereumLibrary.prototype.chainChanged = function (chainId) {
-    try {
-      var chainId = parseInt(chainId, 16)
-      this.getLogger().info(`Chain: ${this.network[chainId]}`)
-    } catch (error) {
-      this.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
-    }
-  }
-
   EthereumLibrary.prototype.getEtherscanRegistry = function () {
     return this.etherscan
   }
@@ -137,39 +137,107 @@ import detectEthereumProvider from '@metamask/detect-provider'
     return this.network
   }
 
-  EthereumLibrary.prototype.loadEthers = async function () {
-    try {
-      if (typeof root.ethers === 'undefined') {
-        await this.ipfsLoader.loadEtherJsLibrary()
-        if (typeof root.ethers !== 'undefined') {
-          return
-        }
-      }
-    } catch (error) {
-      this.getLogger().error(error)
+  EthereumLibrary.prototype.keccak256 = async function (text) {
+    text =
+      text === undefined || text == null || text.trim() === ''
+        ? null
+        : text.trim()
+    if (text == null) {
+      throw new Error('Undefined Text....')
     }
-    // Should not happen...
-    throw new Error('Unavailable Ethereum library...')
+    if (root.ethers === undefined || root.ethers == null) {
+      await this.ipfsBundle.loadEthersJsLibrary()
+    }
+    return root.ethers.utils.keccak256(root.ethers.utils.toUtf8Bytes(text))
+  }
+
+  EthereumLibrary.prototype.personalSign = async function (message, provider) {
+    message =
+      message === undefined || message == null || message.trim() === ''
+        ? null
+        : message.trim()
+    if (message == null) {
+      throw new Error('Undefined Message....')
+    }
+    try {
+      if (provider === undefined || provider == null) {
+        provider = await this.getEthereumProvider()
+      }
+      const account = await this.getAccount(provider)
+      const signature = await provider.request({
+        method: 'personal_sign',
+        params: [message, account]
+      })
+      if (signature !== undefined || signature !== null) {
+        this.getLogger().info(`Signature: ${signature}`)
+      }
+      return signature
+    } catch (error) {
+      // EIP 1193 user Rejected Request
+      if (error.code === 4001) {
+        const err = new Error('Rejected User Request...')
+        err.name = 'RejectedUserRequest'
+        throw err
+      }
+      throw error
+    }
+  }
+
+  EthereumLibrary.prototype.personalRecover = function (message, signature) {
+    message =
+      message === undefined || message == null || message.trim() === ''
+        ? null
+        : message.trim()
+    if (message == null) {
+      throw new Error('Undefined Message....')
+    }
+    signature =
+      signature === undefined || signature == null || signature.trim() === ''
+        ? null
+        : signature.trim()
+    if (signature == null) {
+      throw new Error('Undefined Signature....')
+    }
+    const msgParams = { data: message, sig: signature }
+    const recovered = root.sigUtil.recoverPersonalSignature(msgParams)
+    return recovered !== undefined && recovered !== null ? recovered : null
   }
 
   EthereumLibrary.prototype.decrypt = async function (text, provider) {
-    if (provider === undefined || provider == null) {
-      provider = await this.getEthereumProvider()
+    text =
+      text === undefined || text == null || text.trim() === ''
+        ? null
+        : text.trim()
+    if (text == null) {
+      throw new Error('Undefined Text....')
     }
-    const account = await this.getAccount(provider)
-    var tStart = new Date()
-    const decryptedText = await provider.request({
-      method: 'eth_decrypt',
-      params: [text, account]
-    })
-    if (decryptedText !== undefined || decryptedText !== null) {
-      var tStop = new Date() - tStart
-      var ratio = Math.floor((decryptedText.length * 100) / text.length)
-      this.getLogger().info(
-        `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
-      )
+    try {
+      if (provider === undefined || provider == null) {
+        provider = await this.getEthereumProvider()
+      }
+      const account = await this.getAccount(provider)
+      var tStart = new Date()
+      const decryptedText = await provider.request({
+        method: 'eth_decrypt',
+        params: [text, account]
+      })
+      if (decryptedText !== undefined || decryptedText !== null) {
+        var tStop = new Date() - tStart
+        var ratio = Math.floor((decryptedText.length * 100) / text.length)
+        this.getLogger().info(
+          `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
+        )
+      }
+      return decryptedText
+    } catch (error) {
+      // EIP 1193 user Rejected Request
+      if (error.code === 4001) {
+        const err = new Error('Rejected User Request...')
+        err.name = 'RejectedUserRequest'
+        throw err
+      }
+      throw error
     }
-    return decryptedText
   }
 
   EthereumLibrary.prototype.getPublicEncryptionKey = async function (
@@ -209,7 +277,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
   EthereumLibrary.prototype.detectEthereumProvider = async function () {
     var provider = null
     try {
-      provider = await detectEthereumProvider({ mustBeMetaMask: true })
+      provider = await root.detectEthereumProvider({ mustBeMetaMask: true })
       if (provider !== undefined && provider !== null) {
         provider.autoRefreshOnNetworkChange = false
       }
@@ -217,7 +285,9 @@ import detectEthereumProvider from '@metamask/detect-provider'
       this.getLogger().error(error)
     }
     if (provider === undefined || provider == null) {
-      throw new Error('Please install ~MetaMask...')
+      const err = new Error('Please install ~MetaMask...')
+      err.name = 'InstallMetamask'
+      throw err
     }
     return provider
   }
@@ -324,13 +394,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
       ) {
         throw new Error('Unable to retrieve any Ethereum accounts...')
       }
-      if (provider.chainId !== undefined) {
-        this.getLogger().info(
-          `Chain: ${provider.chainId}, Connected Account: ${accounts[0]}`
-        )
-      } else {
-        this.getLogger().info(`Connected Account: ${accounts[0]}`)
-      }
+      await this.accounts(provider, accounts)
       return accounts[0]
     } catch (error) {
       // EIP 1193 user Rejected Request
@@ -348,7 +412,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
       provider = await this.getEthereumProvider()
     }
     if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
+      await this.ipfsBundle.loadEthersJsLibrary()
     }
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
@@ -357,7 +421,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
     const network = await web3.getNetwork()
-    const chainId = parseInt(network.chainId)
+    const chainId = parseInt(network.chainId, 16)
     return {
       account: account,
       chainId: chainId,
@@ -370,13 +434,13 @@ import detectEthereumProvider from '@metamask/detect-provider'
       provider = await this.getEthereumProvider()
     }
     if (root.ethers === undefined || root.ethers == null) {
-      await this.loadEthers()
+      await this.ipfsBundle.loadEthersJsLibrary()
     }
     // Instantiate an ethers Web3Provider
     const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
     const network = await web3.getNetwork()
-    const chainId = parseInt(network.chainId)
+    const chainId = parseInt(network.chainId, 16)
     return {
       web3: web3,
       chainId: chainId
