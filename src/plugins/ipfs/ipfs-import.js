@@ -16,7 +16,8 @@ IPFS Import
   const name = 'ipfs-import'
 
   const local = '<a href="'
-  const remote = '<a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="'
+  const remote =
+    '<a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="'
 
   const alertFailed = function (
     strings,
