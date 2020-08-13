@@ -53,8 +53,10 @@ Encrypt widget
       json[title] = jsonTiddler
     })
     var content = $tw.crypto.encrypt(JSON.stringify(json))
-    if ($tw.crypto.hasEncryptionKey()) {
-      content = JSON.stringify({ encrypted: content })
+    if (typeof $tw.crypto.hasEncryptionKey === 'function') {
+      if ($tw.crypto.hasEncryptionKey()) {
+        content = JSON.stringify({ encrypted: content })
+      }
     }
     this.encryptedText = $tw.utils.htmlEncode(content)
   }

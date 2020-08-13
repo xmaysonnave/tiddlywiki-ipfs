@@ -54,12 +54,14 @@ Compress widget
       json[title] = jsonTiddler
     })
     var content = JSON.stringify(json)
-    content = { compressed: $tw.compress.deflate(content) }
-    var tiddler = $tw.wiki.getTiddler('$:/isEncrypted')
-    if (tiddler && tiddler.fields.text === 'yes') {
-      content.compressed = $tw.crypto.encrypt(content.compressed)
+    if ($tw.compress && typeof $tw.compress.deflate === 'function') {
+      content = { compressed: $tw.compress.deflate(content) }
+      var tiddler = $tw.wiki.getTiddler('$:/isEncrypted')
+      if (tiddler && tiddler.fields.text === 'yes') {
+        content.compressed = $tw.crypto.encrypt(content.compressed)
+      }
+      content = JSON.stringify(content)
     }
-    content = JSON.stringify(content)
     this.compressedText = $tw.utils.htmlEncode(content)
   }
 

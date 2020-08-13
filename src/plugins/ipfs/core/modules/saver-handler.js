@@ -213,7 +213,11 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     ) {
       return false
     }
-    if ($tw.browser && $tw.crypto.hasEncryptionKey()) {
+    if (
+      $tw.browser &&
+      typeof $tw.crypto.hasEncryptionKey === 'function' &&
+      $tw.crypto.hasEncryptionKey()
+    ) {
       await $tw.ipfs.loadEthSigUtilLibrary()
     }
     var variables = options.variables || {}

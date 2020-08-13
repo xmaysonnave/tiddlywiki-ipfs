@@ -59,6 +59,7 @@ Command to save the current wiki as a wiki folder
 
   WikiFolderMaker.prototype.tiddlersToIgnore = [
     '$:/boot/boot.css',
+    '$:/boot/ipfs-boot.js',
     '$:/boot/boot.js',
     '$:/boot/bootprefix.js',
     '$:/core',
