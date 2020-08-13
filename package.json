@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200812403",
+  "version": "v0.3.0-200813393",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -15,8 +15,8 @@
   "scripts": {
     "build-all-noclone": "./scripts/build-all-noclone.sh",
     "build": "./scripts/build.sh",
+    "debug": "./scripts/debug-build-tiddlywiki.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
-    "debug": "yarn tiddlywiki build --output production --build --verbose",
     "eslint": "eslint \"src/**/*.js\" && eslint \"test/**/*.js\" && eslint \"scripts/**/*.js\"",
     "eslint:fix": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix && eslint \"scripts/**/*.js\" --fix",
     "format": "prettier-standard --eslint --format",
@@ -59,7 +59,7 @@
     "@metamask/detect-provider": "^1.1.0",
     "bs58": "^4.0.1",
     "buffer": "^5.6.0",
-    "cids": "^0.8.3",
+    "cids": "0.8.3",
     "content-hash": "^2.5.2",
     "ipfs-provider": "^1.0.0",
     "whatwg-url": "^8.1.0",
@@ -74,7 +74,7 @@
     "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/runtime-corejs3": "^7.11.2",
-    "acorn": "^7.4.0",
+    "acorn": "^8.0.1",
     "babel-eslint": "^10.1.0",
     "babelify": "^10.0.0",
     "browserify": "^16.5.2",
@@ -96,7 +96,7 @@
     "eth-sig-util": "^2.5.3",
     "gzipper": "^4.0.1",
     "husky": "^4.2.5",
-    "jest": "^26.2.2",
+    "jest": "^26.4.0",
     "lint-staged": "^10.2.11",
     "loglevel": "^1.6.8",
     "pako": "^1.0.11",
@@ -104,7 +104,7 @@
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.4.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.370.1",
+    "snyk": "^1.373.1",
     "tiddlywiki": "^5.1.22",
     "typescript": "^3.9.7"
   },
