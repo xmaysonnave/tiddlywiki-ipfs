@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # cleanup
 rm -f -R ./tw5-locator > /dev/null 2>&1
 rm -f -R ./tw5-relink > /dev/null 2>&1

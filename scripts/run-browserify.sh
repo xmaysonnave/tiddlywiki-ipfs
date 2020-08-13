@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 yarn prettier-standard \
   --lint \
   --format \

@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 node -v
 npm -v
 
