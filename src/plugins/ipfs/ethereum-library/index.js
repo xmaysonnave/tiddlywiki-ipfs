@@ -168,9 +168,6 @@ import root from 'window-or-global'
         method: 'personal_sign',
         params: [message, account]
       })
-      if (signature !== undefined || signature !== null) {
-        this.getLogger().info(`Signature: ${signature}`)
-      }
       return signature
     } catch (error) {
       // EIP 1193 user Rejected Request
