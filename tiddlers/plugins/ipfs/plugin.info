@@ -7,6 +7,7 @@
   "tags": "$:/ipfs/core",
   "core-version": ">=5.1.2",
   "_project_uri": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
+  "plugin-priority": 3100,
   "plugin-type": "plugin",
 	"list": "readme changelog"
 }
