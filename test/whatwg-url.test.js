@@ -20,7 +20,7 @@
  * https://url.spec.whatwg.org/
  */
 
-const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
 const { URL } = require('whatwg-url')

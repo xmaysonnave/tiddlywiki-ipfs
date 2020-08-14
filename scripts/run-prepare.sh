@@ -14,12 +14,12 @@ cp -R ./src/plugins/ipfs/core ./build/plugins/ipfs > /dev/null 2>&1
 # don't copy sub-directories, they are meant to be bundled
 cp ./src/plugins/ipfs/* ./build/plugins/ipfs > /dev/null 2>&1
 
-# plugin tiddlers
-cp -R ./plugins/ipfs ./build/plugins > /dev/null 2>&1
+# ipfs plugin tiddlers
+cp -R ./tiddlers/plugins/ipfs ./build/plugins > /dev/null 2>&1
 
 # system tiddlers
 cp ./src/boot/boot.js ./node_modules/tiddlywiki/boot
-cp -R ./plugins/system ./build/tiddlers > /dev/null 2>&1
+cp -R ./tiddlers/system ./build/tiddlers > /dev/null 2>&1
 
 # libraries
 wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.1.0/dist/detect-provider.min.js -O ./build/tiddlers/system/detect-provider.min.js

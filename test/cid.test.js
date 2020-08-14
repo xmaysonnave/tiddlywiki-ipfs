@@ -2,7 +2,7 @@
 /*global jest,beforeAll,describe,it,expect*/
 'use strict'
 
-const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const root = require('window-or-global')
 // IPFS

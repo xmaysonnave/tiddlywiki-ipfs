@@ -2,8 +2,8 @@
 /*global jest,beforeAll,describe,it,expect*/
 'use strict'
 
-const IpfsBundle = require('../build/plugins/ipfs/ipfs-bundle.js').IpfsBundle
-const IpfsWrapper = require('../build/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
+const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+const IpfsWrapper = require('../src/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
 const log = require('loglevel')
 const root = require('window-or-global')
 const { URL } = require('whatwg-url')
