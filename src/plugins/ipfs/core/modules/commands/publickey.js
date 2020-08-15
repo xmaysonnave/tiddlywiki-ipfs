@@ -27,7 +27,7 @@ Save publickey for crypto operations
     if (this.params.length < 1) {
       return 'Missing publickey'
     }
-    if ($tw.compress && typeof $tw.compress.setEncryptionKey === 'function') {
+    if ($tw.crypto && typeof $tw.crypto.setEncryptionKey === 'function') {
       $tw.crypto.setEncryptionKey(this.params[0])
     }
     return null
