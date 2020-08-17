@@ -3,5 +3,5 @@ modified: 20200807094915385
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/xmaysonnave/eth-sig-util/master/LICENSE
 _project_uri: https://github.com/xmaysonnave/eth-sig-util
-_source_uri: https://cdn.jsdelivr.net/gh/xmaysonnave/eth-sig-util@2.5.3/eth-sig-util.umd.min.js
-_source_sri: sha384-pZ7+aSZK6Q4wkuDnSppIicWUZyMzT10JYPqegpFhQp4ztRf2oMBpSDOATCiUjR1r
+_source_uri: https://cdn.jsdelivr.net/gh/xmaysonnave/eth-sig-util@2.5.3+build.2/eth-sig-util.umd.min.js
+_source_sri: sha384-56pg0vf2lPY81JRHWycS8jC9WgvE+46993IB8MIS8PPAqTe4ZyrmjNREppXEubfU
