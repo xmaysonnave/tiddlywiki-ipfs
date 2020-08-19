@@ -2,6 +2,6 @@ title: $:/language/
 modified: 20200804094915385
 tags: $:/ipfs/core
 
-NetworkError/XMLHttpRequest: Network Error while loading...
+NetworkError/Fetch: Network Error while loading...
 LazyLoadingWarning: <p>Trying to load external Tiddler content from:<p></p>''<$ipfslink field="_canonical_uri" tiddler=<<currentTiddler>>/>''</p>
 EmptyTidddler: <p>An external Tiddler content has been loaded:</p><p>''<$ipfslink field="_canonical_uri" tiddler=<<currentTiddler>>/>''</p><p>The imported Tiddler content is empty, possible reasons:</p><ul><li>The Tiddler Content Type doesn't match the type of the external content.</li>

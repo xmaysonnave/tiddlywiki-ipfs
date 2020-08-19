@@ -1,4 +1,4 @@
-import root from 'window-or-global'
+import root, { fetch, Error } from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -172,54 +172,20 @@ import root from 'window-or-global'
     return false
   }
 
-  IpfsLoader.prototype.xhrToJson = async function (url) {
-    return await this.httpGet(url, 'post', 'json')
-  }
-
-  IpfsLoader.prototype.xhrToUint8Array = function (url) {
-    return this.httpGet(url, 'get', 'arraybuffer')
-  }
-
-  IpfsLoader.prototype.httpGet = function (url, method, responseType) {
-    const self = this
-    const xhr = new XMLHttpRequest()
-    return new Promise(function (resolve, reject) {
-      xhr.responseType = responseType
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status !== 0) {
-          if (xhr.status >= 300) {
-            reject(
-              new Error($tw.language.getString('NetworkError/XMLHttpRequest'))
-            )
-            return
-          }
-          try {
-            var result = null
-            if (responseType === 'arraybuffer') {
-              result = new Uint8Array(this.response)
-            } else {
-              result = this.response
-            }
-            self.getLogger().info(
-              `[${xhr.status}] Loaded:
- ${url}`
-            )
-            resolve(result)
-          } catch (error) {
-            reject(error)
-          }
-        }
-      }
-      xhr.onerror = function () {
-        reject(new Error($tw.language.getString('NetworkError/XMLHttpRequest')))
-      }
-      try {
-        xhr.open(method, url, true)
-        xhr.send()
-      } catch (error) {
-        reject(error)
-      }
-    })
+  IpfsLoader.prototype.fetchUint8Array = async function (url) {
+    const response = await fetch(url)
+    if (response.ok) {
+      const ab = await response.arrayBuffer()
+      const ua = new Uint8Array(ab)
+      this.getLogger().info(
+        `[${response.status}] Loaded:
+${url}`
+      )
+      return ua
+    }
+    throw new Error(
+      `[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`
+    )
   }
 
   IpfsLoader.prototype.checkMessage = async function (
@@ -267,7 +233,7 @@ import root from 'window-or-global'
       password === undefined || password == null || password.trim() === ''
         ? null
         : password.trim()
-    const ua = await this.xhrToUint8Array(url)
+    const ua = await this.fetchUint8Array(url)
     if (ua.length === 0) {
       return ''
     }
@@ -329,7 +295,7 @@ import root from 'window-or-global'
       password === undefined || password == null || password.trim() === ''
         ? null
         : password.trim()
-    var ua = await this.xhrToUint8Array(url)
+    var ua = await this.fetchUint8Array(url)
     if (ua.length === 0) {
       return ''
     }

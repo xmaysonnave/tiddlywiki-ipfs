@@ -612,10 +612,6 @@ IPFS Controller
     return true
   }
 
-  IpfsController.prototype.xhrToJson = async function (url) {
-    return await this.ipfsBundle.xhrToJson(url)
-  }
-
   IpfsController.prototype.decodeCid = function (pathname) {
     return this.ipfsBundle.decodeCid(pathname)
   }

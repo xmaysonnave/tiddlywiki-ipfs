@@ -59,10 +59,6 @@ import IpfsUrl from './ipfs-url'
     this.once = true
   }
 
-  IpfsBundle.prototype.xhrToJson = async function (url) {
-    return await this.ipfsLoader.xhrToJson(url)
-  }
-
   IpfsBundle.prototype.getENSRegistry = function () {
     return this.ensLibrary.getENSRegistry()
   }
