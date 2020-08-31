@@ -20,7 +20,7 @@ const ed25519Base36V1 =
   'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
 beforeAll(() => {
   root.log = log
-  const logger = log.getLogger('default')
+  const logger = log.getLogger('ipfs')
   logger.setLevel('silent', false)
 })
 describe('CID', () => {

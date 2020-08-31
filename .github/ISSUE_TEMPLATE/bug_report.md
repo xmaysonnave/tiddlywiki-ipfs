@@ -23,19 +23,19 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
 
-- OS
-- Browser
-- Version
-- TiddlyWiki Version
-- TiddlyWiki Plugins
+-   OS
+-   Browser
+-   Version
+-   TiddlyWiki Version
+-   TiddlyWiki Plugins
 
 **Mobile (please complete the following information):**
 
-- Device
-- OS
-- Browser
-- TiddlyWiki Version
-- TiddlyWiki Plugins
+-   Device
+-   OS
+-   Browser
+-   TiddlyWiki Version
+-   TiddlyWiki Plugins
 
 **Additional context**
 Add any other context about the problem here.

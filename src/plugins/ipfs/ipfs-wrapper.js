@@ -7,7 +7,6 @@ module-type: library
 IPFS Wrapper
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

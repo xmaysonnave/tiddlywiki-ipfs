@@ -7,7 +7,6 @@ module-type: library
 IPFS Controller
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/
@@ -99,56 +98,47 @@ IPFS Controller
     encoding
   ) {
     if (content === undefined || content == null) {
-      return null
+      throw new Error('Unable to process undefined content...')
     }
     if (encoding === undefined || encoding == null) {
       encoding = 'utf8'
     }
-    var compressed = $tw.wiki.getTiddler('$:/isCompressed')
-    compressed =
-      compressed !== undefined &&
-      compressed.fields.text !== undefined &&
-      compressed.fields.text.trim() !== ''
-        ? compressed.fields.text
-        : 'yes'
-    compressed =
+    var compress = $tw.wiki.getTiddler('$:/isCompressed')
+    compress = compress !== undefined ? compress.fields.text === 'yes' : false
+    compress =
       tiddler !== undefined &&
       tiddler.fields._compress !== undefined &&
       tiddler.fields._compress.trim() !== ''
-        ? tiddler.fields._compress
-        : compressed
+        ? tiddler.fields._compress.trim() === 'yes'
+        : compress
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
     encrypted =
-      encrypted !== undefined &&
-      encrypted.fields.text !== undefined &&
-      encrypted.fields.text.trim() !== ''
-        ? encrypted.fields.text
-        : 'no'
+      encrypted !== undefined ? encrypted.fields.text === 'yes' : false
     var password =
       tiddler !== undefined &&
       tiddler.fields._password !== undefined &&
       tiddler.fields._password.trim() !== ''
-        ? tiddler.fields._password
+        ? tiddler.fields._password.trim()
         : null
     var publicKey =
       tiddler !== undefined &&
-      tiddler.fields._public_key !== undefined &&
-      tiddler.fields._public_key.trim() !== ''
-        ? tiddler.fields._public_key
+      tiddler.fields._encryption_public_key !== undefined &&
+      tiddler.fields._encryption_public_key.trim() !== ''
+        ? tiddler.fields._encryption_public_key.trim()
         : null
-    if (encrypted === 'yes' || password || publicKey) {
+    if (encrypted || password || publicKey) {
       try {
-        if (publicKey || $tw.crypto.hasEncryptionKey()) {
+        if (publicKey || $tw.crypto.hasEncryptionPublicKey()) {
           await this.loadEthSigUtilLibrary()
         }
-        if (compressed === 'yes') {
+        if (compress) {
           content = { compressed: this.deflate(content) }
           content.compressed = $tw.crypto.encrypt(
             content.compressed,
             password,
             publicKey
           )
-          content.keccak256 = await this.keccak256(content.compressed)
+          content.keccak256 = $tw.crypto.keccak256(content.compressed)
           if (publicKey && publicKey !== $tw.crypto.currentPublicKey) {
             content.signature = await this.personalSign(content.keccak256)
           }
@@ -158,14 +148,14 @@ IPFS Controller
           if (encoding === 'base64') {
             content = atob(content)
           }
-          if (publicKey || $tw.crypto.hasEncryptionKey()) {
+          if (publicKey || $tw.crypto.hasEncryptionPublicKey()) {
             content = { encrypted: content }
             content.encrypted = $tw.crypto.encrypt(
               content.encrypted,
               password,
               publicKey
             )
-            content.keccak256 = await this.keccak256(content.encrypted)
+            content.keccak256 = $tw.crypto.keccak256(content.encrypted)
             if (publicKey && publicKey !== $tw.crypto.currentPublicKey) {
               content.signature = await this.personalSign(content.keccak256)
             }
@@ -182,7 +172,7 @@ IPFS Controller
       }
     } else {
       try {
-        if (compressed === 'yes') {
+        if (compress) {
           content = { compressed: this.deflate(content) }
           content = JSON.stringify(content)
           content = this.StringToUint8Array(content)
@@ -650,10 +640,6 @@ IPFS Controller
 
   IpfsController.prototype.decrypt = async function (text, provider) {
     return await this.ipfsBundle.decrypt(text, provider)
-  }
-
-  IpfsController.prototype.keccak256 = async function (text) {
-    return await this.ipfsBundle.keccak256(text)
   }
 
   IpfsController.prototype.getPublicEncryptionKey = async function (provider) {

@@ -27,7 +27,7 @@ Compression handling
           $tw.compress &&
           typeof $tw.compress.setCompressState === 'function'
         ) {
-          $tw.compress.setCompressState(tiddler.fields.text)
+          $tw.compress.setCompressState(tiddler.fields.text === 'yes')
         }
       }
     })

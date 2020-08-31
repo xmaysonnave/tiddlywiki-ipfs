@@ -12,7 +12,7 @@ cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
 
 # build
-yarn tiddlywiki build \
+yarn ipfs-tiddlywiki build \
   --output production \
   --build \
   --verbose \
@@ -22,7 +22,7 @@ yarn tiddlywiki build \
 cp -R ./editions/dev/* ./build > /dev/null 2>&1
 
 # build
-yarn tiddlywiki build \
+yarn ipfs-tiddlywiki build \
   --output production \
   --build \
   --verbose \

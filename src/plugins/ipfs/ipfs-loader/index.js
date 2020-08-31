@@ -1,4 +1,4 @@
-import root, { fetch, Error } from 'window-or-global'
+import root from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -179,7 +179,7 @@ import root, { fetch, Error } from 'window-or-global'
       const ua = new Uint8Array(ab)
       this.getLogger().info(
         `[${response.status}] Loaded:
-${url}`
+  ${url}`
       )
       return ua
     }
@@ -188,11 +188,55 @@ ${url}`
     )
   }
 
-  IpfsLoader.prototype.checkMessage = async function (
-    message,
-    keccak256,
-    signature
-  ) {
+  IpfsLoader.prototype.xhrToJson = async function (url) {
+    return await this.httpGet(url, 'post', 'json')
+  }
+
+  IpfsLoader.prototype.xhrToUint8Array = async function (url) {
+    return await this.httpGet(url, 'get', 'arraybuffer')
+  }
+
+  IpfsLoader.prototype.httpGet = function (url, method, responseType) {
+    const self = this
+    const xhr = new XMLHttpRequest()
+    return new Promise(function (resolve, reject) {
+      xhr.responseType = responseType
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status !== 0) {
+          if (xhr.status >= 300) {
+            reject(new Error($tw.language.getString('NetworkError/Fetch')))
+            return
+          }
+          try {
+            var result = null
+            if (responseType === 'arraybuffer') {
+              result = new Uint8Array(this.response)
+            } else {
+              result = this.response
+            }
+            self.getLogger().info(
+              `[${xhr.status}] Loaded:
+ ${url}`
+            )
+            resolve(result)
+          } catch (error) {
+            reject(error)
+          }
+        }
+      }
+      xhr.onerror = function () {
+        reject(new Error($tw.language.getString('NetworkError/Fetch')))
+      }
+      try {
+        xhr.open(method, url, true)
+        xhr.send()
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  IpfsLoader.prototype.checkMessage = function (message, keccak256, signature) {
     message =
       message === undefined || message == null || message.trim() === ''
         ? null
@@ -201,9 +245,9 @@ ${url}`
       throw new Error('Undefined encrypted content...')
     }
     if (keccak256) {
-      const hash = await this.ipfsBundle.keccak256(message)
+      const hash = $tw.crypto.keccak256(message)
       if (keccak256 !== hash) {
-        throw new Error('Tampered encrypted content, keccak256 do not match...')
+        throw new Error('Tampered encrypted content, signature do not match...')
       }
     }
     if (signature) {
@@ -249,11 +293,7 @@ ${url}`
         data = this.ipfsBundle.inflate(data)
       } else if (json.compressed.startsWith('{"version":')) {
         if (json.signature) {
-          await this.checkMessage(
-            json.compressed,
-            json.keccak256,
-            json.signature
-          )
+          this.checkMessage(json.compressed, json.keccak256, json.signature)
         }
         data = await this.ipfsBundle.decrypt(json.compressed)
         data = this.ipfsBundle.inflate(data)
@@ -263,7 +303,7 @@ ${url}`
     } else if (data.startsWith('{"encrypted":')) {
       const json = JSON.parse(data)
       if (json.signature) {
-        await this.checkMessage(json.encrypted, json.keccak256, json.signature)
+        this.checkMessage(json.encrypted, json.keccak256, json.signature)
       }
       data = await this.ipfsBundle.decrypt(json.encrypted)
       data = btoa(data)
@@ -295,7 +335,7 @@ ${url}`
       password === undefined || password == null || password.trim() === ''
         ? null
         : password.trim()
-    var ua = await this.fetchUint8Array(url)
+    const ua = await this.fetchUint8Array(url)
     if (ua.length === 0) {
       return ''
     }
@@ -311,11 +351,7 @@ ${url}`
         data = this.ipfsBundle.inflate(data)
       } else if (json.compressed.startsWith('{"version":')) {
         if (json.signature) {
-          await this.checkMessage(
-            json.compressed,
-            json.keccak256,
-            json.signature
-          )
+          this.checkMessage(json.compressed, json.keccak256, json.signature)
         }
         data = await this.ipfsBundle.decrypt(json.compressed)
         data = this.ipfsBundle.inflate(data)
@@ -325,7 +361,7 @@ ${url}`
     } else if (data.startsWith('{"encrypted":')) {
       const json = JSON.parse(data)
       if (json.signature) {
-        await this.checkMessage(json.encrypted, json.keccak256, json.signature)
+        this.checkMessage(json.encrypted, json.keccak256, json.signature)
       }
       data = await this.ipfsBundle.decrypt(json.encrypted)
     } else if (data.startsWith('{"iv":')) {

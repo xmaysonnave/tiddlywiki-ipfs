@@ -15,21 +15,26 @@
   ],
   "build": {
 		"index": [
-			"--compress", "true",
+			"--compress", "yes",
 			"--rendertiddler", "$:/core/save/all", "index.html", "text/plain"
     ],
-		"index-encrypted": [
-			"--compress", "true",
+		"index-standford": [
+			"--compress", "yes",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/index-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-standford.html", "text/plain",
       "--clearpassword"
     ],
     "index-plain": [
       "--rendertiddler", "$:/core/save/all", "../sample/index-plain.html", "text/plain"
     ],
-		"index-plain-and-encrypted": [
+		"index-plain-and-ethereum": [
+      "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-ethereum.html", "text/plain",
+      "--clearencryptionpublickey"
+    ],
+		"index-plain-and-standford": [
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-standford.html", "text/plain",
       "--clearpassword"
     ]
   }

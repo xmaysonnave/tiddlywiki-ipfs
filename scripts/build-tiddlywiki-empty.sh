@@ -4,7 +4,7 @@
 cp -R ./editions/empty/* ./build > /dev/null 2>&1
 
 # build
-yarn tiddlywiki build \
+yarn ipfs-tiddlywiki build \
   --output production \
   --build \
   --verbose \

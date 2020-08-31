@@ -4,6 +4,13 @@
 rm -f -R ./build > /dev/null 2>&1
 rm -f -R ./sample > /dev/null 2>&1
 
+# lint and format
+yarn format \
+|| exit 1
+
+# target
+yarn browserslist
+
 # build directories
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 mkdir ./sample > /dev/null 2>&1
@@ -18,12 +25,13 @@ cp ./src/plugins/ipfs/* ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./tiddlers/plugins/ipfs ./build/plugins > /dev/null 2>&1
 
 # system tiddlers
-cp ./src/boot/boot.js ./node_modules/tiddlywiki/boot
 cp -R ./tiddlers/system ./build/tiddlers > /dev/null 2>&1
+cp ./src/boot/ipfs-boot.js ./build/tiddlers/system > /dev/null 2>&1
+cp ./src/boot/ipfs-bootprefix.js ./build/tiddlers/system > /dev/null 2>&1
 
 # libraries
 wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.1.0/dist/detect-provider.min.js -O ./build/tiddlers/system/detect-provider.min.js
-wget https://cdn.jsdelivr.net/npm/loglevel@1.6.8/dist/loglevel.min.js -O ./build/tiddlers/system/loglevel.min.js
+wget https://cdn.jsdelivr.net/npm/loglevel@1.7.0/dist/loglevel.min.js -O ./build/tiddlers/system/loglevel.min.js
 wget https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js -O ./build/tiddlers/system/pako.min.js
 
 # cp -R ./tiddlers/editions/empty ./build/editions > /dev/null 2>&1

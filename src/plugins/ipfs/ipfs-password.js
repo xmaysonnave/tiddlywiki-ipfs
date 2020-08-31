@@ -60,13 +60,13 @@ Compression handling
       } else {
         try {
           const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-          $tw.crypto.setEncryptionKey(encryptionKey)
+          $tw.crypto.setEncryptionPublicKey(encryptionKey)
         } catch (error) {
           if (error.name !== 'RejectedUserRequest') {
             $tw.ipfs.getLogger().error(error)
           }
           $tw.utils.alert(name, error.message)
-          $tw.crypto.setEncryptionKey(null)
+          $tw.crypto.setEncryptionPublicKey(null)
         }
       }
     })
@@ -87,13 +87,13 @@ Compression handling
         if (standford.fields.text === 'no' && hadPassword) {
           try {
             const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-            $tw.crypto.setEncryptionKey(encryptionKey)
+            $tw.crypto.setEncryptionPublicKey(encryptionKey)
           } catch (error) {
             if (error.name !== 'RejectedUserRequest') {
               $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)
-            $tw.crypto.setEncryptionKey(null)
+            $tw.crypto.setEncryptionPublicKey(null)
           }
         }
       }

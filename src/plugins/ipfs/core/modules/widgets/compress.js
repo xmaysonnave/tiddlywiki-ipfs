@@ -59,6 +59,12 @@ Compress widget
       var tiddler = $tw.wiki.getTiddler('$:/isEncrypted')
       if (tiddler && tiddler.fields.text === 'yes') {
         content.compressed = $tw.crypto.encrypt(content.compressed)
+        if (
+          typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
+          $tw.crypto.hasEncryptionPublicKey()
+        ) {
+          content.keccak256 = $tw.crypto.keccak256(content.compressed)
+        }
       }
       content = JSON.stringify(content)
     }

@@ -7,7 +7,6 @@ module-type: macro
 Display saver info name
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

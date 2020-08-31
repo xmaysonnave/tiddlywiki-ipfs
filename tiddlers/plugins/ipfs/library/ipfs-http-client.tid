@@ -3,5 +3,5 @@ modified: 20200813094915385
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/ipfs/js-ipfs/master/packages/ipfs-http-client/LICENSE-MIT
 _project_uri: https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client
-_source_uri: https://cdn.jsdelivr.net/npm/ipfs-http-client@46.0.0/dist/index.min.js
-_source_sri: sha384-SYbUkcemqQJfSo6LN0wlSBECY4oqMZK6mX4uem+vAIZ/9JiQsuLS08mDxEgyKnkD
+_source_uri: https://cdn.jsdelivr.net/npm/ipfs-http-client@46.0.1/dist/index.min.js
+_source_sri: sha384-08ZBK+SMxOni5g4szkF318Vus2ovYuvdUgAnnSinYgtuH9KyVDgxWyhKaBrS4wqU

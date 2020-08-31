@@ -7,7 +7,6 @@ module-type: macro
 IPFS plugin version
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/
@@ -41,7 +40,7 @@ IPFS plugin version
       standford = false
     }
     var tiddler = $tw.wiki.getTiddler(
-      '$:/language/Buttons/Encryption/SetPublicKey/Hint'
+      '$:/language/Buttons/Encryption/SetEncryptionPublicKey/Hint'
     )
     if (encrypted) {
       if (standford) {
@@ -50,7 +49,7 @@ IPFS plugin version
         )
       } else {
         tiddler = $tw.wiki.getTiddler(
-          '$:/language/Buttons/Encryption/ClearPublicKey/Hint'
+          '$:/language/Buttons/Encryption/ClearEncryptionPublicKey/Hint'
         )
       }
     } else {

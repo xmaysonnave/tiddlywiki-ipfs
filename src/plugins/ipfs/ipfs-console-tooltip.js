@@ -7,7 +7,6 @@ module-type: macro
 IPFS plugin version
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

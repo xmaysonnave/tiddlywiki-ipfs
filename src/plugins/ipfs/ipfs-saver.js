@@ -7,7 +7,6 @@ module-type: saver
 IPFS Saver
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

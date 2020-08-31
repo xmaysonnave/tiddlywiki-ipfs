@@ -8,7 +8,6 @@ IPFS Bundle
 
 \*/
 import CID from 'cids'
-import { URL } from 'whatwg-url'
 import root from 'window-or-global'
 import EnsLibrary from './ens-library'
 import EthereumLibrary from './ethereum-library'
@@ -32,13 +31,13 @@ import IpfsUrl from './ipfs-url'
   IpfsBundle.prototype.getLogger = function () {
     if (root.log !== undefined && root.log !== null) {
       const loggers = root.log.getLoggers()
-      var log = loggers.eruda
-      if (log !== undefined && log !== null) {
-        return log
+      var eruda = loggers.eruda
+      if (eruda) {
+        return eruda
       }
-      var log = loggers.default
-      if (log !== undefined && log !== null) {
-        return log
+      var ipfs = loggers.ipfs
+      if (ipfs) {
+        return ipfs
       }
     }
     return console
@@ -177,10 +176,6 @@ import IpfsUrl from './ipfs-url'
 
   IpfsBundle.prototype.getWeb3Provider = async function (provider) {
     return await this.ethereumLibrary.getWeb3Provider(provider)
-  }
-
-  IpfsBundle.prototype.keccak256 = async function (text) {
-    return await this.ethereumLibrary.keccak256(text)
   }
 
   IpfsBundle.prototype.isOwner = async function (domain, web3, account) {

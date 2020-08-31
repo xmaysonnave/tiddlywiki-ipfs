@@ -7,7 +7,6 @@ module-type: library
 IPFS Action
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

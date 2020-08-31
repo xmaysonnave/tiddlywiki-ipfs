@@ -19,13 +19,13 @@ Startup initialisation
   exports.startup = function () {
     var getLogger = function () {
       if (window.log !== undefined && window.log !== null) {
-        return window.log.getLogger('default')
+        return window.log.getLogger('ipfs')
       }
       return console
     }
     // Logger
     if (window.log !== undefined && window.log !== null) {
-      const log = window.log.getLogger('default')
+      const log = window.log.getLogger('ipfs')
       if ($tw.utils.getIpfsVerbose()) {
         log.setLevel('info', false)
       } else {

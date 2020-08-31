@@ -7,7 +7,6 @@ module-type: utils
 IPFS Default
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

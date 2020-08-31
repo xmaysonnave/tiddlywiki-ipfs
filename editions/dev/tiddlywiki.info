@@ -15,26 +15,31 @@
   ],
   "build": {
 		"dev": [
-			"--compress", "true",
-      "--publickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
+			"--compress", "yes",
+      "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
 			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain"
     ],
 		"dev-compressed": [
-			"--compress", "true",
+			"--compress", "yes",
 			"--rendertiddler", "$:/core/save/all", "../sample/dev-compressed.html", "text/plain"
     ],
-		"dev-encrypted": [
-			"--compress", "true",
+		"dev-standford": [
+			"--compress", "yes",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/dev-encrypted.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/dev-standford.html", "text/plain",
       "--clearpassword"
     ],
     "dev-plain": [
       "--rendertiddler", "$:/core/save/all", "../sample/dev-plain.html", "text/plain"
     ],
-    "dev-plain-and-encrypted": [
+    "dev-plain-and-ethereum": [
+      "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
+      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-ethereum.html", "text/plain",
+      "--clearencryptionpublickey"
+    ],
+    "dev-plain-and-standford": [
       "--password", "blue",
-      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-encrypted.html", "text/plain",
+      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-standford.html", "text/plain",
       "--clearpassword"
     ]
   }

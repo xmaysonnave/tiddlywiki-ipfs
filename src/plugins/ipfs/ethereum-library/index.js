@@ -137,20 +137,6 @@ import root from 'window-or-global'
     return this.network
   }
 
-  EthereumLibrary.prototype.keccak256 = async function (text) {
-    text =
-      text === undefined || text == null || text.trim() === ''
-        ? null
-        : text.trim()
-    if (text == null) {
-      throw new Error('Undefined Text....')
-    }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.ipfsBundle.loadEthersJsLibrary()
-    }
-    return root.ethers.utils.keccak256(root.ethers.utils.toUtf8Bytes(text))
-  }
-
   EthereumLibrary.prototype.personalSign = async function (message, provider) {
     message =
       message === undefined || message == null || message.trim() === ''
@@ -295,14 +281,16 @@ import root from 'window-or-global'
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
-    const permissions = await provider.request({
-      method: 'wallet_getPermissions'
-    })
-    const accountsPermission = permissions.find(
-      permission => permission.parentCapability === 'eth_accounts'
-    )
-    if (accountsPermission) {
-      return true
+    if (typeof provider.request === 'function') {
+      const permissions = await provider.request({
+        method: 'wallet_getPermissions'
+      })
+      const accountsPermission = permissions.find(
+        permission => permission.parentCapability === 'eth_accounts'
+      )
+      if (accountsPermission) {
+        return true
+      }
     }
     return false
   }
@@ -313,15 +301,17 @@ import root from 'window-or-global'
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
-    const permissions = await provider.request({
-      method: 'wallet_requestPermissions',
-      params: [{ eth_accounts: {} }]
-    })
-    const accountsPermission = permissions.find(
-      permission => permission.parentCapability === 'eth_accounts'
-    )
-    if (accountsPermission) {
-      return true
+    if (typeof provider.request === 'function') {
+      const permissions = await provider.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }]
+      })
+      const accountsPermission = permissions.find(
+        permission => permission.parentCapability === 'eth_accounts'
+      )
+      if (accountsPermission) {
+        return true
+      }
     }
     return false
   }
@@ -335,44 +325,42 @@ import root from 'window-or-global'
     }
     try {
       var accounts = null
-      if (typeof provider.request === 'function') {
-        var permission = false
-        // Permission Attempt
-        try {
-          permission = await this.checkAccountPermission(provider)
-          if (permission === false) {
-            permission = await this.requestAccountPermission(provider)
-          }
-        } catch (error) {
-          if (error.code === 4001) {
-            throw error
-          }
-          this.getLogger().error(error)
+      var permission = false
+      // Permission Attempt
+      try {
+        permission = await this.checkAccountPermission(provider)
+        if (permission === false) {
+          permission = await this.requestAccountPermission(provider)
         }
-        // Request Accounts attempt
-        try {
-          if (
-            permission === false ||
-            (await provider._metamask.isUnlocked()) === false
-          ) {
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-            accounts = await provider.request({ method: 'eth_requestAccounts' })
-          }
-          if (
-            accounts === undefined ||
-            accounts == null ||
-            Array.isArray(accounts) === false ||
-            accounts.length === 0
-          ) {
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-            accounts = await provider.request({ method: 'eth_accounts' })
-          }
-        } catch (error) {
-          if (error.code === 4001) {
-            throw error
-          }
-          this.getLogger().error(error)
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
         }
+        this.getLogger().error(error)
+      }
+      // Request Accounts attempt
+      try {
+        if (
+          permission === false ||
+          (await provider._metamask.isUnlocked()) === false
+        ) {
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
+          accounts = await provider.request({ method: 'eth_requestAccounts' })
+        }
+        if (
+          accounts === undefined ||
+          accounts == null ||
+          Array.isArray(accounts) === false ||
+          accounts.length === 0
+        ) {
+          // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
+          accounts = await provider.request({ method: 'eth_accounts' })
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
+        this.getLogger().error(error)
       }
       // Enable attempt
       if (

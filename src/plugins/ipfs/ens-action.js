@@ -7,7 +7,6 @@ module-type: library
 ENS Action
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/

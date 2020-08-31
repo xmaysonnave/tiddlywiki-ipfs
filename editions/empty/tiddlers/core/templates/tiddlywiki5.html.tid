@@ -1,5 +1,5 @@
 title: $:/core/templates/tiddlywiki5.html
-modified: 20200528094915385
+modified: 20200831094915385
 tags: bluelightav.eth
 
 <$set name="saveTiddlerAndShadowsFilter" filter="[subfilter<saveTiddlerFilter>] [subfilter<saveTiddlerFilter>plugintiddlers[]]">
@@ -19,7 +19,7 @@ tags: bluelightav.eth
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="format-detection" content="telephone=no" />
 <meta name="copyright" content="`{{$:/core/copyright.txt}}`"/>
-<meta name="Dwebsite" content="bluelightav.eth.eth"/>
+<meta name="Dwebsite" content="bluelightav.eth"/>
 <link id="faviconLink" href="https://bafkreihi27cp35a6gyzwgi3qljmfhnpmio5ysyatpmvfaip7fd3lem7ksq.ipfs.dweb.link/" crossorigin="anonymous" rel="icon" sizes="32x32" type="image/png"/>
 <title>`{{$:/core/wiki/title}}`</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->
@@ -55,6 +55,10 @@ tags: bluelightav.eth
 <!--~~ Boot kernel ~~-->
 <div id="bootKernel" style="display:none;">
 `{{ $:/boot/boot.js ||$:/core/templates/javascript-tiddler}}`
+</div>
+<!--~~ Ipfs Boot kernel ~~-->
+<div id="ipfsBootKernel" style="display:none;">
+`{{ $:/boot/ipfs-boot.js ||$:/core/templates/javascript-tiddler}}`
 </div>
 <!--~~ Raw markup for the bottom of the body section ~~-->
 `{{{ [enlist<saveTiddlerAndShadowsFilter>tag[$:/tags/RawMarkupWikified/BottomBody]] ||$:/core/templates/raw-static-tiddler}}}`

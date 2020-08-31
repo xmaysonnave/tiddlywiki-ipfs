@@ -1,10 +1,10 @@
 /*\
-title: $:/core/modules/commands/publickey.js
+title: $:/core/modules/commands/encryptionpublickey.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: command
 
-Save publickey for crypto operations
+Save encryption public key for crypto operations
 
 \*/
 ;(function () {
@@ -13,7 +13,7 @@ Save publickey for crypto operations
   'use strict'
 
   exports.info = {
-    name: 'publickey',
+    name: 'encryptionpublickey',
     synchronous: true
   }
 
@@ -25,10 +25,10 @@ Save publickey for crypto operations
 
   Command.prototype.execute = function () {
     if (this.params.length < 1) {
-      return 'Missing publickey'
+      return 'Missing encryption public key'
     }
-    if ($tw.crypto && typeof $tw.crypto.setEncryptionKey === 'function') {
-      $tw.crypto.setEncryptionKey(this.params[0])
+    if ($tw.crypto && typeof $tw.crypto.setEncryptionPublicKey === 'function') {
+      $tw.crypto.setEncryptionPublicKey(this.params[0])
     }
     return null
   }

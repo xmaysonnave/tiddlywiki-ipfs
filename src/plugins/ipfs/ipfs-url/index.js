@@ -1,5 +1,4 @@
 import root from 'window-or-global'
-import { URL } from 'whatwg-url'
 ;(function () {
   'use strict'
 

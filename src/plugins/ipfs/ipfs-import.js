@@ -7,7 +7,6 @@ module-type: library
 IPFS Import
 
 \*/
-
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/
