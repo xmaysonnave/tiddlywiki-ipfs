@@ -143,24 +143,24 @@ import root from 'window-or-global'
     if (url == null) {
       url = this.getUrl(value, base)
     } else if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
-      if (url.protocol === 'ipns:') {
-        if (
-          url.hostname !== undefined &&
-          url.hostname !== null &&
-          url.hostname.trim() !== ''
-        ) {
-          base.pathname = `/ipns/${url.hostname}`
-        }
-      } else {
-        if (
-          url.hostname !== undefined &&
-          url.hostname !== null &&
-          url.hostname.trim() !== ''
-        ) {
-          base.pathname = `/ipfs/${url.hostname}`
+      const protocol = url.protocol.slice(0, -1)
+      if (
+        url.hostname !== undefined &&
+        url.hostname !== null &&
+        url.hostname.trim() !== ''
+      ) {
+        base.pathname = `/${protocol}/${url.hostname}`
+      } else if (
+        url.pathname !== undefined &&
+        url.pathname !== null &&
+        url.pathname.trim() !== ''
+      ) {
+        if (url.pathname.startsWith('//')) {
+          base.pathname = `/${protocol}/${url.pathname.slice(2)}`
+        } else {
+          base.pathname = `/${protocol}/${url.pathname}`
         }
       }
-      // Unable to set url protocol
       base.username = url.username
       base.password = url.password
       base.search = url.search

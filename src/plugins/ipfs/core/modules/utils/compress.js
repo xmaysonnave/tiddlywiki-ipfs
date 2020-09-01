@@ -14,7 +14,7 @@ Utility functions related to compression.
   /**
    * Look for a compression store area in the text of a TiddlyWiki file
    */
-  exports.extractCompressionStoreArea = function (text) {
+  exports.extractCompressedStoreArea = function (text) {
     var compressedStoreAreaStartMarker =
       '<pre id="compressedStoreArea" type="text/plain" style="display:none;">'
     var compressedStoreAreaStart = text.indexOf(compressedStoreAreaStartMarker)
@@ -35,22 +35,15 @@ Utility functions related to compression.
     return null
   }
 
-  /**
-   * Attempt to extract the tiddlers from a compressed store area
-   */
-  exports.inflateCompressedStoreArea = function (encryptedStoreArea, password) {
-    var decryptedText = $tw.crypto.decrypt(encryptedStoreArea, password)
-    if (decryptedText) {
-      var json = JSON.parse(decryptedText)
-      var tiddlers = []
-      for (var title in json) {
-        if (title !== '$:/isEncrypted') {
-          tiddlers.push(json[title])
+  exports.inflateCompressedStoreArea = function (b64, callback) {
+    if (b64) {
+      const data = $tw.compress.inflate(b64)
+      if (data) {
+        var tiddlers = $tw.utils.loadTiddlers(data)
+        if (tiddlers) {
+          callback(tiddlers)
         }
       }
-      return tiddlers
-    } else {
-      return null
     }
   }
 })()

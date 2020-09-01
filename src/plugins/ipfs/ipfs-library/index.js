@@ -133,7 +133,7 @@ import root from 'window-or-global'
     // Process
     if (client !== undefined && client.add !== undefined) {
       // Process
-      var buffer = Buffer.from(content)
+      const buffer = Buffer.from(content)
       this.getLogger().info('Processing IPFS add...')
       // 1 - https://github.com/ipfs/go-ipfs/issues/5683
       // default chunker: "size-262144"

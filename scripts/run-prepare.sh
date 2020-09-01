@@ -4,17 +4,18 @@
 rm -f -R ./build > /dev/null 2>&1
 rm -f -R ./sample > /dev/null 2>&1
 
-# lint and format
-yarn format \
-|| exit 1
-
-# target
-yarn browserslist
-
 # build directories
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
-mkdir ./sample > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
+mkdir ./sample > /dev/null 2>&1
+
+# lint
+yarn lint \
+|| exit 1
+
+# format
+yarn format \
+|| exit 1
 
 # core ipfs plugin scripts
 cp -R ./src/plugins/ipfs/core ./build/plugins/ipfs > /dev/null 2>&1

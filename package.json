@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200831477",
+  "version": "v0.3.0-200901473",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -27,8 +27,10 @@
     "build": "./scripts/build.sh",
     "debug": "./scripts/debug-build-tiddlywiki.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
-    "format": "prettier-standard --eslint --format",
+    "format": "prettier-standard --format",
     "ipfs-tiddlywiki": "node ./ipfs-tiddlywiki.js",
+    "lint": "prettier-standard --lint",
+    "precommit": "lint-staged",
     "prepare": "yarn snyk-protect",
     "run-build-number": "./scripts/run-build-number.sh",
     "run-browserify": "./scripts/run-browserify.sh",
@@ -38,14 +40,9 @@
     "snyk-monitor": "snyk monitor --all-projects",
     "test": "./scripts/test.sh"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*": [
-      "prettier-standard --eslint --format"
+      "prettier-standard --lint"
     ]
   },
   "repository": {
@@ -73,9 +70,9 @@
     "window-or-global": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.4",
-    "@babel/plugin-transform-runtime": "^7.11.0",
-    "@babel/preset-env": "^7.11.0",
+    "@babel/core": "^7.11.5",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
     "@babel/runtime-corejs3": "^7.11.2",
     "babelify": "^10.0.0",
     "browserify": "^16.5.2",

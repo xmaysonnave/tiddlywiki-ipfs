@@ -135,7 +135,7 @@ IPFS Action
       fields: fields
     })
     $tw.wiki.addTiddler(updatedTiddler)
-    if (ipnsKey !== null) {
+    if (ipnsKey !== null && ipnsName !== null) {
       $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
       $tw.ipfs
         .pinToIpfs(added)

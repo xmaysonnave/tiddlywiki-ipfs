@@ -20,6 +20,7 @@ var _boot = function ($tw) {
       if (!ipfs) {
         ipfs = log.getLogger('ipfs')
         ipfs.setLevel('info', false)
+        ipfs.info('Loglevel is starting up...')
       }
       return ipfs
     }
@@ -506,23 +507,21 @@ var _boot = function ($tw) {
     }
 
     $tw.boot.inflateTiddlers = function (callback) {
-      var compressedArea = document.getElementById('compressedStoreArea')
-      if (compressedArea) {
+      var compressedStoreArea = document.getElementById('compressedStoreArea')
+      if (compressedStoreArea) {
         var inflate = function (b64) {
-          var data = null
           if (b64 !== undefined && b64 !== null) {
-            data = $tw.compress.inflate(b64)
+            $tw.boot.preloadTiddler($tw.compress.inflate(b64), callback)
           }
-          $tw.boot.preloadTiddler(data, callback)
         }
-        var data = compressedArea.innerHTML
-        if (data.startsWith('{"compressed":')) {
-          var json = JSON.parse(data)
-          if (json.compressed.startsWith('{"iv":')) {
+        var content = compressedStoreArea.innerHTML
+        if (content.match(/{"compressed":/)) {
+          var json = JSON.parse(content)
+          if (json.compressed.match(/{"iv":/)) {
             $tw.boot.passwordPrompt(json.compressed, function (decrypted) {
               inflate(decrypted)
             })
-          } else if (json.compressed.startsWith('{"version":')) {
+          } else if (json.compressed.match(/{"version":/)) {
             $tw.boot.metamaskPrompt(
               json.compressed,
               json.keccak256,
@@ -535,7 +534,7 @@ var _boot = function ($tw) {
             inflate(json.compressed)
           }
         } else {
-          $tw.boot.preloadTiddler(data, callback)
+          $tw.boot.preloadTiddler(content, callback)
         }
       } else {
         // Preload any encrypted tiddlers
@@ -549,15 +548,15 @@ var _boot = function ($tw) {
      * callback: function to be called the decryption is complete
      */
     $tw.boot.decryptEncryptedTiddlers = function (callback) {
-      var encryptedArea = document.getElementById('encryptedStoreArea')
-      if (encryptedArea) {
-        var data = encryptedArea.innerHTML
-        if (data.startsWith('{"iv":')) {
-          $tw.boot.passwordPrompt(data, function (decrypted) {
+      var encryptedStoreArea = document.getElementById('encryptedStoreArea')
+      if (encryptedStoreArea) {
+        var content = encryptedStoreArea.innerHTML
+        if (content.match(/{"iv":/)) {
+          $tw.boot.passwordPrompt(content, function (decrypted) {
             $tw.boot.preloadTiddler(decrypted, callback)
           })
-        } else if (data.startsWith('{"encrypted":')) {
-          const json = JSON.parse(data)
+        } else if (content.match(/{"encrypted":/)) {
+          const json = JSON.parse(content)
           $tw.boot.metamaskPrompt(
             json.encrypted,
             json.keccak256,
@@ -567,7 +566,7 @@ var _boot = function ($tw) {
             }
           )
         } else {
-          $tw.boot.preloadTiddler(data, callback)
+          $tw.boot.preloadTiddler(content, callback)
         }
       } else {
         // Just invoke the callback straight away if there weren't any encrypted tiddlers

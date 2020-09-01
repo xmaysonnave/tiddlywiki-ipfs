@@ -179,7 +179,7 @@ import root from 'window-or-global'
       const ua = new Uint8Array(ab)
       this.getLogger().info(
         `[${response.status}] Loaded:
-  ${url}`
+  ${response.url}`
       )
       return ua
     }
@@ -189,14 +189,14 @@ import root from 'window-or-global'
   }
 
   IpfsLoader.prototype.xhrToJson = async function (url) {
-    return await this.httpGet(url, 'post', 'json')
+    return await this.httpRequest(url, 'post', 'json')
   }
 
   IpfsLoader.prototype.xhrToUint8Array = async function (url) {
-    return await this.httpGet(url, 'get', 'arraybuffer')
+    return await this.httpRequest(url, 'get', 'arraybuffer')
   }
 
-  IpfsLoader.prototype.httpGet = function (url, method, responseType) {
+  IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
     const self = this
     const xhr = new XMLHttpRequest()
     return new Promise(function (resolve, reject) {
@@ -216,7 +216,7 @@ import root from 'window-or-global'
             }
             self.getLogger().info(
               `[${xhr.status}] Loaded:
- ${url}`
+ ${xhr.responseURL}`
             )
             resolve(result)
           } catch (error) {
@@ -281,43 +281,43 @@ import root from 'window-or-global'
     if (ua.length === 0) {
       return ''
     }
-    var data = this.ipfsBundle.Utf8ArrayToStr(ua)
-    if (data.startsWith('{"compressed":')) {
-      const json = JSON.parse(data)
-      if (json.compressed.startsWith('{"iv":')) {
+    var content = this.ipfsBundle.Utf8ArrayToStr(ua)
+    if (content.match(/{"compressed":/)) {
+      const json = JSON.parse(content)
+      if (json.compressed.match(/{"iv":/)) {
         if (password == null && $tw.crypto.hasPassword() === false) {
-          data = await this.decryptFromPasswordPrompt(json.compressed)
+          content = await this.decryptFromPasswordPrompt(json.compressed)
         } else {
-          data = $tw.crypto.decrypt(json.compressed, password)
+          content = $tw.crypto.decrypt(json.compressed, password)
         }
-        data = this.ipfsBundle.inflate(data)
-      } else if (json.compressed.startsWith('{"version":')) {
+        content = this.ipfsBundle.inflate(content)
+      } else if (json.compressed.match(/{"version":/)) {
         if (json.signature) {
           this.checkMessage(json.compressed, json.keccak256, json.signature)
         }
-        data = await this.ipfsBundle.decrypt(json.compressed)
-        data = this.ipfsBundle.inflate(data)
+        content = await this.ipfsBundle.decrypt(json.compressed)
+        content = this.ipfsBundle.inflate(content)
       } else {
-        data = this.ipfsBundle.inflate(json.compressed)
+        content = this.ipfsBundle.inflate(json.compressed)
       }
-    } else if (data.startsWith('{"encrypted":')) {
-      const json = JSON.parse(data)
+    } else if (content.match(/{"encrypted":/)) {
+      const json = JSON.parse(content)
       if (json.signature) {
         this.checkMessage(json.encrypted, json.keccak256, json.signature)
       }
-      data = await this.ipfsBundle.decrypt(json.encrypted)
-      data = btoa(data)
-    } else if (data.startsWith('{"iv":')) {
+      content = await this.ipfsBundle.decrypt(json.encrypted)
+      content = btoa(content)
+    } else if (content.match(/{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
-        data = await this.decryptFromPasswordPrompt(data)
+        content = await this.decryptFromPasswordPrompt(content)
       } else {
-        data = $tw.crypto.decrypt(data, password)
+        content = $tw.crypto.decrypt(content, password)
       }
-      data = btoa(data)
+      content = btoa(content)
     } else {
-      data = this.ipfsBundle.Uint8ArrayToBase64(ua)
+      content = this.ipfsBundle.Uint8ArrayToBase64(ua)
     }
-    return data
+    return content
   }
 
   /**
@@ -339,39 +339,39 @@ import root from 'window-or-global'
     if (ua.length === 0) {
       return ''
     }
-    var data = this.ipfsBundle.Utf8ArrayToStr(ua)
-    if (data.startsWith('{"compressed":')) {
-      const json = JSON.parse(data)
-      if (json.compressed.startsWith('{"iv":')) {
+    var content = this.ipfsBundle.Utf8ArrayToStr(ua)
+    if (content.match(/{"compressed":/)) {
+      const json = JSON.parse(content)
+      if (json.compressed.match(/{"iv":/)) {
         if (password == null && $tw.crypto.hasPassword() === false) {
-          data = await this.decryptFromPasswordPrompt(json.compressed)
+          content = await this.decryptFromPasswordPrompt(json.compressed)
         } else {
-          data = $tw.crypto.decrypt(json.compressed, password)
+          content = $tw.crypto.decrypt(json.compressed, password)
         }
-        data = this.ipfsBundle.inflate(data)
-      } else if (json.compressed.startsWith('{"version":')) {
+        content = this.ipfsBundle.inflate(content)
+      } else if (json.compressed.match(/{"version":/)) {
         if (json.signature) {
           this.checkMessage(json.compressed, json.keccak256, json.signature)
         }
-        data = await this.ipfsBundle.decrypt(json.compressed)
-        data = this.ipfsBundle.inflate(data)
+        content = await this.ipfsBundle.decrypt(json.compressed)
+        content = this.ipfsBundle.inflate(content)
       } else {
-        data = this.ipfsBundle.inflate(json.compressed)
+        content = this.ipfsBundle.inflate(json.compressed)
       }
-    } else if (data.startsWith('{"encrypted":')) {
-      const json = JSON.parse(data)
+    } else if (content.match(/{"encrypted":/)) {
+      const json = JSON.parse(content)
       if (json.signature) {
         this.checkMessage(json.encrypted, json.keccak256, json.signature)
       }
-      data = await this.ipfsBundle.decrypt(json.encrypted)
-    } else if (data.startsWith('{"iv":')) {
+      content = await this.ipfsBundle.decrypt(json.encrypted)
+    } else if (content.match(/{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
-        data = await this.decryptFromPasswordPrompt(data)
+        content = await this.decryptFromPasswordPrompt(content)
       } else {
-        data = $tw.crypto.decrypt(data, password)
+        content = $tw.crypto.decrypt(content, password)
       }
     }
-    return data
+    return content
   }
 
   IpfsLoader.prototype.decryptFromPasswordPrompt = function (encrypted) {

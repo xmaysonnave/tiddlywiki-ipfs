@@ -209,4 +209,19 @@ IPFS utils
       info: info
     }
   }
+
+  exports.loadTiddlers = function (text) {
+    if (text !== undefined && text !== null) {
+      var json = JSON.parse(text)
+      var tiddlers = []
+      for (var title in json) {
+        if (title !== '$:/isEncrypted' && title !== '$:/isCompressed') {
+          tiddlers.push(json[title])
+        }
+      }
+      return tiddlers
+    } else {
+      return null
+    }
+  }
 })()
