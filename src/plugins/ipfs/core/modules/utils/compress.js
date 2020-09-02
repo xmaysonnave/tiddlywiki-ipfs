@@ -35,7 +35,38 @@ Utility functions related to compression.
     return null
   }
 
-  exports.inflateCompressedStoreArea = function (b64, callback) {
+  exports.inflateCompressedStoreArea = function (
+    compressedStoreArea,
+    callback
+  ) {
+    if (compressedStoreArea) {
+      if (compressedStoreArea.match(/{"compressed":/)) {
+        var json = JSON.parse(compressedStoreArea)
+        if (json.compressed.match(/{"iv":/)) {
+          $tw.utils.decryptStoreAreaInteractive(json.compressed, function (
+            decrypted
+          ) {
+            $tw.utils.inflateTiddlers(decrypted, callback)
+          })
+        } else if (json.compressed.match(/{"version":/)) {
+          $tw.utils.decryptFromMetamaskPrompt(
+            json.compressed,
+            json.keccak256,
+            json.signature,
+            function (decrypted) {
+              $tw.utils.inflateTiddlers(decrypted, callback)
+            }
+          )
+        } else {
+          $tw.utils.inflateTiddlers(json.compressed, callback)
+        }
+        return true
+      }
+    }
+    return false
+  }
+
+  exports.inflateTiddlers = function (b64, callback) {
     if (b64) {
       const data = $tw.compress.inflate(b64)
       if (data) {

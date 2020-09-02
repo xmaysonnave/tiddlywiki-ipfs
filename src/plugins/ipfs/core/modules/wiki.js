@@ -90,27 +90,9 @@ wikimethod
       // Check whether this is a compressed TiddlyWiki file
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
-        if (compressedStoreArea.match(/{"compressed":/)) {
-          var json = JSON.parse(compressedStoreArea)
-          if (json.compressed.match(/{"iv":/)) {
-            $tw.utils.decryptStoreAreaInteractive(json.compressed, function (
-              decrypted
-            ) {
-              $tw.utils.inflateCompressedStoreArea(decrypted, callback)
-            })
-          } else if (json.compressed.match(/{"version":/)) {
-            $tw.utils.decryptFromMetamaskPrompt(
-              json.compressed,
-              json.keccak256,
-              json.signature,
-              function (decrypted) {
-                $tw.utils.inflateCompressedStoreArea(decrypted, callback)
-              }
-            )
-          } else {
-            $tw.utils.inflateCompressedStoreArea(json.compressed, callback)
-          }
-        } else {
+        if (
+          !$tw.utils.inflateCompressedStoreArea(compressedStoreArea, callback)
+        ) {
           // Otherwise, just try to deserialise any tiddlers in the file
           callback(
             self.deserializeTiddlers(type, compressedStoreArea, tiddlerFields, {
@@ -122,30 +104,9 @@ wikimethod
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
-          if (encryptedStoreArea.match(/{"iv":/)) {
-            $tw.utils.decryptStoreAreaInteractive(encryptedStoreArea, function (
-              decrypted
-            ) {
-              var tiddlers = $tw.utils.loadTiddlers(decrypted)
-              if (tiddlers) {
-                callback(tiddlers)
-              }
-            })
-          } else if (encryptedStoreArea.match(/{"encrypted":/)) {
-            var json = JSON.parse(encryptedStoreArea)
-            $tw.utils.decryptFromMetamaskPrompt(
-              json.encrypted,
-              json.keccak256,
-              json.signature,
-              function (decrypted) {
-                var tiddlers = $tw.utils.loadTiddlers(decrypted)
-                if (tiddlers) {
-                  callback(tiddlers)
-                }
-              }
-            )
-          } else {
-            // Otherwise, just try to deserialise any tiddlers in the file
+          if (
+            !$tw.utils.decryptEncryptedStoreArea(encryptedStoreArea, callback)
+          ) {
             callback(
               self.deserializeTiddlers(
                 type,

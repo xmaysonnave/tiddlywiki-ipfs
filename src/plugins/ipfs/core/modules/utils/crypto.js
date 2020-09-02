@@ -35,24 +35,45 @@ Utility functions related to crypto.
     return null
   }
 
+  exports.decryptEncryptedStoreArea = function (encryptedStoreArea, callback) {
+    if (encryptedStoreArea) {
+      if (encryptedStoreArea.match(/{"iv":/)) {
+        $tw.utils.decryptStoreAreaInteractive(encryptedStoreArea, function (
+          decrypted
+        ) {
+          var tiddlers = $tw.utils.loadTiddlers(decrypted)
+          if (tiddlers) {
+            callback(tiddlers)
+          }
+        })
+        return true
+      } else if (encryptedStoreArea.match(/{"encrypted":/)) {
+        var json = JSON.parse(encryptedStoreArea)
+        $tw.utils.decryptFromMetamaskPrompt(
+          json.encrypted,
+          json.keccak256,
+          json.signature,
+          function (decrypted) {
+            var tiddlers = $tw.utils.loadTiddlers(decrypted)
+            if (tiddlers) {
+              callback(tiddlers)
+            }
+          }
+        )
+        return true
+      }
+    }
+    return false
+  }
+
   /**
    * Attempt to extract the tiddlers from an encrypted store area using the current password.
    * If the password is not provided then the password in the password store will be used
    */
   exports.decryptStoreArea = function (encryptedStoreArea, password) {
-    var decryptedText = $tw.crypto.decrypt(encryptedStoreArea, password)
-    if (decryptedText) {
-      var json = JSON.parse(decryptedText)
-      var tiddlers = []
-      for (var title in json) {
-        if (title !== '$:/isEncrypted' && title !== '$:/isCompressed') {
-          tiddlers.push(json[title])
-        }
-      }
-      return tiddlers
-    } else {
-      return null
-    }
+    return $tw.utils.loadTiddlers(
+      $tw.crypto.decrypt(encryptedStoreArea, password)
+    )
   }
 
   exports.decryptFromMetamaskPrompt = function (
