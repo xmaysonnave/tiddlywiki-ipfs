@@ -351,10 +351,16 @@ IPFS Controller
 
   IpfsController.prototype.getIpnsIdentifiers = async function (
     identifier,
+    base,
     ipnsName
   ) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpnsIdentifiers(ipfs, identifier, ipnsName)
+    return await this.ipfsWrapper.getIpnsIdentifiers(
+      ipfs,
+      identifier,
+      base,
+      ipnsName
+    )
   }
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
@@ -440,44 +446,90 @@ IPFS Controller
     }
     var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl)
     if (protocol === ipnsKeyword && ipnsIdentifier !== null) {
-      var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(
-        ipnsIdentifier
-      )
-      if (resolveIpns) {
-        $tw.ipfs.getLogger().info(
-          `Resolving IPNS key:
- ${normalizedUrl}`
-        )
-        $tw.utils.alert(name, 'Resolving an IPNS key...')
-        try {
-          cid = await this.resolveIpnsKey(ipnsKey)
-          if (cid !== null) {
-            resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}`, base)
-            $tw.ipfs.getLogger().info(
-              `Successfully resolved IPNS key:
- ${normalizedUrl}`
-            )
-            $tw.utils.alert(name, 'Successfully resolved an IPNS key...')
-          }
-        } catch (error) {
-          // Unable to resolve the key
-          // It usually happen when the key is not initialized
-          cid = null
-          $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-        }
-      }
-    } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
+      var {
+        cid,
+        ipnsKey,
+        ipnsName,
+        normalizedUrl,
+        resolvedUrl
+      } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base)
+    } else if (
+      resolveEns &&
+      normalizedUrl.hostname.endsWith('.eth') &&
+      protocol !== ipfsKeyword &&
+      protocol !== ipnsKeyword
+    ) {
       var { cid, protocol, resolvedUrl } = await this.resolveEns(
         normalizedUrl.hostname,
+        base,
         web3
       )
       if (protocol === 'ipns') {
-        ipnsKey = cid
-        cid = null
+        var { cid, ipnsKey, ipnsName } = await this.resolveIpns(
+          cid,
+          resolveIpns,
+          base
+        )
       }
-    } else {
-      resolvedUrl = normalizedUrl
+    }
+    return {
+      cid: cid,
+      ipnsKey: ipnsKey,
+      ipnsName: ipnsName,
+      normalizedUrl: normalizedUrl,
+      resolvedUrl: resolvedUrl !== null ? resolvedUrl : normalizedUrl
+    }
+  }
+
+  IpfsController.prototype.resolveIpns = async function (
+    ipnsIdentifier,
+    resolveIpns,
+    base
+  ) {
+    ipnsIdentifier =
+      ipnsIdentifier === undefined ||
+      ipnsIdentifier == null ||
+      ipnsIdentifier.toString().trim() === ''
+        ? null
+        : ipnsIdentifier.toString().trim()
+    if (ipnsIdentifier == null) {
+      return {
+        cid: null,
+        ipnsKey: null,
+        ipnsName: null,
+        normalizedUrl: null,
+        resolvedUrl: null
+      }
+    }
+    var cid = null
+    var resolvedUrl = null
+    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(
+      ipnsIdentifier,
+      base
+    )
+    if (resolveIpns) {
+      $tw.ipfs.getLogger().info(
+        `Resolving IPNS key:
+${normalizedUrl}`
+      )
+      $tw.utils.alert(name, 'Resolving an IPNS key...')
+      try {
+        cid = await this.resolveIpnsKey(ipnsKey)
+        if (cid !== null) {
+          resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}`, base)
+          $tw.ipfs.getLogger().info(
+            `Successfully resolved IPNS key:
+${normalizedUrl}`
+          )
+          $tw.utils.alert(name, 'Successfully resolved an IPNS key...')
+        }
+      } catch (error) {
+        // Unable to resolve the key
+        // It usually happen when the key is not initialized
+        cid = null
+        $tw.ipfs.getLogger().error(error)
+        $tw.utils.alert(name, error.message)
+      }
     }
     return {
       cid: cid,
@@ -485,6 +537,46 @@ IPFS Controller
       ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
       resolvedUrl: resolvedUrl
+    }
+  }
+
+  IpfsController.prototype.resolveEns = async function (ensDomain, base, web3) {
+    ensDomain =
+      ensDomain === undefined ||
+      ensDomain == null ||
+      ensDomain.toString().trim() === ''
+        ? null
+        : ensDomain.toString().trim()
+    if (ensDomain == null) {
+      return {
+        cid: null,
+        protocol: null,
+        resolvedUrl: null
+      }
+    }
+    if (web3 === undefined || web3 == null) {
+      var { web3 } = await this.getWeb3Provider()
+    }
+    const { content, protocol } = await this.ensWrapper.getContentHash(
+      ensDomain,
+      web3
+    )
+    if (content == null || protocol == null) {
+      return {
+        cid: null,
+        protocol: null,
+        resolvedUrl: null
+      }
+    }
+    const url = this.normalizeUrl(`/${protocol}/${content}`, base)
+    $tw.ipfs.getLogger().info(
+      `Successfully fetched ENS domain content: "${ensDomain}"
+${url}`
+    )
+    return {
+      cid: content,
+      protocol: protocol,
+      resolvedUrl: url
     }
   }
 
@@ -548,33 +640,6 @@ IPFS Controller
     return {
       ipfs: ipfs,
       provider: provider
-    }
-  }
-
-  IpfsController.prototype.resolveEns = async function (ensDomain, web3) {
-    if (web3 === undefined || web3 == null) {
-      var { web3 } = await this.getWeb3Provider()
-    }
-    const { content, protocol } = await this.ensWrapper.getContentHash(
-      ensDomain,
-      web3
-    )
-    if (content !== null && protocol !== null) {
-      const url = this.normalizeUrl(`/${protocol}/${content}`)
-      $tw.ipfs.getLogger().info(
-        `Successfully fetched ENS domain content: "${ensDomain}"
- ${url}`
-      )
-      return {
-        cid: content,
-        protocol: protocol,
-        resolvedUrl: url
-      }
-    }
-    return {
-      cid: null,
-      protocol: null,
-      resolvedUrl: null
     }
   }
 

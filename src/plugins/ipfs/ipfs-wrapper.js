@@ -80,6 +80,7 @@ IPFS Wrapper
   IpfsWrapper.prototype.getIpnsIdentifiers = async function (
     ipfs,
     identifier,
+    base,
     ipnsName
   ) {
     identifier =
@@ -182,7 +183,10 @@ IPFS Wrapper
         false
       )
       ipnsKey = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1b32, 'base36', false)
-      normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}`)
+      normalizedUrl = this.ipfsUrl.normalizeUrl(
+        `/${ipnsKeyword}/${ipnsKey}`,
+        base
+      )
       this.getLogger().info(
         `Successfully Fetched IPNS identifiers: '${ipnsName}':
  'dag-pb' "cidv0" (base58btc): ${cidAnalyser}${cidv0}
@@ -191,7 +195,10 @@ IPFS Wrapper
  ${normalizedUrl}`
       )
     } else {
-      normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}`)
+      normalizedUrl = this.ipfsUrl.normalizeUrl(
+        `/${ipnsKeyword}/${ipnsKey}`,
+        base
+      )
       this.getLogger().info(
         `Unable to Fetch IPNS identifiers, default to
  ${normalizedUrl}`
