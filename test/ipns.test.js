@@ -78,6 +78,7 @@ describe('IPNS key and IPNS name', () => {
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(
       null,
       'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0',
+      null,
       'tiddly'
     )
     expect(
@@ -95,7 +96,7 @@ describe('IPNS name', () => {
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn()
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys)
     try {
-      await ipfsWrapper.getIpnsIdentifiers(null, null, 'dummy')
+      await ipfsWrapper.getIpnsIdentifiers(null, null, null, 'dummy')
     } catch (error) {
       expect(error.message).toBe('Unknown IPNS identifier...')
     }
@@ -107,6 +108,7 @@ describe('IPNS name', () => {
     ipfsWrapper.ipfsLibrary.getKeys = jest.fn()
     ipfsWrapper.ipfsLibrary.getKeys.mockResolvedValue(keys)
     const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(
+      null,
       null,
       null,
       'tiddly'
