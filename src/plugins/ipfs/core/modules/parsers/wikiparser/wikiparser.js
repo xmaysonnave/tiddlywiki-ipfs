@@ -45,7 +45,7 @@ wikiparser
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           })
-        text = $tw.language.getRawString('LazyLoadingWarning')
+        text = `''${$tw.language.getRawString('LazyLoadingWarning')}''`
       }
     }
     // Initialise the classes if we don't have them already

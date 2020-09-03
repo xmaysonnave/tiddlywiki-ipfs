@@ -41,6 +41,7 @@ Ipfs/Version/Prompt: <b>IPFS</b>:
 Settings/Encryption/Caption: Encryption
 Settings/Encryption/Standford/Description: Use Standford encryption
 Settings/Encryption/Ethereum/Description: Use Ethereum public key
+Settings/Encryption/Signature/Description: Sign Ethereum encrypted content
 
 Settings/Compression/Caption: Compression
 Settings/Compression/Description: Use Content Compression

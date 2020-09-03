@@ -202,8 +202,10 @@ IPFS Import
     this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
-      const url = $tw.ipfs.getIpfsBaseUrl()
-      url.hash = tiddler.fields.title
+      const url = $tw.ipfs.getUrl(
+        `#${tiddler.fields.title}`,
+        $tw.ipfs.getDocumentUrl()
+      )
       if (canonicalUri !== null || importUri !== null) {
         $tw.ipfs.getLogger().info('*** Begin Import ***')
         this.rootUri = importUri !== null ? importUri : canonicalUri
@@ -275,15 +277,17 @@ IPFS Import
       var reportAdded = ''
       var reportUpdated = ''
       for (var [title, merged] of this.merged.entries()) {
+        const oldTiddler = $tw.wiki.getTiddler(title)
         $tw.wiki.addTiddler(merged)
-        if (
-          this.host !== null &&
-          this.merged.get(this.host.fields.title) === undefined
-        ) {
-          if (this.added.indexOf(title) !== -1) {
-            reportAdded = `${reportAdded}[[${title}]]`
-          } else {
-            reportUpdated = `${reportUpdated}[[${title}]]`
+        const newTiddler = $tw.wiki.getTiddler(title)
+        if (this.added.indexOf(title) !== -1) {
+          reportAdded = `${reportAdded}[[${title}]]`
+        } else if (!oldTiddler.isEqual(newTiddler)) {
+          reportUpdated = `${reportUpdated}[[${title}]]`
+        } else {
+          const index = this.updated.indexOf(title)
+          if (index !== -1) {
+            this.updated.splice(index, 1)
           }
         }
       }
@@ -330,7 +334,11 @@ IPFS Import
           }
         }
       })
-      if (this.merged.size > 0) {
+      if (
+        this.added.length !== 0 ||
+        deleted !== 0 ||
+        this.updated.length !== 0
+      ) {
         $tw.utils.alert(
           name,
           'Successfully Imported, Added: ' +
@@ -341,12 +349,13 @@ IPFS Import
             this.updated.length
         )
       }
-      if (
-        this.host !== null &&
-        this.merged.get(this.host.fields.title) === undefined
-      ) {
+      if (this.merged.get(this.host.fields.title) === undefined) {
         var updatedTiddler = new $tw.Tiddler(this.host)
-        if (this.merged.size === 0) {
+        if (
+          this.added.length === 0 &&
+          deleted === 0 &&
+          this.updated.length === 0
+        ) {
           updatedTiddler = $tw.utils.updateTiddler({
             tiddler: updatedTiddler,
             fields: [
@@ -356,7 +365,7 @@ IPFS Import
               },
               {
                 key: 'text',
-                value: "''No Tiddlers have been Imported''"
+                value: "''No Tiddlers have been Imported...''"
               }
             ]
           })
@@ -364,7 +373,7 @@ IPFS Import
           const reportAddedMsg = `<p align='left'>''Added: ${this.added.length}''</p>`
           const reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
           const reportImportedMsg =
-            "<p align='center'>''Successfully Imported''</p>"
+            "<p align='center'>''Successfully Imported...''</p>"
           const reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
           var value = `${reportImportedMsg}`
           if (reportAdded.trim() !== '') {
@@ -1041,14 +1050,9 @@ IPFS Import
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
-              if (url !== this.rootUri) {
-                merged._canonical_uri = this.resolved.get(url)
-                merged._import_uri = this.rootUri
-              } else {
-                merged._canonical_uri = this.rootUri
-              }
+              merged._import_uri = this.rootUri
             } else {
-              merged._canonical_uri = this.resolved.get(merged._canonical_uri)
+              merged._canonical_uri = this.resolved.get(canonicalUri)
               if (canonicalUri !== this.rootUri) {
                 merged._import_uri = this.rootUri
               }
@@ -1129,7 +1133,7 @@ IPFS Import
       return null
     }
     // Retrieve target host Tiddler
-    if (this.host !== null && this.host.fields.title === title) {
+    if (this.host.fields.title === title) {
       currentTiddler = this.host
     } else {
       currentTiddler = $tw.wiki.getTiddler(title)

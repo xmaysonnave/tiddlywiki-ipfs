@@ -8,6 +8,8 @@ var _boot = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
+  $tw.ipfs = $tw.ipfs || Object.create(null)
+
   $tw.boot.getLogger = function () {
     var log = $tw.node ? global.log || require('loglevel') : window.log
     if (log !== undefined && log !== null) {
@@ -63,13 +65,16 @@ var _boot = function ($tw) {
       currentPublicKey = null
       if ($tw.wiki) {
         this.updateCryptoStateTiddler()
-        var standford = $tw.wiki.getTiddler('$:/config/Standford')
+        var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
         if (
-          !standford ||
-          (currentPassword !== null && standford.fields.text === 'no')
+          !encryption ||
+          (currentPassword !== null && encryption.fields.text !== 'standford')
         ) {
           $tw.wiki.addTiddler(
-            new $tw.Tiddler({ title: '$:/config/Standford', text: 'yes' })
+            new $tw.Tiddler({
+              title: '$:/config/Encryption',
+              text: 'standford'
+            })
           )
         }
       }
@@ -80,15 +85,21 @@ var _boot = function ($tw) {
         newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
       if ($tw.wiki) {
         this.updateCryptoStateTiddler()
-        var standford = $tw.wiki.getTiddler('$:/config/Standford')
-        if (!standford) {
+        var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+        if (!encryption) {
           $tw.wiki.addTiddler(
-            new $tw.Tiddler({ title: '$:/config/Standford', text: 'yes' })
+            new $tw.Tiddler({
+              title: '$:/config/Encryption',
+              text: 'standford'
+            })
           )
         } else {
-          if (currentPublicKey !== null && standford.fields.text === 'yes') {
+          if (currentPublicKey !== null && encryption.fields.text === 'yes') {
             $tw.wiki.addTiddler(
-              new $tw.Tiddler({ title: '$:/config/Standford', text: 'no' })
+              new $tw.Tiddler({
+                title: '$:/config/Encryption',
+                text: 'ethereum'
+              })
             )
           }
         }
@@ -595,7 +606,7 @@ var _boot = function ($tw) {
 
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
 
-  $tw.boot.boot = function (callback) {
+  $tw.ipfs.boot = function (callback) {
     // Initialise crypto object
     $tw.crypto = new $tw.utils.Crypto()
     // Initialise password prompter
@@ -625,7 +636,7 @@ var _boot = function ($tw) {
   /////////////////////////// Autoboot in the browser
 
   if ($tw.browser) {
-    $tw.boot.boot()
+    $tw.ipfs.boot()
   }
 
   return $tw

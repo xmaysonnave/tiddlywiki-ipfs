@@ -166,7 +166,10 @@ import root from 'window-or-global'
     }
   }
 
-  EthereumLibrary.prototype.personalRecover = function (message, signature) {
+  EthereumLibrary.prototype.personalRecover = async function (
+    message,
+    signature
+  ) {
     message =
       message === undefined || message == null || message.trim() === ''
         ? null
@@ -181,9 +184,17 @@ import root from 'window-or-global'
     if (signature == null) {
       throw new Error('Undefined Signature....')
     }
+    if (root.sigUtil === undefined || root.sigUtil == null) {
+      await this.ipfsBundle.loadEthSigUtilLibrary()
+    }
     const msgParams = { data: message, sig: signature }
     const recovered = root.sigUtil.recoverPersonalSignature(msgParams)
-    return recovered !== undefined && recovered !== null ? recovered : null
+    if (recovered === undefined || recovered == null) {
+      const err = new Error('Unrecoverable signature...')
+      err.name = 'UnrecoverableSignature'
+      throw err
+    }
+    return recovered
   }
 
   EthereumLibrary.prototype.decrypt = async function (text, provider) {

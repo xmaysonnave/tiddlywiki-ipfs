@@ -43,11 +43,11 @@ Console/Mobile/Show: Show Mobile Console
 
 Encryption/Hint: Set or clear a password or a public key for saving this wiki
 Encryption/ClearPassword/Caption: clear password or public key
-Encryption/ClearPassword/Hint: Clear the password and save this wiki without encryption
-Encryption/ClearEncryptionPublicKey/Hint: Clear the public encryption key and save this wiki without encryption
+Encryption/ClearPassword/Hint: Clear the password
+Encryption/ClearEncryptionPublicKey/Hint: Clear the public encryption key
 Encryption/SetPassword/Caption: set password or public key
-Encryption/SetPassword/Hint: Set a password for saving this wiki with encryption
-Encryption/SetEncryptionPublicKey/Hint: Set a public encryption key for saving this wiki with encryption
+Encryption/SetPassword/Hint: Set a password for saving this wiki with Standford encryption
+Encryption/SetEncryptionPublicKey/Hint: Set a public encryption key for saving this wiki with Ethereum encryption
 
 Ens/Manager/Open/Caption: open ENS Manager
 Ens/Manager/Open/Hint: Open ENS Domain Manager

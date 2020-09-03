@@ -236,7 +236,11 @@ import root from 'window-or-global'
     })
   }
 
-  IpfsLoader.prototype.checkMessage = function (message, keccak256, signature) {
+  IpfsLoader.prototype.checkMessage = async function (
+    message,
+    keccak256,
+    signature
+  ) {
     message =
       message === undefined || message == null || message.trim() === ''
         ? null
@@ -251,14 +255,24 @@ import root from 'window-or-global'
       }
     }
     if (signature) {
-      const recovered = this.ipfsBundle.personalRecover(keccak256, signature)
-      $tw.ipfs
-        .getLogger()
-        .info(`Signed from: https://app.ens.domains/address/${recovered}`)
-      $tw.utils.alert(
-        name,
-        `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
-      )
+      try {
+        const recovered = await this.ipfsBundle.personalRecover(
+          keccak256,
+          signature
+        )
+        $tw.ipfs
+          .getLogger()
+          .info(`Signed from: https://app.ens.domains/address/${recovered}`)
+        $tw.utils.alert(
+          name,
+          `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+        )
+      } catch (error) {
+        if (error.name === 'UnrecoverableSignature') {
+          throw new Error(`Tampered encrypted content. ${error.message}`)
+        }
+        throw error
+      }
     }
   }
 
@@ -293,7 +307,8 @@ import root from 'window-or-global'
         content = this.ipfsBundle.inflate(content)
       } else if (json.compressed.match(/{"version":/)) {
         if (json.signature) {
-          this.checkMessage(json.compressed, json.keccak256, json.signature)
+          const signature = await this.ipfsBundle.decrypt(json.signature)
+          await this.checkMessage(json.compressed, json.keccak256, signature)
         }
         content = await this.ipfsBundle.decrypt(json.compressed)
         content = this.ipfsBundle.inflate(content)
@@ -303,7 +318,8 @@ import root from 'window-or-global'
     } else if (content.match(/{"encrypted":/)) {
       const json = JSON.parse(content)
       if (json.signature) {
-        this.checkMessage(json.encrypted, json.keccak256, json.signature)
+        const signature = await this.ipfsBundle.decrypt(json.signature)
+        await this.checkMessage(json.encrypted, json.keccak256, signature)
       }
       content = await this.ipfsBundle.decrypt(json.encrypted)
       content = btoa(content)
@@ -351,7 +367,8 @@ import root from 'window-or-global'
         content = this.ipfsBundle.inflate(content)
       } else if (json.compressed.match(/{"version":/)) {
         if (json.signature) {
-          this.checkMessage(json.compressed, json.keccak256, json.signature)
+          const signature = await this.ipfsBundle.decrypt(json.signature)
+          await this.checkMessage(json.compressed, json.keccak256, signature)
         }
         content = await this.ipfsBundle.decrypt(json.compressed)
         content = this.ipfsBundle.inflate(content)
@@ -361,7 +378,8 @@ import root from 'window-or-global'
     } else if (content.match(/{"encrypted":/)) {
       const json = JSON.parse(content)
       if (json.signature) {
-        this.checkMessage(json.encrypted, json.keccak256, json.signature)
+        const signature = await this.ipfsBundle.decrypt(json.signature)
+        await this.checkMessage(json.encrypted, json.keccak256, signature)
       }
       content = await this.ipfsBundle.decrypt(json.encrypted)
     } else if (content.match(/{"iv":/)) {

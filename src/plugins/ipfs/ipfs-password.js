@@ -38,12 +38,12 @@ Compression handling
     }
     // Ensure that $:/isEncrypted is maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
-      if ($tw.utils.hop(changes, '$:/config/Standford')) {
+      if ($tw.utils.hop(changes, '$:/config/Encryption')) {
         const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
         if (encrypted.fields.text === 'yes') {
           const hasPassword = $tw.crypto.hasPassword()
-          const standford = $tw.wiki.getTiddler('$:/config/Standford')
-          if (!hasPassword && standford.fields.text === 'yes') {
+          const encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+          if (!hasPassword && encryption.fields.text === 'standford') {
             setPassword()
           } else if (hasPassword) {
             $tw.rootWidget.dispatchEvent({ type: 'tm-clear-password' })
@@ -52,8 +52,8 @@ Compression handling
       }
     })
     $tw.rootWidget.addEventListener('tm-set-password', async function (event) {
-      const standford = $tw.wiki.getTiddler('$:/config/Standford')
-      if (standford.fields.text === 'yes') {
+      const encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+      if (encryption.fields.text === 'standford') {
         if ($tw.crypto.hasPassword() === false) {
           setPassword()
         }
@@ -75,25 +75,26 @@ Compression handling
     ) {
       if ($tw.browser) {
         const hadPassword = $tw.crypto.hasPassword()
-        const standford = $tw.wiki.getTiddler('$:/config/Standford')
-        if (
-          hadPassword &&
-          standford.fields.text === 'yes' &&
-          !confirm($tw.language.getString('Encryption/ConfirmClearPassword'))
-        ) {
-          return
-        }
-        $tw.crypto.setPassword(null)
-        if (standford.fields.text === 'no' && hadPassword) {
-          try {
-            const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-            $tw.crypto.setEncryptionPublicKey(encryptionKey)
-          } catch (error) {
-            if (error.name !== 'RejectedUserRequest') {
-              $tw.ipfs.getLogger().error(error)
+        const encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+        if (hadPassword) {
+          if (
+            encryption.fields.text === 'standford' &&
+            !confirm($tw.language.getString('Encryption/ConfirmClearPassword'))
+          ) {
+            return
+          }
+          $tw.crypto.setPassword(null)
+          if (encryption.fields.text === 'ethereum') {
+            try {
+              const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
+              $tw.crypto.setEncryptionPublicKey(encryptionKey)
+            } catch (error) {
+              if (error.name !== 'RejectedUserRequest') {
+                $tw.ipfs.getLogger().error(error)
+              }
+              $tw.utils.alert(name, error.message)
+              $tw.crypto.setEncryptionPublicKey(null)
             }
-            $tw.utils.alert(name, error.message)
-            $tw.crypto.setEncryptionPublicKey(null)
           }
         }
       }

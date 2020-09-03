@@ -33,27 +33,22 @@ IPFS plugin version
     } else {
       encrypted = false
     }
-    var standford = $tw.wiki.getTiddler('$:/config/Standford')
-    if (standford.fields.text === 'yes') {
-      standford = true
-    } else {
-      standford = false
-    }
-    var tiddler = $tw.wiki.getTiddler(
-      '$:/language/Buttons/Encryption/SetEncryptionPublicKey/Hint'
-    )
+    var tiddler
+    var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
     if (encrypted) {
-      if (standford) {
+      tiddler = $tw.wiki.getTiddler(
+        '$:/language/Buttons/Encryption/ClearEncryptionPublicKey/Hint'
+      )
+      if (encryption.fields.text === 'standford') {
         tiddler = $tw.wiki.getTiddler(
           '$:/language/Buttons/Encryption/ClearPassword/Hint'
         )
-      } else {
-        tiddler = $tw.wiki.getTiddler(
-          '$:/language/Buttons/Encryption/ClearEncryptionPublicKey/Hint'
-        )
       }
     } else {
-      if (standford) {
+      tiddler = $tw.wiki.getTiddler(
+        '$:/language/Buttons/Encryption/SetEncryptionPublicKey/Hint'
+      )
+      if (encryption.fields.text === 'standford') {
         tiddler = $tw.wiki.getTiddler(
           '$:/language/Buttons/Encryption/SetPassword/Hint'
         )

@@ -1,0 +1,8 @@
+{
+    "title": "$:/boot/boothandler.js",
+    "text": "/*\\\ntitle: $:/boot/boothandler.js\ntype: application/javascript\ntags: $:/ipfs/core\n\n\\*/\nvar bootHandler = function ($tw) {\n  /*jslint node: true, browser: true */\n  'use strict'\n  $tw = $tw || Object.create(null)\n  $tw.boot = $tw.boot || Object.create(null)\n  $tw.boot.suppressBoot = true\n  return $tw\n}\n\nif (typeof exports === 'undefined') {\n  // Set up $tw global for the browser\n  window.$tw = bootHandler(window.$tw)\n} else {\n  // Export functionality as a module\n  exports.bootHandler = bootHandler\n}\n",
+    "type": "application/javascript",
+    "tags": "$:/ipfs/core",
+    "modified": "20200827094915385",
+    "library": "yes"
+}

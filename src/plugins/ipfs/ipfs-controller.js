@@ -39,7 +39,6 @@ IPFS Controller
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
     this.ensWrapper = new EnsWrapper(this.ipfsBundle.ensLibrary)
-    this.ipfsUrl = this.ipfsBundle.ipfsUrl
     this.ipfsWrapper = new IpfsWrapper(this.ipfsBundle)
     // Listener
     this.ensAction = new EnsAction()
@@ -126,9 +125,18 @@ IPFS Controller
       tiddler.fields._encryption_public_key.trim() !== ''
         ? tiddler.fields._encryption_public_key.trim()
         : null
-    if (encrypted || password || publicKey) {
+    var sign = $tw.wiki.getTiddler('$:/isSigned')
+    sign = sign !== undefined ? sign.fields.text === 'yes' : false
+    sign =
+      tiddler !== undefined &&
+      tiddler.fields._sign !== undefined &&
+      tiddler.fields._sign.trim() !== ''
+        ? tiddler.fields._sign.trim() === 'yes'
+        : sign
+    var hasPublicKey = publicKey || $tw.crypto.hasEncryptionPublicKey()
+    if (encrypted || password || hasPublicKey) {
       try {
-        if (publicKey || $tw.crypto.hasEncryptionPublicKey()) {
+        if (hasPublicKey) {
           await this.loadEthSigUtilLibrary()
         }
         if (compress) {
@@ -138,9 +146,14 @@ IPFS Controller
             password,
             publicKey
           )
-          content.keccak256 = $tw.crypto.keccak256(content.compressed)
-          if (publicKey && publicKey !== $tw.crypto.currentPublicKey) {
+          if (hasPublicKey && sign) {
+            content.keccak256 = $tw.crypto.keccak256(content.compressed)
             content.signature = await this.personalSign(content.keccak256)
+            content.signature = $tw.crypto.encrypt(
+              content.signature,
+              null,
+              publicKey
+            )
           }
           content = JSON.stringify(content)
         } else {
@@ -148,16 +161,21 @@ IPFS Controller
           if (encoding === 'base64') {
             content = atob(content)
           }
-          if (publicKey || $tw.crypto.hasEncryptionPublicKey()) {
+          if (hasPublicKey) {
             content = { encrypted: content }
             content.encrypted = $tw.crypto.encrypt(
               content.encrypted,
-              password,
+              null,
               publicKey
             )
-            content.keccak256 = $tw.crypto.keccak256(content.encrypted)
-            if (publicKey && publicKey !== $tw.crypto.currentPublicKey) {
+            if (sign) {
+              content.keccak256 = $tw.crypto.keccak256(content.encrypted)
               content.signature = await this.personalSign(content.keccak256)
+              content.signature = $tw.crypto.encrypt(
+                content.signature,
+                null,
+                publicKey
+              )
             }
             content = JSON.stringify(content)
           } else {
@@ -377,32 +395,40 @@ IPFS Controller
     return await this.ipfsWrapper.publishIpnsName(cid, ipfs, ipnsKey, ipnsName)
   }
 
+  IpfsController.prototype.isJson = function (content) {
+    return this.ipfsBundle.isJson(content)
+  }
+
   IpfsController.prototype.getIpfsBaseUrl = function () {
-    return this.ipfsUrl.getIpfsBaseUrl()
+    return this.ipfsBundle.getIpfsBaseUrl()
   }
 
   IpfsController.prototype.normalizeUrl = function (value, base) {
-    return this.ipfsUrl.normalizeUrl(value, base)
+    return this.ipfsBundle.normalizeUrl(value, base)
   }
 
   IpfsController.prototype.getDocumentUrl = function () {
-    return this.ipfsUrl.getDocumentUrl()
+    return this.ipfsBundle.getDocumentUrl()
   }
 
   IpfsController.prototype.getIpfsDefaultApi = function () {
-    return this.ipfsUrl.getIpfsDefaultApi()
+    return this.ipfsBundle.getIpfsDefaultApi()
   }
 
   IpfsController.prototype.getIpfsDefaultGateway = function () {
-    return this.ipfsUrl.getIpfsDefaultGateway()
+    return this.ipfsBundle.getIpfsDefaultGateway()
   }
 
   IpfsController.prototype.getIpfsApiUrl = function () {
-    return this.ipfsUrl.getIpfsApiUrl()
+    return this.ipfsBundle.getIpfsApiUrl()
   }
 
   IpfsController.prototype.getIpfsGatewayUrl = function () {
-    return this.ipfsUrl.getIpfsGatewayUrl()
+    return this.ipfsBundle.getIpfsGatewayUrl()
+  }
+
+  IpfsController.prototype.getUrl = function (url, base) {
+    return this.ipfsBundle.getUrl(url, base)
   }
 
   IpfsController.prototype.resolveUrl = async function (
@@ -580,14 +606,6 @@ ${url}`
     }
   }
 
-  IpfsController.prototype.getUrl = function (url, base) {
-    return this.ipfsUrl.getUrl(url, base)
-  }
-
-  IpfsController.prototype.isJson = function (content) {
-    return this.ipfsBundle.isJson(content)
-  }
-
   IpfsController.prototype.getIpfsClient = async function () {
     // Provider
     const ipfsProvider = $tw.utils.getIpfsProvider()
@@ -695,8 +713,11 @@ ${url}`
     return await this.ipfsBundle.isOwner(domain, web3, account)
   }
 
-  IpfsController.prototype.personalRecover = function (message, signature) {
-    return this.ipfsBundle.personalRecover(message, signature)
+  IpfsController.prototype.personalRecover = async function (
+    message,
+    signature
+  ) {
+    return await this.ipfsBundle.personalRecover(message, signature)
   }
 
   IpfsController.prototype.personalSign = async function (message, provider) {

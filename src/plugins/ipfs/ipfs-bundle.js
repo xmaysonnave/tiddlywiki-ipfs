@@ -58,6 +58,38 @@ import IpfsUrl from './ipfs-url'
     this.once = true
   }
 
+  IpfsBundle.prototype.getIpfsBaseUrl = function () {
+    return this.ipfsUrl.getIpfsBaseUrl()
+  }
+
+  IpfsBundle.prototype.normalizeUrl = function (value, base) {
+    return this.ipfsUrl.normalizeUrl(value, base)
+  }
+
+  IpfsBundle.prototype.getDocumentUrl = function () {
+    return this.ipfsUrl.getDocumentUrl()
+  }
+
+  IpfsBundle.prototype.getIpfsDefaultApi = function () {
+    return this.ipfsUrl.getIpfsDefaultApi()
+  }
+
+  IpfsBundle.prototype.getIpfsDefaultGateway = function () {
+    return this.ipfsUrl.getIpfsDefaultGateway()
+  }
+
+  IpfsBundle.prototype.getIpfsApiUrl = function () {
+    return this.ipfsUrl.getIpfsApiUrl()
+  }
+
+  IpfsBundle.prototype.getIpfsGatewayUrl = function () {
+    return this.ipfsUrl.getIpfsGatewayUrl()
+  }
+
+  IpfsBundle.prototype.getUrl = function (url, base) {
+    return this.ipfsUrl.getUrl(url, base)
+  }
+
   IpfsBundle.prototype.getENSRegistry = function () {
     return this.ensLibrary.getENSRegistry()
   }
@@ -138,8 +170,8 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
-  IpfsBundle.prototype.personalRecover = function (message, signature) {
-    return this.ethereumLibrary.personalRecover(message, signature)
+  IpfsBundle.prototype.personalRecover = async function (message, signature) {
+    return await this.ethereumLibrary.personalRecover(message, signature)
   }
 
   IpfsBundle.prototype.personalSign = async function (message, provider) {

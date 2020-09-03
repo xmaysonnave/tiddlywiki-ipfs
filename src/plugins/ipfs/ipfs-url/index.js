@@ -88,14 +88,11 @@ import root from 'window-or-global'
     try {
       if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
         base = this.getDocumentUrl()
-        if (base.protocol === 'file:') {
-          return this.getUrl(base)
-        }
       }
     } catch (error) {
       base = this.getIpfsGatewayUrl()
     }
-    return this.getUrl(`${base.protocol}//${base.host}`)
+    return this.getUrl(base)
   }
 
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
