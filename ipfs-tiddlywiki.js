@@ -11,4 +11,4 @@ var $tw = require('./src/boot/ipfs-boot.js').TiddlyWiki($tw)
 $tw.boot.argv = Array.prototype.slice.call(process.argv, 2)
 
 // Boot the TW5 app
-$tw.ipfs.boot()
+$tw.boot.boot()

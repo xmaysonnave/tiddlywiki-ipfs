@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-200903473",
+  "version": "v0.3.0-200904379",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -27,6 +27,7 @@
     "build": "./scripts/build.sh",
     "debug": "./scripts/debug-build-tiddlywiki.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
+    "build-tiddlywiki-empty": "./scripts/build-tiddlywiki-empty.sh",
     "format": "prettier-standard --format",
     "ipfs-tiddlywiki": "node ./ipfs-tiddlywiki.js",
     "lint": "prettier-standard --lint",
@@ -70,7 +71,7 @@
     "window-or-global": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.5",
+    "@babel/core": "^7.11.6",
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/runtime-corejs3": "^7.11.2",
@@ -82,13 +83,13 @@
     "gzipper": "^4.0.1",
     "husky": "^4.2.5",
     "jest": "^26.4.0",
-    "lint-staged": "^10.2.11",
+    "lint-staged": "^10.3.0",
     "loglevel": "^1.6.8",
     "pako": "^1.0.11",
     "prettier-standard": "^16.4.1",
     "sjcl": "^1.0.8",
     "snyk": "^1.388.0",
-    "terser": "^5.2.1",
+    "terser": "^5.3.0",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.0.2"
   },

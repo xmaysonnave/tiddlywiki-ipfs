@@ -2,7 +2,5 @@
     "title": "$:/boot/ipfs-bootprefix.js",
     "text": "/*\\\ntitle: $:/boot/ipfs-bootprefix.js\ntype: application/javascript\ntags: $:/ipfs/core\n\n\\*/\nvar ipfsBootPrefix = function ($tw) {\n  /*jslint node: true, browser: true */\n  'use strict'\n\n  $tw = $tw || Object.create(null)\n  $tw.boot = $tw.boot || Object.create(null)\n  $tw.boot.suppressBoot = true\n\n  return $tw\n}\n\nif (typeof exports === 'undefined') {\n  // Set up $tw global for the browser\n  window.$tw = ipfsBootPrefix(window.$tw)\n} else {\n  // Export functionality as a module\n  exports.ipfsBootPrefix = ipfsBootPrefix\n}\n",
     "type": "application/javascript",
-    "tags": "$:/ipfs/core",
-    "modified": "20200903094915385",
-    "library": "yes"
+    "tags": "$:/ipfs/core"
 }

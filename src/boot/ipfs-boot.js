@@ -8,8 +8,6 @@ var _boot = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
-  $tw.ipfs = $tw.ipfs || Object.create(null)
-
   $tw.boot.getLogger = function () {
     var log = $tw.node ? global.log || require('loglevel') : window.log
     if (log !== undefined && log !== null) {
@@ -606,7 +604,7 @@ var _boot = function ($tw) {
 
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
 
-  $tw.ipfs.boot = function (callback) {
+  $tw.boot.boot = function (callback) {
     // Initialise crypto object
     $tw.crypto = new $tw.utils.Crypto()
     // Initialise password prompter
@@ -631,12 +629,6 @@ var _boot = function ($tw) {
         }
       }
     })
-  }
-
-  /////////////////////////// Autoboot in the browser
-
-  if ($tw.browser) {
-    $tw.ipfs.boot()
   }
 
   return $tw

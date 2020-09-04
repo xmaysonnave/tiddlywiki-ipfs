@@ -1,10 +1,10 @@
 title: $:/core/templates/tiddlywiki5.html
-modified: 20200831094915385
+modified: 20200904094915385
 tags: bluelightav.eth
 
 <$set name="saveTiddlerAndShadowsFilter" filter="[subfilter<saveTiddlerFilter>] [subfilter<saveTiddlerFilter>plugintiddlers[]]">
 `<!doctype html>
-`{{$:/core/templates/MOTW.html}}`<html lang="`<$text text={{{ [{$:/language}get[name]] }}}/>`">
+`{{ $:/core/templates/MOTW.html }}`<html lang="`<$text text={{{ [{$:/language}get[name]] }}}/>`">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <!--~~ Raw markup for the top of the head section ~~-->
@@ -21,7 +21,7 @@ tags: bluelightav.eth
 <meta name="copyright" content="`{{$:/core/copyright.txt}}`"/>
 <meta name="Dwebsite" content="bluelightav.eth"/>
 <link id="faviconLink" href="https://bafkreihi27cp35a6gyzwgi3qljmfhnpmio5ysyatpmvfaip7fd3lem7ksq.ipfs.dweb.link/" crossorigin="anonymous" rel="icon" sizes="32x32" type="image/png"/>
-<title>`{{$:/core/wiki/title}}`</title>
+<title>`{{ $:/core/wiki/title }}`</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->
 
 <!--~~ Raw markup ~~-->
@@ -34,16 +34,16 @@ tags: bluelightav.eth
 `{{{ [enlist<saveTiddlerAndShadowsFilter>tag[$:/tags/RawMarkupWikified/TopBody]] ||$:/core/templates/raw-static-tiddler}}}`
 <!--~~ Static styles ~~-->
 <div id="styleArea">
-`{{$:/boot/boot.css||$:/core/templates/css-tiddler}}`
+`{{ $:/boot/boot.css||$:/core/templates/css-tiddler }}`
 </div>
 <!--~~ Static content for Google and browsers without JavaScript ~~-->
 <noscript>
 <div id="splashArea">
-`{{$:/core/templates/static.area}}`
+`{{ $:/core/templates/static.area }}`
 </div>
 </noscript>
 <!--~~ Ordinary tiddlers ~~-->
-`{{$:/core/templates/store.area.template.html}}`
+`{{ $:/core/templates/store.area.template.html }}`
 <!--~~ Library modules ~~-->
 <div id="libraryModules" style="display:none;">
 `{{{ [is[system]type[application/javascript]library[yes]] ||$:/core/templates/javascript-tiddler}}}`
@@ -59,6 +59,10 @@ tags: bluelightav.eth
 <!--~~ Ipfs Boot kernel ~~-->
 <div id="ipfsBootKernel" style="display:none;">
 `{{ $:/boot/ipfs-boot.js ||$:/core/templates/javascript-tiddler}}`
+</div>
+<!--~~ Boot handler ~~-->
+<div id="bootHandler" style="display:none;">
+`{{ $:/boot/boothandler.js ||$:/core/templates/javascript-tiddler}}`
 </div>
 <!--~~ Raw markup for the bottom of the body section ~~-->
 `{{{ [enlist<saveTiddlerAndShadowsFilter>tag[$:/tags/RawMarkupWikified/BottomBody]] ||$:/core/templates/raw-static-tiddler}}}`
