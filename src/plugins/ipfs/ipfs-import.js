@@ -14,6 +14,8 @@ IPFS Import
 
   const name = 'ipfs-import'
 
+  const tiddlyWikiType = 'text/vnd.tiddlywiki'
+
   const local = '<a href="'
   const remote =
     '<a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="'
@@ -138,7 +140,10 @@ IPFS Import
       key = `ipfs://${cid}`
     } else if (ipnsKey !== null) {
       key = `ipns://${ipnsKey}`
-    } else if (normalizedUrl.hostname.endsWith('.eth')) {
+    } else if (
+      normalizedUrl.hostname.endsWith('.eth') ||
+      normalizedUrl.hostname.endsWith('.eth.link')
+    ) {
       key = normalizedUrl.hostname
     } else {
       key = normalizedUrl.toString()
@@ -158,7 +163,7 @@ IPFS Import
     const { cid, ipnsIdentifier, protocol } = $tw.ipfs.decodeCid(key)
     if (protocol !== null && (cid !== null || ipnsIdentifier !== null)) {
       return true
-    } else if (key.endsWith('.eth')) {
+    } else if (key.endsWith('.eth') || key.endsWith('.eth.link')) {
       return true
     }
     return false
@@ -188,7 +193,7 @@ IPFS Import
         ? null
         : password.trim()
     this.host = tiddler
-    const { type, info } = $tw.utils.getContentType(
+    const { type } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
     )
@@ -225,10 +230,6 @@ IPFS Import
           loadedRemoved += importRemoved
         }
         if (canonicalUri !== null) {
-          var load = true
-          if (info.encoding === 'base64' || type === 'image/svg+xml') {
-            load = false
-          }
           const {
             loaded: canonicalLoaded,
             removed: canonicalRemoved
@@ -238,7 +239,7 @@ IPFS Import
             '_canonical_uri',
             canonicalUri,
             password,
-            load
+            tiddlyWikiType === type
           )
           loadedAdded += canonicalLoaded
           loadedRemoved += canonicalRemoved
@@ -334,85 +335,55 @@ IPFS Import
           }
         }
       })
-      if (
-        this.added.length !== 0 ||
-        deleted !== 0 ||
-        this.updated.length !== 0
-      ) {
-        $tw.utils.alert(
-          name,
-          'Successfully Imported, Added: ' +
-            this.added.length +
-            ', Deleted: ' +
-            deleted +
-            ', Updated: ' +
-            this.updated.length
-        )
-      }
+      const reportImportedMsg = `<p style="text-align:center">''Successfully Imported''</p>`
+      $tw.utils.alert(
+        name,
+        `${reportImportedMsg}<p>''Added'': ${this.added.length}<br/>''Deleted'': ${deleted}<br/>''Updated'': ${this.updated.length}</p>`
+      )
       if (this.merged.get(this.host.fields.title) === undefined) {
         var updatedTiddler = new $tw.Tiddler(this.host)
-        if (
-          this.added.length === 0 &&
-          deleted === 0 &&
-          this.updated.length === 0
-        ) {
-          updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: updatedTiddler,
-            fields: [
-              {
-                key: 'type',
-                value: 'text/vnd.tiddlywiki'
-              },
-              {
-                key: 'text',
-                value: "''No Tiddlers have been Imported...''"
-              }
-            ]
-          })
-        } else {
-          const reportAddedMsg = `<p align='left'>''Added: ${this.added.length}''</p>`
-          const reportDeletedMsg = `<p align='left'>''Deleted: ${deleted}''</p>`
-          const reportImportedMsg =
-            "<p align='center'>''Successfully Imported...''</p>"
-          const reportUpdatedMsg = `<p align='left'>''Updated: ${this.updated.length}''</p>`
-          var value = `${reportImportedMsg}`
-          if (reportAdded.trim() !== '') {
-            value = `${value}
+        const reportAddedMsg = `<p>''Added'': ${this.added.length}</p>`
+        const reportDeletedMsg = `<p>''Deleted'': ${deleted}</p>`
+        const reportUpdatedMsg = `<p>''Updated'': ${this.updated.length}</p>`
+        var value = `${reportImportedMsg}${reportAddedMsg}`
+        if (reportAdded.trim() !== '') {
+          value = `${value}
 
- ${reportAddedMsg}
+{{{${reportAdded}}}}
 
- {{{${reportAdded}}}}`
-          }
-          if (reportDeleted.trim() !== '') {
-            value = `${value}
-
- ${reportDeletedMsg}
-
- {{{${reportDeleted}}}}`
-          }
-          if (reportUpdated.trim() !== '') {
-            value = `${value}
-
- ${reportUpdatedMsg}
-
- {{{${reportUpdated}}}}`
-          }
-          updatedTiddler = $tw.utils.updateTiddler({
-            tiddler: updatedTiddler,
-            fields: [
-              {
-                key: 'type',
-                value: 'text/vnd.tiddlywiki'
-              },
-              {
-                key: 'text',
-                value: value
-              }
-            ]
-          })
+`
         }
-        $tw.wiki.addTiddler(updatedTiddler)
+        value = `${value}${reportDeletedMsg}`
+        if (reportDeleted.trim() !== '') {
+          value = `${value}
+
+{{{${reportDeleted}}}}
+
+`
+        }
+        value = `${value}${reportUpdatedMsg}`
+        if (reportUpdated.trim() !== '') {
+          value = `${value}
+
+{{{${reportUpdated}}}}
+
+`
+        }
+        updatedTiddler = $tw.utils.updateTiddler({
+          tiddler: updatedTiddler,
+          fields: [
+            {
+              key: 'type',
+              value: tiddlyWikiType
+            },
+            {
+              key: 'text',
+              value: value
+            }
+          ]
+        })
       }
+      $tw.wiki.addTiddler(updatedTiddler)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -560,7 +531,7 @@ IPFS Import
           }
           var type = tiddler.type
           if (type === undefined || type == null) {
-            type = 'text/vnd.tiddlywiki'
+            type = tiddlyWikiType
           }
           var info = $tw.config.contentTypeInfo[type]
           if (info === undefined || info == null) {
@@ -575,7 +546,7 @@ IPFS Import
               alertFieldFailed`${msg} "${field}": ${resolvedKey}">${title}</a>`
             )
             // Default
-            type = 'text/vnd.tiddlywiki'
+            type = tiddlyWikiType
             info = $tw.config.contentTypeInfo[type]
           }
           tiddler.type = type
@@ -620,13 +591,6 @@ IPFS Import
               removed += loadedRemoved
             }
             if (canonicalUri !== null) {
-              var load = true
-              if (
-                info.encoding === 'base64' ||
-                tiddler.type === 'image/svg+xml'
-              ) {
-                load = false
-              }
               const {
                 loaded: loadedAdded,
                 removed: loadedRemoved
@@ -636,7 +600,7 @@ IPFS Import
                 'canonical_uri',
                 canonicalUri,
                 password,
-                load
+                tiddlyWikiType === tiddler.type
               )
               loaded += loadedAdded
               removed += loadedRemoved
@@ -696,7 +660,6 @@ IPFS Import
         const keys = []
         const tiddler = imported.get(title)
         var type = tiddler.type
-        var info = $tw.config.contentTypeInfo[type]
         var canonicalUri = tiddler._canonical_uri
         canonicalUri =
           canonicalUri === undefined ||
@@ -750,8 +713,7 @@ IPFS Import
                 resolvedKey,
                 title,
                 canonicalKey,
-                type,
-                info
+                type
               )
             ) {
               var importKey = null
@@ -816,10 +778,9 @@ IPFS Import
     parentResolvedKey,
     title,
     canonicalKey,
-    type,
-    info
+    type
   ) {
-    if (info.encoding === 'base64' || type === 'image/svg+xml') {
+    if (tiddlyWikiType !== type) {
       keys.push(canonicalKey)
       return true
     }
@@ -1013,7 +974,6 @@ IPFS Import
         }
         const tiddler = imported.get(title)
         var type = tiddler.type
-        var info = $tw.config.contentTypeInfo[type]
         var canonicalUri = tiddler._canonical_uri
         canonicalUri =
           canonicalUri === undefined ||
@@ -1032,25 +992,24 @@ IPFS Import
         if (importUri !== null) {
           exist = this.importTiddler(title, importUri)
         }
-        if (
-          exist == null &&
-          canonicalUri !== null &&
-          info.encoding !== 'base64' &&
-          type !== 'image/svg+xml'
-        ) {
+        if (exist == null && canonicalUri !== null && tiddlyWikiType === type) {
           this.importTiddler(title, canonicalUri)
         }
         exist = this.mergeTiddler(title, url)
         if (exist !== null) {
           const merged = this.merged.get(title)
           var type = merged.type
-          var info = $tw.config.contentTypeInfo[type]
-          if (info.encoding === 'base64' || type === 'image/svg+xml') {
+          if (tiddlyWikiType !== type) {
             merged._import_uri = this.rootUri
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
-              merged._import_uri = this.rootUri
+              if (url !== this.rootUri) {
+                merged._canonical_uri = this.resolved.get(url)
+                merged._import_uri = this.rootUri
+              } else {
+                merged._canonical_uri = this.rootUri
+              }
             } else {
               merged._canonical_uri = this.resolved.get(canonicalUri)
               if (canonicalUri !== this.rootUri) {
@@ -1086,7 +1045,6 @@ IPFS Import
       return null
     }
     var type = tiddler.type
-    var info = $tw.config.contentTypeInfo[type]
     var importUri = tiddler._import_uri
     importUri =
       importUri == null || importUri === undefined || importUri.trim() === ''
@@ -1103,12 +1061,7 @@ IPFS Import
     if (importUri !== null) {
       exist = this.importTiddler(title, importUri)
     }
-    if (
-      exist == null &&
-      canonicalUri !== null &&
-      info.encoding !== 'base64' &&
-      type !== 'image/svg+xml'
-    ) {
+    if (exist == null && canonicalUri !== null && tiddlyWikiType === type) {
       this.importTiddler(title, canonicalUri)
     }
     return this.mergeTiddler(title, uri)

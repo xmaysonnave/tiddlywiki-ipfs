@@ -337,7 +337,6 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     var canonicalUri = tiddler.getFieldString('_canonical_uri')
     canonicalUri =
       canonicalUri === undefined ||
@@ -350,12 +349,8 @@ IPFS Tiddler
       importUri === undefined || importUri == null || importUri.trim() === ''
         ? null
         : importUri.trim()
-    // Reload Attachment
-    if (
-      (info.encoding === 'base64' || type === 'image/svg+xml') &&
-      canonicalUri !== null &&
-      importUri == null
-    ) {
+    // Reload
+    if (canonicalUri !== null && importUri == null) {
       const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [{ key: 'text', value: '' }]
@@ -363,21 +358,19 @@ IPFS Tiddler
       $tw.wiki.addTiddler(updatedTiddler)
       return true
     }
-    // Async Import
-    if (
-      type === 'text/vnd.tiddlywiki' &&
-      (canonicalUri !== null || importUri !== null)
-    ) {
+    // Import
+    if (canonicalUri !== null || importUri !== null) {
       var ipfsImport = new IpfsImport()
       ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       })
-    } else {
-      $tw.wiki.clearCache(title)
-      const changedTiddler = $tw.utils.getChangedTiddler(title)
-      $tw.rootWidget.refresh(changedTiddler)
+      return true
     }
+    // Refresh
+    $tw.wiki.clearCache(title)
+    const changedTiddler = $tw.utils.getChangedTiddler(title)
+    $tw.rootWidget.refresh(changedTiddler)
     return true
   }
 
