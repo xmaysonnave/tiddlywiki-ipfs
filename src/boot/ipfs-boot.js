@@ -1,7 +1,6 @@
 /*\
 title: $:/boot/ipfs-boot.js
 type: application/javascript
-tags: $:/ipfs/core
 
 \*/
 var _boot = function ($tw) {
@@ -63,18 +62,6 @@ var _boot = function ($tw) {
       currentPublicKey = null
       if ($tw.wiki) {
         this.updateCryptoStateTiddler()
-        var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
-        if (
-          !encryption ||
-          (currentPassword !== null && encryption.fields.text !== 'standford')
-        ) {
-          $tw.wiki.addTiddler(
-            new $tw.Tiddler({
-              title: '$:/config/Encryption',
-              text: 'standford'
-            })
-          )
-        }
       }
     }
     this.setEncryptionPublicKey = function (newPublicKey) {
@@ -83,8 +70,39 @@ var _boot = function ($tw) {
         newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
       if ($tw.wiki) {
         this.updateCryptoStateTiddler()
+      }
+    }
+    this.updateCryptoStateTiddler = function () {
+      if ($tw.wiki) {
+        var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+        if (encrypted) {
+          var publicKey = encrypted.fields._encryption_public_key
+          if (publicKey) {
+            currentPassword = null
+            currentPublicKey = publicKey
+          }
+        }
+        var state = currentPassword || currentPublicKey ? 'yes' : 'no'
+        if (!encrypted || encrypted.fields.text !== state) {
+          if (currentPublicKey) {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/isEncrypted',
+                _encryption_public_key: currentPublicKey,
+                text: state
+              })
+            )
+          } else {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/isEncrypted',
+                text: state
+              })
+            )
+          }
+        }
         var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
-        if (!encryption) {
+        if (!currentPublicKey || !encryption) {
           $tw.wiki.addTiddler(
             new $tw.Tiddler({
               title: '$:/config/Encryption',
@@ -92,28 +110,10 @@ var _boot = function ($tw) {
             })
           )
         } else {
-          if (currentPublicKey !== null && encryption.fields.text === 'yes') {
-            $tw.wiki.addTiddler(
-              new $tw.Tiddler({
-                title: '$:/config/Encryption',
-                text: 'ethereum'
-              })
-            )
-          }
-        }
-      }
-    }
-    this.updateCryptoStateTiddler = function () {
-      if ($tw.wiki) {
-        var state = currentPassword || currentPublicKey ? 'yes' : 'no'
-        var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        if (!encrypted || encrypted.fields.text !== state) {
           $tw.wiki.addTiddler(
             new $tw.Tiddler({
-              title: '$:/isEncrypted',
-              _encryption_public_key:
-                currentPublicKey !== null ? currentPublicKey : undefined,
-              text: state
+              title: '$:/config/Encryption',
+              text: 'ethereum'
             })
           )
         }
@@ -617,17 +617,6 @@ var _boot = function ($tw) {
     $tw.boot.inflateTiddlers(function () {
       // Startup
       $tw.boot.startup({ callback: callback })
-      // Make sure the crypto state tiddler is up to date
-      if ($tw.crypto) {
-        var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        if (encrypted && encrypted.fields._encryption_public_key) {
-          $tw.crypto.setEncryptionPublicKey(
-            encrypted.fields._encryption_public_key
-          )
-        } else {
-          $tw.crypto.updateCryptoStateTiddler()
-        }
-      }
     })
   }
 
