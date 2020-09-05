@@ -35,13 +35,6 @@
       "--password", "blue",
 			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain-and-standford.html", "text/plain",
       "--clearpassword"
-    ],
-    "plugin": [
-      "--render",
-        "[tag[$:/ipfs/core]]",
-        "[encodeuricomponent[]addprefix[./]addsuffix[.json]]",
-        "text/plain",
-        "$:/core/templates/json-tiddler"
     ]
 	}
 }

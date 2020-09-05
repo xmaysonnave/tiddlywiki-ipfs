@@ -3,4 +3,4 @@
 node -v
 npm -v
 
-jest --verbose ./test
+yarn jest --verbose

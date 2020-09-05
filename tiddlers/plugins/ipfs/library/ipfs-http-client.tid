@@ -1,7 +1,7 @@
 title: $:/ipfs/library/ipfs-http-client
-modified: 20200813094915385
+modified: 20200905094915385
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/ipfs/js-ipfs/master/packages/ipfs-http-client/LICENSE-MIT
 _project_uri: https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client
-_source_uri: https://cdn.jsdelivr.net/npm/ipfs-http-client@46.0.1/dist/index.min.js
-_source_sri: sha384-08ZBK+SMxOni5g4szkF318Vus2ovYuvdUgAnnSinYgtuH9KyVDgxWyhKaBrS4wqU
+_source_uri: https://cdn.jsdelivr.net/npm/ipfs-http-client@46.1.1/dist/index.min.js
+_source_sri: sha384-qD27GUsFAAd8kmsHdbVu8/PFnXrfHyJLit0nZC38n+8eSRKrgkMns1oFh4zc7O+u

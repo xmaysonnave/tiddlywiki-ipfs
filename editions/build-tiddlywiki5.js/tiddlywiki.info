@@ -1,0 +1,10 @@
+{
+	"description": "Build tiddlywiki5.js",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "plugin": [
+			"--rendertiddler", "$:/core/templates/tiddlywiki5.js", "tiddlywiki5.js", "text/plain"
+    ]
+	}
+}

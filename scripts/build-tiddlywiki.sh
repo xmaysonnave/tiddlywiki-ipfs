@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+./scripts/build-ipfs-tiddlywiki.sh || exit 1
+
 ./scripts/build-tiddlywiki-empty.sh || exit 1
 
 # bluelightav edition

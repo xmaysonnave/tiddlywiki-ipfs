@@ -1,6 +1,0 @@
-{
-    "title": "$:/boot/boothandler.js",
-    "text": "/*\\\ntitle: $:/boot/boothandler.js\ntype: application/javascript\ntags: $:/ipfs/core\n\n\\*/\nvar bootHandler = function ($tw) {\n  /*jslint node: true, browser: true */\n  'use strict'\n  if ($tw.browser && !$tw.boot.suppressBoot) {\n    $tw.boot.boot()\n  }\n  return $tw\n}\n\nif (typeof exports === 'undefined') {\n  // Set up $tw global for the browser\n  window.$tw = bootHandler(window.$tw)\n} else {\n  // Export functionality as a module\n  exports.bootHandler = bootHandler\n}\n",
-    "type": "application/javascript",
-    "tags": "$:/ipfs/core"
-}

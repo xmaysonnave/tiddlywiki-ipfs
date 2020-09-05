@@ -3,5 +3,6 @@ build/
 node_modules/
 production/
 sample/
+temp/
 tw5-locator/
 tw5-relink/

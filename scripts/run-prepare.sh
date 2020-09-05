@@ -3,11 +3,13 @@
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
 rm -f -R ./sample > /dev/null 2>&1
+rm -f -R ./temp > /dev/null 2>&1
 
 # build directories
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 mkdir ./sample > /dev/null 2>&1
+mkdir ./temp > /dev/null 2>&1
 
 # lint
 yarn lint \
@@ -41,7 +43,6 @@ wget https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js -O ./build/tiddle
 # cp -R ./tiddlers/plugins/tiddlywiki/* ./build/plugins/ipfs > /dev/null 2>&1
 
 # generate build number
-./scripts/run-build-number.sh \
-|| exit 1
+./scripts/run-build-number.sh || exit 1
 
 exit 0

@@ -21,6 +21,7 @@ yarn terser \
   -o build/tiddlers/system/keccak.umd.min.js \
 || exit 1
 
+# cleanup
 rm ./build/tiddlers/system/keccak.umd.js > /dev/null 2>&1
 
 exit 0
