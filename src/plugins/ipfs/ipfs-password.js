@@ -38,11 +38,11 @@ Compression handling
     }
     // Ensure that $:/isEncrypted is maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
-      if ($tw.utils.hop(changes, '$:/config/Encryption')) {
+      if ($tw.utils.hop(changes, '$:/config/encryption')) {
         const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
         if (encrypted.fields.text === 'yes') {
           const hasPassword = $tw.crypto.hasPassword()
-          const encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+          const encryption = $tw.wiki.getTiddler('$:/config/encryption')
           if (!hasPassword && encryption.fields.text === 'standford') {
             setPassword()
           } else if (hasPassword) {
@@ -52,7 +52,7 @@ Compression handling
       }
     })
     $tw.rootWidget.addEventListener('tm-set-password', async function (event) {
-      const encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+      const encryption = $tw.wiki.getTiddler('$:/config/encryption')
       if (encryption.fields.text === 'standford') {
         if ($tw.crypto.hasPassword() === false) {
           setPassword()
@@ -75,7 +75,7 @@ Compression handling
     ) {
       if ($tw.browser) {
         const hadPassword = $tw.crypto.hasPassword()
-        const encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+        const encryption = $tw.wiki.getTiddler('$:/config/encryption')
         if (hadPassword) {
           if (
             encryption.fields.text === 'standford' &&

@@ -48,6 +48,10 @@ IPFS Controller
     this.ensAction.init()
     this.ipfsAction.init()
     this.ipfsTiddler.init()
+    // Load sigUtil early if needed
+    if ($tw.crypto.hasEncryptionPublicKey()) {
+      this.loadEthSigUtilLibrary()
+    }
     // Init once
     this.once = true
   }

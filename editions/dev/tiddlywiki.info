@@ -17,7 +17,8 @@
 		"dev": [
 			"--compress", "yes",
       "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain"
+			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain",
+      "--clearencryptionpublickey"
     ],
 		"dev-compressed": [
 			"--compress", "yes",

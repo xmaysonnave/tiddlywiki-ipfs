@@ -24,11 +24,11 @@ list-before:
 
 <$checkbox tiddler="$:/isCompressed" field="text" checked="yes" unchecked="no" default="no"> <<lingo Compression/Description>> </$checkbox>
 
-!! <$link to="$:/config/Encryption"><<lingo Encryption/Caption>></$link>
+!! <$link to="$:/config/encryption"><<lingo Encryption/Caption>></$link>
 
-<$radio tiddler="$:/config/Encryption" value="standford"> <<lingo Encryption/Standford/Description>> </$radio>
+<$radio tiddler="$:/config/encryption" value="standford"> <<lingo Encryption/Standford/Description>> </$radio>
 
-<$radio tiddler="$:/config/Encryption" value="ethereum"> <<lingo Encryption/Ethereum/Description>> </$radio>
+<$radio tiddler="$:/config/encryption" value="ethereum"> <<lingo Encryption/Ethereum/Description>> </$radio>
 
 <$checkbox tiddler="$:/isSigned" field="text" checked="yes" unchecked="no" default="no"> <<lingo Encryption/Signature/Description>> </$checkbox>
 

@@ -34,7 +34,7 @@ IPFS plugin version
       encrypted = false
     }
     var tiddler
-    var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
+    var encryption = $tw.wiki.getTiddler('$:/config/encryption')
     if (encrypted) {
       tiddler = $tw.wiki.getTiddler(
         '$:/language/Buttons/Encryption/ClearEncryptionPublicKey/Hint'

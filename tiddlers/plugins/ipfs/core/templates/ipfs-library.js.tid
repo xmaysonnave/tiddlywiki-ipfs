@@ -1,0 +1,6 @@
+title: $:/core/templates/ipfs-library.js
+
+\rules only filteredtranscludeinline transcludeinline codeinline
+
+// Library modules
+{{{ [is[system]type[application/javascript]ipfs-library[yes]] ||$:/core/templates/plain-text-tiddler}}}

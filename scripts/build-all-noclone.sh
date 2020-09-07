@@ -4,6 +4,8 @@
 
 ./scripts/run-browserify.sh || exit 1
 
+./scripts/build-ipfs-tiddlywiki.sh || exit 1
+
 # lint
 yarn lint || exit 1
 

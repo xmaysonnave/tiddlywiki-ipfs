@@ -1,6 +1,7 @@
 /*\
 title: $:/boot/ipfs-boot.js
 type: application/javascript
+tags: $:/ipfs/core
 
 \*/
 var _boot = function ($tw) {
@@ -62,6 +63,18 @@ var _boot = function ($tw) {
       currentPublicKey = null
       if ($tw.wiki) {
         this.updateCryptoStateTiddler()
+        var encryption = $tw.wiki.getTiddler('$:/config/encryption')
+        if (
+          currentPassword !== null &&
+          encryption.fields.text !== 'standford'
+        ) {
+          $tw.wiki.addTiddler(
+            new $tw.Tiddler({
+              title: '$:/config/encryption',
+              text: 'standford'
+            })
+          )
+        }
       }
     }
     this.setEncryptionPublicKey = function (newPublicKey) {
@@ -70,18 +83,23 @@ var _boot = function ($tw) {
         newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
       if ($tw.wiki) {
         this.updateCryptoStateTiddler()
+        var encryption = $tw.wiki.getTiddler('$:/config/encryption')
+        if (
+          currentPublicKey !== null &&
+          encryption.fields.text !== 'ethereum'
+        ) {
+          $tw.wiki.addTiddler(
+            new $tw.Tiddler({
+              title: '$:/config/encryption',
+              text: 'ethereum'
+            })
+          )
+        }
       }
     }
     this.updateCryptoStateTiddler = function () {
       if ($tw.wiki) {
         var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        if (encrypted) {
-          var publicKey = encrypted.fields._encryption_public_key
-          if (publicKey) {
-            currentPassword = null
-            currentPublicKey = publicKey
-          }
-        }
         var state = currentPassword || currentPublicKey ? 'yes' : 'no'
         if (!encrypted || encrypted.fields.text !== state) {
           if (currentPublicKey) {
@@ -100,22 +118,6 @@ var _boot = function ($tw) {
               })
             )
           }
-        }
-        var encryption = $tw.wiki.getTiddler('$:/config/Encryption')
-        if (!currentPublicKey || !encryption) {
-          $tw.wiki.addTiddler(
-            new $tw.Tiddler({
-              title: '$:/config/Encryption',
-              text: 'standford'
-            })
-          )
-        } else {
-          $tw.wiki.addTiddler(
-            new $tw.Tiddler({
-              title: '$:/config/Encryption',
-              text: 'ethereum'
-            })
-          )
         }
       }
     }
@@ -618,6 +620,10 @@ var _boot = function ($tw) {
       // Startup
       $tw.boot.startup({ callback: callback })
     })
+  }
+
+  if ($tw.browser && !$tw.boot.suppressBoot) {
+    $tw.boot.boot()
   }
 
   return $tw
