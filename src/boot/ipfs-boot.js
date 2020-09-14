@@ -62,12 +62,8 @@ var _boot = function ($tw) {
         newPassword === undefined || newPassword == null ? null : newPassword
       currentPublicKey = null
       if ($tw.wiki) {
-        this.updateCryptoStateTiddler()
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
-        if (
-          currentPassword !== null &&
-          encryption.fields.text !== 'standford'
-        ) {
+        if (encryption.fields.text !== 'standford') {
           $tw.wiki.addTiddler(
             new $tw.Tiddler({
               title: '$:/config/encryption',
@@ -75,26 +71,35 @@ var _boot = function ($tw) {
             })
           )
         }
+        this.updateCryptoStateTiddler()
       }
     }
     this.setEncryptionPublicKey = function (newPublicKey) {
-      currentPassword = null
       currentPublicKey =
         newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
+      currentPassword = null
       if ($tw.wiki) {
-        this.updateCryptoStateTiddler()
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
-        if (
-          currentPublicKey !== null &&
-          encryption.fields.text !== 'ethereum'
-        ) {
-          $tw.wiki.addTiddler(
-            new $tw.Tiddler({
-              title: '$:/config/encryption',
-              text: 'ethereum'
-            })
-          )
+        if (currentPublicKey !== null) {
+          if (encryption.fields.text !== 'ethereum') {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/config/encryption',
+                text: 'ethereum'
+              })
+            )
+          }
+        } else {
+          if (encryption.fields.text !== 'standford') {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/config/encryption',
+                text: 'standford'
+              })
+            )
+          }
         }
+        this.updateCryptoStateTiddler()
       }
     }
     this.updateCryptoStateTiddler = function () {
@@ -328,7 +333,7 @@ var _boot = function ($tw) {
 
   if ($tw.browser && !$tw.node) {
     $tw.boot.metamaskPrompt = async function (
-      text,
+      encrypted,
       keccak256,
       signature,
       callback
@@ -362,9 +367,25 @@ var _boot = function ($tw) {
         }
         return false
       }
+      var personalRecover = async function (provider, message, signature) {
+        var recovered = null
+        if (typeof provider.request === 'function') {
+          var params = [message, signature]
+          recovered = await provider.request({
+            method: 'personal_ecRecover',
+            params
+          })
+        }
+        if (recovered === undefined || recovered == null) {
+          const err = new Error('Unrecoverable signature...')
+          err.name = 'UnrecoverableSignature'
+          throw err
+        }
+        return recovered
+      }
       // Check hash
       if (keccak256) {
-        const hash = $tw.crypto.keccak256(text)
+        const hash = $tw.crypto.keccak256(encrypted)
         if (keccak256 !== hash) {
           throw new Error(
             'Tampered encrypted content, signature do not match...'
@@ -372,7 +393,7 @@ var _boot = function ($tw) {
         }
       }
       // Decrypt
-      var decryptedText = null
+      var decrypted = null
       try {
         const provider = await window.detectEthereumProvider({
           mustBeMetaMask: true
@@ -446,23 +467,45 @@ var _boot = function ($tw) {
           $tw.boot.getLogger().log(`Ethereum Account: ${accounts[0]}`)
         }
         try {
+          if (signature) {
+            var tStart = new Date()
+            signature = await provider.request({
+              method: 'eth_decrypt',
+              params: [signature, accounts[0]]
+            })
+            if (signature !== undefined || signature !== null) {
+              var tStop = new Date() - tStart
+              $tw.boot
+                .getLogger()
+                .info(`Ethereum Signature Decrypt: ${tStop}ms`)
+            }
+            var recovered = await personalRecover(
+              provider,
+              keccak256,
+              signature
+            )
+            $tw.boot.getLogger().info(`Ethereum Signature: ${recovered}`)
+          }
           var tStart = new Date()
-          decryptedText = await provider.request({
+          decrypted = await provider.request({
             method: 'eth_decrypt',
-            params: [text, accounts[0]]
+            params: [encrypted, accounts[0]]
           })
-          if (decryptedText !== undefined || decryptedText !== null) {
+          if (decrypted !== undefined || decrypted !== null) {
             var tStop = new Date() - tStart
-            var ratio = Math.floor((decryptedText.length * 100) / text.length)
+            var ratio = Math.floor((decrypted.length * 100) / encrypted.length)
             $tw.boot
               .getLogger()
               .info(
-                `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
+                `Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`
               )
           }
         } catch (error) {
           if (error.code === 4001) {
             throw error
+          }
+          if (error.name === 'UnrecoverableSignature') {
+            throw new Error(`Tampered encrypted content. ${error.message}`)
           }
           $tw.boot.getLogger().error(error)
           throw new Error('Unable to Decrypt Ethereum content...')
@@ -474,7 +517,7 @@ var _boot = function ($tw) {
           $tw.utils.error(error.message)
         }
       }
-      callback(decryptedText)
+      callback(decrypted)
     }
 
     $tw.boot.passwordPrompt = function (text, callback) {
@@ -619,6 +662,17 @@ var _boot = function ($tw) {
     $tw.boot.inflateTiddlers(function () {
       // Startup
       $tw.boot.startup({ callback: callback })
+      // Make sure the crypto state tiddler is up to date
+      if ($tw.crypto) {
+        var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+        if (encrypted && encrypted.fields._encryption_public_key) {
+          $tw.crypto.setEncryptionPublicKey(
+            encrypted.fields._encryption_public_key
+          )
+        } else {
+          $tw.crypto.updateCryptoStateTiddler()
+        }
+      }
     })
   }
 

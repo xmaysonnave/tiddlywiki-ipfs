@@ -1,5 +1,5 @@
 title: $:/config/PreferredSaver
-modified: 20200528094915385
+modified: 20200908094915385
 tags: $:/ipfs/core
 
-$:/plugins/ipfs/ipfs-saver.js
+$:/core/modules/savers/download.js

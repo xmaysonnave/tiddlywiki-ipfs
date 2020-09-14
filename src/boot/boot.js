@@ -1981,6 +1981,7 @@ var _boot = function ($tw) {
         'modules',
         'bootKernelPrefix',
         'bootKernel',
+        'ipfsBootKernel',
         'styleArea',
         'storeArea',
         'systemArea'
@@ -2758,10 +2759,6 @@ var _boot = function ($tw) {
     $tw.wiki.defineTiddlerModules()
     // And any modules within plugins
     $tw.wiki.defineShadowModules()
-    // Make sure the crypto state tiddler is up to date
-    if ($tw.crypto) {
-      $tw.crypto.updateCryptoStateTiddler()
-    }
     // Gather up any startup modules
     $tw.boot.remainingStartupModules = [] // Array of startup modules
     $tw.modules.forEachModuleOfType('startup', function (title, module) {

@@ -30,7 +30,7 @@ Compress widget
     this.parentDomNode = parent
     this.computeAttributes()
     this.execute()
-    var textNode = this.document.createTextNode(this.compressedText)
+    var textNode = this.document.createTextNode(this.encryptedText)
     parent.insertBefore(textNode, nextSibling)
     this.domNodes.push(textNode)
   }
@@ -68,7 +68,7 @@ Compress widget
       }
       content = JSON.stringify(content)
     }
-    this.compressedText = $tw.utils.htmlEncode(content)
+    this.encryptedText = $tw.utils.htmlEncode(content)
   }
 
   /*

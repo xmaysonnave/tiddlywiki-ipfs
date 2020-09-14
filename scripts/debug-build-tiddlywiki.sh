@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
 
-./scripts/run-prepare.sh || exit 1
+# empty edition
+cp -R ./editions/empty/* ./build > /dev/null 2>&1
 
-./scripts/run-browserify.sh || exit 1
-
-./scripts/build-ipfs-tiddlywiki.sh || exit 1
-
-# lint
-yarn lint || exit 1
-
-# format
-yarn format || exit 1
-
-./scripts/build-tiddlywiki-empty.sh || exit 1
+# build
+node --inspect ./ipfs-tiddlywiki.js build \
+  --output production \
+  --build \
+  --verbose \
+|| exit 1
 
 # cleanup
 rm -f -R ./temp > /dev/null 2>&1
