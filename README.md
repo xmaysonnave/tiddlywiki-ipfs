@@ -16,6 +16,7 @@
 </p>
 
 <p align="center">
+  <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs.svg?type=shield"/></a>
   <a href="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs"><img alt="TravisCI" src="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=master"/></a>
   <a href="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs"><img alt="Snyk" src="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg"/></a>
 </p>
