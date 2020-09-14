@@ -1,7 +1,7 @@
 language: node_js
 
 os: linux
-dist: bionic
+dist: focal
 arch: amd64
 
 node_js:
