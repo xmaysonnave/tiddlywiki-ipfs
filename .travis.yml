@@ -5,7 +5,7 @@ dist: bionic
 arch: amd64
 
 node_js:
-  - '12'
+  - '14'
 
 after_success:
   - snyk monitor
