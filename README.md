@@ -243,20 +243,20 @@ load-nvmrc
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
 
 ```
-v12.18.1
+v14
 ```
 
 Install the recommended `node` version.
 
 ```
-nvm install v12.18.1
+nvm install v14
 ```
 
 Check:
 
 ```
 node -v
-v12.18.1
+v14.11.0
 ```
 
 Install `yarn`.
