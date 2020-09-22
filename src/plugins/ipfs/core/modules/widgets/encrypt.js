@@ -30,6 +30,16 @@ Encrypt widget
     this.computeAttributes()
     this.execute()
     var textNode = this.document.createTextNode(this.encryptedText)
+    if (
+      typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
+      $tw.crypto.hasEncryptionPublicKey()
+    ) {
+      var sign = $tw.wiki.getTiddler('$:/isSigned')
+      sign = sign !== undefined ? sign.fields.text === 'yes' : false
+      if (sign) {
+        textNode.sign = true
+      }
+    }
     parent.insertBefore(textNode, nextSibling)
     this.domNodes.push(textNode)
   }

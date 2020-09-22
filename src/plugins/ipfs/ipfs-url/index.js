@@ -1,4 +1,3 @@
-import root from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -64,7 +63,7 @@ import root from 'window-or-global'
    */
   IpfsUrl.prototype.getDocumentUrl = function () {
     try {
-      return new URL(root.location.href)
+      return new URL(globalThis.location.href)
     } catch (error) {
       this.getLogger().error(error)
     }

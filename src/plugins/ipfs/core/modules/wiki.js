@@ -64,6 +64,53 @@ wikimethod
   }
 
   /**
+   * Parse text from a tiddler and render it into another format
+   * outputType: content type for the output
+   * title: title of the tiddler to be rendered
+   * options: see below
+   * Options include:
+   * variables: hashmap of variables to set
+   * parentWidget: optional parent widget for the root node
+   */
+  exports.renderTiddlerAndSign = async function (outputType, title, options) {
+    options = options || {}
+    var parser = this.parseTiddler(title, options)
+    var widgetNode = this.makeWidget(parser, options)
+    var container = $tw.fakeDocument.createElement('div')
+    widgetNode.render(container, null)
+    var sign = $tw.wiki.locateTWElement(container, 'sign')
+    if (sign) {
+      var content = JSON.parse($tw.utils.htmlDecode(sign.textContent))
+      content.signature = await $tw.ipfs.personalSign(content.keccak256)
+      content.signature = $tw.crypto.encrypt(content.signature)
+      content = JSON.stringify(content)
+      sign.textContent = $tw.utils.htmlEncode(content)
+    }
+    return outputType === 'text/html'
+      ? container.innerHTML
+      : outputType === 'text/plain-formatted'
+      ? container.formattedTextContent
+      : container.textContent
+  }
+
+  exports.locateTWElement = function (element, type) {
+    if (element.children) {
+      for (var i = 0; i < element.children.length; i++) {
+        const current = element.children[i]
+        if (current[type]) {
+          return current
+        }
+        if (current.children) {
+          const found = $tw.wiki.locateTWElement(current, type)
+          if (found) {
+            return found
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Lower level utility to read the content of a browser File object,
    * invoking callback(tiddlerFieldsArray) with an array of tiddler fields objects
    */

@@ -8,7 +8,6 @@ IPFS Bundle
 
 \*/
 import CID from 'cids'
-import root from 'window-or-global'
 import EnsLibrary from './ens-library'
 import EthereumLibrary from './ethereum-library'
 import IpfsLibrary from './ipfs-library'
@@ -29,8 +28,8 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.getLogger = function () {
-    if (root.log !== undefined && root.log !== null) {
-      const loggers = root.log.getLoggers()
+    if (globalThis.log !== undefined && globalThis.log !== null) {
+      const loggers = globalThis.log.getLoggers()
       var eruda = loggers.eruda
       if (eruda) {
         return eruda
@@ -104,58 +103,54 @@ import IpfsUrl from './ipfs-url'
 
   IpfsBundle.prototype.loadErudaLibrary = async function () {
     try {
-      if (typeof root.eruda === 'undefined') {
+      if (typeof globalThis.eruda === 'undefined') {
         await this.ipfsLoader.loadErudaLibrary()
-        if (typeof root.eruda !== 'undefined') {
-          return
-        }
       }
     } catch (error) {
       this.getLogger().error(error)
     }
-    throw new Error('Unavailable Eruda library...')
+    if (typeof globalThis.eruda === 'undefined') {
+      throw new Error('Unavailable Eruda library...')
+    }
   }
 
   IpfsBundle.prototype.loadEthSigUtilLibrary = async function () {
     try {
-      if (typeof root.sigUtil === 'undefined') {
+      if (typeof globalThis.sigUtil === 'undefined') {
         await this.ipfsLoader.loadEthSigUtilLibrary()
-        if (typeof root.sigUtil !== 'undefined') {
-          return
-        }
       }
     } catch (error) {
       this.getLogger().error(error)
     }
-    throw new Error('Unavailable Eth-Sig-Util library...')
+    if (typeof globalThis.sigUtil === 'undefined') {
+      throw new Error('Unavailable eth-sig-util library...')
+    }
   }
 
   IpfsBundle.prototype.loadEthersJsLibrary = async function () {
     try {
-      if (typeof root.ethers === 'undefined') {
+      if (typeof globalThis.ethers === 'undefined') {
         await this.ipfsLoader.loadEtherJsLibrary()
-        if (typeof root.ethers !== 'undefined') {
-          return
-        }
       }
     } catch (error) {
       this.getLogger().error(error)
     }
-    throw new Error('Unavailable Ethereum library...')
+    if (typeof globalThis.ethers === 'undefined') {
+      throw new Error('Unavailable Ethereum library...')
+    }
   }
 
   IpfsBundle.prototype.loadIpfsHttpLibrary = async function () {
     try {
-      if (typeof root.IpfsHttpClient === 'undefined') {
+      if (typeof globalThis.IpfsHttpClient === 'undefined') {
         await this.ipfsLoader.loadIpfsHttpLibrary()
-        if (typeof root.IpfsHttpClient !== 'undefined') {
-          return
-        }
       }
     } catch (error) {
       this.getLogger().error(error)
     }
-    throw new Error('Unavailable IPFS HTTP Client library...')
+    if (typeof globalThis.IpfsHttpClient === 'undefined') {
+      throw new Error('Unavailable IPFS HTTP Client library...')
+    }
   }
 
   IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {
@@ -796,7 +791,7 @@ to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${con
 
   IpfsBundle.prototype.deflate = function (str) {
     var tStart = new Date()
-    var ua = root.pako.deflate(str, { raw: false })
+    var ua = globalThis.pako.deflate(str, { raw: false })
     var b64 = this.Uint8ArrayToBase64(ua)
     var tStop = new Date() - tStart
     var ratio = Math.floor((b64.length * 100) / str.length)
@@ -808,7 +803,7 @@ to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${con
   IpfsBundle.prototype.inflate = function (b64) {
     var tStart = new Date()
     var ua = this.decode(b64)
-    var str = root.pako.inflate(ua, { to: 'string' })
+    var str = globalThis.pako.inflate(ua, { to: 'string' })
     var tStop = new Date() - tStart
     var ratio = Math.floor((str.length * 100) / b64.length)
     this.getLogger().info(

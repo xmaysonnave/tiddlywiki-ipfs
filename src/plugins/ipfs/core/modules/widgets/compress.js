@@ -31,6 +31,16 @@ Compress widget
     this.computeAttributes()
     this.execute()
     var textNode = this.document.createTextNode(this.encryptedText)
+    if (
+      typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
+      $tw.crypto.hasEncryptionPublicKey()
+    ) {
+      var sign = $tw.wiki.getTiddler('$:/isSigned')
+      sign = sign !== undefined ? sign.fields.text === 'yes' : false
+      if (sign) {
+        textNode.sign = true
+      }
+    }
     parent.insertBefore(textNode, nextSibling)
     this.domNodes.push(textNode)
   }
@@ -56,8 +66,9 @@ Compress widget
     var content = JSON.stringify(json)
     if ($tw.compress && typeof $tw.compress.deflate === 'function') {
       content = { compressed: $tw.compress.deflate(content) }
-      var tiddler = $tw.wiki.getTiddler('$:/isEncrypted')
-      if (tiddler && tiddler.fields.text === 'yes') {
+      var encrypt = $tw.wiki.getTiddler('$:/isEncrypted')
+      encrypt = encrypt !== undefined ? encrypt.fields.text === 'yes' : false
+      if (encrypt) {
         content.compressed = $tw.crypto.encrypt(content.compressed)
         if (
           typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&

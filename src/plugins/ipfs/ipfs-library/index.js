@@ -1,5 +1,4 @@
 import { getIpfs, providers } from 'ipfs-provider'
-import root from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -82,9 +81,7 @@ import root from 'window-or-global'
       throw new Error('Undefined IPFS API URL...')
     }
     try {
-      if (typeof root.IpfsHttpClient === 'undefined') {
-        await this.ipfsBundle.loadIpfsHttpLibrary()
-      }
+      await this.ipfsBundle.loadIpfsHttpLibrary()
       this.getLogger().info(
         `Processing connection to IPFS API URL:
  ${apiUrl}`

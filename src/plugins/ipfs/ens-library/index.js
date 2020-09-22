@@ -1,6 +1,5 @@
 import bs58 from 'bs58'
 import contentHash from 'content-hash'
-import root from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -146,7 +145,7 @@ import root from 'window-or-global'
     const abi = [
       'function resolver(bytes32 node) external view returns (address)'
     ]
-    const iface = new root.ethers.utils.Interface(abi)
+    const iface = new globalThis.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('resolver', [node])
     const result = await web3.call({ to: registry, data: data })
     if (result === undefined || result == null || result === '0x') {
@@ -184,7 +183,7 @@ import root from 'window-or-global'
     var abi = [
       'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
     ]
-    var iface = new root.ethers.utils.Interface(abi)
+    var iface = new globalThis.ethers.utils.Interface(abi)
     var data = iface.encodeFunctionData('supportsInterface', ['0x01ffc9a7'])
     var result = await web3.call({ to: address, data: data })
     if (result === undefined || result == null || result === '0x') {
@@ -247,7 +246,7 @@ import root from 'window-or-global'
     var abi = [
       'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
     ]
-    var iface = new root.ethers.utils.Interface(abi)
+    var iface = new globalThis.ethers.utils.Interface(abi)
     var data = iface.encodeFunctionData('supportsInterface', ['0xbc1c58d1'])
     var result = await web3.call({ to: address, data: data })
     if (result === undefined || result == null || result === '0x') {
@@ -282,7 +281,7 @@ import root from 'window-or-global'
     }
     const etherscan = this.ipfsBundle.getEtherscanRegistry()
     // Resolve domain as namehash
-    const domainHash = root.ethers.utils.namehash(domain)
+    const domainHash = globalThis.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
@@ -315,7 +314,7 @@ import root from 'window-or-global'
     const abi = [
       'function contenthash(bytes32 node) external view returns (bytes memory)'
     ]
-    const iface = new root.ethers.utils.Interface(abi)
+    const iface = new globalThis.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('contenthash', [domainHash])
     const result = await web3.call({ to: resolver, data: data })
     if (result === undefined || result == null || result === '0x') {
@@ -361,7 +360,7 @@ import root from 'window-or-global'
     }
     const etherscan = this.ipfsBundle.getEtherscanRegistry()
     // Resolve domain as namehash
-    const domainHash = root.ethers.utils.namehash(domain)
+    const domainHash = globalThis.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
@@ -369,7 +368,7 @@ import root from 'window-or-global'
  ${etherscan[chainId]}/address/${registry}`
     )
     const abi = ['function owner(bytes32 node) public view returns(address)']
-    const iface = new root.ethers.utils.Interface(abi)
+    const iface = new globalThis.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('owner', [domainHash])
     const result = await web3.call({ to: registry, data: data })
     if (result === undefined || result == null || result === '0x') {
@@ -417,7 +416,7 @@ import root from 'window-or-global'
     }
     const etherscan = this.ipfsBundle.getEtherscanRegistry()
     // Resolve domain as namehash
-    const domainHash = root.ethers.utils.namehash(domain)
+    const domainHash = globalThis.ethers.utils.namehash(domain)
     // Fetch ens registry address
     const { chainId, registry } = await this.getRegistry(web3)
     this.getLogger().info(
@@ -447,7 +446,7 @@ import root from 'window-or-global'
     // Set Contenthash
     this.getLogger().info('Processing ENS domain content...')
     const abi = ['function setContenthash(bytes32 node, bytes calldata hash)']
-    const iface = new root.ethers.utils.Interface(abi)
+    const iface = new globalThis.ethers.utils.Interface(abi)
     const data = iface.encodeFunctionData('setContenthash', [
       domainHash,
       encoded

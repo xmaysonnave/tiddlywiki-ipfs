@@ -4,7 +4,6 @@
 
 const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
-const root = require('window-or-global')
 // IPFS
 const sha256Base58V0 = 'QmcRQfcRTAa4cqCUSiQr9J1QQS3A3gXzkBKrGLmd8WAHTB'
 const sha256Base32V1 =
@@ -19,7 +18,7 @@ const ed25519Libp2pKeyBase32V1 =
 const ed25519Base36V1 =
   'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
 beforeAll(() => {
-  root.log = log
+  globalThis.log = log
   const logger = log.getLogger('ipfs')
   logger.setLevel('silent', false)
 })

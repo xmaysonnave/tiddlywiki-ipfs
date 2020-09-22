@@ -188,7 +188,11 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     var variables = options.variables || {}
     var template = options.template || '$:/core/save/all'
     var downloadType = options.downloadType || 'text/plain'
-    var text = this.wiki.renderTiddler(downloadType, template, options)
+    var text = await this.wiki.renderTiddlerAndSign(
+      downloadType,
+      template,
+      options
+    )
     var callback = function (err) {
       if (err) {
         alert($tw.language.getString('Error/WhileSaving') + ':\n\n' + err)

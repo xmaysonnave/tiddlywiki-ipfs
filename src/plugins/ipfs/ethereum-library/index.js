@@ -1,4 +1,3 @@
-import root from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -184,11 +183,9 @@ import root from 'window-or-global'
     if (signature == null) {
       throw new Error('Undefined Signature....')
     }
-    if (root.sigUtil === undefined || root.sigUtil == null) {
-      await this.ipfsBundle.loadEthSigUtilLibrary()
-    }
+    await this.ipfsBundle.loadEthSigUtilLibrary()
     const msgParams = { data: message, sig: signature }
-    const recovered = root.sigUtil.recoverPersonalSignature(msgParams)
+    const recovered = globalThis.sigUtil.recoverPersonalSignature(msgParams)
     if (recovered === undefined || recovered == null) {
       const err = new Error('Unrecoverable signature...')
       err.name = 'UnrecoverableSignature'
@@ -271,8 +268,10 @@ import root from 'window-or-global'
   EthereumLibrary.prototype.detectEthereumProvider = async function () {
     var provider = null
     try {
-      if (typeof root.detectEthereumProvider === 'function') {
-        provider = await root.detectEthereumProvider({ mustBeMetaMask: true })
+      if (typeof globalThis.detectEthereumProvider === 'function') {
+        provider = await globalThis.detectEthereumProvider({
+          mustBeMetaMask: true
+        })
         if (provider !== undefined && provider !== null) {
           provider.autoRefreshOnNetworkChange = false
         }
@@ -409,14 +408,12 @@ import root from 'window-or-global'
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.ipfsBundle.loadEthersJsLibrary()
-    }
+    await this.ipfsBundle.loadEthersJsLibrary()
     // Enable provider
     // https://github.com/ethers-io/ethers.js/issues/433
     const account = await this.getAccount(provider)
     // Instantiate a Web3Provider
-    const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
+    const web3 = new globalThis.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
     const network = await web3.getNetwork()
     const chainId = parseInt(network.chainId, 16)
@@ -431,11 +428,9 @@ import root from 'window-or-global'
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
     }
-    if (root.ethers === undefined || root.ethers == null) {
-      await this.ipfsBundle.loadEthersJsLibrary()
-    }
+    await this.ipfsBundle.loadEthersJsLibrary()
     // Instantiate an ethers Web3Provider
-    const web3 = new root.ethers.providers.Web3Provider(provider, 'any')
+    const web3 = new globalThis.ethers.providers.Web3Provider(provider, 'any')
     // Retrieve current network
     const network = await web3.getNetwork()
     const chainId = parseInt(network.chainId, 16)

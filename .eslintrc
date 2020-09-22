@@ -8,12 +8,12 @@
     "standard"
   ],
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 11,
     "sourceType": "module",
     "ecmaFeatures": {}
   },
   "env": {
-    "es6": true,
+    "es2020": true,
     "jest": true,
     "node": true,
     "browser": true

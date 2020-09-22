@@ -1,7 +1,7 @@
 title: $:/ipfs/library/eruda
-modified: 20200619094915385
+modified: 20200917094915385
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/liriliri/eruda/master/LICENSE
 _project_uri: https://github.com/liriliri/eruda
-_source_uri: https://cdn.jsdelivr.net/npm/eruda@2.3.3/eruda.min.js
-_source_sri: sha384-O4NQOgwNPEet1/xZmB7hYYb/vMdpWyVJcqL+47zpRWuXtRlhwnEoNM/w3/C3HCoP
+_source_uri: https://cdn.jsdelivr.net/npm/eruda@2.4.0/eruda.min.js
+_source_sri: sha384-yRdhT9vzHMtLeJiVqsHKwzYnQbtbbc0+Dfby77vfTcN33IXZ9z3NA6x93vzpU26j

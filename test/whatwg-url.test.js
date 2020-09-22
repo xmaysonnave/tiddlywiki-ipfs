@@ -22,7 +22,6 @@
 
 const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
-const root = require('window-or-global')
 const invalid = 'Wrong URL...'
 const baseFile = new URL(
   'file:///work/tiddly/tiddlywiki-ipfs/production/index.html'
@@ -38,7 +37,7 @@ const relative =
   '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
 
 beforeAll(() => {
-  root.log = log
+  globalThis.log = log
   const logger = log.getLogger('ipfs')
   logger.setLevel('silent', false)
 })

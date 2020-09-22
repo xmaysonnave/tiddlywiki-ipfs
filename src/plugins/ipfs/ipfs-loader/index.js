@@ -1,4 +1,3 @@
-import root from 'window-or-global'
 ;(function () {
   'use strict'
 
@@ -18,7 +17,7 @@ import root from 'window-or-global'
     obj,
     module
   ) {
-    if (root[obj] === undefined) {
+    if (globalThis[obj] === undefined) {
       const tiddler = $tw.wiki.getTiddler(title)
       if (tiddler) {
         const sourceUri = tiddler.getFieldString('_source_uri')
@@ -29,7 +28,7 @@ import root from 'window-or-global'
           sourceSri,
           module
         )
-        if (loaded !== undefined && root[obj] !== undefined) {
+        if (loaded !== undefined && globalThis[obj] !== undefined) {
           this.getLogger().info(
             `Loaded ${title}:
  ${sourceUri}`
@@ -45,7 +44,7 @@ import root from 'window-or-global'
 
   // https://github.com/liriliri/eruda
   IpfsLoader.prototype.loadErudaLibrary = async function () {
-    if (typeof root.eruda === 'undefined') {
+    if (typeof globalThis.eruda === 'undefined') {
       return await this.loadTiddlerLibrary(
         '$:/ipfs/library/eruda',
         'eruda',
@@ -57,7 +56,7 @@ import root from 'window-or-global'
 
   // https://github.com/ethers-io/ethers.js/
   IpfsLoader.prototype.loadEtherJsLibrary = async function () {
-    if (typeof root.ethers === 'undefined') {
+    if (typeof globalThis.ethers === 'undefined') {
       return await this.loadTiddlerLibrary(
         '$:/ipfs/library/ethers',
         'ethers',
@@ -69,7 +68,7 @@ import root from 'window-or-global'
 
   // https://github.com/xmaysonnave/eth-sig-util
   IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
-    if (typeof root.sigUtil === 'undefined') {
+    if (typeof globalThis.sigUtil === 'undefined') {
       return await this.loadTiddlerLibrary(
         '$:/ipfs/library/eth-sig-util',
         'sigUtil',
@@ -81,7 +80,7 @@ import root from 'window-or-global'
 
   // https://github.com/ipfs/js-ipfs-http-client
   IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
-    if (typeof root.IpfsHttpClient === 'undefined') {
+    if (typeof globalThis.IpfsHttpClient === 'undefined') {
       await this.loadTiddlerLibrary(
         '$:/ipfs/library/ipfs-http-client',
         'IpfsHttpClient',
@@ -114,11 +113,11 @@ import root from 'window-or-global'
     const self = this
     return new Promise((resolve, reject) => {
       // Process
-      const script = root.document.createElement('script')
+      const script = globalThis.document.createElement('script')
       // Functions
       const cleanup = () => {
         try {
-          delete root[id]
+          delete globalThis[id]
           script.onerror = null
           script.onload = null
           script.remove()
@@ -129,7 +128,7 @@ import root from 'window-or-global'
         }
       }
       script.onload = () => {
-        resolve(root[id])
+        resolve(globalThis[id])
         cleanup()
       }
       script.onerror = () => {
@@ -152,7 +151,7 @@ import root from 'window-or-global'
       // URL
       script.src = url
       // Load
-      root.document.head.appendChild(script)
+      globalThis.document.head.appendChild(script)
     })
   }
 
