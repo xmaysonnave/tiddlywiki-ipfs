@@ -394,6 +394,7 @@ var _boot = function ($tw) {
       }
       // Decrypt
       var decrypted = null
+      var recovered = null
       try {
         const provider = await window.detectEthereumProvider({
           mustBeMetaMask: true
@@ -479,12 +480,10 @@ var _boot = function ($tw) {
                 .getLogger()
                 .info(`Ethereum Signature Decrypt: ${tStop}ms`)
             }
-            var recovered = await personalRecover(
-              provider,
-              keccak256,
-              signature
-            )
-            $tw.boot.getLogger().info(`Ethereum Signature: ${recovered}`)
+            recovered = await personalRecover(provider, keccak256, signature)
+            $tw.boot
+              .getLogger()
+              .info(`Signed from: https://app.ens.domains/address/${recovered}`)
           }
           var tStart = new Date()
           decrypted = await provider.request({
@@ -517,7 +516,7 @@ var _boot = function ($tw) {
           $tw.utils.error(error.message)
         }
       }
-      callback(decrypted)
+      callback(decrypted, recovered)
     }
 
     $tw.boot.passwordPrompt = function (text, callback) {
@@ -580,8 +579,14 @@ var _boot = function ($tw) {
               json.compressed,
               json.keccak256,
               json.signature,
-              function (decrypted) {
+              function (decrypted, recovered) {
                 inflate(decrypted)
+                if (recovered) {
+                  $tw.utils.alert(
+                    name,
+                    `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+                  )
+                }
               }
             )
           } else {
@@ -615,8 +620,14 @@ var _boot = function ($tw) {
             json.encrypted,
             json.keccak256,
             json.signature,
-            function (decrypted) {
+            function (decrypted, recovered) {
               $tw.boot.preloadTiddler(decrypted, callback)
+              if (recovered) {
+                $tw.utils.alert(
+                  name,
+                  `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+                )
+              }
             }
           )
         } else {

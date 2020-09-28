@@ -172,19 +172,24 @@
   }
 
   IpfsLoader.prototype.fetchUint8Array = async function (url) {
-    const response = await fetch(url)
-    if (response.ok) {
-      const ab = await response.arrayBuffer()
-      const ua = new Uint8Array(ab)
-      this.getLogger().info(
-        `[${response.status}] Loaded:
-  ${response.url}`
+    try {
+      const response = await fetch(url)
+      if (response.ok) {
+        const ab = await response.arrayBuffer()
+        const ua = new Uint8Array(ab)
+        this.getLogger().info(
+          `[${response.status}] Loaded:
+    ${response.url}`
+        )
+        return ua
+      }
+      throw new Error(
+        `[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`
       )
-      return ua
+    } catch (error) {
+      this.getLogger().error(error)
     }
-    throw new Error(
-      `[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`
-    )
+    throw new Error(`${$tw.language.getString('NetworkError/Fetch')}`)
   }
 
   IpfsLoader.prototype.xhrToJson = async function (url) {

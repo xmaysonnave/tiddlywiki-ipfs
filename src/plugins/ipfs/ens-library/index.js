@@ -1,10 +1,16 @@
-import bs58 from 'bs58'
-import contentHash from 'content-hash'
+import basex from '@multiformats/base-x'
+import CID from 'cids'
+import concat from 'uint8arrays/concat'
+import fromString from 'uint8arrays/from-string'
+import multiC from 'multicodec'
+import multiH from 'multihashes'
 ;(function () {
   'use strict'
 
   /*eslint no-unused-vars:"off"*/
   const name = 'ens-library'
+  const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+  const bs58 = basex(BASE58)
 
   // https://github.com/ensdomains/resolvers
   var EnsLibrary = function (ipfsBundle) {
@@ -27,6 +33,30 @@ import contentHash from 'content-hash'
     return this.registry
   }
 
+  EnsLibrary.prototype.hexStringToUint8Array = function (hex) {
+    const prefix = hex.slice(0, 2)
+    const value = hex.slice(2)
+    var res = ''
+    if (prefix === '0x') {
+      res = value
+    } else {
+      res = hex
+    }
+    return multiH.fromHexString(res)
+  }
+
+  EnsLibrary.prototype.getCodec = function (hash) {
+    const ua = this.hexStringToUint8Array(hash)
+    return multiC.getCodec(ua)
+  }
+
+  EnsLibrary.prototype.b58MultiHash = function (hash) {
+    const ua = this.hexStringToUint8Array(hash)
+    const value = multiC.rmPrefix(ua)
+    const cid = new CID(value)
+    return multiH.toB58String(cid.multihash)
+  }
+
   // https://github.com/ensdomains/ui/blob/master/src/utils/contents.js
   EnsLibrary.prototype.decodeContenthash = function (encoded) {
     var decoded = null
@@ -35,26 +65,22 @@ import contentHash from 'content-hash'
       throw new Error(encoded.error)
     }
     if (encoded) {
-      const codec = contentHash.getCodec(encoded)
-      decoded = contentHash.decode(encoded)
-      if (codec === 'ipfs-ns') {
-        protocol = 'ipfs'
-        decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
-      } else if (codec === 'ipns-ns') {
-        decoded = bs58
-          .decode(decoded)
-          .slice(2)
-          .toString()
-        protocol = 'ipns'
-        decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
-      } else if (codec === 'swarm-ns') {
-        protocol = 'bzz'
-      } else if (codec === 'onion') {
-        protocol = 'onion'
-      } else if (codec === 'onion3') {
-        protocol = 'onion3'
-      } else {
-        decoded = encoded
+      try {
+        const codec = this.getCodec(encoded)
+        decoded = this.b58MultiHash(encoded)
+        if (codec === 'ipfs-ns') {
+          protocol = 'ipfs'
+          decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
+        } else if (codec === 'ipns-ns') {
+          protocol = 'ipns'
+          decoded = bs58.decode(decoded).slice(2)
+          decoded = $tw.ipfs.Utf8ArrayToStr(decoded)
+          decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
+        } else {
+          throw new Error(`Unsupported ENS Content Hash codec: ${codec}`)
+        }
+      } catch (error) {
+        this.getLogger().error(error)
       }
     }
     return {
@@ -85,15 +111,19 @@ import contentHash from 'content-hash'
       text = matched[2]
     }
     if (type === 'ipfs') {
-      const bs58content = this.ipfsBundle.cidToBase58CidV0(text, true)
-      encoded = '0x' + contentHash.encode('ipfs-ns', bs58content)
+      encoded = this.ipfsBundle.cidToBase58CidV0(text, true)
+      encoded = new CID(1, 'dag-pb', multiH.fromB58String(encoded))
+      encoded =
+        '0x' + multiC.addPrefix('ipfs-ns', encoded.bytes).toString('hex')
     } else if (type === 'ipns') {
-      const bs58content = bs58.encode(
-        Buffer.concat([Buffer.from([0, text.length]), Buffer.from(text)])
-      )
-      encoded = '0x' + contentHash.encode('ipns-ns', bs58content)
+      var ua = [Uint8Array.from([0, text.length]), fromString(text)]
+      ua = concat(ua, 2 + text.length)
+      encoded = bs58.encode(ua)
+      encoded = new CID(1, 'dag-pb', multiH.fromB58String(encoded))
+      encoded =
+        '0x' + multiC.addPrefix('ipns-ns', encoded.bytes).toString('hex')
     } else {
-      throw new Error(`Unsupported ENS domain protocol: ${type}`)
+      throw new Error(`Unsupported ENS Content Hash type: ${type}`)
     }
     return {
       encoded: encoded
