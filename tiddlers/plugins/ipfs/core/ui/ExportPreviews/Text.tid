@@ -1,0 +1,5 @@
+title: $:/core/ui/ExportPreviews/Text
+tags: $:/tags/ExportPreview
+caption: {{$:/language/Import/Listing/Preview/Text}}
+
+<$transclude tiddler=<<currentTiddler>> subtiddler=<<payloadTiddler>> mode="block"/>

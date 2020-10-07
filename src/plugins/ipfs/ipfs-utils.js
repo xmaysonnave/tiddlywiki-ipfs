@@ -224,4 +224,233 @@ IPFS utils
       return null
     }
   }
+
+  exports.exportToIpfs = async function (target, content) {
+    // Check
+    if (content === undefined || content == null) {
+      return false
+    }
+    var account = null
+    var added = null
+    var cid = null
+    var fields = []
+    var ipnsKey = null
+    var ipnsName = null
+    var normalizedUrl = null
+    var web3 = null
+    const ipfsKeyword = 'ipfs'
+    var exportUri = target.getFieldString('_export_uri')
+    try {
+      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(
+        true,
+        true,
+        exportUri
+      )
+      if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
+        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+        const isOwner = await $tw.ipfs.isOwner(
+          normalizedUrl.hostname,
+          web3,
+          account
+        )
+        if (isOwner === false) {
+          const err = new Error('Unauthorized Account...')
+          err.name = 'OwnerError'
+          throw err
+        }
+      }
+    } catch (error) {
+      if (error.name !== 'OwnerError') {
+        $tw.ipfs.getLogger().error(error)
+      }
+      $tw.utils.alert(name, error.message)
+      return false
+    }
+    $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}`)
+    try {
+      var { added } = await $tw.ipfs.addToIpfs(content)
+    } catch (error) {
+      $tw.ipfs.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
+      return false
+    }
+    // Prepare New value
+    fields.push({ key: '_export_uri', value: `${ipfsKeyword}://${added}` })
+    var updatedTiddler = $tw.utils.updateTiddler({
+      tiddler: target,
+      addTags: ['$:/isExported', '$:/isIpfs'],
+      fields: fields
+    })
+    $tw.wiki.addTiddler(updatedTiddler)
+    if (ipnsKey !== null && ipnsName !== null) {
+      $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
+      $tw.ipfs
+        .pinToIpfs(added)
+        .then(data => {
+          $tw.ipfs
+            .publishIpnsName(added, ipnsKey, ipnsName)
+            .then(data => {
+              fields.push({ key: '_export_uri', value: exportUri })
+              const updatedTiddler = $tw.utils.updateTiddler({
+                tiddler: target,
+                addTags: ['$:/isExported', '$:/isIpfs'],
+                fields: fields
+              })
+              $tw.wiki.addTiddler(updatedTiddler)
+              $tw.utils.alert(
+                name,
+                `Successfully Published IPNS name: ${ipnsName}`
+              )
+              if ($tw.utils.getIpfsUnpin()) {
+                $tw.ipfs
+                  .unpinFromIpfs(cid)
+                  .then(data => {
+                    if (data !== undefined && data !== null) {
+                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
+                    }
+                  })
+                  .catch(error => {
+                    $tw.ipfs.getLogger().error(error)
+                    $tw.utils.alert(name, error.message)
+                  })
+              }
+            })
+            .catch(error => {
+              $tw.ipfs.requestToUnpin(added)
+              $tw.ipfs.getLogger().error(error)
+              $tw.utils.alert(name, error.message)
+            })
+        })
+        .catch(error => {
+          $tw.ipfs.getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+        })
+    } else if (
+      normalizedUrl !== null &&
+      normalizedUrl.hostname.endsWith('.eth')
+    ) {
+      $tw.utils.alert(name, `Publishing to ENS: ${normalizedUrl.hostname}`)
+      $tw.ipfs
+        .pinToIpfs(added)
+        .then(data => {
+          $tw.ipfs
+            .setContentHash(
+              normalizedUrl.hostname,
+              `/${ipfsKeyword}/${added}`,
+              web3,
+              account
+            )
+            .then(data => {
+              fields.push({ key: '_export_uri', value: exportUri })
+              const updatedTiddler = $tw.utils.updateTiddler({
+                tiddler: target,
+                addTags: ['$:/isExported', '$:/isIpfs'],
+                fields: fields
+              })
+              $tw.wiki.addTiddler(updatedTiddler)
+              $tw.utils.alert(name, 'Successfully Published to ENS...')
+              if ($tw.utils.getIpfsUnpin()) {
+                $tw.ipfs
+                  .unpinFromIpfs(cid)
+                  .then(data => {
+                    if (data !== undefined && data !== null) {
+                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
+                    }
+                  })
+                  .catch(error => {
+                    $tw.ipfs.getLogger().error(error)
+                    $tw.utils.alert(name, error.message)
+                  })
+              }
+            })
+            .catch(error => {
+              $tw.ipfs.requestToUnpin(added)
+              if (
+                error.name !== 'OwnerError' &&
+                error.name !== 'RejectedUserRequest' &&
+                error.name !== 'UnauthorizedUserAccount'
+              ) {
+                $tw.ipfs.getLogger().error(error)
+              }
+              $tw.utils.alert(name, error.message)
+            })
+        })
+        .catch(error => {
+          $tw.ipfs.getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+        })
+    }
+    return true
+  }
+
+  exports.exportTiddlersAsJson = async function (tiddlers, exportUri, spaces) {
+    var json
+    var data = []
+    var spaces =
+      spaces === undefined || spaces == null
+        ? $tw.config.preferences.jsonSpaces
+        : spaces
+    const ipnsKeyword = 'ipns'
+    // Process Tiddlers
+    if (tiddlers) {
+      for (var t = 0; t < tiddlers.length; t++) {
+        // Load Tiddler
+        var current = $tw.wiki.getTiddler(tiddlers[t])
+        // Process
+        var fields = {}
+        // Process fields
+        for (var field in current.fields) {
+          // Discard
+          if (field === 'tags' || field === '_export_uri') {
+            continue
+          }
+          var ipnsKey = null
+          var fieldValue = current.getFieldString(field)
+          if (field === '_canonical_uri' && fieldValue === exportUri) {
+            continue
+          }
+          if (field === '_import_uri' && fieldValue === exportUri) {
+            continue
+          }
+          try {
+            var { ipnsKey } = await $tw.ipfs.resolveUrl(
+              false,
+              false,
+              fieldValue
+            )
+          } catch (error) {
+            $tw.ipfs.getLogger().error(error)
+            $tw.utils.alert(name, error.message)
+            return null
+          }
+          // IPNS
+          if (ipnsKey !== null) {
+            fieldValue = `${ipnsKeyword}://${ipnsKey}`
+          }
+          // Store field
+          fields[field] = fieldValue
+        }
+        // Process tags
+        var tags = current.fields.tags
+        if (tags !== undefined && tags !== null) {
+          var tagValues = ''
+          for (var i = 0; i < tags.length; i++) {
+            const tag = tags[i]
+            // Discard
+            if (tag === '$:/isExported' || tag === '$:/isImported') {
+              continue
+            }
+            tagValues =
+              (tagValues.length === 0 ? '[[' : `${tagValues} [[`) + `${tag}]]`
+          }
+          // Store tags
+          fields.tags = tagValues
+        }
+        // Store
+        data.push(fields)
+      }
+      json = JSON.stringify(data, null, spaces)
+    }
+    return json
+  }
 })()

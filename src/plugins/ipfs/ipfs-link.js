@@ -73,7 +73,7 @@ IPFS link widget
     // Tiddler link
     var value = this.url !== undefined ? this.url : this.value
     var tiddler = $tw.wiki.getTiddler(value)
-    if (tiddler !== undefined && tiddler !== null) {
+    if (tiddler) {
       this.renderTiddlerLink(parent, nextSibling)
     } else {
       this.renderText(parent, nextSibling)
@@ -342,15 +342,19 @@ IPFS link widget
       this.getAttribute('tiddler') !== undefined
         ? this.getAttribute('tiddler')
         : this.getVariable('currentTiddler')
-    const tiddler = $tw.wiki.getTiddler(this.tiddler)
+    var tiddler
+    if (this.tiddler) {
+      tiddler = $tw.wiki.getTiddler(this.tiddler)
+    }
     this.field = this.getAttribute('field')
     this.value =
       this.getAttribute('value') !== undefined
         ? this.getAttribute('value')
-        : tiddler.getFieldString(this.field) !== ''
+        : tiddler && tiddler.getFieldString(this.field) !== ''
         ? tiddler.getFieldString(this.field)
         : this.tiddler
     if (
+      tiddler &&
       this.getAttribute('value') !== undefined &&
       tiddler.getFieldString(this.getAttribute('value')) !== ''
     ) {

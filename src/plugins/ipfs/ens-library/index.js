@@ -110,18 +110,28 @@ import multiH from 'multihashes'
       type = matched[1]
       text = matched[2]
     }
+    // https://stackoverflow.com/questions/39225161/convert-uint8array-into-hex-string-equivalent-in-node-js
+    function i2hex (i) {
+      return ('0' + i.toString(16)).slice(-2)
+    }
     if (type === 'ipfs') {
       encoded = this.ipfsBundle.cidToBase58CidV0(text, true)
       encoded = new CID(1, 'dag-pb', multiH.fromB58String(encoded))
-      encoded =
-        '0x' + multiC.addPrefix('ipfs-ns', encoded.bytes).toString('hex')
+      encoded = multiC.addPrefix('ipfs-ns', encoded.bytes)
+      encoded = Array.from(encoded)
+        .map(i2hex)
+        .join('')
+      encoded = `0x${encoded}`
     } else if (type === 'ipns') {
       var ua = [Uint8Array.from([0, text.length]), fromString(text)]
       ua = concat(ua, 2 + text.length)
       encoded = bs58.encode(ua)
       encoded = new CID(1, 'dag-pb', multiH.fromB58String(encoded))
-      encoded =
-        '0x' + multiC.addPrefix('ipns-ns', encoded.bytes).toString('hex')
+      encoded = multiC.addPrefix('ipns-ns', encoded.bytes)
+      encoded = Array.from(encoded)
+        .map(i2hex)
+        .join('')
+      encoded = `0x${encoded}`
     } else {
       throw new Error(`Unsupported ENS Content Hash type: ${type}`)
     }

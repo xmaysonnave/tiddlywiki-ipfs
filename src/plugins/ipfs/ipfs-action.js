@@ -75,165 +75,14 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleExportToIpfs = async function (event, child) {
-    var account = null
-    var added = null
-    var cid = null
-    var fields = []
-    var ipnsKey = null
-    var ipnsName = null
-    var normalizedUrl = null
-    var web3 = null
-    const title = event.tiddlerTitle
-    var tiddler = $tw.wiki.getTiddler(title)
-    var exportUri = tiddler.getFieldString('_export_uri')
-    try {
-      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(
-        true,
-        true,
-        exportUri
-      )
-      if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
-        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-        const isOwner = await $tw.ipfs.isOwner(
-          normalizedUrl.hostname,
-          web3,
-          account
-        )
-        if (isOwner === false) {
-          const err = new Error('Unauthorized Account...')
-          err.name = 'OwnerError'
-          throw err
-        }
-      }
-    } catch (error) {
-      if (error.name !== 'OwnerError') {
-        $tw.ipfs.getLogger().error(error)
-      }
-      $tw.utils.alert(name, error.message)
-      return false
-    }
+    var target = $tw.wiki.getTiddler(event.tiddlerTitle)
     // Retrieve content
-    const content = await this.exportTiddler(child, exportUri, tiddler)
+    const content = await this.exportTiddler(target, child)
     // Check
-    if (content == null) {
+    if (content === undefined || content == null) {
       return false
     }
-    $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}`)
-    try {
-      var { added } = await $tw.ipfs.addToIpfs(content)
-    } catch (error) {
-      $tw.ipfs.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
-      return false
-    }
-    // Prepare New value
-    fields.push({ key: '_export_uri', value: `${ipfsKeyword}://${added}` })
-    var tiddler = $tw.wiki.getTiddler(title)
-    var updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: tiddler,
-      addTags: ['$:/isExported', '$:/isIpfs'],
-      fields: fields
-    })
-    $tw.wiki.addTiddler(updatedTiddler)
-    if (ipnsKey !== null && ipnsName !== null) {
-      $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
-      $tw.ipfs
-        .pinToIpfs(added)
-        .then(data => {
-          $tw.ipfs
-            .publishIpnsName(added, ipnsKey, ipnsName)
-            .then(data => {
-              fields.push({ key: '_export_uri', value: exportUri })
-              tiddler = $tw.utils.updateTiddler({
-                tiddler: tiddler,
-                addTags: ['$:/isExported', '$:/isIpfs'],
-                fields: fields
-              })
-              $tw.wiki.addTiddler(tiddler)
-              $tw.utils.alert(
-                name,
-                `Successfully Published IPNS name: ${ipnsName}`
-              )
-              if ($tw.utils.getIpfsUnpin()) {
-                $tw.ipfs
-                  .unpinFromIpfs(cid)
-                  .then(data => {
-                    if (data !== undefined && data !== null) {
-                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
-                    }
-                  })
-                  .catch(error => {
-                    $tw.ipfs.getLogger().error(error)
-                    $tw.utils.alert(name, error.message)
-                  })
-              }
-            })
-            .catch(error => {
-              $tw.ipfs.requestToUnpin(added)
-              $tw.ipfs.getLogger().error(error)
-              $tw.utils.alert(name, error.message)
-            })
-        })
-        .catch(error => {
-          $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-        })
-    } else if (
-      normalizedUrl !== null &&
-      normalizedUrl.hostname.endsWith('.eth')
-    ) {
-      $tw.utils.alert(name, `Publishing to ENS: ${normalizedUrl.hostname}`)
-      $tw.ipfs
-        .pinToIpfs(added)
-        .then(data => {
-          $tw.ipfs
-            .setContentHash(
-              normalizedUrl.hostname,
-              `/${ipfsKeyword}/${added}`,
-              web3,
-              account
-            )
-            .then(data => {
-              fields.push({ key: '_export_uri', value: exportUri })
-              tiddler = $tw.utils.updateTiddler({
-                tiddler: tiddler,
-                addTags: ['$:/isExported', '$:/isIpfs'],
-                fields: fields
-              })
-              $tw.wiki.addTiddler(tiddler)
-              $tw.utils.alert(name, 'Successfully Published to ENS...')
-              if ($tw.utils.getIpfsUnpin()) {
-                $tw.ipfs
-                  .unpinFromIpfs(cid)
-                  .then(data => {
-                    if (data !== undefined && data !== null) {
-                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
-                    }
-                  })
-                  .catch(error => {
-                    $tw.ipfs.getLogger().error(error)
-                    $tw.utils.alert(name, error.message)
-                  })
-              }
-            })
-            .catch(error => {
-              $tw.ipfs.requestToUnpin(added)
-              if (
-                error.name !== 'OwnerError' &&
-                error.name !== 'RejectedUserRequest' &&
-                error.name !== 'UnauthorizedUserAccount'
-              ) {
-                $tw.ipfs.getLogger().error(error)
-              }
-              $tw.utils.alert(name, error.message)
-            })
-        })
-        .catch(error => {
-          $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-        })
-    }
-    return true
+    return await $tw.utils.exportToIpfs(target, content)
   }
 
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
@@ -611,87 +460,31 @@ IPFS Action
     return true
   }
 
-  IpfsAction.prototype.exportTiddlersAsJson = async function (
-    exportFilter,
-    exportUri,
-    spaces
-  ) {
-    var tiddlers = $tw.wiki.filterTiddlers(exportFilter)
-    var spaces =
-      spaces === undefined ? $tw.config.preferences.jsonSpaces : spaces
-    var data = []
-    // Process Tiddlers
-    for (var t = 0; t < tiddlers.length; t++) {
-      // Load Tiddler
-      var tiddler = $tw.wiki.getTiddler(tiddlers[t])
-      // Process
-      var fields = {}
-      // Process fields
-      for (var field in tiddler.fields) {
-        // Discard
-        if (field === 'tags' || field === '_export_uri') {
-          continue
-        }
-        var ipnsKey = null
-        var fieldValue = tiddler.getFieldString(field)
-        if (field === '_canonical_uri' && fieldValue === exportUri) {
-          continue
-        }
-        if (field === '_import_uri' && fieldValue === exportUri) {
-          continue
-        }
-        try {
-          var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue)
-        } catch (error) {
-          $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-          return null
-        }
-        // IPNS
-        if (ipnsKey !== null) {
-          fieldValue = `${ipnsKeyword}://${ipnsKey}`
-        }
-        // Store field
-        fields[field] = fieldValue
-      }
-      // Process tags
-      var tags = tiddler.fields.tags
-      if (tags !== undefined && tags !== null) {
-        var tagValues = ''
-        for (var i = 0; i < tags.length; i++) {
-          const tag = tags[i]
-          // Discard
-          if (tag === '$:/isExported' || tag === '$:/isImported') {
-            continue
-          }
-          tagValues =
-            (tagValues.length === 0 ? '[[' : `${tagValues} [[`) + `${tag}]]`
-        }
-        // Store tags
-        fields.tags = tagValues
-      }
-      // Store
-      data.push(fields)
-    }
-    return JSON.stringify(data, null, spaces)
-  }
-
-  IpfsAction.prototype.exportTiddler = async function (
-    child,
-    exportUri,
-    tiddler
-  ) {
+  IpfsAction.prototype.exportTiddler = async function (target, child) {
     // Check
-    if (tiddler === undefined || tiddler == null) {
+    if (target === undefined || target == null) {
       const error = new Error('Unknown Tiddler...')
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return null
     }
-    // Title
-    const title = tiddler.getFieldString('title')
+    const locateNavigatorWidget = function (element) {
+      if (element.parseTreeNode.type === 'navigator') {
+        return element
+      }
+      if (element.children) {
+        for (var i = 0; i < element.children.length; i++) {
+          const found = locateNavigatorWidget(element.children[i])
+          if (found) {
+            return found
+          }
+        }
+      }
+      return null
+    }
+    const title = target.getFieldString('title')
     // Filter
-    var exportFilter = `[[${tiddler.fields.title}]]`
+    var exportFilter = `[[${target.fields.title}]]`
     // Child filters
     if (child) {
       // Links
@@ -710,10 +503,24 @@ IPFS Action
         }
       }
     }
-    var content = null
+    var content
     var contentType = 'text/plain'
     if (child || $tw.utils.getIpfsExport() === 'json') {
-      content = await this.exportTiddlersAsJson(exportFilter, exportUri)
+      content = await $tw.utils.exportTiddlersAsJson(
+        $tw.wiki.filterTiddlers(exportFilter),
+        target.getFieldString('_export_uri')
+      )
+      if (content) {
+        const navigator = locateNavigatorWidget($tw.pageWidgetNode)
+        if (navigator) {
+          navigator.dispatchEvent({
+            target: target.fields.title,
+            type: 'tm-export-tiddlers',
+            param: content
+          })
+          return
+        }
+      }
     } else if ($tw.utils.getIpfsExport() === 'static') {
       const options = {
         downloadType: contentType,
@@ -743,7 +550,9 @@ IPFS Action
         options
       )
     }
-    return await $tw.ipfs.processContent(tiddler, content, 'utf8')
+    if (content) {
+      return await $tw.ipfs.processContent(target, content, 'utf8')
+    }
   }
 
   IpfsAction.prototype.transcludeContent = function (title) {
