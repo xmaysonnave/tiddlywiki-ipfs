@@ -5,7 +5,7 @@
  */
 
 var $tw = require('tiddlywiki').TiddlyWiki()
-var $tw = require('./src/boot/ipfs-boot.js').TiddlyWiki($tw)
+$tw = require('./src/boot/ipfs-boot.js').TiddlyWiki($tw)
 
 // Pass the command line arguments to the boot kernel
 $tw.boot.argv = Array.prototype.slice.call(process.argv, 2)

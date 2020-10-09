@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-201007389",
+  "version": "v0.3.0-201009385",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -25,9 +25,9 @@
   "scripts": {
     "build-all-noclone": "./scripts/build-all-noclone.sh",
     "build": "./scripts/build.sh",
-    "debug": "./scripts/debug-build-tiddlywiki.sh",
     "build-tiddlywiki": "./scripts/build-tiddlywiki.sh",
     "build-tiddlywiki-empty": "./scripts/build-tiddlywiki-empty.sh",
+    "debug": "./scripts/debug-build-tiddlywiki.sh",
     "format": "prettier-standard --format",
     "ipfs-tiddlywiki": "node ./ipfs-tiddlywiki.js",
     "lint": "prettier-standard --lint",
@@ -37,8 +37,8 @@
     "run-browserify": "./scripts/run-browserify.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "snyk-protect": "snyk protect",
     "snyk-monitor": "snyk monitor --all-projects",
+    "snyk-protect": "snyk protect",
     "test": "./scripts/test.sh"
   },
   "lint-staged": {
@@ -88,7 +88,7 @@
     "pako": "^1.0.11",
     "prettier-standard": "^16.4.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.410.2",
+    "snyk": "^1.410.4",
     "terser": "^5.3.4",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.0.3"

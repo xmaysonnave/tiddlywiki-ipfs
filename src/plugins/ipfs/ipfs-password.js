@@ -19,7 +19,7 @@ Compression handling
   exports.synchronous = true
 
   exports.startup = function () {
-    var setPassword = function () {
+    const setPassword = function () {
       $tw.passwordPrompt.createPrompt({
         serviceName: $tw.language.getString('Encryption/PromptSetPassword'),
         noUserName: true,
@@ -74,28 +74,26 @@ Compression handling
       event
     ) {
       if ($tw.browser) {
-        const hadPassword = $tw.crypto.hasPassword()
-        const encryption = $tw.wiki.getTiddler('$:/config/encryption')
-        if (hadPassword) {
+        const hasPassword = $tw.crypto.hasPassword()
+        const hasEncryptionPublicKey = $tw.crypto.hasEncryptionPublicKey()
+        if (hasPassword) {
           if (
-            encryption.fields.text === 'standford' &&
             !confirm($tw.language.getString('Encryption/ConfirmClearPassword'))
           ) {
             return
           }
           $tw.crypto.setPassword(null)
-          if (encryption.fields.text === 'ethereum') {
-            try {
-              const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-              $tw.crypto.setEncryptionPublicKey(encryptionKey)
-            } catch (error) {
-              if (error.name !== 'RejectedUserRequest') {
-                $tw.ipfs.getLogger().error(error)
-              }
-              $tw.utils.alert(name, error.message)
-              $tw.crypto.setEncryptionPublicKey(null)
-            }
+        } else if (hasEncryptionPublicKey) {
+          if (
+            !confirm(
+              $tw.language.getString(
+                'Encryption/ConfirmClearEncryptionPublicKey'
+              )
+            )
+          ) {
+            return
           }
+          $tw.crypto.setEncryptionPublicKey(null)
         }
       }
     })

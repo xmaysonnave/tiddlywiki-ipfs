@@ -7,11 +7,18 @@ arch: amd64
 node_js:
   - '14'
 
+python:
+  - "3.7"
+
+install:
+  - pip install deepcode
+
 after_success:
   - snyk monitor
 
 script:
   - yarn build
+  - deepcode analyze -p .
   - yarn test
 
 branches:

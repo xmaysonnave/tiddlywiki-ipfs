@@ -1,5 +1,6 @@
 title: $:/core/ui/ViewTemplate/plugin
-tags: $:/tags/ViewTemplate
+modified: 20201009094915385
+tags: $:/tags/ViewTemplate $:/ipfs/core
 
 <$list filter="[all[current]has[plugin-type]] -[all[current]field:plugin-type[import]] -[all[current]field:plugin-type[export]]">
 <$set name="plugin-type" value={{!!plugin-type}}>

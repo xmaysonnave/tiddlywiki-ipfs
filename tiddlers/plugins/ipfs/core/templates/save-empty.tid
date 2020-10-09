@@ -1,6 +1,0 @@
-title: $:/core/save/empty
-
-\define saveTiddlerFilter()
-[is[system]] -[prefix[$:/state/popup/]] -[[$:/boot/boot.css]] -[type[application/javascript]library[yes]] -[[$:/boot/ipfs-boot.js]] -[[$:/boot/boot.js]] -[[$:/boot/bootprefix.js]] +[sort[title]]
-\end
-{{$:/core/templates/tiddlywiki5.html}}

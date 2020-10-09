@@ -161,9 +161,11 @@ IPFS Import
       return false
     }
     const { cid, ipnsIdentifier, protocol } = $tw.ipfs.decodeCid(key)
-    if (protocol !== null && (cid !== null || ipnsIdentifier !== null)) {
-      return true
-    } else if (key.endsWith('.eth') || key.endsWith('.eth.link')) {
+    if (
+      key.endsWith('.eth') ||
+      key.endsWith('.eth.link') ||
+      (protocol !== null && (cid !== null || ipnsIdentifier !== null))
+    ) {
       return true
     }
     return false

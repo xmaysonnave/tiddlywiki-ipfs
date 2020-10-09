@@ -207,12 +207,17 @@ Follow the [nvm installation and update tutorial](https://github.com/nvm-sh/nvm#
 Current installation and update script:
 
 ```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+```
+or
+```
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 ```
 
 As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
 
 ```
+# nvm initialization!
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -222,10 +227,8 @@ autoload -U add-zsh-hook
 load-nvmrc() {
   local node_version="$(nvm version)"
   local nvmrc_path="$(nvm_find_nvmrc)"
-
   if [ -n "$nvmrc_path" ]; then
     local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
     if [ "$nvmrc_node_version" = "N/A" ]; then
       nvm install
     elif [ "$nvmrc_node_version" != "$node_version" ]; then
@@ -238,6 +241,13 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+```
+
+Check:
+
+```
+nvm -v
+0.36.0
 ```
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
@@ -256,7 +266,7 @@ Check:
 
 ```
 node -v
-v14.11.0
+v14.13.1
 ```
 
 Install `yarn`.
@@ -316,9 +326,12 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/pa
 -   build-all-noclone
 -   build
 -   build-tiddlywiki
--   eslint
--   eslint:fix
+-   build-tiddlywiki-empty
+-   debug
 -   format
+-   ipfs-tiddlywiki
+-   lint
+-   precommit
 -   prepare
 -   run-build-number
 -   run-browserify
@@ -342,7 +355,9 @@ The `production` directory contains production ready runnable `TiddlyWikis`:
 
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
--   [tiddlywiki-ipfs-plugin.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/tiddlywiki-ipfs-plugin.json)
+-   [$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Fboot%2Fboot.js.json)
+-   [$:/library/ipfs-library.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Flibrary%2Fipfs-library.js.json)
+-   [$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Fplugins%2Fipfs.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 

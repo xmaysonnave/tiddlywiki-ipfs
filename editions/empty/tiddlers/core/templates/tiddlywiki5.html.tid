@@ -56,10 +56,6 @@ tags: bluelightav.eth
 <div id="bootKernel" style="display:none;">
 `{{ $:/boot/boot.js ||$:/core/templates/javascript-tiddler}}`
 </div>
-<!--~~ Ipfs Boot kernel ~~-->
-<div id="ipfsBootKernel" style="display:none;">
-`{{ $:/boot/ipfs-boot.js ||$:/core/templates/javascript-tiddler}}`
-</div>
 <!--~~ Raw markup for the bottom of the body section ~~-->
 `{{{ [enlist<saveTiddlerAndShadowsFilter>tag[$:/tags/RawMarkupWikified/BottomBody]] ||$:/core/templates/raw-static-tiddler}}}`
 </body>

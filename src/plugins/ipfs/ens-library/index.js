@@ -245,8 +245,8 @@ import multiH from 'multihashes'
       this.getLogger().error(error)
       return false
     }
-    var data = iface.encodeFunctionData('supportsInterface', ['0xffffffff'])
-    var result = await web3.call({ to: address, data: data })
+    data = iface.encodeFunctionData('supportsInterface', ['0xffffffff'])
+    result = await web3.call({ to: address, data: data })
     if (result === undefined || result == null || result === '0x') {
       return false
     }

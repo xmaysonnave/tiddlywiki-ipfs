@@ -1,4 +1,6 @@
 title: $:/core/templates/ipfs-library.js
+modified: 20201009094915385
+tags: $:/ipfs/core
 
 \rules only filteredtranscludeinline transcludeinline codeinline
 

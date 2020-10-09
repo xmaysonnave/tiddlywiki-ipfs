@@ -63,7 +63,7 @@ IPFS Controller
       if (log !== undefined && log !== null) {
         return log
       }
-      var log = loggers.default
+      log = loggers.default
       if (log !== undefined && log !== null) {
         return log
       }
@@ -327,7 +327,7 @@ IPFS Controller
  ${normalizedUrl}`
         )
       }
-      var index = this.unpin.indexOf(cid)
+      index = this.unpin.indexOf(cid)
       if (index !== -1) {
         this.unpin.splice(index, 1)
         $tw.ipfs.getLogger().info(

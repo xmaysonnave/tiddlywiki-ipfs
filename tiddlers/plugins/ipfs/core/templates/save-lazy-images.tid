@@ -1,9 +1,0 @@
-title: $:/core/save/lazy-images
-
-\define saveTiddlerFilter()
-[is[tiddler]] -[prefix[$:/state/popup/]] -[[$:/HistoryList]] -[[$:/boot/boot.css]] -[type[application/javascript]library[yes]] -[[$:/boot/ipfs-boot.js]] -[[$:/boot/boot.js]] -[[$:/boot/bootprefix.js]] -[!is[system]is[image]] +[sort[title]]
-\end
-\define skinnySaveTiddlerFilter()
-[is[image]]
-\end
-{{$:/core/templates/tiddlywiki5.html}}
