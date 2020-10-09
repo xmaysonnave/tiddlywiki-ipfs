@@ -19,7 +19,7 @@ tags: bluelightav.eth
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="format-detection" content="telephone=no" />
 <meta name="copyright" content="`{{$:/core/copyright.txt}}`"/>
-<meta name="Dwebsite" content="bluelightav.eth.eth"/>
+<meta name="Dwebsite" content="bluelightav.eth"/>
 <link id="faviconLink" href="https://bafkreihi27cp35a6gyzwgi3qljmfhnpmio5ysyatpmvfaip7fd3lem7ksq.ipfs.dweb.link/" crossorigin="anonymous" rel="icon" sizes="32x32" type="image/png"/>
 <title>`{{ $:/core/wiki/title }}`</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->

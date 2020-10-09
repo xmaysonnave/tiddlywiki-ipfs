@@ -1,11 +1,13 @@
 title: IPFS Quick Start
-modified: 20200602094915385
+modified: 20201009094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
 <h2>Requirements</h2>
 <ul>
-  <li>[ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs]]</li>
+  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]</li>
+  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library.js]]</li>
+  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]</li>
   <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
   <li>[ext[Metamask|https://metamask.io]]</li>
 </ul>
