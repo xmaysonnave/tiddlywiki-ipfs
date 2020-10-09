@@ -357,7 +357,7 @@ The `production` directory contains production ready runnable `TiddlyWikis`:
 
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
--   [$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%2524%253A%252Fboot%252Fboot.js.json)
+-   [$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fboot%252Fboot.js.json)
 -   [$:/library/ipfs-library.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%2524%253A%252Flibrary%252Fipfs-library.js.json)
 -   [$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%2524%253A%252Fplugins%252Fipfs.json)
 
