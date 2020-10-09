@@ -1,5 +1,5 @@
 title: ENS Settings
-modified: 20200526094915385
+modified: 20201009094915385
 tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
@@ -132,5 +132,5 @@ type: text/vnd.tiddlywiki
   This command resolves and opens the default <b>ENS Domain</b>.
 </p>
 <p>
-  See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md]] for more informations.
+  See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/README.md]] for more informations.
 </p>

@@ -11,13 +11,13 @@
 </p>
 
 <p align="center">
-  <img alt="CodeQL" src="https://github.com/xmaysonnave/tiddlywiki-ipfs/workflows/CodeQL/badge.svg?branch=master"/>
+  <img alt="CodeQL" src="https://github.com/xmaysonnave/tiddlywiki-ipfs/workflows/CodeQL/badge.svg?branch=main"/>
   <a href="https://github.com/prettier/prettier"><img alt="Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"/></a>
 </p>
 
 <p align="center">
   <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs.svg?type=shield"/></a>
-  <a href="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs"><img alt="TravisCI" src="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=master"/></a>
+  <a href="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs"><img alt="TravisCI" src="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=main"/></a>
   <a href="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs"><img alt="Snyk" src="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg"/></a>
 </p>
 
@@ -252,7 +252,7 @@ nvm -v
 0.36.0
 ```
 
-This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/.nvmrc) who describes the node version to use.
+This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/.nvmrc) who describes the node version to use.
 
 ```
 v14
@@ -323,7 +323,7 @@ yarn
 
 The repository contains several scripts who build TiddWiki instances bundled with `IPFS with TiddlyWiki`.
 
-The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/package.json) references several options:
+The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/package.json) references several options:
 
 -   build-all-noclone
 -   build
@@ -377,7 +377,7 @@ This project is integrated with Travis CI:
 
 <a name="developer-running"/>
 
-Open [production/index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/index.html) file in your favorite browser.
+Open [production/index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html) file in your favorite browser.
 
 ## Contributor Covenant Code of Conduct
 

@@ -1,5 +1,5 @@
 title: Import
-modified: 20200528094915385
+modified: 20201009094915385
 tags: blueligtav.eth $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
@@ -18,7 +18,7 @@ type: text/vnd.tiddlywiki
 </p>
 <p>
   Create a Tiddler and defines a <b>_canonical_uri</b> field. Fill up the <b>canonical_uri</b> field
-  with the following URL [ext[Sample|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/root.json]].
+  with the following URL [ext[Sample|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/root.json]].
   Save your Tiddler. You should see the following result.
 </p>
 [img class="tc-image-documentation" [$:/ipfs/image/import]]
@@ -37,11 +37,11 @@ type: text/vnd.tiddlywiki
   This imported sample references multiple files with relative [[URL]].
 </p>
 <ul>
-  <li>[ext[Root|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/root.json]]</li>
-  <li>[ext[Level_1_2|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_1_2.json]]</li>
-  <li>[ext[Level_2_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_2_1.json]]</li>
-  <li>[ext[Level_3_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_3_1.json]]</li>
-  <li>[ext[Level_4_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/sample/level_4_1.json]]</li>
+  <li>[ext[Root|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/root.json]]</li>
+  <li>[ext[Level_1_2|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/level_1_2.json]]</li>
+  <li>[ext[Level_2_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/level_2_1.json]]</li>
+  <li>[ext[Level_3_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/level_3_1.json]]</li>
+  <li>[ext[Level_4_1|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/level_4_1.json]]</li>
 </ul>
 <p>
   Importing is a four steps process:
@@ -57,6 +57,6 @@ type: text/vnd.tiddlywiki
   Beware that multiple dialog boxes will popup with specific errors.
 </p>
 <ul>
-  <li>[ext[Load|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/load/root.json]]</li>
-  <li>[ext[Process|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/master/test/import/process/root.json]]</li>
+  <li>[ext[Load|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/load/root.json]]</li>
+  <li>[ext[Process|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/process/root.json]]</li>
 </ul>
