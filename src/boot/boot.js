@@ -730,7 +730,6 @@ var _boot = function ($tw) {
       form.elements[0].focus()
     }, 10)
     // Add a submit event handler
-    var self = this
     form.addEventListener(
       'submit',
       function (event) {

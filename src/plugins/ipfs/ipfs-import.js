@@ -319,7 +319,7 @@ IPFS Import
           }
           return
         }
-        var value = tiddler.getFieldString('_import_uri')
+        value = tiddler.getFieldString('_import_uri')
         if (
           value !== undefined &&
           value !== null &&
