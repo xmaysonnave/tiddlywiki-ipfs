@@ -351,9 +351,9 @@ yarn build
 
 The `production` directory contains production ready runnable `TiddlyWikis`:
 
--   [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/index.html)
--   [dev.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/dev.html)
--   [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/production/empty.html)
+-   [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html)
+-   [dev.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/dev.html)
+-   [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/empty.html)
 
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
