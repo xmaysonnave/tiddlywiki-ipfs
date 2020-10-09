@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-201009385",
+  "version": "v0.3.0-201009417",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -8,9 +8,13 @@
   },
   "browserslist": [
     "> 1%",
-    "chrome >= 81",
+    "and_chr >= 85",
+    "chrome >= 83",
     "edge >= 83",
     "firefox >= 77",
+    "ios_saf >= 13.3",
+    "safari >= 13.1",
+    "not ios_saf 12.2-12.4",
     "not ie 11",
     "not ie_mob > 0",
     "not op_mini all",

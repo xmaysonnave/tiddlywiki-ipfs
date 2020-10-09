@@ -209,7 +209,9 @@ Current installation and update script:
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 ```
+
 or
+
 ```
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 ```
@@ -355,9 +357,9 @@ The `production` directory contains production ready runnable `TiddlyWikis`:
 
 and the `IPFS with TiddlyWiki` plugin as a json file:
 
--   [$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Fboot%2Fboot.js.json)
--   [$:/library/ipfs-library.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Flibrary%2Fipfs-library.js.json)
--   [$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Fplugins%2Fipfs.json)
+-   [\$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Fboot%2Fboot.js.json)
+-   [\$:/library/ipfs-library.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Flibrary%2Fipfs-library.js.json)
+-   [\$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/%24%3A%2Fplugins%2Fipfs.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 

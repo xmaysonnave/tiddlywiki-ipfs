@@ -8,7 +8,7 @@ node_js:
   - '14'
 
 python:
-  - "3.7"
+  - '3.8'
 
 install:
   - pip install deepcode
@@ -18,7 +18,6 @@ after_success:
 
 script:
   - yarn build
-  - deepcode analyze -p .
   - yarn test
 
 branches:
