@@ -94,12 +94,12 @@
     return this.getUrl(base)
   }
 
-  IpfsUrl.prototype.getBase = function (value) {
+  IpfsUrl.prototype.getBase = function (base) {
     var url = null
-    value =
-      value === undefined || value == null || value.toString().trim() === ''
+    var value =
+      base === undefined || base == null || base.toString().trim() === ''
         ? null
-        : value.toString().trim()
+        : base.toString().trim()
     if (value == null) {
       return this.getIpfsBaseUrl()
     }
@@ -109,9 +109,9 @@
       return this.getIpfsBaseUrl()
     }
     // Parse
+    var hostname
     var identifier
     var protocol
-    var hostname
     const members = url.hostname.split('.')
     for (var i = 0; i < members.length; i++) {
       // Ignore
@@ -135,10 +135,10 @@
       }
     }
     if (!protocol || !identifier) {
-      return this.getIpfsBaseUrl()
+      return base
     }
     if (protocol !== 'ipfs' && protocol !== 'ipns') {
-      return this.getUrl(`${url.protocol}//${url.host}`)
+      return base
     }
     const host = url.port ? `${hostname}:${url.port}` : hostname
     return this.getUrl(`${url.protocol}//${host}`)

@@ -23,7 +23,6 @@
 const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const text = 'text'
-const resourceRelative = '../../import/cleanup/root.json'
 beforeAll(() => {
   globalThis.log = log
   const logger = log.getLogger('ipfs')
@@ -225,8 +224,8 @@ describe('Normalize URL', () => {
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
     const parsed = ipfsUrl.normalizeUrl(
-      resourceRelative,
-      ipfsUrl.getDocumentUrl()
+      '../../import/cleanup/root.json',
+      new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
     expect(
       parsed.toString() ===
@@ -243,7 +242,7 @@ describe('Normalize URL', () => {
     )
     const parsed = ipfsUrl.normalizeUrl(
       './level_4_1.json',
-      ipfsUrl.getDocumentUrl()
+      new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     )
     expect(
       parsed.toString() ===
@@ -273,7 +272,7 @@ describe('Normalize URL', () => {
     )
     const parsed = ipfsUrl.normalizeUrl(
       'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy',
-      ipfsUrl.getDocumentUrl()
+      new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     )
     expect(
       parsed.toString() ===
