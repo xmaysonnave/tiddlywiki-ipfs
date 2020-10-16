@@ -1,0 +1,30 @@
+title: $:/core/ui/ViewTemplate/ipfsimport
+tags: $:/tags/ViewTemplate
+
+\define lingo-base() $:/language/Import/
+
+\define buttons()
+<$button message="tm-delete-tiddler" param=<<currentTiddler>>><<lingo Listing/Cancel/Caption>></$button>
+<$button message="tm-perform-ipfs-import" param=<<currentTiddler>>><<lingo Listing/Import/Caption>></$button>
+<<lingo Listing/Preview>> <$select tiddler="$:/state/ipfsimportpreviewtype" default="$:/core/ui/ImportPreviews/Text">
+<$list filter="[all[shadows+tiddlers]tag[$:/tags/ImportPreview]!has[draft.of]]">
+<option value=<<currentTiddler>>>{{!!caption}}</option>
+</$list>
+</$select>
+\end
+
+<$list filter="[all[current]field:plugin-type[ipfs-import]]">
+
+<div class="tc-import">
+
+<<lingo Listing/Hint>>
+
+<<buttons>>
+
+{{||$:/core/ui/IpfsImportListing}}
+
+<<buttons>>
+
+</div>
+
+</$list>

@@ -468,20 +468,6 @@ IPFS Action
       $tw.utils.alert(name, error.message)
       return null
     }
-    const locateNavigatorWidget = function (element) {
-      if (element.parseTreeNode.type === 'navigator') {
-        return element
-      }
-      if (element.children) {
-        for (var i = 0; i < element.children.length; i++) {
-          const found = locateNavigatorWidget(element.children[i])
-          if (found) {
-            return found
-          }
-        }
-      }
-      return null
-    }
     const title = target.getFieldString('title')
     // Filter
     var exportFilter = `[[${target.fields.title}]]`
@@ -511,11 +497,11 @@ IPFS Action
         target.getFieldString('_export_uri')
       )
       if (content) {
-        const navigator = locateNavigatorWidget($tw.pageWidgetNode)
+        const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
         if (navigator) {
           navigator.dispatchEvent({
             target: target.fields.title,
-            type: 'tm-export-tiddlers',
+            type: 'tm-ipfs-export-tiddlers',
             param: content
           })
           return

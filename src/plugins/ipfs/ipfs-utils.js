@@ -383,6 +383,21 @@ IPFS utils
     return true
   }
 
+  exports.locateNavigatorWidget = function (element) {
+    if (element.parseTreeNode.type === 'navigator') {
+      return element
+    }
+    if (element.children) {
+      for (var i = 0; i < element.children.length; i++) {
+        const found = $tw.utils.locateNavigatorWidget(element.children[i])
+        if (found) {
+          return found
+        }
+      }
+    }
+    return null
+  }
+
   exports.exportTiddlersAsJson = async function (tiddlers, exportUri, spaces) {
     var json
     var data = []

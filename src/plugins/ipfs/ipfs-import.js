@@ -110,7 +110,7 @@ IPFS Import
     return removed
   }
 
-  IpfsImport.prototype.getKey = async function (base, value) {
+  IpfsImport.prototype.getKey = async function (value, base) {
     var cid = null
     var ipnsKey = null
     var key = null
@@ -176,9 +176,6 @@ IPFS Import
     importUri,
     tiddler
   ) {
-    const self = this
-    var loadedAdded = 0
-    var loadedRemoved = 0
     canonicalUri =
       canonicalUri === undefined ||
       canonicalUri == null ||
@@ -194,211 +191,97 @@ IPFS Import
       password === undefined || password == null || password.trim() === ''
         ? null
         : password.trim()
-    this.host = tiddler
     const { type } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
     )
+    const self = this
     this.loaded = new Map()
     this.notLoaded = []
     this.isEmpty = []
     this.resolved = new Map()
     this.notResolved = []
-    this.added = []
-    this.updated = []
+    this.deleted = []
     this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
-      const url = $tw.ipfs.getUrl(
+      const host = $tw.ipfs.getUrl(
         `#${tiddler.fields.title}`,
         $tw.ipfs.getDocumentUrl()
       )
       if (canonicalUri !== null || importUri !== null) {
-        $tw.ipfs.getLogger().info('*** Begin Import ***')
-        this.rootUri = importUri !== null ? importUri : canonicalUri
         if (importUri !== null) {
-          const {
-            loaded: importLoaded,
-            removed: importRemoved
-          } = await this.load(
-            url,
+          var { key: importUri } = await this.getKey(importUri, host)
+          await this.load(
+            host,
             tiddler.fields.title,
             '_import_uri',
             importUri,
             password,
             true
           )
-          loadedAdded += importLoaded
-          loadedRemoved += importRemoved
         }
         if (canonicalUri !== null) {
-          const {
-            loaded: canonicalLoaded,
-            removed: canonicalRemoved
-          } = await this.load(
-            url,
+          var { key: canonicalUri } = await this.getKey(canonicalUri, host)
+          await this.load(
+            host,
             tiddler.fields.title,
             '_canonical_uri',
             canonicalUri,
             password,
             tiddlyWikiType === type
           )
-          loadedAdded += canonicalLoaded
-          loadedRemoved += canonicalRemoved
         }
-        const { processed, removed: processedRemoved } = this.processImported()
-        this.importTiddlers()
-        $tw.ipfs
-          .getLogger()
-          .info(`*** Loaded: ${this.loaded.size} Resource(s) ***`)
-        $tw.ipfs
-          .getLogger()
-          .info(`*** Loaded: ${this.isEmpty.length} Empty Resource(s) ***`)
-        $tw.ipfs
-          .getLogger()
-          .info(`*** Failed to Load: ${this.notLoaded.length} Resource(s) ***`)
-        $tw.ipfs
-          .getLogger()
-          .info(`*** Failed to Resolve: ${this.notResolved.length} URL(s) ***`)
-        $tw.ipfs
-          .getLogger()
-          .info(
-            `*** Loaded: ${loadedAdded}, Removed: ${loadedRemoved} Tiddler(s) ***`
-          )
-        $tw.ipfs
-          .getLogger()
-          .info(
-            `*** Processed: ${processed}, Removed: ${processedRemoved} Tiddler(s) ***`
-          )
-        $tw.ipfs
-          .getLogger()
-          .info(
-            `*** Added: ${this.added.length}, Updated: ${this.updated.length} Tiddler(s) ***`
-          )
-      }
-      // Update Wiki
-      var reportAdded = ''
-      var reportUpdated = ''
-      for (var [title, merged] of this.merged.entries()) {
-        const oldTiddler = $tw.wiki.getTiddler(title)
-        $tw.wiki.addTiddler(merged)
-        const newTiddler = $tw.wiki.getTiddler(title)
-        if (this.added.indexOf(title) !== -1) {
-          reportAdded = `${reportAdded}[[${title}]]`
-        } else if (!oldTiddler.isEqual(newTiddler)) {
-          reportUpdated = `${reportUpdated}[[${title}]]`
-        } else {
-          const index = this.updated.indexOf(title)
-          if (index !== -1) {
-            this.updated.splice(index, 1)
-          }
-        }
-      }
-      // Process deleted
-      var deleted = 0
-      var reportDeleted = ''
-      $tw.wiki.forEachTiddler({ includeSystem: true }, function (
-        title,
-        tiddler
-      ) {
-        var value = tiddler.getFieldString('_canonical_uri')
-        if (
-          value !== undefined &&
-          value !== null &&
-          value === self.rootUri &&
-          self.merged.get(title) === undefined
+        // Process
+        this.processImported()
+        // Import
+        var rootUri = importUri !== null ? importUri : canonicalUri
+        this.importTiddlers(rootUri)
+        // Deleted
+        $tw.wiki.forEachTiddler({ includeSystem: true }, function (
+          title,
+          tiddler
         ) {
+          var value = tiddler.getFieldString('_canonical_uri')
           if (
-            self.host !== null &&
-            self.merged.get(self.host.fields.title) === undefined &&
-            self.host.fields.title !== title
+            value !== undefined &&
+            value !== null &&
+            value === rootUri &&
+            self.merged.get(title) === undefined &&
+            self.deleted.indexOf(title) === -1
           ) {
-            $tw.wiki.deleteTiddler(title)
-            reportDeleted = `${reportDeleted}[[${title}]]`
-            deleted += 1
+            self.deleted.push(title)
           }
-          return
-        }
-        value = tiddler.getFieldString('_import_uri')
-        if (
-          value !== undefined &&
-          value !== null &&
-          value === self.rootUri &&
-          self.merged.get(title) === undefined
-        ) {
+          value = tiddler.getFieldString('_import_uri')
           if (
-            self.host !== null &&
-            self.merged.get(self.host.fields.title) === undefined &&
-            self.host.fields.title !== title
+            value !== undefined &&
+            value !== null &&
+            value === rootUri &&
+            self.merged.get(title) === undefined &&
+            self.deleted.indexOf(title) === -1
           ) {
-            $tw.wiki.deleteTiddler(title)
-            reportDeleted = `${reportDeleted}[[${title}]]`
-            deleted += 1
+            self.deleted.push(title)
           }
-        }
-      })
-      const reportImportedMsg = `<p style="text-align:center">''Successfully Imported''</p>`
-      $tw.utils.alert(
-        name,
-        `${reportImportedMsg}<p>''Added'': ${this.added.length}<br/>''Deleted'': ${deleted}<br/>''Updated'': ${this.updated.length}</p>`
-      )
-      if (this.merged.get(this.host.fields.title) === undefined) {
-        var updatedTiddler = new $tw.Tiddler(this.host)
-        const reportAddedMsg = `<p>''Added'': ${this.added.length}</p>`
-        const reportDeletedMsg = `<p>''Deleted'': ${deleted}</p>`
-        const reportUpdatedMsg = `<p>''Updated'': ${this.updated.length}</p>`
-        var value = `${reportImportedMsg}${reportAddedMsg}`
-        if (reportAdded.trim() !== '') {
-          value = `${value}
-
-{{{${reportAdded}}}}
-
-`
-        }
-        value = `${value}${reportDeletedMsg}`
-        if (reportDeleted.trim() !== '') {
-          value = `${value}
-
-{{{${reportDeleted}}}}
-
-`
-        }
-        value = `${value}${reportUpdatedMsg}`
-        if (reportUpdated.trim() !== '') {
-          value = `${value}
-
-{{{${reportUpdated}}}}
-
-`
-        }
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          fields: [
-            {
-              key: 'type',
-              value: tiddlyWikiType
-            },
-            {
-              key: 'text',
-              value: value
-            }
-          ]
         })
+        return {
+          merged: this.merged,
+          deleted: this.deleted,
+          loaded: this.loaded,
+          isEmpty: this.isEmpty,
+          notLoaded: this.notLoaded,
+          notResolved: this.notResolved
+        }
       }
-      $tw.wiki.addTiddler(updatedTiddler)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
     }
-    $tw.ipfs.getLogger().info('*** End Import ***')
-    this.host = null
     this.loaded = null
     this.isEmpty = null
     this.notLoaded = null
     this.resolved = null
     this.notResolved = null
-    this.added = null
-    this.updated = null
+    this.deleted = null
     this.merged = null
   }
 
@@ -420,7 +303,7 @@ IPFS Import
       this.resolved.get(url) === undefined
     ) {
       try {
-        var { key, resolvedUrl } = await this.getKey(parentUrl, url)
+        var { key, resolvedUrl } = await this.getKey(url, parentUrl)
         this.resolved.set(url, key)
       } catch (error) {
         const msg = 'Failed to Resolve:'
@@ -457,6 +340,23 @@ IPFS Import
     return {
       loaded: loaded,
       removed: removed
+    }
+  }
+
+  IpfsImport.prototype.performImport = function (
+    toBeAdded,
+    toBeUpdated,
+    toBeDeleted
+  ) {
+    // New and Updated
+    for (var [title, merged] of this.merged.entries()) {
+      if (toBeAdded.indexOf(title) || toBeUpdated.indexOf(title) !== -1) {
+        $tw.wiki.addTiddler(merged)
+      }
+    }
+    // Deleted
+    for (var i = 0; i < toBeDeleted.length; i++) {
+      $tw.wiki.deleteTiddler(toBeDeleted[i])
     }
   }
 
@@ -966,7 +866,7 @@ IPFS Import
     }
   }
 
-  IpfsImport.prototype.importTiddlers = function () {
+  IpfsImport.prototype.importTiddlers = function (rootUri) {
     var processedTitles = []
     for (var key of this.loaded.keys()) {
       const { imported, url } = this.loaded.get(key)
@@ -990,42 +890,36 @@ IPFS Import
           importUri.trim() === ''
             ? null
             : importUri.trim()
-        var exist = null
+        var processed
         if (importUri !== null) {
-          exist = this.importTiddler(title, importUri)
+          processed = this.importTiddler(title, importUri)
         }
-        if (exist == null && canonicalUri !== null && tiddlyWikiType === type) {
+        if (!processed && canonicalUri !== null && tiddlyWikiType === type) {
           this.importTiddler(title, canonicalUri)
         }
-        exist = this.mergeTiddler(title, url)
-        if (exist !== null) {
+        if (this.mergeTiddler(title, url)) {
           const merged = this.merged.get(title)
           var type = merged.type
           if (tiddlyWikiType !== type) {
-            merged._import_uri = this.rootUri
+            merged._import_uri = rootUri
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
-              if (url !== this.rootUri) {
+              if (url !== rootUri) {
                 merged._canonical_uri = this.resolved.get(url)
-                merged._import_uri = this.rootUri
+                merged._import_uri = rootUri
               } else {
-                merged._canonical_uri = this.rootUri
+                merged._canonical_uri = rootUri
               }
             } else {
               merged._canonical_uri = this.resolved.get(canonicalUri)
-              if (canonicalUri !== this.rootUri) {
-                merged._import_uri = this.rootUri
+              if (canonicalUri !== rootUri) {
+                merged._import_uri = rootUri
               }
             }
           }
-          if (exist) {
-            this.updated.push(title)
-          } else {
-            this.added.push(title)
-          }
-          processedTitles.push(title)
         }
+        processedTitles.push(title)
       }
     }
   }
@@ -1033,18 +927,18 @@ IPFS Import
   IpfsImport.prototype.importTiddler = function (title, uri) {
     const key = this.resolved.get(uri)
     if (key === undefined) {
-      return null
+      return false
     }
     if (this.loaded.get(key) === undefined) {
-      return null
+      return false
     }
     const { imported } = this.loaded.get(key)
     if (imported === undefined) {
-      return null
+      return false
     }
     const tiddler = imported.get(title)
     if (tiddler === undefined) {
-      return null
+      return false
     }
     var type = tiddler.type
     var importUri = tiddler._import_uri
@@ -1059,42 +953,36 @@ IPFS Import
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
-    var exist = null
+    var processed
     if (importUri !== null) {
-      exist = this.importTiddler(title, importUri)
+      processed = this.importTiddler(title, importUri)
     }
-    if (exist == null && canonicalUri !== null && tiddlyWikiType === type) {
+    if (!processed && canonicalUri !== null && tiddlyWikiType === type) {
       this.importTiddler(title, canonicalUri)
     }
     return this.mergeTiddler(title, uri)
   }
 
   IpfsImport.prototype.mergeTiddler = function (title, uri) {
-    var merged = null
-    var currentTiddler = null
     const key = this.resolved.get(uri)
     if (key === undefined) {
-      return null
+      return false
     }
     if (this.loaded.get(key) === undefined) {
-      return null
+      return false
     }
     const { imported } = this.loaded.get(key)
     if (imported === undefined) {
-      return null
+      return false
     }
     const tiddler = imported.get(title)
     if (tiddler === undefined) {
-      return null
+      return false
     }
     // Retrieve target host Tiddler
-    if (this.host.fields.title === title) {
-      currentTiddler = this.host
-    } else {
-      currentTiddler = $tw.wiki.getTiddler(title)
-    }
+    var currentTiddler = $tw.wiki.getTiddler(title)
     // Retrieve or prepare merged content
-    merged = this.merged.get(title)
+    var merged = this.merged.get(title)
     if (merged === undefined) {
       merged = {}
       this.merged.set(title, merged)
@@ -1135,7 +1023,7 @@ IPFS Import
         }
       }
     }
-    // Merge merged Tags
+    // Merge Tags
     if (merged.tags !== undefined && merged.tags !== null) {
       const mergedTags = $tw.utils.parseStringArray(merged.tags, false)
       for (var i = 0; i < mergedTags.length; i++) {
@@ -1155,10 +1043,8 @@ IPFS Import
     }
     // Processed tags
     merged.tags = tags
-    if (currentTiddler !== undefined && currentTiddler !== null) {
-      return true
-    }
-    return false
+    // Processed
+    return true
   }
 
   exports.IpfsImport = IpfsImport

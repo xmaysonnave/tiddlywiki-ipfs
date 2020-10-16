@@ -1,4 +1,4 @@
-title: $:/core/ui/ExportListing
+title: $:/core/ui/IpfsExportListing
 modified: 20201009094915385
 tags: :/ipfs/core
 
@@ -51,8 +51,8 @@ $(currentTiddler)$!!popup-$(payloadTiddler)$
 <tr>
 <td colspan="2">
 <$reveal type="match" text="yes" state=<<previewPopupState>> tag="div">
-<$list filter="[{$:/state/exportpreviewtype}has[text]]" variable="listItem" emptyMessage={{$:/core/ui/ExportPreviews/Text}}>
-<$transclude tiddler={{$:/state/exportpreviewtype}}/>
+<$list filter="[{$:/state/ipfsexportpreviewtype}has[text]]" variable="listItem" emptyMessage={{$:/core/ui/IpfsExportPreviews/Text}}>
+<$transclude tiddler={{$:/state/ipfsexportpreviewtype}}/>
 </$list>
 </$reveal>
 </td>

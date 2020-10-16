@@ -481,8 +481,8 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    var identifier = null
-    var protocol = null
+    var identifier
+    var protocol
     // Parse
     const members = pathname.trim().split('/')
     for (var i = 0; i < members.length; i++) {
@@ -491,19 +491,19 @@ import IpfsUrl from './ipfs-url'
         continue
       }
       // First non empty member
-      if (protocol == null) {
+      if (!protocol) {
         protocol = members[i]
         continue
       }
       // Second non empty member
-      if (identifier == null) {
+      if (!identifier) {
         identifier = members[i]
         break
       }
       // Nothing to process
       break
     }
-    if (protocol == null || identifier == null) {
+    if (!protocol || !identifier) {
       return {
         cid: null,
         ipnsIdentifier: null,
@@ -552,8 +552,8 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    var identifier = null
-    var protocol = null
+    var identifier
+    var protocol
     // Parse
     const members = hostname.trim().split('.')
     for (var i = 0; i < members.length; i++) {
@@ -562,19 +562,19 @@ import IpfsUrl from './ipfs-url'
         continue
       }
       // First non empty member
-      if (identifier == null) {
+      if (!identifier) {
         identifier = members[i]
         continue
       }
       // Second non empty member
-      if (protocol == null) {
+      if (!protocol) {
         protocol = members[i]
         break
       }
       // Nothing to process
       break
     }
-    if (protocol == null || identifier == null) {
+    if (!protocol || !identifier) {
       return {
         cid: null,
         ipnsIdentifier: null,

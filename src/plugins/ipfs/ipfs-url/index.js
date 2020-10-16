@@ -94,6 +94,56 @@
     return this.getUrl(base)
   }
 
+  IpfsUrl.prototype.getBase = function (value) {
+    var url = null
+    value =
+      value === undefined || value == null || value.toString().trim() === ''
+        ? null
+        : value.toString().trim()
+    if (value == null) {
+      return this.getIpfsBaseUrl()
+    }
+    try {
+      url = this.getUrl(value)
+    } catch (error) {
+      return this.getIpfsBaseUrl()
+    }
+    // Parse
+    var identifier
+    var protocol
+    var hostname
+    const members = url.hostname.split('.')
+    for (var i = 0; i < members.length; i++) {
+      // Ignore
+      if (members[i].trim() === '') {
+        continue
+      }
+      // First non empty member
+      if (!identifier) {
+        identifier = members[i]
+        continue
+      }
+      // Second non empty member
+      if (!protocol) {
+        protocol = members[i]
+        continue
+      }
+      if (hostname) {
+        hostname = `${hostname}.${members[i]}`
+      } else {
+        hostname = members[i]
+      }
+    }
+    if (!protocol || !identifier) {
+      return this.getIpfsBaseUrl()
+    }
+    if (protocol !== 'ipfs' && protocol !== 'ipns') {
+      return this.getUrl(`${url.protocol}//${url.host}`)
+    }
+    const host = url.port ? `${hostname}:${url.port}` : hostname
+    return this.getUrl(`${url.protocol}//${host}`)
+  }
+
   IpfsUrl.prototype.normalizeUrl = function (value, base) {
     value =
       value === undefined || value == null || value.toString().trim() === ''
@@ -102,9 +152,7 @@
     if (value == null) {
       return null
     }
-    base = this.getUrl(
-      base !== undefined && base !== null ? base : this.getIpfsBaseUrl()
-    )
+    base = this.getBase(base)
     // Parse
     var url = null
     // Text or URL

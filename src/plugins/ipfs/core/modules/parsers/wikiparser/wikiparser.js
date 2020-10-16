@@ -41,6 +41,19 @@ wikiparser
         var ipfsImport = new IpfsImport()
         ipfsImport
           .import(canonicalUri, importUri, options.tiddler)
+          .then(data => {
+            if (data) {
+              const navigator = $tw.utils.locateNavigatorWidget(
+                $tw.pageWidgetNode
+              )
+              if (navigator) {
+                navigator.dispatchEvent({
+                  type: 'tm-ipfs-import-tiddlers',
+                  param: data
+                })
+              }
+            }
+          })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)

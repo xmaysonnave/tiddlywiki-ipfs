@@ -12,7 +12,8 @@ Navigator widget
   'use strict'
 
   var IMPORT_TITLE = '$:/Import'
-  var EXPORT_TITLE = '$:/Export'
+  var IPFS_IMPORT_TITLE = '$:/IpfsImport'
+  var IPFS_EXPORT_TITLE = '$:/IpfsExport'
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
@@ -31,10 +32,24 @@ Navigator widget
         handler: 'handleCloseOtherTiddlersEvent'
       },
       { type: 'tm-new-tiddler', handler: 'handleNewTiddlerEvent' },
-      { type: 'tm-export-tiddlers', handler: 'handleExportTiddlersEvent' },
+      {
+        type: 'tm-ipfs-export-tiddlers',
+        handler: 'handleIpfsExportTiddlersEvent'
+      },
       { type: 'tm-import-tiddlers', handler: 'handleImportTiddlersEvent' },
+      {
+        type: 'tm-ipfs-import-tiddlers',
+        handler: 'handleIpfsImportTiddlersEvent'
+      },
+      {
+        type: 'tm-perform-ipfs-export',
+        handler: 'handlePerformIpfsExportEvent'
+      },
       { type: 'tm-perform-import', handler: 'handlePerformImportEvent' },
-      { type: 'tm-perform-export', handler: 'handlePerformExportEvent' },
+      {
+        type: 'tm-perform-ipfs-import',
+        handler: 'handlePerformIpfsImportEvent'
+      },
       { type: 'tm-fold-tiddler', handler: 'handleFoldTiddlerEvent' },
       {
         type: 'tm-fold-other-tiddlers',
@@ -550,20 +565,20 @@ Navigator widget
   }
 
   // Export JSON tiddlers
-  NavigatorWidget.prototype.handleExportTiddlersEvent = function (event) {
+  NavigatorWidget.prototype.handleIpfsExportTiddlersEvent = function (event) {
     // Get the tiddlers
     var tiddlers = []
     try {
       tiddlers = JSON.parse(event.param)
     } catch (e) {}
     // Get the current $:/Export tiddler
-    var exportTitle = event.exportTitle ? event.exportTitle : EXPORT_TITLE
+    var exportTitle = event.exportTitle ? event.exportTitle : IPFS_EXPORT_TITLE
     var exportTiddler = this.wiki.getTiddler(exportTitle)
     var exportData = this.wiki.getTiddlerData(exportTitle, {})
     var newFields = {
       title: exportTitle,
       type: 'application/json',
-      'plugin-type': 'export',
+      'plugin-type': 'ipfs-export',
       status: 'pending',
       target: event.target
     }
@@ -606,7 +621,9 @@ Navigator widget
     return false
   }
 
-  NavigatorWidget.prototype.handlePerformExportEvent = async function (event) {
+  NavigatorWidget.prototype.handlePerformIpfsExportEvent = async function (
+    event
+  ) {
     var exportTiddler = this.wiki.getTiddler(event.param)
     var target = this.wiki.getTiddler(exportTiddler.fields.target)
     var exportData = this.wiki.getTiddlerDataCached(event.param, {
@@ -647,6 +664,75 @@ Navigator widget
       // Navigate to the $:/Export tiddler
       this.addToHistory([event.param])
     }
+  }
+
+  // Import IPFS JSON tiddlers into a pending import tiddler
+  NavigatorWidget.prototype.handleIpfsImportTiddlersEvent = function (event) {
+    // Get the added tiddlers
+    var addedTiddlers = []
+    try {
+      addedTiddlers = Array.from(event.param.merged.values())
+    } catch (e) {}
+    // Get the current $:/IpfsImport tiddler
+    var importTitle = event.importTitle ? event.importTitle : IPFS_IMPORT_TITLE
+    var importTiddler = this.wiki.getTiddler(importTitle)
+    var importData = this.wiki.getTiddlerData(importTitle, {})
+    var newFields = {
+      title: importTitle,
+      type: 'application/json',
+      'plugin-type': 'ipfs-import',
+      status: 'pending'
+    }
+    var addedIncomingTiddlers = []
+    // Process each tiddler
+    importData.tiddlers = importData.tiddlers || {}
+    $tw.utils.each(addedTiddlers, function (tiddlerFields) {
+      tiddlerFields.title = $tw.utils.trim(tiddlerFields.title)
+      var title = tiddlerFields.title
+      if (title) {
+        addedIncomingTiddlers.push(title)
+        importData.tiddlers[title] = tiddlerFields
+      }
+    })
+    // Give the active upgrader modules a chance to process the incoming tiddlers
+    var messages = this.wiki.invokeUpgraders(
+      addedIncomingTiddlers,
+      importData.tiddlers
+    )
+    $tw.utils.each(messages, function (message, title) {
+      newFields['message-' + title] = message
+    })
+    // Deselect any suppressed tiddlers
+    $tw.utils.each(importData.tiddlers, function (tiddler, title) {
+      if ($tw.utils.count(tiddler) === 0) {
+        newFields['selection-' + title] = 'unchecked'
+      }
+    })
+    // Save the $:/IpfsImport tiddler
+    newFields.text = JSON.stringify(
+      importData,
+      null,
+      $tw.config.preferences.jsonSpaces
+    )
+    this.wiki.addTiddler(new $tw.Tiddler(importTiddler, newFields))
+    // Update the story and history details
+    var autoOpenOnImport = event.autoOpenOnImport
+      ? event.autoOpenOnImport
+      : this.getVariable('tv-auto-open-on-import')
+    if (autoOpenOnImport !== 'no') {
+      var storyList = this.getStoryList()
+      var history = []
+      // Add it to the story
+      if (storyList && storyList.indexOf(importTitle) === -1) {
+        storyList.unshift(importTitle)
+      }
+      // And to history
+      history.push(importTitle)
+      // Save the updated story and history
+      this.saveStoryList(storyList)
+      this.addToHistory(history)
+    }
+    return false
   }
 
   // Import JSON tiddlers into a pending import tiddler
@@ -720,6 +806,43 @@ Navigator widget
 
   //
   NavigatorWidget.prototype.handlePerformImportEvent = function (event) {
+    var self = this
+    var importTiddler = this.wiki.getTiddler(event.param)
+    var importData = this.wiki.getTiddlerDataCached(event.param, {
+      tiddlers: {}
+    })
+    var importReport = []
+    // Add the tiddlers to the store
+    importReport.push($tw.language.getString('Import/Imported/Hint') + '\n')
+    $tw.utils.each(importData.tiddlers, function (tiddlerFields) {
+      var title = tiddlerFields.title
+      if (
+        title &&
+        importTiddler &&
+        importTiddler.fields['selection-' + title] !== 'unchecked'
+      ) {
+        var tiddler = new $tw.Tiddler(tiddlerFields)
+        tiddler = $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
+        self.wiki.addTiddler(tiddler)
+        importReport.push('# [[' + tiddlerFields.title + ']]')
+      }
+    })
+    // Replace the $:/Import tiddler with an import report
+    this.wiki.addTiddler(
+      new $tw.Tiddler({
+        title: event.param,
+        text: importReport.join('\n'),
+        status: 'complete'
+      })
+    )
+    // Navigate to the $:/Import tiddler
+    this.addToHistory([event.param])
+    // Trigger an autosave
+    $tw.rootWidget.dispatchEvent({ type: 'tm-auto-save-wiki' })
+  }
+
+  //
+  NavigatorWidget.prototype.handlePerformIpfsImportEvent = function (event) {
     var self = this
     var importTiddler = this.wiki.getTiddler(event.param)
     var importData = this.wiki.getTiddlerDataCached(event.param, {

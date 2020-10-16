@@ -1,6 +1,6 @@
-title: $:/core/ui/ExportPreviews/Text
-modified: 20201009094915385
-tags: $:/tags/ExportPreview $:/ipfs/core
+title: $:/core/ui/IpfsExportPreviews/Text
+modified: 20201016094915385
+tags: $:/tags/IpfsExportPreview $:/ipfs/core
 caption: {{$:/language/Import/Listing/Preview/Text}}
 
 <$transclude tiddler=<<currentTiddler>> subtiddler=<<payloadTiddler>> mode="block"/>

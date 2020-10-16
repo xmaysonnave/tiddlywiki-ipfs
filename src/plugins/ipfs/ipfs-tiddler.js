@@ -361,10 +361,25 @@ IPFS Tiddler
     // Import
     if (canonicalUri !== null || importUri !== null) {
       var ipfsImport = new IpfsImport()
-      ipfsImport.import(canonicalUri, importUri, tiddler).catch(error => {
-        $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(name, error.message)
-      })
+      ipfsImport
+        .import(canonicalUri, importUri, tiddler)
+        .then(data => {
+          if (data) {
+            const navigator = $tw.utils.locateNavigatorWidget(
+              $tw.pageWidgetNode
+            )
+            if (navigator) {
+              navigator.dispatchEvent({
+                type: 'tm-ipfs-import-tiddlers',
+                param: data
+              })
+            }
+          }
+        })
+        .catch(error => {
+          $tw.ipfs.getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+        })
       return true
     }
     // Refresh
