@@ -766,11 +766,13 @@ var _boot = function ($tw) {
     var promptInfo = {
       serviceName: options.serviceName,
       callback: options.callback,
-      form: form
+      form: form,
+      owner: this
     }
     this.passwordPrompts.push(promptInfo)
     // Make sure the wrapper is displayed
     this.setWrapperDisplay()
+    return promptInfo
   }
 
   $tw.utils.PasswordPrompt.prototype.removePrompt = function (promptInfo) {
@@ -835,13 +837,24 @@ var _boot = function ($tw) {
       currentPassword = null
       if ($tw.wiki) {
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
-        if (encryption.fields.text !== 'ethereum') {
-          $tw.wiki.addTiddler(
-            new $tw.Tiddler({
-              title: '$:/config/encryption',
-              text: 'ethereum'
-            })
-          )
+        if (currentPublicKey !== null) {
+          if (encryption.fields.text !== 'ethereum') {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/config/encryption',
+                text: 'ethereum'
+              })
+            )
+          }
+        } else {
+          if (encryption.fields.text !== 'standford') {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/config/encryption',
+                text: 'standford'
+              })
+            )
+          }
         }
         this.updateCryptoStateTiddler()
       }
@@ -3073,8 +3086,7 @@ var _boot = function ($tw) {
   /**
    * Startup TiddlyWiki
    */
-  $tw.boot.startup = function (options) {
-    options = options || {}
+  $tw.boot.initStartup = function (options) {
     // Get the URL hash and check for safe mode
     $tw.locationHash = '#'
     if ($tw.browser && !$tw.node) {
@@ -3266,6 +3278,9 @@ var _boot = function ($tw) {
         return result
       }
     }
+  }
+
+  $tw.boot.loadStartup = function (options) {
     // Load tiddlers
     if ($tw.boot.tasks.readBrowserTiddlers) {
       $tw.loadTiddlersBrowser()
@@ -3278,6 +3293,9 @@ var _boot = function ($tw) {
     }
     // Give hooks a chance to modify the store
     $tw.hooks.invokeHook('th-boot-tiddlers-loaded')
+  }
+
+  $tw.boot.execStartup = function (options) {
     // Unpack plugin tiddlers
     $tw.wiki.readPluginInfo()
     $tw.wiki.registerPluginTiddlers(
@@ -3305,6 +3323,16 @@ var _boot = function ($tw) {
     $tw.boot.disabledStartupModules = $tw.boot.disabledStartupModules || []
     // Repeatedly execute the next eligible task
     $tw.boot.executeNextStartupTask(options.callback)
+  }
+  /**
+   * Startup TiddlyWiki
+   */
+  $tw.boot.startup = function (options) {
+    options = options || {}
+    // Get the URL hash and check for safe mode
+    $tw.boot.initStartup(options)
+    $tw.boot.loadStartup(options)
+    $tw.boot.execStartup(options)
   }
 
   /**
