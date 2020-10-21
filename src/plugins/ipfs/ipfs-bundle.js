@@ -618,24 +618,26 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.convertCidToBase58CidV0 = function (cid, log) {
-    var cidv0 = new CID(cid)
-    if (cidv0.version === 1) {
-      const converted = new CID(0, dagPb, cidv0.multihash, 'base58btc')
+    cid = new CID(cid)
+    const { codec: cidCodec } = cid.toJSON()
+    if (cid.version === 1) {
+      const converted = new CID(0, dagPb, cid.multihash, 'base58btc')
       // Log
       if (log) {
+        const { codec: convertedCodec } = converted.toJSON()
         this.getLogger().info(
           `Converted:
- '${cidv0.codec}' "cidv1" (${cidv0.multibaseName}): ${cidAnalyser}${cidv0}
- to '${converted.codec}' "cidv0" (${converted.multibaseName}): ${cidAnalyser}${converted}`
+ '${cidCodec}' "cidv1" (${cid.multibaseName}): ${cidAnalyser}${cid}
+ to '${convertedCodec}' "cidv0" (base58btc): ${cidAnalyser}${converted}`
         )
       }
       return converted
     }
     // Convert
-    if (cidv0.codec !== dagPb || cidv0.multibaseName !== 'base58btc') {
-      cidv0 = this.convertCidToCid(cid, 0, dagPb, 'base58btc', log)
+    if (cidCodec !== dagPb || cid.multibaseName !== 'base58btc') {
+      cid = this.convertCidToCid(cid, 0, dagPb, 'base58btc', log)
     }
-    return cidv0
+    return cid
   }
 
   IpfsBundle.prototype.cidToCidV1 = function (cid, protocol, log) {
@@ -643,31 +645,32 @@ import IpfsUrl from './ipfs-url'
   }
 
   IpfsBundle.prototype.convertCidToCidV1 = function (cid, protocol, log) {
-    var cidv1 = new CID(cid)
+    cid = new CID(cid)
+    const { codec: cidCodec } = cid.toJSON()
     var codec =
       protocol !== undefined && protocol !== null
         ? protocol === 'ipns'
           ? libp2pKey
           : dagPb
         : dagPb
-    var multibasename = codec === libp2pKey ? 'base36' : 'base32'
-    // Convert cidv0
-    if (cidv1.version === 0) {
-      const converted = new CID(1, codec, cidv1.multihash, multibasename)
+    var multibaseName = codec === libp2pKey ? 'base36' : 'base32'
+    // Convert
+    if (cid.version === 0) {
+      const converted = new CID(1, codec, cid.multihash, multibaseName)
       if (log) {
         this.getLogger().info(
           `Converted:
- '${cidv1.codec}' "cidv0" (${cidv1.multibaseName}): ${cidAnalyser}${cidv1}
- to '${converted.codec}' "cidv1" (${converted.multibaseName}): ${cidAnalyser}${converted}`
+ '${cidCodec}' "cidv0" (${cid.multibaseName}): ${cidAnalyser}${cid}
+ to '${codec}' "cidv1" (${multibaseName}): ${cidAnalyser}${converted}`
         )
       }
       return converted
     }
     // Convert
-    if (cidv1.codec !== codec || cidv1.multibaseName !== multibasename) {
-      cidv1 = this.convertCidToCid(cid, 1, codec, multibasename, log)
+    if (cidCodec !== codec || cid.multibaseName !== multibaseName) {
+      cid = this.convertCidToCid(cid, 1, codec, multibaseName, log)
     }
-    return cidv1
+    return cid
   }
 
   IpfsBundle.prototype.cidToLibp2pKeyCidV1 = function (
@@ -692,19 +695,24 @@ import IpfsUrl from './ipfs-url'
     log
   ) {
     cid = new CID(cid)
+    const { codec: cidCodec, version: cidVersion } = cid.toJSON()
     if (
       cid.version === version &&
-      cid.codec === codec &&
+      cidCodec === codec &&
       cid.multibaseName === multibaseName
     ) {
       return cid
     }
     const converted = new CID(version, codec, cid.multihash, multibaseName)
     if (log) {
+      const {
+        codec: convertedCodec,
+        version: convertedVersion
+      } = converted.toJSON()
       this.getLogger().info(
         `Converted:
-'${cid.codec}' "cidv${cid.version}" (${cid.multibaseName}): ${cidAnalyser}${cid}
-to '${codec}' "cidv${converted.version}" (${multibaseName}): ${cidAnalyser}${converted}`
+'${cidCodec}' "cidv${cidVersion}" (${cid.multibaseName}): ${cidAnalyser}${cid}
+to '${convertedCodec}' "cidv${convertedVersion}" (${multibaseName}): ${cidAnalyser}${converted}`
       )
     }
     return converted
