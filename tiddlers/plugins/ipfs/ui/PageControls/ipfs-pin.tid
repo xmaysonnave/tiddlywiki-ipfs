@@ -1,5 +1,4 @@
 title: $:/core/ui/Buttons/ipfs/pin
-modified: 20200528094915385
 tags: $:/ipfs/core $:/tags/PageControls
 caption: {{$:/core/images/chevron-up}} {{$:/language/Buttons/Ipfs/Pin/Caption}}
 description: {{$:/language/Buttons/Ipfs/Pin/Hint}}

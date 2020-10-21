@@ -1,5 +1,4 @@
 title: $:/core/ui/EditTemplate/body
-modified: 20200804094915385
 tags: $:/ipfs/core $:/tags/EditTemplate
 
 \define lingo-base() $:/language/EditTemplate/Body/

@@ -1,5 +1,4 @@
 title: $:/core/ui/ControlPanel/Saving/General
-modified: 20200804094915385
 tags: $:/ipfs/core $:/tags/ControlPanel/Saving
 caption: {{$:/language/ControlPanel/Saving/General/Caption}}
 list-before:

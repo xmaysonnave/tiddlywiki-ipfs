@@ -1,5 +1,4 @@
 title: $:/core/ui/Buttons/ipfs/refresh
-modified: 20200528094915385
 tags: $:/ipfs/core $:/tags/ViewToolbar
 caption: {{$:/core/images/refresh-button}} {{$:/language/Buttons/Ipfs/Refresh/Caption}}
 description: {{$:/language/Buttons/Ipfs/Refresh/Hint}}

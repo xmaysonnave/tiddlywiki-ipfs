@@ -668,10 +668,10 @@ Navigator widget
 
   // Import IPFS JSON tiddlers into a pending import tiddler
   NavigatorWidget.prototype.handleIpfsImportTiddlersEvent = function (event) {
-    // Get the added tiddlers
-    var addedTiddlers = []
+    // Get the merged tiddlers
+    var tiddlers = []
     try {
-      addedTiddlers = Array.from(event.param.merged.values())
+      tiddlers = Array.from(event.param.merged.values())
     } catch (e) {}
     // Get the current $:/IpfsImport tiddler
     var importTitle = event.importTitle ? event.importTitle : IPFS_IMPORT_TITLE
@@ -683,20 +683,20 @@ Navigator widget
       'plugin-type': 'ipfs-import',
       status: 'pending'
     }
-    var addedIncomingTiddlers = []
+    var incomingTiddlers = []
     // Process each tiddler
     importData.tiddlers = importData.tiddlers || {}
-    $tw.utils.each(addedTiddlers, function (tiddlerFields) {
+    $tw.utils.each(tiddlers, function (tiddlerFields) {
       tiddlerFields.title = $tw.utils.trim(tiddlerFields.title)
       var title = tiddlerFields.title
       if (title) {
-        addedIncomingTiddlers.push(title)
+        incomingTiddlers.push(title)
         importData.tiddlers[title] = tiddlerFields
       }
     })
     // Give the active upgrader modules a chance to process the incoming tiddlers
     var messages = this.wiki.invokeUpgraders(
-      addedIncomingTiddlers,
+      incomingTiddlers,
       importData.tiddlers
     )
     $tw.utils.each(messages, function (message, title) {

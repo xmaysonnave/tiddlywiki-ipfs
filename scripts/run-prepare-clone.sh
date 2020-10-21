@@ -13,7 +13,7 @@ cd ..
 # tw5-relink
 git clone https://github.com/flibbles/tw5-relink
 cd tw5-relink
-git checkout tags/v1.10.0
+git checkout tags/v1.10.1
 cd ..
 
 exit 0

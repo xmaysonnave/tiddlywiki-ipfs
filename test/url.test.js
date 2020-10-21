@@ -285,11 +285,15 @@ describe('Normalize URL', () => {
     const ipfsUrl = ipfsBundle.ipfsUrl
     ipfsUrl.getDocumentUrl = jest.fn()
     ipfsUrl.getDocumentUrl.mockReturnValueOnce(
-      new URL('http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/')
+      new URL(
+        'http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/'
+      )
     )
     const parsed = ipfsUrl.normalizeUrl(
       'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy',
-      new URL('http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/')
+      new URL(
+        'http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/'
+      )
     )
     expect(
       parsed.toString() ===

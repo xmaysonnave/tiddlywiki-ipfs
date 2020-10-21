@@ -1,5 +1,4 @@
 title: $:/core/ui/Buttons/ipfs/console/mobile
-modified: 20200528094915385
 tags: $:/ipfs/core  $:/tags/PageControls
 caption: {{$:/core/images/preview-open}} {{$:/language/Buttons/Console/Mobile/Caption}}
 description: {{$:/language/Buttons/Console/Mobile/Hint}}

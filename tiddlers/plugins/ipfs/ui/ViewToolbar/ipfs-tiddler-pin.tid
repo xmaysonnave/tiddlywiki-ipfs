@@ -1,5 +1,4 @@
 title: $:/core/ui/Buttons/ipfs/tiddler/pin
-modified: 20200528094915385
 tags: $:/ipfs/core $:/tags/ViewToolbar
 caption: {{$:/core/images/chevron-up}} {{$:/language/Buttons/Ipfs/Tiddler/Pin/Caption}}
 description: {{$:/language/Buttons/Ipfs/Tiddler/Pin/Hint}}

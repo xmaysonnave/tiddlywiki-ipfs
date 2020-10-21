@@ -1,5 +1,5 @@
 title: $:/core/ui/IpfsImportListing
-modified: 20201016094915385
+tags: :/ipfs/core
 
 \define lingo-base() $:/language/Import/
 
@@ -25,9 +25,7 @@ $(currentTiddler)$!!popup-$(payloadTiddler)$
 <tbody>
 <tr>
 <th>
-<$checkbox tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<select-all-actions>>>
-<<lingo Listing/Select/Caption>>
-</$checkbox>
+<$checkbox title={{$:/language/Import/Listing/Import/Caption}} tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<select-all-actions>>/>
 </th>
 <th>
 <<lingo Listing/Title/Caption>>
