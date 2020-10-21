@@ -195,13 +195,11 @@ IPFS Import
       tiddler.fields.title,
       tiddler.fields.type
     )
-    const self = this
     this.loaded = new Map()
     this.notLoaded = []
     this.isEmpty = []
     this.resolved = new Map()
     this.notResolved = []
-    this.deleted = []
     this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
@@ -238,34 +236,54 @@ IPFS Import
         var rootUri = importUri !== null ? importUri : canonicalUri
         this.importTiddlers(rootUri)
         // Deleted
-        $tw.wiki.forEachTiddler({ includeSystem: true }, function (
-          title,
-          tiddler
-        ) {
-          var value = tiddler.getFieldString('_canonical_uri')
+        var deleted = null
+        var deletedFilter = ''
+        var titles = $tw.wiki.getTiddlers({ includeSystem: true })
+        for (var i = 0; i < titles.length; i++) {
+          const current = $tw.wiki.getTiddler(titles[i])
+          var { key } = await this.getKey(
+            current.getFieldString('_canonical_uri'),
+            rootUri
+          )
           if (
-            value !== undefined &&
-            value !== null &&
-            value === rootUri &&
-            self.merged.get(title) === undefined &&
-            self.deleted.indexOf(title) === -1
+            key === rootUri &&
+            this.merged.get(current.fields.title) === undefined &&
+            deletedFilter.includes(`[[${current.fields.title}]]`) === false
           ) {
-            self.deleted.push(title)
+            deletedFilter = `${deletedFilter} [[${current.fields.title}]]`
           }
-          value = tiddler.getFieldString('_import_uri')
+          var { key } = await this.getKey(
+            current.getFieldString('_import_uri'),
+            rootUri
+          )
           if (
-            value !== undefined &&
-            value !== null &&
-            value === rootUri &&
-            self.merged.get(title) === undefined &&
-            self.deleted.indexOf(title) === -1
+            key === rootUri &&
+            this.merged.get(current).fields.title === undefined &&
+            deletedFilter.includes(`[[${current.fields.title}]]`) === false
           ) {
-            self.deleted.push(title)
+            deletedFilter = `${deletedFilter} [[${current.fields.title}]]`
           }
-        })
+        }
+        if (deletedFilter.trim() !== '') {
+          const contentType = 'text/raw'
+          const options = {
+            downloadType: contentType,
+            method: 'download',
+            template: '$:/core/templates/exporters/JsonFile',
+            variables: {
+              exportFilter: deletedFilter
+            }
+          }
+          deleted = $tw.wiki.renderTiddler(
+            contentType,
+            '$:/core/templates/exporters/JsonFile',
+            options
+          )
+          deleted = JSON.parse(deleted)
+        }
         return {
           merged: this.merged,
-          deleted: this.deleted,
+          deleted: deleted,
           loaded: this.loaded,
           isEmpty: this.isEmpty,
           notLoaded: this.notLoaded,
@@ -281,7 +299,6 @@ IPFS Import
     this.notLoaded = null
     this.resolved = null
     this.notResolved = null
-    this.deleted = null
     this.merged = null
   }
 
