@@ -76,6 +76,9 @@ IPFS Action
 
   IpfsAction.prototype.handleExportToIpfs = async function (event, child) {
     var target = $tw.wiki.getTiddler(event.tiddlerTitle)
+    if (target === undefined) {
+      return false
+    }
     // Retrieve content
     const content = await this.exportTiddler(target, child)
     // Check
@@ -88,6 +91,9 @@ IPFS Action
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
     const title = event.tiddlerTitle
     var tiddler = $tw.wiki.getTiddler(title)
+    if (tiddler === undefined) {
+      return false
+    }
     var added = null
     // Do not process if _canonical_uri is set and the text field is empty
     const canonicalUri = tiddler.getFieldString('_canonical_uri')

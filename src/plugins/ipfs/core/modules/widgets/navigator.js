@@ -668,10 +668,15 @@ Navigator widget
 
   // Import IPFS JSON tiddlers into a pending import tiddler
   NavigatorWidget.prototype.handleIpfsImportTiddlersEvent = function (event) {
-    // Get the merged tiddlers
+    // Get the new or updated tiddlers
     var tiddlers = []
     try {
       tiddlers = Array.from(event.param.merged.values())
+    } catch (e) {}
+    // Get the deleted tiddlers
+    var deleted = []
+    try {
+      deleted = Array.from(event.param.deleted.values())
     } catch (e) {}
     // Get the current $:/IpfsImport tiddler
     var importTitle = event.importTitle ? event.importTitle : IPFS_IMPORT_TITLE
@@ -684,7 +689,7 @@ Navigator widget
       status: 'pending'
     }
     var incomingTiddlers = []
-    // Process each tiddler
+    // Process each new or updated tiddler
     importData.tiddlers = importData.tiddlers || {}
     $tw.utils.each(tiddlers, function (tiddlerFields) {
       tiddlerFields.title = $tw.utils.trim(tiddlerFields.title)
@@ -692,6 +697,7 @@ Navigator widget
       if (title) {
         incomingTiddlers.push(title)
         importData.tiddlers[title] = tiddlerFields
+        newFields['import-' + title] = 'yes'
       }
     })
     // Give the active upgrader modules a chance to process the incoming tiddlers
@@ -705,7 +711,18 @@ Navigator widget
     // Deselect any suppressed tiddlers
     $tw.utils.each(importData.tiddlers, function (tiddler, title) {
       if ($tw.utils.count(tiddler) === 0) {
-        newFields['selection-' + title] = 'unchecked'
+        newFields['importSelection-' + title] = 'unchecked'
+      }
+    })
+    // Process each deleted tiddler
+    importData.tiddlers = importData.tiddlers || {}
+    $tw.utils.each(deleted, function (tiddlerFields) {
+      tiddlerFields.title = $tw.utils.trim(tiddlerFields.title)
+      var title = tiddlerFields.title
+      if (title) {
+        incomingTiddlers.push(title)
+        importData.tiddlers[title] = tiddlerFields
+        newFields['delete-' + title] = 'yes'
       }
     })
     // Save the $:/IpfsImport tiddler
@@ -856,7 +873,8 @@ Navigator widget
       if (
         title &&
         importTiddler &&
-        importTiddler.fields['selection-' + title] !== 'unchecked'
+        importTiddler.fields['import-' + title] === 'yes' &&
+        importTiddler.fields['importSelection-' + title] !== 'unchecked'
       ) {
         var tiddler = new $tw.Tiddler(tiddlerFields)
         tiddler = $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
@@ -864,7 +882,28 @@ Navigator widget
         importReport.push('# [[' + tiddlerFields.title + ']]')
       }
     })
-    // Replace the $:/Import tiddler with an import report
+    importReport.push('\n')
+    // Delete tiddlers from the store
+    importReport.push($tw.language.getString('Import/Deleted/Hint') + '\n')
+    $tw.utils.each(importData.tiddlers, function (tiddlerFields) {
+      var title = tiddlerFields.title
+      if (
+        title &&
+        importTiddler &&
+        importTiddler.fields['delete-' + title] === 'yes' &&
+        importTiddler.fields['deleteSelection-' + title] !== 'unchecked'
+      ) {
+        var tiddler = self.wiki.getTiddler(title)
+        if (tiddler) {
+          self.handleDeleteTiddlerEvent({ param: tiddlerFields.title })
+          tiddler = self.wiki.getTiddler(title)
+          if (tiddler === undefined) {
+            importReport.push('# [[' + tiddlerFields.title + ']]')
+          }
+        }
+      }
+    })
+    // Replace the $:/IpfsImport tiddler with an import report
     this.wiki.addTiddler(
       new $tw.Tiddler({
         title: event.param,
@@ -872,7 +911,7 @@ Navigator widget
         status: 'complete'
       })
     )
-    // Navigate to the $:/Import tiddler
+    // Navigate to the $:/IpfsImport tiddler
     this.addToHistory([event.param])
     // Trigger an autosave
     $tw.rootWidget.dispatchEvent({ type: 'tm-auto-save-wiki' })

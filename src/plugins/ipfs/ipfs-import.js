@@ -236,8 +236,7 @@ IPFS Import
         var rootUri = importUri !== null ? importUri : canonicalUri
         this.importTiddlers(rootUri)
         // Deleted
-        var deleted = null
-        var deletedFilter = ''
+        var deleted = new Map()
         var titles = $tw.wiki.getTiddlers({ includeSystem: true })
         for (var i = 0; i < titles.length; i++) {
           const current = $tw.wiki.getTiddler(titles[i])
@@ -248,9 +247,12 @@ IPFS Import
           if (
             key === rootUri &&
             this.merged.get(current.fields.title) === undefined &&
-            deletedFilter.includes(`[[${current.fields.title}]]`) === false
+            deleted.get(current.fields.title) === undefined
           ) {
-            deletedFilter = `${deletedFilter} [[${current.fields.title}]]`
+            const object = this.getObject(`[[${current.fields.title}]]`)
+            if (object !== null) {
+              deleted.set(current.fields.title, object)
+            }
           }
           var { key } = await this.getKey(
             current.getFieldString('_import_uri'),
@@ -259,27 +261,13 @@ IPFS Import
           if (
             key === rootUri &&
             this.merged.get(current).fields.title === undefined &&
-            deletedFilter.includes(`[[${current.fields.title}]]`) === false
+            deleted.get(current.fields.title) === undefined
           ) {
-            deletedFilter = `${deletedFilter} [[${current.fields.title}]]`
-          }
-        }
-        if (deletedFilter.trim() !== '') {
-          const contentType = 'text/raw'
-          const options = {
-            downloadType: contentType,
-            method: 'download',
-            template: '$:/core/templates/exporters/JsonFile',
-            variables: {
-              exportFilter: deletedFilter
+            const object = this.getObject(`[[${current.fields.title}]]`)
+            if (object !== null) {
+              deleted.set(current.fields.title, object)
             }
           }
-          deleted = $tw.wiki.renderTiddler(
-            contentType,
-            '$:/core/templates/exporters/JsonFile',
-            options
-          )
-          deleted = JSON.parse(deleted)
         }
         return {
           merged: this.merged,
@@ -300,6 +288,30 @@ IPFS Import
     this.resolved = null
     this.notResolved = null
     this.merged = null
+  }
+
+  IpfsImport.prototype.getObject = function (filter) {
+    if (filter === undefined || filter == null || filter.trim() === '') {
+      return null
+    }
+    const contentType = 'text/raw'
+    const options = {
+      downloadType: contentType,
+      method: 'download',
+      template: '$:/core/templates/exporters/JsonFile',
+      variables: {
+        exportFilter: filter
+      }
+    }
+    const deleted = $tw.wiki.renderTiddler(
+      contentType,
+      '$:/core/templates/exporters/JsonFile',
+      options
+    )
+    if (deleted !== undefined && deleted !== null && deleted.length > 0) {
+      return JSON.parse(deleted)[0]
+    }
+    return null
   }
 
   IpfsImport.prototype.load = async function (

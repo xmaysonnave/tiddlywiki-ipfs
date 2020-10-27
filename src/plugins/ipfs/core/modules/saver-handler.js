@@ -218,15 +218,18 @@ The saver handler tracks changes to the store and handles saving the entire wiki
           ? null
           : title.trim()
       if (title !== null) {
-        var saver = this.getSaver(title)
-        if (saver !== null && saver.module !== undefined) {
-          if (
-            await this.save(saver.module, method, variables, text, callback)
-          ) {
-            return true
-          }
-        }
         ignorePreferred = title
+        if (
+          await this.save(
+            this.getSaver(title).module,
+            method,
+            variables,
+            text,
+            callback
+          )
+        ) {
+          return true
+        }
       }
     }
 

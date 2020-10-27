@@ -183,9 +183,9 @@ Render this widget into the DOM
     }
   }
 
-  /*
-Compute the internal state of the widget
-*/
+  /**
+   * Compute the internal state of the widget
+   */
   CheckboxWidget.prototype.execute = function () {
     // Get the parameters from the attributes
     this.checkboxActions = this.getAttribute('actions')
@@ -208,9 +208,9 @@ Compute the internal state of the widget
     this.makeChildWidgets()
   }
 
-  /*
-Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
-*/
+  /**
+   * Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
+   */
   CheckboxWidget.prototype.refresh = function (changedTiddlers) {
     var changedAttributes = this.computeAttributes()
     if (

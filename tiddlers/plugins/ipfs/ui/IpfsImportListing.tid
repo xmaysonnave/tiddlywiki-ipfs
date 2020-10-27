@@ -7,17 +7,35 @@ tags: :/ipfs/core
 message-$(payloadTiddler)$
 \end
 
-\define selectionField()
-selection-$(payloadTiddler)$
+\define importSelectionField()
+importSelection-$(payloadTiddler)$
+\end
+
+\define deleteSelectionField()
+deleteSelection-$(payloadTiddler)$
 \end
 
 \define previewPopupState()
 $(currentTiddler)$!!popup-$(payloadTiddler)$
 \end
 
+\define importState()
+$(currentTiddler)$!!import-$(payloadTiddler)$
+\end
+
+\define deleteState()
+$(currentTiddler)$!!delete-$(payloadTiddler)$
+\end
+
 \define select-all-actions()
 <$list filter="[all[current]plugintiddlers[]sort[title]]" variable="payloadTiddler">
-<$action-setfield $field={{{ [<payloadTiddler>addprefix[selection-]] }}} $value={{$:/state/import/select-all}}/>
+<$action-setfield $field={{{ [<payloadTiddler>addprefix[importSelection-]] }}} $value={{$:/state/import/select-all}}/>
+</$list>
+\end
+
+\define delete-all-actions()
+<$list filter="[all[current]plugintiddlers[]sort[title]]" variable="payloadTiddler">
+<$action-setfield $field={{{ [<payloadTiddler>addprefix[deleteSelection-]] }}} $value={{$:/state/import/delete-all}}/>
 </$list>
 \end
 
@@ -26,6 +44,9 @@ $(currentTiddler)$!!popup-$(payloadTiddler)$
 <tr>
 <th>
 <$checkbox title={{$:/language/Import/Listing/Import/Caption}} tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<select-all-actions>>/>
+</th>
+<th>
+<$checkbox title={{$:/language/Import/Listing/Delete/Caption}} tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<delete-all-actions>>/>
 </th>
 <th>
 <<lingo Listing/Title/Caption>>
@@ -37,7 +58,14 @@ $(currentTiddler)$!!popup-$(payloadTiddler)$
 <$list filter="[all[current]plugintiddlers[]sort[title]]" variable="payloadTiddler">
 <tr>
 <td>
-<$checkbox field=<<selectionField>> checked="checked" unchecked="unchecked" default="checked"/>
+<$reveal type="match" state=<<importState>> text="yes" tag="div">
+<$checkbox field=<<importSelectionField>> checked="checked" unchecked="unchecked" default="checked"/>
+</$reveal>
+</td>
+<td>
+<$reveal type="match" state=<<deleteState>> text="yes" tag="div">
+<$checkbox field=<<deleteSelectionField>> checked="checked" unchecked="unchecked" default="checked"/>
+</$reveal>
 </td>
 <td>
 <$reveal type="nomatch" state=<<previewPopupState>> text="yes" tag="div">
@@ -56,7 +84,7 @@ $(currentTiddler)$!!popup-$(payloadTiddler)$
 </td>
 </tr>
 <tr>
-<td colspan="3">
+<td colspan="4">
 <$reveal type="match" text="yes" state=<<previewPopupState>> tag="div">
 <$list filter="[{$:/state/ipfsimportpreviewtype}has[text]]" variable="listItem" emptyMessage={{$:/core/ui/ImportPreviews/Text}}>
 <$transclude tiddler={{$:/state/ipfsimportpreviewtype}}/>

@@ -144,6 +144,9 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleIpfsPin = function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
+    if (tiddler === undefined) {
+      return false
+    }
     if (event.param !== undefined && event.param !== null) {
       // Tiddler
       for (var field in tiddler.fields) {
@@ -202,6 +205,9 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
+    if (tiddler === undefined) {
+      return false
+    }
     const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
     if (event.param !== undefined && event.param !== null) {
       // Tiddler
@@ -337,6 +343,9 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
+    if (tiddler === undefined) {
+      return false
+    }
     var canonicalUri = tiddler.getFieldString('_canonical_uri')
     canonicalUri =
       canonicalUri === undefined ||
