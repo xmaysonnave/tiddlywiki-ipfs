@@ -19,7 +19,7 @@ IPFS Default
     var output = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/export')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -48,7 +48,7 @@ IPFS Default
     var protocol = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/protocol')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -77,7 +77,7 @@ IPFS Default
     var api = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/api')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -89,7 +89,7 @@ IPFS Default
     if (api !== null) {
       tiddler = $tw.wiki.getTiddler(api)
       if (tiddler !== undefined && tiddler !== null) {
-        var text = tiddler.getFieldString('text')
+        var text = tiddler.fields.text
         text =
           text === undefined || text == null || text.trim() === ''
             ? null
@@ -112,7 +112,7 @@ IPFS Default
     var gateway = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/gateway')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -124,7 +124,7 @@ IPFS Default
     if (gateway !== null) {
       tiddler = $tw.wiki.getTiddler(gateway)
       if (tiddler !== undefined && tiddler !== null) {
-        var text = tiddler.getFieldString('text')
+        var text = tiddler.fields.text
         text =
           text === undefined || text == null || text.trim() === ''
             ? null
@@ -147,7 +147,7 @@ IPFS Default
     var ensDomain = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ens/domain')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -166,7 +166,7 @@ IPFS Default
     var ipnsName = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/name')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -185,7 +185,7 @@ IPFS Default
     var ipnsKey = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/key')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -204,7 +204,7 @@ IPFS Default
     var verbose = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/verbose')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -228,7 +228,7 @@ IPFS Default
     var unpin = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/unpin')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -252,7 +252,7 @@ IPFS Default
     var policy = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/policy')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null
@@ -281,7 +281,7 @@ IPFS Default
     var provider = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/provider')
     if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.getFieldString('text')
+      var text = tiddler.fields.text
       text =
         text === undefined || text == null || text.trim() === ''
           ? null

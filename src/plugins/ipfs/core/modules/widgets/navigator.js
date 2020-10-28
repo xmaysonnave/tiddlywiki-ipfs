@@ -645,7 +645,7 @@ Navigator widget
     })
     var content = await $tw.utils.exportTiddlersAsJson(
       tiddlers,
-      target.getFieldString('_export_uri')
+      target.fields._export_uri
     )
     if (content) {
       content = await $tw.ipfs.processContent(target, content, 'utf8')

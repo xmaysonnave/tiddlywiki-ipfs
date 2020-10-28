@@ -115,7 +115,7 @@ IPFS utils
       title = object
     }
     if (object instanceof $tw.Tiddler) {
-      title = object.getFieldString('title')
+      title = object.fields.title
     }
     // Check
     if (title === undefined || title == null) {
@@ -239,7 +239,7 @@ IPFS utils
     var normalizedUrl = null
     var web3 = null
     const ipfsKeyword = 'ipfs'
-    var exportUri = target.getFieldString('_export_uri')
+    var exportUri = target.fields._export_uri
     try {
       var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(
         true,

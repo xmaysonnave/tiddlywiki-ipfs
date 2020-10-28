@@ -346,14 +346,14 @@ IPFS Tiddler
     if (tiddler === undefined) {
       return false
     }
-    var canonicalUri = tiddler.getFieldString('_canonical_uri')
+    var canonicalUri = tiddler.fields._canonical_uri
     canonicalUri =
       canonicalUri === undefined ||
       canonicalUri == null ||
       canonicalUri.trim() === ''
         ? null
         : canonicalUri.trim()
-    var importUri = tiddler.getFieldString('_import_uri')
+    var importUri = tiddler.fields._import_uri
     importUri =
       importUri === undefined || importUri == null || importUri.trim() === ''
         ? null
@@ -452,7 +452,7 @@ IPFS Tiddler
             ? null
             : oldResolvedUrl.toString().trim()
         if (oldResolvedUrl !== null && field === '_canonical_uri') {
-          var data = tiddler.getFieldString('text')
+          var data = tiddler.fields.text
           try {
             if (info.encoding === 'base64') {
               data = await $tw.ipfs.loadToBase64(oldResolvedUrl, password)

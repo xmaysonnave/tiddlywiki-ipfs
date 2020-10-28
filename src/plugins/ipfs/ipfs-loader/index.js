@@ -20,8 +20,8 @@
     if (globalThis[obj] === undefined) {
       const tiddler = $tw.wiki.getTiddler(title)
       if (tiddler) {
-        const sourceUri = tiddler.getFieldString('_source_uri')
-        const sourceSri = tiddler.getFieldString('_source_sri')
+        const sourceUri = tiddler.fields._source_uri
+        const sourceSri = tiddler.fields._source_sri
         const loaded = await this.loadLibrary(
           title,
           sourceUri,

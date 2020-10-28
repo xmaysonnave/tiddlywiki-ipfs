@@ -96,7 +96,7 @@ IPFS Action
     }
     var added = null
     // Do not process if _canonical_uri is set and the text field is empty
-    const canonicalUri = tiddler.getFieldString('_canonical_uri')
+    const canonicalUri = tiddler.fields._canonical_uri
     if (
       canonicalUri !== undefined &&
       canonicalUri !== null &&
@@ -141,7 +141,7 @@ IPFS Action
       tiddler.fields.title,
       tiddler.fields.type
     )
-    var content = tiddler.getFieldString('text')
+    var content = tiddler.fields.text
     if (content === undefined || content == null || content === '') {
       $tw.utils.alert(name, 'Empty attachment content...')
       return null
@@ -474,7 +474,7 @@ IPFS Action
       $tw.utils.alert(name, error.message)
       return null
     }
-    const title = target.getFieldString('title')
+    const title = target.fields.title
     // Filter
     var exportFilter = `[[${target.fields.title}]]`
     // Child filters
@@ -500,7 +500,7 @@ IPFS Action
     if (child || $tw.utils.getIpfsExport() === 'json') {
       content = await $tw.utils.exportTiddlersAsJson(
         $tw.wiki.filterTiddlers(exportFilter),
-        target.getFieldString('_export_uri')
+        target.fields._export_uri
       )
       if (content) {
         const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)

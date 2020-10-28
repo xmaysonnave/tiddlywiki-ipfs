@@ -241,7 +241,7 @@ IPFS Import
         for (var i = 0; i < titles.length; i++) {
           const current = $tw.wiki.getTiddler(titles[i])
           var { key } = await this.getKey(
-            current.getFieldString('_canonical_uri'),
+            current.fields._canonical_uri,
             rootUri
           )
           if (
@@ -255,7 +255,7 @@ IPFS Import
             }
           }
           var { key } = await this.getKey(
-            current.getFieldString('_import_uri'),
+            current.fields._import_uri,
             rootUri
           )
           if (
