@@ -249,10 +249,7 @@ IPFS Import
               ? null
               : canonicalUri.trim()
           if (canonicalUri !== null) {
-            var { key } = await this.getKey(
-              current.getFieldString('canonical_uri'),
-              rootUri
-            )
+            const { key } = await this.getKey(canonicalUri, rootUri)
             if (
               key === rootUri &&
               this.merged.get(title) === undefined &&
@@ -272,7 +269,7 @@ IPFS Import
               ? null
               : importUri.trim()
           if (importUri !== null) {
-            var { key } = await this.getKey(current.fields._import_uri, rootUri)
+            const { key } = await this.getKey(importUri, rootUri)
             if (
               key === rootUri &&
               this.merged.get(title) === undefined &&

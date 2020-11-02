@@ -138,7 +138,9 @@ var _boot = function ($tw) {
    * Iterate through all the own properties of an object or array. Callback is invoked with (element,title,object)
    */
   $tw.utils.each = function (object, callback) {
-    var next, f, length
+    var next
+    var f
+    var length
     if (object) {
       if (Object.prototype.toString.call(object) === '[object Array]') {
         for (f = 0, length = object.length; f < length; f++) {

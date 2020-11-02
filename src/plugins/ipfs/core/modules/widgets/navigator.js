@@ -822,7 +822,7 @@ Navigator widget
   }
 
   //
-  NavigatorWidget.prototype.handlePerformImportEvent = function (event) {
+  NavigatorWidget.prototype.handlePerformImportEvent = async function (event) {
     var self = this
     var importTiddler = this.wiki.getTiddler(event.param)
     var importData = this.wiki.getTiddlerDataCached(event.param, {
@@ -876,9 +876,10 @@ Navigator widget
         importTiddler.fields['import-' + title] === 'yes' &&
         importTiddler.fields['importSelection-' + title] !== 'unchecked'
       ) {
-        var tiddler = new $tw.Tiddler(tiddlerFields)
-        tiddler = $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
-        self.wiki.addTiddler(tiddler)
+        $tw.hooks.invokeHook(
+          'th-importing-tiddler',
+          new $tw.Tiddler(tiddlerFields)
+        )
         importReport.push('# [[' + tiddlerFields.title + ']]')
       }
     })

@@ -563,13 +563,6 @@ IPFS Tiddler
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       }
-      // Process _canonical_uri
-      if (field === '_canonical_uri') {
-        updatedTiddler = $tw.utils.updateTiddler({
-          tiddler: updatedTiddler,
-          fields: [{ key: 'text', value: '' }]
-        })
-      }
       $tw.ipfs.requestToPin(cid, ipnsKey, normalizedUrl)
       $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl)
     }
