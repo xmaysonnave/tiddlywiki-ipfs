@@ -838,7 +838,13 @@ Navigator widget
         importTiddler &&
         importTiddler.fields['selection-' + title] !== 'unchecked'
       ) {
-        var tiddler = new $tw.Tiddler(tiddlerFields)
+        if ($tw.utils.hop(importTiddler.fields, ['rename-' + title])) {
+          var tiddler = new $tw.Tiddler(tiddlerFields, {
+            title: importTiddler.fields['rename-' + title]
+          })
+        } else {
+          var tiddler = new $tw.Tiddler(tiddlerFields)
+        }
         tiddler = $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
         self.wiki.addTiddler(tiddler)
         importReport.push('# [[' + tiddlerFields.title + ']]')
@@ -876,10 +882,14 @@ Navigator widget
         importTiddler.fields['import-' + title] === 'yes' &&
         importTiddler.fields['importSelection-' + title] !== 'unchecked'
       ) {
-        $tw.hooks.invokeHook(
-          'th-importing-tiddler',
-          new $tw.Tiddler(tiddlerFields)
-        )
+        if ($tw.utils.hop(importTiddler.fields, ['rename-' + title])) {
+          var tiddler = new $tw.Tiddler(tiddlerFields, {
+            title: importTiddler.fields['rename-' + title]
+          })
+        } else {
+          var tiddler = new $tw.Tiddler(tiddlerFields)
+        }
+        $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
         importReport.push('# [[' + tiddlerFields.title + ']]')
       }
     })
