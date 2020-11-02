@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-201102330",
+  "version": "v0.3.0-201102332",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -99,7 +99,7 @@
   },
   "engines": {
     "node": ">=14.15.0",
-    "yarn": ">=1.22.10"
+    "yarn": ">=1.22.5"
   },
   "os": [
     "!darwin",
