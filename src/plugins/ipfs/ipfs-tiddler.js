@@ -75,8 +75,8 @@ IPFS Tiddler
     $tw.hooks.addHook('th-deleting-tiddler', async function (tiddler) {
       return await self.handleDeleteTiddler(tiddler)
     })
-    $tw.hooks.addHook('th-importing-tiddler', function (tiddler) {
-      return self.handleFileImport(tiddler)
+    $tw.hooks.addHook('th-importing-tiddler', async function (tiddler) {
+      return await self.handleFileImport(tiddler)
     })
     $tw.hooks.addHook('th-saving-tiddler', async function (tiddler) {
       return await self.handleSaveTiddler(tiddler)
@@ -324,20 +324,10 @@ IPFS Tiddler
     return tiddler
   }
 
-  IpfsTiddler.prototype.handleFileImport = function (tiddler) {
-    // Update tiddler
-    const addition = $tw.wiki.getModificationFields()
-    addition.title = tiddler.fields.title
-    addition.tags = (tiddler.fields.tags || []).slice(0)
-    // Add isAttachment tag
-    if (addition.tags.indexOf('$:/isAttachment') === -1) {
-      $tw.utils.pushTop(addition.tags, '$:/isAttachment')
-    }
-    // Add isEmbedded tag
-    if (addition.tags.indexOf('$:/isEmbedded') === -1) {
-      $tw.utils.pushTop(addition.tags, '$:/isEmbedded')
-    }
-    return new $tw.Tiddler(tiddler, addition)
+  IpfsTiddler.prototype.handleFileImport = async function (tiddler) {
+    const updatedTiddler = await this.updateIpfsTags(tiddler)
+    $tw.wiki.addTiddler(updatedTiddler)
+    return updatedTiddler
   }
 
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
@@ -400,7 +390,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
-    const { type, info } = $tw.utils.getContentType(
+    const { info } = $tw.utils.getContentType(
       tiddler.fields.title,
       tiddler.fields.type
     )
@@ -477,13 +467,37 @@ IPFS Tiddler
         $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl)
       }
     }
+    // Process new and updated fields
+    updatedTiddler = await this.updateIpfsTags(
+      tiddler,
+      oldTiddler,
+      updatedTiddler
+    )
+    // Update
+    $tw.wiki.addTiddler(updatedTiddler)
+    return updatedTiddler
+  }
+
+  IpfsTiddler.prototype.updateIpfsTags = async function (
+    tiddler,
+    oldTiddler,
+    updatedTiddler
+  ) {
     var canonicalUri = null
     var exportUri = null
     var importUri = null
     var canonicalCid = null
     var exportCid = null
     var importCid = null
-    // Process new and updated fields
+    var updatedTiddler =
+      updatedTiddler === undefined || updatedTiddler == null
+        ? new $tw.Tiddler(tiddler)
+        : updatedTiddler
+    const { type, info } = $tw.utils.getContentType(
+      tiddler.fields.title,
+      tiddler.fields.type
+    )
+    // Process
     for (var field in tiddler.fields) {
       // Not a reserved keyword
       if (reservedFields.indexOf(field) !== -1) {
@@ -646,7 +660,6 @@ IPFS Tiddler
         removeTags: removeTags
       })
     }
-    $tw.wiki.addTiddler(updatedTiddler)
     return updatedTiddler
   }
 

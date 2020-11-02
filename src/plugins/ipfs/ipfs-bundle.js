@@ -387,6 +387,7 @@ import IpfsUrl from './ipfs-url'
       throw new Error('Unable to decode CID. "URL" or "string" expected...')
     }
     var cid = null
+    var hostname = null
     var ipnsIdentifier = null
     var protocol = null
     var url = null
@@ -400,15 +401,18 @@ import IpfsUrl from './ipfs-url'
       url = decode
     }
     if (url !== null) {
-      var { cid, ipnsIdentifier, protocol } = this.decodeUrlCid(url)
+      var { cid, hostname, ipnsIdentifier, protocol } = this.decodeUrlCid(url)
     } else {
-      var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(decode)
+      var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostnameCid(
+        decode
+      )
       if (protocol == null && cid == null && ipnsIdentifier == null) {
         var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(decode)
       }
     }
     return {
       cid: cid,
+      hostname: hostname,
       ipnsIdentifier: ipnsIdentifier,
       protocol: protocol
     }
@@ -419,6 +423,7 @@ import IpfsUrl from './ipfs-url'
     if (url === undefined || url == null) {
       return {
         cid: null,
+        hostname: null,
         ipnsIdentifier: null,
         protocol: null
       }
@@ -427,6 +432,7 @@ import IpfsUrl from './ipfs-url'
       throw new Error('Unable to decode CID. "URL" expected...')
     }
     var cid = null
+    var hostname = null
     var ipnsIdentifier = null
     var protocol = null
     if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
@@ -445,11 +451,14 @@ import IpfsUrl from './ipfs-url'
       }
       return {
         cid: cid,
+        hostname: null,
         ipnsIdentifier: ipnsIdentifier,
         protocol: protocol
       }
     }
-    var { cid, ipnsIdentifier, protocol } = this.decodeHostnameCid(url.hostname)
+    var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostnameCid(
+      url.hostname
+    )
     if (protocol == null && cid == null && ipnsIdentifier == null) {
       var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(
         url.pathname
@@ -457,6 +466,7 @@ import IpfsUrl from './ipfs-url'
     }
     return {
       cid: cid,
+      hostname: hostname,
       ipnsIdentifier: ipnsIdentifier,
       protocol: protocol
     }
@@ -533,29 +543,32 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
-  IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
-    if (hostname === undefined || hostname == null) {
+  IpfsBundle.prototype.decodeHostnameCid = function (value) {
+    if (value === undefined || value == null) {
       return {
         cid: null,
+        hostname: null,
         ipnsIdentifier: null,
         protocol: null
       }
     }
-    if (typeof hostname !== 'string') {
+    if (typeof value !== 'string') {
       throw new Error('Unable to decode CID. "string" expected...')
     }
-    hostname = hostname.trim() === '' ? null : hostname.trim()
-    if (hostname == null) {
+    value = value.trim() === '' ? null : value.trim()
+    if (value == null) {
       return {
         cid: null,
+        hostname: null,
         ipnsIdentifier: null,
         protocol: null
       }
     }
+    var hostname
     var identifier
     var protocol
     // Parse
-    const members = hostname.trim().split('.')
+    const members = value.trim().split('.')
     for (var i = 0; i < members.length; i++) {
       // Ignore
       if (members[i].trim() === '') {
@@ -569,10 +582,13 @@ import IpfsUrl from './ipfs-url'
       // Second non empty member
       if (!protocol) {
         protocol = members[i]
-        break
+        continue
       }
-      // Nothing to process
-      break
+      if (hostname) {
+        hostname = `${hostname}.${members[i]}`
+      } else {
+        hostname = members[i]
+      }
     }
     if (!protocol || !identifier) {
       return {
@@ -584,6 +600,7 @@ import IpfsUrl from './ipfs-url'
     if (protocol !== 'ipfs' && protocol !== 'ipns') {
       return {
         cid: null,
+        hostname: null,
         ipnsIdentifier: null,
         protocol: null
       }
@@ -599,6 +616,7 @@ import IpfsUrl from './ipfs-url'
     }
     return {
       cid: cid,
+      hostname: hostname,
       ipnsIdentifier: ipnsIdentifier,
       protocol: protocol
     }

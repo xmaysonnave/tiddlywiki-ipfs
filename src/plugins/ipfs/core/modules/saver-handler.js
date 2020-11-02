@@ -221,13 +221,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
         var saver = this.getSaver(title)
         if (saver !== null && saver.module !== undefined) {
           if (
-            await this.save(
-              saver.module,
-              method,
-              variables,
-              text,
-              callback
-            )
+            await this.save(saver.module, method, variables, text, callback)
           ) {
             return true
           }

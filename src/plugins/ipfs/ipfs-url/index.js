@@ -109,36 +109,14 @@
       return this.getIpfsBaseUrl()
     }
     // Parse
-    var hostname
-    var identifier
-    var protocol
-    const members = url.hostname.split('.')
-    for (var i = 0; i < members.length; i++) {
-      // Ignore
-      if (members[i].trim() === '') {
-        continue
-      }
-      // First non empty member
-      if (!identifier) {
-        identifier = members[i]
-        continue
-      }
-      // Second non empty member
-      if (!protocol) {
-        protocol = members[i]
-        continue
-      }
-      if (hostname) {
-        hostname = `${hostname}.${members[i]}`
-      } else {
-        hostname = members[i]
-      }
-    }
-    if (!protocol || !identifier) {
-      return base
+    var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.decodeCid(
+      value
+    )
+    if (!protocol || (!cid && !ipnsIdentifier)) {
+      return url
     }
     if (protocol !== 'ipfs' && protocol !== 'ipns') {
-      return base
+      return url
     }
     const host = url.port ? `${hostname}:${url.port}` : hostname
     return this.getUrl(`${url.protocol}//${host}`)

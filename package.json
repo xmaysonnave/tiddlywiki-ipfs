@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.3.0-201028368",
+  "version": "v0.3.0-201102330",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -70,6 +70,7 @@
     "buffer": "^5.7.0",
     "cids": "1.0.2",
     "ipfs-provider": "^1.1.0",
+    "npm": "^6.14.8",
     "uint8arrays": "^1.1.0"
   },
   "devDependencies": {
@@ -91,14 +92,14 @@
     "pako": "^1.0.11",
     "prettier-standard": "^16.4.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.420.1",
+    "snyk": "^1.421.1",
     "terser": "^5.3.8",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.0.5"
   },
   "engines": {
-    "node": ">=14.0.1",
-    "yarn": ">=1.22.4"
+    "node": ">=14.15.0",
+    "yarn": ">=1.22.10"
   },
   "os": [
     "!darwin",

@@ -134,7 +134,7 @@ IPFS Import
       resolvedUrl
     } = await $tw.ipfs.resolveUrl(false, true, value, base)
     if (normalizedUrl == null && resolvedUrl == null) {
-      throw new Error(`Failed to resolve value: "${value}"`)
+      throw new Error(`Failed to resolve value: ${value}`)
     }
     if (cid !== null) {
       key = `ipfs://${cid}`
@@ -239,33 +239,49 @@ IPFS Import
         var deleted = new Map()
         var titles = $tw.wiki.getTiddlers({ includeSystem: true })
         for (var i = 0; i < titles.length; i++) {
+          const title = titles[i]
           const current = $tw.wiki.getTiddler(titles[i])
-          var { key } = await this.getKey(
-            current.fields._canonical_uri,
-            rootUri
-          )
-          if (
-            key === rootUri &&
-            this.merged.get(current.fields.title) === undefined &&
-            deleted.get(current.fields.title) === undefined
-          ) {
-            const object = this.getObject(`[[${current.fields.title}]]`)
-            if (object !== null) {
-              deleted.set(current.fields.title, object)
+          canonicalUri = current.fields._canonical_uri
+          canonicalUri =
+            canonicalUri === undefined ||
+            canonicalUri == null ||
+            canonicalUri.trim() === ''
+              ? null
+              : canonicalUri.trim()
+          if (canonicalUri !== null) {
+            var { key } = await this.getKey(
+              current.getFieldString('canonical_uri'),
+              rootUri
+            )
+            if (
+              key === rootUri &&
+              this.merged.get(title) === undefined &&
+              deleted.get(title) === undefined
+            ) {
+              const object = this.getObject(`[[${title}]]`)
+              if (object !== null) {
+                deleted.set(title, object)
+              }
             }
           }
-          var { key } = await this.getKey(
-            current.fields._import_uri,
-            rootUri
-          )
-          if (
-            key === rootUri &&
-            this.merged.get(current).fields.title === undefined &&
-            deleted.get(current.fields.title) === undefined
-          ) {
-            const object = this.getObject(`[[${current.fields.title}]]`)
-            if (object !== null) {
-              deleted.set(current.fields.title, object)
+          importUri = current.fields._import_uri
+          importUri =
+            importUri === undefined ||
+            importUri == null ||
+            importUri.trim() === ''
+              ? null
+              : importUri.trim()
+          if (importUri !== null) {
+            var { key } = await this.getKey(current.fields._import_uri, rootUri)
+            if (
+              key === rootUri &&
+              this.merged.get(title) === undefined &&
+              deleted.get(title) === undefined
+            ) {
+              const object = this.getObject(`[[${title}]]`)
+              if (object !== null) {
+                deleted.set(title, object)
+              }
             }
           }
         }
