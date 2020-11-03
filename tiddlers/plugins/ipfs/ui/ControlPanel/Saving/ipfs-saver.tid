@@ -22,12 +22,6 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 </tbody>
 </table>
 
-''<$link to="$:/ipfs/saver/provider"><<lingo Provider>></$link>''
-
-<$radio tiddler="$:/ipfs/saver/provider" value="default"><<lingo Provider/Default/Description>></$radio>
-<$radio tiddler="$:/ipfs/saver/provider" value="window"><<lingo Provider/Window/Description>></$radio>
-<$radio tiddler="$:/ipfs/saver/provider" value="http"><<lingo Provider/HTTP/Description>></$radio>
-
 ''<$link to="$:/ipfs/saver/export"><<lingo Export>></$link>''
 
 <$radio tiddler="$:/ipfs/saver/export" value="json"><<lingo Export/Json/Description>></$radio>
