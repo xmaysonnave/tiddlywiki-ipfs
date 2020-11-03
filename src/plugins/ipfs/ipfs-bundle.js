@@ -383,9 +383,6 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    if (decode instanceof URL === false && typeof decode !== 'string') {
-      throw new Error('Unable to decode CID. "URL" or "string" expected...')
-    }
     var cid = null
     var hostname = null
     var ipnsIdentifier = null
@@ -395,7 +392,7 @@ import IpfsUrl from './ipfs-url'
       try {
         url = this.ipfsUrl.getUrl(decode)
       } catch (error) {
-        // Ignore
+        url = null
       }
     } else {
       url = decode
@@ -420,7 +417,7 @@ import IpfsUrl from './ipfs-url'
 
   IpfsBundle.prototype.decodeUrlCid = function (url) {
     // Check
-    if (url === undefined || url == null) {
+    if (url === undefined || url == null || url.toString().trim() === '') {
       return {
         cid: null,
         hostname: null,
@@ -429,7 +426,12 @@ import IpfsUrl from './ipfs-url'
       }
     }
     if (url instanceof URL === false) {
-      throw new Error('Unable to decode CID. "URL" expected...')
+      return {
+        cid: null,
+        hostname: null,
+        ipnsIdentifier: null,
+        protocol: null
+      }
     }
     var cid = null
     var hostname = null
@@ -446,6 +448,24 @@ import IpfsUrl from './ipfs-url'
           protocol = 'ipns'
         } else if (url.protocol === 'ipfs:' && this.isCid(url.hostname)) {
           cid = url.hostname
+          protocol = 'ipfs'
+        }
+      } else if (
+        url.pathname !== undefined &&
+        url.pathname !== null &&
+        url.pathname.trim() !== ''
+      ) {
+        var pathname
+        if (url.pathname.startsWith('//')) {
+          pathname = `/${protocol}/${url.pathname.slice(2)}`
+        } else {
+          pathname = `/${protocol}/${url.pathname}`
+        }
+        if (url.protocol === 'ipns:') {
+          ipnsIdentifier = pathname
+          protocol = 'ipns'
+        } else if (url.protocol === 'ipfs:' && this.isCid(pathname)) {
+          cid = pathname
           protocol = 'ipfs'
         }
       }
@@ -480,10 +500,8 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    if (typeof pathname !== 'string') {
-      throw new Error('Unable to decode CID. "string" expected...')
-    }
-    pathname = pathname.trim() === '' ? null : pathname.trim()
+    pathname =
+      pathname.toString().trim() === '' ? null : pathname.toString().trim()
     if (pathname == null || pathname === '/') {
       return {
         cid: null,
@@ -520,18 +538,14 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    if (protocol !== 'ipfs' && protocol !== 'ipns') {
-      return {
-        cid: null,
-        ipnsIdentifier: null,
-        protocol: null
-      }
-    }
     var cid = null
     var ipnsIdentifier = null
-    if (protocol === 'ipns') {
+    if (protocol === 'ipns' || protocol === 'ipns:') {
       ipnsIdentifier = identifier
-    } else if (protocol === 'ipfs' && this.isCid(identifier)) {
+    } else if (
+      (protocol === 'ipfs' || protocol === 'ipfs:') &&
+      this.isCid(identifier)
+    ) {
       cid = identifier
     } else {
       protocol = null
@@ -543,8 +557,8 @@ import IpfsUrl from './ipfs-url'
     }
   }
 
-  IpfsBundle.prototype.decodeHostnameCid = function (value) {
-    if (value === undefined || value == null) {
+  IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
+    if (hostname === undefined || hostname == null) {
       return {
         cid: null,
         hostname: null,
@@ -552,11 +566,9 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    if (typeof value !== 'string') {
-      throw new Error('Unable to decode CID. "string" expected...')
-    }
-    value = value.trim() === '' ? null : value.trim()
-    if (value == null) {
+    hostname =
+      hostname.toString().trim() === '' ? null : hostname.toString().trim()
+    if (hostname == null) {
       return {
         cid: null,
         hostname: null,
@@ -564,11 +576,11 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    var hostname
+    var domain
     var identifier
     var protocol
     // Parse
-    const members = value.trim().split('.')
+    const members = hostname.trim().split('.')
     for (var i = 0; i < members.length; i++) {
       // Ignore
       if (members[i].trim() === '') {
@@ -584,10 +596,10 @@ import IpfsUrl from './ipfs-url'
         protocol = members[i]
         continue
       }
-      if (hostname) {
-        hostname = `${hostname}.${members[i]}`
+      if (domain) {
+        domain = `${domain}.${members[i]}`
       } else {
-        hostname = members[i]
+        domain = members[i]
       }
     }
     if (!protocol || !identifier) {
@@ -597,26 +609,21 @@ import IpfsUrl from './ipfs-url'
         protocol: null
       }
     }
-    if (protocol !== 'ipfs' && protocol !== 'ipns') {
-      return {
-        cid: null,
-        hostname: null,
-        ipnsIdentifier: null,
-        protocol: null
-      }
-    }
     var cid = null
     var ipnsIdentifier = null
-    if (protocol === 'ipns') {
+    if (protocol === 'ipns' || protocol === 'ipns:') {
       ipnsIdentifier = identifier
-    } else if (protocol === 'ipfs' && this.isCid(identifier)) {
+    } else if (
+      (protocol === 'ipfs' || protocol === 'ipfs:') &&
+      this.isCid(identifier)
+    ) {
       cid = identifier
     } else {
       protocol = null
     }
     return {
       cid: cid,
-      hostname: hostname,
+      hostname: domain,
       ipnsIdentifier: ipnsIdentifier,
       protocol: protocol
     }

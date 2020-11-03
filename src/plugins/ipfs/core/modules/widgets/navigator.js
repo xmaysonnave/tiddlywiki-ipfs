@@ -889,7 +889,8 @@ Navigator widget
         } else {
           var tiddler = new $tw.Tiddler(tiddlerFields)
         }
-        $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
+        tiddler = $tw.hooks.invokeHook('th-importing-tiddler', tiddler)
+        self.wiki.addTiddler(tiddler)
         importReport.push('# [[' + tiddlerFields.title + ']]')
       }
     })

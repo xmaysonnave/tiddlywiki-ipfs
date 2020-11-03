@@ -75,9 +75,6 @@ IPFS Tiddler
     $tw.hooks.addHook('th-deleting-tiddler', async function (tiddler) {
       return await self.handleDeleteTiddler(tiddler)
     })
-    $tw.hooks.addHook('th-importing-tiddler', async function (tiddler) {
-      return await self.handleFileImport(tiddler)
-    })
     $tw.hooks.addHook('th-saving-tiddler', async function (tiddler) {
       return await self.handleSaveTiddler(tiddler)
     })
@@ -322,12 +319,6 @@ IPFS Tiddler
       $tw.utils.alert(name, error.message)
     }
     return tiddler
-  }
-
-  IpfsTiddler.prototype.handleFileImport = async function (tiddler) {
-    const updatedTiddler = await this.updateIpfsTags(tiddler)
-    $tw.wiki.addTiddler(updatedTiddler)
-    return updatedTiddler
   }
 
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {

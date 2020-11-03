@@ -95,27 +95,35 @@
   }
 
   IpfsUrl.prototype.getBase = function (base) {
-    var url = null
-    var value =
+    base =
       base === undefined || base == null || base.toString().trim() === ''
         ? null
         : base.toString().trim()
-    if (value == null) {
+    var url
+    if (base == null) {
       return this.getIpfsBaseUrl()
     }
     try {
-      url = this.getUrl(value)
+      url = this.getUrl(base)
     } catch (error) {
       return this.getIpfsBaseUrl()
     }
     // Parse
     var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.decodeCid(
-      value
+      base
     )
+    if (hostname === undefined || hostname == null || hostname.trim() === '') {
+      return url
+    }
     if (!protocol || (!cid && !ipnsIdentifier)) {
       return url
     }
-    if (protocol !== 'ipfs' && protocol !== 'ipns') {
+    if (
+      protocol !== 'ipfs' &&
+      protocol !== 'ipfs:' &&
+      protocol !== 'ipns' &&
+      protocol !== 'ipns:'
+    ) {
       return url
     }
     const host = url.port ? `${hostname}:${url.port}` : hostname

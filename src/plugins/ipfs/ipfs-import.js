@@ -117,9 +117,9 @@ IPFS Import
     var normalizedUrl = null
     var resolvedUrl = null
     value =
-      value === undefined || value == null || value.trim() === ''
+      value === undefined || value == null || value.toString().trim() === ''
         ? null
-        : value.trim()
+        : value.toString().trim()
     if (value == null) {
       return {
         key: null,
@@ -136,15 +136,15 @@ IPFS Import
     if (normalizedUrl == null && resolvedUrl == null) {
       throw new Error(`Failed to resolve value: ${value}`)
     }
-    if (cid !== null) {
-      key = `ipfs://${cid}`
-    } else if (ipnsKey !== null) {
-      key = `ipns://${ipnsKey}`
-    } else if (
+    if (
       normalizedUrl.hostname.endsWith('.eth') ||
       normalizedUrl.hostname.endsWith('.eth.link')
     ) {
       key = normalizedUrl.hostname
+    } else if (cid !== null) {
+      key = `ipfs://${cid}`
+    } else if (ipnsKey !== null) {
+      key = `ipns://${ipnsKey}`
     } else {
       key = normalizedUrl.toString()
     }
@@ -205,11 +205,10 @@ IPFS Import
       // Load and prepare imported tiddlers to be processed
       const host = $tw.ipfs.getUrl(
         `#${tiddler.fields.title}`,
-        $tw.ipfs.getDocumentUrl()
+        $tw.ipfs.getIpfsBaseUrl()
       )
       if (canonicalUri !== null || importUri !== null) {
         if (importUri !== null) {
-          var { key: importUri } = await this.getKey(importUri, host)
           await this.load(
             host,
             tiddler.fields.title,
@@ -220,7 +219,6 @@ IPFS Import
           )
         }
         if (canonicalUri !== null) {
-          var { key: canonicalUri } = await this.getKey(canonicalUri, host)
           await this.load(
             host,
             tiddler.fields.title,
@@ -249,7 +247,10 @@ IPFS Import
               ? null
               : canonicalUri.trim()
           if (canonicalUri !== null) {
-            const { key } = await this.getKey(canonicalUri, rootUri)
+            var key = this.resolved.get(canonicalUri)
+            if (key === undefined) {
+              var { key } = await this.getKey(canonicalUri, rootUri)
+            }
             if (
               key === rootUri &&
               this.merged.get(title) === undefined &&
@@ -269,7 +270,10 @@ IPFS Import
               ? null
               : importUri.trim()
           if (importUri !== null) {
-            const { key } = await this.getKey(importUri, rootUri)
+            var key = this.resolved.get(importUri)
+            if (key === undefined) {
+              var { key } = await this.getKey(importUri, rootUri)
+            }
             if (
               key === rootUri &&
               this.merged.get(title) === undefined &&

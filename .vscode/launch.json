@@ -20,8 +20,7 @@
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "runtimeVersion": "12.18.1",
-      "runtimeArgs": ["debug"],
+      "runtimeArgs": ["start:debug"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }
