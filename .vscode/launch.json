@@ -15,12 +15,12 @@
       "port": 9229
     },
     {
-      "name": "Debug Build TiddlyWiki",
+      "name": "Debug Build Empty",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["start:debug"],
+      "runtimeArgs": ["debug-build-empty"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }

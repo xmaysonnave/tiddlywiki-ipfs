@@ -1,12 +1,11 @@
 #!/usr/bin/env zsh
-echo '*** build ***'
+echo '*** build-noclone ***'
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 echo 'nvm:' $(nvm -v)
 nvm use
 # build
-./scripts/run-prepare-clone.sh || exit 1
 ./scripts/run-prepare.sh || exit 1
 ./scripts/run-browserify.sh || exit 1
 ./scripts/build-assets.sh || exit 1

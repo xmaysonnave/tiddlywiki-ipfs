@@ -6,7 +6,7 @@
     "plugin": [
       "--render",
         "[tag[$:/ipfs/core]]",
-        "[encodeuricomponent[]addprefix[./]addsuffix[.json]]",
+        "[encodeuricomponent[]addprefix[./]addsuffix[%BUILD_NUMBER%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

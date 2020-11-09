@@ -16,25 +16,25 @@
   "build": {
 		"index": [
 			"--compress", "yes",
-			"--rendertiddler", "$:/core/save/all", "index.html", "text/plain"
+			"--rendertiddler", "$:/core/save/all", "index%BUILD_NUMBER%.html", "text/plain"
     ],
 		"index-standford": [
 			"--compress", "yes",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/index-standford.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-standford%BUILD_NUMBER%.html", "text/plain",
       "--clearpassword"
     ],
     "index-plain": [
-      "--rendertiddler", "$:/core/save/all", "../sample/index-plain.html", "text/plain"
+      "--rendertiddler", "$:/core/save/all", "../sample/index-plain%BUILD_NUMBER%.html", "text/plain"
     ],
 		"index-plain-and-ethereum": [
       "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-ethereum.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-ethereum%BUILD_NUMBER%.html", "text/plain",
       "--clearencryptionpublickey"
     ],
 		"index-plain-and-standford": [
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-standford.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/index-plain-and-standford%BUILD_NUMBER%.html", "text/plain",
       "--clearpassword"
     ]
   }

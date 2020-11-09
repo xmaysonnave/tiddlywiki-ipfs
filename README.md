@@ -207,13 +207,13 @@ Follow the [nvm installation and update tutorial](https://github.com/nvm-sh/nvm#
 Current installation and update script:
 
 ```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
 ```
 
 or
 
 ```
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
 ```
 
 As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
@@ -249,7 +249,7 @@ Check:
 
 ```
 nvm -v
-0.36.0
+0.37.0
 ```
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/.nvmrc) who describes the node version to use.
