@@ -1,0 +1,14 @@
+{
+	"description": "Build Ipfs TiddlyWiki library modules",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "library": [
+      "--render",
+        "[tag[$:/ipfs/library/modules]]",
+        "[encodeuricomponent[]addprefix[./]addsuffix[%BUILD_SEMVER%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ]
+	}
+}

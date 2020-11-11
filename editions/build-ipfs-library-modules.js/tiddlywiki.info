@@ -1,0 +1,10 @@
+{
+	"description": "Build ipfs-library-modules.js",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "modules": [
+			"--rendertiddler", "$:/ipfs/library/ipfs-library-modules.js", "ipfs-library-modules.js", "text/plain"
+    ]
+	}
+}

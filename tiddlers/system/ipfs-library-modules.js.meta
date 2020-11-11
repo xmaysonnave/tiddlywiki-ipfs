@@ -1,0 +1,5 @@
+title: $:/library/ipfs-library-modules.js
+tags: $:/ipfs/library/modules
+type: application/javascript
+version: %BUILD_SEMVER%
+library: yes

@@ -1,5 +1,0 @@
-title: $:/library/ipfs-library.js
-tags: $:/ipfs/core
-type: application/javascript
-version: %BUILD_NUMBER%
-library: yes

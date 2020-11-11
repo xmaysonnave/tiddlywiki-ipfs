@@ -147,14 +147,7 @@ import { getIpfs, providers } from 'ipfs-provider'
         rawLeaves: false
       })
       // Check
-      if (
-        added === undefined ||
-        added == null ||
-        added.path === undefined ||
-        added.path == null ||
-        added.size === undefined ||
-        added.size == null
-      ) {
+      if (!added || !added.path || !added.size) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
@@ -179,11 +172,7 @@ import { getIpfs, providers } from 'ipfs-provider'
       client = await client.enable({ commands: ['pin'] })
     }
     // Process
-    if (
-      client !== undefined &&
-      client.pin !== undefined &&
-      client.pin.add !== undefined
-    ) {
+    if (client && client.pin && client.pin.add) {
       this.getLogger().info('Processing IPFS pin add...')
       const result = await client.pin.add(cid, {
         recursive: true
@@ -207,11 +196,7 @@ import { getIpfs, providers } from 'ipfs-provider'
       client = await client.enable({ commands: ['pin'] })
     }
     // Process
-    if (
-      client !== undefined &&
-      client.pin !== undefined &&
-      client.pin.rm !== undefined
-    ) {
+    if (client && client.pin && client.pin.rm) {
       this.getLogger().info('Processing IPFS pin rm...')
       const result = await client.pin.rm(cid, {
         recursive: true
@@ -241,18 +226,14 @@ import { getIpfs, providers } from 'ipfs-provider'
     if (client.enable) {
       client = await client.enable({ commands: ['name'] })
     }
-    if (
-      client !== undefined &&
-      client.name !== undefined &&
-      client.name.publish !== undefined
-    ) {
+    if (client && client.name && client.name.publish) {
       this.getLogger().info('Processing IPFS name publish...')
       const result = await client.name.publish(cid, {
         resolve: true,
         key: ipnsName,
         allowOffline: false
       })
-      if (result === undefined || result == null) {
+      if (!result) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
@@ -275,11 +256,7 @@ import { getIpfs, providers } from 'ipfs-provider'
     if (client.enable) {
       client = await client.enable({ commands: ['name'] })
     }
-    if (
-      client !== undefined &&
-      client.name !== undefined &&
-      client.name.resolve !== undefined
-    ) {
+    if (client && client.name && client.name.resolve) {
       this.getLogger().info('Processing IPFS name resolve...')
       const resolvedSource = await client.name.resolve(id, {
         nocache: false,
@@ -290,7 +267,7 @@ import { getIpfs, providers } from 'ipfs-provider'
       for await (const resolved of resolvedSource) {
         lastResult = resolved
       }
-      if (lastResult == null || lastResult === undefined) {
+      if (!lastResult) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return lastResult
@@ -306,18 +283,10 @@ import { getIpfs, providers } from 'ipfs-provider'
     if (client.enable) {
       client = await client.enable({ commands: ['key'] })
     }
-    if (
-      client !== undefined &&
-      client.key !== undefined &&
-      client.key.list !== undefined
-    ) {
+    if (client && client.key && client.key.list) {
       this.getLogger().info('Processing IPFS key list...')
       const result = await client.key.list()
-      if (
-        result === undefined ||
-        result == null ||
-        Array.isArray(result) === false
-      ) {
+      if (!result || !Array.isArray(result)) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return result
@@ -342,21 +311,12 @@ import { getIpfs, providers } from 'ipfs-provider'
     if (client.enable) {
       client = await client.enable({ commands: ['key'] })
     }
-    if (
-      client !== undefined &&
-      client.key !== undefined &&
-      client.key.gen !== undefined
-    ) {
+    if (client && client.key && client.key.gen) {
       this.getLogger().info('Processing IPFS key gen...')
       const key = await client.key.gen(ipnsName, {
         type: 'ed25519'
       })
-      if (
-        key === undefined ||
-        key == null ||
-        key.id === undefined ||
-        key.id == null
-      ) {
+      if (!key || !key.id) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return key.id
@@ -379,19 +339,10 @@ import { getIpfs, providers } from 'ipfs-provider'
     if (client.enable) {
       client = await client.enable({ commands: ['key'] })
     }
-    if (
-      client !== undefined &&
-      client.key !== undefined &&
-      client.key.rm !== undefined
-    ) {
+    if (client && client.key && client.key.rm) {
       this.getLogger().info('Processing IPFS key rm...')
       const key = await client.key.rm(ipnsName)
-      if (
-        key === undefined ||
-        key == null ||
-        key.id === undefined ||
-        key.id == null
-      ) {
+      if (!key || !key.id) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return key.id
@@ -429,30 +380,26 @@ import { getIpfs, providers } from 'ipfs-provider'
     if (client.enable) {
       client = await client.enable({ commands: ['key'] })
     }
-    if (
-      client !== undefined &&
-      client.key !== undefined &&
-      client.key.rename !== undefined
-    ) {
+    if (client && client.key && client.key.rename) {
       this.getLogger().info('Processing IPFS key rename...')
       const key = await client.key.rename(oldIpnsName, newIpnsName)
-      if (key === undefined || key == null) {
+      if (!key) {
         throw new Error('IPFS client returned an unknown result...')
       }
       var id = null
-      if (key.id !== undefined && key.id !== null) {
+      if (key.id) {
         id = key.id
       }
       var was = null
-      if (key.was !== undefined && key.was !== null) {
+      if (key.was) {
         was = key.was
       }
       var now = null
-      if (key.now !== undefined && key.now !== null) {
+      if (key.now) {
         now = key.now
       }
       var overwrite = null
-      if (key.overwrite !== undefined && key.overwrite !== null) {
+      if (key.overwrite) {
         overwrite = key.overwrite
       }
       return {

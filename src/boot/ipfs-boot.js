@@ -1,7 +1,7 @@
 /*\
 title: $:/boot/ipfs-boot.js
 type: application/javascript
-tags: $:/ipfs/core
+tags: $:/ipfs/boot
 
 \*/
 var _boot = function ($tw) {

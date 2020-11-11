@@ -1,0 +1,14 @@
+{
+	"description": "Build Ipfs TiddlyWiki boot",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "boot": [
+      "--render",
+        "[tag[$:/ipfs/boot]]",
+        "[encodeuricomponent[]addprefix[./]addsuffix[%BUILD_SEMVER%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ]
+	}
+}

@@ -1,12 +1,12 @@
 {
-	"description": "Build Ipfs TiddlyWiki artifacts",
+	"description": "Build Ipfs TiddlyWiki plugin",
 	"plugins": [],
 	"themes":[],
 	"build": {
     "plugin": [
       "--render",
         "[tag[$:/ipfs/core]]",
-        "[encodeuricomponent[]addprefix[./]addsuffix[%BUILD_NUMBER%.json]]",
+        "[encodeuricomponent[]addprefix[./]addsuffix[%BUILD_SEMVER%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

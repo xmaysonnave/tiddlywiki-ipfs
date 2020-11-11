@@ -9,31 +9,31 @@
 	"build": {
 		"empty": [
 			"--compress", "yes",
-			"--rendertiddler", "$:/core/save/empty", "empty%BUILD_NUMBER%.html", "text/plain"
+			"--rendertiddler", "$:/core/save/empty", "empty.html", "text/plain"
 		],
 		"empty-ethereum": [
 			"--compress", "yes",
       "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-			"--rendertiddler", "$:/core/save/empty", "../sample/empty-ethereum%BUILD_NUMBER%.html", "text/plain",
+			"--rendertiddler", "$:/core/save/empty", "../sample/empty-ethereum.html", "text/plain",
       "--clearencryptionpublickey"
     ],
 		"empty-standford": [
 			"--compress", "yes",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/empty", "../sample/empty-standford%BUILD_NUMBER%.html", "text/plain",
+			"--rendertiddler", "$:/core/save/empty", "../sample/empty-standford.html", "text/plain",
       "--clearpassword"
     ],
 		"empty-plain": [
-			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain%BUILD_NUMBER%.html", "text/plain"
+			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain.html", "text/plain"
 		],
 		"empty-plain-and-ethereum": [
       "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain-and-ethereum%BUILD_NUMBER%.html", "text/plain",
+			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain-and-ethereum.html", "text/plain",
       "--clearencryptionpublickey"
     ],
 		"empty-plain-and-standford": [
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain-and-standford%BUILD_NUMBER%.html", "text/plain",
+			"--rendertiddler", "$:/core/save/empty", "../sample/empty-plain-and-standford.html", "text/plain",
       "--clearpassword"
     ]
 	}

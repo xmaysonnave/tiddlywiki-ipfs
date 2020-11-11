@@ -38,12 +38,12 @@ Supported ENS Ethereum Networks
 Resources:
 
 * https://github.com/xmaysonnave/tiddlywiki-ipfs/
-* https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/master/README.md
+* https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/README.md
 
 !! With a capable ENS browser:
 
-* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
-* [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on [ext[Rinkeby|https://www.rinkeby.io/]]: Ethereum Test Network (~PoA)
+* Production [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on "Mainnet: Ethereum Main Network"
+* Development [ext[IPFS with TiddlyWiki|https://bluelightav.eth]] on [ext[Rinkeby|https://www.rinkeby.io/]]: Ethereum Test Network (~PoA)
 * [ext[IPFS with TiddlyWiki plugin|https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs]]
 * [ext[IPFS with TiddlyWiki Documentation|https://bluelightav.eth/#IPFS%20Documentation]]
 

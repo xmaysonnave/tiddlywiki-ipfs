@@ -1,10 +1,5 @@
 #!/usr/bin/env zsh
 echo '*** run-prepare-clone ***'
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-echo 'nvm:' $(nvm -v)
-nvm use
 # cleanup
 rm -f -R ./tw5-locator > /dev/null 2>&1
 rm -f -R ./tw5-relink > /dev/null 2>&1

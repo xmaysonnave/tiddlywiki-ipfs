@@ -17,30 +17,30 @@
 		"dev": [
 			"--compress", "yes",
       "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-			"--rendertiddler", "$:/core/save/all", "dev%BUILD_NUMBER%.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "dev.html", "text/plain",
       "--clearencryptionpublickey"
     ],
 		"dev-compressed": [
 			"--compress", "yes",
-			"--rendertiddler", "$:/core/save/all", "../sample/dev-compressed%BUILD_NUMBER%.html", "text/plain"
+			"--rendertiddler", "$:/core/save/all", "../sample/dev-compressed.html", "text/plain"
     ],
 		"dev-standford": [
 			"--compress", "yes",
       "--password", "blue",
-			"--rendertiddler", "$:/core/save/all", "../sample/dev-standford%BUILD_NUMBER%.html", "text/plain",
+			"--rendertiddler", "$:/core/save/all", "../sample/dev-standford.html", "text/plain",
       "--clearpassword"
     ],
     "dev-plain": [
-      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain%BUILD_NUMBER%.html", "text/plain"
+      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain.html", "text/plain"
     ],
     "dev-plain-and-ethereum": [
       "--encryptionpublickey", "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
-      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-ethereum%BUILD_NUMBER%.html", "text/plain",
+      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-ethereum.html", "text/plain",
       "--clearencryptionpublickey"
     ],
     "dev-plain-and-standford": [
       "--password", "blue",
-      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-standford%BUILD_NUMBER%.html", "text/plain",
+      "--rendertiddler", "$:/core/save/all", "../sample/dev-plain-and-standford.html", "text/plain",
       "--clearpassword"
     ]
   }

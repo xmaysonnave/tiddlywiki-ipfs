@@ -1,4 +1,3 @@
-.build-number
 build/
 node_modules/
 sample/

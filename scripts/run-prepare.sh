@@ -9,8 +9,8 @@ nvm use
 rm -f -R ./build > /dev/null 2>&1
 rm -f -R ./production > /dev/null 2>&1
 rm -f -R ./sample > /dev/null 2>&1
-rm .build-number > /dev/null 2>&1
 # build directories
+mkdir -p ./build/output > /dev/null 2>&1
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 mkdir -p ./build/tiddlers/boot > /dev/null 2>&1
 mkdir ./production > /dev/null 2>&1
@@ -30,7 +30,7 @@ cp -R ./src/boot/boot.js ./build/tiddlers/boot > /dev/null 2>&1
 wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/dist/detect-provider.min.js -O ./build/tiddlers/system/detect-provider.min.js
 wget https://cdn.jsdelivr.net/npm/loglevel@1.7.0/dist/loglevel.min.js -O ./build/tiddlers/system/loglevel.min.js
 wget https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js -O ./build/tiddlers/system/pako.min.js
-# generate build number
-./scripts/run-build-number.sh || exit 1
+# generate build version
+./scripts/run-build-semver.sh || exit 1
 # done
 exit 0

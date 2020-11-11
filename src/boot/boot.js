@@ -1,8 +1,8 @@
 /*\
 title: $:/boot/boot.js
 type: application/javascript
-version: %BUILD_NUMBER%
-tags: $:/ipfs/core
+version: %BUILD_SEMVER%
+tags: $:/ipfs/boot
 
 The main boot kernel for TiddlyWiki. This single file creates a barebones TW environment that is just sufficient to bootstrap the modules containing the main logic of the application.
 

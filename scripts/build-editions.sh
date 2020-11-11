@@ -10,7 +10,7 @@ nvm use
 # bluelightav edition
 cp -R ./editions/bluelightav.eth/* ./build > /dev/null 2>&1
 # update build number
-./scripts/run-update-build-number.sh || exit 1
+./scripts/run-update-build-semver.sh || exit 1
 # tw5-locator
 cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # tw5-relink
@@ -23,7 +23,7 @@ yarn ipfs-tiddlywiki build \
 # bluelightav dev edition
 cp -R ./editions/dev/* ./build > /dev/null 2>&1
 # update build number
-./scripts/run-update-build-number.sh || exit 1
+./scripts/run-update-build-semver.sh || exit 1
 # build
 yarn ipfs-tiddlywiki build \
   --output production \

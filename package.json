@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.4.0-beta+build201109433",
+  "version": "v0.4.0-beta+build201111429",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -35,11 +35,12 @@
     "precommit": "lint-staged",
     "prepare": "yarn snyk-protect",
     "prettier-standard": "prettier-standard --format --lint",
-    "run-build-number": "./scripts/run-build-number.sh",
+    "run-build-semver": "./scripts/run-build-semver.sh",
     "run-browserify": "./scripts/run-browserify.sh",
+    "run-ipfs-publish": "./scripts/run-ipfs-publish.sh",
     "run-prepare-clone": "./scripts/run-prepare-clone.sh",
     "run-prepare": "./scripts/run-prepare.sh",
-    "run-update-build-number": "./scripts/run-update-build-number.sh",
+    "run-update-build-semver": "./scripts/run-update-build-semver.sh",
     "snyk-monitor": "snyk monitor --all-projects",
     "snyk-protect": "snyk protect",
     "test": "./scripts/test.sh"
@@ -66,7 +67,7 @@
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
     "@multiformats/base-x": "^4.0.1",
-    "buffer": "^6.0.1",
+    "buffer": "^6.0.2",
     "cids": "1.0.2",
     "ipfs-provider": "^1.1.0",
     "uint8arrays": "^1.1.0"
@@ -82,17 +83,19 @@
     "core-js": "^3.7.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.13.0",
-    "eth-sig-util": "^2.5.3",
+    "eth-sig-util": "^3.0.0",
     "gzipper": "^4.1.0",
     "husky": "^4.3.0",
+    "ipfs-http-client": "^48.1.0",
     "jest": "^26.6.2",
+    "keccak": "^3.0.1",
     "lint-staged": "^10.5.0",
     "loglevel": "^1.6.8",
     "pako": "^1.0.11",
     "prettier-standard": "^16.4.1",
     "replace": "^1.2.0",
     "sjcl": "^1.0.8",
-    "snyk": "^1.424.4",
+    "snyk": "^1.425.3",
     "terser": "^5.3.8",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.0.5"
