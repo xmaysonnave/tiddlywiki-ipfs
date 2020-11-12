@@ -41,7 +41,7 @@
   }
 
   IpfsUrl.prototype.getIpfsDefaultGateway = function () {
-    return 'https://ipfs.infura.io'
+    return 'https://dweb.link'
   }
 
   /**

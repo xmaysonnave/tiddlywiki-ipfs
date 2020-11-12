@@ -66,10 +66,7 @@ function main () {
   fs.writeFileSync('README.md', file, 'utf8')
 
   // Save
-  const content = JSON.stringify({
-    version,
-    encoded: encodeURIComponent(version)
-  })
+  const content = JSON.stringify({ version })
   fs.writeFileSync('./build/output/.build-semver.json', content, 'utf8')
 }
 

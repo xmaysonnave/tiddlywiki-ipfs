@@ -115,7 +115,7 @@ IPFS link widget
       defaultValue: 'http://www.w3.org/1999/xhtml'
     })
     var domNode = this.document.createElementNS(namespace, tag)
-    domNode.setAttribute('href', url)
+    domNode.setAttribute('href', url.toString())
     // Add a click event handler
     $tw.utils.addEventListeners(domNode, [
       {
@@ -338,24 +338,29 @@ IPFS link widget
   IpfsLinkWidget.prototype.execute = function () {
     // Pick up our attributes
     this.url = undefined
-    this.tiddler =
-      this.getAttribute('tiddler') !== undefined
-        ? this.getAttribute('tiddler')
-        : this.getVariable('currentTiddler')
+    this.tiddler = this.getAttribute('tiddler')
+      ? this.getAttribute('tiddler')
+      : this.getVariable('currentTiddler')
     var tiddler
     if (this.tiddler) {
       tiddler = $tw.wiki.getTiddler(this.tiddler)
     }
     this.field = this.getAttribute('field')
-    this.value =
-      this.getAttribute('value') !== undefined
-        ? this.getAttribute('value')
-        : tiddler && tiddler.getFieldString(this.field) !== ''
-        ? tiddler.getFieldString(this.field)
-        : this.tiddler
+    this.value = this.getAttribute('value')
+    this.value = this.value
+      ? this.value
+      : tiddler && tiddler.getFieldString(this.field) !== ''
+      ? tiddler.getFieldString(this.field)
+      : this.tiddler
+    this.text = this.getAttribute('text')
+    this.text = this.text
+      ? tiddler && tiddler.getFieldString(this.text) !== ''
+        ? tiddler.getFieldString(this.text)
+        : this.text
+      : this.value
     if (
       tiddler &&
-      this.getAttribute('value') !== undefined &&
+      this.getAttribute('value') &&
       tiddler.getFieldString(this.getAttribute('value')) !== ''
     ) {
       this.url = tiddler.getFieldString(this.getAttribute('value'))
@@ -371,7 +376,7 @@ IPFS link widget
     if (this.parseTreeNode.children && this.parseTreeNode.children.length > 0) {
       templateTree = this.parseTreeNode.children
     } else {
-      templateTree = [{ type: 'text', text: this.value }]
+      templateTree = [{ type: 'text', text: this.text }]
     }
     this.makeChildWidgets(templateTree)
   }
@@ -387,6 +392,7 @@ IPFS link widget
       value = tiddler.getFieldString(this.field)
     }
     if (
+      changedAttributes.text ||
       changedAttributes.field ||
       changedTiddlers[this.field] ||
       changedAttributes.value ||

@@ -9,14 +9,10 @@ function main () {
   if (!semver) {
     throw new Error('Unknown version...')
   }
-  const { version, encoded } = JSON.parse(semver)
+  const { version } = JSON.parse(semver)
   if (!version) {
     throw new Error('Unknown version...')
   }
-  if (!encoded) {
-    throw new Error('Unknown encoded version...')
-  }
-
   replace({
     regex: '%BUILD_SEMVER%',
     replacement: `${version}`,
@@ -27,7 +23,7 @@ function main () {
 
   replace({
     regex: '%BUILD_SEMVER%',
-    replacement: `-${encoded}`,
+    replacement: `-${version}`,
     paths: ['./build/tiddlywiki.info'],
     recursive: false,
     silent: true

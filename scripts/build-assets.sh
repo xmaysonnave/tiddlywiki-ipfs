@@ -48,6 +48,6 @@ yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 # publish to ipfs
-./scripts/run-ipfs-publish.sh "$:/plugins/ipfs" "json" || exit 1
+./scripts/run-ipfs-publish.sh "$:/plugins/ipfs" "json" "false" || exit 1
 # done
 exit 0

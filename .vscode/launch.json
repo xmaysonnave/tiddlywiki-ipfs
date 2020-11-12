@@ -30,7 +30,13 @@
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["run-ipfs-publish", "$:/plugins/ipfs", "json"],
+      "runtimeArgs": [
+        "run-ipfs-publish",
+        "$:/plugins/ipfs",
+        "json",
+        "false",
+        "true"
+      ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }
