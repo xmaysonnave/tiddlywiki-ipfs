@@ -356,7 +356,7 @@ IPFS link widget
     this.text = this.text
       ? tiddler && tiddler.getFieldString(this.text) !== ''
         ? tiddler.getFieldString(this.text)
-        : this.text
+        : this.tiddler
       : this.value
     if (
       tiddler &&
@@ -388,7 +388,7 @@ IPFS link widget
     const changedAttributes = this.computeAttributes()
     const tiddler = $tw.wiki.getTiddler(this.tiddler)
     var value = null
-    if (this.field !== undefined && this.field !== null) {
+    if (tiddler && this.field !== undefined && this.field !== null) {
       value = tiddler.getFieldString(this.field)
     }
     if (

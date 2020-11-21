@@ -27,13 +27,18 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 
 This plugin provides the following features:
 
--   Store `TiddlyWiki's` and attachments on [IPFS](https://ipfs.io/)
--   Access `TiddlyWiki's` and attachments from [IPFS](https://ipfs.io/)
--   Encrypt and Decrypt `TiddlyWiki's` and attachments
--   Publish and Manage IPNS Keys and Names
+-   Store `TiddlyWiki`'s and attachments on [IPFS](https://ipfs.io/)
+-   Access `TiddlyWiki`'s and attachments from [IPFS](https://ipfs.io/)
+-   Compress `TiddlyWiki`'s and attachments
+-   Encrypt, Decrypt and Sign `TiddlyWiki`'s and attachments
+    -   Standford
+    -   Ethereum
+    -   [SHA-3](https://en.wikipedia.org/wiki/SHA-3)
+-   Import and Export
+-   Publish and Manage IPNS Names and Keys
 -   Interact with [Metamask](https://metamask.io) Ethereum wallets
 -   Publish to [ENS](https://ens.domains)
--   Share over [IPFS](https://ipfs.io/) `TiddlyWiki's` [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments
+-   Share over [IPFS](https://ipfs.io/) `TiddlyWiki`'s [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
@@ -105,8 +110,8 @@ To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
 To run a local IPFS node, you need:
 
--   [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
--   [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
+-   IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
+-   IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
 -   [IPFS Server](https://github.com/ipfs/go-ipfs)
 
 More informations about IPFS:
@@ -268,7 +273,7 @@ Check:
 
 ```
 node -v
-v14.15.0
+v14.15.1
 ```
 
 Install `yarn`.
@@ -363,7 +368,7 @@ The `production` directory contains production ready runnable `TiddlyWikis`:
 and `IPFS with TiddlyWiki` boot, libraries and plugin as json files:
 
 -   [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fboot%252Fboot.js.json)
--   [\$:/library/ipfs-library.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Flibrary%252Fipfs-library.js.json)
+-   [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Flibrary%252Fipfs-library.js.json)
 -   [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fplugins%252Fipfs.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:

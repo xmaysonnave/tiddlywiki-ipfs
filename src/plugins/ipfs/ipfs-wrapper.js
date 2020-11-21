@@ -81,6 +81,7 @@ IPFS Wrapper
     ipfs,
     identifier,
     base,
+    path,
     ipnsName
   ) {
     identifier =
@@ -94,6 +95,10 @@ IPFS Wrapper
     if (identifier == null && ipnsName == null) {
       throw new Error('Undefined IPNS identifiers...')
     }
+    path =
+      path === undefined || path == null || path.trim() === ''
+        ? ''
+        : path.trim()
     var found = false
     var ipnsKey = null
     var keys = null
@@ -184,7 +189,7 @@ IPFS Wrapper
       )
       ipnsKey = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1b32, 'base36', false)
       normalizedUrl = this.ipfsUrl.normalizeUrl(
-        `/${ipnsKeyword}/${ipnsKey}`,
+        `/${ipnsKeyword}/${ipnsKey}${path}`,
         base
       )
       this.getLogger().info(
@@ -196,7 +201,7 @@ IPFS Wrapper
       )
     } else {
       normalizedUrl = this.ipfsUrl.normalizeUrl(
-        `/${ipnsKeyword}/${ipnsKey}`,
+        `/${ipnsKeyword}/${ipnsKey}${path}`,
         base
       )
       this.getLogger().info(
@@ -297,9 +302,13 @@ IPFS Wrapper
     throw new Error('Failed to fetch from IPFS...')
   }
 
-  IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
+  IpfsWrapper.prototype.addToIpfs = async function (ipfs, content, hashOnly) {
     try {
-      const { hash, size } = await this.ipfsLibrary.add(ipfs, content)
+      const { hash, size } = await this.ipfsLibrary.add(
+        ipfs,
+        $tw.ipfs.StringToUint8Array(content),
+        hashOnly
+      )
       const pathname = '/' + ipfsKeyword + '/' + hash
       const url = this.ipfsUrl.normalizeUrl(pathname)
       this.getLogger().info(`Successfully added: ${size} bytes,

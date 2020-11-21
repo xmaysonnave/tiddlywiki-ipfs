@@ -11,10 +11,13 @@ module-type: filteroperator
   /**
    * Export our filter functions
    */
-  exports.normalizetitle = function (source, operator, options) {
+  exports.filenamify = function (source, operator, options) {
     var results = []
+    var filenamify = $tw.node
+      ? globalThis.filenamify || require('filenamify')
+      : $tw.ipfs.filenamify
     source(function (tiddler, title) {
-      results.push(title.replace(/[:/]/g, '_'))
+      results.push(filenamify(title, { replacement: '_' }))
     })
     return results
   }

@@ -374,6 +374,7 @@ IPFS Controller
   IpfsController.prototype.getIpnsIdentifiers = async function (
     identifier,
     base,
+    path,
     ipnsName
   ) {
     const { ipfs } = await this.getIpfsClient()
@@ -381,6 +382,7 @@ IPFS Controller
       ipfs,
       identifier,
       base,
+      path,
       ipnsName
     )
   }
@@ -401,6 +403,10 @@ IPFS Controller
 
   IpfsController.prototype.isJson = function (content) {
     return this.ipfsBundle.isJson(content)
+  }
+
+  IpfsController.prototype.filenamify = function (name, options) {
+    return this.ipfsBundle.filenamify(name, options)
   }
 
   IpfsController.prototype.getIpfsBaseUrl = function () {
@@ -474,7 +480,7 @@ IPFS Controller
         resolvedUrl: null
       }
     }
-    var { cid, ipnsIdentifier, protocol } = this.decodeCid(normalizedUrl)
+    var { cid, ipnsIdentifier, path, protocol } = this.decodeCid(normalizedUrl)
     if (protocol === ipnsKeyword && ipnsIdentifier !== null) {
       var {
         cid,
@@ -482,7 +488,7 @@ IPFS Controller
         ipnsName,
         normalizedUrl,
         resolvedUrl
-      } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base)
+      } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
     } else if (
       resolveEns &&
       normalizedUrl.hostname.endsWith('.eth') &&
@@ -492,13 +498,15 @@ IPFS Controller
       var { cid, protocol, resolvedUrl } = await this.resolveEns(
         normalizedUrl.hostname,
         base,
+        path,
         web3
       )
-      if (protocol === 'ipns') {
-        var { cid, ipnsKey, ipnsName } = await this.resolveIpns(
+      if (protocol === ipnsKeyword) {
+        var { cid, ipnsKey, ipnsName, resolvedUrl } = await this.resolveIpns(
           cid,
           resolveIpns,
-          base
+          base,
+          path
         )
       }
     }
@@ -514,7 +522,8 @@ IPFS Controller
   IpfsController.prototype.resolveIpns = async function (
     ipnsIdentifier,
     resolveIpns,
-    base
+    base,
+    path
   ) {
     ipnsIdentifier =
       ipnsIdentifier === undefined ||
@@ -522,6 +531,10 @@ IPFS Controller
       ipnsIdentifier.toString().trim() === ''
         ? null
         : ipnsIdentifier.toString().trim()
+    path =
+      path === undefined || path == null || path.trim() === ''
+        ? ''
+        : path.trim()
     if (ipnsIdentifier == null) {
       return {
         cid: null,
@@ -535,7 +548,8 @@ IPFS Controller
     var resolvedUrl = null
     var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(
       ipnsIdentifier,
-      base
+      base,
+      path
     )
     if (resolveIpns) {
       $tw.ipfs.getLogger().info(
@@ -546,7 +560,7 @@ ${normalizedUrl}`
       try {
         cid = await this.resolveIpnsKey(ipnsKey)
         if (cid !== null) {
-          resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}`, base)
+          resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}${path}`, base)
           $tw.ipfs.getLogger().info(
             `Successfully resolved IPNS key:
 ${normalizedUrl}`
@@ -570,7 +584,12 @@ ${normalizedUrl}`
     }
   }
 
-  IpfsController.prototype.resolveEns = async function (ensDomain, base, web3) {
+  IpfsController.prototype.resolveEns = async function (
+    ensDomain,
+    base,
+    path,
+    web3
+  ) {
     ensDomain =
       ensDomain === undefined ||
       ensDomain == null ||
@@ -584,6 +603,10 @@ ${normalizedUrl}`
         resolvedUrl: null
       }
     }
+    path =
+      path === undefined || path == null || path.trim() === ''
+        ? ''
+        : path.trim()
     if (web3 === undefined || web3 == null) {
       var { web3 } = await this.getWeb3Provider()
     }
@@ -598,7 +621,7 @@ ${normalizedUrl}`
         resolvedUrl: null
       }
     }
-    const url = this.normalizeUrl(`/${protocol}/${content}`, base)
+    const url = this.normalizeUrl(`/${protocol}/${content}${path}`, base)
     $tw.ipfs.getLogger().info(
       `Successfully fetched ENS domain content: "${ensDomain}"
 ${url}`

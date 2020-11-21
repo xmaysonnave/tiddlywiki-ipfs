@@ -116,7 +116,7 @@ import { getIpfs, providers } from 'ipfs-provider'
     throw new Error('Unreachable IPFS API URL...')
   }
 
-  IpfsLibrary.prototype.add = async function (client, content) {
+  IpfsLibrary.prototype.add = async function (client, content, hashOnly) {
     if (client === undefined || client == null) {
       throw new Error('Undefined IPFS provider...')
     }
@@ -129,8 +129,17 @@ import { getIpfs, providers } from 'ipfs-provider'
     }
     // Process
     if (client !== undefined && client.add !== undefined) {
+      const options = {
+        chunker: 'rabin-262144-524288-1048576',
+        cidVersion: 0,
+        hashAlg: 'sha2-256',
+        pin: true,
+        rawLeaves: false
+      }
+      if (hashOnly) {
+        options.onlyHash = true
+      }
       // Process
-      const buffer = Buffer.from(content)
       this.getLogger().info('Processing IPFS add...')
       // 1 - https://github.com/ipfs/go-ipfs/issues/5683
       // default chunker: "size-262144"
@@ -139,23 +148,60 @@ import { getIpfs, providers } from 'ipfs-provider'
       // Not a 'dag-pb' but a 'raw' multicodec instead
       // We generate a V0 and convert it to a V1
       // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
-      const added = await client.add(buffer, {
-        chunker: 'rabin-262144-524288-1048576',
-        cidVersion: 0,
-        hashAlg: 'sha2-256',
-        pin: false,
-        rawLeaves: false
-      })
+      const added = await client.add(content, options)
       // Check
-      if (!added || !added.path || !added.size) {
+      if (!added || !added.cid || !added.path || !added.size) {
         throw new Error('IPFS client returned an unknown result...')
       }
       return {
-        hash: this.ipfsBundle.cidToCidV1(added.path, 'ipfs', true),
+        hash: this.ipfsBundle.cidToCidV1(added.cid.toString(), 'ipfs', true),
         size: added.size
       }
     }
     throw new Error('Undefined IPFS add...')
+  }
+
+  IpfsLibrary.prototype.addAll = async function (client, content, hashOnly) {
+    if (client === undefined || client == null) {
+      throw new Error('Undefined IPFS provider...')
+    }
+    if (content === undefined || content == null) {
+      throw new Error('Undefined content...')
+    }
+    // Window IPFS policy
+    if (client.enable) {
+      client = await client.enable({ commands: ['addAll'] })
+    }
+    // Process
+    if (client !== undefined && client.addAll !== undefined) {
+      const added = []
+      const options = {
+        chunker: 'rabin-262144-524288-1048576',
+        cidVersion: 0,
+        hashAlg: 'sha2-256',
+        pin: true,
+        rawLeaves: false,
+        wrapWithDirectory: true
+      }
+      if (hashOnly) {
+        options.onlyHash = true
+      }
+      // Process
+      this.getLogger().info('Processing IPFS addAll...')
+      for await (const result of client.addAll(content, options)) {
+        // Check
+        if (!result || !result.cid || !result.path || !result.size) {
+          throw new Error('IPFS client returned an unknown result...')
+        }
+        added.push({
+          cid: this.ipfsBundle.cidToCidV1(result.cid.toString(), 'ipfs', true),
+          path: result.path,
+          size: result.size
+        })
+      }
+      return added
+    }
+    throw new Error('Undefined IPFS addAll...')
   }
 
   IpfsLibrary.prototype.pin = async function (client, cid) {

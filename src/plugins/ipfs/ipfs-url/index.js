@@ -1,3 +1,4 @@
+import filenamify from 'filenamify'
 ;(function () {
   'use strict'
 
@@ -10,6 +11,13 @@
 
   IpfsUrl.prototype.getLogger = function () {
     return this.ipfsBundle.getLogger()
+  }
+
+  IpfsUrl.prototype.filenamify = function (name, options) {
+    if (name === undefined || name == null || name.trim() === '') {
+      throw new Error('Undefined name...')
+    }
+    return filenamify.replace(name, options)
   }
 
   IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {

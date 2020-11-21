@@ -1,14 +1,11 @@
 title: IPFS Documentation
-modified: 20201009094915385
+modified: 20201117094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
 <h2>Requirements</h2>
 <ul>
-  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]</li>
-  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library.js]]</li>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]</li>
-  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+  <li>[[IPFS Quick Start]]</li>
 </ul>
 <h2>IPFS Documentation</h2>
 <<locator-view baseTitle:"IPFS Documentation">>

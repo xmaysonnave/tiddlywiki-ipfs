@@ -1,26 +1,62 @@
 title: IPFS Quick Start
-modified: 20201009094915385
+modified: 20201117094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
-<h2>Requirements</h2>
-<ul>
-  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]</li>
-  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library.js]]</li>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]</li>
-  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
-  <li>[ext[Metamask|https://metamask.io]]</li>
-</ul>
 <h2>IPFS Quick Start</h2>
+<h3>Live version</h3>
 <p>
-  The easiest way to start with <b>IPFS with ~TiddlyWiki</b> is to save over <b>IPFS</b> a live version from <b>IPFS</b>
-  and use the default [[Settings]].
+  The easiest way to start with <b>IPFS with ~TiddlyWiki</b> is to use a live version.
 </p>
+<h4>Release</h4>
 <ul>
   <li><$ipfslink value="bluelightav.eth"/></li>
   <li><$ipfslink value="empty.bluelightav.eth"/></li>
-  <li><$ipfslink value="tiddly.bluelightav.eth"/></li>
   <li><$ipfslink value="doc.bluelightav.eth"/></li>
+</ul>
+<h4><$text text={{$:/build/ipfs/semver!!_kind}} /> <$text text={{$:/build/ipfs/semver!!_version}} /></h4>
+<ul>
+  <li><$ipfslink field="_source_uri" text="_target" tiddler="$:/bluelightav.eth/source"/></li>
+  <li><$ipfslink field="_source_uri" text="_target" tiddler="$:/empty.bluelightav.eth/source"/></li>
+  <li><$ipfslink field="_source_uri" text="_target" tiddler="$:/doc.bluelightav.eth/source"/></li>
+</ul>
+<h3>Drag and Drop</h3>
+<p>
+  Another way is to drag and drop the required files in a live version.
+</p>
+<h4>Release</h4>
+<ul>
+  <li><$ipfslink value="bluelightav.eth/#%24%3A%2Fboot%2Fboot.js"><$text text="IPFS with TiddlyWiki Boot"/></$ipfslink></li>
+  <li><$ipfslink value="bluelightav.eth/#%24%3A%2Flibrary%2Fipfs-library-modules.js"><$text text="IPFS with TiddlyWiki Library"/></$ipfslink></li>
+  <li><$ipfslink value="bluelightav.eth/#%24%3A%2Fplugins%2Fipfs"><$text text="IPFS with TiddlyWiki Plugin"/></$ipfslink></li>
+  <li><$ipfslink value="bluelightav.eth/#IPFS%20Documentation"><$text text="IPFS with TiddlyWiki Documentation"/></$ipfslink></li>
+</ul>
+<h4><$text text={{$:/build/ipfs/semver!!_kind}} /> <$text text={{$:/build/ipfs/semver!!_version}} /></h4>
+<ul>
+  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/boot/boot.js/source"/></li></ul>
+  </li>
+  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]]
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/library/ipfs-library-modules.js/source"/></li></ul>
+  </li>
+  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/plugins/ipfs/source"/></li></ul>
+  </li>
+  <li>[[IPFS Documentation]]
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/ipfs/documentation/source"/></li></ul>
+  </li>
+</ul>
+<h4>Mandatory Third parties plugins</h4>
+<ul>
+  <li>[ext[Locator Plugin|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+</ul>
+<h4>Optional Third parties plugins</h4>
+<ul>
+  <li>[ext[Relink Plugin|https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink]]</li>
+</ul>
+<h4>Ethereum</h4>
+<ul>
+  <li>[ext[Metamask|https://metamask.io]]</li>
 </ul>
 <p>
   We do not recommmend to work at the file system level as modern browsers limits interactions from the file system and web servers.
@@ -38,6 +74,11 @@ type: text/vnd.tiddlywiki
 </ul>
 <p>
   As a convenience here is our [[Node Configuration|IPFS Server Config]] suitable for [ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]] and the
-  [ext[IPFS Go Server|https://github.com/ipfs/go-ipfs]]. This configuration is based on the [ext[v0.6.0|https://github.com/ipfs/go-ipfs/releases/tag/v0.6.0]] version.
+  [ext[IPFS Go Server|https://github.com/ipfs/go-ipfs]].
+</p>
+<p>
+  This configuration is based on the [ext[v0.7.0|https://github.com/ipfs/go-ipfs/releases/tag/v0.7.0]] version.
+</p>
+<p>
   More informations about the configuration parameters are available [ext[here|https://github.com/ipfs/go-ipfs/blob/master/docs/config.md]]
 </p>

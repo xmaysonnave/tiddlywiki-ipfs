@@ -57,6 +57,10 @@ import IpfsUrl from './ipfs-url'
     this.once = true
   }
 
+  IpfsBundle.prototype.filenamify = function (name, options) {
+    return this.ipfsUrl.filenamify(name, options)
+  }
+
   IpfsBundle.prototype.getIpfsBaseUrl = function () {
     return this.ipfsUrl.getIpfsBaseUrl()
   }
@@ -380,12 +384,14 @@ import IpfsUrl from './ipfs-url'
       return {
         cid: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
     var cid = null
     var hostname = null
     var ipnsIdentifier = null
+    var path = null
     var protocol = null
     var url = null
     if (decode instanceof URL === false) {
@@ -398,19 +404,28 @@ import IpfsUrl from './ipfs-url'
       url = decode
     }
     if (url !== null) {
-      var { cid, hostname, ipnsIdentifier, protocol } = this.decodeUrlCid(url)
-    } else {
-      var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostnameCid(
-        decode
+      var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeUrlCid(
+        url
       )
+    } else {
+      var {
+        cid,
+        hostname,
+        ipnsIdentifier,
+        path,
+        protocol
+      } = this.decodeHostnameCid(decode)
       if (protocol == null && cid == null && ipnsIdentifier == null) {
-        var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(decode)
+        var { cid, ipnsIdentifier, path, protocol } = this.decodePathnameCid(
+          decode
+        )
       }
     }
     return {
       cid: cid,
       hostname: hostname,
       ipnsIdentifier: ipnsIdentifier,
+      path: path,
       protocol: protocol
     }
   }
@@ -422,6 +437,7 @@ import IpfsUrl from './ipfs-url'
         cid: null,
         hostname: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
@@ -430,6 +446,7 @@ import IpfsUrl from './ipfs-url'
         cid: null,
         hostname: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
@@ -437,6 +454,7 @@ import IpfsUrl from './ipfs-url'
     var hostname = null
     var ipnsIdentifier = null
     var protocol = null
+    var path = `${url.pathname}${url.search}${url.hash}`
     if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
       if (
         url.hostname !== undefined &&
@@ -457,22 +475,21 @@ import IpfsUrl from './ipfs-url'
       ) {
         var pathname
         if (url.pathname.startsWith('//')) {
-          pathname = `/${protocol}/${url.pathname.slice(2)}`
+          pathname = `/${protocol}/${url.pathname.slice(2)}${url.search}${
+            url.hash
+          }`
         } else {
-          pathname = `/${protocol}/${url.pathname}`
+          pathname = `/${protocol}/${url.pathname}${url.search}${url.hash}`
         }
-        if (url.protocol === 'ipns:') {
-          ipnsIdentifier = pathname
-          protocol = 'ipns'
-        } else if (url.protocol === 'ipfs:' && this.isCid(pathname)) {
-          cid = pathname
-          protocol = 'ipfs'
-        }
+        var { cid, ipnsIdentifier, path, protocol } = this.decodePathnameCid(
+          pathname
+        )
       }
       return {
         cid: cid,
         hostname: null,
         ipnsIdentifier: ipnsIdentifier,
+        path: path,
         protocol: protocol
       }
     }
@@ -480,14 +497,21 @@ import IpfsUrl from './ipfs-url'
       url.hostname
     )
     if (protocol == null && cid == null && ipnsIdentifier == null) {
-      var { cid, ipnsIdentifier, protocol } = this.decodePathnameCid(
-        url.pathname
-      )
+      var {
+        cid,
+        ipnsIdentifier,
+        path: innerPath,
+        protocol
+      } = this.decodePathnameCid(url.pathname)
+      if (innerPath) {
+        path = `${innerPath}${url.search}${url.hash}`
+      }
     }
     return {
       cid: cid,
       hostname: hostname,
       ipnsIdentifier: ipnsIdentifier,
+      path: path,
       protocol: protocol
     }
   }
@@ -497,6 +521,7 @@ import IpfsUrl from './ipfs-url'
       return {
         cid: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
@@ -506,11 +531,13 @@ import IpfsUrl from './ipfs-url'
       return {
         cid: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
-    var identifier
-    var protocol
+    var identifier = null
+    var protocol = null
+    var path = '/'
     // Parse
     const members = pathname.trim().split('/')
     for (var i = 0; i < members.length; i++) {
@@ -526,15 +553,15 @@ import IpfsUrl from './ipfs-url'
       // Second non empty member
       if (!identifier) {
         identifier = members[i]
-        break
+        continue
       }
-      // Nothing to process
-      break
+      path = `${path}/${members[i]}`
     }
     if (!protocol || !identifier) {
       return {
         cid: null,
         ipnsIdentifier: null,
+        path: pathname,
         protocol: null
       }
     }
@@ -553,6 +580,7 @@ import IpfsUrl from './ipfs-url'
     return {
       cid: cid,
       ipnsIdentifier: ipnsIdentifier,
+      path: protocol ? path : pathname,
       protocol: protocol
     }
   }
@@ -563,6 +591,7 @@ import IpfsUrl from './ipfs-url'
         cid: null,
         hostname: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
@@ -573,12 +602,14 @@ import IpfsUrl from './ipfs-url'
         cid: null,
         hostname: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
-    var domain
-    var identifier
-    var protocol
+    var domain = null
+    var identifier = null
+    var protocol = null
+    var path = '/'
     // Parse
     const members = hostname.trim().split('.')
     for (var i = 0; i < members.length; i++) {
@@ -596,16 +627,27 @@ import IpfsUrl from './ipfs-url'
         protocol = members[i]
         continue
       }
-      if (domain) {
-        domain = `${domain}.${members[i]}`
+      const search = members[i].split('/', 1)
+      if (search[0] !== members[i]) {
+        if (domain) {
+          domain = `${domain}.${search[0]}`
+        } else {
+          domain = search[0]
+        }
+        path = search[1]
       } else {
-        domain = members[i]
+        if (domain) {
+          domain = `${domain}.${members[i]}`
+        } else {
+          domain = members[i]
+        }
       }
     }
     if (!protocol || !identifier) {
       return {
         cid: null,
         ipnsIdentifier: null,
+        path: null,
         protocol: null
       }
     }
@@ -625,6 +667,7 @@ import IpfsUrl from './ipfs-url'
       cid: cid,
       hostname: domain,
       ipnsIdentifier: ipnsIdentifier,
+      path: path,
       protocol: protocol
     }
   }

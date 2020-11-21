@@ -5,8 +5,7 @@ type: text/vnd.tiddlywiki
 
 <h2>Requirements</h2>
 <ul>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]</li>
-  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+  <li>[[IPFS Quick Start]]</li>
 </ul>
 <h2>Technical</h2>
 <<locator-view baseTitle:"IPFS Technical">>

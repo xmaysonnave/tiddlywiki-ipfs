@@ -6,7 +6,7 @@
     "library": [
       "--render",
         "[tag[$:/ipfs/library/modules]]",
-        "[normalizetitle[]addprefix[./]addsuffix[%BUILD_SEMVER%.json]]",
+        "[filenamify[]addprefix[./]addsuffix[-%BUILD_LIBRARY_SEMVER%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

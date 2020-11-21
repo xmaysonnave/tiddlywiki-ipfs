@@ -1,5 +1,5 @@
 title: Welcome
-modified: 20200622094915385
+modified: 20201116094915385
 tags: bluelightav.eth TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -17,7 +17,15 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>Store ~TiddlyWiki's and attachments on [ext[IPFS|https://ipfs.io/]]</li>
   <li>Access ~TiddlyWiki's and attachments from [ext[IPFS|https://ipfs.io/]]</li>
-  <li>Encrypt and Decrypt ~TiddlyWiki's and attachments</li>
+  <li>Compress ~TiddlyWiki's and attachments</li>
+  <li>Encrypt, Decrypt and Sign ~TiddlyWiki's and attachments
+    <ul>
+      <li>Standford</li>
+      <li>Ethereum</li>
+      <li>[ext[SHA-3|https://en.wikipedia.org/wiki/SHA-3]]</li>
+    </ul>
+  </li>
+  <li>Import and Export</li>
   <li>Publish and Manage IPNS Names and Keys</li>
   <li>Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets</li>
   <li>Publish to [ext[ENS|https://ens.domains]]</li>
@@ -25,29 +33,10 @@ type: text/vnd.tiddlywiki
 </ul>
 <h3>Project</h3>
 <ul>
-  <li>Project
-    <ul><li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li></ul>
-  </li>
-  <li>Resolve ENS with IPFS with ~TiddlyWiki
-    <ul>
-      <li><$ipfslink value="bluelightav.eth"/> on "[ext[Mainnet|https://etherscan.io/]]" or "[ext[Rinkeby|https://www.rinkeby.io/]]"</li>
-		</ul>
-  </li>
-  <li>Resolve ENS with [ext[Metamask|https://metamask.io]]
-    <ul><li>[ext[https://bluelightav.eth]]</li></ul>
-  </li>
-  <li>Resolve ENS without a browser extension
-    <ul>
-			<li>[ext[https://bluelightav.eth.link]]</li>
-		</ul>
-  </li>
+  <li><$ipfslink value="bluelightav.eth"/>IPFS with ~TiddlyWiki</$ipfslink></li>
+  <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
 </ul>
-<p>
-  To install the plugin drag and drop the following link [[IPFS with TiddlyWiki|$:/plugins/ipfs]] to your <b>~TiddlyWiki</b>.
-</p>
-<p>
-  <b>~TiddlyWiki</b>
-</p>
+<h3>~TiddlyWiki</h3>
 <ul>
   <li>[ext[TiddlyWiki|https://tiddlywiki.com]]</li>
   <li>[ext[TiddlyWiki5 GitHub|https://github.com/Jermolene/TiddlyWiki5/]]</li>
@@ -107,6 +96,8 @@ type: text/vnd.tiddlywiki
     </ul>
   </li>
 </ul>
-<p>
-  See the [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] for more options.
-</p>
+<h3>Settings</h3>
+<ul>
+  <li>[[Saving General|$:/core/ui/ControlPanel/Saving/General]]</li>
+  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Saving/Ipfs]]</li>
+</ul>

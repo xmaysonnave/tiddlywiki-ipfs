@@ -1,0 +1,16 @@
+{
+	"description": "Build Ipfs TiddlyWiki documentation",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "plain": [
+      "--rendertiddler",
+        "$:/core/templates/exporters/JsonFile",
+        "./$_ipfs_documentation-%BUILD_DOCUMENTATION_SEMVER%.json",
+        "text/plain",
+        "",
+        "exportFilter",
+        "[tag[$:/ipfs/documentation]]"
+    ]
+	}
+}

@@ -6,7 +6,7 @@
     "boot": [
       "--render",
         "[tag[$:/ipfs/boot]]",
-        "[normalizetitle[]addprefix[./]addsuffix[%BUILD_SEMVER%.json]]",
+        "[filenamify[]addprefix[./]addsuffix[-%BUILD_BOOT_SEMVER%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

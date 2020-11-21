@@ -6,7 +6,7 @@
     "plugin": [
       "--render",
         "[tag[$:/ipfs/core]]",
-        "[normalizetitle[]addprefix[./]addsuffix[%BUILD_SEMVER%.json]]",
+        "[filenamify[]addprefix[./]addsuffix[-%BUILD_PLUGIN_SEMVER%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

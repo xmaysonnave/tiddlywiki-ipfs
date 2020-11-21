@@ -32,10 +32,11 @@
       "runtimeExecutable": "yarn",
       "runtimeArgs": [
         "run-ipfs-publish",
-        "$:/plugins/ipfs",
-        "json",
-        "false",
-        "true"
+        "--name=$:/plugins/ipfs",
+        "--extension=json",
+        "--output=./build/tiddlers/config",
+        "--tags=$:/ipfs/documentation",
+        "--hashOnly=true"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"

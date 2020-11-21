@@ -6,13 +6,18 @@ type: text/vnd.tiddlywiki
 
 Features:
 
-* Store `TiddlyWiki's` and attachments on [ext[IPFS|https://ipfs.io/]]
-* Access `TiddlyWiki's` and attachments from [ext[IPFS|https://ipfs.io/]]
-* Encrypt and Decrypt `TiddlyWiki` and attachments
-* Publish and Manage IPNS Keys and Names
+* Store `TiddlyWiki`'s and attachments on [ext[IPFS|https://ipfs.io/]]
+* Access `TiddlyWiki`'s and attachments from [ext[IPFS|https://ipfs.io/]]
+* Compress `TiddlyWiki`'s and attachments
+* Encrypt, Decrypt and Sign `TiddlyWiki`'s and attachments
+  * Standford
+  * Ethereum
+  * [ext[SHA-3|https://en.wikipedia.org/wiki/SHA-3]]
+* Import and Export
+* Publish and Manage IPNS Names and Keys
 * Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
 * Publish to [ext[ENS|https://ens.domains]]
-* Share over [ext[IPFS|https://ipfs.io/]] `TiddlyWiki's` [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments
+* Share over [ext[IPFS|https://ipfs.io/]] `TiddlyWiki`'s [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments
 
 Supported Browsers:
 
@@ -42,8 +47,8 @@ Resources:
 
 Requirement:
 
-* A modified boot [[$:/boot/boot.js]]
-** Download from IPFS <$ipfslink field="_source_uri" text="tiddler" tiddler="$:/boot/boot.js/source"/>
-* A set of libraries [[$:/library/ipfs-library-modules.js]]
-** Download from IPFS <$ipfslink field="_source_uri" text="tiddler" tiddler="$:/library/ipfs-library-modules.js/source"/>
-* This plugin [[$:/plugins/ipfs]]
+* [[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]
+** Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/boot/boot.js/source"/>
+* [[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]]
+** Available on from IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/library/ipfs-library-modules.js/source"/>
+* [[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]

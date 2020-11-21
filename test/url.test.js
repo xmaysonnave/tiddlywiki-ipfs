@@ -83,14 +83,14 @@ describe('Gateway URL', () => {
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
     const parsed = ipfsUrl.getIpfsDefaultGatewayUrl()
-    expect(parsed.toString() === 'https://ipfs.infura.io/').toBeTruthy()
+    expect(parsed.toString() === 'https://dweb.link/').toBeTruthy()
   })
   it('Valid Safe', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
     const parsed = ipfsUrl.getIpfsGatewayUrl()
-    expect(parsed.toString() === 'https://ipfs.infura.io/').toBeTruthy()
+    expect(parsed.toString() === 'https://dweb.link/').toBeTruthy()
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
@@ -158,7 +158,7 @@ describe('Base URL', () => {
       new URL('https://gateway.ipfs.io/ipfs/cid')
     )
     const base = ipfsUrl.getIpfsBaseUrl()
-    expect(base.toString() === 'https://ipfs.infura.io/').toBeTruthy()
+    expect(base.toString() === 'https://dweb.link/').toBeTruthy()
   })
 
   it('Fallback to default Gateway', () => {
@@ -170,7 +170,7 @@ describe('Base URL', () => {
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
     const base = ipfsUrl.getIpfsBaseUrl()
-    expect(base.toString() === 'https://ipfs.infura.io/').toBeTruthy()
+    expect(base.toString() === 'https://dweb.link/').toBeTruthy()
   })
 })
 describe('Normalize URL', () => {
@@ -202,7 +202,7 @@ describe('Normalize URL', () => {
       new URL('https://ipfs.infura.io/ipfs/cid')
     )
     const parsed = ipfsUrl.normalizeUrl('/ipfs/cid')
-    expect(parsed.toString() === 'https://ipfs.infura.io/ipfs/cid').toBeTruthy()
+    expect(parsed.toString() === 'https://dweb.link/ipfs/cid').toBeTruthy()
   })
   it('Relative. Fallback to default Gateway...', () => {
     const ipfsBundle = new IpfsBundle()
@@ -213,7 +213,7 @@ describe('Normalize URL', () => {
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
     const parsed = ipfsUrl.normalizeUrl('/ipfs/cid')
-    expect(parsed.toString() === 'https://ipfs.infura.io/ipfs/cid').toBeTruthy()
+    expect(parsed.toString() === 'https://dweb.link/ipfs/cid').toBeTruthy()
   })
   it('Relative. File system...', () => {
     const ipfsBundle = new IpfsBundle()
