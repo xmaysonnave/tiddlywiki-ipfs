@@ -21,6 +21,7 @@ async function main () {
     if (!name) {
       throw new Error('Unknown name...')
     }
+    console.log(`*** ${name} ***`)
     const extension = argv.extension
     if (!extension) {
       throw new Error('Unknown file extension...')
@@ -33,8 +34,6 @@ async function main () {
     if (!rawSemver || rawSemver.trim() === '') {
       throw new Error(`Undefined 'env.${env}_SEMVER'...`)
     }
-    // Semver
-    console.log(`*** ${name} ***`)
     // Process Raw
     var raw = null
     const fileName = filenamify(name, { replacement: '_' })
@@ -64,7 +63,7 @@ async function main () {
     // Current
     if (fs.existsSync(`./current/${fileName}.json`)) {
       const current = fs.readFileSync(`./current/${fileName}.json`, 'utf8')
-      var { _rawHash, _version: version } = JSON.parse(current)
+      var { _raw_hash: _rawHash, _version: version } = JSON.parse(current)
     }
 
     // Version
@@ -74,7 +73,6 @@ async function main () {
         console.log(`*** new version: ${version} ***`)
       }
     } else {
-      console.log(`*** content matching ${name} ***`)
       console.log(`*** current version: ${version} ***`)
     }
     // Check
@@ -149,7 +147,7 @@ async function main () {
     // Save
     const toJson = {
       _target: name,
-      _rawHash: rawHash,
+      _raw_hash: rawHash,
       _version: version
     }
     fs.writeFileSync(

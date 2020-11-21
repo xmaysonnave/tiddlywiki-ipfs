@@ -36,6 +36,7 @@ async function main () {
     if (!name) {
       throw new Error('Nothing to publish...')
     }
+    console.log(`*** ${name} ***`)
     const extension = argv.extension
     if (!extension) {
       throw new Error('Unknown file extension...')
@@ -52,13 +53,14 @@ async function main () {
       `./build/output/${fileName}_build.json`,
       'utf8'
     )
-    var { _target, _rawHash, _version } = JSON.parse(build)
+    var { _target, _raw_hash: _rawHash, _version } = JSON.parse(build)
     if (_target !== name) {
       throw new Error('Target inconsistency...')
     }
     // current
     var currentVersion = null
     var currentParentCid = null
+    var currentRawHash = null
     var currentCid = null
     if (fs.existsSync(`./current/${fileName}.json`)) {
       const current = fs.readFileSync(`./current/${fileName}.json`, 'utf8')
@@ -68,11 +70,15 @@ async function main () {
       var {
         _parent_cid: currentParentCid,
         _cid: currentCid,
-        _version: currentVersion
+        _version: currentVersion,
+        _raw_hash: currentRawHash
       } = JSON.parse(current)
+      if (currentVersion !== null && currentVersion === _version) {
+        if (_rawHash !== currentRawHash) {
+          throw new Error('Raw Hash inconsistency...')
+        }
+      }
     }
-    // Upload
-    console.log(`*** ${name} ***`)
     // Ipfs Client
     const apiUrl = process.env.API
       ? process.env.API
@@ -139,6 +145,7 @@ async function main () {
     console.log(`*** ${msg} ${parentCid} ***`)
     console.log(`*** ${msg} ${parentCid}/${file} ***`)
     console.log(`*** ${msg} ${cid} ***`)
+    // Check
     if (currentVersion !== null && currentVersion === _version) {
       if (cid.toString() !== currentCid) {
         throw new Error('Matching version but not cid...')
@@ -157,7 +164,7 @@ async function main () {
       _cid: cid.toString(),
       _cid_uri: `${gatewayUrl}/ipfs/${cid}`,
       _version: _version,
-      _rawHash: _rawHash,
+      _raw_hash: _rawHash,
       _size: size
     }
     if (tags) {
@@ -181,7 +188,7 @@ _source_uri: ipfs://${toJson._parent_cid}/${file}
 _cid: ${toJson._cid}
 _cid_uri: ipfs://${toJson._cid}
 _version: ${toJson._version}
-_rawHash: ${toJson.__rawHash}
+_raw_hash: ${toJson.__raw_hash}
 _size: ${toJson._size}`,
         'utf8'
       )
