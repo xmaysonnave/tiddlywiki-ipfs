@@ -61,7 +61,7 @@ module.exports = function main (name, extension, dir, env) {
     }
   }
   if (!raw) {
-    throw new Error(`Unknown raw content: '${path}'`)
+    throw new Error('Unknown raw content...')
   }
   // Keccak
   const keccak = createKeccakHash('keccak256')

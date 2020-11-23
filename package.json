@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.4.0-beta+build-201121474",
+  "version": "v0.4.0-beta+build-201123418",
   "description": "IPFS with TiddlyWiki",
   "main": "./src/plugins/ipfs/ipfs-bundle.js",
   "directories": {
@@ -94,6 +94,7 @@
     "keccak": "^3.0.1",
     "lint-staged": "^10.5.0",
     "loglevel": "^1.6.8",
+    "node-fetch": "^2.6.1",
     "pako": "^2.0.2",
     "prettier-standard": "^16.4.1",
     "replace": "^1.2.0",

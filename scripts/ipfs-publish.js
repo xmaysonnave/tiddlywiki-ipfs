@@ -2,9 +2,19 @@
 'use strict'
 
 const dotenv = require('dotenv')
+const fetch = require('node-fetch')
 const filenamify = require('filenamify')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
+
+async function fetchUrl (url) {
+  const response = await fetch(url)
+  if (response.ok) {
+    const ab = await response.arrayBuffer()
+    return new Uint8Array(ab)
+  }
+  throw new Error(`[${response.status}], Fetch Error...`)
+}
 
 // String to uint array
 function StringToUint8Array (string) {
@@ -94,7 +104,6 @@ module.exports = async function main (name, extension, dir, tags, hashOnly) {
   const gatewayUrl = process.env.GATEWAY
     ? process.env.GATEWAY
     : 'https://dweb.link'
-  const gateway = IpfsHttpClient(gatewayUrl)
   // Load
   var load = null
   var file = `${fileName}-${_version}.${extension}`
@@ -201,13 +210,13 @@ _size: ${toJson._size}`,
     )
   }
   if (!hashOnly) {
-    var size = 0
-    for await (const chunk of gateway.cat(toJson._cid)) {
-      size += chunk.length
-    }
+    await fetchUrl(`${gatewayUrl}/ipfs/${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._cid} ***`)
-    for await (const file of gateway.get(toJson._parent_cid)) {
-      console.log(`*** Fetched ${gatewayUrl}/ipfs/${file.path} ***`)
-    }
+    await fetchUrl(`${gatewayUrl}/ipfs/${toJson._parent_cid}`)
+    console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid} ***`)
+    await fetchUrl(`${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._path}`)
+    console.log(
+      `*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._path} ***`
+    )
   }
 }

@@ -19,5 +19,8 @@ mkdir ./sample > /dev/null 2>&1
 # format and lint
 yarn prettier-standard || exit 1
 
+# target
+yarn browserslist
+
 # done
 exit 0

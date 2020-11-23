@@ -11,8 +11,6 @@ nvm use
 ./scripts/build-init.sh || exit 1
 # build plugin
 ./scripts/tiddlywiki-ipfs/build-plugin.sh || exit 1
-# publish plugin
-./scripts/tiddlywiki-ipfs/publish-plugin.sh || exit 1
 # ./scripts/run-prepare.sh || exit 1
 # ./scripts/run-browserify.sh || exit 1
 # ./scripts/build-assets.sh || exit 1
