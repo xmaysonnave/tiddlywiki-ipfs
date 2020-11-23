@@ -6,7 +6,7 @@
     "boot": [
       "--render",
         "[tag[$:/ipfs/boot]]",
-        "[filenamify[]addprefix[./]addsuffix[-%BUILD_BOOT_SEMVER%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/boot/]addsuffix[-%BUILD_BOOT_SEMVER%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

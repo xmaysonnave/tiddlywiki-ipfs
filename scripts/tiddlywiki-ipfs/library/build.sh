@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-echo '*** build-library ***'
+echo '*** build library ***'
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -36,17 +36,17 @@ yarn ipfs-tiddlywiki build \
 
 # build tiddlywiki library
 ./scripts/build-init-step.sh || exit 1
-# build library modules
+# assets
 cp ./tiddlers/library/ipfs-library-modules.js.meta ./build/tiddlers/system > /dev/null 2>&1
 cp ./build/output/tiddlywiki-ipfs/library/ipfs-library-modules.js ./build/tiddlers/system > /dev/null 2>&1
 cp ./src/plugins/ipfs/ipfs-filters.js ./build/tiddlers/system > /dev/null 2>&1
-# build raw library
 cp -R ./editions/build-library/* ./build > /dev/null 2>&1
+# build raw library
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 # check hash and set version
-node ./scripts/tiddlywiki-ipfs/library/build-library-semver.js "$@" || exit 1
+node ./scripts/tiddlywiki-ipfs/library/build-semver.js "$@" || exit 1
 # build
 yarn ipfs-tiddlywiki build \
   --output production \
