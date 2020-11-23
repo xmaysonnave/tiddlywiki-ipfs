@@ -16,7 +16,9 @@ if [[ ! -f "$FILE" ]]; then
     exit 1
 fi
 cp "./build/output/tiddlywiki-ipfs/plugin/\$_plugins_ipfs_build.tid" ./build/tiddlers/config
-cp -R ./editions/build-documentation/tiddlywiki.info ./build > /dev/null 2>&1
+cp -R ./editions/documentation/* ./build > /dev/null 2>&1
+cp ./src/plugins/ipfs/ipfs-filters.js ./build/tiddlers/system > /dev/null 2>&1
+cp -R ./editions/documentation/tiddlywiki.info ./build > /dev/null 2>&1
 # build raw
 yarn ipfs-tiddlywiki build \
   --build \

@@ -1,5 +1,5 @@
 title: IPFS Imported Tiddlers
-tags: bluelightav.eth $:/ipfs/documentation [[IPFS Explorers]]
+tags: bluelightav.eth [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
 <<locator-view baseTitle:"$:/isImported">>

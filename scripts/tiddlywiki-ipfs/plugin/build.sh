@@ -26,7 +26,7 @@ if [[ ! -f "$FILE" ]]; then
     exit 1
 fi
 cp "./build/output/tiddlywiki-ipfs/library/\$_library_ipfs-library-modules.js_build.tid" ./build/plugins/ipfs/config
-cp -R ./editions/build-plugin/tiddlywiki.info ./build > /dev/null 2>&1
+cp -R ./editions/plugin/tiddlywiki.info ./build > /dev/null 2>&1
 # bundle
 yarn browserify \
   src/plugins/ipfs/ipfs-bundle.js \

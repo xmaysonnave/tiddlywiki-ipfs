@@ -29,7 +29,7 @@ cp ./tiddlers/library/* ./build/tiddlers/system > /dev/null 2>&1
 # library template tiddler
 cp ./tiddlers/plugins/ipfs/library/ipfs-library-modules.js.tid ./build/tiddlers/system > /dev/null 2>&1
 # ipfs-library-modules.js
-cp -R ./editions/build-ipfs-library-modules.js/tiddlywiki.info ./build > /dev/null 2>&1
+cp -R ./editions/library/tiddlywiki.info ./build > /dev/null 2>&1
 # build
 yarn ipfs-tiddlywiki build \
   --build \
@@ -41,7 +41,7 @@ yarn ipfs-tiddlywiki build \
 cp ./tiddlers/library/ipfs-library-modules.js.meta ./build/tiddlers/system > /dev/null 2>&1
 cp ./build/output/tiddlywiki-ipfs/library/ipfs-library-modules.js ./build/tiddlers/system > /dev/null 2>&1
 cp ./src/plugins/ipfs/ipfs-filters.js ./build/tiddlers/system > /dev/null 2>&1
-cp -R ./editions/build-library/tiddlywiki.info ./build > /dev/null 2>&1
+cp -R ./editions/library-modules/tiddlywiki.info ./build > /dev/null 2>&1
 # build raw
 yarn ipfs-tiddlywiki build \
   --build \

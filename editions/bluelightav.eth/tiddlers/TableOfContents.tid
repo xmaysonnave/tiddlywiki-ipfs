@@ -1,5 +1,5 @@
 title: TableOfContents
-tags: $:/ipfs/documentation $:/tags/SideBar
+tags: bluelightav.eth $:/tags/SideBar
 type: text/vnd.tiddlywiki
 caption: {{$:/language/SideBar/TableOfContents/Caption}}
 list: Features Reference Community About IPFS IPNS ENS

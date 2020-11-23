@@ -1,5 +1,5 @@
 {
-	"description": "Build ipfs-library-modules.js",
+	"description": "Build library modules",
 	"plugins": [],
 	"themes":[],
 	"build": {

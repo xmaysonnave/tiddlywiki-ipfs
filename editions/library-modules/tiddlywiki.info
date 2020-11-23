@@ -1,5 +1,5 @@
 {
-	"description": "Build Ipfs TiddlyWiki library modules",
+	"description": "Build TiddlyWiki library modules",
 	"plugins": [],
 	"themes":[],
 	"build": {

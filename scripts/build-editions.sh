@@ -32,7 +32,7 @@ yarn ipfs-tiddlywiki build \
   --name=index \
   --extension=html || exit 1
 # build documentation
-cp -R ./editions/build-documentation/* ./build > /dev/null 2>&1
+cp -R ./editions/documentation/* ./build > /dev/null 2>&1
 # raw
 yarn ipfs-tiddlywiki build \
   --build \
