@@ -4,7 +4,10 @@
 	"themes":[],
 	"build": {
     "modules": [
-			"--rendertiddler", "$:/ipfs/library/ipfs-library-modules.js", "ipfs-library-modules.js", "text/plain"
+			"--rendertiddler",
+        "$:/ipfs/library/ipfs-library-modules.js",
+        "tiddlywiki-ipfs/library/ipfs-library-modules.js",
+        "text/plain"
     ]
 	}
 }

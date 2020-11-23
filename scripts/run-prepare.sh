@@ -7,6 +7,7 @@ echo 'nvm:' $(nvm -v)
 nvm use
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
+rm -f -R ./production > /dev/null 2>&1
 rm -f -R ./sample > /dev/null 2>&1
 # build directories
 mkdir -p ./build/output > /dev/null 2>&1

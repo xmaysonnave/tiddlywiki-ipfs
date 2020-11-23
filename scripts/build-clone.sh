@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
-echo '*** run-prepare-clone ***'
+echo '*** build-clone ***'
+
 # cleanup
 rm -f -R ./tw5-locator > /dev/null 2>&1
 rm -f -R ./tw5-relink > /dev/null 2>&1
@@ -13,5 +14,6 @@ git clone https://github.com/flibbles/tw5-relink
 cd tw5-relink
 git checkout tags/v1.10.1
 cd ..
+
 # done
 exit 0

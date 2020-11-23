@@ -1,0 +1,13 @@
+{
+  "_target": "$:/library/ipfs-library-modules.js",
+  "_path": "$_library_ipfs-library-modules.js-v1.0.0+build-201123363.json",
+  "_parent_cid": "QmT5YdYxH5dRgH67e2iT3Sid2nanJ5wweUnMMpnBqCvmJv",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmT5YdYxH5dRgH67e2iT3Sid2nanJ5wweUnMMpnBqCvmJv",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmT5YdYxH5dRgH67e2iT3Sid2nanJ5wweUnMMpnBqCvmJv/$_library_ipfs-library-modules.js-v1.0.0+build-201123363.json",
+  "_cid": "QmZNBvW6tE5iGqfZcWYFghxTxQ5sC3Y4SbJQouw99cRFCi",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmZNBvW6tE5iGqfZcWYFghxTxQ5sC3Y4SbJQouw99cRFCi",
+  "_version": "v1.0.0+build-201123363",
+  "_raw_hash": "c692d9b3b610502e58c9ed8312d6c746545a095bf44be4b658a4e94a4ef02ba5",
+  "_size": 132041,
+  "_tags": "$:/ipfs/core"
+}
