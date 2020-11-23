@@ -191,11 +191,12 @@ module.exports = async function main (name, extension, dir, tags, hashOnly) {
     JSON.stringify(toJson),
     'utf8'
   )
+  var tid = `title: ${name}/build`
   if (tags) {
-    fs.writeFileSync(
-      `./build/output/${dir}/${fileName}_build.tid`,
-      `title: ${name}/build
-tags: ${toJson._tags}
+    tid = `${tid}
+tags: ${toJson._tags}`
+  }
+  tid = `${tid}
 _target: ${toJson._target}
 _path: ${toJson._path}
 _parent_cid: ${toJson._parent_cid}
@@ -205,10 +206,9 @@ _cid: ${toJson._cid}
 _cid_uri: ipfs://${toJson._cid}
 _version: ${toJson._version}
 _raw_hash: ${toJson.__raw_hash}
-_size: ${toJson._size}`,
-      'utf8'
-    )
-  }
+_size: ${toJson._size}`
+  // Save
+  fs.writeFileSync(`./build/output/${dir}/${fileName}_build.tid`, tid, 'utf8')
   if (!hashOnly) {
     await fetchUrl(`${gatewayUrl}/ipfs/${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._cid} ***`)
