@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-echo '*** build-noclone ***'
+echo '*** noclone ***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -8,16 +8,13 @@ echo 'nvm:' $(nvm -v)
 nvm use
 
 # init
-./scripts/build-init.sh || exit 1
+./scripts/init.sh || exit 1
 # build plugin
-./scripts/tiddlywiki-ipfs/build-plugin.sh || exit 1
-# ./scripts/run-prepare.sh || exit 1
-# ./scripts/run-browserify.sh || exit 1
-# ./scripts/build-assets.sh || exit 1
-# build tiddlywiki editions
-# ./scripts/build-editions.sh || exit 1
+./scripts/tiddlywiki-ipfs/build.sh || exit 1
+# build editions
+./scripts/editions/build.sh || exit 1
 
-# format and lint
+# final format and lint
 yarn prettier-standard || exit 1
 
 # done

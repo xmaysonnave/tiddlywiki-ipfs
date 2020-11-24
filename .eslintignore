@@ -1,8 +1,7 @@
 .github/
 build/
+download/
 node_modules/
 production/
 sample/
-tw5-locator/
-tw5-relink/
 .yarn/

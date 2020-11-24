@@ -1,12 +1,12 @@
 {
   "_target": "$:/ipfs/documentation",
-  "_path": "$_ipfs_documentation-v0.4.0-beta+build-201123450.json",
-  "_parent_cid": "QmemUPtzdBtLEhAVrGtNNJaGVeqgMk16oGHuPfXHQndkvF",
-  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmemUPtzdBtLEhAVrGtNNJaGVeqgMk16oGHuPfXHQndkvF",
-  "_source_uri": "http://127.0.0.1:8080/ipfs/QmemUPtzdBtLEhAVrGtNNJaGVeqgMk16oGHuPfXHQndkvF/$_ipfs_documentation-v0.4.0-beta+build-201123450.json",
-  "_cid": "QmeWjWVvmj7kQjEt5TRe14DXhkq7y11oDwCNUcHszjN7qq",
-  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmeWjWVvmj7kQjEt5TRe14DXhkq7y11oDwCNUcHszjN7qq",
-  "_version": "v0.4.0-beta+build-201123450",
-  "_raw_hash": "73a50e9f15db108de0710a3ba6b3178f6c72830dac4bb4756cd679fe44df8509",
+  "_path": "$_ipfs_documentation-v0.4.0-beta+build-201124284.json",
+  "_parent_cid": "Qme7Wi4VS1MuWhATWXW5N7TSBzH5JisPv7T9SapdSiS7vn",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/Qme7Wi4VS1MuWhATWXW5N7TSBzH5JisPv7T9SapdSiS7vn",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/Qme7Wi4VS1MuWhATWXW5N7TSBzH5JisPv7T9SapdSiS7vn/$_ipfs_documentation-v0.4.0-beta+build-201124284.json",
+  "_cid": "QmVD6WCWRQShnKroMZHbWhGFPS8MrMonXvUF79FMZMaAAv",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmVD6WCWRQShnKroMZHbWhGFPS8MrMonXvUF79FMZMaAAv",
+  "_version": "v0.4.0-beta+build-201124284",
+  "_raw_hash": "9233745828366c566974f83653425cc83127a0c334437b20b7dfa0251c29db60",
   "_size": 1583454
 }

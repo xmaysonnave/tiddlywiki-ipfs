@@ -1,7 +1,6 @@
 build
+download
 node_modules
 sample
-tw5-locator
-tw5-relink
 production
 .yarn

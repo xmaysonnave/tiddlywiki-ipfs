@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-echo '*** build plugin ***'
+echo '*** plugin ***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -7,25 +7,26 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use
 
-# build plugin
-./scripts/build-init-step.sh || exit 1
+# init
+./scripts/init-step.sh || exit 1
+mkdir -p ./current/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 # assets
 cp -R ./src/plugins/ipfs/core ./build/plugins/ipfs > /dev/null 2>&1
 # don't copy sub-directories, they are meant to be bundled
 cp ./src/plugins/ipfs/* ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./tiddlers/plugins/ipfs ./build/plugins > /dev/null 2>&1
-FILE="./build/output/tiddlywiki-ipfs/boot/\$_boot_boot.js_build.tid"
+FILE="./production/tiddlywiki-ipfs/boot/\$_boot_boot.js_build.tid"
 if [[ ! -f "$FILE" ]]; then
     echo "$FILE does not exist..."
     exit 1
 fi
-cp "./build/output/tiddlywiki-ipfs/boot/\$_boot_boot.js_build.tid" ./build/plugins/ipfs/config
-FILE="./build/output/tiddlywiki-ipfs/library/\$_library_ipfs-library-modules.js_build.tid"
+cp "./production/tiddlywiki-ipfs/boot/\$_boot_boot.js_build.tid" ./build/plugins/ipfs/config
+FILE="./production/tiddlywiki-ipfs/library/\$_library_ipfs-library-modules.js_build.tid"
 if [[ ! -f "$FILE" ]]; then
     echo "$FILE does not exist..."
     exit 1
 fi
-cp "./build/output/tiddlywiki-ipfs/library/\$_library_ipfs-library-modules.js_build.tid" ./build/plugins/ipfs/config
+cp "./production/tiddlywiki-ipfs/library/\$_library_ipfs-library-modules.js_build.tid" ./build/plugins/ipfs/config
 cp -R ./editions/plugin/tiddlywiki.info ./build > /dev/null 2>&1
 # bundle
 yarn browserify \
@@ -37,7 +38,7 @@ yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 # check hash and set version
-node ./scripts/tiddlywiki-ipfs/plugin/build-semver.js "$@" || exit 1
+node ./scripts/tiddlywiki-ipfs/plugin/semver.js "$@" || exit 1
 # build
 yarn ipfs-tiddlywiki build \
   --output production \
