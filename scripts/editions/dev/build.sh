@@ -21,9 +21,9 @@ cp ./tiddlers/plugins/ipfs/core/templates/store.area.template.html.tid ./build/t
 cp -R ./editions/bluelightav/* ./build > /dev/null 2>&1
 cp -R ./editions/dev/* ./build > /dev/null 2>&1
 # tw5-locator
-cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
+cp -R ./download/tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
 # tw5-relink
-cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
+cp -R ./download/tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
 # set dependency
 node ./scripts/dependency.js "$@" || exit 1
 # build raw
