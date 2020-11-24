@@ -37,6 +37,18 @@ function main () {
       throw new Error('Unknown plugin build...')
     }
 
+    // documentation
+    var documentation = null
+    path =
+      './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation_build.json'
+    if (fs.existsSync(path)) {
+      documentation = fs.readFileSync(path, 'utf8')
+    }
+    if (!documentation) {
+      throw new Error('Unknown documentation build...')
+    }
+
+    // boot
     var { _version } = JSON.parse(boot)
     if (_version === undefined || _version == null) {
       throw new Error('Unknown boot version...')
@@ -50,6 +62,7 @@ function main () {
       silent: true
     })
 
+    // library
     var { _version } = JSON.parse(library)
     if (_version === undefined || _version == null) {
       throw new Error('Unknown library version...')
@@ -63,6 +76,7 @@ function main () {
       silent: true
     })
 
+    // plugin
     var { _version } = JSON.parse(plugin)
     if (_version === undefined || _version == null) {
       throw new Error('Unknown plugin version...')
@@ -70,6 +84,20 @@ function main () {
 
     replace({
       regex: `%BUILD_PLUGIN_SEMVER%`,
+      replacement: _version,
+      paths: ['./build/tiddlywiki.info'],
+      recursive: false,
+      silent: true
+    })
+
+    // documentation
+    var { _version } = JSON.parse(documentation)
+    if (_version === undefined || _version == null) {
+      throw new Error('Unknown documentation version...')
+    }
+
+    replace({
+      regex: `%BUILD_DOCUMENTATION_SEMVER%`,
       replacement: _version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,

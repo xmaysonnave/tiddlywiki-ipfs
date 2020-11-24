@@ -19,6 +19,10 @@ cp ./src/plugins/ipfs/core/modules/widgets/encrypt.js ./build/tiddlers/core/modu
 cp ./src/plugins/ipfs/core/modules/widgets/compress.js ./build/tiddlers/core/modules/widgets > /dev/null 2>&1
 cp ./tiddlers/plugins/ipfs/core/templates/store.area.template.html.tid ./build/tiddlers/core/templates > /dev/null 2>&1
 cp -R ./editions/bluelightav/* ./build > /dev/null 2>&1
+# tw5-locator
+cp -R ./tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
+# tw5-relink
+cp -R ./tw5-relink/plugins/relink ./build/plugins/relink > /dev/null 2>&1
 # set dependency
 node ./scripts/dependency.js "$@" || exit 1
 # build raw
