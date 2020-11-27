@@ -12,7 +12,6 @@ nvm use
 mkdir -p ./current/tiddlywiki-ipfs/boot > /dev/null 2>&1
 # assets
 cp -R ./boot/boot.js ./build/tiddlers/boot > /dev/null 2>&1
-cp ./core/modules/filters/ipfs-filters.js ./build/tiddlers/core/modules/filters > /dev/null 2>&1
 cp -R ./editions/boot/tiddlywiki.info ./build > /dev/null 2>&1
 # build raw
 yarn ipfs-tiddlywiki build \

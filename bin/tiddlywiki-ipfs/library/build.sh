@@ -28,7 +28,6 @@ yarn ipfs-tiddlywiki build \
 ./bin/init-step.sh || exit 1
 # assets
 cp ./build/output/tiddlywiki-ipfs/library/ipfs-library-modules.js ./build/tiddlers/system > /dev/null 2>&1
-cp ./core/modules/filters/ipfs-filters.js ./build/tiddlers/core/modules/filters > /dev/null 2>&1
 # meta
 cp ./library/modules/ipfs-library-modules.js.meta ./build/tiddlers/system > /dev/null 2>&1
 # library

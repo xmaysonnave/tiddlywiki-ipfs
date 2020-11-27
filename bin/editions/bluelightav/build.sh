@@ -11,13 +11,6 @@ nvm use
 ./bin/init-step.sh || exit 1
 mkdir -p ./current/editions/bluelightav > /dev/null 2>&1
 # assets
-cp ./core/modules/filters/ipfs-filters.js ./build/tiddlers/core/modules/filters > /dev/null 2>&1
-cp ./core/modules/commands/clearencryptionpublickey.js ./build/tiddlers/core/modules/commands > /dev/null 2>&1
-cp ./core/modules/commands/compress.js ./build/tiddlers/core/modules/commands > /dev/null 2>&1
-cp ./core/modules/commands/encryptionpublickey.js ./build/tiddlers/core/modules/commands > /dev/null 2>&1
-cp ./core/modules/widgets/encrypt.js ./build/tiddlers/core/modules/widgets > /dev/null 2>&1
-cp ./core/modules/widgets/compress.js ./build/tiddlers/core/modules/widgets > /dev/null 2>&1
-cp ./core/templates/store.area.template.html.tid ./build/tiddlers/core/templates > /dev/null 2>&1
 cp -R ./editions/bluelightav/* ./build > /dev/null 2>&1
 # tw5-locator
 cp -R ./download/tw5-locator/plugins/locator ./build/plugins/locator > /dev/null 2>&1
