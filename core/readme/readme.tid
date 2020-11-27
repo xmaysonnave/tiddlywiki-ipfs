@@ -1,0 +1,54 @@
+title: $:/plugins/ipfs/readme
+tags: $:/ipfs/core
+type: text/vnd.tiddlywiki
+
+!! IPFS with ~TiddlyWiki
+
+Features:
+
+* Store `TiddlyWiki`'s and attachments on [ext[IPFS|https://ipfs.io/]]
+* Access `TiddlyWiki`'s and attachments from [ext[IPFS|https://ipfs.io/]]
+* Compress `TiddlyWiki`'s and attachments
+* Encrypt, Decrypt and Sign `TiddlyWiki`'s and attachments
+  * Standford
+  * Ethereum
+  * [ext[SHA-3|https://en.wikipedia.org/wiki/SHA-3]]
+* Import and Export
+* Publish and Manage IPNS Names and Keys
+* Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
+* Publish to [ext[ENS|https://ens.domains]]
+* Share over [ext[IPFS|https://ipfs.io/]] `TiddlyWiki`'s [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments
+
+Supported Browsers:
+
+* [ext[Firefox|https://www.mozilla.org]]
+* [ext[Chrome|https://www.google.com/chrome/]]
+* [ext[Chromium|https://www.chromium.org]]
+
+Supported Ethereum browser extension:
+
+* [ext[Metamask|https://metamask.io]]
+
+Supported Mobile ĐApp browser:
+
+* [ext[Metamask|https://metamask.io]]
+
+Supported ENS Ethereum Networks
+
+* `Mainnet`: Ethereum Main Network
+* `Ropsten`: Ethereum Test Network (~PoW)
+* `Rinkeby`: Ethereum Test Network (~PoA)
+* `Goerli`: Ethereum Test Network (~PoA)
+
+Resources:
+
+* https://github.com/xmaysonnave/tiddlywiki-ipfs/
+* https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/README.md
+
+Requirement:
+
+* [[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]
+** Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build"/>
+* [[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]]
+** Available on from IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build"/>
+* [[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]

@@ -4,4 +4,5 @@ node_modules/
 sample/
 .yarn/
 .yarnrc
+wget-log
 yarn-error.log

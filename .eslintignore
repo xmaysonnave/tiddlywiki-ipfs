@@ -1,5 +1,6 @@
 .github/
 build/
+current/
 download/
 node_modules/
 production/

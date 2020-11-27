@@ -16,9 +16,9 @@ type: text/vnd.tiddlywiki
 </ul>
 <h4><$text text={{$:/build/ipfs/semver!!_kind}} /> <$text text={{$:/build/ipfs/semver!!_version}} /></h4>
 <ul>
-  <li><$ipfslink field="_source_uri" text="_target" tiddler="$:/bluelightav.eth/source"/></li>
-  <li><$ipfslink field="_source_uri" text="_target" tiddler="$:/empty.bluelightav.eth/source"/></li>
-  <li><$ipfslink field="_source_uri" text="_target" tiddler="$:/doc.bluelightav.eth/source"/></li>
+  <li><$ipfslink field="_source_uri" text="_owner" tiddler="$:/bluelightav.eth/build"/></li>
+  <li><$ipfslink field="_source_uri" text="_owner" tiddler="$:/empty.bluelightav.eth/build"/></li>
+  <li><$ipfslink field="_source_uri" text="_owner" tiddler="$:/doc.bluelightav.eth/build"/></li>
 </ul>
 <h3>Drag and Drop</h3>
 <p>
@@ -34,16 +34,16 @@ type: text/vnd.tiddlywiki
 <h4><$text text={{$:/build/ipfs/semver!!_kind}} /> <$text text={{$:/build/ipfs/semver!!_version}} /></h4>
 <ul>
   <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/boot/boot.js/source"/></li></ul>
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build"/></li></ul>
   </li>
   <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/library/ipfs-library-modules.js/source"/></li></ul>
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build"/></li></ul>
   </li>
   <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/plugins/ipfs/source"/></li></ul>
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs/build"/></li></ul>
   </li>
   <li>[[IPFS Documentation]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_target" tiddler="$:/ipfs/documentation/source"/></li></ul>
+    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation/build"/></li></ul>
   </li>
 </ul>
 <h4>Mandatory Third parties plugins</h4>

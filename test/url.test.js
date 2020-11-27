@@ -20,7 +20,7 @@
  * https://url.spec.whatwg.org/
  */
 
-const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 const text = 'text'
 beforeAll(() => {

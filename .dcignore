@@ -1,7 +1,0 @@
-build/
-download/
-node_modules/
-sample/
-.yarn/
-.yarnrc
-yarn-error.log

@@ -15,12 +15,12 @@
       "port": 9229
     },
     {
-      "name": "Debug Build Editions",
+      "name": "Debug build Empty edition",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["editions"],
+      "runtimeArgs": ["empty"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },

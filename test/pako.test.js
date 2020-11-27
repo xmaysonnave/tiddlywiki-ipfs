@@ -5,7 +5,7 @@
 const fs = require('fs')
 const pako = require('pako')
 
-const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
 
 beforeAll(() => {})
 

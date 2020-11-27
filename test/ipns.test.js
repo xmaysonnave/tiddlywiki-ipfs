@@ -2,8 +2,8 @@
 /*global jest,beforeAll,describe,it,expect*/
 'use strict'
 
-const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
-const IpfsWrapper = require('../src/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
+const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
+const IpfsWrapper = require('../core/modules/ipfs-wrapper.js').IpfsWrapper
 const log = require('loglevel')
 const base = new URL('https://ipfs.infura.io/')
 const resolvedTiddly =

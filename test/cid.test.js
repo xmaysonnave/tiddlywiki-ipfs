@@ -2,7 +2,7 @@
 /*global jest,beforeAll,describe,it,expect*/
 'use strict'
 
-const IpfsBundle = require('../src/plugins/ipfs/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
 const log = require('loglevel')
 // IPFS
 const sha256Base58V0 = 'QmcRQfcRTAa4cqCUSiQr9J1QQS3A3gXzkBKrGLmd8WAHTB'

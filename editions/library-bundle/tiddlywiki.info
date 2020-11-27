@@ -1,0 +1,13 @@
+{
+	"description": "Build library bundle",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "modules": [
+			"--rendertiddler",
+        "$:/ipfs/library/ipfs-library-modules.js",
+        "tiddlywiki-ipfs/library/ipfs-library-modules.js",
+        "text/plain"
+    ]
+	}
+}

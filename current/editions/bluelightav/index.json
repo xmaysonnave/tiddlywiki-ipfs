@@ -1,13 +1,12 @@
 {
-  "_target": "index",
   "_path": "index.html",
-  "_parent_cid": "QmXFoqD1s7AuHmMYySnH69KogrcvcmQUQb2yp49rss7SD2",
-  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmXFoqD1s7AuHmMYySnH69KogrcvcmQUQb2yp49rss7SD2",
-  "_source_uri": "http://127.0.0.1:8080/ipfs/QmXFoqD1s7AuHmMYySnH69KogrcvcmQUQb2yp49rss7SD2/index.html",
-  "_cid": "QmUoKw9gmrZnzJ9CnQCcCjgRu4wM3YqmU756g9LAUZimkJ",
-  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmUoKw9gmrZnzJ9CnQCcCjgRu4wM3YqmU756g9LAUZimkJ",
-  "_version": "v5.1.22-beta+build-201124435",
-  "_raw_hash": "a9c24aa804de284fcda4e482529eb87a649efb4ad2eddd4d12f927ffcd0d76db",
-  "_size": 2754928,
-  "_tags": "bluelightav.eth"
+  "_parent_cid": "QmWDkioNykZhRJ37JtysNYAFjnrTUKJhJTQJmoCAeGok1m",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmWDkioNykZhRJ37JtysNYAFjnrTUKJhJTQJmoCAeGok1m",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmWDkioNykZhRJ37JtysNYAFjnrTUKJhJTQJmoCAeGok1m/index.html",
+  "_cid": "QmayDJwK3SDfsuADEuo6swPM2DXdaQ4F2arLQrCNvGwy8b",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmayDJwK3SDfsuADEuo6swPM2DXdaQ4F2arLQrCNvGwy8b",
+  "_version": "v5.1.22-beta+build-201127442",
+  "_raw_hash": "9a84093cd263041c3c1715330e860fdf04daa82cc02e3d48a10fe45018ce994c",
+  "_size": 2767880,
+  "_tags": "$:/ipfs/editions"
 }

@@ -1,5 +1,4 @@
 {
-  "_target": "$:/boot/boot.js",
   "_path": "$_boot_boot.js-v5.1.22-beta+build-201119409.json",
   "_parent_cid": "QmNMmNTTqJcgxiPowZtbnqqACnrrEvfHvJrJrZVKjLFa7W",
   "_parent_uri": "http://127.0.0.1:8080/ipfs/QmNMmNTTqJcgxiPowZtbnqqACnrrEvfHvJrJrZVKjLFa7W",
@@ -9,5 +8,6 @@
   "_version": "v5.1.22-beta+build-201119409",
   "_raw_hash": "2f70f4b57ac881a72dbc7f9cf88066ab989a64f6b68ad0d83b841b6e51e2fc26",
   "_size": 120853,
+  "_owner": "$:/boot/boot.js",
   "_tags": "$:/ipfs/core"
 }
