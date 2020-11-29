@@ -8,13 +8,12 @@ echo 'nvm:' $(nvm -v)
 nvm use
 
 # cleanup
-rm -f -R ./build > /dev/null 2>&1
-rm -f -R ./production > /dev/null 2>&1
-rm -f -R ./sample > /dev/null 2>&1
+rm -f -R ./build
+rm -f -R ./sample
+
 # build directory layout
-mkdir -p ./build/output > /dev/null 2>&1
-mkdir ./production > /dev/null 2>&1
-mkdir ./sample > /dev/null 2>&1
+mkdir -p ./build/output
+mkdir ./sample
 
 # format and lint
 yarn prettier-standard || exit 1

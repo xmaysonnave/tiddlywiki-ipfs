@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
 echo '*** build editions ***'
 
+# init
+./bin/init-editions.sh "$@" || exit 1
+
 # build empty
 ./bin/editions/empty/build.sh "$@" || exit 1
 

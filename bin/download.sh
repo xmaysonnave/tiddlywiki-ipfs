@@ -8,11 +8,22 @@ echo 'nvm:' $(nvm -v)
 nvm use
 
 # cleanup
-rm -f -R ./download > /dev/null 2>&1
-# layout
-mkdir -p ./download/keccak > /dev/null 2>&1
+rm -f -R ./download
+
+# ethereumjs-util
+mkdir -p ./download/ethereumjs-util
+yarn browserify \
+  node_modules/ethereumjs-util/dist/index.js \
+  -s ethUtil \
+  -o download/ethereumjs-util/ethereumjs-util.umd.js || exit 1
+
+yarn terser \
+  download/ethereumjs-util/ethereumjs-util.umd.js \
+  -c toplevel,sequences=false -m \
+  -o download/ethereumjs-util/ethereumjs-util.umd.min.js || exit 1
 
 # keccak
+mkdir -p ./download/keccak
 yarn browserify \
   node_modules/keccak/js.js \
   -s createKeccakHash \
@@ -25,6 +36,10 @@ yarn terser \
 
 # down
 cd download
+
+# tiddlywiki.com
+mkdir tiddlywiki.com > /dev/null 2>&1
+wget https://tiddlywiki.com/index.html -O ./tiddlywiki.com/index.html
 
 # @metamask/detect-provider
 mkdir detect-provider > /dev/null 2>&1

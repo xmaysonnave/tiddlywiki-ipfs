@@ -5,8 +5,8 @@
 	"build": {
     "modules": [
 			"--rendertiddler",
-        "$:/ipfs/library/ipfs-library-modules.js",
-        "tiddlywiki-ipfs/library/ipfs-library-modules.js",
+        "$:/ipfs/library/bundle",
+        "tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js",
         "text/plain"
     ]
 	}

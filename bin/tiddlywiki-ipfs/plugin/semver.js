@@ -7,7 +7,7 @@ const semver = require('../../semver.js')
 function main () {
   try {
     const name = '$:/plugins/ipfs'
-    const extension = 'json'
+    const extension = 'js'
     const dir = 'tiddlywiki-ipfs/plugin'
     const env = 'PLUGIN'
 

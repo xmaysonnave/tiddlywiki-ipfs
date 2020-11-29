@@ -1,0 +1,5 @@
+title: IPFS Attachments
+tags: $:/ipfs/documentation [[IPFS Explorers]]
+type: text/vnd.tiddlywiki
+
+<<locator-view baseTitle:"$:/isAttachment">>

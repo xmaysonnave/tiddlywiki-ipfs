@@ -29,7 +29,7 @@ function main () {
 
     // plugin
     var plugin = null
-    path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs_build.json'
+    path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.json'
     if (fs.existsSync(path)) {
       plugin = fs.readFileSync(path, 'utf8')
     }
@@ -40,7 +40,7 @@ function main () {
     // documentation
     var documentation = null
     path =
-      './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation_build.json'
+      './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.json'
     if (fs.existsSync(path)) {
       documentation = fs.readFileSync(path, 'utf8')
     }

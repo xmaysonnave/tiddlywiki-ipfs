@@ -1,0 +1,6 @@
+title: $:/config/plugins/menubar/MenuItems/Visibility/$:/plugins/tiddlywiki/menubar/items/
+tags: $:/ipfs/editions/bluelightav
+
+pagecontrols: show
+server: hide
+sidebar: hide

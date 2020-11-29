@@ -7,8 +7,8 @@ const semver = require('../../semver.js')
 
 function main () {
   try {
-    const name = '$:/library/ipfs-library-modules.js'
-    const extension = 'json'
+    const name = '$:/library/ipfs-library-modules'
+    const extension = 'js'
     const dir = 'tiddlywiki-ipfs/library'
     const env = 'LIBRARY'
 
@@ -16,7 +16,7 @@ function main () {
 
     // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
     var files = fs
-      .readdirSync('./build/tiddlers/system', { withFileTypes: true })
+      .readdirSync('./build/tiddlers', { withFileTypes: true })
       .filter(item => !item.isDirectory())
       .map(item => item.name)
     for (var i = 0; i < files.length; i++) {
@@ -24,7 +24,7 @@ function main () {
         replace({
           regex: `%BUILD_${env}_SEMVER%`,
           replacement: version,
-          paths: [`./build/tiddlers/system/${files[i]}`],
+          paths: [`./build/tiddlers/${files[i]}`],
           recursive: false,
           silent: true
         })

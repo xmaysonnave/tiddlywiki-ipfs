@@ -1,10 +1,4 @@
-/*\
-title: $:/boot/ipfs-boot.js
-type: application/javascript
-tags: $:/ipfs/boot
-
-\*/
-var _boot = function ($tw) {
+var _ipfs = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
@@ -695,7 +689,7 @@ var _boot = function ($tw) {
 }
 
 if (typeof exports !== 'undefined') {
-  exports.TiddlyWiki = _boot
+  exports.TiddlyWiki = _ipfs
 } else {
-  _boot(window.$tw)
+  _ipfs(window.$tw)
 }

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 'use strict'
 
+const beautify = require('json-beautify')
 const dotenv = require('dotenv')
-const fetch = require('node-fetch')
 const filenamify = require('filenamify')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
-const beautify = require('json-beautify')
+const fetch = require('node-fetch')
 
 async function fetchUrl (url) {
-  const response = await fetch(url)
+  var response = await fetch(url)
   if (response.ok) {
     const ab = await response.arrayBuffer()
     return new Uint8Array(ab)
@@ -82,19 +82,21 @@ module.exports = async function main (
     : process.env.HASH_ONLY
     ? process.env.HASH_ONLY === 'true'
     : true
-  console.log(`*** ${name} ***`)
   const fileName = filenamify(name, { replacement: '_' })
   // build
   const build = fs.readFileSync(
     `./build/output/${dir}/${fileName}_build.json`,
     'utf8'
   )
-  var { _raw_hash: _rawHash, _version } = JSON.parse(build)
+  var { _raw_hash: _rawHash, _semver, _version } = JSON.parse(build)
   if (_version === undefined || _version == null) {
     throw new Error('Unknown version...')
   }
   if (_rawHash === undefined || _rawHash == null) {
     throw new Error('Unknown raw hash...')
+  }
+  if (_semver === undefined || _semver == null) {
+    throw new Error('Unknown semver...')
   }
   // current
   var currentVersion = null
@@ -109,7 +111,8 @@ module.exports = async function main (
       _parent_cid: currentParentCid,
       _cid: currentCid,
       _version: currentVersion,
-      _raw_hash: currentRawHash
+      _raw_hash: currentRawHash,
+      _semver: currentSemver
     } = JSON.parse(current)
     // Check
     if (currentVersion === _version) {
@@ -117,7 +120,7 @@ module.exports = async function main (
         throw new Error('Matching version but not raw hash...')
       }
     } else {
-      if (_rawHash === currentRawHash) {
+      if (_semver === currentSemver && _rawHash === currentRawHash) {
         throw new Error('Raw hash inconsistency...')
       }
     }
@@ -138,8 +141,8 @@ module.exports = async function main (
     load = fs.readFileSync(content, 'utf8')
   }
   if (!load) {
-    file = `${fileName}.${extension}`
-    content = `./build/output//${dir}/${file}`
+    file = fileName
+    content = `./build/output/${dir}/${fileName}`
     if (fs.existsSync(content)) {
       load = fs.readFileSync(content, 'utf8')
     }
@@ -203,6 +206,7 @@ module.exports = async function main (
     _source_uri: `${gatewayUrl}/ipfs/${parentCid}/${file}`,
     _cid: cid.toString(),
     _cid_uri: `${gatewayUrl}/ipfs/${cid}`,
+    _semver: _semver,
     _version: _version,
     _raw_hash: _rawHash,
     _size: size
@@ -234,6 +238,7 @@ _parent_uri: ipfs://${toJson._parent_cid}
 _source_uri: ipfs://${toJson._parent_cid}/${file}
 _cid: ${toJson._cid}
 _cid_uri: ipfs://${toJson._cid}
+_semver: ${toJson._semver}
 _version: ${toJson._version}
 _raw_hash: ${toJson.__raw_hash}
 _size: ${toJson._size}`

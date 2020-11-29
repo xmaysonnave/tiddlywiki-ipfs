@@ -1,0 +1,5 @@
+title: $:/boot/ipfs-boot.js
+tags: $:/ipfs/boot/modules
+type: application/javascript
+version: %BUILD_BOOT_SEMVER%
+ipfs-boot-modules: yes

@@ -3,7 +3,10 @@
 /**
  * This is invoked as a shell script by NPM when the `tiddlywiki` command is typed
  */
+
 const path = require('path')
+
+// boot modules
 var $tw = require('tiddlywiki').TiddlyWiki()
 $tw = require('./boot/ipfs-boot.js').TiddlyWiki($tw)
 

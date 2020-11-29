@@ -6,7 +6,7 @@
     "plain": [
       "--rendertiddler",
         "$:/core/templates/exporters/JsonFile",
-        "./tiddlywiki-ipfs/documentation/$_ipfs_documentation-%BUILD_DOCUMENTATION_SEMVER%.json",
+        "./tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_SEMVER%.json",
         "text/plain",
         "",
         "exportFilter",

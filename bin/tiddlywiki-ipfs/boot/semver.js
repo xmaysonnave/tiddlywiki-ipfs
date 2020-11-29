@@ -6,8 +6,8 @@ const semver = require('../../semver.js')
 
 function main () {
   try {
-    const name = '$:/boot/boot.js'
-    const extension = 'json'
+    const name = '$:/boot/boot'
+    const extension = 'js'
     const dir = 'tiddlywiki-ipfs/boot'
     const env = 'BOOT'
 
@@ -16,7 +16,7 @@ function main () {
     replace({
       regex: `%BUILD_${env}_SEMVER%`,
       replacement: version,
-      paths: ['./build/tiddlers/boot/boot.js'],
+      paths: ['./build/tiddlers/$_boot_boot.js.meta'],
       recursive: false,
       silent: true
     })

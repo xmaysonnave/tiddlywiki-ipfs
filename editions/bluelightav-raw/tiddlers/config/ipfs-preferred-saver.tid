@@ -1,0 +1,4 @@
+title: $:/config/PreferredSaver
+tags: $:/ipfs/editions/bluelightav
+
+$:/plugins/ipfs/ipfs-saver.js

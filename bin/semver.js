@@ -43,9 +43,6 @@ module.exports = function main (name, extension, dir, env) {
     throw new Error(`Undefined 'env.${env}_SEMVER'...`)
   }
 
-  // Log
-  console.log(`*** ${name} ***`)
-
   // Process Raw
   var raw = null
   const fileName = filenamify(name, { replacement: '_' })
@@ -53,6 +50,12 @@ module.exports = function main (name, extension, dir, env) {
   var path = `./build/output/${dir}/${fileName}-%BUILD_${env}_SEMVER%.${extension}`
   if (fs.existsSync(path)) {
     raw = fs.readFileSync(path, 'utf8')
+  }
+  if (!raw) {
+    path = `./build/output/${dir}/${fileName}.${extension}-%BUILD_${env}_SEMVER%.json`
+    if (fs.existsSync(path)) {
+      raw = fs.readFileSync(path, 'utf8')
+    }
   }
   if (!raw) {
     path = `./build/output/${dir}/${fileName}.${extension}`
@@ -73,8 +76,11 @@ module.exports = function main (name, extension, dir, env) {
   var version = null
 
   // Current
-  if (fs.existsSync(`./current/${dir}/${fileName}.json`)) {
-    const current = fs.readFileSync(`./current/${dir}/${fileName}.json`, 'utf8')
+  if (fs.existsSync(`./current/${dir}/${fileName}.${extension}.json`)) {
+    const current = fs.readFileSync(
+      `./current/${dir}/${fileName}.${extension}.json`,
+      'utf8'
+    )
     var { _raw_hash: _rawHash, _version: version } = JSON.parse(current)
   }
 
@@ -104,10 +110,11 @@ module.exports = function main (name, extension, dir, env) {
   // Save
   const toJson = {
     _raw_hash: rawHash,
+    _semver: rawSemver,
     _version: version
   }
   fs.writeFileSync(
-    `./build/output/${dir}/${fileName}_build.json`,
+    `./build/output/${dir}/${fileName}.${extension}_build.json`,
     JSON.stringify(toJson),
     'utf8'
   )

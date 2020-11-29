@@ -1,5 +1,0 @@
-title: IPFS Attachments
-tags: blueligtav.eth [[IPFS Explorers]]
-type: text/vnd.tiddlywiki
-
-<<locator-view baseTitle:"$:/isAttachment">>
