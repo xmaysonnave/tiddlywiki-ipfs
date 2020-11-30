@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "v0.4.0-beta+build-201129535",
+  "version": "v0.4.0-beta+build-201130424",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
@@ -31,8 +31,6 @@
     "build": "./bin/build.sh",
     "build-noclone": "./bin/build-noclone.sh",
     "bluelightav": "./bin/editions/bluelightav/build.sh",
-    "cli-semver": "./bin/cli-semver.sh",
-    "cli-upload": "./bin/cli-upload.sh",
     "dev": "./bin/editions/dev/build.sh",
     "documentation": "./bin/tiddlywiki-ipfs/documentation/build.sh",
     "download": "./bin/download.sh",
@@ -41,13 +39,16 @@
     "ipfs-tiddlywiki": "./bin/ipfs-tiddlywiki.sh",
     "library": "./bin/tiddlywiki-ipfs/library/build.sh",
     "tiddlywiki-ipfs": "./bin/tiddlywiki-ipfs/build.sh",
+    "tiddlywiki.com": "./bin/editions/tiddlywiki.com/build.sh",
     "precommit": "lint-staged",
     "prepare": "yarn snyk-protect",
     "prettier-standard": "prettier-standard --format --lint",
-    "publish": "./bin/publish.sh",
+    "publish": "./bin/cli-publish.sh",
+    "semver": "./bin/cli-semver.sh",
     "snyk-monitor": "snyk monitor --all-projects",
     "snyk-protect": "snyk protect",
-    "test": "./bin/test.sh"
+    "test": "./bin/test.sh",
+    "upload": "./bin/cli-upload.sh"
   },
   "lint-staged": {
     "*": [

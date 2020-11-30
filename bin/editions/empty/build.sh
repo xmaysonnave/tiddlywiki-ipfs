@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
+echo '***'
 echo '*** empty ***'
+echo '***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -9,20 +11,20 @@ nvm use
 
 # init
 ./bin/init-editions.sh "$@" || exit 1
-rm -f -R ./build/output/editions/empty
-mkdir -p ./build/output/editions/empty
-rm -f -R ./production/editions/empty
-mkdir -p ./production/editions/empty
-rm -f -R ./build/tiddlers
-mkdir -p ./build/tiddlers
-rm -f -R ./build/plugins
-mkdir -p ./current/editions/empty
+rm -f -R ./build/output/editions/ > /dev/null 2>&1
+mkdir -p ./build/output/editions/empty > /dev/null 2>&1
+rm -f -R ./production/editions/empty > /dev/null 2>&1
+mkdir -p ./production/editions/empty > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers > /dev/null 2>&1
+rm -f -R ./build/plugins > /dev/null 2>&1
+mkdir -p ./current/editions/empty > /dev/null 2>&1
 
-rm -f -R ./build/plugins/locator
-rm -f -R ./build/plugins/relink
+rm -f -R ./build/plugins/locator > /dev/null 2>&1
+rm -f -R ./build/plugins/relink > /dev/null 2>&1
 
 # assets
-cp -R ./editions/empty-raw/* ./build
+cp -R ./editions/empty-raw/* ./build || exit 1
 
 # set dependency
 node ./bin/dependency.js "$@" || exit 1
@@ -37,11 +39,11 @@ yarn ipfs-tiddlywiki build \
 echo '*** build empty***'
 
 # init
-rm -f -R ./build/tiddlers
-mkdir -p ./build/tiddlers
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
-cp ./editions/empty/tiddlywiki.info ./build/tiddlywiki.info
+cp ./editions/empty/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # set dependency
 node ./bin/dependency.js "$@" || exit 1

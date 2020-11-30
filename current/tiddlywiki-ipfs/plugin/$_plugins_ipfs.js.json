@@ -1,14 +1,14 @@
 {
-  "_path": "$_plugins_ipfs.js-v0.4.0-beta+build-201129535.json",
-  "_parent_cid": "QmeQiiRAAijBwifZKccos5hhw8VQyaaYYb34hx7cuYX1AY",
-  "_parent_uri": "https://ipfs.bluelightav.org/ipfs/QmeQiiRAAijBwifZKccos5hhw8VQyaaYYb34hx7cuYX1AY",
-  "_source_uri": "https://ipfs.bluelightav.org/ipfs/QmeQiiRAAijBwifZKccos5hhw8VQyaaYYb34hx7cuYX1AY/$_plugins_ipfs.js-v0.4.0-beta+build-201129535.json",
-  "_cid": "Qmd2eEA6cWEfo8hz98erWghMiNbp8AKHFGbP74XdHKPGK6",
-  "_cid_uri": "https://ipfs.bluelightav.org/ipfs/Qmd2eEA6cWEfo8hz98erWghMiNbp8AKHFGbP74XdHKPGK6",
+  "_parent_cid": "QmTs7D5bffieQ1vf7U1gH1Yp8u2LUTd68Ja4ehJVPw4ppN",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmTs7D5bffieQ1vf7U1gH1Yp8u2LUTd68Ja4ehJVPw4ppN",
+  "_source_path": "$_plugins_ipfs.js-v0.4.0-beta+build-201130424.json",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmTs7D5bffieQ1vf7U1gH1Yp8u2LUTd68Ja4ehJVPw4ppN/$_plugins_ipfs.js-v0.4.0-beta+build-201130424.json",
+  "_cid": "QmbyskQBH9f75gLUjSKFE4xmG3NVyaAyr6j16UtF3sd8Yk",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmbyskQBH9f75gLUjSKFE4xmG3NVyaAyr6j16UtF3sd8Yk",
   "_semver": "v0.4.0-beta+build",
-  "_version": "v0.4.0-beta+build-201129535",
-  "_raw_hash": "d3a9b7ca4126ebe8fc615f66d56f94d6d03cc80f350b987f91c4631f25eb33cb",
-  "_size": 907353,
+  "_version": "v0.4.0-beta+build-201130424",
+  "_raw_hash": "7b06f629e11723e083886967fe39ccfafa96471086d027265244cdeeffe3df95",
+  "_size": 907219,
   "_owner": "$:/plugins/ipfs",
   "_tags": "$:/ipfs/documentation"
 }

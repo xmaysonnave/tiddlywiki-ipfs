@@ -5,9 +5,6 @@ version: %BUILD_LIBRARY_SEMVER%
 library: yes
 _detect_provider_license_uri: https://raw.githubusercontent.com/MetaMask/detect-provider/main/LICENSE
 _detect_provider_project_uri: https://github.com/MetaMask/detect-provider
-_ethereumjs-util_source_uri: https://cdn.jsdelivr.net/npm/ethereumjs-util@7.0.7/dist/index.min.js
-_ethereumjs-util_license_uri: https://raw.githubusercontent.com/ethereumjs/ethereumjs-util/master/LICENSE
-_ethereumjs-util_project_uri: https://github.com/ethereumjs/ethereumjs-util
 _detect_provider_source_uri: https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/index.min.js
 _keccak_license_uri: https://raw.githubusercontent.com/cryptocoinjs/keccak/master/LICENSE
 _keccak_project_uri: https://github.com/cryptocoinjs/keccak

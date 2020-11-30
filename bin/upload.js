@@ -42,10 +42,11 @@ module.exports = async function main (
   tags,
   hashOnly
 ) {
-  const result = dotenv.config()
-  if (result.error) {
-    throw result.error
+  const dotEnv = dotenv.config()
+  if (dotEnv.error) {
+    throw dotEnv.error
   }
+
   name =
     name == null || name === undefined || name.trim() === ''
       ? null
@@ -82,7 +83,9 @@ module.exports = async function main (
     : process.env.HASH_ONLY
     ? process.env.HASH_ONLY === 'true'
     : true
+
   const fileName = filenamify(name, { replacement: '_' })
+
   // build
   const build = fs.readFileSync(
     `./build/output/${dir}/${fileName}_build.json`,
@@ -98,6 +101,7 @@ module.exports = async function main (
   if (_semver === undefined || _semver == null) {
     throw new Error('Unknown semver...')
   }
+
   // current
   var currentVersion = null
   var currentParentCid = null
@@ -125,6 +129,14 @@ module.exports = async function main (
       }
     }
   }
+
+  // Pin
+  var toBePinned = []
+  if (fs.existsSync(`./build/output/pin/pin.json`)) {
+    const pin = fs.readFileSync(`./build/output/pin/pin.json`, 'utf8')
+    toBePinned = JSON.parse(pin)
+  }
+
   // Ipfs Client
   const apiUrl = process.env.API
     ? process.env.API
@@ -150,6 +162,8 @@ module.exports = async function main (
   if (!load) {
     throw new Error('Unknown content...')
   }
+
+  // Upload
   const options = {
     chunker: 'rabin-262144-524288-1048576',
     cidVersion: 0,
@@ -161,34 +175,37 @@ module.exports = async function main (
   if (hashOnly) {
     options.onlyHash = true
   }
-  var parentCid = null
   var cid = null
   var size = null
   var msg = 'added'
   if (hashOnly) {
-    msg = 'hashed only'
+    msg = 'hashed'
   }
+
   const upload = {
     path: `/${file}`,
     content: StringToUint8Array(load)
   }
-  for await (const added of api.addAll([upload], options)) {
-    if (!added || !added.cid) {
-      throw new Error('IPFS client returned an unknown result...')
+  const result = await api.add(upload, options)
+  if (!result || !result.cid) {
+    throw new Error('IPFS client returned an unknown result...')
+  }
+  const parentCid = result.cid
+
+  // Lookup
+  for await (const ls of api.ls(parentCid)) {
+    if (ls.name === file) {
+      cid = ls.cid
+      size = ls.size
     }
-    if (cid !== null && parentCid !== null) {
-      throw new Error('IPFS client returned an unexpected result...')
-    }
-    if (!cid && added.path === file) {
-      cid = added.cid
-    } else if (!parentCid) {
-      parentCid = added.cid
-    }
-    size = added.size
+  }
+  if (!cid) {
+    throw new Error('Unknown cid...')
   }
   console.log(`*** ${msg} ${parentCid} ***`)
   console.log(`*** ${msg} ${parentCid}/${file} ***`)
   console.log(`*** ${msg} ${cid} ***`)
+
   // Check
   if (currentVersion === _version) {
     if (cid.toString() !== currentCid) {
@@ -198,11 +215,12 @@ module.exports = async function main (
       throw new Error('Matching version but not parent cid...')
     }
   }
-  // Save
+
+  // Json
   const toJson = {
-    _path: file,
     _parent_cid: parentCid.toString(),
     _parent_uri: `${gatewayUrl}/ipfs/${parentCid}`,
+    _source_path: file,
     _source_uri: `${gatewayUrl}/ipfs/${parentCid}/${file}`,
     _cid: cid.toString(),
     _cid_uri: `${gatewayUrl}/ipfs/${cid}`,
@@ -217,11 +235,14 @@ module.exports = async function main (
   if (tags) {
     toJson._tags = tags
   }
+  // Save current
   fs.writeFileSync(
     `./current/${dir}/${fileName}.json`,
     beautify(toJson, null, 2, 80),
     'utf8'
   )
+
+  // Tiddler
   var tid = `title: ${name}/build`
   if (tags) {
     tid = `${tid}
@@ -232,26 +253,50 @@ tags: ${toJson._tags}`
 _owner: ${toJson._owner}`
   }
   tid = `${tid}
-_path: ${toJson._path}
 _parent_cid: ${toJson._parent_cid}
 _parent_uri: ipfs://${toJson._parent_cid}
+_source_path: ${toJson._path}
 _source_uri: ipfs://${toJson._parent_cid}/${file}
 _cid: ${toJson._cid}
-_cid_uri: ipfs://${toJson._cid}
+_cid_uri: ipfs://${toJson._cid_uri}
 _semver: ${toJson._semver}
 _version: ${toJson._version}
 _raw_hash: ${toJson.__raw_hash}
 _size: ${toJson._size}`
-  // Save
+
+  // Save Tiddler
   fs.writeFileSync(`./production/${dir}/${fileName}_build.tid`, tid, 'utf8')
+
+  // Pin reference
+  if (toBePinned.indexOf(`${parentCid}/${file}`) === -1) {
+    toBePinned.push(`${parentCid}/${file}`)
+  }
+  // Pin parent directory
+  if (toBePinned.indexOf(parentCid.toString()) === -1) {
+    toBePinned.push(parentCid.toString())
+  }
+  // Pin resource
+  if (toBePinned.indexOf(cid.toString()) === -1) {
+    toBePinned.push(cid.toString())
+  }
+  // Save
+  fs.writeFileSync(
+    `./build/output/pin/pin.json`,
+    JSON.stringify(toBePinned),
+    'utf8'
+  )
+
+  // Fetch
   if (!hashOnly) {
     await fetchUrl(`${gatewayUrl}/ipfs/${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._cid} ***`)
     await fetchUrl(`${gatewayUrl}/ipfs/${toJson._parent_cid}`)
     console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid} ***`)
-    await fetchUrl(`${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._path}`)
+    await fetchUrl(
+      `${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._source_path}`
+    )
     console.log(
-      `*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._path} ***`
+      `*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._source_path} ***`
     )
   }
 }

@@ -1,14 +1,14 @@
 {
-  "_path": "$_ipfs_documentation.json-v0.4.0-beta+build-201129535.json",
-  "_parent_cid": "QmWen6kthsmm8R4gyjci2ujuvznCiTB23VSarqyC2c3dnt",
-  "_parent_uri": "https://ipfs.bluelightav.org/ipfs/QmWen6kthsmm8R4gyjci2ujuvznCiTB23VSarqyC2c3dnt",
-  "_source_uri": "https://ipfs.bluelightav.org/ipfs/QmWen6kthsmm8R4gyjci2ujuvznCiTB23VSarqyC2c3dnt/$_ipfs_documentation.json-v0.4.0-beta+build-201129535.json",
-  "_cid": "Qmf8dJuwmFC6BxX6gha5TviuazFDZ9nVdUkE7mRNA1e5u4",
-  "_cid_uri": "https://ipfs.bluelightav.org/ipfs/Qmf8dJuwmFC6BxX6gha5TviuazFDZ9nVdUkE7mRNA1e5u4",
+  "_parent_cid": "QmPx7YWiUAsyse5pemnEUkazFk2nk3kcm239pQRqCKhJAe",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmPx7YWiUAsyse5pemnEUkazFk2nk3kcm239pQRqCKhJAe",
+  "_source_path": "$_ipfs_documentation.json-v0.4.0-beta+build-201130424.json",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmPx7YWiUAsyse5pemnEUkazFk2nk3kcm239pQRqCKhJAe/$_ipfs_documentation.json-v0.4.0-beta+build-201130424.json",
+  "_cid": "QmbdBA9nADK5sTJXLb9RZdM4oGq4DdCmXuxH8ePVoKBk6c",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmbdBA9nADK5sTJXLb9RZdM4oGq4DdCmXuxH8ePVoKBk6c",
   "_semver": "v0.4.0-beta+build",
-  "_version": "v0.4.0-beta+build-201129535",
-  "_raw_hash": "859110c86887e356858529828f945aba52f78c98ba9adbbddcd1800470c98d22",
-  "_size": 1583973,
+  "_version": "v0.4.0-beta+build-201130424",
+  "_raw_hash": "8b98b14b1efeb597521f3c089358d7dbe998b3235184a6087e4036bb5b6d7436",
+  "_size": 1583728,
   "_owner": "$:/ipfs/documentation",
   "_tags": "$:/ipfs/documentation"
 }

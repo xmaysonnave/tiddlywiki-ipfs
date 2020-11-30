@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
+echo '***'
 echo '*** plugin ***'
+echo '***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -8,33 +10,23 @@ echo 'nvm:' $(nvm -v)
 nvm use
 
 # init
-rm -f -R ./build/output/tiddlywiki-ipfs/plugin
-mkdir -p ./build/output/tiddlywiki-ipfs/plugin
-rm -f -R ./production/tiddlywiki-ipfs/plugin
-mkdir -p ./production/tiddlywiki-ipfs/plugin
-rm -f -R ./build/tiddlers
-mkdir -p ./build/tiddlers
-rm -f -R ./build/plugins
-mkdir -p ./current/tiddlywiki-ipfs/plugin
+rm -f -R ./build/output/tiddlywiki-ipfs/plugin > /dev/null 2>&1
+mkdir -p ./build/output/tiddlywiki-ipfs/plugin > /dev/null 2>&1
+rm -f -R ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
+mkdir -p ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers > /dev/null 2>&1
+rm -f -R ./build/plugins > /dev/null 2>&1
+mkdir -p ./current/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 
 # assets
-mkdir -p ./build/plugins/ipfs
-cp -R ./core/* ./build/plugins/ipfs
-rm ./build/plugins/ipfs/modules/ipfs-bundle.js
-rm -R ./build/plugins/ipfs/modules/ipfs-bundle
-FILE='./production/tiddlywiki-ipfs/boot/$_boot_boot.js_build.tid'
-if [[ ! -f "$FILE" ]]; then
-    echo "$FILE does not exist..."
-    exit 1
-fi
-cp './production/tiddlywiki-ipfs/boot/$_boot_boot.js_build.tid' './build/plugins/ipfs/config/$_boot_boot.js_build.tid'
-FILE='./production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.tid'
-if [[ ! -f "$FILE" ]]; then
-    echo "$FILE does not exist..."
-    exit 1
-fi
-cp './production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.tid' './build/plugins/ipfs/config/$_library_ipfs-library-modules.js_build.tid'
-cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info
+mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
+cp -R ./core/* ./build/plugins/ipfs || exit 1
+rm ./build/plugins/ipfs/modules/ipfs-bundle.js > /dev/null 2>&1
+rm -R ./build/plugins/ipfs/modules/ipfs-bundle > /dev/null 2>&1
+cp './production/tiddlywiki-ipfs/boot/$_boot_boot.js_build.tid' './build/plugins/ipfs/config/$_boot_boot.js_build.tid' || exit 1
+cp './production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.tid' './build/plugins/ipfs/config/$_library_ipfs-library-modules.js_build.tid' || exit 1
+cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # bundle
 echo '*** build ipfs-bundle ***'

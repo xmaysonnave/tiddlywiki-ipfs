@@ -13,5 +13,8 @@ echo '*** build editions ***'
 # build dev
 ./bin/editions/dev/build.sh "$@" || exit 1
 
+# build tiddlywiki.com
+./bin/editions/tiddlywiki.com/build.sh "$@" || exit 1
+
 # done
 exit 0

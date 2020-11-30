@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-echo '*** ipfs-tiddlywiki ***'
+echo '*** cli publish ***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -7,8 +7,8 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use
 
-# run
-node ./ipfs-tiddlywiki.js "$@" || exit 1
+# build
+node ./bin/cli-publish.js "$@" || exit 1
 
 # done
 exit 0

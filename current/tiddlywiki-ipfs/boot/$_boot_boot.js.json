@@ -1,14 +1,14 @@
 {
-  "_path": "$_boot_boot.js-v0.4.0-beta+build-201129535.json",
-  "_parent_cid": "QmNW8EAz955o2SPjiGjeEHHqMDB7sNRUxYZH5BEBKeyw6N",
-  "_parent_uri": "https://ipfs.bluelightav.org/ipfs/QmNW8EAz955o2SPjiGjeEHHqMDB7sNRUxYZH5BEBKeyw6N",
-  "_source_uri": "https://ipfs.bluelightav.org/ipfs/QmNW8EAz955o2SPjiGjeEHHqMDB7sNRUxYZH5BEBKeyw6N/$_boot_boot.js-v0.4.0-beta+build-201129535.json",
-  "_cid": "QmSf5sHMpLHzFHREESsHfN1cHZjxw4AMiySmpGagTiwWeX",
-  "_cid_uri": "https://ipfs.bluelightav.org/ipfs/QmSf5sHMpLHzFHREESsHfN1cHZjxw4AMiySmpGagTiwWeX",
+  "_parent_cid": "QmPyfNfP2tLUyp9wigkJvsYFzuAtHrjfDTRLRU6eF9yq6H",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmPyfNfP2tLUyp9wigkJvsYFzuAtHrjfDTRLRU6eF9yq6H",
+  "_source_path": "$_boot_boot.js-v0.4.0-beta+build-201130424.json",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmPyfNfP2tLUyp9wigkJvsYFzuAtHrjfDTRLRU6eF9yq6H/$_boot_boot.js-v0.4.0-beta+build-201130424.json",
+  "_cid": "QmcDgk39rRRLHKaN5pNeVsy9zmMtCg8SMW3cuiugEnfgcE",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmcDgk39rRRLHKaN5pNeVsy9zmMtCg8SMW3cuiugEnfgcE",
   "_semver": "v0.4.0-beta+build",
-  "_version": "v0.4.0-beta+build-201129535",
+  "_version": "v0.4.0-beta+build-201130424",
   "_raw_hash": "81a38d8e2de05240be050581e826a6326a1197618188daee0020efaaa922b703",
-  "_size": 120267,
+  "_size": 120158,
   "_owner": "$:/boot/boot.js",
   "_tags": "$:/ipfs/core"
 }

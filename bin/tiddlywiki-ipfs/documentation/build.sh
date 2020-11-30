@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
+echo '***'
 echo '*** documentation ***'
+echo '***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -8,24 +10,19 @@ echo 'nvm:' $(nvm -v)
 nvm use
 
 # init
-rm -f -R ./build/output/tiddlywiki-ipfs/documentation
-mkdir -p ./build/output/tiddlywiki-ipfs/documentation
-rm -f -R ./production/tiddlywiki-ipfs/documentation
-mkdir -p ./production/tiddlywiki-ipfs/documentation
-mkdir -p ./current/tiddlywiki-ipfs/documentation
-rm -f -R ./build/tiddlers
-mkdir -p ./build/tiddlers/config
-rm -f -R ./build/plugins
-mkdir -p ./current/tiddlywiki-ipfs/documentation
+rm -f -R ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
+mkdir -p ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
+rm -f -R ./production/tiddlywiki-ipfs/documentation > /dev/null 2>&1
+mkdir -p ./production/tiddlywiki-ipfs/documentation > /dev/null 2>&1
+mkdir -p ./current/tiddlywiki-ipfs/documentation > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers/config > /dev/null 2>&1
+rm -f -R ./build/plugins > /dev/null 2>&1
+mkdir -p ./current/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 
 # assets
-FILE='./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid'
-if [[ ! -f "$FILE" ]]; then
-    echo "$FILE does not exist..."
-    exit 1
-fi
-cp './production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid' './build/tiddlers/config/$_plugins_ipfs.js_build.tid'
-cp -R ./editions/documentation/* ./build
+cp -R ./editions/documentation/* ./build || exit 1
+cp './production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid' './build/tiddlers/config/$_plugins_ipfs.js_build.tid' || exit 1
 
 # build raw
 echo '*** build raw documentation ***'

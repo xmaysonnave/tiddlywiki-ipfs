@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
+echo '***'
 echo '*** bluelightav ***'
+echo '***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -9,27 +11,28 @@ nvm use
 
 # init
 ./bin/init-editions.sh "$@" || exit 1
-rm -f -R ./build/output/editions/bluelightav
-mkdir -p ./build/output/editions/bluelightav
-rm -f -R ./production/editions/bluelightav
-mkdir -p ./production/editions/bluelightav
-rm -f -R ./build/tiddlers
-mkdir -p ./build/tiddlers
-rm -f -R ./build/plugins
-mkdir -p ./current/editions/bluelightav
+rm -f -R ./build/output/editions/bluelightav > /dev/null 2>&1
+mkdir -p ./build/output/editions/bluelightav > /dev/null 2>&1
+rm -f -R ./production/editions/bluelightav > /dev/null 2>&1
+mkdir -p ./production/editions/bluelightav > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers > /dev/null 2>&1
+rm -f -R ./build/plugins > /dev/null 2>&1
+mkdir -p ./current/editions/bluelightav > /dev/null 2>&1
 
 # tw5-locator
-rm -f -R ./build/plugins/locator
-mkdir -p ./build/plugins/locator
-cp -R ./download/tw5-locator/plugins/locator ./build/plugins
+rm -f -R ./build/plugins/locator > /dev/null 2>&1
+mkdir -p ./build/plugins/locator > /dev/null 2>&1
+cp -R ./download/tw5-locator/plugins/locator ./build/plugins || exit 1
 
 # tw5-relink
-rm -f -R ./build/plugins/relink
-mkdir -p ./build/plugins/relink
-cp -R ./download/tw5-relink/plugins/relink ./build/plugins
+rm -f -R ./build/plugins/relink > /dev/null 2>&1
+mkdir -p ./build/plugins/relink > /dev/null 2>&1
+cp -R ./download/tw5-relink/plugins/relink ./build/plugins || exit 1
 
 # assets
-cp -R ./editions/bluelightav-raw/* ./build
+cp -R ./editions/bluelightav-raw/* ./build || exit 1
+cp './production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.tid' './build/tiddlers/config/$_ipfs_documentation.json_build.tid' || exit 1
 
 # set dependency
 node ./bin/dependency.js "$@" || exit 1
@@ -44,11 +47,11 @@ yarn ipfs-tiddlywiki build \
 echo '*** build bluelightav ***'
 
 # init
-rm -f -R ./build/tiddlers
-mkdir -p ./build/tiddlers
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
-cp ./editions/bluelightav/tiddlywiki.info ./build/tiddlywiki.info
+cp ./editions/bluelightav/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # set dependency
 node ./bin/dependency.js "$@" || exit 1

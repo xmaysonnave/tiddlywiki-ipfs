@@ -10,9 +10,9 @@ const createKeccakHash = require('keccak')
 
 module.exports = function main (name, extension, dir, env) {
   // Check
-  const result = dotenv.config()
-  if (result.error) {
-    throw result.error
+  const dotEnv = dotenv.config()
+  if (dotEnv.error) {
+    throw dotEnv.error
   }
   name =
     name == null || name === undefined || name.trim() === ''
