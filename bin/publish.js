@@ -40,12 +40,10 @@ module.exports = async function main (pin) {
     try {
       if (pin) {
         console.log(`*** Pinning ${toBePinned[i]} ***`)
-        const cid = await api.pin.add(toBePinned[i], { recursive: false })
-        console.log(`**** Pinned ${cid} ****`)
+        await api.pin.add(toBePinned[i], { recursive: true })
       } else {
         console.log(`*** Unpinning ${toBePinned[i]} ***`)
-        const cid = await api.pin.rm(toBePinned[i], { recursive: false })
-        console.log(`**** Unpinned ${cid} ****`)
+        await api.pin.rm(toBePinned[i], { recursive: true })
       }
     } catch (error) {
       console.error(error.message)

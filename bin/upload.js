@@ -137,14 +137,6 @@ module.exports = async function main (
     toBePinned = JSON.parse(pin)
   }
 
-  // Ipfs Client
-  const apiUrl = process.env.API
-    ? process.env.API
-    : 'https://ipfs.infura.io:5001'
-  const api = IpfsHttpClient(apiUrl)
-  const gatewayUrl = process.env.GATEWAY
-    ? process.env.GATEWAY
-    : 'https://dweb.link'
   // Load
   var load = null
   var file = `${fileName}-${_version}.${extension}`
@@ -162,6 +154,19 @@ module.exports = async function main (
   if (!load) {
     throw new Error('Unknown content...')
   }
+
+  // Ipfs Client
+  const apiUrl = process.env.API
+    ? process.env.API
+    : 'https://ipfs.infura.io:5001'
+  const api = IpfsHttpClient(apiUrl)
+  const gatewayUrl = process.env.GATEWAY
+    ? process.env.GATEWAY
+    : 'https://dweb.link'
+
+  var parentCid = await ipfs.object.new({
+    template: 'unixfs-dir'
+  })
 
   // Upload
   const options = {

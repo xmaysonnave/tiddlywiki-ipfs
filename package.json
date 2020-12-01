@@ -76,6 +76,7 @@
     "cids": "1.0.2",
     "filenamify": "^4.2.0",
     "ipfs-provider": "^1.1.0",
+    "ipld-dag-pb": "^0.20.0",
     "uint8arrays": "^1.1.0"
   },
   "devDependencies": {
@@ -92,7 +93,6 @@
     "eruda": "^2.4.1",
     "eslint": "^7.14.0",
     "eth-sig-util": "^3.0.0",
-    "ethereumjs-util": "^7.0.7",
     "ethers": "^5.0.23",
     "gzipper": "^4.1.0",
     "husky": "^4.3.0",
@@ -106,7 +106,7 @@
     "prettier-standard": "^16.4.1",
     "replace": "^1.2.0",
     "sjcl": "^1.0.8",
-    "snyk": "^1.431.2",
+    "snyk": "^1.431.4",
     "terser": "^5.5.1",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.1.2",
