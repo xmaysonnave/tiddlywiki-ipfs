@@ -1,6 +1,4 @@
 #!/usr/bin/env zsh
-echo '*** build tiddlywiki-ipfs ***'
-
 # build library
 ./bin/tiddlywiki-ipfs/library/build.sh "$@" || exit 1
 

@@ -1,13 +1,13 @@
 {
-  "_parent_cid": "QmRugEYhH2ko3UGsgm3yEbmQy2mvLqMeRgqiyXQE9EDu6V",
-  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmRugEYhH2ko3UGsgm3yEbmQy2mvLqMeRgqiyXQE9EDu6V",
+  "_parent_cid": "Qmc4jqCWpVqCyArFCLVT8noTYGcTGXKV6KGfggbhictSJb",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/Qmc4jqCWpVqCyArFCLVT8noTYGcTGXKV6KGfggbhictSJb",
   "_source_path": "index.html",
-  "_source_uri": "http://127.0.0.1:8080/ipfs/QmRugEYhH2ko3UGsgm3yEbmQy2mvLqMeRgqiyXQE9EDu6V/index.html",
-  "_cid": "QmPQMA1Kfq21r7p2BpCSCjQhCjTm3m75STNNnicJZCAZSy",
-  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmPQMA1Kfq21r7p2BpCSCjQhCjTm3m75STNNnicJZCAZSy",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/Qmc4jqCWpVqCyArFCLVT8noTYGcTGXKV6KGfggbhictSJb/index.html",
+  "_cid": "QmRigKvh4SgcniW9rW9K8xtnpH9fUgfpydSoVohJwi1CJH",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmRigKvh4SgcniW9rW9K8xtnpH9fUgfpydSoVohJwi1CJH",
   "_semver": "0.4.0-beta-TW-v5.1.22+build",
-  "_version": "0.4.0-beta-TW-v5.1.22+build-201202427",
-  "_raw_hash": "7a7033d4610421a0a9c69dc44ca2881711bf5de8be8a9576be6492d6c2489000",
-  "_size": 996713,
+  "_version": "0.4.0-beta-TW-v5.1.22+build-201202492",
+  "_raw_hash": "2e42987c3660a66452171f9e7ac233d240a506acbc1b496956a57dcc725a36b1",
+  "_size": 996721,
   "_tags": "$:/ipfs/editions"
 }

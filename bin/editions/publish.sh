@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-
 # publish empty
 ./bin/editions/empty/publish.sh "$@" || exit 1
 

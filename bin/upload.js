@@ -46,7 +46,6 @@ module.exports = async function main (
   if (dotEnv.error) {
     throw dotEnv.error
   }
-
   name =
     name == null || name === undefined || name.trim() === ''
       ? null
@@ -84,11 +83,11 @@ module.exports = async function main (
     ? process.env.HASH_ONLY === 'true'
     : true
 
-  const fileName = filenamify(name, { replacement: '_' })
+  const normalizedName = filenamify(name, { replacement: '_' })
 
   // build
   const build = fs.readFileSync(
-    `./build/output/${dir}/${fileName}_build.json`,
+    `./build/output/${dir}/${normalizedName}_build.json`,
     'utf8'
   )
   var { _raw_hash: _rawHash, _semver, _version } = JSON.parse(build)
@@ -106,8 +105,11 @@ module.exports = async function main (
   var currentVersion = null
   var currentParentCid = null
   var currentCid = null
-  if (fs.existsSync(`./current/${dir}/${fileName}.json`)) {
-    const current = fs.readFileSync(`./current/${dir}/${fileName}.json`, 'utf8')
+  if (fs.existsSync(`./current/${dir}/${normalizedName}.json`)) {
+    const current = fs.readFileSync(
+      `./current/${dir}/${normalizedName}.json`,
+      'utf8'
+    )
     if (!current) {
       throw new Error('Unknown current version...')
     }
@@ -141,21 +143,47 @@ module.exports = async function main (
   }
 
   // Load
-  var load = null
-  var file = `${fileName}-${_version}.${extension}`
-  var content = `./production/${dir}/${file}`
-  if (fs.existsSync(content)) {
-    load = fs.readFileSync(content, 'utf8')
+  const upload = []
+  var content = null
+  var contentName = `${normalizedName}-${_version}.${extension}`
+  var contentPath = `./production/${dir}/${contentName}`
+  if (fs.existsSync(contentPath)) {
+    content = fs.readFileSync(contentPath, 'utf8')
   }
-  if (!load) {
-    file = fileName
-    content = `./build/output/${dir}/${fileName}`
-    if (fs.existsSync(content)) {
-      load = fs.readFileSync(content, 'utf8')
+  if (!content) {
+    contentName = normalizedName
+    contentPath = `./build/output/${dir}/${normalizedName}`
+    if (fs.existsSync(contentPath)) {
+      content = fs.readFileSync(contentPath, 'utf8')
     }
   }
-  if (!load) {
+  if (!content) {
     throw new Error('Unknown content...')
+  }
+  upload.push({
+    path: `/${contentName}`,
+    content: StringToUint8Array(content)
+  })
+
+  // favicon
+  var favicon = null
+  var faviconName = 'favicon.ico'
+  var faviconPath = `./production/${dir}/${faviconName}`
+  if (fs.existsSync(faviconPath)) {
+    favicon = fs.readFileSync(faviconPath)
+  }
+  if (!favicon) {
+    faviconName = 'favicon.png'
+    faviconPath = `./production/${dir}/${faviconName}`
+    if (fs.existsSync(faviconPath)) {
+      favicon = fs.readFileSync(faviconPath)
+    }
+  }
+  if (favicon) {
+    upload.push({
+      path: `/${faviconName}`,
+      content: favicon
+    })
   }
 
   // Ipfs Client
@@ -169,9 +197,10 @@ module.exports = async function main (
     : 'https://dweb.link'
   gatewayUrl = `${gatewayUrl}/ipfs/`
 
-  // Upload Leaf
+  // Upload
   var cid = null
   var parentCid = null
+  var faviconCid = null
   var size = null
   var msg = 'added'
   if (hashOnly) {
@@ -188,21 +217,17 @@ module.exports = async function main (
   if (hashOnly) {
     options.onlyHash = true
   }
-  const upload = [
-    {
-      path: `/${file}`,
-      content: StringToUint8Array(load)
-    }
-  ]
   for await (const result of api.addAll(upload, options)) {
     if (!result) {
       throw new Error('IPFS client returned an unknown result...')
     }
     if (result.path === '') {
       parentCid = result.cid
-    } else if (result.path === file) {
+    } else if (result.path === contentName) {
       cid = result.cid
       size = result.size
+    } else if (result.path === faviconName) {
+      faviconCid = result.cid
     }
   }
   if (!parentCid) {
@@ -213,8 +238,14 @@ module.exports = async function main (
   }
 
   console.log(`*** ${msg} ${cid} ***`)
+  if (faviconCid) {
+    console.log(`*** ${msg} ${faviconCid} ***`)
+  }
   console.log(`*** ${msg} ${parentCid} ***`)
-  console.log(`*** ${msg} ${parentCid}/${file} ***`)
+  console.log(`*** ${msg} ${parentCid}/${contentName} ***`)
+  if (faviconCid) {
+    console.log(`*** ${msg} ${parentCid}/${faviconName} ***`)
+  }
 
   // Check
   if (currentVersion === _version) {
@@ -230,8 +261,8 @@ module.exports = async function main (
   const toJson = {
     _parent_cid: parentCid.toString(),
     _parent_uri: `${gatewayUrl}${parentCid}`,
-    _source_path: file,
-    _source_uri: `${gatewayUrl}${parentCid}/${file}`,
+    _source_path: contentName,
+    _source_uri: `${gatewayUrl}${parentCid}/${contentName}`,
     _cid: cid.toString(),
     _cid_uri: `${gatewayUrl}${cid}`,
     _semver: _semver,
@@ -247,7 +278,7 @@ module.exports = async function main (
   }
   // Save current
   fs.writeFileSync(
-    `./current/${dir}/${fileName}.json`,
+    `./current/${dir}/${normalizedName}.json`,
     beautify(toJson, null, 2, 80),
     'utf8'
   )
@@ -265,8 +296,8 @@ _owner: ${toJson._owner}`
   tid = `${tid}
 _parent_cid: ${toJson._parent_cid}
 _parent_uri: ipfs://${toJson._parent_cid}
-_source_path: ${toJson._path}
-_source_uri: ipfs://${toJson._parent_cid}/${file}
+_source_path: ${toJson._source_path}
+_source_uri: ipfs://${toJson._parent_cid}/${contentName}
 _cid: ${toJson._cid}
 _cid_uri: ipfs://${toJson._cid_uri}
 _semver: ${toJson._semver}
@@ -275,19 +306,34 @@ _raw_hash: ${toJson.__raw_hash}
 _size: ${toJson._size}`
 
   // Save Tiddler
-  fs.writeFileSync(`./production/${dir}/${fileName}_build.tid`, tid, 'utf8')
+  fs.writeFileSync(
+    `./production/${dir}/${normalizedName}_build.tid`,
+    tid,
+    'utf8'
+  )
 
-  // resource
+  // content
   if (!replay.has(cid.toString())) {
     replay.set(cid.toString(), 'file')
+  }
+  // favicon
+  if (faviconCid) {
+    if (!replay.has(faviconCid.toString())) {
+      replay.set(faviconCid.toString(), 'file')
+    }
   }
   // parent directory
   if (!replay.has(parentCid.toString())) {
     replay.set(parentCid.toString(), 'dir')
   }
   // link
-  if (!replay.has(`${parentCid}/${file}`)) {
-    replay.set(`${parentCid}/${file}`, 'link')
+  if (!replay.has(`${parentCid}/${contentName}`)) {
+    replay.set(`${parentCid}/${contentName}`, 'link')
+  }
+  if (faviconCid) {
+    if (!replay.has(`${parentCid}/${faviconName}`)) {
+      replay.set(`${parentCid}/${faviconName}`, 'link')
+    }
   }
 
   // Save
@@ -305,11 +351,21 @@ _size: ${toJson._size}`
   if (!hashOnly) {
     await fetchUrl(`${gatewayUrl}${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
+    if (faviconCid) {
+      await fetchUrl(`${gatewayUrl}${faviconCid}`)
+      console.log(`*** Fetched ${gatewayUrl}${faviconCid} ***`)
+    }
     await fetchUrl(`${gatewayUrl}${toJson._parent_cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid} ***`)
     await fetchUrl(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
     console.log(
       `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`
     )
+    if (faviconCid) {
+      await fetchUrl(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
+      console.log(
+        `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${faviconName} ***`
+      )
+    }
   }
 }

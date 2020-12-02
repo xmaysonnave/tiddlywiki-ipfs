@@ -7,18 +7,18 @@ echo '***'
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 echo 'nvm:' $(nvm -v)
-nvm use
+nvm use > /dev/null 2>&1
 
 # cleanup
 rm -f -R ./download > /dev/null 2>&1
 
 # ethereumjs-util
+echo '*** browserify ethereumjs-util ***'
 mkdir -p ./download/ethereumjs-util > /dev/null 2>&1
 yarn browserify \
   node_modules/ethereumjs-util/dist/index.js \
   -s ethUtil \
   -o download/ethereumjs-util/ethereumjs-util.umd.js || exit 1
-
 yarn terser \
   download/ethereumjs-util/ethereumjs-util.umd.js \
   -c toplevel,sequences=false -m \
@@ -26,11 +26,11 @@ yarn terser \
 
 # keccak
 mkdir -p ./download/keccak > /dev/null 2>&1
+echo '*** browserify keccak ***'
 yarn browserify \
   node_modules/keccak/js.js \
   -s createKeccakHash \
   -o download/keccak/keccak.umd.js || exit 1
-
 yarn terser \
   download/keccak/keccak.umd.js \
   -c toplevel,sequences=false -m \

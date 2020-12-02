@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-
 # init
 ./bin/init-editions.sh "$@" || exit 1
 

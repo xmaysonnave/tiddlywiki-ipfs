@@ -1,6 +1,4 @@
 #!/usr/bin/env zsh
-echo '*** publish tiddlywiki-ipfs ***'
-
 # publish library
 ./bin/tiddlywiki-ipfs/library/publish.sh "$@" || exit 1
 
