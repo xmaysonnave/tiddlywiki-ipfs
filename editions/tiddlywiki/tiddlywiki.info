@@ -14,13 +14,13 @@
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_SEMVER%.json",
         "application/json",
       "--import",
-        "./download/tiddlywiki.com/index.html",
+        "./download/tiddlywiki/index.html",
         "text/html",
 			"--compress",
         "yes",
 			"--rendertiddler",
         "$:/core/save/all",
-        "./editions/tiddlywiki.com/index.html",
+        "./editions/tiddlywiki/index.html",
         "text/plain"
     ]
   }

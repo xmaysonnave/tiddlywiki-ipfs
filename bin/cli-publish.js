@@ -8,7 +8,9 @@ const argv = yargs(hideBin(process.argv)).argv
 
 async function main () {
   try {
-    await publish(argv.pin ? argv.pin.trim() : null)
+    const dir = argv.dir ? argv.dir.trim() : null
+    const pin = argv.pin ? argv.pin.trim() : null
+    await publish(dir, pin)
   } catch (error) {
     console.error(error)
     process.exit(1)

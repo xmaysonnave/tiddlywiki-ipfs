@@ -45,6 +45,16 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
+      "name": "Debug publish boot",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["publish-boot"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
       "name": "Debug build plugin",
       "type": "node",
       "request": "launch",

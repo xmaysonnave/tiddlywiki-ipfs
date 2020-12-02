@@ -37,9 +37,9 @@ yarn terser \
 # down
 cd download
 
-# tiddlywiki.com
-mkdir tiddlywiki.com > /dev/null 2>&1
-wget https://tiddlywiki.com/index.html -O ./tiddlywiki.com/index.html || exit 1
+# tiddlywiki
+mkdir tiddlywiki > /dev/null 2>&1
+wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
 
 # @metamask/detect-provider
 mkdir detect-provider > /dev/null 2>&1

@@ -68,7 +68,7 @@ module.exports = async function main (
   dir =
     dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
   if (dir == null) {
-    throw new Error('Unknown output dir...')
+    throw new Error('Unknown directory...')
   }
   tags =
     tags == null || tags === undefined || tags.trim() === ''
@@ -130,11 +130,14 @@ module.exports = async function main (
     }
   }
 
-  // Pin
-  var toBePinned = []
-  if (fs.existsSync(`./build/output/pin/pin.json`)) {
-    const pin = fs.readFileSync(`./build/output/pin/pin.json`, 'utf8')
-    toBePinned = JSON.parse(pin)
+  // Replay
+  const replay = new Map()
+  if (fs.existsSync(`./production/${dir}/$_replay.json`)) {
+    const json = fs.readFileSync(`./production/${dir}/$_replay.json`, 'utf8')
+    const jsonObject = JSON.parse(json)
+    for (const key in jsonObject) {
+      replay.set(key, jsonObject[key])
+    }
   }
 
   // Load
@@ -160,56 +163,58 @@ module.exports = async function main (
     ? process.env.API
     : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
-  const gatewayUrl = process.env.GATEWAY
+
+  var gatewayUrl = process.env.GATEWAY
     ? process.env.GATEWAY
     : 'https://dweb.link'
+  gatewayUrl = `${gatewayUrl}/ipfs/`
 
-  var parentCid = await ipfs.object.new({
-    template: 'unixfs-dir'
-  })
-
-  // Upload
-  const options = {
-    chunker: 'rabin-262144-524288-1048576',
-    cidVersion: 0,
-    hashAlg: 'sha2-256',
-    pin: false,
-    wrapWithDirectory: true,
-    rawLeaves: false
-  }
-  if (hashOnly) {
-    options.onlyHash = true
-  }
+  // Upload Leaf
   var cid = null
+  var parentCid = null
   var size = null
   var msg = 'added'
   if (hashOnly) {
     msg = 'hashed'
   }
-
-  const upload = {
-    path: `/${file}`,
-    content: StringToUint8Array(load)
+  const options = {
+    chunker: 'rabin-262144-524288-1048576',
+    cidVersion: 0,
+    hashAlg: 'sha2-256',
+    pin: false,
+    rawLeaves: false,
+    wrapWithDirectory: true
   }
-  const result = await api.add(upload, options)
-  if (!result || !result.cid) {
-    throw new Error('IPFS client returned an unknown result...')
+  if (hashOnly) {
+    options.onlyHash = true
   }
-  const parentCid = result.cid
-
-  // Lookup
-  for await (const ls of api.ls(parentCid)) {
-    if (ls.name === file) {
-      cid = ls.cid
-      size = ls.size
+  const upload = [
+    {
+      path: `/${file}`,
+      content: StringToUint8Array(load)
     }
+  ]
+  for await (const result of api.addAll(upload, options)) {
+    if (!result) {
+      throw new Error('IPFS client returned an unknown result...')
+    }
+    if (result.path === '') {
+      parentCid = result.cid
+    } else if (result.path === file) {
+      cid = result.cid
+      size = result.size
+    }
+  }
+  if (!parentCid) {
+    throw new Error('Unknown parent cid...')
   }
   if (!cid) {
     throw new Error('Unknown cid...')
   }
+
+  console.log(`*** ${msg} ${cid} ***`)
   console.log(`*** ${msg} ${parentCid} ***`)
   console.log(`*** ${msg} ${parentCid}/${file} ***`)
-  console.log(`*** ${msg} ${cid} ***`)
 
   // Check
   if (currentVersion === _version) {
@@ -224,11 +229,11 @@ module.exports = async function main (
   // Json
   const toJson = {
     _parent_cid: parentCid.toString(),
-    _parent_uri: `${gatewayUrl}/ipfs/${parentCid}`,
+    _parent_uri: `${gatewayUrl}${parentCid}`,
     _source_path: file,
-    _source_uri: `${gatewayUrl}/ipfs/${parentCid}/${file}`,
+    _source_uri: `${gatewayUrl}${parentCid}/${file}`,
     _cid: cid.toString(),
-    _cid_uri: `${gatewayUrl}/ipfs/${cid}`,
+    _cid_uri: `${gatewayUrl}${cid}`,
     _semver: _semver,
     _version: _version,
     _raw_hash: _rawHash,
@@ -272,36 +277,39 @@ _size: ${toJson._size}`
   // Save Tiddler
   fs.writeFileSync(`./production/${dir}/${fileName}_build.tid`, tid, 'utf8')
 
-  // Pin reference
-  if (toBePinned.indexOf(`${parentCid}/${file}`) === -1) {
-    toBePinned.push(`${parentCid}/${file}`)
+  // resource
+  if (!replay.has(cid.toString())) {
+    replay.set(cid.toString(), 'file')
   }
-  // Pin parent directory
-  if (toBePinned.indexOf(parentCid.toString()) === -1) {
-    toBePinned.push(parentCid.toString())
+  // parent directory
+  if (!replay.has(parentCid.toString())) {
+    replay.set(parentCid.toString(), 'dir')
   }
-  // Pin resource
-  if (toBePinned.indexOf(cid.toString()) === -1) {
-    toBePinned.push(cid.toString())
+  // link
+  if (!replay.has(`${parentCid}/${file}`)) {
+    replay.set(`${parentCid}/${file}`, 'link')
   }
+
   // Save
+  const jsonObject = {}
+  replay.forEach((value, key) => {
+    jsonObject[key] = value
+  })
   fs.writeFileSync(
-    `./build/output/pin/pin.json`,
-    JSON.stringify(toBePinned),
+    `./production/${dir}/$_replay.json`,
+    JSON.stringify(jsonObject),
     'utf8'
   )
 
   // Fetch
   if (!hashOnly) {
-    await fetchUrl(`${gatewayUrl}/ipfs/${toJson._cid}`)
-    console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._cid} ***`)
-    await fetchUrl(`${gatewayUrl}/ipfs/${toJson._parent_cid}`)
-    console.log(`*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid} ***`)
-    await fetchUrl(
-      `${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._source_path}`
-    )
+    await fetchUrl(`${gatewayUrl}${toJson._cid}`)
+    console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
+    await fetchUrl(`${gatewayUrl}${toJson._parent_cid}`)
+    console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid} ***`)
+    await fetchUrl(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
     console.log(
-      `*** Fetched ${gatewayUrl}/ipfs/${toJson._parent_cid}/${toJson._source_path} ***`
+      `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`
     )
   }
 }
