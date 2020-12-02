@@ -25,13 +25,13 @@ cp -R ./editions/documentation/* ./build || exit 1
 cp './production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid' './build/tiddlers/config/$_plugins_ipfs.js_build.tid' || exit 1
 
 # build raw
-echo '*** build raw documentation ***'
+echo '*** raw documentation ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 
 # check hash and set version
-echo '*** build documentation semver ***'
+echo '*** semver documentation ***'
 ./bin/cli-semver.sh \
   --name=$:/ipfs/documentation \
   --extension=json \
@@ -39,7 +39,7 @@ echo '*** build documentation semver ***'
   --env=DOCUMENTATION || exit 1
 
 # build
-echo '*** build documentation ***'
+echo '*** documentation ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

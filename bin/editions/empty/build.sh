@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** empty ***'
+echo '*** build empty ***'
 echo '***'
 
 # nvm
@@ -30,13 +30,10 @@ cp -R ./editions/empty-raw/* ./build || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # build raw
-echo '*** build raw empty ***'
+echo '*** raw empty ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
-
-# build
-echo '*** build empty***'
 
 # init
 rm -f -R ./build/tiddlers > /dev/null 2>&1
@@ -49,13 +46,14 @@ cp ./editions/empty/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # check hash and set version
-echo '*** build empty semver ***'
+echo '*** semver empty ***'
 ./bin/cli-semver.sh \
   --name=index \
   --extension=html \
   --dir=editions/empty \
   --env=EMPTY || exit 1
 
+echo '*** empty ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

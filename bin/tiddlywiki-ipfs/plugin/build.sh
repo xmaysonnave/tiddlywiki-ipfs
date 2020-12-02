@@ -29,24 +29,24 @@ cp './production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build
 cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # bundle
-echo '*** build ipfs-bundle ***'
+echo '*** browserify ipfs-bundle ***'
 yarn browserify \
   core/modules/ipfs-bundle.js \
   -s IpfsBundle \
     -o build/plugins/ipfs/core/modules/ipfs-bundle.js || exit 1
 
 # build raw
-echo '*** build raw plugin ***'
+echo '*** raw plugin ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 
 # check hash and set version
-echo '*** build plugin semver ***'
+echo '*** semver plugin ***'
 node ./bin/tiddlywiki-ipfs/plugin/semver.js "$@" || exit 1
 
 # build
-echo '*** build plugin ***'
+echo '*** plugin ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

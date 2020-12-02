@@ -1,6 +1,4 @@
 #!/usr/bin/env zsh
-echo '*** init-editions ***'
-
 DIR='./build/output/tiddlywiki-ipfs/boot'
 if [[ ! -d "$DIR" ]]; then
   ./bin/tiddlywiki-ipfs/boot/build.sh "$@" || exit 1

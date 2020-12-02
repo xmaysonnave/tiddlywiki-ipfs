@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** bluelightav ***'
+echo '*** build bluelightav ***'
 echo '***'
 
 # nvm
@@ -38,13 +38,10 @@ cp './production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.t
 node ./bin/dependency.js "$@" || exit 1
 
 # build raw
-echo '*** build raw bluelightav ***'
+echo '*** raw bluelightav ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
-
-# build
-echo '*** build bluelightav ***'
 
 # init
 rm -f -R ./build/tiddlers > /dev/null 2>&1
@@ -57,13 +54,14 @@ cp ./editions/bluelightav/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # check hash and set version
-echo '*** build bluelightav semver ***'
+echo '*** semver bluelightav ***'
 ./bin/cli-semver.sh \
   --name=index \
   --extension=html \
   --dir=editions/bluelightav \
   --env=BLUELIGHTAV || exit 1
 
+echo '*** bluelightav ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

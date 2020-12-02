@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-echo '*** publish editions ***'
 
 # publish empty
 ./bin/editions/empty/publish.sh "$@" || exit 1

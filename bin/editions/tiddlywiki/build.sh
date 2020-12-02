@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** tiddlywiki ***'
+echo '*** build tiddlywiki ***'
 echo '***'
 
 # nvm
@@ -27,7 +27,7 @@ cp -R ./editions/tiddlywiki/* ./build || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # build raw
-echo '*** build raw tiddlywiki ***'
+echo '*** raw tiddlywiki ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
@@ -36,7 +36,7 @@ yarn ipfs-tiddlywiki build \
 node ./bin/dependency.js "$@" || exit 1
 
 # check hash and set version
-echo '*** build tiddlywiki semver ***'
+echo '*** semver tiddlywiki ***'
 ./bin/cli-semver.sh \
   --name=index \
   --extension=html \
@@ -44,7 +44,7 @@ echo '*** build tiddlywiki semver ***'
   --env=TIDDLYWIKI || exit 1
 
 # build
-echo '*** build tiddlywiki ***'
+echo '*** tiddlywiki ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

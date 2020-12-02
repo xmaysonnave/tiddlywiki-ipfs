@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** dev ***'
+echo '*** build dev ***'
 echo '***'
 
 # nvm
@@ -38,13 +38,10 @@ cp -R ./download/tw5-relink/plugins/relink ./build/plugins || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # build raw
-echo '*** build raw dev ***'
+echo '*** raw dev ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
-
-# build
-echo '*** build dev ***'
 
 # init
 rm -f -R ./build/tiddlers > /dev/null 2>&1
@@ -57,20 +54,21 @@ cp ./editions/dev/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # check hash and set version
-echo '*** build dev semver ***'
+echo '*** semver dev ***'
 ./bin/cli-semver.sh \
   --name=index \
   --extension=html \
   --dir=editions/dev \
   --env=DEV || exit 1
 
+echo '*** dev ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
   --verbose || exit 1
 
 # upload to ipfs
-echo '*** upload dev***'
+echo '*** upload dev ***'
 ./bin/cli-upload.sh \
   --name=index.html \
   --extension=html \

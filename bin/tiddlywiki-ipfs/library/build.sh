@@ -36,12 +36,11 @@ cp ./core/library/pako.min.js.meta ./build/tiddlers/pako.min.js.meta || exit 1
 cp ./editions/library-bundle/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # build
-echo '*** build library bundle ***'
+echo '*** bundle library ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 
-# build library
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
@@ -55,17 +54,17 @@ cp './core/library/$_library_ipfs-library-modules.js.meta' './build/tiddlers/$_l
 cp ./editions/library/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # build raw
-echo '*** build raw library ***'
+echo '*** raw library ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 
 # check hash and set version
-echo '*** build library semver ***'
+echo '*** semver library ***'
 node ./bin/tiddlywiki-ipfs/library/semver.js "$@" || exit 1
 
 # build
-echo '*** build library ***'
+echo '*** library ***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

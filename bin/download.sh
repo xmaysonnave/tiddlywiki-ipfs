@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
+echo '***'
 echo '*** download ***'
+echo '***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"

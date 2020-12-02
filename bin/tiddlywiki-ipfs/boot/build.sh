@@ -32,7 +32,7 @@ cp ./core/boot/ipfs-boot-bundle.tid ./build/tiddlers/ipfs-boot-bundle.tid || exi
 cp ./editions/boot-bundle/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # build
-echo '*** build boot bundle ***'
+echo '*** bundle boot ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
@@ -51,17 +51,17 @@ cp './core/boot/$_boot_boot.js.meta' './build/tiddlers/$_boot_boot.js.meta' || e
 cp ./editions/boot/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # build raw
-echo '*** build raw boot ***'
+echo '*** raw boot ***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
 
 # check hash and set version
-echo '*** build boot semver ***'
+echo '*** semver boot ***'
 node ./bin/tiddlywiki-ipfs/boot/semver.js "$@" || exit 1
 
 # build
-echo '*** build boot***'
+echo '*** boot***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \

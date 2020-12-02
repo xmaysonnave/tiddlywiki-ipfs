@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
-echo '*** noclone ***'
+echo '***'
+echo '*** build noclone ***'
+echo '***'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
