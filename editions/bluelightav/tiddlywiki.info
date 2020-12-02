@@ -116,6 +116,16 @@
         "../sample/index-plain-and-standford.html",
         "text/plain",
       "--clearpassword"
+    ],
+		"prod_favicon": [
+			"--savetiddler",
+        "$:/favicon.ico",
+        "../production/editions/bluelightav/favicon.png"
+    ],
+		"sample_favicon": [
+			"--savetiddler",
+        "$:/favicon.ico",
+        "../sample/favicon.png"
     ]
   }
 }

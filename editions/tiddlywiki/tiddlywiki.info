@@ -22,6 +22,11 @@
         "$:/core/save/all",
         "./editions/tiddlywiki/index.html",
         "text/plain"
+    ],
+		"favicon": [
+			"--savetiddler",
+        "$:/favicon.ico",
+        "./editions/tiddlywiki/favicon.ico"
     ]
   }
 }

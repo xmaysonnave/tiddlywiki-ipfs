@@ -114,6 +114,11 @@
         "../sample/empty-plain-and-standford.html",
         "text/plain",
       "--clearpassword"
+    ],
+		"favicon": [
+			"--savetiddler",
+        "$:/favicon.ico",
+        "../production/editions/empty/favicon.png"
     ]
 	}
 }

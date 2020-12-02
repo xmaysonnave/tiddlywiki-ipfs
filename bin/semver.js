@@ -118,6 +118,6 @@ module.exports = function main (name, extension, dir, env) {
     JSON.stringify(toJson),
     'utf8'
   )
-  
+
   return version
 }

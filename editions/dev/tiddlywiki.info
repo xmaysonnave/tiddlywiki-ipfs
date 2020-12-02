@@ -139,6 +139,11 @@
         "../sample/dev-plain-and-standford.html",
         "text/plain",
       "--clearpassword"
+    ],
+		"favicon": [
+			"--savetiddler",
+        "$:/favicon.ico",
+        "../production/editions/dev/favicon.png"
     ]
   }
 }
