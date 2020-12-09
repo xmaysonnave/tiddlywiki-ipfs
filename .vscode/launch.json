@@ -2,12 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Jest Tests",
+      "name": "Debug Tests",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
-        "${workspaceRoot}/node_modules/.bin/jest",
+        "${workspaceRoot}/node_modules/.bin/mocha",
+        "tests/url.test.js",
         "--runInBand"
       ],
       "console": "integratedTerminal",

@@ -1,6 +1,11 @@
-/*eslint no-unused-vars:"off"*/
-/*global jest,beforeAll,describe,it,expect*/
-'use strict'
+/*eslint no-unused-expressions:"off"*/
+/*eslint no-undef:"off"*/
+;('use strict')
+
+const log = require('loglevel')
+const chai = require('chai')
+const sinon = require('sinon')
+const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
 
 /**
  * url.href;
@@ -20,37 +25,36 @@
  * https://url.spec.whatwg.org/
  */
 
-const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
-const log = require('loglevel')
+const { expect } = chai
+
 const text = 'text'
-beforeAll(() => {
+
+before(() => {
   globalThis.log = log
   const logger = log.getLogger('ipfs')
   logger.setLevel('silent', false)
 })
+
 describe('API URL', () => {
   it('Valid Default', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getIpfsDefaultApiUrl()
-    expect(parsed.toString() === 'https://ipfs.infura.io:5001/').toBeTruthy()
+    const parsed = ipfsBundle.getIpfsDefaultApiUrl()
+    expect(parsed.toString() === 'https://ipfs.infura.io:5001/').to.be.true
   })
   it('Valid Safe', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getIpfsApiUrl()
-    expect(parsed.toString() === 'https://ipfs.infura.io:5001/').toBeTruthy()
+    const parsed = ipfsBundle.getIpfsApiUrl()
+    expect(parsed.toString() === 'https://ipfs.infura.io:5001/').to.be.true
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     try {
-      ipfsUrl.getIpfsApiUrl()
+      ipfsBundle.getIpfsApiUrl()
     } catch (error) {
-      expect(error.message).toBe('Invalid IPFS API URL...')
+      expect(error.message).to.equal('Invalid IPFS API URL...')
     }
   })
 })
@@ -58,22 +62,19 @@ describe('Document URL', () => {
   it('Valid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('https://ipfs.infura.io/ipfs/cid')
     )
-    const parsed = ipfsUrl.getDocumentUrl()
-    expect(parsed.toString() === 'https://ipfs.infura.io/ipfs/cid').toBeTruthy()
+    const parsed = ipfsBundle.getDocumentUrl()
+    expect(parsed.toString() === 'https://ipfs.infura.io/ipfs/cid').to.be.true
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     try {
-      ipfsUrl.getDocumentUrl()
+      ipfsBundle.getDocumentUrl()
     } catch (error) {
-      expect(error.message).toBe('Invalid current HTML Document URL...')
+      expect(error.message).to.equal('Invalid current HTML Document URL...')
     }
   })
 })
@@ -81,25 +82,22 @@ describe('Gateway URL', () => {
   it('Valid Default', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getIpfsDefaultGatewayUrl()
-    expect(parsed.toString() === 'https://dweb.link/').toBeTruthy()
+    const parsed = ipfsBundle.getIpfsDefaultGatewayUrl()
+    expect(parsed.toString() === 'https://dweb.link/').to.be.true
   })
   it('Valid Safe', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getIpfsGatewayUrl()
-    expect(parsed.toString() === 'https://dweb.link/').toBeTruthy()
+    const parsed = ipfsBundle.getIpfsGatewayUrl()
+    expect(parsed.toString() === 'https://dweb.link/').to.be.true
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     try {
-      ipfsUrl.getIpfsGatewayUrl()
+      ipfsBundle.getIpfsGatewayUrl()
     } catch (error) {
-      expect(error.message).toBe('Invalid IPFS Gateway URL...')
+      expect(error.message).to.equal('Invalid IPFS Gateway URL...')
     }
   })
 })
@@ -107,189 +105,161 @@ describe('URL', () => {
   it('Valid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl('https://ipfs.infura.io:5001/')
-    expect(parsed.toString() === 'https://ipfs.infura.io:5001/').toBeTruthy()
+    const parsed = ipfsBundle.getUrl('https://ipfs.infura.io:5001/')
+    expect(parsed.toString() === 'https://ipfs.infura.io:5001/').to.be.true
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     try {
-      ipfsUrl.getUrl()
+      ipfsBundle.getUrl()
     } catch (error) {
-      expect(error.message).toBe('Invalid URL...')
+      expect(error.message).to.equal('Undefined URL...')
     }
   })
   it('IPFS', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const url = ipfsUrl.getUrl(
+    const url = ipfsBundle.getUrl(
       'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
     )
     expect(
       url.hostname ===
         'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' &&
         url.protocol === 'ipfs:'
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('IPNS', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const url = ipfsUrl.getUrl(
+    const url = ipfsBundle.getUrl(
       'ipns://bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
     )
     expect(
       url.hostname ===
         'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy' &&
         url.protocol === 'ipns:'
-    ).toBeTruthy()
+    ).to.be.true
   })
 })
 describe('Base URL', () => {
   it('Origin', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
-      new URL('https://gateway.ipfs.io/ipfs/cid')
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
+      new URL('https://ipfs.infura.io/ipfs/cid')
     )
-    const base = ipfsUrl.getIpfsBaseUrl()
-    expect(base.toString() === 'https://dweb.link/').toBeTruthy()
+    const base = ipfsBundle.getIpfsBaseUrl()
+    expect(base.toString() === 'https://dweb.link/').to.be.true
   })
 
   it('Fallback to default Gateway', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
-    const base = ipfsUrl.getIpfsBaseUrl()
-    expect(base.toString() === 'https://dweb.link/').toBeTruthy()
+    const base = ipfsBundle.getIpfsBaseUrl()
+    expect(base.toString() === 'https://dweb.link/').to.be.true
   })
 })
 describe('Normalize URL', () => {
   it('Text...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     try {
-      ipfsUrl.normalizeUrl(text)
+      ipfsBundle.normalizeUrl(text)
     } catch (error) {
-      expect(error.message).toBe('Invalid URL...')
+      expect(error.message).to.equal('Invalid URL...')
     }
   })
   it('Dot ETH, no protocol...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.normalizeUrl('bluelightav.eth/ipfs/cid')
-    expect(
-      parsed.toString() === 'https://bluelightav.eth/ipfs/cid'
-    ).toBeTruthy()
+    const parsed = ipfsBundle.normalizeUrl('bluelightav.eth/ipfs/cid')
+    expect(parsed.toString() === 'https://bluelightav.eth/ipfs/cid').to.be.true
   })
   it('Relative. Fallback to Origin...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('https://ipfs.infura.io/ipfs/cid')
     )
-    const parsed = ipfsUrl.normalizeUrl('/ipfs/cid')
-    expect(parsed.toString() === 'https://dweb.link/ipfs/cid').toBeTruthy()
+    const parsed = ipfsBundle.normalizeUrl('/ipfs/cid')
+    expect(parsed.toString() === 'https://dweb.link/ipfs/cid').to.be.true
   })
   it('Relative. Fallback to default Gateway...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
-    const parsed = ipfsUrl.normalizeUrl('/ipfs/cid')
-    expect(parsed.toString() === 'https://dweb.link/ipfs/cid').toBeTruthy()
+    const parsed = ipfsBundle.normalizeUrl('/ipfs/cid')
+    expect(parsed.toString() === 'https://dweb.link/ipfs/cid').to.be.true
   })
   it('Relative. File system...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
-    const parsed = ipfsUrl.normalizeUrl(
+    const parsed = ipfsBundle.normalizeUrl(
       '../../import/cleanup/root.json',
       new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json')
     )
     expect(
       parsed.toString() ===
         'file:///work/tiddly/tiddlywiki-ipfs/test/import/cleanup/root.json'
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('Relative...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     )
-    const parsed = ipfsUrl.normalizeUrl(
+    const parsed = ipfsBundle.normalizeUrl(
       './level_4_1.json',
       new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     )
     expect(
       parsed.toString() ===
         'https://ipfs.bluelightav.org/import/analyze/level_4_1.json'
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('Remove dot link...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('https://ipfs.infura.io/ipfs/cid')
     )
-    const parsed = ipfsUrl.normalizeUrl('https://bluelightav.eth.link/ipfs/cid')
-    expect(
-      parsed.toString() === 'https://bluelightav.eth/ipfs/cid'
-    ).toBeTruthy()
+    const parsed = ipfsBundle.normalizeUrl(
+      'https://bluelightav.eth.link/ipfs/cid'
+    )
+    expect(parsed.toString() === 'https://bluelightav.eth/ipfs/cid').to.be.true
   })
   it('Relative IPFS Protocol...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
       new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     )
-    const parsed = ipfsUrl.normalizeUrl(
+    const parsed = ipfsBundle.normalizeUrl(
       'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy',
       new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     )
     expect(
       parsed.toString() ===
         'https://ipfs.bluelightav.org/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('Base Relative IPFS Protocol...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    ipfsUrl.getDocumentUrl = jest.fn()
-    ipfsUrl.getDocumentUrl.mockReturnValueOnce(
-      new URL(
-        'http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/'
-      )
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(
+      'http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/'
     )
-    const parsed = ipfsUrl.normalizeUrl(
+    const parsed = ipfsBundle.normalizeUrl(
       'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy',
       new URL(
         'http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/'
@@ -298,6 +268,6 @@ describe('Normalize URL', () => {
     expect(
       parsed.toString() ===
         'http://localhost:8080/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-    ).toBeTruthy()
+    ).to.be.true
   })
 })

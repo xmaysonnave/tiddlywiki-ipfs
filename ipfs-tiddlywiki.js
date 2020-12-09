@@ -8,7 +8,7 @@ const path = require('path')
 
 // boot modules
 var $tw = require('tiddlywiki').TiddlyWiki()
-$tw = require('./boot/ipfs-boot.js').TiddlyWiki($tw)
+$tw = require('./boot/ipfs-boot.js').IpfsTiddlyWiki($tw)
 
 // Load plugin
 const current = path.dirname(module.filename)

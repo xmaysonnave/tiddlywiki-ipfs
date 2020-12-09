@@ -6,15 +6,21 @@ const dotenv = require('dotenv')
 const filenamify = require('filenamify')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
-const fetch = require('node-fetch')
+const FetchStream = require('fetch').FetchStream
 
-async function fetchUrl (url) {
-  var response = await fetch(url)
-  if (response.ok) {
-    const ab = await response.arrayBuffer()
-    return new Uint8Array(ab)
-  }
-  throw new Error(`[${response.status}], Fetch Error...`)
+function fetch (url) {
+  return new Promise((resolve, reject) => {
+    const request = new FetchStream(url)
+    request.on('error', error => {
+      reject(error)
+    })
+    request.on('data', function (chunk) {
+      // Load
+    })
+    request.on('end', () => {
+      resolve(true)
+    })
+  })
 }
 
 // String to uint array
@@ -349,20 +355,20 @@ _size: ${toJson._size}`
 
   // Fetch
   if (!hashOnly) {
-    await fetchUrl(`${gatewayUrl}${toJson._cid}`)
+    await fetch(`${gatewayUrl}${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
     if (faviconCid) {
-      await fetchUrl(`${gatewayUrl}${faviconCid}`)
+      await fetch(`${gatewayUrl}${faviconCid}`)
       console.log(`*** Fetched ${gatewayUrl}${faviconCid} ***`)
     }
-    await fetchUrl(`${gatewayUrl}${toJson._parent_cid}`)
+    await fetch(`${gatewayUrl}${toJson._parent_cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid} ***`)
-    await fetchUrl(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
+    await fetch(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
     console.log(
       `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`
     )
     if (faviconCid) {
-      await fetchUrl(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
+      await fetch(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
       console.log(
         `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${faviconName} ***`
       )

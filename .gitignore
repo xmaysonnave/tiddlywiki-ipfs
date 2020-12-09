@@ -2,7 +2,9 @@ build/
 download/
 node_modules/
 sample/
+.ipfs/
 .yarn/
 .yarnrc
+nohup
 wget-log
 yarn-error.log

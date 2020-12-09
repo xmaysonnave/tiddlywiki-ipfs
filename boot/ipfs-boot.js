@@ -689,7 +689,7 @@ var _ipfs = function ($tw) {
 }
 
 if (typeof exports !== 'undefined') {
-  exports.TiddlyWiki = _ipfs
+  exports.IpfsTiddlyWiki = _ipfs
 } else {
   _ipfs(window.$tw)
 }

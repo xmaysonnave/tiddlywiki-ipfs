@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** plugin ***'
+echo '*** build plugin ***'
 echo '***'
 
 # nvm

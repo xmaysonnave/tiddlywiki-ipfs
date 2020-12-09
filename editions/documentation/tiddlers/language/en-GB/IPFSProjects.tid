@@ -1,5 +1,5 @@
 title: IPFS Projects
-modified: 20200831094915385
+modified: 20201208094915385
 tags: $:/ipfs/documentation [[IPFS Technical]]
 type: text/vnd.tiddlywiki
 
@@ -11,6 +11,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[Babel|https://github.com/babel]]</li>
   <li>[ext[Beyond Compare|https://www.scootersoftware.com/]]</li>
   <li>[ext[Buffer|https://github.com/feross/buffer]]</li>
+  <li>[ext[Chai|https://www.chaijs.com/]]</li>
   <li>[ext[Chromium|https://www.chromium.org/]]</li>
   <li>[ext[Chrome|https://www.google.com/chrome/]]</li>
   <li>[ext[Cid|https://github.com/multiformats/js-cid]]</li>
@@ -39,13 +40,13 @@ type: text/vnd.tiddlywiki
   <li>[ext[IPFS Provider|https://github.com/ipfs-shipyard/ipfs-provider]]</li>
   <li>[ext[JavaScript|https://www.w3schools.com/js/]]</li>
   <li>[ext[JavaScript Standard Style|https://github.com/standard/standard]]</li>
-  <li>[ext[Jest|https://github.com/facebook/jest]]</li>
   <li>[ext[Let's Encrypt|https://letsencrypt.org/]]</li>
   <li>[ext[Loglevel|https://github.com/pimterry/loglevel]]</li>
   <li>[ext[Markdown|https://commonmark.org/]]</li>
   <li>[ext[Metamask Eth-Sig-Util|https://github.com/MetaMask/eth-sig-util]]</li>
   <li>[ext[Metamask Extension|https://github.com/MetaMask/metamask-extension]]</li>
   <li>[ext[Metamask Mobile|https://github.com/MetaMask/metamask-mobile]]</li>
+  <li>[ext[Mocha|https://mochajs.org/]]</li>
   <li>[ext[Nginx|https://www.nginx.com/]]</li>
   <li>[ext[Node.js|https://github.com/nodejs]]</li>
   <li>[ext[Npm|https://github.com/npm/cli]]</li>
@@ -56,6 +57,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[Prettier Standard|https://github.com/sheerun/prettier-standard]]</li>
   <li>[ext[Prettierx|https://github.com/brodybits/prettierx]]</li>
   <li>[ext[Sablier|https://github.com/sablierhq]]</li>
+  <li>[ext[Sinon|https://sinonjs.org/]]</li>
   <li>[ext[Snyk|https://snyk.io/]]</li>
   <li>[ext[Stanford Javascript Crypto Library|https://github.com/bitwiseshiftleft/sjcl]]</li>
   <li>[ext[TiddlyWiki5|https://github.com/Jermolene/TiddlyWiki5]]</li>

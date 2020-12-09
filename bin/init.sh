@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
+echo '***'
+echo '*** init ***'
+echo '***'
+
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -14,12 +18,16 @@ mkdir -p ./build/output/pin > /dev/null 2>&1
 mkdir ./sample > /dev/null 2>&1
 
 # format and lint
+echo '***'
 echo '*** prettier-standard ***'
-yarn prettier-standard || exit 1
+echo '***'
+yarn prettier-standard "$@" || exit 1
 
 # target
+echo '***'
 echo '*** target ***'
-yarn browserslist || exit 1
+echo '***'
+yarn browserslist "$@" || exit 1
 
 # done
 exit 0

@@ -10,7 +10,7 @@ echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
 # test
-yarn jest --verbose || exit 1
+yarn mocha tests/**/*.test.js "$@" || exit 1
 
 # done
 exit 0

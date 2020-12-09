@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** boot ***'
+echo '*** build boot ***'
 echo '***'
 
 # nvm

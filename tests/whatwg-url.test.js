@@ -1,6 +1,10 @@
-/*eslint no-unused-vars:"off"*/
-/*global jest,beforeAll,describe,it,expect*/
-'use strict'
+/*eslint no-unused-expressions:"off"*/
+/*eslint no-undef:"off"*/
+;('use strict')
+
+const log = require('loglevel')
+const chai = require('chai')
+const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
 
 /**
  * url.href;
@@ -19,9 +23,8 @@
  * https://github.com/stevenvachon/universal-url-lite
  * https://url.spec.whatwg.org/
  */
+const { expect } = chai
 
-const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
-const log = require('loglevel')
 const invalid = 'Wrong URL...'
 const baseFile = new URL(
   'file:///work/tiddly/tiddlywiki-ipfs/production/index.html'
@@ -36,33 +39,31 @@ const ipfs = new URL(
 const relative =
   '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
 
-beforeAll(() => {
+before(() => {
   globalThis.log = log
   const logger = log.getLogger('ipfs')
   logger.setLevel('silent', false)
 })
+
 describe('WHATWG-URL', () => {
   it('Undefined URL', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     expect(() => {
-      ipfsUrl.getUrl()
-    }).toThrow()
+      ipfsBundle.getUrl()
+    }).to.throw('Undefined URL...')
   })
   it('Invalid URL', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
     expect(() => {
-      ipfsUrl.getUrl(invalid)
-    }).toThrow()
+      ipfsBundle.getUrl(invalid)
+    }).to.throw('Invalid URL...')
   })
   it('HTTPS no port', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(baseHttp)
+    const parsed = ipfsBundle.getUrl(baseHttp)
     expect(
       parsed.protocol === 'https:' &&
         parsed.origin === baseHttp.origin &&
@@ -74,13 +75,12 @@ describe('WHATWG-URL', () => {
         parsed.hash === '' &&
         parsed.href === baseHttp.href &&
         parsed.toString() === baseHttp.toString()
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('HTTPS with default port', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(baseHttpPort)
+    const parsed = ipfsBundle.getUrl(baseHttpPort)
     expect(
       parsed.protocol === 'https:' &&
         parsed.origin === baseHttpPort.origin &&
@@ -92,13 +92,12 @@ describe('WHATWG-URL', () => {
         parsed.hash === '' &&
         parsed.href === baseHttpPort.href &&
         parsed.toString() === baseHttpPort.toString()
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('HTTPS with non default port', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(baseHttpNonDefaultPort)
+    const parsed = ipfsBundle.getUrl(baseHttpNonDefaultPort)
     expect(
       parsed.protocol === 'https:' &&
         parsed.origin === baseHttpNonDefaultPort.origin &&
@@ -110,13 +109,12 @@ describe('WHATWG-URL', () => {
         parsed.hash === '' &&
         parsed.href === baseHttpNonDefaultPort.href &&
         parsed.toString() === baseHttpNonDefaultPort.toString()
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('File protocol URL', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(baseFile)
+    const parsed = ipfsBundle.getUrl(baseFile)
     expect(
       parsed.protocol === 'file:' &&
         parsed.origin === 'null' &&
@@ -125,13 +123,12 @@ describe('WHATWG-URL', () => {
           '/work/tiddly/tiddlywiki-ipfs/production/index.html' &&
         parsed.href === baseFile.href &&
         parsed.toString() === baseFile.toString()
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('Useless base HTTP URL', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(absolute, baseHttp)
+    const parsed = ipfsBundle.getUrl(absolute, baseHttp)
     expect(
       parsed.protocol === 'https:' &&
         parsed.protocol === baseHttp.protocol &&
@@ -139,16 +136,14 @@ describe('WHATWG-URL', () => {
         parsed !== absolute &&
         parsed.href === absolute.href &&
         parsed.toString() === absolute.toString()
-    ).toBeTruthy()
+    ).to.be.true
   })
   it('Relative URL', () => {
     const base = new URL(baseHttp)
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const parsed = ipfsUrl.getUrl(relative, base)
-    base.pathname = relative
-    expect((parsed.pathname = base.pathname)).toBeTruthy()
+    const parsed = ipfsBundle.getUrl(relative, base)
+    expect(parsed.pathname === relative).to.be.true
   })
   it('Updating IPFS scheme', () => {
     const base = new URL('https://ipfs.bluelightav.org')
@@ -163,7 +158,7 @@ describe('WHATWG-URL', () => {
         parsed.hostname === 'ipfs.bluelightav.org' &&
         parsed.pathname ===
           '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-    ).toBeTruthy()
+    ).to.be.true
   })
   /*
    * This test shows that whatwg-url is unable to set an URL protocol
@@ -173,9 +168,8 @@ describe('WHATWG-URL', () => {
   it('Modifying IPFS scheme', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const ipfsUrl = ipfsBundle.ipfsUrl
-    const base = ipfsUrl.getUrl(baseHttp)
-    const parsed = ipfsUrl.getUrl(ipfs)
+    const base = ipfsBundle.getUrl(baseHttp)
+    const parsed = ipfsBundle.getUrl(ipfs)
     parsed.pathname = `/ipfs/${parsed.hostname}`
     parsed.protocol = base.protocol
     parsed.host = base.host
@@ -185,6 +179,6 @@ describe('WHATWG-URL', () => {
         parsed.port === '' &&
         parsed.pathname ===
           '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-    ).toBeTruthy()
+    ).to.be.true
   })
 })

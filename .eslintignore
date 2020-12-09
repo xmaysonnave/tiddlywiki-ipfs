@@ -1,9 +1,11 @@
 .github/
+.ipfs/
 boot/boot.js
 build/
 current/
 download/
 node_modules/
+nohup
 production/
 sample/
 .yarn/

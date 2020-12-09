@@ -260,20 +260,20 @@ nvm -v
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/.nvmrc) who describes the node version to use.
 
 ```
-v14
+v15
 ```
 
 Install the recommended `node` version.
 
 ```
-nvm install v14
+nvm install v15
 ```
 
 Check:
 
 ```
 node -v
-v14.15.1
+v15.0.1
 ```
 
 Install `yarn`.

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** documentation ***'
+echo '*** build documentation ***'
 echo '***'
 
 # nvm

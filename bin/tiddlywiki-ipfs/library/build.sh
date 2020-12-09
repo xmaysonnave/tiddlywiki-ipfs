@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** library ***'
+echo '*** build library ***'
 echo '***'
 
 # nvm
