@@ -167,7 +167,7 @@ Setup a nodejs environment to build tiddlywiki instances bundled with `IPFS with
 -   [Ethers](https://github.com/ethers-io/ethers.js/)
 -   [IPFS Provider](https://github.com/ipfs-shipyard/ipfs-provider)
 -   [IPFS HTTP Client](https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client)
--   [Jest](https://github.com/facebook/jest)
+-   [Mocha](https://mochajs.org/)
 -   [Node.js](https://nodejs.org/)
 -   [Snyk](https://github.com/snyk)
 -   [TiddyWiki5](https://www.npmjs.com/package/tiddlywiki)

@@ -33,7 +33,7 @@ echo '*** browserify ipfs-bundle ***'
 yarn browserify \
   core/modules/ipfs-bundle.js \
   -s IpfsBundle \
-    -o build/plugins/ipfs/core/modules/ipfs-bundle.js || exit 1
+    -o build/plugins/ipfs/modules/ipfs-bundle.js || exit 1
 
 # build raw
 echo '*** raw plugin ***'

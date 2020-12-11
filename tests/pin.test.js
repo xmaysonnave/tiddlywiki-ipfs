@@ -403,6 +403,64 @@ describe(`Single '${recursive}' pin and '${direct}' unpin`, () => {
   })
 })
 
+describe(`Wrapped '${direct}'`, () => {
+  before(async () => {
+    await start()
+  })
+  it(`pin '${direct}'...`, async () => {
+    const hash = await addAll(file1, options)
+    var hashFile = null
+    var hashParent = null
+    for (const key of hash.keys()) {
+      if (hashFile === null) {
+        hashFile = key
+      } else if (hashParent === null) {
+        hashParent = key
+      }
+    }
+    var pinned = await api.pin.add(hashParent, {
+      recursive: false
+    })
+    expect(pinned.toString()).to.equal(hashParent)
+    var { cid: fetched, type } = await hasPin(hashParent, direct)
+    expect(fetched.toString()).to.equal(hashParent.toString())
+    expect(fetched.toString()).to.equal(parentFile1Cid)
+    expect(type).to.equal(direct)
+    // hashFile is not pinned
+    var { cid: fetched, type } = await hasPin(hashFile)
+    expect(fetched.toString()).to.equal('')
+    // Pin
+    var pinned = await api.pin.add(hashFile, {
+      recursive: false
+    })
+    expect(pinned.toString()).to.equal(hashFile)
+    var { cid: fetched, type } = await hasPin(hashFile)
+    expect(fetched.toString()).to.equal(hashFile)
+    expect(type).to.equal(direct)
+    // Link
+    var { cid: fetched, parentCid, type } = await hasPin(
+      parentFile1Cid,
+      indirect,
+      '/file1.txt'
+    )
+    expect(fetched.toString()).to.equal(contentCid)
+    expect(parentCid).to.equal(null)
+    expect(type).to.equal(direct)
+  })
+  it(`unpin '${direct}'...`, async () => {
+    const unpinned = await pinRm(parentFile1Cid, false)
+    expect(unpinned.toString()).to.equal(parentFile1Cid)
+    var { cid: fetched } = await hasPin(parentFile1Cid, recursive)
+    expect(fetched.toString()).to.equal('')
+    var { cid: fetched, type } = await hasPin(contentCid)
+    expect(fetched.toString()).to.equal(contentCid)
+    expect(type).to.equal(direct)
+  })
+  after(async () => {
+    await stop()
+  })
+})
+
 describe(`Wrapped '${recursive}'`, () => {
   before(async () => {
     await start()

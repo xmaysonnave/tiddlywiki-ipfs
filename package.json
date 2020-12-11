@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta+build-201209260",
+  "version": "0.4.0-beta+build-201211454",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
@@ -84,9 +84,9 @@
     "uint8arrays": "^1.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.12.7",
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
     "@babel/runtime-corejs3": "^7.12.1",
     "@metamask/detect-provider": "^1.2.0",
     "abort-controller": "^3.0.0",
@@ -98,7 +98,7 @@
     "dotenv": "^8.2.0",
     "eruda": "^2.4.1",
     "eslint": "^7.15.0",
-    "eth-sig-util": "^3.0.0",
+    "eth-sig-util": "xmaysonnave/eth-sig-util#v3.0.1",
     "ethers": "^5.0.24",
     "fetch": "^1.1.0",
     "gzipper": "^4.1.0",
@@ -116,7 +116,7 @@
     "replace": "^1.2.0",
     "sinon": "^9.2.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.434.3",
+    "snyk": "^1.436.0",
     "terser": "^5.5.1",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.1.2",

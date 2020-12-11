@@ -12,18 +12,6 @@ nvm use > /dev/null 2>&1
 # cleanup
 rm -f -R ./download > /dev/null 2>&1
 
-# ethereumjs-util
-echo '*** browserify ethereumjs-util ***'
-mkdir -p ./download/ethereumjs-util > /dev/null 2>&1
-yarn browserify \
-  node_modules/ethereumjs-util/dist/index.js \
-  -s ethUtil \
-  -o download/ethereumjs-util/ethereumjs-util.umd.js || exit 1
-yarn terser \
-  download/ethereumjs-util/ethereumjs-util.umd.js \
-  -c toplevel,sequences=false -m \
-  -o download/ethereumjs-util/ethereumjs-util.umd.min.js || exit 1
-
 # keccak
 mkdir -p ./download/keccak > /dev/null 2>&1
 echo '*** browserify keccak ***'

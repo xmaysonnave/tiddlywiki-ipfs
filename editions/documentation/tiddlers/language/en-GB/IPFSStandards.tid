@@ -1,5 +1,5 @@
 title: IPFS Standards
-modified: 20200530094915385
+modified: 20201209094915385
 tags: $:/ipfs/documentation [[IPFS Technical]]
 type: text/vnd.tiddlywiki
 
@@ -14,7 +14,6 @@ type: text/vnd.tiddlywiki
   <li>[ext[JavaScript Standard|https://standardjs.com/]]</li>
   <li>[ext[Linting with Eslint|https://eslint.org/]]</li>
   <li>[ext[Open Source Projects|https://www.fsf.org/]]</li>
-  <li>[ext[Testing with Jest|https://jestjs.io/]]</li>
+  <li>[ext[Testing with Mocha|https://mochajs.org/]]</li>
   <li>Transparency with [ext[Ethereum|https://ethereum.org]] and [ext[GitHub|https://github.com/]]</li>
-  <li>[ext[WHATWG URL|https://url.spec.whatwg.org/]] with [ext[Universal URL|https://github.com/stevenvachon/universal-url]]</li>
 </ol>

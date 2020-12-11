@@ -2,5 +2,5 @@ title: $:/ipfs/library/eth-sig-util
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/xmaysonnave/eth-sig-util/master/LICENSE
 _project_uri: https://github.com/xmaysonnave/eth-sig-util
-_source_uri: https://cdn.jsdelivr.net/gh/xmaysonnave/eth-sig-util@2.5.4/eth-sig-util.umd.min.js
+_source_uri: https://cdn.jsdelivr.net/gh/xmaysonnave/eth-sig-util@3.0.1/eth-sig-util.umd.min.js
 _source_sri: sha384-l67mglUQ5EqK0OQ9L3nxw501X8QbfS06RNIAKNsAHrhib6I+GMGApLvwNZ2eRnYK
