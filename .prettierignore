@@ -6,6 +6,7 @@ current
 download
 node_modules
 sample
+test/data
 production
 nohup
 .yarn

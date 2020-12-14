@@ -152,13 +152,15 @@ const file1 = [
 ]
 const parentFile1Cid = 'QmNpwpR6uMixTtnvXUEQ81K9HdMYzZV2KWS2B7fE3ELFec'
 
-// const file2 = [
-//   {
-//     path: '/file2.txt',
-//     content: content
-//   }
-// ]
-// const parentFile2Cid = 'QmeCUpfcZvxDAQxkzn6kS1Cz2fPKuxz6pGoKc3zeDSP8rn'
+const file2 = [
+  {
+    path: '/file2.txt',
+    content: content
+  }
+]
+const parentFile2Cid = 'QmeCUpfcZvxDAQxkzn6kS1Cz2fPKuxz6pGoKc3zeDSP8rn'
+
+const parentFile2CidWithLinkToFile1 = 'QmU5eoM1Cw7ohHPz4Cxjvagmt6W9jPzLCLVKBtmErpbm6z'
 
 const options = {
   chunker: 'rabin-262144-524288-1048576',
@@ -495,6 +497,79 @@ describe(`Wrapped '${recursive}'`, () => {
     expect(fetched.toString()).to.equal('')
     var { cid: fetched } = await hasPin(contentCid)
     expect(fetched.toString()).to.equal('')
+  })
+  after(async () => {
+    await stop()
+  })
+})
+
+describe(`Wrapped '${direct}' pin and '${recursive}' unpin`, () => {
+  before(async () => {
+    await start()
+  })
+  it(`pin '${direct}'...`, async () => {
+    await addAll(file1, options)
+    var pinned = await api.pin.add(parentFile1Cid, {
+      recursive: false
+    })
+    expect(pinned.toString()).to.equal(parentFile1Cid)
+    var { cid: fetched, type } = await hasPin(parentFile1Cid, direct)
+    expect(fetched.toString()).to.equal(parentFile1Cid)
+    expect(type).to.equal(direct)
+    // Pin
+    var pinned = await api.pin.add(contentCid, {
+      recursive: false
+    })
+    expect(pinned.toString()).to.equal(contentCid)
+    var { cid: fetched, type } = await hasPin(contentCid)
+    expect(fetched.toString()).to.equal(contentCid)
+    expect(type).to.equal(direct)
+  })
+  it(`unpin '${recursive}'...`, async () => {
+    var unpinned = await pinRm(parentFile1Cid, true)
+    expect(unpinned.toString()).to.equal(parentFile1Cid)
+    var { cid: fetched } = await hasPin(parentFile1Cid, recursive)
+    expect(fetched.toString()).to.equal('')
+    // Linked data is still pinned
+    var { cid: fetched } = await hasPin(contentCid)
+    expect(fetched.toString()).to.equal(contentCid)
+    // Unpin recursive
+    var unpinned = await pinRm(contentCid, true)
+    expect(unpinned.toString()).to.equal(contentCid)
+    var { cid: fetched } = await hasPin(contentCid)
+    expect(fetched.toString()).to.equal('')
+  })
+  after(async () => {
+    await stop()
+  })
+})
+
+describe(`Wrapped and dependency`, () => {
+  before(async () => {
+    await start()
+  })
+  it(`pin '${recursive}'...`, async () => {
+    await addAll(file1, options)
+    await api.pin.add(parentFile1Cid, {
+      recursive: true
+    })
+    await addAll(file2, options)
+    const cid = await api.object.patch.addLink(parentFile2Cid, {
+      name: 'link-to-file1',
+      cid: new CID(contentCid)
+    })
+    await api.pin.add(cid, {
+      recursive: true
+    })
+    expect(cid.toString()).to.equal(parentFile2CidWithLinkToFile1)
+  })
+  it(`unpin '${recursive}'...`, async () => {
+    var unpinned = await pinRm(parentFile1Cid, true)
+    expect(unpinned.toString()).to.equal(parentFile1Cid)
+    var { cid: fetched, parentCid, type } = await hasPin(contentCid)
+    expect(fetched.toString()).to.equal(contentCid)
+    expect(parentCid.toString()).to.equal(parentFile2CidWithLinkToFile1)
+    expect(type).to.equal(indirect)
   })
   after(async () => {
     await stop()

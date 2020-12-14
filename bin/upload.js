@@ -349,7 +349,7 @@ _size: ${toJson._size}`
   })
   fs.writeFileSync(
     `./production/${dir}/$_replay.json`,
-    JSON.stringify(jsonObject),
+    (jsonObject),
     'utf8'
   )
 
