@@ -1646,7 +1646,7 @@
     "@sinonjs/commons" "^1"
     "@sinonjs/samsam" "^5.0.2"
 
-"@sinonjs/samsam@^5.0.2", "@sinonjs/samsam@^5.2.0":
+"@sinonjs/samsam@^5.0.2", "@sinonjs/samsam@^5.3.0":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-5.3.0.tgz#1d2f0743dc54bf13fe9d508baefacdffa25d4329"
   integrity sha512-hXpcfx3aq+ETVBwPlRFICld5EnrkexXuXDwqUNhDdr5L8VjvMeSRwyOa0qL7XFmR+jVWR4rUZtnxlG7RX72sBg==
@@ -3027,14 +3027,13 @@ cid-tool@^1.0.0:
     uint8arrays "^1.1.0"
     yargs "^15.0.2"
 
-cids@1.0.2, cids@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/cids/-/cids-1.0.2.tgz#04ebadd65e5600a07feb16db594160f087c6eab3"
-  integrity sha512-ohCcYyEHh0Z5Hl+O1IML4kt6Kx5GPho1ybxtqK4zyk6DeV5CvOLoT/mqDh0cgKcAvsls3vcVa9HjZc7RQr3geA==
+cids@1.1.4, cids@^1.0.0:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/cids/-/cids-1.1.4.tgz#d2aa4343fef971ef896b032fa0b99a66755d0f98"
+  integrity sha512-mo0IWZKcaQZsret8cP39MzDnPVT9NhhQEVaIKwWnBFaLtj2slTFckYMnbk15ptewNkb22qRBLfuBK+qiWYW/Mg==
   dependencies:
-    class-is "^1.1.0"
     multibase "^3.0.1"
-    multicodec "^2.0.1"
+    multicodec "^2.1.0"
     multihashes "^3.0.1"
     uint8arrays "^1.1.0"
 
@@ -3870,9 +3869,9 @@ electron-fetch@^1.7.2:
     encoding "^0.1.13"
 
 electron-to-chromium@^1.3.621:
-  version "1.3.622"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.622.tgz#9726bd2e67a5462154750ce9701ca6af07d07877"
-  integrity sha512-AJT0Fm1W0uZlMVVkkJrcCVvczDuF8tPm3bwzQf5WO8AaASB2hwTRP7B8pU5rqjireH+ib6am8+hH5/QkXzzYKw==
+  version "1.3.624"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.624.tgz#0ed5d2930ab37c4ec977ab58def2cda9c446e1c3"
+  integrity sha512-o7j+CRwsXXj3180EeT6fnOOCyhdeBCmcjQLfe0ObpSH1N0PSylrQ3ibBfAZ39Y28YQ+gKKmU2xSSggdARpjuDg==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -4299,9 +4298,9 @@ esutils@2.0.3, esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-eth-sig-util@xmaysonnave/eth-sig-util#v3.0.1:
+"eth-sig-util@https://github.com/xmaysonnave/eth-sig-util#v3.0.1":
   version "3.0.1"
-  resolved "https://codeload.github.com/xmaysonnave/eth-sig-util/tar.gz/5dfbf631d2349891d64f2cdca166886a38c74d5f"
+  resolved "https://github.com/xmaysonnave/eth-sig-util#5dfbf631d2349891d64f2cdca166886a38c74d5f"
   dependencies:
     buffer "^5.2.1"
     elliptic "^6.4.0"
@@ -5276,10 +5275,10 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-husky@^4.3.0:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-4.3.5.tgz#ab8d2a0eb6b62fef2853ee3d442c927d89290902"
-  integrity sha512-E5S/1HMoDDaqsH8kDF5zeKEQbYqe3wL9zJDyqyYqc8I4vHBtAoxkDBGXox0lZ9RI+k5GyB728vZdmnM4bYap+g==
+husky@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-4.3.6.tgz#ebd9dd8b9324aa851f1587318db4cccb7665a13c"
+  integrity sha512-o6UjVI8xtlWRL5395iWq9LKDyp/9TE7XMOTvIpEVzW638UcGxTmV5cfel6fsk/jbZSTlvfGVJf2svFtybcIZag==
   dependencies:
     chalk "^4.0.0"
     ci-info "^2.0.0"
@@ -5407,10 +5406,10 @@ inherits@2.0.1:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
   integrity sha1-sX0I0ya0Qj5Wjv9xn5GwscvfafE=
 
-ini@^1.3.5, ini@~1.3.0:
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.7.tgz#a09363e1911972ea16d7a8851005d84cf09a9a84"
-  integrity sha512-iKpRpXP+CrP2jyrxvg1kMUpXDyRUFDWurxbnVT1vQPx+Wz9uCYsMIqYuSBLV+PAaZG/d7kRLKRFc9oDMsH+mFQ==
+ini@^1.3.0, ini@^1.3.4, ini@^1.3.5:
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
+  integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
 
 inline-source-map@~0.6.0:
   version "0.6.2"
@@ -8039,9 +8038,9 @@ multiaddr-to-uri@^6.0.0:
     multiaddr "^8.0.0"
 
 multiaddr@^8.0.0, multiaddr@^8.1.0:
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/multiaddr/-/multiaddr-8.1.1.tgz#d86315deed93752fa68b4199fee56f8b4a516a2b"
-  integrity sha512-Dyur7rWX44MlgKIqVA2dYPOZx/UwG60PVSffJ5S17uo6Pu31lftJXShMEfPtUDGHnyALAOWOuC3X/iPhDtw4Vg==
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/multiaddr/-/multiaddr-8.1.2.tgz#74060ff8636ba1c01b2cf0ffd53950b852fa9b1f"
+  integrity sha512-r13IzW8+Sv9zab9Gt8RPMIN2WkptIPq99EpAzg4IbJ/zTELhiEwXWr9bAmEatSCI4j/LSA6ESJzvz95JZ+ZYXQ==
   dependencies:
     cids "^1.0.0"
     class-is "^1.1.0"
@@ -8068,13 +8067,13 @@ multicast-dns@^7.2.0:
     dns-packet "^4.0.0"
     thunky "^1.0.2"
 
-multicodec@^2.0.0, multicodec@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/multicodec/-/multicodec-2.0.1.tgz#0971bbef83fcb354315c837c9a3f3e2e422af371"
-  integrity sha512-YDYeWn9iGa76hOHAyyZa0kbt3tr5FLg1ZXUHrZUJltjnxxdbTIbHnxWLd2zTcMOjdT3QyO+Xs4bQgJUcC2RWUA==
+multicodec@^2.0.0, multicodec@^2.0.1, multicodec@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/multicodec/-/multicodec-2.1.0.tgz#b66dff2184e91e74ac68981e0deba2591bbf1f87"
+  integrity sha512-7AYpK/avswOWvnqQ9/jOkQCS7Fp4aKxw5ojvn5gyK2VQTZz3YVXeLMzoIZDBy745JSfJMXkTS0ptnHci5Mt1mA==
   dependencies:
-    uint8arrays "1.0.0"
-    varint "^5.0.0"
+    uint8arrays "1.1.0"
+    varint "^6.0.0"
 
 multihashes@^3.0.1:
   version "3.1.0"
@@ -8954,9 +8953,9 @@ pino-std-serializers@^2.4.2:
   integrity sha512-wXqbqSrIhE58TdrxxlfLwU9eDhrzppQDvGhBEr1gYbzzM4KKo3Y63gSjiDXRKLVS2UOXdPNR2v+KnQgNrs+xUg==
 
 pino@^6.0.0:
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-6.7.0.tgz#d5d96b7004fed78816b5694fda3eab02b5ca6d23"
-  integrity sha512-vPXJ4P9rWCwzlTJt+f0Ni4THc3DWyt8iDDCO4edQ8narTu6hnpzdXu8FqeSJCGndl1W6lfbYQUQihUO54y66Lw==
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-6.8.0.tgz#d242f9936f2e65217fde75c0af5d5d8b4d3d3fde"
+  integrity sha512-nxq+6Jr7m0cMjYFBoTRw3bco14omZ/SQCheAHz9GVwdkbUrzKhgT+gSI/ql2Mnsca0QQKgpB/ACWhjxE4JsX3Q==
   dependencies:
     fast-redact "^3.0.0"
     fast-safe-stringify "^2.0.7"
@@ -9953,15 +9952,15 @@ simple-html-tokenizer@^0.5.7:
   resolved "https://registry.yarnpkg.com/simple-html-tokenizer/-/simple-html-tokenizer-0.5.10.tgz#0843e4f00c9677f1c81e3dfeefcee0a4aca8e5d0"
   integrity sha512-1DHMUmvUOGuUZ9/+cX/+hOhWhRD5dEw6lodn8WuV+T+cQ31hhBcCu1dcDsNotowi4mMaNhrLyKoS+DtB81HdDA==
 
-sinon@^9.0.2, sinon@^9.2.1:
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-9.2.1.tgz#64cc88beac718557055bd8caa526b34a2231be6d"
-  integrity sha512-naPfsamB5KEE1aiioaoqJ6MEhdUs/2vtI5w1hPAXX/UwvoPjXcwh1m5HiKx0HGgKR8lQSoFIgY5jM6KK8VrS9w==
+sinon@^9.0.2, sinon@^9.2.2:
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-9.2.2.tgz#b83cf5d43838f99cfa3644453f4c7db23e7bd535"
+  integrity sha512-9Owi+RisvCZpB0bdOVFfL314I6I4YoRlz6Isi4+fr8q8YQsDPoCe5UnmNtKHRThX3negz2bXHWIuiPa42vM8EQ==
   dependencies:
     "@sinonjs/commons" "^1.8.1"
     "@sinonjs/fake-timers" "^6.0.1"
     "@sinonjs/formatio" "^5.0.1"
-    "@sinonjs/samsam" "^5.2.0"
+    "@sinonjs/samsam" "^5.3.0"
     diff "^4.0.2"
     nise "^4.0.4"
     supports-color "^7.1.0"
@@ -11077,10 +11076,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
-  integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
+typescript@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.3.tgz#519d582bd94cba0cf8934c7d8e8467e473f53bb7"
+  integrity sha512-B3ZIOf1IKeH2ixgHhj6la6xdwR9QrLC5d1VKeCSY4tvkqhF2eqd9O7txNlS0PO3GrBAFIdr3L1ndNwteUbZLYg==
 
 typical@^6.0.0:
   version "6.0.1"
@@ -11092,15 +11091,7 @@ uglify-js@^3.1.4:
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.12.1.tgz#78307f539f7b9ca5557babb186ea78ad30cc0375"
   integrity sha512-o8lHP20KjIiQe5b/67Rh68xEGRrc2SRsCuuoYclXXoC74AfSRGblU1HKzJWH3HxPZ+Ort85fWHpSX7KwBUC9CQ==
 
-uint8arrays@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-1.0.0.tgz#9cf979517f85c32d6ef54adf824e3499bb715331"
-  integrity sha512-14tqEVujDREW7YwonSZZwLvo7aFDfX7b6ubvM/U7XvZol+CC/LbhaX/550VlWmhddAL9Wou1sxp0Of3tGqXigg==
-  dependencies:
-    multibase "^3.0.0"
-    web-encoding "^1.0.2"
-
-uint8arrays@^1.0.0, uint8arrays@^1.1.0:
+uint8arrays@1.1.0, uint8arrays@^1.0.0, uint8arrays@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-1.1.0.tgz#d034aa65399a9fd213a1579e323f0b29f67d0ed2"
   integrity sha512-cLdlZ6jnFczsKf5IH1gPHTtcHtPGho5r4CvctohmQjw8K7Q3gFdfIGHxSTdTaCKrL4w09SsPRJTqRS0drYeszA==

@@ -70,13 +70,19 @@ describe('PersonalSign', () => {
 
 describe('Decrypt', () => {
   it('decrypt', () => {
-    const compressed = fs.readFileSync('./tests/data/compressed.txt')
+    const compressed = fs.readFileSync('./tests/data/compressed.txt', 'utf8')
     var outputText = sigUtil.encrypt(
       derivedPublicKey,
       { data: compressed.toString() },
       'x25519-xsalsa20-poly1305'
     )
     outputText = sigUtil.decrypt(outputText, privateKeyHex)
-    expect(outputText === compressed.toString()).to.be.true
+    expect(outputText === compressed).to.be.true
+  })
+  it('decrypt large', () => {
+    const encrypted = fs.readFileSync('./tests/data/encrypted.json', 'utf8')
+    const outputText = sigUtil.decrypt(JSON.parse(encrypted), privateKeyHex)
+    const unencrypted = fs.readFileSync('./tests/data/unencrypted.json', 'utf8')
+    expect(outputText === unencrypted).to.be.true
   })
 })
