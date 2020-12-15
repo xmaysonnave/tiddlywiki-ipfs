@@ -13,7 +13,7 @@ Clear encryption public key for crypto operations
 
   exports.info = {
     name: 'clearencryptionpublickey',
-    synchronous: true
+    synchronous: true,
   }
 
   var Command = function (params, commander, callback) {

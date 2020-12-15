@@ -76,26 +76,13 @@ IpfsWrapper.prototype.getIpfsClient = async function (url) {
   throw new Error('Failed to retrieve an IPFS provider...')
 }
 
-IpfsWrapper.prototype.getIpnsIdentifiers = async function (
-  ipfs,
-  identifier,
-  base,
-  path,
-  ipnsName
-) {
-  identifier =
-    identifier === undefined || identifier == null || identifier.trim() === ''
-      ? null
-      : identifier.trim()
-  ipnsName =
-    ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
-      ? null
-      : ipnsName.trim()
+IpfsWrapper.prototype.getIpnsIdentifiers = async function (ipfs, identifier, base, path, ipnsName) {
+  identifier = identifier === undefined || identifier == null || identifier.trim() === '' ? null : identifier.trim()
+  ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
   if (identifier == null && ipnsName == null) {
     throw new Error('Undefined IPNS identifiers...')
   }
-  path =
-    path === undefined || path == null || path.trim() === '' ? '' : path.trim()
+  path = path === undefined || path == null || path.trim() === '' ? '' : path.trim()
   var found = false
   var ipnsKey = null
   var keys = null
@@ -110,22 +97,9 @@ IpfsWrapper.prototype.getIpnsIdentifiers = async function (
   if (ipnsName !== null && identifier !== null) {
     if (keys !== null && keys !== undefined && Array.isArray(keys)) {
       for (var index = 0; index < keys.length; index++) {
-        const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(
-          keys[index].id,
-          'base32',
-          false
-        )
-        const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(
-          keys[index].id,
-          'base36',
-          false
-        )
-        if (
-          (keys[index].id === identifier ||
-            cidv1b32 === identifier ||
-            cidv1b36 === identifier) &&
-          keys[index].name === ipnsName
-        ) {
+        const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base32', false).toString()
+        const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base36', false).toString()
+        if ((keys[index].id === identifier || cidv1b32 === identifier || cidv1b36 === identifier) && keys[index].name === ipnsName) {
           ipnsKey = keys[index].id
           found = true
           break
@@ -145,22 +119,9 @@ IpfsWrapper.prototype.getIpnsIdentifiers = async function (
   } else {
     if (keys !== null && keys !== undefined && Array.isArray(keys)) {
       for (var index = 0; index < keys.length; index++) {
-        const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(
-          keys[index].id,
-          'base32',
-          false
-        )
-        const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(
-          keys[index].id,
-          'base36',
-          false
-        )
-        if (
-          keys[index].id === identifier ||
-          cidv1b32 === identifier ||
-          cidv1b36 === identifier ||
-          keys[index].name === identifier
-        ) {
+        const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base32', false).toString()
+        const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base36', false).toString()
+        if (keys[index].id === identifier || cidv1b32 === identifier || cidv1b36 === identifier || keys[index].name === identifier) {
           ipnsKey = keys[index].id
           ipnsName = keys[index].name
           found = true
@@ -171,20 +132,17 @@ IpfsWrapper.prototype.getIpnsIdentifiers = async function (
   }
   if (found === false) {
     // Unable to resolve the keys, check if identifier is a an IPFS cid
-    if (this.ipfsBundle.isCid(identifier) === false) {
+    if (!this.ipfsBundle.getCid(identifier)) {
       throw new Error('Unknown IPNS identifier...')
     }
     ipnsKey = identifier
   }
   // Lets build an url, the resolver will do the final check, we cannot do more here
   if (found) {
-    const cidv0 = this.ipfsBundle.cidToBase58CidV0(ipnsKey, false)
-    const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv0, 'base32', false)
+    const cidv0 = this.ipfsBundle.cidToBase58CidV0(ipnsKey, false).toString()
+    const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv0, 'base32', false).toString()
     ipnsKey = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1b32, 'base36', false)
-    normalizedUrl = this.ipfsUrl.normalizeUrl(
-      `/${ipnsKeyword}/${ipnsKey}${path}`,
-      base
-    )
+    normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}${path}`, base)
     this.getLogger().info(
       `Successfully Fetched IPNS identifiers: '${ipnsName}':
 'dag-pb' "cidv0" (base58btc): ${cidAnalyser}${cidv0}
@@ -193,26 +151,23 @@ to 'libp2p-key' "cidv1" (base36): ${cidAnalyser}${ipnsKey}
 ${normalizedUrl}`
     )
   } else {
-    normalizedUrl = this.ipfsUrl.normalizeUrl(
-      `/${ipnsKeyword}/${ipnsKey}${path}`,
-      base
-    )
+    normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}${path}`, base)
     this.getLogger().info(
       `Unable to Fetch IPNS identifiers, default to
 ${normalizedUrl}`
     )
   }
   return {
-    ipnsKey: ipnsKey,
+    ipnsKey: ipnsKey !== null ? ipnsKey.toString() : null,
     ipnsName: ipnsName,
-    normalizedUrl: normalizedUrl
+    normalizedUrl: normalizedUrl,
   }
 }
 
 IpfsWrapper.prototype.generateIpnsKey = async function (ipfs, ipnsName) {
   try {
     const key = await this.ipfsLibrary.genKey(ipfs, ipnsName)
-    const cid = this.ipfsBundle.cidToLibp2pKeyCidV1(key, 'base36', true)
+    const cid = this.ipfsBundle.cidToLibp2pKeyCidV1(key, 'base36', true).toString()
     const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${cid}`)
     this.getLogger().info(
       `Successfully generated IPNS key with IPNS name: ${ipnsName}
@@ -238,24 +193,16 @@ IpfsWrapper.prototype.removeIpnsKey = async function (ipfs, ipnsName) {
   throw new Error('Failed to remove an IPNS Key...')
 }
 
-IpfsWrapper.prototype.renameIpnsName = async function (
-  ipfs,
-  oldIpnsName,
-  newIpnsName
-) {
+IpfsWrapper.prototype.renameIpnsName = async function (ipfs, oldIpnsName, newIpnsName) {
   try {
-    const { id, was, now } = await this.ipfsLibrary.renameKey(
-      ipfs,
-      oldIpnsName,
-      newIpnsName
-    )
-    const key = this.ipfsBundle.cidToLibp2pKeyCidV1(id, 'base36', true)
+    const { id, was, now } = await this.ipfsLibrary.renameKey(ipfs, oldIpnsName, newIpnsName)
+    const key = this.ipfsBundle.cidToLibp2pKeyCidV1(id, 'base36', true).toString()
     const msg = `Successfully renamed IPNS name: ${was} with ${now}`
     this.getLogger().info(msg)
     $tw.utils.alert(name, msg)
     return {
       ipnsKey: key,
-      ipnsName: now
+      ipnsName: now,
     }
   } catch (error) {
     this.getLogger().error(error)
@@ -275,10 +222,7 @@ IpfsWrapper.prototype.getIpnsKeys = async function (ipfs) {
 }
 
 IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
-  cid =
-    cid === undefined || cid == null || cid.toString().trim() === ''
-      ? null
-      : cid.toString().trim()
+  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
@@ -297,18 +241,14 @@ ${url}`)
 
 IpfsWrapper.prototype.addToIpfs = async function (ipfs, content, hashOnly) {
   try {
-    const { hash, size } = await this.ipfsLibrary.add(
-      ipfs,
-      $tw.ipfs.StringToUint8Array(content),
-      hashOnly
-    )
+    const { hash, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content), hashOnly)
     const pathname = '/' + ipfsKeyword + '/' + hash
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(`Successfully added: ${size} bytes,
 ${url}`)
     return {
       added: hash,
-      size: size
+      size: size,
     }
   } catch (error) {
     this.getLogger().error(error)
@@ -317,10 +257,7 @@ ${url}`)
 }
 
 IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
-  ipnsKey =
-    ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === ''
-      ? null
-      : ipnsKey.trim()
+  ipnsKey = ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '' ? null : ipnsKey.trim()
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
   }
@@ -344,30 +281,16 @@ ${parsed}`
   throw new Error('Failed to resolve an IPNS key...')
 }
 
-IpfsWrapper.prototype.publishIpnsName = async function (
-  cid,
-  ipfs,
-  ipnsKey,
-  ipnsName
-) {
-  ipnsKey =
-    ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === ''
-      ? null
-      : ipnsKey.trim()
+IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipnsName) {
+  ipnsKey = ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '' ? null : ipnsKey.trim()
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
   }
-  ipnsName =
-    ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
-      ? null
-      : ipnsName.trim()
+  ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
   if (ipnsName == null) {
     throw new Error('Undefined IPNS name...')
   }
-  cid =
-    cid === undefined || cid == null || cid.toString().trim() === ''
-      ? null
-      : cid.toString().trim()
+  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
@@ -392,10 +315,7 @@ ${url}`
 }
 
 IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
-  cid =
-    cid === undefined || cid == null || cid.toString().trim() === ''
-      ? null
-      : cid.toString().trim()
+  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
@@ -415,10 +335,7 @@ ${url}`
 }
 
 IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
-  cid =
-    cid === undefined || cid == null || cid.toString().trim() === ''
-      ? null
-      : cid.toString().trim()
+  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }

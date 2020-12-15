@@ -14,27 +14,19 @@ module.exports = function main (name, extension, dir, env) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  name =
-    name == null || name === undefined || name.trim() === ''
-      ? null
-      : name.trim()
+  name = name == null || name === undefined || name.trim() === '' ? null : name.trim()
   if (name == null) {
     throw new Error('Unknown name...')
   }
-  extension =
-    extension == null || extension === undefined || extension.trim() === ''
-      ? null
-      : extension.trim()
+  extension = extension == null || extension === undefined || extension.trim() === '' ? null : extension.trim()
   if (extension == null) {
     throw new Error('Unknown file extension...')
   }
-  dir =
-    dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
+  dir = dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
   if (dir == null) {
     throw new Error('Unknown output dir...')
   }
-  env =
-    env == null || env === undefined || env.trim() === '' ? null : env.trim()
+  env = env == null || env === undefined || env.trim() === '' ? null : env.trim()
   if (!env) {
     throw new Error('Unknown env...')
   }
@@ -76,11 +68,8 @@ module.exports = function main (name, extension, dir, env) {
   var version = null
 
   // Current
-  if (fs.existsSync(`./current/${dir}/${fileName}.${extension}.json`)) {
-    const current = fs.readFileSync(
-      `./current/${dir}/${fileName}.${extension}.json`,
-      'utf8'
-    )
+  if (fs.existsSync(`./current/${dir}/current.json`)) {
+    const current = fs.readFileSync(`./current/${dir}/current.json`, 'utf8')
     var { _raw_hash: _rawHash, _version: version } = JSON.parse(current)
   }
 
@@ -104,20 +93,16 @@ module.exports = function main (name, extension, dir, env) {
     replacement: version,
     paths: ['./build/tiddlywiki.info'],
     recursive: false,
-    silent: true
+    silent: true,
   })
 
   // Save
   const toJson = {
     _raw_hash: rawHash,
     _semver: rawSemver,
-    _version: version
+    _version: version,
   }
-  fs.writeFileSync(
-    `./build/output/${dir}/${fileName}.${extension}_build.json`,
-    JSON.stringify(toJson),
-    'utf8'
-  )
+  fs.writeFileSync(`./build/output/${dir}/${fileName}.${extension}_build.json`, JSON.stringify(toJson), 'utf8')
 
   return version
 }

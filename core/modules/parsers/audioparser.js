@@ -21,37 +21,20 @@ The audio parser parses an audio tiddler into an embeddable HTML element
       tag: 'audio',
       attributes: {
         controls: { type: 'string', value: 'controls' },
-        style: { type: 'string', value: 'width: 100%; object-fit: contain' }
-      }
+        style: { type: 'string', value: 'width: 100%; object-fit: contain' },
+      },
     }
-    if (
-      $tw.browser &&
-      options.tiddler !== undefined &&
-      options.tiddler !== null
-    ) {
+    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri =
-        canonicalUri === undefined ||
-        canonicalUri == null ||
-        canonicalUri.trim() === ''
-          ? null
-          : canonicalUri.trim()
+      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
       if (canonicalUri !== null) {
         var password = options.tiddler.fields._password
-        password =
-          password === undefined || password == null || password.trim() === ''
-            ? null
-            : password.trim()
+        password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
             var { normalizedUrl, resolvedUrl } = data
-            var url =
-              resolvedUrl !== null
-                ? resolvedUrl.toString()
-                : normalizedUrl !== null
-                ? normalizedUrl.toString()
-                : null
+            var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
             if (url !== null) {
               $tw.ipfs
                 .loadToBase64(url, password)
@@ -59,11 +42,9 @@ The audio parser parses an audio tiddler into an embeddable HTML element
                   if (data) {
                     element.attributes.src = {
                       type: 'string',
-                      value: `${value}${data}`
+                      value: `${value}${data}`,
                     }
-                    var parsedTiddler = $tw.utils.getChangedTiddler(
-                      options.tiddler
-                    )
+                    var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
                   }
                 })

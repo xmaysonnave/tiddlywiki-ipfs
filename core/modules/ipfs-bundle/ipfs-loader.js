@@ -42,11 +42,7 @@ IpfsLoader.prototype.loadErudaLibrary = async function () {
 // https://github.com/ethers-io/ethers.js/
 IpfsLoader.prototype.loadEtherJsLibrary = async function () {
   if (typeof globalThis.ethers === 'undefined') {
-    return await this.loadTiddlerLibrary(
-      '$:/ipfs/library/ethers',
-      'ethers',
-      true
-    )
+    return await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
   }
   return false
 }
@@ -54,11 +50,7 @@ IpfsLoader.prototype.loadEtherJsLibrary = async function () {
 // https://github.com/xmaysonnave/eth-sig-util
 IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
   if (typeof globalThis.sigUtil === 'undefined') {
-    return await this.loadTiddlerLibrary(
-      '$:/ipfs/library/eth-sig-util',
-      'sigUtil',
-      true
-    )
+    return await this.loadTiddlerLibrary('$:/ipfs/library/eth-sig-util', 'sigUtil', true)
   }
   return false
 }
@@ -66,11 +58,7 @@ IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
   if (typeof globalThis.IpfsHttpClient === 'undefined') {
-    await this.loadTiddlerLibrary(
-      '$:/ipfs/library/ipfs-http-client',
-      'IpfsHttpClient',
-      true
-    )
+    await this.loadTiddlerLibrary('$:/ipfs/library/ipfs-http-client', 'IpfsHttpClient', true)
   }
   return false
 }
@@ -141,11 +129,7 @@ IpfsLoader.prototype.loadLibrary = function (id, url, sri, asModule) {
 }
 
 IpfsLoader.prototype.isJson = function (content) {
-  if (
-    content !== undefined &&
-    content !== null &&
-    typeof content === 'string'
-  ) {
+  if (content !== undefined && content !== null && typeof content === 'string') {
     try {
       JSON.parse(content)
       return true
@@ -168,9 +152,7 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
       )
       return ua
     }
-    throw new Error(
-      `[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`
-    )
+    throw new Error(`[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
   } catch (error) {
     this.getLogger().error(error)
   }
@@ -225,15 +207,8 @@ ${xhr.responseURL}`
   })
 }
 
-IpfsLoader.prototype.checkMessage = async function (
-  message,
-  keccak256,
-  signature
-) {
-  message =
-    message === undefined || message == null || message.trim() === ''
-      ? null
-      : message.trim()
+IpfsLoader.prototype.checkMessage = async function (message, keccak256, signature) {
+  message = message === undefined || message == null || message.trim() === '' ? null : message.trim()
   if (message == null) {
     throw new Error('Undefined encrypted content...')
   }
@@ -245,13 +220,8 @@ IpfsLoader.prototype.checkMessage = async function (
   }
   if (signature) {
     try {
-      const recovered = await this.ipfsBundle.personalRecover(
-        keccak256,
-        signature
-      )
-      $tw.ipfs
-        .getLogger()
-        .info(`Signed from: https://app.ens.domains/address/${recovered}`)
+      const recovered = await this.ipfsBundle.personalRecover(keccak256, signature)
+      $tw.ipfs.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
       $tw.utils.alert(
         this.name,
         `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
@@ -269,17 +239,11 @@ IpfsLoader.prototype.checkMessage = async function (
  * Load to Base64
  */
 IpfsLoader.prototype.loadToBase64 = async function (url, password) {
-  url =
-    url === undefined || url == null || url.toString().trim() === ''
-      ? null
-      : url.toString().trim()
+  url = url === undefined || url == null || url.toString().trim() === '' ? null : url.toString().trim()
   if (url == null) {
     throw new Error('Undefined URL...')
   }
-  password =
-    password === undefined || password == null || password.trim() === ''
-      ? null
-      : password.trim()
+  password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
   const ua = await this.fetchUint8Array(url)
   if (ua.length === 0) {
     return ''
@@ -329,17 +293,11 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
  * Load to UTF-8
  */
 IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
-  url =
-    url === undefined || url == null || url.toString().trim() === ''
-      ? null
-      : url.toString().trim()
+  url = url === undefined || url == null || url.toString().trim() === '' ? null : url.toString().trim()
   if (url == null) {
     throw new Error('Undefined URL...')
   }
-  password =
-    password === undefined || password == null || password.trim() === ''
-      ? null
-      : password.trim()
+  password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
   const ua = await this.fetchUint8Array(url)
   if (ua.length === 0) {
     return ''
@@ -401,7 +359,7 @@ IpfsLoader.prototype.decryptFromPasswordPrompt = function (encrypted) {
           reject(error)
         }
         return false
-      }
+      },
     })
   })
 }

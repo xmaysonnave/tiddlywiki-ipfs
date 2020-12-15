@@ -35,19 +35,15 @@ Startup initialisation
     }
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
-    $tw.utils.registerFileType(
-      'application/x-tiddler-dictionary',
-      'utf8',
-      '.dict'
-    )
+    $tw.utils.registerFileType('application/x-tiddler-dictionary', 'utf8', '.dict')
     $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
     $tw.utils.registerFileType('image/jpg', 'base64', ['.jpg', '.jpeg'], {
-      flags: ['image']
+      flags: ['image'],
     })
     $tw.utils.registerFileType('text/csv', 'utf8', '.csv')
     $tw.utils.registerFileType('video/quicktime', 'base64', ['.mov', '.qt'])
     $tw.utils.registerFileType('text/x-tiddlywiki', 'utf8', '.tid', {
-      deserializerType: 'text/html'
+      deserializerType: 'text/html',
     })
     // Log
     getLogger().info('ipfs-startup is starting up...')

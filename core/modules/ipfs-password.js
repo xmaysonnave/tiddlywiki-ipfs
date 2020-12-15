@@ -33,7 +33,7 @@ Compression handling
             $tw.crypto.setPassword(null)
           }
           return true // Get rid of the password prompt
-        }
+        },
       })
     }
     // Ensure that $:/isEncrypted is maintained properly
@@ -70,27 +70,17 @@ Compression handling
         }
       }
     })
-    $tw.rootWidget.addEventListener('tm-clear-password', async function (
-      event
-    ) {
+    $tw.rootWidget.addEventListener('tm-clear-password', async function (event) {
       if ($tw.browser) {
         const hasPassword = $tw.crypto.hasPassword()
         const hasEncryptionPublicKey = $tw.crypto.hasEncryptionPublicKey()
         if (hasPassword) {
-          if (
-            !confirm($tw.language.getString('Encryption/ConfirmClearPassword'))
-          ) {
+          if (!confirm($tw.language.getString('Encryption/ConfirmClearPassword'))) {
             return
           }
           $tw.crypto.setPassword(null)
         } else if (hasEncryptionPublicKey) {
-          if (
-            !confirm(
-              $tw.language.getString(
-                'Encryption/ConfirmClearEncryptionPublicKey'
-              )
-            )
-          ) {
+          if (!confirm($tw.language.getString('Encryption/ConfirmClearEncryptionPublicKey'))) {
             return
           }
           $tw.crypto.setEncryptionPublicKey(null)

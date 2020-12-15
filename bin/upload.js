@@ -40,62 +40,32 @@ function StringToUint8Array (string) {
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (
-  name,
-  owner,
-  extension,
-  dir,
-  tags,
-  hashOnly
-) {
+module.exports = async function main (name, owner, extension, dir, tags, hashOnly) {
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  name =
-    name == null || name === undefined || name.trim() === ''
-      ? null
-      : name.trim()
+  name = name == null || name === undefined || name.trim() === '' ? null : name.trim()
   if (name == null) {
     throw new Error('Unknown name...')
   }
-  owner =
-    owner == null || owner === undefined || owner.trim() === ''
-      ? null
-      : owner.trim()
-  extension =
-    extension == null || extension === undefined || extension.trim() === ''
-      ? null
-      : extension.trim()
+  owner = owner == null || owner === undefined || owner.trim() === '' ? null : owner.trim()
+  extension = extension == null || extension === undefined || extension.trim() === '' ? null : extension.trim()
   if (extension == null) {
     throw new Error('Unknown file extension...')
   }
-  dir =
-    dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
+  dir = dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
   if (dir == null) {
     throw new Error('Unknown directory...')
   }
-  tags =
-    tags == null || tags === undefined || tags.trim() === ''
-      ? null
-      : tags.trim()
-  hashOnly =
-    hashOnly == null || hashOnly === undefined || hashOnly.trim() === ''
-      ? null
-      : hashOnly.trim()
-  hashOnly = hashOnly
-    ? hashOnly === 'true'
-    : process.env.HASH_ONLY
-    ? process.env.HASH_ONLY === 'true'
-    : true
+  tags = tags == null || tags === undefined || tags.trim() === '' ? null : tags.trim()
+  hashOnly = hashOnly == null || hashOnly === undefined || hashOnly.trim() === '' ? null : hashOnly.trim()
+  hashOnly = hashOnly ? hashOnly === 'true' : process.env.HASH_ONLY ? process.env.HASH_ONLY === 'true' : true
 
   const normalizedName = filenamify(name, { replacement: '_' })
 
   // build
-  const build = fs.readFileSync(
-    `./build/output/${dir}/${normalizedName}_build.json`,
-    'utf8'
-  )
+  const build = fs.readFileSync(`./build/output/${dir}/${normalizedName}_build.json`, 'utf8')
   var { _raw_hash: _rawHash, _semver, _version } = JSON.parse(build)
   if (_version === undefined || _version == null) {
     throw new Error('Unknown version...')
@@ -111,21 +81,12 @@ module.exports = async function main (
   var currentVersion = null
   var currentParentCid = null
   var currentCid = null
-  if (fs.existsSync(`./current/${dir}/${normalizedName}.json`)) {
-    const current = fs.readFileSync(
-      `./current/${dir}/${normalizedName}.json`,
-      'utf8'
-    )
+  if (fs.existsSync(`./current/${dir}/current.json`)) {
+    const current = fs.readFileSync(`./current/${dir}/current.json`, 'utf8')
     if (!current) {
       throw new Error('Unknown current version...')
     }
-    var {
-      _parent_cid: currentParentCid,
-      _cid: currentCid,
-      _version: currentVersion,
-      _raw_hash: currentRawHash,
-      _semver: currentSemver
-    } = JSON.parse(current)
+    var { _parent_cid: currentParentCid, _cid: currentCid, _version: currentVersion, _raw_hash: currentRawHash, _semver: currentSemver } = JSON.parse(current)
     // Check
     if (currentVersion === _version) {
       if (_rawHash !== currentRawHash) {
@@ -168,7 +129,7 @@ module.exports = async function main (
   }
   upload.push({
     path: `/${contentName}`,
-    content: StringToUint8Array(content)
+    content: StringToUint8Array(content),
   })
 
   // favicon
@@ -188,19 +149,15 @@ module.exports = async function main (
   if (favicon) {
     upload.push({
       path: `/${faviconName}`,
-      content: favicon
+      content: favicon,
     })
   }
 
   // Ipfs Client
-  const apiUrl = process.env.API
-    ? process.env.API
-    : 'https://ipfs.infura.io:5001'
+  const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
 
-  var gatewayUrl = process.env.GATEWAY
-    ? process.env.GATEWAY
-    : 'https://dweb.link'
+  var gatewayUrl = process.env.GATEWAY ? process.env.GATEWAY : 'https://dweb.link'
   gatewayUrl = `${gatewayUrl}/ipfs/`
 
   // Upload
@@ -218,7 +175,7 @@ module.exports = async function main (
     hashAlg: 'sha2-256',
     pin: false,
     rawLeaves: false,
-    wrapWithDirectory: true
+    wrapWithDirectory: true,
   }
   if (hashOnly) {
     options.onlyHash = true
@@ -274,7 +231,7 @@ module.exports = async function main (
     _semver: _semver,
     _version: _version,
     _raw_hash: _rawHash,
-    _size: size
+    _size: size,
   }
   if (owner) {
     toJson._owner = owner
@@ -283,11 +240,7 @@ module.exports = async function main (
     toJson._tags = tags
   }
   // Save current
-  fs.writeFileSync(
-    `./current/${dir}/${normalizedName}.json`,
-    beautify(toJson, null, 2, 80),
-    'utf8'
-  )
+  fs.writeFileSync(`./current/${dir}/current.json`, beautify(toJson, null, 2, 80), 'utf8')
 
   // Tiddler
   var tid = `title: ${name}/build`
@@ -312,11 +265,7 @@ _raw_hash: ${toJson.__raw_hash}
 _size: ${toJson._size}`
 
   // Save Tiddler
-  fs.writeFileSync(
-    `./production/${dir}/${normalizedName}_build.tid`,
-    tid,
-    'utf8'
-  )
+  fs.writeFileSync(`./production/${dir}/${normalizedName}_build.tid`, tid, 'utf8')
 
   // content
   if (!replay.has(cid.toString())) {
@@ -347,11 +296,7 @@ _size: ${toJson._size}`
   replay.forEach((value, key) => {
     jsonObject[key] = value
   })
-  fs.writeFileSync(
-    `./production/${dir}/$_replay.json`,
-    (jsonObject),
-    'utf8'
-  )
+  fs.writeFileSync(`./production/${dir}/$_replay.json`, JSON.stringify(jsonObject), 'utf8')
 
   // Fetch
   if (!hashOnly) {
@@ -364,14 +309,10 @@ _size: ${toJson._size}`
     await fetch(`${gatewayUrl}${toJson._parent_cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid} ***`)
     await fetch(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
-    console.log(
-      `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`
-    )
+    console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`)
     if (faviconCid) {
       await fetch(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
-      console.log(
-        `*** Fetched ${gatewayUrl}${toJson._parent_cid}/${faviconName} ***`
-      )
+      console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid}/${faviconName} ***`)
     }
   }
 }

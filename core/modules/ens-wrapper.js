@@ -21,21 +21,18 @@ ENS Wrapper
 
   EnsWrapper.prototype.getContentHash = async function (domain, web3) {
     try {
-      var { content, protocol } = await this.ensLibrary.getContentHash(
-        domain,
-        web3
-      )
+      var { content, protocol } = await this.ensLibrary.getContentHash(domain, web3)
       if (content !== null && protocol !== null) {
         // Success
         return {
           content: content,
-          protocol: protocol
+          protocol: protocol,
         }
       }
       $tw.utils.alert(name, 'Unassigned ENS domain content...')
       return {
         content: null,
-        protocol: null
+        protocol: null,
       }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
@@ -43,20 +40,11 @@ ENS Wrapper
     }
   }
 
-  EnsWrapper.prototype.setContentHash = async function (
-    domain,
-    cid,
-    web3,
-    account
-  ) {
+  EnsWrapper.prototype.setContentHash = async function (domain, cid, web3, account) {
     try {
       await this.ensLibrary.setContentHash(domain, cid, web3, account)
     } catch (error) {
-      if (
-        error.name === 'OwnerError' ||
-        error.name === 'RejectedUserRequest' ||
-        error.name === 'UnauthorizedUserAccount'
-      ) {
+      if (error.name === 'OwnerError' || error.name === 'RejectedUserRequest' || error.name === 'UnauthorizedUserAccount') {
         throw error
       }
       $tw.ipfs.getLogger().error(error)

@@ -1,0 +1,14 @@
+{
+  "_parent_cid": "QmPdTSeKzY1uCccEdTBjHJRAnhH4Kv5XUs4LUUMmb6quET",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmPdTSeKzY1uCccEdTBjHJRAnhH4Kv5XUs4LUUMmb6quET",
+  "_source_path": "$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201215306.json",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmPdTSeKzY1uCccEdTBjHJRAnhH4Kv5XUs4LUUMmb6quET/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201215306.json",
+  "_cid": "QmQT6CN2zndYZxo1evBiWcCZ5oktSjKzPaBshXQMuHs8GJ",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmQT6CN2zndYZxo1evBiWcCZ5oktSjKzPaBshXQMuHs8GJ",
+  "_semver": "0.4.0-beta-TW-v5.1.23-pre+build",
+  "_version": "0.4.0-beta-TW-v5.1.23-pre+build-201215306",
+  "_raw_hash": "db4db66ee4729166a60aa288f2c6cd8e36f810f3b193960eff34afcbd7f37be0",
+  "_size": 119172,
+  "_owner": "$:/boot/boot.js",
+  "_tags": "$:/ipfs/core"
+}

@@ -26,7 +26,7 @@ function main () {
           replacement: version,
           paths: [`./build/tiddlers/${files[i]}`],
           recursive: false,
-          silent: true
+          silent: true,
         })
       }
     }

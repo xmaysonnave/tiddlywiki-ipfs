@@ -24,11 +24,7 @@ IPFS plugin version
    */
   exports.run = function () {
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-    if (
-      encrypted !== undefined &&
-      encrypted !== null &&
-      encrypted.fields.text === 'yes'
-    ) {
+    if (encrypted !== undefined && encrypted !== null && encrypted.fields.text === 'yes') {
       encrypted = true
     } else {
       encrypted = false
@@ -36,22 +32,14 @@ IPFS plugin version
     var tiddler
     var encryption = $tw.wiki.getTiddler('$:/config/encryption')
     if (encrypted) {
-      tiddler = $tw.wiki.getTiddler(
-        '$:/language/Buttons/Encryption/ClearEncryptionPublicKey/Hint'
-      )
+      tiddler = $tw.wiki.getTiddler('$:/language/Buttons/Encryption/ClearEncryptionPublicKey/Hint')
       if (encryption.fields.text === 'standford') {
-        tiddler = $tw.wiki.getTiddler(
-          '$:/language/Buttons/Encryption/ClearPassword/Hint'
-        )
+        tiddler = $tw.wiki.getTiddler('$:/language/Buttons/Encryption/ClearPassword/Hint')
       }
     } else {
-      tiddler = $tw.wiki.getTiddler(
-        '$:/language/Buttons/Encryption/SetEncryptionPublicKey/Hint'
-      )
+      tiddler = $tw.wiki.getTiddler('$:/language/Buttons/Encryption/SetEncryptionPublicKey/Hint')
       if (encryption.fields.text === 'standford') {
-        tiddler = $tw.wiki.getTiddler(
-          '$:/language/Buttons/Encryption/SetPassword/Hint'
-        )
+        tiddler = $tw.wiki.getTiddler('$:/language/Buttons/Encryption/SetPassword/Hint')
       }
     }
     return tiddler.fields.text

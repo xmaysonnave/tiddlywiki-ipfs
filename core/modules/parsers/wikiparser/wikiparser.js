@@ -19,37 +19,22 @@ wikiparser
   var WikiParser = function (type, text, options) {
     this.wiki = options.wiki
     // Check for an externally linked tiddler
-    if (
-      $tw.browser &&
-      (text || '') === '' &&
-      options.tiddler !== undefined &&
-      options.tiddler !== null
-    ) {
+    if ($tw.browser && (text || '') === '' && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri =
-        canonicalUri === undefined ||
-        canonicalUri == null ||
-        canonicalUri.trim() === ''
-          ? null
-          : canonicalUri.trim()
+      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
       var importUri = options.tiddler.fields._import_uri
-      importUri =
-        importUri === undefined || importUri == null || importUri.trim() === ''
-          ? null
-          : importUri.trim()
+      importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
       if (canonicalUri !== null || importUri !== null) {
         var ipfsImport = new IpfsImport()
         ipfsImport
           .import(canonicalUri, importUri, options.tiddler)
           .then(data => {
             if (data) {
-              const navigator = $tw.utils.locateNavigatorWidget(
-                $tw.pageWidgetNode
-              )
+              const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
               if (navigator) {
                 navigator.dispatchEvent({
                   type: 'tm-ipfs-import-tiddlers',
-                  param: data
+                  param: data,
                 })
               }
             }
@@ -63,37 +48,16 @@ wikiparser
     }
     // Initialise the classes if we don't have them already
     if (!this.pragmaRuleClasses) {
-      WikiParser.prototype.pragmaRuleClasses = $tw.modules.createClassesFromModules(
-        'wikirule',
-        'pragma',
-        $tw.WikiRuleBase
-      )
-      this.setupRules(
-        WikiParser.prototype.pragmaRuleClasses,
-        '$:/config/WikiParserRules/Pragmas/'
-      )
+      WikiParser.prototype.pragmaRuleClasses = $tw.modules.createClassesFromModules('wikirule', 'pragma', $tw.WikiRuleBase)
+      this.setupRules(WikiParser.prototype.pragmaRuleClasses, '$:/config/WikiParserRules/Pragmas/')
     }
     if (!this.blockRuleClasses) {
-      WikiParser.prototype.blockRuleClasses = $tw.modules.createClassesFromModules(
-        'wikirule',
-        'block',
-        $tw.WikiRuleBase
-      )
-      this.setupRules(
-        WikiParser.prototype.blockRuleClasses,
-        '$:/config/WikiParserRules/Block/'
-      )
+      WikiParser.prototype.blockRuleClasses = $tw.modules.createClassesFromModules('wikirule', 'block', $tw.WikiRuleBase)
+      this.setupRules(WikiParser.prototype.blockRuleClasses, '$:/config/WikiParserRules/Block/')
     }
     if (!this.inlineRuleClasses) {
-      WikiParser.prototype.inlineRuleClasses = $tw.modules.createClassesFromModules(
-        'wikirule',
-        'inline',
-        $tw.WikiRuleBase
-      )
-      this.setupRules(
-        WikiParser.prototype.inlineRuleClasses,
-        '$:/config/WikiParserRules/Inline/'
-      )
+      WikiParser.prototype.inlineRuleClasses = $tw.modules.createClassesFromModules('wikirule', 'inline', $tw.WikiRuleBase)
+      this.setupRules(WikiParser.prototype.inlineRuleClasses, '$:/config/WikiParserRules/Inline/')
     }
     // Save the parse text
     this.type = type || 'text/vnd.tiddlywiki'
@@ -104,18 +68,10 @@ wikiparser
     // Set current parse position
     this.pos = 0
     // Instantiate the pragma parse rules
-    this.pragmaRules = this.instantiateRules(
-      this.pragmaRuleClasses,
-      'pragma',
-      0
-    )
+    this.pragmaRules = this.instantiateRules(this.pragmaRuleClasses, 'pragma', 0)
     // Instantiate the parser block and inline rules
     this.blockRules = this.instantiateRules(this.blockRuleClasses, 'block', 0)
-    this.inlineRules = this.instantiateRules(
-      this.inlineRuleClasses,
-      'inline',
-      0
-    )
+    this.inlineRules = this.instantiateRules(this.inlineRuleClasses, 'inline', 0)
     // Parse any pragmas
     this.tree = []
     var topBranch = this.parsePragmas()
@@ -134,9 +90,7 @@ wikiparser
     var self = this
     if (!$tw.safemode) {
       $tw.utils.each(proto, function (object, name) {
-        if (
-          self.wiki.getTiddlerText(configPrefix + name, 'enable') !== 'enable'
-        ) {
+        if (self.wiki.getTiddlerText(configPrefix + name, 'enable') !== 'enable') {
           delete proto[name]
         }
       })
@@ -159,7 +113,7 @@ Instantiate an array of parse rules
       if (matchIndex !== undefined) {
         rulesInfo.push({
           rule: rule,
-          matchIndex: matchIndex
+          matchIndex: matchIndex,
         })
       }
     })
@@ -172,9 +126,7 @@ Skip any whitespace at the current position. Options are:
 */
   WikiParser.prototype.skipWhitespace = function (options) {
     options = options || {}
-    var whitespaceRegExp = options.treatNewlinesAsNonWhitespace
-      ? /([^\S\n]+)/gm
-      : /(\s+)/gm
+    var whitespaceRegExp = options.treatNewlinesAsNonWhitespace ? /([^\S\n]+)/gm : /(\s+)/gm
     whitespaceRegExp.lastIndex = this.pos
     var whitespaceMatch = whitespaceRegExp.exec(this.source)
     if (whitespaceMatch && whitespaceMatch.index === this.pos) {
@@ -197,10 +149,7 @@ Get the next match out of an array of parse rule instances
         ruleInfo.matchIndex = ruleInfo.rule.findNextMatch(startPos)
       }
       // Adopt this match if it's closer than the current best match
-      if (
-        ruleInfo.matchIndex !== undefined &&
-        ruleInfo.matchIndex <= matchingRulePos
-      ) {
+      if (ruleInfo.matchIndex !== undefined && ruleInfo.matchIndex <= matchingRulePos) {
         matchingRule = ruleInfo
         matchingRulePos = ruleInfo.matchIndex
       }
@@ -243,9 +192,7 @@ Parse a block from the current position
   terminatorRegExpString: optional regular expression string that identifies the end of plain paragraphs. Must not include capturing parenthesis
 */
   WikiParser.prototype.parseBlock = function (terminatorRegExpString) {
-    var terminatorRegExp = terminatorRegExpString
-      ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'gm')
-      : /(\r?\n\r?\n)/gm
+    var terminatorRegExp = terminatorRegExpString ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'gm') : /(\r?\n\r?\n)/gm
     this.skipWhitespace()
     if (this.pos >= this.sourceLength) {
       return []
@@ -260,8 +207,8 @@ Parse a block from the current position
       {
         type: 'element',
         tag: 'p',
-        children: this.parseInlineRun(terminatorRegExp)
-      }
+        children: this.parseInlineRun(terminatorRegExp),
+      },
     ]
   }
 
@@ -291,9 +238,7 @@ Parse a block from the current position to the end of the text
   /*
 Parse blocks of text until a terminating regexp is encountered
 */
-  WikiParser.prototype.parseBlocksTerminated = function (
-    terminatorRegExpString
-  ) {
+  WikiParser.prototype.parseBlocksTerminated = function (terminatorRegExpString) {
     var terminatorRegExp = new RegExp('(' + terminatorRegExpString + ')', 'gm')
     var tree = []
     // Skip any whitespace
@@ -302,10 +247,7 @@ Parse blocks of text until a terminating regexp is encountered
     terminatorRegExp.lastIndex = this.pos
     var match = terminatorRegExp.exec(this.source)
     // Parse the text into blocks
-    while (
-      this.pos < this.sourceLength &&
-      !(match && match.index === this.pos)
-    ) {
+    while (this.pos < this.sourceLength && !(match && match.index === this.pos)) {
       var blocks = this.parseBlock(terminatorRegExpString)
       tree.push.apply(tree, blocks)
       // Skip any whitespace
@@ -343,10 +285,7 @@ Options available:
     while (this.pos < this.sourceLength && nextMatch) {
       // Process the text preceding the run rule
       if (nextMatch.matchIndex > this.pos) {
-        this.pushTextWidget(
-          tree,
-          this.source.substring(this.pos, nextMatch.matchIndex)
-        )
+        this.pushTextWidget(tree, this.source.substring(this.pos, nextMatch.matchIndex))
         this.pos = nextMatch.matchIndex
       }
       // Process the run rule
@@ -362,10 +301,7 @@ Options available:
     return tree
   }
 
-  WikiParser.prototype.parseInlineRunTerminated = function (
-    terminatorRegExp,
-    options
-  ) {
+  WikiParser.prototype.parseInlineRunTerminated = function (terminatorRegExp, options) {
     options = options || {}
     var tree = []
     // Find the next occurrence of the terminator
@@ -374,21 +310,12 @@ Options available:
     // Find the next occurrence of a inlinerule
     var inlineRuleMatch = this.findNextMatch(this.inlineRules, this.pos)
     // Loop around until we've reached the end of the text
-    while (
-      this.pos < this.sourceLength &&
-      (terminatorMatch || inlineRuleMatch)
-    ) {
+    while (this.pos < this.sourceLength && (terminatorMatch || inlineRuleMatch)) {
       // Return if we've found the terminator, and it precedes any inline rule match
       if (terminatorMatch) {
-        if (
-          !inlineRuleMatch ||
-          inlineRuleMatch.matchIndex >= terminatorMatch.index
-        ) {
+        if (!inlineRuleMatch || inlineRuleMatch.matchIndex >= terminatorMatch.index) {
           if (terminatorMatch.index > this.pos) {
-            this.pushTextWidget(
-              tree,
-              this.source.substring(this.pos, terminatorMatch.index)
-            )
+            this.pushTextWidget(tree, this.source.substring(this.pos, terminatorMatch.index))
           }
           this.pos = terminatorMatch.index
           if (options.eatTerminator) {
@@ -401,10 +328,7 @@ Options available:
       if (inlineRuleMatch) {
         // Preceding text
         if (inlineRuleMatch.matchIndex > this.pos) {
-          this.pushTextWidget(
-            tree,
-            this.source.substring(this.pos, inlineRuleMatch.matchIndex)
-          )
+          this.pushTextWidget(tree, this.source.substring(this.pos, inlineRuleMatch.matchIndex))
           this.pos = inlineRuleMatch.matchIndex
         }
         // Process the inline rule

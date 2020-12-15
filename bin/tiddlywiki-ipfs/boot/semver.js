@@ -18,7 +18,7 @@ function main () {
       replacement: version,
       paths: ['./build/tiddlers/$_boot_boot.js.meta'],
       recursive: false,
-      silent: true
+      silent: true,
     })
   } catch (error) {
     console.error(error)

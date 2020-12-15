@@ -52,10 +52,7 @@ IPFS utils
    * from $:/core/modules/utils/logger.js
    **/
   exports.alert = function (callee, text) {
-    if (
-      typeof window === 'undefined' ||
-      typeof window.navigator === 'undefined'
-    ) {
+    if (typeof window === 'undefined' || typeof window.navigator === 'undefined') {
       return
     }
     const ALERT_TAG = '$:/tags/Alert'
@@ -82,11 +79,11 @@ IPFS utils
     } else {
       alertFields = {
         title: $tw.wiki.generateNewTitle('$:/temp/alerts/alert', {
-          prefix: ''
+          prefix: '',
         }),
         text: text,
         tags: [ALERT_TAG],
-        component: callee
+        component: callee,
       }
       existingCount = 0
     }
@@ -129,12 +126,7 @@ IPFS utils
 
   exports.updateTiddler = function (updates) {
     // Is there anything to do
-    if (
-      updates === undefined ||
-      updates == null ||
-      updates.tiddler === undefined ||
-      updates.tiddler == null
-    ) {
+    if (updates === undefined || updates == null || updates.tiddler === undefined || updates.tiddler == null) {
       return null
     }
     // Prepare updates
@@ -142,11 +134,7 @@ IPFS utils
     // Tags
     fields.tags = (updates.tiddler.fields.tags || []).slice(0)
     // Process add tags
-    if (
-      updates.addTags !== undefined &&
-      updates.addTags !== null &&
-      Array.isArray(updates.addTags)
-    ) {
+    if (updates.addTags !== undefined && updates.addTags !== null && Array.isArray(updates.addTags)) {
       for (var i = 0; i < updates.addTags.length; i++) {
         const tag = updates.addTags[i]
         if (fields.tags.indexOf(tag) === -1) {
@@ -155,11 +143,7 @@ IPFS utils
       }
     }
     // Process remove tags
-    if (
-      updates.removeTags !== undefined &&
-      updates.removeTags !== null &&
-      Array.isArray(updates.removeTags)
-    ) {
+    if (updates.removeTags !== undefined && updates.removeTags !== null && Array.isArray(updates.removeTags)) {
       for (var i = 0; i < updates.removeTags.length; i++) {
         const tag = updates.removeTags[i]
         const index = fields.tags.indexOf(tag)
@@ -169,11 +153,7 @@ IPFS utils
       }
     }
     // Process fields
-    if (
-      updates.fields !== undefined &&
-      updates.fields !== null &&
-      Array.isArray(updates.fields)
-    ) {
+    if (updates.fields !== undefined && updates.fields !== null && Array.isArray(updates.fields)) {
       for (var i = 0; i < updates.fields.length; i++) {
         const field = updates.fields[i]
         if (field.key !== undefined && field.key !== null) {
@@ -186,10 +166,7 @@ IPFS utils
   }
 
   exports.getContentType = function (title, type) {
-    type =
-      type === undefined || type == null || type.trim() === ''
-        ? null
-        : type.trim()
+    type = type === undefined || type == null || type.trim() === '' ? null : type.trim()
     if (type == null) {
       type = 'text/vnd.tiddlywiki'
     }
@@ -206,7 +183,7 @@ IPFS utils
     }
     return {
       type: type,
-      info: info
+      info: info,
     }
   }
 
@@ -241,18 +218,10 @@ IPFS utils
     const ipfsKeyword = 'ipfs'
     var exportUri = target.fields._export_uri
     try {
-      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(
-        true,
-        true,
-        exportUri
-      )
+      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(true, true, exportUri)
       if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
         var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-        const isOwner = await $tw.ipfs.isOwner(
-          normalizedUrl.hostname,
-          web3,
-          account
-        )
+        const isOwner = await $tw.ipfs.isOwner(normalizedUrl.hostname, web3, account)
         if (isOwner === false) {
           const err = new Error('Unauthorized Account...')
           err.name = 'OwnerError'
@@ -279,7 +248,7 @@ IPFS utils
     var updatedTiddler = $tw.utils.updateTiddler({
       tiddler: target,
       addTags: ['$:/isExported', '$:/isIpfs'],
-      fields: fields
+      fields: fields,
     })
     $tw.wiki.addTiddler(updatedTiddler)
     if (ipnsKey !== null && ipnsName !== null) {
@@ -294,13 +263,10 @@ IPFS utils
               const updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: target,
                 addTags: ['$:/isExported', '$:/isIpfs'],
-                fields: fields
+                fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(
-                name,
-                `Successfully Published IPNS name: ${ipnsName}`
-              )
+              $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
                   .unpinFromIpfs(cid)
@@ -325,27 +291,19 @@ IPFS utils
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
         })
-    } else if (
-      normalizedUrl !== null &&
-      normalizedUrl.hostname.endsWith('.eth')
-    ) {
+    } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
       $tw.utils.alert(name, `Publishing to ENS: ${normalizedUrl.hostname}`)
       $tw.ipfs
         .pinToIpfs(added)
         .then(data => {
           $tw.ipfs
-            .setContentHash(
-              normalizedUrl.hostname,
-              `/${ipfsKeyword}/${added}`,
-              web3,
-              account
-            )
+            .setContentHash(normalizedUrl.hostname, `/${ipfsKeyword}/${added}`, web3, account)
             .then(data => {
               fields.push({ key: '_export_uri', value: exportUri })
               const updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: target,
                 addTags: ['$:/isExported', '$:/isIpfs'],
-                fields: fields
+                fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
               $tw.utils.alert(name, 'Successfully Published to ENS...')
@@ -365,11 +323,7 @@ IPFS utils
             })
             .catch(error => {
               $tw.ipfs.requestToUnpin(added)
-              if (
-                error.name !== 'OwnerError' &&
-                error.name !== 'RejectedUserRequest' &&
-                error.name !== 'UnauthorizedUserAccount'
-              ) {
+              if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
                 $tw.ipfs.getLogger().error(error)
               }
               $tw.utils.alert(name, error.message)
@@ -401,10 +355,7 @@ IPFS utils
   exports.exportTiddlersAsJson = async function (tiddlers, exportUri, spaces) {
     var json
     var data = []
-    var spaces =
-      spaces === undefined || spaces == null
-        ? $tw.config.preferences.jsonSpaces
-        : spaces
+    var spaces = spaces === undefined || spaces == null ? $tw.config.preferences.jsonSpaces : spaces
     const ipnsKeyword = 'ipns'
     // Process Tiddlers
     if (tiddlers) {
@@ -428,11 +379,7 @@ IPFS utils
             continue
           }
           try {
-            var { ipnsKey } = await $tw.ipfs.resolveUrl(
-              false,
-              false,
-              fieldValue
-            )
+            var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
@@ -455,8 +402,7 @@ IPFS utils
             if (tag === '$:/isExported' || tag === '$:/isImported') {
               continue
             }
-            tagValues =
-              (tagValues.length === 0 ? '[[' : `${tagValues} [[`) + `${tag}]]`
+            tagValues = (tagValues.length === 0 ? '[[' : `${tagValues} [[`) + `${tag}]]`
           }
           // Store tags
           fields.tags = tagValues

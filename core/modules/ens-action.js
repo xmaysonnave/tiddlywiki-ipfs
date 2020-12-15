@@ -30,17 +30,13 @@ ENS Action
     $tw.rootWidget.addEventListener('tm-ens-manager-open', function (event) {
       return self.handleOpenEnsManager(event)
     })
-    $tw.rootWidget.addEventListener('tm-ens-resolve-and-open', async function (
-      event
-    ) {
+    $tw.rootWidget.addEventListener('tm-ens-resolve-and-open', async function (event) {
       return await self.handleResolveEnsAndOpen(event)
     })
     $tw.rootWidget.addEventListener('tm-ens-publish', async function (event) {
       return await self.handlePublishToEns(event)
     })
-    $tw.rootWidget.addEventListener('tm-ipns-publish-to-ens', async function (
-      event
-    ) {
+    $tw.rootWidget.addEventListener('tm-ipns-publish-to-ens', async function (event) {
       return await self.handlePublishIpnsToEns(event)
     })
     // Init once
@@ -49,29 +45,19 @@ ENS Action
 
   EnsAction.prototype.handleOpenEnsManager = function (event) {
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain =
-      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
-        ? null
-        : ensDomain.trim()
+    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
     // Check
     if (ensDomain == null) {
       window.open('https://app.ens.domains', '_blank', 'noopener,noreferrer')
     } else {
-      window.open(
-        `https://app.ens.domains/name/${ensDomain}`,
-        '_blank',
-        'noopener,noreferrer'
-      )
+      window.open(`https://app.ens.domains/name/${ensDomain}`, '_blank', 'noopener,noreferrer')
     }
     return true
   }
 
   EnsAction.prototype.handleResolveEnsAndOpen = async function (event) {
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain =
-      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
-        ? null
-        : ensDomain.trim()
+    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
@@ -95,10 +81,7 @@ ENS Action
     var ipnsKey = null
     const wiki = $tw.ipfs.getDocumentUrl()
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain =
-      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
-        ? null
-        : ensDomain.trim()
+    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
@@ -123,29 +106,19 @@ ENS Action
   EnsAction.prototype.handlePublishIpnsToEns = async function (event) {
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName =
-      ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
-        ? null
-        : ipnsName.trim()
+    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
     }
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain =
-      ensDomain === undefined || ensDomain == null || ensDomain.trim() === ''
-        ? null
-        : ensDomain.trim()
+    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
     }
     try {
-      var { ipnsKey } = await $tw.ipfs.resolveUrl(
-        true,
-        false,
-        `/${ipnsKeyword}/${ipnsName}`
-      )
+      var { ipnsKey } = await $tw.ipfs.resolveUrl(true, false, `/${ipnsKeyword}/${ipnsName}`)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -161,15 +134,9 @@ ENS Action
     var web3 = null
     try {
       var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-      var {
-        cid: ensCid,
-        resolvedUrl: ensResolvedUrl
-      } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
+      var { cid: ensCid, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
       if (ensCid !== null && cid === ensResolvedUrl.pathname) {
-        $tw.utils.alert(
-          name,
-          'The current resolved ENS domain content is up to date...'
-        )
+        $tw.utils.alert(name, 'The current resolved ENS domain content is up to date...')
         return false
       }
       const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
@@ -199,11 +166,7 @@ ENS Action
           })
           .catch(error => {
             $tw.ipfs.requestToPin(ensCid)
-            if (
-              error.name !== 'OwnerError' &&
-              error.name !== 'RejectedUserRequest' &&
-              error.name !== 'UnauthorizedUserAccount'
-            ) {
+            if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
               $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)

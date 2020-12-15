@@ -15,21 +15,12 @@ Utility functions related to crypto.
    * Look for an encrypted store area in the text of a TiddlyWiki file
    */
   exports.extractEncryptedStoreArea = function (text) {
-    var encryptedStoreAreaStartMarker =
-      '<pre id="encryptedStoreArea" type="text/plain" style="display:none;">'
+    var encryptedStoreAreaStartMarker = '<pre id="encryptedStoreArea" type="text/plain" style="display:none;">'
     var encryptedStoreAreaStart = text.indexOf(encryptedStoreAreaStartMarker)
     if (encryptedStoreAreaStart !== -1) {
-      var encryptedStoreAreaEnd = text.indexOf(
-        '</pre>',
-        encryptedStoreAreaStart
-      )
+      var encryptedStoreAreaEnd = text.indexOf('</pre>', encryptedStoreAreaStart)
       if (encryptedStoreAreaEnd !== -1) {
-        return $tw.utils.htmlDecode(
-          text.substring(
-            encryptedStoreAreaStart + encryptedStoreAreaStartMarker.length,
-            encryptedStoreAreaEnd - 1
-          )
-        )
+        return $tw.utils.htmlDecode(text.substring(encryptedStoreAreaStart + encryptedStoreAreaStartMarker.length, encryptedStoreAreaEnd - 1))
       }
     }
     return null
@@ -38,9 +29,7 @@ Utility functions related to crypto.
   exports.decryptEncryptedStoreArea = function (encryptedStoreArea, callback) {
     if (encryptedStoreArea) {
       if (encryptedStoreArea.match(/{"iv":/)) {
-        $tw.utils.decryptStoreAreaInteractive(encryptedStoreArea, function (
-          decrypted
-        ) {
+        $tw.utils.decryptStoreAreaInteractive(encryptedStoreArea, function (decrypted) {
           var tiddlers = $tw.utils.loadTiddlers(decrypted)
           if (tiddlers) {
             callback(tiddlers)
@@ -49,17 +38,12 @@ Utility functions related to crypto.
         return true
       } else if (encryptedStoreArea.match(/{"encrypted":/)) {
         var json = JSON.parse(encryptedStoreArea)
-        $tw.utils.decryptFromMetamaskPrompt(
-          json.encrypted,
-          json.keccak256,
-          json.signature,
-          function (decrypted) {
-            var tiddlers = $tw.utils.loadTiddlers(decrypted)
-            if (tiddlers) {
-              callback(tiddlers)
-            }
+        $tw.utils.decryptFromMetamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted) {
+          var tiddlers = $tw.utils.loadTiddlers(decrypted)
+          if (tiddlers) {
+            callback(tiddlers)
           }
-        )
+        })
         return true
       }
     }
@@ -71,21 +55,12 @@ Utility functions related to crypto.
    * If the password is not provided then the password in the password store will be used
    */
   exports.decryptStoreArea = function (encryptedStoreArea, password) {
-    return $tw.utils.loadTiddlers(
-      $tw.crypto.decrypt(encryptedStoreArea, password)
-    )
+    return $tw.utils.loadTiddlers($tw.crypto.decrypt(encryptedStoreArea, password))
   }
 
-  exports.decryptFromMetamaskPrompt = function (
-    encrypted,
-    keccak256,
-    signature,
-    callback
-  ) {
+  exports.decryptFromMetamaskPrompt = function (encrypted, keccak256, signature, callback) {
     if (encrypted) {
-      $tw.boot.metamaskPrompt(encrypted, keccak256, signature, function (
-        decrypted
-      ) {
+      $tw.boot.metamaskPrompt(encrypted, keccak256, signature, function (decrypted) {
         if (decrypted) {
           callback(decrypted)
         }
@@ -104,11 +79,7 @@ Utility functions related to crypto.
    *
    * $tw.config.usePasswordVault: causes any password entered by the user to also be put into the system password vault
    */
-  exports.decryptStoreAreaInteractive = function (
-    encryptedStoreArea,
-    callback,
-    options
-  ) {
+  exports.decryptStoreAreaInteractive = function (encryptedStoreArea, callback, options) {
     // Try to decrypt with the current password
     var decrypted = $tw.crypto.decrypt(encryptedStoreArea)
     if (decrypted) {
@@ -138,7 +109,7 @@ Utility functions related to crypto.
             // We didn't decrypt everything, so continue to prompt for password
             return false
           }
-        }
+        },
       })
     }
   }

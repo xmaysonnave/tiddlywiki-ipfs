@@ -95,11 +95,7 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array)
   }
 
-  IpfsController.prototype.processContent = async function (
-    tiddler,
-    content,
-    encoding
-  ) {
+  IpfsController.prototype.processContent = async function (tiddler, content, encoding) {
     if (content === undefined || content == null) {
       throw new Error('Unable to process undefined content...')
     }
@@ -108,35 +104,17 @@ IPFS Controller
     }
     var compress = $tw.wiki.getTiddler('$:/isCompressed')
     compress = compress !== undefined ? compress.fields.text === 'yes' : false
-    compress =
-      tiddler !== undefined &&
-      tiddler.fields._compress !== undefined &&
-      tiddler.fields._compress.trim() !== ''
-        ? tiddler.fields._compress.trim() === 'yes'
-        : compress
+    compress = tiddler !== undefined && tiddler.fields._compress !== undefined && tiddler.fields._compress.trim() !== '' ? tiddler.fields._compress.trim() === 'yes' : compress
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-    encrypted =
-      encrypted !== undefined ? encrypted.fields.text === 'yes' : false
-    var password =
-      tiddler !== undefined &&
-      tiddler.fields._password !== undefined &&
-      tiddler.fields._password.trim() !== ''
-        ? tiddler.fields._password.trim()
-        : null
+    encrypted = encrypted !== undefined ? encrypted.fields.text === 'yes' : false
+    var password = tiddler !== undefined && tiddler.fields._password !== undefined && tiddler.fields._password.trim() !== '' ? tiddler.fields._password.trim() : null
     var publicKey =
-      tiddler !== undefined &&
-      tiddler.fields._encryption_public_key !== undefined &&
-      tiddler.fields._encryption_public_key.trim() !== ''
+      tiddler !== undefined && tiddler.fields._encryption_public_key !== undefined && tiddler.fields._encryption_public_key.trim() !== ''
         ? tiddler.fields._encryption_public_key.trim()
         : null
     var sign = $tw.wiki.getTiddler('$:/isSigned')
     sign = sign !== undefined ? sign.fields.text === 'yes' : false
-    sign =
-      tiddler !== undefined &&
-      tiddler.fields._sign !== undefined &&
-      tiddler.fields._sign.trim() !== ''
-        ? tiddler.fields._sign.trim() === 'yes'
-        : sign
+    sign = tiddler !== undefined && tiddler.fields._sign !== undefined && tiddler.fields._sign.trim() !== '' ? tiddler.fields._sign.trim() === 'yes' : sign
     var hasPublicKey = publicKey || $tw.crypto.hasEncryptionPublicKey()
     if (encrypted || password || hasPublicKey) {
       try {
@@ -145,19 +123,11 @@ IPFS Controller
         }
         if (compress) {
           content = { compressed: this.deflate(content) }
-          content.compressed = $tw.crypto.encrypt(
-            content.compressed,
-            password,
-            publicKey
-          )
+          content.compressed = $tw.crypto.encrypt(content.compressed, password, publicKey)
           if (hasPublicKey && sign) {
             content.keccak256 = $tw.crypto.keccak256(content.compressed)
             content.signature = await this.personalSign(content.keccak256)
-            content.signature = $tw.crypto.encrypt(
-              content.signature,
-              null,
-              publicKey
-            )
+            content.signature = $tw.crypto.encrypt(content.signature, null, publicKey)
           }
           content = JSON.stringify(content)
         } else {
@@ -167,19 +137,11 @@ IPFS Controller
           }
           if (hasPublicKey) {
             content = { encrypted: content }
-            content.encrypted = $tw.crypto.encrypt(
-              content.encrypted,
-              null,
-              publicKey
-            )
+            content.encrypted = $tw.crypto.encrypt(content.encrypted, null, publicKey)
             if (sign) {
               content.keccak256 = $tw.crypto.keccak256(content.encrypted)
               content.signature = await this.personalSign(content.keccak256)
-              content.signature = $tw.crypto.encrypt(
-                content.signature,
-                null,
-                publicKey
-              )
+              content.signature = $tw.crypto.encrypt(content.signature, null, publicKey)
             }
             content = JSON.stringify(content)
           } else {
@@ -363,28 +325,14 @@ IPFS Controller
     return await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName)
   }
 
-  IpfsController.prototype.renameIpnsName = async function (
-    oldIpnsName,
-    newIpnsName
-  ) {
+  IpfsController.prototype.renameIpnsName = async function (oldIpnsName, newIpnsName) {
     const { ipfs } = await this.getIpfsClient()
     return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName)
   }
 
-  IpfsController.prototype.getIpnsIdentifiers = async function (
-    identifier,
-    base,
-    path,
-    ipnsName
-  ) {
+  IpfsController.prototype.getIpnsIdentifiers = async function (identifier, base, path, ipnsName) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpnsIdentifiers(
-      ipfs,
-      identifier,
-      base,
-      path,
-      ipnsName
-    )
+    return await this.ipfsWrapper.getIpnsIdentifiers(ipfs, identifier, base, path, ipnsName)
   }
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
@@ -392,11 +340,7 @@ IPFS Controller
     return await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey)
   }
 
-  IpfsController.prototype.publishIpnsName = async function (
-    cid,
-    ipnsKey,
-    ipnsName
-  ) {
+  IpfsController.prototype.publishIpnsName = async function (cid, ipnsKey, ipnsName) {
     const { ipfs } = await this.getIpfsClient()
     return await this.ipfsWrapper.publishIpnsName(cid, ipfs, ipnsKey, ipnsName)
   }
@@ -441,29 +385,20 @@ IPFS Controller
     return this.ipfsBundle.getUrl(url, base)
   }
 
-  IpfsController.prototype.resolveUrl = async function (
-    resolveIpns,
-    resolveEns,
-    value,
-    base,
-    web3
-  ) {
+  IpfsController.prototype.resolveUrl = async function (resolveIpns, resolveEns, value, base, web3) {
     var cid = null
     var ipnsKey = null
     var ipnsName = null
     var normalizedUrl = null
     var resolvedUrl = null
-    value =
-      value === undefined || value == null || value.toString().trim() === ''
-        ? null
-        : value.toString().trim()
+    value = value === undefined || value == null || value.toString().trim() === '' ? null : value.toString().trim()
     if (value == null) {
       return {
         cid: null,
         ipnsKey: null,
         ipnsName: null,
         normalizedUrl: null,
-        resolvedUrl: null
+        resolvedUrl: null,
       }
     }
     try {
@@ -477,37 +412,16 @@ IPFS Controller
         ipnsKey: null,
         ipnsName: null,
         normalizedUrl: null,
-        resolvedUrl: null
+        resolvedUrl: null,
       }
     }
     var { cid, ipnsIdentifier, path, protocol } = this.decodeCid(normalizedUrl)
     if (protocol === ipnsKeyword && ipnsIdentifier !== null) {
-      var {
-        cid,
-        ipnsKey,
-        ipnsName,
-        normalizedUrl,
-        resolvedUrl
-      } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
-    } else if (
-      resolveEns &&
-      normalizedUrl.hostname.endsWith('.eth') &&
-      protocol !== ipfsKeyword &&
-      protocol !== ipnsKeyword
-    ) {
-      var { cid, protocol, resolvedUrl } = await this.resolveEns(
-        normalizedUrl.hostname,
-        base,
-        path,
-        web3
-      )
+      var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
+    } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth') && protocol !== ipfsKeyword && protocol !== ipnsKeyword) {
+      var { cid, protocol, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
       if (protocol === ipnsKeyword) {
-        var { cid, ipnsKey, ipnsName, resolvedUrl } = await this.resolveIpns(
-          cid,
-          resolveIpns,
-          base,
-          path
-        )
+        var { cid, ipnsKey, ipnsName, resolvedUrl } = await this.resolveIpns(cid, resolveIpns, base, path)
       }
     }
     return {
@@ -515,42 +429,25 @@ IPFS Controller
       ipnsKey: ipnsKey,
       ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
-      resolvedUrl: resolvedUrl !== null ? resolvedUrl : normalizedUrl
+      resolvedUrl: resolvedUrl !== null ? resolvedUrl : normalizedUrl,
     }
   }
 
-  IpfsController.prototype.resolveIpns = async function (
-    ipnsIdentifier,
-    resolveIpns,
-    base,
-    path
-  ) {
-    ipnsIdentifier =
-      ipnsIdentifier === undefined ||
-      ipnsIdentifier == null ||
-      ipnsIdentifier.toString().trim() === ''
-        ? null
-        : ipnsIdentifier.toString().trim()
-    path =
-      path === undefined || path == null || path.trim() === ''
-        ? ''
-        : path.trim()
+  IpfsController.prototype.resolveIpns = async function (ipnsIdentifier, resolveIpns, base, path) {
+    ipnsIdentifier = ipnsIdentifier === undefined || ipnsIdentifier == null || ipnsIdentifier.toString().trim() === '' ? null : ipnsIdentifier.toString().trim()
+    path = path === undefined || path == null || path.trim() === '' ? '' : path.trim()
     if (ipnsIdentifier == null) {
       return {
         cid: null,
         ipnsKey: null,
         ipnsName: null,
         normalizedUrl: null,
-        resolvedUrl: null
+        resolvedUrl: null,
       }
     }
     var cid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(
-      ipnsIdentifier,
-      base,
-      path
-    )
+    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier, base, path)
     if (resolveIpns) {
       $tw.ipfs.getLogger().info(
         `Resolving IPNS key:
@@ -580,45 +477,29 @@ ${normalizedUrl}`
       ipnsKey: ipnsKey,
       ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
-      resolvedUrl: resolvedUrl
+      resolvedUrl: resolvedUrl,
     }
   }
 
-  IpfsController.prototype.resolveEns = async function (
-    ensDomain,
-    base,
-    path,
-    web3
-  ) {
-    ensDomain =
-      ensDomain === undefined ||
-      ensDomain == null ||
-      ensDomain.toString().trim() === ''
-        ? null
-        : ensDomain.toString().trim()
+  IpfsController.prototype.resolveEns = async function (ensDomain, base, path, web3) {
+    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.toString().trim() === '' ? null : ensDomain.toString().trim()
     if (ensDomain == null) {
       return {
         cid: null,
         protocol: null,
-        resolvedUrl: null
+        resolvedUrl: null,
       }
     }
-    path =
-      path === undefined || path == null || path.trim() === ''
-        ? ''
-        : path.trim()
+    path = path === undefined || path == null || path.trim() === '' ? '' : path.trim()
     if (web3 === undefined || web3 == null) {
       var { web3 } = await this.getWeb3Provider()
     }
-    const { content, protocol } = await this.ensWrapper.getContentHash(
-      ensDomain,
-      web3
-    )
+    const { content, protocol } = await this.ensWrapper.getContentHash(ensDomain, web3)
     if (content == null || protocol == null) {
       return {
         cid: null,
         protocol: null,
-        resolvedUrl: null
+        resolvedUrl: null,
       }
     }
     const url = this.normalizeUrl(`/${protocol}/${content}${path}`, base)
@@ -629,7 +510,7 @@ ${url}`
     return {
       cid: content,
       protocol: protocol,
-      resolvedUrl: url
+      resolvedUrl: url,
     }
   }
 
@@ -641,7 +522,7 @@ ${url}`
       const client = await this.ipfsWrapper.getWindowIpfsClient()
       return {
         ipfs: client.ipfs,
-        provider: client.provider
+        provider: client.provider,
       }
     }
     // Default, try IPFS companion
@@ -650,7 +531,7 @@ ${url}`
         const client = await this.ipfsWrapper.getWindowIpfsClient()
         return {
           ipfs: client.ipfs,
-          provider: client.provider
+          provider: client.provider,
         }
       } catch (error) {
         // Ignore, fallback to HTTP
@@ -670,7 +551,7 @@ ${url}`
       // Done
       return {
         ipfs: client.ipfs,
-        provider: client.provider
+        provider: client.provider,
       }
     }
     // Build a new HTTP client
@@ -684,22 +565,12 @@ ${url}`
     // Done
     return {
       ipfs: ipfs,
-      provider: provider
+      provider: provider,
     }
   }
 
-  IpfsController.prototype.setContentHash = async function (
-    ensDomain,
-    cid,
-    web3,
-    account
-  ) {
-    if (
-      account === undefined ||
-      account == null ||
-      web3 === undefined ||
-      web3 == null
-    ) {
+  IpfsController.prototype.setContentHash = async function (ensDomain, cid, web3, account) {
+    if (account === undefined || account == null || web3 === undefined || web3 == null) {
       var { account, web3 } = await this.getEnabledWeb3Provider()
     }
     await this.ensWrapper.setContentHash(ensDomain, cid, web3, account)
@@ -716,8 +587,8 @@ ${url}`
     return this.ipfsBundle.decodeCid(pathname)
   }
 
-  IpfsController.prototype.isCid = function (cid) {
-    return this.ipfsBundle.isCid(cid)
+  IpfsController.prototype.getCid = function (cid) {
+    return this.ipfsBundle.getCid(cid)
   }
 
   IpfsController.prototype.cidToBase58CidV0 = function (cid, log) {
@@ -728,11 +599,7 @@ ${url}`
     return this.ipfsBundle.cidToCidV1(cid, protocol, log)
   }
 
-  IpfsController.prototype.cidToLibp2pKeyCidV1 = function (
-    cid,
-    multibaseName,
-    log
-  ) {
+  IpfsController.prototype.cidToLibp2pKeyCidV1 = function (cid, multibaseName, log) {
     return this.ipfsBundle.cidToLibp2pKeyCidV1(cid, multibaseName, log)
   }
 
@@ -740,10 +607,7 @@ ${url}`
     return await this.ipfsBundle.isOwner(domain, web3, account)
   }
 
-  IpfsController.prototype.personalRecover = async function (
-    message,
-    signature
-  ) {
+  IpfsController.prototype.personalRecover = async function (message, signature) {
     return await this.ipfsBundle.personalRecover(message, signature)
   }
 

@@ -59,7 +59,7 @@ Render this widget into the DOM
         'src',
         this.getVariable('tv-get-export-image-link', {
           params: [{ name: 'src', value: this.imageSource }],
-          defaultValue: this.imageSource
+          defaultValue: this.imageSource,
         })
       )
     } else {
@@ -68,12 +68,7 @@ Render this widget into the DOM
         var type = tiddler.fields.type
         var text = tiddler.fields.text
         var canonicalUri = tiddler.fields._canonical_uri
-        canonicalUri =
-          canonicalUri === undefined ||
-          canonicalUri == null ||
-          canonicalUri.trim() === ''
-            ? null
-            : canonicalUri.trim()
+        canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
         // If the tiddler has body text then it doesn't need to be lazily loaded
         if (text) {
           // Render the appropriate element for the image type
@@ -83,10 +78,7 @@ Render this widget into the DOM
               domNode.setAttribute('src', 'data:application/pdf;base64,' + text)
               break
             case 'image/svg+xml':
-              domNode.setAttribute(
-                'src',
-                'data:image/svg+xml,' + encodeURIComponent(text)
-              )
+              domNode.setAttribute('src', 'data:image/svg+xml,' + encodeURIComponent(text))
               break
             default:
               domNode.setAttribute('src', 'data:' + type + ';base64,' + text)
@@ -94,20 +86,12 @@ Render this widget into the DOM
           }
         } else if (canonicalUri) {
           var password = tiddler.fields._password
-          password =
-            password === undefined || password == null || password.trim() === ''
-              ? null
-              : password.trim()
+          password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
           $tw.ipfs
             .resolveUrl(false, true, canonicalUri)
             .then(data => {
               var { normalizedUrl, resolvedUrl } = data
-              var url =
-                resolvedUrl !== null
-                  ? resolvedUrl.toString()
-                  : normalizedUrl !== null
-                  ? normalizedUrl.toString()
-                  : null
+              var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
               if (url !== null) {
                 switch (type) {
                   case 'application/pdf':
@@ -116,10 +100,7 @@ Render this widget into the DOM
                       .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          domNode.setAttribute(
-                            'src',
-                            'data:application/pdf;base64,' + data
-                          )
+                          domNode.setAttribute('src', 'data:application/pdf;base64,' + data)
                         }
                       })
                       .catch(error => {
@@ -132,10 +113,7 @@ Render this widget into the DOM
                       .loadToUtf8(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          domNode.setAttribute(
-                            'src',
-                            'data:image/svg+xml,' + encodeURIComponent(data)
-                          )
+                          domNode.setAttribute('src', 'data:image/svg+xml,' + encodeURIComponent(data))
                         }
                       })
                       .catch(error => {
@@ -148,10 +126,7 @@ Render this widget into the DOM
                       .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          domNode.setAttribute(
-                            'src',
-                            'data:' + type + ';base64,' + data
-                          )
+                          domNode.setAttribute('src', 'data:' + type + ';base64,' + data)
                         }
                       })
                       .catch(error => {

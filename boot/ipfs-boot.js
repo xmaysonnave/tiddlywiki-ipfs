@@ -39,11 +39,7 @@ var _ipfs = function ($tw) {
           var tStop = new Date() - tStart
           var ratio = Math.floor((outputText.length * 100) / inputText.length)
           var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
-          $tw.boot
-            .getLogger()
-            .info(
-              `Standford ${uMethod}: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`
-            )
+          $tw.boot.getLogger().info(`Standford ${uMethod}: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
         }
       } catch (ex) {
         $tw.boot.getLogger().error('Crypto error:' + ex)
@@ -52,8 +48,7 @@ var _ipfs = function ($tw) {
       return outputText
     }
     this.setPassword = function (newPassword) {
-      currentPassword =
-        newPassword === undefined || newPassword == null ? null : newPassword
+      currentPassword = newPassword === undefined || newPassword == null ? null : newPassword
       currentPublicKey = null
       if ($tw.wiki) {
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
@@ -61,7 +56,7 @@ var _ipfs = function ($tw) {
           $tw.wiki.addTiddler(
             new $tw.Tiddler({
               title: '$:/config/encryption',
-              text: 'standford'
+              text: 'standford',
             })
           )
         }
@@ -69,8 +64,7 @@ var _ipfs = function ($tw) {
       }
     }
     this.setEncryptionPublicKey = function (newPublicKey) {
-      currentPublicKey =
-        newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
+      currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
       currentPassword = null
       if ($tw.wiki) {
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
@@ -79,7 +73,7 @@ var _ipfs = function ($tw) {
             $tw.wiki.addTiddler(
               new $tw.Tiddler({
                 title: '$:/config/encryption',
-                text: 'ethereum'
+                text: 'ethereum',
               })
             )
           }
@@ -88,7 +82,7 @@ var _ipfs = function ($tw) {
             $tw.wiki.addTiddler(
               new $tw.Tiddler({
                 title: '$:/config/encryption',
-                text: 'standford'
+                text: 'standford',
               })
             )
           }
@@ -106,14 +100,14 @@ var _ipfs = function ($tw) {
               new $tw.Tiddler({
                 title: '$:/isEncrypted',
                 _encryption_public_key: currentPublicKey,
-                text: state
+                text: state,
               })
             )
           } else {
             $tw.wiki.addTiddler(
               new $tw.Tiddler({
                 title: '$:/isEncrypted',
-                text: state
+                text: state,
               })
             )
           }
@@ -130,24 +124,14 @@ var _ipfs = function ($tw) {
       publicKey = publicKey || currentPublicKey
       if (publicKey) {
         var output
-        var sigUtil = $tw.node
-          ? global.sigUtil || require('eth-sig-util')
-          : window.sigUtil
+        var sigUtil = $tw.node ? global.sigUtil || require('eth-sig-util') : window.sigUtil
         var tStart = new Date()
         try {
-          output = sigUtil.encrypt(
-            publicKey,
-            { data: text },
-            'x25519-xsalsa20-poly1305'
-          )
+          output = sigUtil.encrypt(publicKey, { data: text }, 'x25519-xsalsa20-poly1305')
           output = JSON.stringify(output)
           var tStop = new Date() - tStart
           var ratio = Math.floor((output.length * 100) / text.length)
-          $tw.boot
-            .getLogger()
-            .info(
-              `Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`
-            )
+          $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
         } catch (error) {
           $tw.boot.getLogger().error('Crypto error:' + error)
           output = null
@@ -161,9 +145,7 @@ var _ipfs = function ($tw) {
       return callSjcl('decrypt', text, password)
     }
     this.keccak256 = function (text) {
-      var createKeccakHash = $tw.node
-        ? global.createKeccakHash || require('keccak')
-        : window.createKeccakHash
+      var createKeccakHash = $tw.node ? global.createKeccakHash || require('keccak') : window.createKeccakHash
       var hash = createKeccakHash('keccak256')
       hash.update(text)
       return hash.digest('hex')
@@ -185,9 +167,7 @@ var _ipfs = function ($tw) {
         var state = currentState === 'yes' ? 'yes' : 'no'
         var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
         if (!tiddler || tiddler.fields.text !== state) {
-          $tw.wiki.addTiddler(
-            new $tw.Tiddler({ title: '$:/isCompressed', text: state })
-          )
+          $tw.wiki.addTiddler(new $tw.Tiddler({ title: '$:/isCompressed', text: state }))
         }
       }
     }
@@ -197,11 +177,7 @@ var _ipfs = function ($tw) {
       var b64 = this.btoa(ua)
       var tStop = new Date() - tStart
       var ratio = Math.floor((b64.length * 100) / str.length)
-      $tw.boot
-        .getLogger()
-        .info(
-          `Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`
-        )
+      $tw.boot.getLogger().info(`Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`)
       return b64
     }
     this.inflate = function (b64) {
@@ -210,11 +186,7 @@ var _ipfs = function ($tw) {
       var str = pako.inflate(ua, { to: 'string' })
       var tStop = new Date() - tStart
       var ratio = Math.floor((str.length * 100) / b64.length)
-      $tw.boot
-        .getLogger()
-        .info(
-          `Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`
-        )
+      $tw.boot.getLogger().info(`Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`)
       return str
     }
     this.decode = function (b64) {
@@ -275,8 +247,7 @@ var _ipfs = function ($tw) {
      * https://developer.mozilla.org/en/JavaScript_typed_arrays/Uint8Array
      */
     var Base64Binary = {
-      _keyStr:
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+      _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
       /* will return a  Uint8Array type */
       decodeArrayBuffer: function (input) {
         var bytes = (input.length / 4) * 3
@@ -319,27 +290,20 @@ var _ipfs = function ($tw) {
           if (enc4 !== 64) ua[i + 2] = chr3
         }
         return ua
-      }
+      },
     }
   }
 
   /////////////////////////// Browser definitions
 
   if ($tw.browser && !$tw.node) {
-    $tw.boot.metamaskPrompt = async function (
-      encrypted,
-      keccak256,
-      signature,
-      callback
-    ) {
+    $tw.boot.metamaskPrompt = async function (encrypted, keccak256, signature, callback) {
       var checkAccountPermission = async function (provider) {
         if (typeof provider.request === 'function') {
           const permissions = await provider.request({
-            method: 'wallet_getPermissions'
+            method: 'wallet_getPermissions',
           })
-          const accountsPermission = permissions.find(
-            permission => permission.parentCapability === 'eth_accounts'
-          )
+          const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
           if (accountsPermission) {
             return true
           }
@@ -350,11 +314,9 @@ var _ipfs = function ($tw) {
         if (typeof provider.request === 'function') {
           const permissions = await provider.request({
             method: 'wallet_requestPermissions',
-            params: [{ eth_accounts: {} }]
+            params: [{ eth_accounts: {} }],
           })
-          const accountsPermission = permissions.find(
-            permission => permission.parentCapability === 'eth_accounts'
-          )
+          const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
           if (accountsPermission) {
             return true
           }
@@ -367,7 +329,7 @@ var _ipfs = function ($tw) {
           var params = [message, signature]
           recovered = await provider.request({
             method: 'personal_ecRecover',
-            params
+            params,
           })
         }
         if (recovered === undefined || recovered == null) {
@@ -381,9 +343,7 @@ var _ipfs = function ($tw) {
       if (keccak256) {
         const hash = $tw.crypto.keccak256(encrypted)
         if (keccak256 !== hash) {
-          throw new Error(
-            'Tampered encrypted content, signature do not match...'
-          )
+          throw new Error('Tampered encrypted content, signature do not match...')
         }
       }
       // Decrypt
@@ -391,7 +351,7 @@ var _ipfs = function ($tw) {
       var recovered = null
       try {
         const provider = await window.detectEthereumProvider({
-          mustBeMetaMask: true
+          mustBeMetaMask: true,
         })
         if (provider === undefined || provider == null) {
           throw new Error('Please install MetaMask...')
@@ -413,20 +373,12 @@ var _ipfs = function ($tw) {
         }
         // Request Accounts attempt
         try {
-          if (
-            permission === false ||
-            (await provider._metamask.isUnlocked()) === false
-          ) {
+          if (permission === false || (await provider._metamask.isUnlocked()) === false) {
             accounts = await provider.request({
-              method: 'eth_requestAccounts'
+              method: 'eth_requestAccounts',
             })
           }
-          if (
-            accounts === undefined ||
-            accounts == null ||
-            Array.isArray(accounts) === false ||
-            accounts.length === 0
-          ) {
+          if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
             accounts = await provider.request({ method: 'eth_accounts' })
           }
         } catch (error) {
@@ -436,28 +388,16 @@ var _ipfs = function ($tw) {
           $tw.boot.getLogger().error(error)
         }
         // Enable attempt
-        if (
-          accounts === undefined ||
-          accounts == null ||
-          Array.isArray(accounts) === false ||
-          accounts.length === 0
-        ) {
+        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
           if (typeof provider.enable === 'function') {
             accounts = await provider.enable()
           }
         }
-        if (
-          accounts === undefined ||
-          accounts == null ||
-          Array.isArray(accounts) === false ||
-          accounts.length === 0
-        ) {
+        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
           throw new Error('Unable to retrieve any Ethereum accounts...')
         }
         if (provider.chainId !== undefined) {
-          $tw.boot
-            .getLogger()
-            .log(`Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
+          $tw.boot.getLogger().log(`Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
         } else {
           $tw.boot.getLogger().log(`Ethereum Account: ${accounts[0]}`)
         }
@@ -466,32 +406,24 @@ var _ipfs = function ($tw) {
             var tStart = new Date()
             signature = await provider.request({
               method: 'eth_decrypt',
-              params: [signature, accounts[0]]
+              params: [signature, accounts[0]],
             })
             if (signature !== undefined || signature !== null) {
               var tStop = new Date() - tStart
-              $tw.boot
-                .getLogger()
-                .info(`Ethereum Signature Decrypt: ${tStop}ms`)
+              $tw.boot.getLogger().info(`Ethereum Signature Decrypt: ${tStop}ms`)
             }
             recovered = await personalRecover(provider, keccak256, signature)
-            $tw.boot
-              .getLogger()
-              .info(`Signed from: https://app.ens.domains/address/${recovered}`)
+            $tw.boot.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
           }
           var tStart = new Date()
           decrypted = await provider.request({
             method: 'eth_decrypt',
-            params: [encrypted, accounts[0]]
+            params: [encrypted, accounts[0]],
           })
           if (decrypted !== undefined || decrypted !== null) {
             var tStop = new Date() - tStart
             var ratio = Math.floor((decrypted.length * 100) / encrypted.length)
-            $tw.boot
-              .getLogger()
-              .info(
-                `Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`
-              )
+            $tw.boot.getLogger().info(`Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`)
           }
         } catch (error) {
           if (error.code === 4001) {
@@ -535,7 +467,7 @@ var _ipfs = function ($tw) {
             // We didn't decrypt everything, so continue to prompt for password
             return false
           }
-        }
+        },
       })
     }
 
@@ -569,20 +501,15 @@ var _ipfs = function ($tw) {
               inflate(decrypted)
             })
           } else if (json.compressed.match(/{"version":/)) {
-            $tw.boot.metamaskPrompt(
-              json.compressed,
-              json.keccak256,
-              json.signature,
-              function (decrypted, recovered) {
-                inflate(decrypted)
-                if (recovered) {
-                  $tw.utils.alert(
-                    name,
-                    `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
-                  )
-                }
+            $tw.boot.metamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted, recovered) {
+              inflate(decrypted)
+              if (recovered) {
+                $tw.utils.alert(
+                  name,
+                  `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+                )
               }
-            )
+            })
           } else {
             inflate(json.compressed)
           }
@@ -610,20 +537,15 @@ var _ipfs = function ($tw) {
           })
         } else if (content.match(/{"encrypted":/)) {
           const json = JSON.parse(content)
-          $tw.boot.metamaskPrompt(
-            json.encrypted,
-            json.keccak256,
-            json.signature,
-            function (decrypted, recovered) {
-              $tw.boot.preloadTiddler(decrypted, callback)
-              if (recovered) {
-                $tw.utils.alert(
-                  name,
-                  `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
-                )
-              }
+          $tw.boot.metamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted, recovered) {
+            $tw.boot.preloadTiddler(decrypted, callback)
+            if (recovered) {
+              $tw.utils.alert(
+                name,
+                `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+              )
             }
-          )
+          })
         } else {
           $tw.boot.preloadTiddler(content, callback)
         }
@@ -671,9 +593,7 @@ var _ipfs = function ($tw) {
       if ($tw.crypto) {
         var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
         if (encrypted && encrypted.fields._encryption_public_key) {
-          $tw.crypto.setEncryptionPublicKey(
-            encrypted.fields._encryption_public_key
-          )
+          $tw.crypto.setEncryptionPublicKey(encrypted.fields._encryption_public_key)
         } else {
           $tw.crypto.updateCryptoStateTiddler()
         }

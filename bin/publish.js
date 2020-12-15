@@ -19,14 +19,10 @@ async function managePin (api, key, kind) {
   } catch (error) {
     // Ignore
   }
-  var gatewayUrl = process.env.GATEWAY
-    ? process.env.GATEWAY
-    : 'https://dweb.link'
+  var gatewayUrl = process.env.GATEWAY ? process.env.GATEWAY : 'https://dweb.link'
   gatewayUrl = `${gatewayUrl}/ipfs/`
   if (cid) {
-    console.log(
-      `*** Pin status: ${gatewayUrl}${cid}, kind: ${kind}, type: ${type} ***`
-    )
+    console.log(`*** Pin status: ${gatewayUrl}${cid}, kind: ${kind}, type: ${type} ***`)
   } else {
     console.log(`*** Pinning: ${gatewayUrl}${key}, kind: ${kind} ***`)
     cid = await api.pin.add(key, { recursive: false })
@@ -49,14 +45,10 @@ async function manageUnpin (api, key, kind) {
   } catch (error) {
     // Ignore
   }
-  var gatewayUrl = process.env.GATEWAY
-    ? process.env.GATEWAY
-    : 'https://dweb.link'
+  var gatewayUrl = process.env.GATEWAY ? process.env.GATEWAY : 'https://dweb.link'
   gatewayUrl = `${gatewayUrl}/ipfs/`
   if (cid) {
-    console.log(
-      `*** Unpinning ${gatewayUrl}${key}, kind: ${kind}, type: ${type} ***`
-    )
+    console.log(`*** Unpinning ${gatewayUrl}${key}, kind: ${kind}, type: ${type} ***`)
     if (type === 'recursive') {
       cid = await api.pin.rm(key, { recursive: true })
     } else {
@@ -79,18 +71,12 @@ module.exports = async function main (dir, pin) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  dir =
-    dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
+  dir = dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
   if (dir == null) {
     throw new Error('Unknown directory...')
   }
-  pin =
-    pin == null || pin === undefined || pin.trim() === '' ? null : pin.trim()
-  pin = pin
-    ? pin === 'true'
-    : process.env.PIN
-    ? process.env.PIN === 'true'
-    : true
+  pin = pin == null || pin === undefined || pin.trim() === '' ? null : pin.trim()
+  pin = pin ? pin === 'true' : process.env.PIN ? process.env.PIN === 'true' : true
 
   // Replay
   const replay = new Map()
@@ -101,9 +87,7 @@ module.exports = async function main (dir, pin) {
   }
 
   // Ipfs Client
-  const apiUrl = process.env.API
-    ? process.env.API
-    : 'https://ipfs.infura.io:5001'
+  const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
 
   // Pin or Unpin

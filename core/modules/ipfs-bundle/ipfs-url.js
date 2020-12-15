@@ -105,10 +105,7 @@ IpfsUrl.prototype.getIpfsBaseUrl = function () {
 }
 
 IpfsUrl.prototype.getBase = function (base) {
-  base =
-    base === undefined || base == null || base.toString().trim() === ''
-      ? null
-      : base.toString().trim()
+  base = base === undefined || base == null || base.toString().trim() === '' ? null : base.toString().trim()
   var url
   if (base == null) {
     return this.getIpfsBaseUrl()
@@ -119,21 +116,14 @@ IpfsUrl.prototype.getBase = function (base) {
     return this.getIpfsBaseUrl()
   }
   // Parse
-  var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.decodeCid(
-    base
-  )
+  var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.decodeCid(base)
   if (hostname === undefined || hostname == null || hostname.trim() === '') {
     return url
   }
   if (!protocol || (!cid && !ipnsIdentifier)) {
     return url
   }
-  if (
-    protocol !== 'ipfs' &&
-    protocol !== 'ipfs:' &&
-    protocol !== 'ipns' &&
-    protocol !== 'ipns:'
-  ) {
+  if (protocol !== 'ipfs' && protocol !== 'ipfs:' && protocol !== 'ipns' && protocol !== 'ipns:') {
     return url
   }
   const host = url.port ? `${hostname}:${url.port}` : hostname
@@ -141,10 +131,7 @@ IpfsUrl.prototype.getBase = function (base) {
 }
 
 IpfsUrl.prototype.normalizeUrl = function (value, base) {
-  value =
-    value === undefined || value == null || value.toString().trim() === ''
-      ? null
-      : value.toString().trim()
+  value = value === undefined || value == null || value.toString().trim() === '' ? null : value.toString().trim()
   if (value == null) {
     return null
   }
@@ -155,18 +142,11 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
   try {
     url = this.getUrl(value)
   } catch (error) {
-    if (
-      value.startsWith('/') === false &&
-      value.startsWith('./') === false &&
-      value.startsWith('../') === false
-    ) {
+    if (value.startsWith('/') === false && value.startsWith('./') === false && value.startsWith('../') === false) {
       var text = true
       try {
         url = this.getUrl(`https://${value}`)
-        if (
-          url.hostname.endsWith('.eth') === false &&
-          url.hostname.endsWith('.eth.link') === false
-        ) {
+        if (url.hostname.endsWith('.eth') === false && url.hostname.endsWith('.eth.link') === false) {
           url = null
         } else {
           text = false
@@ -184,17 +164,9 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
     url = this.getUrl(value, base)
   } else if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
     const protocol = url.protocol.slice(0, -1)
-    if (
-      url.hostname !== undefined &&
-      url.hostname !== null &&
-      url.hostname.trim() !== ''
-    ) {
+    if (url.hostname !== undefined && url.hostname !== null && url.hostname.trim() !== '') {
       base.pathname = `/${protocol}/${url.hostname}`
-    } else if (
-      url.pathname !== undefined &&
-      url.pathname !== null &&
-      url.pathname.trim() !== ''
-    ) {
+    } else if (url.pathname !== undefined && url.pathname !== null && url.pathname.trim() !== '') {
       if (url.pathname.startsWith('//')) {
         base.pathname = `/${protocol}/${url.pathname.slice(2)}`
       } else {

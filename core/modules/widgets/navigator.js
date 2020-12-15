@@ -29,38 +29,38 @@ Navigator widget
       { type: 'tm-close-all-tiddlers', handler: 'handleCloseAllTiddlersEvent' },
       {
         type: 'tm-close-other-tiddlers',
-        handler: 'handleCloseOtherTiddlersEvent'
+        handler: 'handleCloseOtherTiddlersEvent',
       },
       { type: 'tm-new-tiddler', handler: 'handleNewTiddlerEvent' },
       {
         type: 'tm-ipfs-export-tiddlers',
-        handler: 'handleIpfsExportTiddlersEvent'
+        handler: 'handleIpfsExportTiddlersEvent',
       },
       { type: 'tm-import-tiddlers', handler: 'handleImportTiddlersEvent' },
       {
         type: 'tm-ipfs-import-tiddlers',
-        handler: 'handleIpfsImportTiddlersEvent'
+        handler: 'handleIpfsImportTiddlersEvent',
       },
       {
         type: 'tm-perform-ipfs-export',
-        handler: 'handlePerformIpfsExportEvent'
+        handler: 'handlePerformIpfsExportEvent',
       },
       { type: 'tm-perform-import', handler: 'handlePerformImportEvent' },
       {
         type: 'tm-perform-ipfs-import',
-        handler: 'handlePerformIpfsImportEvent'
+        handler: 'handlePerformIpfsImportEvent',
       },
       { type: 'tm-fold-tiddler', handler: 'handleFoldTiddlerEvent' },
       {
         type: 'tm-fold-other-tiddlers',
-        handler: 'handleFoldOtherTiddlersEvent'
+        handler: 'handleFoldOtherTiddlersEvent',
       },
       { type: 'tm-fold-all-tiddlers', handler: 'handleFoldAllTiddlersEvent' },
       {
         type: 'tm-unfold-all-tiddlers',
-        handler: 'handleUnfoldAllTiddlersEvent'
+        handler: 'handleUnfoldAllTiddlersEvent',
       },
-      { type: 'tm-rename-tiddler', handler: 'handleRenameTiddlerEvent' }
+      { type: 'tm-rename-tiddler', handler: 'handleRenameTiddlerEvent' },
     ])
   }
 
@@ -115,7 +115,7 @@ Navigator widget
       var storyTiddler = this.wiki.getTiddler(this.storyTitle)
       this.wiki.addTiddler(
         new $tw.Tiddler({ title: this.storyTitle }, storyTiddler, {
-          list: storyList
+          list: storyList,
         })
       )
     }
@@ -131,11 +131,7 @@ Navigator widget
     }
   }
 
-  NavigatorWidget.prototype.replaceFirstTitleInStory = function (
-    storyList,
-    oldTitle,
-    newTitle
-  ) {
+  NavigatorWidget.prototype.replaceFirstTitleInStory = function (storyList, oldTitle, newTitle) {
     if (storyList) {
       var pos = storyList.indexOf(oldTitle)
       if (pos !== -1) {
@@ -155,14 +151,8 @@ Navigator widget
   NavigatorWidget.prototype.addToStory = function (title, fromTitle) {
     if (this.storyTitle) {
       this.wiki.addToStory(title, fromTitle, this.storyTitle, {
-        openLinkFromInsideRiver: this.getAttribute(
-          'openLinkFromInsideRiver',
-          'top'
-        ),
-        openLinkFromOutsideRiver: this.getAttribute(
-          'openLinkFromOutsideRiver',
-          'top'
-        )
+        openLinkFromInsideRiver: this.getAttribute('openLinkFromInsideRiver', 'top'),
+        openLinkFromOutsideRiver: this.getAttribute('openLinkFromOutsideRiver', 'top'),
       })
     }
   }
@@ -226,7 +216,7 @@ Navigator widget
     function confirmEditShadow (title) {
       return confirm(
         $tw.language.getString('ConfirmEditShadowTiddler', {
-          variables: { title: title }
+          variables: { title: title },
         })
       )
     }
@@ -255,9 +245,7 @@ Navigator widget
     var tiddler = this.wiki.getTiddler(title)
     var storyList = this.getStoryList()
     var originalTitle = tiddler ? tiddler.fields['draft.of'] : ''
-    var originalTiddler = originalTitle
-      ? this.wiki.getTiddler(originalTitle)
-      : undefined
+    var originalTiddler = originalTitle ? this.wiki.getTiddler(originalTitle) : undefined
     var confirmationTitle
     if (!tiddler) {
       return false
@@ -272,11 +260,10 @@ Navigator widget
     }
     // Seek confirmation
     if (
-      (this.wiki.getTiddler(originalTitle) ||
-        (tiddler.fields.text || '') !== '') &&
+      (this.wiki.getTiddler(originalTitle) || (tiddler.fields.text || '') !== '') &&
       !confirm(
         $tw.language.getString('ConfirmDeleteTiddler', {
-          variables: { title: confirmationTitle }
+          variables: { title: confirmationTitle },
         })
       )
     ) {
@@ -316,13 +303,13 @@ Navigator widget
     draftTitle = this.generateDraftTitle(targetTitle)
     var draftTiddler = new $tw.Tiddler(
       {
-        text: ''
+        text: '',
       },
       tiddler,
       {
         title: draftTitle,
         'draft.title': targetTitle,
-        'draft.of': targetTitle
+        'draft.of': targetTitle,
       },
       this.wiki.getModificationFields()
     )
@@ -352,7 +339,7 @@ Navigator widget
         if (isRename && this.wiki.tiddlerExists(draftTitle)) {
           isConfirmed = confirm(
             $tw.language.getString('ConfirmOverwriteTiddler', {
-              variables: { title: draftTitle }
+              variables: { title: draftTitle },
             })
           )
         }
@@ -364,15 +351,11 @@ Navigator widget
             {
               title: draftTitle,
               'draft.title': undefined,
-              'draft.of': undefined
+              'draft.of': undefined,
             },
             this.wiki.getModificationFields()
           )
-          newTiddler = $tw.hooks.invokeHook(
-            'th-saving-tiddler',
-            newTiddler,
-            tiddler
-          )
+          newTiddler = $tw.hooks.invokeHook('th-saving-tiddler', newTiddler, tiddler)
           this.wiki.addTiddler(newTiddler)
           // If enabled, relink references to renamed tiddler
           var shouldRelink =
@@ -391,10 +374,7 @@ Navigator widget
           // #2381 always remove new title & old
           this.removeTitleFromStory(storyList, draftTitle)
           this.removeTitleFromStory(storyList, draftOf)
-          if (
-            !event.paramObject ||
-            event.paramObject.suppressNavigation !== 'yes'
-          ) {
+          if (!event.paramObject || event.paramObject.suppressNavigation !== 'yes') {
             // Replace the draft in the story with the original
             this.replaceFirstTitleInStory(storyList, title, draftTitle)
             this.addToHistory(draftTitle, event.navigateFromClientRect)
@@ -425,17 +405,14 @@ Navigator widget
       if (this.wiki.isDraftModified(draftTitle)) {
         isConfirmed = confirm(
           $tw.language.getString('ConfirmCancelTiddler', {
-            variables: { title: draftTitle }
+            variables: { title: draftTitle },
           })
         )
       }
       // Remove the draft tiddler
       if (isConfirmed) {
         this.wiki.deleteTiddler(draftTitle)
-        if (
-          !event.paramObject ||
-          event.paramObject.suppressNavigation !== 'yes'
-        ) {
+        if (!event.paramObject || event.paramObject.suppressNavigation !== 'yes') {
           if (originalTiddler) {
             this.replaceFirstTitleInStory(storyList, draftTitle, originalTitle)
             this.addToHistory(originalTitle, event.navigateFromClientRect)
@@ -472,9 +449,7 @@ Navigator widget
       // Get the template tiddler
       templateTiddler = this.wiki.getTiddler(event.param)
       // Generate a new title
-      title = this.wiki.generateNewTitle(
-        event.param || $tw.language.getString('DefaultNewTiddlerTitle')
-      )
+      title = this.wiki.generateNewTitle(event.param || $tw.language.getString('DefaultNewTiddlerTitle'))
     }
     // Get the specified additional fields
     if (typeof event.paramObject === 'object') {
@@ -495,11 +470,7 @@ Navigator widget
       }
     })
     // Generate a title if we don't have one
-    title =
-      title ||
-      this.wiki.generateNewTitle(
-        $tw.language.getString('DefaultNewTiddlerTitle')
-      )
+    title = title || this.wiki.generateNewTitle($tw.language.getString('DefaultNewTiddlerTitle'))
     // Find any existing draft for this tiddler
     draftTitle = this.wiki.findDraft(title)
     // Pull in any existing tiddler
@@ -516,10 +487,7 @@ Navigator widget
     }
     if (additionalFields && additionalFields.tags) {
       // Merge tags
-      mergedTags = $tw.utils.pushTop(
-        mergedTags,
-        $tw.utils.parseStringArray(additionalFields.tags)
-      )
+      mergedTags = $tw.utils.pushTop(mergedTags, $tw.utils.parseStringArray(additionalFields.tags))
     }
     if (templateTiddler && templateTiddler.fields.tags) {
       // Merge tags
@@ -529,7 +497,7 @@ Navigator widget
     var draftTiddler = new $tw.Tiddler(
       {
         text: '',
-        'draft.title': title
+        'draft.title': title,
       },
       templateTiddler,
       additionalFields,
@@ -539,7 +507,7 @@ Navigator widget
       {
         title: draftTitle,
         'draft.of': title,
-        tags: mergedTags
+        tags: mergedTags,
       },
       this.wiki.getModificationFields()
     )
@@ -548,10 +516,7 @@ Navigator widget
     if (storyList && storyList.indexOf(draftTitle) === -1) {
       var slot = storyList.indexOf(event.navigateFromTitle)
       if (slot === -1) {
-        slot =
-          this.getAttribute('openLinkFromOutsideRiver', 'top') === 'bottom'
-            ? storyList.length - 1
-            : slot
+        slot = this.getAttribute('openLinkFromOutsideRiver', 'top') === 'bottom' ? storyList.length - 1 : slot
       }
       storyList.splice(slot + 1, 0, draftTitle)
     }
@@ -580,7 +545,7 @@ Navigator widget
       type: 'application/json',
       'plugin-type': 'ipfs-export',
       status: 'pending',
-      target: event.target
+      target: event.target,
     }
     var outgoingTiddlers = []
     // Process each tiddler
@@ -600,11 +565,7 @@ Navigator widget
       }
     })
     // Save the $:/Export tiddler
-    newFields.text = JSON.stringify(
-      exportData,
-      null,
-      $tw.config.preferences.jsonSpaces
-    )
+    newFields.text = JSON.stringify(exportData, null, $tw.config.preferences.jsonSpaces)
     this.wiki.addTiddler(new $tw.Tiddler(exportTiddler, newFields))
     // Update the story and history details
     var storyList = this.getStoryList()
@@ -621,32 +582,23 @@ Navigator widget
     return false
   }
 
-  NavigatorWidget.prototype.handlePerformIpfsExportEvent = async function (
-    event
-  ) {
+  NavigatorWidget.prototype.handlePerformIpfsExportEvent = async function (event) {
     var exportTiddler = this.wiki.getTiddler(event.param)
     var target = this.wiki.getTiddler(exportTiddler.fields.target)
     var exportData = this.wiki.getTiddlerDataCached(event.param, {
-      tiddlers: {}
+      tiddlers: {},
     })
     var tiddlers = []
     var exportReport = []
     exportReport.push($tw.language.getString('Export/Exported/Hint') + '\n')
     $tw.utils.each(exportData.tiddlers, function (tiddlerFields) {
       var title = tiddlerFields.title
-      if (
-        title &&
-        exportTiddler &&
-        exportTiddler.fields['selection-' + title] !== 'unchecked'
-      ) {
+      if (title && exportTiddler && exportTiddler.fields['selection-' + title] !== 'unchecked') {
         tiddlers.push(tiddlerFields.title)
         exportReport.push('# [[' + tiddlerFields.title + ']]')
       }
     })
-    var content = await $tw.utils.exportTiddlersAsJson(
-      tiddlers,
-      target.fields._export_uri
-    )
+    var content = await $tw.utils.exportTiddlersAsJson(tiddlers, target.fields._export_uri)
     if (content) {
       content = await $tw.ipfs.processContent(target, content, 'utf8')
     }
@@ -657,7 +609,7 @@ Navigator widget
           new $tw.Tiddler({
             title: exportTiddler.fields.title,
             text: exportReport.join('\n'),
-            status: 'complete'
+            status: 'complete',
           })
         )
       }
@@ -686,7 +638,7 @@ Navigator widget
       title: importTitle,
       type: 'application/json',
       'plugin-type': 'ipfs-import',
-      status: 'pending'
+      status: 'pending',
     }
     var incomingTiddlers = []
     // Process each new or updated tiddler
@@ -701,10 +653,7 @@ Navigator widget
       }
     })
     // Give the active upgrader modules a chance to process the incoming tiddlers
-    var messages = this.wiki.invokeUpgraders(
-      incomingTiddlers,
-      importData.tiddlers
-    )
+    var messages = this.wiki.invokeUpgraders(incomingTiddlers, importData.tiddlers)
     $tw.utils.each(messages, function (message, title) {
       newFields['message-' + title] = message
     })
@@ -726,16 +675,10 @@ Navigator widget
       }
     })
     // Save the $:/IpfsImport tiddler
-    newFields.text = JSON.stringify(
-      importData,
-      null,
-      $tw.config.preferences.jsonSpaces
-    )
+    newFields.text = JSON.stringify(importData, null, $tw.config.preferences.jsonSpaces)
     this.wiki.addTiddler(new $tw.Tiddler(importTiddler, newFields))
     // Update the story and history details
-    var autoOpenOnImport = event.autoOpenOnImport
-      ? event.autoOpenOnImport
-      : this.getVariable('tv-auto-open-on-import')
+    var autoOpenOnImport = event.autoOpenOnImport ? event.autoOpenOnImport : this.getVariable('tv-auto-open-on-import')
     if (autoOpenOnImport !== 'no') {
       var storyList = this.getStoryList()
       var history = []
@@ -767,7 +710,7 @@ Navigator widget
       title: importTitle,
       type: 'application/json',
       'plugin-type': 'import',
-      status: 'pending'
+      status: 'pending',
     }
     var incomingTiddlers = []
     // Process each tiddler
@@ -781,10 +724,7 @@ Navigator widget
       }
     })
     // Give the active upgrader modules a chance to process the incoming tiddlers
-    var messages = this.wiki.invokeUpgraders(
-      incomingTiddlers,
-      importData.tiddlers
-    )
+    var messages = this.wiki.invokeUpgraders(incomingTiddlers, importData.tiddlers)
     $tw.utils.each(messages, function (message, title) {
       newFields['message-' + title] = message
     })
@@ -795,16 +735,10 @@ Navigator widget
       }
     })
     // Save the $:/Import tiddler
-    newFields.text = JSON.stringify(
-      importData,
-      null,
-      $tw.config.preferences.jsonSpaces
-    )
+    newFields.text = JSON.stringify(importData, null, $tw.config.preferences.jsonSpaces)
     this.wiki.addTiddler(new $tw.Tiddler(importTiddler, newFields))
     // Update the story and history details
-    var autoOpenOnImport = event.autoOpenOnImport
-      ? event.autoOpenOnImport
-      : this.getVariable('tv-auto-open-on-import')
+    var autoOpenOnImport = event.autoOpenOnImport ? event.autoOpenOnImport : this.getVariable('tv-auto-open-on-import')
     if (autoOpenOnImport !== 'no') {
       var storyList = this.getStoryList()
       var history = []
@@ -826,21 +760,17 @@ Navigator widget
     var self = this
     var importTiddler = this.wiki.getTiddler(event.param)
     var importData = this.wiki.getTiddlerDataCached(event.param, {
-      tiddlers: {}
+      tiddlers: {},
     })
     var importReport = []
     // Add the tiddlers to the store
     importReport.push($tw.language.getString('Import/Imported/Hint') + '\n')
     $tw.utils.each(importData.tiddlers, function (tiddlerFields) {
       var title = tiddlerFields.title
-      if (
-        title &&
-        importTiddler &&
-        importTiddler.fields['selection-' + title] !== 'unchecked'
-      ) {
+      if (title && importTiddler && importTiddler.fields['selection-' + title] !== 'unchecked') {
         if ($tw.utils.hop(importTiddler.fields, ['rename-' + title])) {
           var tiddler = new $tw.Tiddler(tiddlerFields, {
-            title: importTiddler.fields['rename-' + title]
+            title: importTiddler.fields['rename-' + title],
           })
         } else {
           var tiddler = new $tw.Tiddler(tiddlerFields)
@@ -855,7 +785,7 @@ Navigator widget
       new $tw.Tiddler({
         title: event.param,
         text: importReport.join('\n'),
-        status: 'complete'
+        status: 'complete',
       })
     )
     // Navigate to the $:/Import tiddler
@@ -869,22 +799,17 @@ Navigator widget
     var self = this
     var importTiddler = this.wiki.getTiddler(event.param)
     var importData = this.wiki.getTiddlerDataCached(event.param, {
-      tiddlers: {}
+      tiddlers: {},
     })
     var importReport = []
     // Add the tiddlers to the store
     importReport.push($tw.language.getString('Import/Imported/Hint') + '\n')
     $tw.utils.each(importData.tiddlers, function (tiddlerFields) {
       var title = tiddlerFields.title
-      if (
-        title &&
-        importTiddler &&
-        importTiddler.fields['import-' + title] === 'yes' &&
-        importTiddler.fields['importSelection-' + title] !== 'unchecked'
-      ) {
+      if (title && importTiddler && importTiddler.fields['import-' + title] === 'yes' && importTiddler.fields['importSelection-' + title] !== 'unchecked') {
         if ($tw.utils.hop(importTiddler.fields, ['rename-' + title])) {
           var tiddler = new $tw.Tiddler(tiddlerFields, {
-            title: importTiddler.fields['rename-' + title]
+            title: importTiddler.fields['rename-' + title],
           })
         } else {
           var tiddler = new $tw.Tiddler(tiddlerFields)
@@ -899,12 +824,7 @@ Navigator widget
     importReport.push($tw.language.getString('Import/Deleted/Hint') + '\n')
     $tw.utils.each(importData.tiddlers, function (tiddlerFields) {
       var title = tiddlerFields.title
-      if (
-        title &&
-        importTiddler &&
-        importTiddler.fields['delete-' + title] === 'yes' &&
-        importTiddler.fields['deleteSelection-' + title] !== 'unchecked'
-      ) {
+      if (title && importTiddler && importTiddler.fields['delete-' + title] === 'yes' && importTiddler.fields['deleteSelection-' + title] !== 'unchecked') {
         var tiddler = self.wiki.getTiddler(title)
         if (tiddler) {
           self.handleDeleteTiddlerEvent({ param: tiddlerFields.title })
@@ -920,7 +840,7 @@ Navigator widget
       new $tw.Tiddler({
         title: event.param,
         text: importReport.join('\n'),
-        status: 'complete'
+        status: 'complete',
       })
     )
     // Navigate to the $:/IpfsImport tiddler
@@ -932,10 +852,7 @@ Navigator widget
   NavigatorWidget.prototype.handleFoldTiddlerEvent = function (event) {
     var paramObject = event.paramObject || {}
     if (paramObject.foldedState) {
-      var foldedState =
-        this.wiki.getTiddlerText(paramObject.foldedState, 'show') === 'show'
-          ? 'hide'
-          : 'show'
+      var foldedState = this.wiki.getTiddlerText(paramObject.foldedState, 'show') === 'show' ? 'hide' : 'show'
       this.wiki.setText(paramObject.foldedState, 'text', null, foldedState)
     }
   }
@@ -945,12 +862,7 @@ Navigator widget
     var paramObject = event.paramObject || {}
     var prefix = paramObject.foldedStatePrefix
     $tw.utils.each(this.getStoryList(), function (title) {
-      self.wiki.setText(
-        prefix + title,
-        'text',
-        null,
-        event.param === title ? 'show' : 'hide'
-      )
+      self.wiki.setText(prefix + title, 'text', null, event.param === title ? 'show' : 'hide')
     })
   }
 
@@ -978,15 +890,8 @@ Navigator widget
     var from = paramObject.from || event.tiddlerTitle
     var to = paramObject.to
     /*eslint no-unneeded-ternary:"off"*/
-    options.dontRenameInTags =
-      paramObject.renameInTags === 'false' || paramObject.renameInTags === 'no'
-        ? true
-        : false
-    options.dontRenameInLists =
-      paramObject.renameInLists === 'false' ||
-      paramObject.renameInLists === 'no'
-        ? true
-        : false
+    options.dontRenameInTags = paramObject.renameInTags === 'false' || paramObject.renameInTags === 'no' ? true : false
+    options.dontRenameInLists = paramObject.renameInLists === 'false' || paramObject.renameInLists === 'no' ? true : false
     this.wiki.renameTiddler(from, to, options)
   }
 

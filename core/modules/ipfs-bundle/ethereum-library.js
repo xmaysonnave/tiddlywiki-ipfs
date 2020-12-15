@@ -9,14 +9,14 @@ var EthereumLibrary = function (ipfsBundle) {
     0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3"',
     0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "0x4"',
     0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "0x5"',
-    0x2a: 'Ethereum Test Network (PoA): "Kovan", chainId: "0x2a"'
+    0x2a: 'Ethereum Test Network (PoA): "Kovan", chainId: "0x2a"',
   }
   this.etherscan = {
     0x1: 'https://etherscan.io',
     0x3: 'https://ropsten.etherscan.io',
     0x4: 'https://rinkeby.etherscan.io',
     0x5: 'https://goerli.etherscan.io',
-    0x2a: 'https://kovan.etherscan.io'
+    0x2a: 'https://kovan.etherscan.io',
   }
   this.once = false
   this.provider = null
@@ -81,28 +81,18 @@ EthereumLibrary.prototype.getChainId = async function (provider) {
     provider = await this.getEthereumProvider()
   }
   var chainId = await provider.request({
-    method: 'eth_chainId'
+    method: 'eth_chainId',
   })
-  chainId =
-    chainId === undefined || chainId == null || chainId.trim() === ''
-      ? null
-      : chainId.trim()
+  chainId = chainId === undefined || chainId == null || chainId.trim() === '' ? null : chainId.trim()
   return chainId !== null ? parseInt(chainId, 16) : null
 }
 
 EthereumLibrary.prototype.accounts = async function (provider, accounts) {
-  if (
-    accounts !== undefined &&
-    accounts !== null &&
-    Array.isArray(accounts) === true &&
-    accounts.length > 0
-  ) {
+  if (accounts !== undefined && accounts !== null && Array.isArray(accounts) === true && accounts.length > 0) {
     try {
       const chainId = await this.getChainId(provider)
       this.getLogger().info(`Chain: ${this.network[chainId]}`)
-      this.getLogger().info(
-        `Ethereum account: ${this.etherscan[chainId]}/address/${accounts[0]}`
-      )
+      this.getLogger().info(`Ethereum account: ${this.etherscan[chainId]}/address/${accounts[0]}`)
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(this.name, error.message)
@@ -113,9 +103,7 @@ EthereumLibrary.prototype.accounts = async function (provider, accounts) {
 }
 
 EthereumLibrary.prototype.disconnectedFromAllChains = function (code, reason) {
-  this.getLogger().info(
-    `Ethereum Provider is disconnected: ${reason}. Code: ${code}`
-  )
+  this.getLogger().info(`Ethereum Provider is disconnected: ${reason}. Code: ${code}`)
 }
 
 EthereumLibrary.prototype.providerMessage = function (message) {
@@ -131,10 +119,7 @@ EthereumLibrary.prototype.getNetworkRegistry = function () {
 }
 
 EthereumLibrary.prototype.personalSign = async function (message, provider) {
-  message =
-    message === undefined || message == null || message.trim() === ''
-      ? null
-      : message.trim()
+  message = message === undefined || message == null || message.trim() === '' ? null : message.trim()
   if (message == null) {
     throw new Error('Undefined Message....')
   }
@@ -145,7 +130,7 @@ EthereumLibrary.prototype.personalSign = async function (message, provider) {
     const account = await this.getAccount(provider)
     const signature = await provider.request({
       method: 'personal_sign',
-      params: [message, account]
+      params: [message, account],
     })
     return signature
   } catch (error) {
@@ -159,21 +144,12 @@ EthereumLibrary.prototype.personalSign = async function (message, provider) {
   }
 }
 
-EthereumLibrary.prototype.personalRecover = async function (
-  message,
-  signature
-) {
-  message =
-    message === undefined || message == null || message.trim() === ''
-      ? null
-      : message.trim()
+EthereumLibrary.prototype.personalRecover = async function (message, signature) {
+  message = message === undefined || message == null || message.trim() === '' ? null : message.trim()
   if (message == null) {
     throw new Error('Undefined Message....')
   }
-  signature =
-    signature === undefined || signature == null || signature.trim() === ''
-      ? null
-      : signature.trim()
+  signature = signature === undefined || signature == null || signature.trim() === '' ? null : signature.trim()
   if (signature == null) {
     throw new Error('Undefined Signature....')
   }
@@ -189,10 +165,7 @@ EthereumLibrary.prototype.personalRecover = async function (
 }
 
 EthereumLibrary.prototype.decrypt = async function (text, provider) {
-  text =
-    text === undefined || text == null || text.trim() === ''
-      ? null
-      : text.trim()
+  text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
   if (text == null) {
     throw new Error('Undefined Text....')
   }
@@ -204,14 +177,12 @@ EthereumLibrary.prototype.decrypt = async function (text, provider) {
     var tStart = new Date()
     const decryptedText = await provider.request({
       method: 'eth_decrypt',
-      params: [text, account]
+      params: [text, account],
     })
     if (decryptedText !== undefined || decryptedText !== null) {
       var tStop = new Date() - tStart
       var ratio = Math.floor((decryptedText.length * 100) / text.length)
-      this.getLogger().info(
-        `Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`
-      )
+      this.getLogger().info(`Ethereum Decrypt: ${tStop}ms, In: ${text.length}, Out: ${decryptedText.length}, Ratio: ${ratio}%`)
     }
     return decryptedText
   } catch (error) {
@@ -225,10 +196,7 @@ EthereumLibrary.prototype.decrypt = async function (text, provider) {
   }
 }
 
-EthereumLibrary.prototype.getPublicEncryptionKey = async function (
-  provider,
-  account
-) {
+EthereumLibrary.prototype.getPublicEncryptionKey = async function (provider, account) {
   try {
     if (provider === undefined || provider == null) {
       provider = await this.getEthereumProvider()
@@ -238,7 +206,7 @@ EthereumLibrary.prototype.getPublicEncryptionKey = async function (
     }
     const encryptionKey = await provider.request({
       method: 'eth_getEncryptionPublicKey',
-      params: [account]
+      params: [account],
     })
     return encryptionKey
   } catch (error) {
@@ -264,7 +232,7 @@ EthereumLibrary.prototype.detectEthereumProvider = async function () {
   try {
     if (typeof globalThis.detectEthereumProvider === 'function') {
       provider = await globalThis.detectEthereumProvider({
-        mustBeMetaMask: true
+        mustBeMetaMask: true,
       })
       if (provider !== undefined && provider !== null) {
         provider.autoRefreshOnNetworkChange = false
@@ -287,11 +255,9 @@ EthereumLibrary.prototype.checkAccountPermission = async function (provider) {
   }
   if (typeof provider.request === 'function') {
     const permissions = await provider.request({
-      method: 'wallet_getPermissions'
+      method: 'wallet_getPermissions',
     })
-    const accountsPermission = permissions.find(
-      permission => permission.parentCapability === 'eth_accounts'
-    )
+    const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
     if (accountsPermission) {
       return true
     }
@@ -306,11 +272,9 @@ EthereumLibrary.prototype.requestAccountPermission = async function (provider) {
   if (typeof provider.request === 'function') {
     const permissions = await provider.request({
       method: 'wallet_requestPermissions',
-      params: [{ eth_accounts: {} }]
+      params: [{ eth_accounts: {} }],
     })
-    const accountsPermission = permissions.find(
-      permission => permission.parentCapability === 'eth_accounts'
-    )
+    const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
     if (accountsPermission) {
       return true
     }
@@ -342,19 +306,11 @@ EthereumLibrary.prototype.getAccount = async function (provider) {
     }
     // Request Accounts attempt
     try {
-      if (
-        permission === false ||
-        (await provider._metamask.isUnlocked()) === false
-      ) {
+      if (permission === false || (await provider._metamask.isUnlocked()) === false) {
         // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
         accounts = await provider.request({ method: 'eth_requestAccounts' })
       }
-      if (
-        accounts === undefined ||
-        accounts == null ||
-        Array.isArray(accounts) === false ||
-        accounts.length === 0
-      ) {
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
         // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
         accounts = await provider.request({ method: 'eth_accounts' })
       }
@@ -365,22 +321,12 @@ EthereumLibrary.prototype.getAccount = async function (provider) {
       this.getLogger().error(error)
     }
     // Enable attempt
-    if (
-      accounts === undefined ||
-      accounts == null ||
-      Array.isArray(accounts) === false ||
-      accounts.length === 0
-    ) {
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
       if (typeof provider.enable === 'function') {
         accounts = await provider.enable()
       }
     }
-    if (
-      accounts === undefined ||
-      accounts == null ||
-      Array.isArray(accounts) === false ||
-      accounts.length === 0
-    ) {
+    if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
       throw new Error('Unable to retrieve any Ethereum accounts...')
     }
     await this.accounts(provider, accounts)
@@ -412,7 +358,7 @@ EthereumLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
   return {
     account: account,
     chainId: chainId,
-    web3: web3
+    web3: web3,
   }
 }
 
@@ -428,7 +374,7 @@ EthereumLibrary.prototype.getWeb3Provider = async function (provider) {
   const chainId = parseInt(network.chainId, 16)
   return {
     web3: web3,
-    chainId: chainId
+    chainId: chainId,
   }
 }
 

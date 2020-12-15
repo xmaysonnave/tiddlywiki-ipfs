@@ -67,14 +67,7 @@
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": [
-        "run-ipfs-publish",
-        "--name=$:/plugins/ipfs",
-        "--extension=json",
-        "--output=./build/tiddlers/config",
-        "--tags=$:/ipfs/documentation",
-        "--hashOnly=true"
-      ],
+      "runtimeArgs": ["run-ipfs-publish", "--name=$:/plugins/ipfs", "--extension=json", "--output=./build/tiddlers/config", "--tags=$:/ipfs/documentation", "--hashOnly=true"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }

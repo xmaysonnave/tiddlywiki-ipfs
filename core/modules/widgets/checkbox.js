@@ -49,8 +49,8 @@ Render this widget into the DOM
       {
         name: 'change',
         handlerObject: this,
-        handlerMethod: 'handleChangeEvent'
-      }
+        handlerMethod: 'handleChangeEvent',
+      },
     ])
     // Insert the label into the DOM and render any children
     parent.insertBefore(this.labelDomNode, nextSibling)
@@ -83,11 +83,7 @@ Render this widget into the DOM
         }
       }
       if (this.checkboxIndex) {
-        var value = this.wiki.extractTiddlerDataItem(
-          tiddler,
-          this.checkboxIndex,
-          this.checkboxDefault || ''
-        )
+        var value = this.wiki.extractTiddlerDataItem(tiddler, this.checkboxIndex, this.checkboxDefault || '')
         if (value === this.checkboxChecked) {
           return true
         }
@@ -148,10 +144,7 @@ Render this widget into the DOM
     }
     // Set the index if specified
     if (this.checkboxIndex) {
-      var indexValue = this.wiki.extractTiddlerDataItem(
-        this.checkboxTitle,
-        this.checkboxIndex
-      )
+      var indexValue = this.wiki.extractTiddlerDataItem(this.checkboxTitle, this.checkboxIndex)
       if (!tiddler || indexValue !== value) {
         hasChanged = true
       }
@@ -160,15 +153,7 @@ Render this widget into the DOM
       if (this.checkboxIndex) {
         this.wiki.setText(this.checkboxTitle, '', this.checkboxIndex, value)
       } else {
-        this.wiki.addTiddler(
-          new $tw.Tiddler(
-            this.wiki.getCreationFields(),
-            fallbackFields,
-            tiddler,
-            newFields,
-            this.wiki.getModificationFields()
-          )
-        )
+        this.wiki.addTiddler(new $tw.Tiddler(this.wiki.getCreationFields(), fallbackFields, tiddler, newFields, this.wiki.getModificationFields()))
       }
     }
     // Trigger actions
@@ -192,10 +177,7 @@ Render this widget into the DOM
     this.checkboxCheckActions = this.getAttribute('checkactions')
     this.checkboxUncheckActions = this.getAttribute('uncheckactions')
     this.checkboxTooltip = this.getAttribute('title')
-    this.checkboxTitle = this.getAttribute(
-      'tiddler',
-      this.getVariable('currentTiddler')
-    )
+    this.checkboxTitle = this.getAttribute('tiddler', this.getVariable('currentTiddler'))
     this.checkboxTag = this.getAttribute('tag')
     this.checkboxField = this.getAttribute('field')
     this.checkboxIndex = this.getAttribute('index')

@@ -13,9 +13,7 @@ module-type: filteroperator
    */
   exports.filenamify = function (source, operator, options) {
     var results = []
-    var filenamify = $tw.node
-      ? globalThis.filenamify || require('filenamify')
-      : $tw.ipfs.filenamify
+    var filenamify = $tw.node ? globalThis.filenamify || require('filenamify') : $tw.ipfs.filenamify
     source(function (tiddler, title) {
       results.push(filenamify(title, { replacement: '_' }))
     })

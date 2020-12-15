@@ -27,18 +27,18 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 
 This plugin provides the following features:
 
--   Store `TiddlyWiki`'s and attachments on [IPFS](https://ipfs.io/)
--   Access `TiddlyWiki`'s and attachments from [IPFS](https://ipfs.io/)
--   Compress `TiddlyWiki`'s and attachments
--   Encrypt, Decrypt and Sign `TiddlyWiki`'s and attachments
-    -   Standford
-    -   Ethereum
-    -   [SHA-3](https://en.wikipedia.org/wiki/SHA-3)
--   Import and Export
--   Publish and Manage IPNS Names and Keys
--   Interact with [Metamask](https://metamask.io) Ethereum wallets
--   Publish to [ENS](https://ens.domains)
--   Share over [IPFS](https://ipfs.io/) `TiddlyWiki`'s [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments
+- Store `TiddlyWiki`'s and attachments on [IPFS](https://ipfs.io/)
+- Access `TiddlyWiki`'s and attachments from [IPFS](https://ipfs.io/)
+- Compress `TiddlyWiki`'s and attachments
+- Encrypt, Decrypt and Sign `TiddlyWiki`'s and attachments
+  - Standford
+  - Ethereum
+  - [SHA-3](https://en.wikipedia.org/wiki/SHA-3)
+- Import and Export
+- Publish and Manage IPNS Names and Keys
+- Interact with [Metamask](https://metamask.io) Ethereum wallets
+- Publish to [ENS](https://ens.domains)
+- Share over [IPFS](https://ipfs.io/) `TiddlyWiki`'s [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
@@ -46,15 +46,15 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 `IPFS with TiddlyWiki` enhances TiddlyWiki as a decentralized application (Đapps) who uses distributed computing systems:
 
--   [IPFS](https://ipfs.io) is a decentralized storage network
--   [Ethereum Smart Contracts](https://ethereum.org/learn/#smart-contracts) are decentralized applications
+- [IPFS](https://ipfs.io) is a decentralized storage network
+- [Ethereum Smart Contracts](https://ethereum.org/learn/#smart-contracts) are decentralized applications
 
 `IPFS with TiddlyWiki` has the following [ĐApp](https://en.wikipedia.org/wiki/Decentralized_application) characteristics:
 
--   Open Source
--   Decentralized
--   Unhackable
--   Unstoppable
+- Open Source
+- Decentralized
+- Unhackable
+- Unstoppable
 
 ## Using `IPFS with TiddlyWiki`:
 
@@ -62,20 +62,20 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 With a capable [ENS](https://ens.domains/) browser:
 
--   [IPFS with TiddlyWiki](https://bluelightav.eth)
--   [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
--   [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
+- [IPFS with TiddlyWiki](https://bluelightav.eth)
+- [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
+- [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
 
 With a non capable [ENS](https://ens.domains/) browser
 
--   [IPFS with TiddlyWiki](https://bluelightav.eth.link)
--   [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
--   [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
+- [IPFS with TiddlyWiki](https://bluelightav.eth.link)
+- [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
+- [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
 
 Recommended TiddlyWiki Plugins:
 
--   [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
--   [Relink](https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink)
+- [Locator](https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator)
+- [Relink](https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink)
 
 ### Getting Started
 
@@ -99,24 +99,24 @@ Starting from the file system, Follow the developer instructions [Running Tiddly
 
 To resolve <b>.eth</b> domains you need an [Ethereum](https://ethereum.org/) capable browser:
 
--   Use [Metamask](https://metamask.io) as a browser extension
--   Use [Metamask](https://metamask.io) as an Android mobile application
--   Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
+- Use [Metamask](https://metamask.io) as a browser extension
+- Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 
 To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
--   Use [Metamask](https://metamask.io) as a browser extension
--   Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [Metamask](https://metamask.io) as a browser extension
+- Use [Metamask](https://metamask.io) as an Android mobile application
 
 To run a local IPFS node, you need:
 
--   IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
--   IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
--   [IPFS Server](https://github.com/ipfs/go-ipfs)
+- IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
+- IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
+- [IPFS Server](https://github.com/ipfs/go-ipfs)
 
 More informations about IPFS:
 
--   [IPFS](https://ipfs.io/)
+- [IPFS](https://ipfs.io/)
 
 Remarks:
 
@@ -126,7 +126,7 @@ Remarks:
 
 <a name="ipfs-desktop"/>
 
--   [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
+- [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
 
 According to the `ipfs-desktop` [README.md](https://github.com/ipfs-shipyard/ipfs-desktop/blob/master/README.md), `IPFS Desktop allows you to run your IPFS Node on your machine without having to bother with command line tools`.
 
@@ -134,8 +134,8 @@ According to the `ipfs-desktop` [README.md](https://github.com/ipfs-shipyard/ipf
 
 <a name="ipfs-companion"/>
 
--   [IPFS Companion for Chrome](https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch)
--   [IPFS Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
+- [IPFS Companion for Chrome](https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch)
+- [IPFS Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
 
 According to the `ipfs-companion` [README.md](https://github.com/ipfs-shipyard/ipfs-companion/blob/master/README.md), `This add-on enables everyone to access IPFS resources the way they were meant: from locally running IPFS node :-)`.
 
@@ -147,10 +147,10 @@ The `IPFS Companion` support is [Temporarily Disabled](https://docs-beta.ipfs.io
 
 <a name="ens-ethereum-network"/>
 
--   `Goerli`: Ethereum Test Network (PoA)
--   `Mainnet`: Ethereum Main Network
--   `Rinkeby`: Ethereum Test Network (PoA)
--   `Ropsten`: Ethereum Test Network (PoW)
+- `Goerli`: Ethereum Test Network (PoA)
+- `Mainnet`: Ethereum Main Network
+- `Rinkeby`: Ethereum Test Network (PoA)
+- `Ropsten`: Ethereum Test Network (PoW)
 
 ## Developer
 
@@ -162,16 +162,16 @@ Setup a nodejs environment to build tiddlywiki instances bundled with `IPFS with
 
 <a name="developer-environment"/>
 
--   [Babelify](https://www.npmjs.com/package/babelify)
--   [Eruda](https://github.com/liriliri/eruda)
--   [Ethers](https://github.com/ethers-io/ethers.js/)
--   [IPFS Provider](https://github.com/ipfs-shipyard/ipfs-provider)
--   [IPFS HTTP Client](https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client)
--   [Mocha](https://mochajs.org/)
--   [Node.js](https://nodejs.org/)
--   [Snyk](https://github.com/snyk)
--   [TiddyWiki5](https://www.npmjs.com/package/tiddlywiki)
--   [Travis CI](https://github.com/marketplace/travis-ci)
+- [Babelify](https://www.npmjs.com/package/babelify)
+- [Eruda](https://github.com/liriliri/eruda)
+- [Ethers](https://github.com/ethers-io/ethers.js/)
+- [IPFS Provider](https://github.com/ipfs-shipyard/ipfs-provider)
+- [IPFS HTTP Client](https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client)
+- [Mocha](https://mochajs.org/)
+- [Node.js](https://nodejs.org/)
+- [Snyk](https://github.com/snyk)
+- [TiddyWiki5](https://www.npmjs.com/package/tiddlywiki)
+- [Travis CI](https://github.com/marketplace/travis-ci)
 
 #### Node.js
 
@@ -336,23 +336,23 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 
 The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/package.json) references several options:
 
--   build-all-noclone
--   build
--   build-tiddlywiki
--   build-tiddlywiki-empty
--   debug
--   format
--   ipfs-tiddlywiki
--   lint
--   precommit
--   prepare
--   run-build-number
--   run-browserify
--   run-prepare-clone
--   run-prepare
--   snyk-monitor
--   snyk-protect
--   test
+- build-all-noclone
+- build
+- build-tiddlywiki
+- build-tiddlywiki-empty
+- debug
+- format
+- ipfs-tiddlywiki
+- lint
+- precommit
+- prepare
+- run-build-number
+- run-browserify
+- run-prepare-clone
+- run-prepare
+- snyk-monitor
+- snyk-protect
+- test
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 
@@ -362,14 +362,14 @@ yarn build
 
 The `production` directory contains production ready runnable `TiddlyWikis`:
 
--   [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html)
--   [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/empty.html)
+- [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html)
+- [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/empty.html)
 
 and `IPFS with TiddlyWiki` boot, libraries and plugin as json files:
 
--   [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fboot%252Fboot.js.json)
--   [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Flibrary%252Fipfs-library.js.json)
--   [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fplugins%252Fipfs.json)
+- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fboot%252Fboot.js.json)
+- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Flibrary%252Fipfs-library.js.json)
+- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fplugins%252Fipfs.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 
@@ -381,7 +381,7 @@ yarn test
 
 This project is integrated with Travis CI:
 
--   https://travis-ci.com/github/xmaysonnave/tiddlywiki-ipfs
+- https://travis-ci.com/github/xmaysonnave/tiddlywiki-ipfs
 
 #### Running TiddlyWiki
 
@@ -399,7 +399,7 @@ Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of 
 
 <a name="authors"/>
 
--   **Xavier Maysonnave** - _Initial work_ - [IPFS with TiddlyWiki](https://github.com/xmaysonnave/tiddlywiki-ipfs)
+- **Xavier Maysonnave** - _Initial work_ - [IPFS with TiddlyWiki](https://github.com/xmaysonnave/tiddlywiki-ipfs)
 
 See also the list of [contributors](https://github.com/xmaysonnave/tiddlywiki-ipfs/contributors) who participated in this project.
 
@@ -413,5 +413,5 @@ This project is licensed under the [GPL-3.0-or-later](https://spdx.org/licenses/
 
 <a name="acknowledgment"/>
 
--   Hat tip to anyone who support this project
--   Inspiration
+- Hat tip to anyone who support this project
+- Inspiration

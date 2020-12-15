@@ -14,7 +14,7 @@ Save encryption public key for crypto operations
 
   exports.info = {
     name: 'encryptionpublickey',
-    synchronous: true
+    synchronous: true,
   }
 
   var Command = function (params, commander, callback) {

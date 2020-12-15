@@ -54,7 +54,7 @@ IPFS Tiddler
     'throttle.refresh',
     'toc-link',
     'title',
-    'type'
+    'type',
   ]
 
   var IpfsTiddler = function () {
@@ -151,10 +151,7 @@ IPFS Tiddler
           continue
         }
         var value = tiddler.getFieldString(field)
-        value =
-          value === undefined || value == null || value.trim() === ''
-            ? null
-            : value.trim()
+        value = value === undefined || value == null || value.trim() === '' ? null : value.trim()
         if (value !== null) {
           this.ipfsPin(value, field)
         }
@@ -181,10 +178,7 @@ IPFS Tiddler
             .then(data => {
               if (data) {
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
-                $tw.utils.alert(
-                  name,
-                  `Successfully Pinned : <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
-                )
+                $tw.utils.alert(name, `Successfully Pinned : <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`)
               }
             })
             .catch(error => {
@@ -213,10 +207,7 @@ IPFS Tiddler
           continue
         }
         var value = tiddler.getFieldString(field)
-        value =
-          value === undefined || value == null || value.trim() === ''
-            ? null
-            : value.trim()
+        value = value === undefined || value == null || value.trim() === '' ? null : value.trim()
         if (value !== null) {
           if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
             if (field === '_canonical_uri' || field === '_import_uri') {
@@ -234,17 +225,11 @@ IPFS Tiddler
   }
 
   IpfsTiddler.prototype.ipfsUnpin = function (value, field) {
-    value =
-      value === undefined || value == null || value.trim() === ''
-        ? null
-        : value.trim()
+    value = value === undefined || value == null || value.trim() === '' ? null : value.trim()
     if (value == null) {
       return
     }
-    field =
-      field === undefined || field == null || field.trim() === ''
-        ? null
-        : field.trim()
+    field = field === undefined || field == null || field.trim() === '' ? null : field.trim()
     if (field == null) {
       return
     }
@@ -263,10 +248,7 @@ IPFS Tiddler
               .then(data => {
                 if (data !== undefined && data !== null) {
                   $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
-                  $tw.utils.alert(
-                    name,
-                    `Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`
-                  )
+                  $tw.utils.alert(name, `Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`)
                 }
               })
               .catch(error => {
@@ -284,10 +266,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
-      const { type, info } = $tw.utils.getContentType(
-        tiddler.fields.title,
-        tiddler.fields.type
-      )
+      const { type, info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
       // Process
       var field = null
       if (info.encoding === 'base64' || type === 'image/svg+xml') {
@@ -328,22 +307,14 @@ IPFS Tiddler
       return false
     }
     var canonicalUri = tiddler.fields._canonical_uri
-    canonicalUri =
-      canonicalUri === undefined ||
-      canonicalUri == null ||
-      canonicalUri.trim() === ''
-        ? null
-        : canonicalUri.trim()
+    canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
     var importUri = tiddler.fields._import_uri
-    importUri =
-      importUri === undefined || importUri == null || importUri.trim() === ''
-        ? null
-        : importUri.trim()
+    importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
     // Reload
     if (canonicalUri !== null && importUri == null) {
       const updatedTiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
-        fields: [{ key: 'text', value: '' }]
+        fields: [{ key: 'text', value: '' }],
       })
       $tw.wiki.addTiddler(updatedTiddler)
       return true
@@ -355,13 +326,11 @@ IPFS Tiddler
         .import(canonicalUri, importUri, tiddler)
         .then(data => {
           if (data) {
-            const navigator = $tw.utils.locateNavigatorWidget(
-              $tw.pageWidgetNode
-            )
+            const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
             if (navigator) {
               navigator.dispatchEvent({
                 type: 'tm-ipfs-import-tiddlers',
-                param: data
+                param: data,
               })
             }
           }
@@ -381,15 +350,9 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
-    const { info } = $tw.utils.getContentType(
-      tiddler.fields.title,
-      tiddler.fields.type
-    )
+    const { info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
     var password = tiddler.fields._password
-    password =
-      password === undefined || password == null || password.trim() === ''
-        ? null
-        : password.trim()
+    password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler)
     // Process deleted fields
@@ -401,11 +364,7 @@ IPFS Tiddler
         }
         // Updated
         const discard = tiddler.fields[field]
-        if (
-          discard !== undefined &&
-          discard !== null &&
-          tiddler.getFieldString(field) !== undefined
-        ) {
+        if (discard !== undefined && discard !== null && tiddler.getFieldString(field) !== undefined) {
           continue
         }
         // Process
@@ -415,23 +374,13 @@ IPFS Tiddler
         var oldResolvedUrl = null
         var oldValue = oldTiddler.getFieldString(field)
         try {
-          var {
-            cid: oldCid,
-            ipnsKey: oldIpnsKey,
-            normalizedUrl: oldNormalizedUrl,
-            resolvedUrl: oldResolvedUrl
-          } = await $tw.ipfs.resolveUrl(false, true, oldValue)
+          var { cid: oldCid, ipnsKey: oldIpnsKey, normalizedUrl: oldNormalizedUrl, resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(false, true, oldValue)
         } catch (error) {
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
           return tiddler
         }
-        oldResolvedUrl =
-          oldResolvedUrl === undefined ||
-          oldResolvedUrl == null ||
-          oldResolvedUrl.toString().trim() === ''
-            ? null
-            : oldResolvedUrl.toString().trim()
+        oldResolvedUrl = oldResolvedUrl === undefined || oldResolvedUrl == null || oldResolvedUrl.toString().trim() === '' ? null : oldResolvedUrl.toString().trim()
         if (oldResolvedUrl !== null && field === '_canonical_uri') {
           var data = tiddler.fields.text
           try {
@@ -443,7 +392,7 @@ IPFS Tiddler
             updatedTiddler = $tw.utils.updateTiddler({
               tiddler: updatedTiddler,
               addTags: ['$:/isAttachment', '$:/isEmbedded'],
-              fields: [{ key: 'text', value: data }]
+              fields: [{ key: 'text', value: data }],
             })
             $tw.ipfs.getLogger().info(
               `Embed attachment: ${data.length}
@@ -459,35 +408,21 @@ IPFS Tiddler
       }
     }
     // Process new and updated fields
-    updatedTiddler = await this.updateIpfsTags(
-      tiddler,
-      oldTiddler,
-      updatedTiddler
-    )
+    updatedTiddler = await this.updateIpfsTags(tiddler, oldTiddler, updatedTiddler)
     // Update
     $tw.wiki.addTiddler(updatedTiddler)
     return updatedTiddler
   }
 
-  IpfsTiddler.prototype.updateIpfsTags = async function (
-    tiddler,
-    oldTiddler,
-    updatedTiddler
-  ) {
+  IpfsTiddler.prototype.updateIpfsTags = async function (tiddler, oldTiddler, updatedTiddler) {
     var canonicalUri = null
     var exportUri = null
     var importUri = null
     var canonicalCid = null
     var exportCid = null
     var importCid = null
-    var updatedTiddler =
-      updatedTiddler === undefined || updatedTiddler == null
-        ? new $tw.Tiddler(tiddler)
-        : updatedTiddler
-    const { type, info } = $tw.utils.getContentType(
-      tiddler.fields.title,
-      tiddler.fields.type
-    )
+    var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
+    const { type, info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
     // Process
     for (var field in tiddler.fields) {
       // Not a reserved keyword
@@ -501,24 +436,14 @@ IPFS Tiddler
       var resolvedUrl = null
       var value = tiddler.getFieldString(field)
       try {
-        var {
-          cid,
-          ipnsKey,
-          normalizedUrl,
-          resolvedUrl
-        } = await $tw.ipfs.resolveUrl(false, true, value)
+        var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, value)
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
         return tiddler
       }
       // Store
-      resolvedUrl =
-        resolvedUrl === undefined ||
-        resolvedUrl == null ||
-        resolvedUrl.toString().trim() === ''
-          ? null
-          : resolvedUrl.toString().trim()
+      resolvedUrl = resolvedUrl === undefined || resolvedUrl == null || resolvedUrl.toString().trim() === '' ? null : resolvedUrl.toString().trim()
       if (field === '_canonical_uri') {
         canonicalUri = resolvedUrl
         canonicalCid = cid
@@ -544,11 +469,7 @@ IPFS Tiddler
       var oldIpnsKey = null
       var oldNormalizedUrl = null
       try {
-        var {
-          cid: oldCid,
-          ipnsKey: oldIpnsKey,
-          normalizedUrl: oldNormalizedUrl
-        } = await $tw.ipfs.resolveUrl(false, true, oldValue)
+        var { cid: oldCid, ipnsKey: oldIpnsKey, normalizedUrl: oldNormalizedUrl } = await $tw.ipfs.resolveUrl(false, true, oldValue)
       } catch (error) {
         // We cannot resolve the previous value
         $tw.ipfs.getLogger().error(error)
@@ -641,7 +562,7 @@ IPFS Tiddler
       updatedTiddler = $tw.utils.updateTiddler({
         tiddler: updatedTiddler,
         addTags: addTags,
-        removeTags: removeTags
+        removeTags: removeTags,
       })
     }
     return updatedTiddler

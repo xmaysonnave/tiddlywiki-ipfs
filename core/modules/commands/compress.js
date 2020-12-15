@@ -14,7 +14,7 @@ Set compression state
 
   exports.info = {
     name: 'compress',
-    synchronous: true
+    synchronous: true,
   }
 
   var Command = function (params, commander, callback) {

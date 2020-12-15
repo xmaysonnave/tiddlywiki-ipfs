@@ -1,0 +1,14 @@
+{
+  "_parent_cid": "QmRrKRsTE3bqTaCYcBin8nMM7VcLFz8pRNq7YigedMu75t",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmRrKRsTE3bqTaCYcBin8nMM7VcLFz8pRNq7YigedMu75t",
+  "_source_path": "$_plugins_ipfs.js-0.4.0-beta+build-201215384.json",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmRrKRsTE3bqTaCYcBin8nMM7VcLFz8pRNq7YigedMu75t/$_plugins_ipfs.js-0.4.0-beta+build-201215384.json",
+  "_cid": "QmT9WkyxX5pwCipPTWjfPVXCzGxpMrRoHUK246KgEBmGNJ",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmT9WkyxX5pwCipPTWjfPVXCzGxpMrRoHUK246KgEBmGNJ",
+  "_semver": "0.4.0-beta+build",
+  "_version": "0.4.0-beta+build-201215384",
+  "_raw_hash": "f98dd56f356f8897815f22a86d82254d31cc16e451b07a64c419e4588c7ec774",
+  "_size": 923300,
+  "_owner": "$:/plugins/ipfs",
+  "_tags": "$:/ipfs/documentation"
+}

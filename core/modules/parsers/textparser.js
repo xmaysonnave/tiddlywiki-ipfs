@@ -17,46 +17,27 @@ The plain text parser processes blocks of source text into a degenerate parse tr
       type: 'codeblock',
       attributes: {
         code: { type: 'string', value: text },
-        language: { type: 'string', value: type }
-      }
+        language: { type: 'string', value: type },
+      },
     }
-    if (
-      $tw.browser &&
-      options.tiddler !== undefined &&
-      options.tiddler !== null
-    ) {
+    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri =
-        canonicalUri === undefined ||
-        canonicalUri == null ||
-        canonicalUri.trim() === ''
-          ? null
-          : canonicalUri.trim()
+      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
       if (canonicalUri !== null) {
         var password = options.tiddler.fields._password
-        password =
-          password === undefined || password == null || password.trim() === ''
-            ? null
-            : password.trim()
+        password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
             var { normalizedUrl, resolvedUrl } = data
-            var url =
-              resolvedUrl !== null
-                ? resolvedUrl.toString()
-                : normalizedUrl !== null
-                ? normalizedUrl.toString()
-                : null
+            var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
             if (url !== null) {
               $tw.ipfs
                 .loadToUtf8(url, password)
                 .then(data => {
                   if (data) {
                     element.attributes.code.value = data
-                    var parsedTiddler = $tw.utils.getChangedTiddler(
-                      options.tiddler
-                    )
+                    var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
                   }
                 })

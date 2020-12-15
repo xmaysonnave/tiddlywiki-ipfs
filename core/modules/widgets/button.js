@@ -35,10 +35,7 @@ Render this widget into the DOM
     this.execute()
     // Create element
     var tag = 'button'
-    if (
-      this.buttonTag &&
-      $tw.config.htmlUnsafeElements.indexOf(this.buttonTag) === -1
-    ) {
+    if (this.buttonTag && $tw.config.htmlUnsafeElements.indexOf(this.buttonTag) === -1) {
       tag = this.buttonTag
     }
     var domNode = this.document.createElement(tag)
@@ -116,7 +113,7 @@ Render this widget into the DOM
         dragFilterFn: function () {
           return self.dragFilter
         },
-        widget: this
+        widget: this,
       })
     }
     // Insert element
@@ -139,30 +136,18 @@ We don't allow actions to propagate because we trigger actions ourselves
   ButtonWidget.prototype.isSelected = function () {
     return this.setTitle
       ? (this.setField
-          ? this.wiki
-              .getTiddler(this.setTitle)
-              .getFieldString(this.setField) === this.setTo
+          ? this.wiki.getTiddler(this.setTitle).getFieldString(this.setField) === this.setTo
           : this.setIndex
-          ? this.wiki.extractTiddlerDataItem(this.setTitle, this.setIndex) ===
-            this.setTo
+          ? this.wiki.extractTiddlerDataItem(this.setTitle, this.setIndex) === this.setTo
           : this.wiki.getTiddlerText(this.setTitle)) ||
           this.defaultSetValue ||
           this.getVariable('currentTiddler')
-      : this.wiki.getTextReference(
-          this.set,
-          this.defaultSetValue,
-          this.getVariable('currentTiddler')
-        ) === this.setTo
+      : this.wiki.getTextReference(this.set, this.defaultSetValue, this.getVariable('currentTiddler')) === this.setTo
   }
 
   ButtonWidget.prototype.isPoppedUp = function () {
-    var tiddler = this.popupTitle
-      ? this.wiki.getTiddler(this.popupTitle)
-      : this.wiki.getTiddler(this.popup)
-    var result =
-      tiddler && tiddler.fields.text
-        ? $tw.popup.readPopupState(tiddler.fields.text)
-        : false
+    var tiddler = this.popupTitle ? this.wiki.getTiddler(this.popupTitle) : this.wiki.getTiddler(this.popup)
+    var result = tiddler && tiddler.fields.text ? $tw.popup.readPopupState(tiddler.fields.text) : false
     return result
   }
 
@@ -179,11 +164,10 @@ We don't allow actions to propagate because we trigger actions ourselves
         width: bounds.width,
         right: bounds.right,
         bottom: bounds.bottom,
-        height: bounds.height
+        height: bounds.height,
       },
-      navigateSuppressNavigation:
-        event.metaKey || event.ctrlKey || event.button === 1,
-      event: event
+      navigateSuppressNavigation: event.metaKey || event.ctrlKey || event.button === 1,
+      event: event,
     })
   }
 
@@ -192,7 +176,7 @@ We don't allow actions to propagate because we trigger actions ourselves
       type: this.message,
       param: this.param,
       tiddlerTitle: this.getVariable('currentTiddler'),
-      event: event
+      event: event,
     })
   }
 
@@ -202,13 +186,13 @@ We don't allow actions to propagate because we trigger actions ourselves
         domNode: this.domNodes[0],
         title: this.popupTitle,
         wiki: this.wiki,
-        noStateReference: true
+        noStateReference: true,
       })
     } else {
       $tw.popup.triggerPopup({
         domNode: this.domNodes[0],
         title: this.popup,
-        wiki: this.wiki
+        wiki: this.wiki,
       })
     }
   }
@@ -221,11 +205,7 @@ We don't allow actions to propagate because we trigger actions ourselves
         ? this.wiki.setText(this.setTitle, undefined, this.setIndex, this.setTo)
         : this.wiki.setText(this.setTitle, 'text', undefined, this.setTo)
     } else {
-      this.wiki.setTextReference(
-        this.set,
-        this.setTo,
-        this.getVariable('currentTiddler')
-      )
+      this.wiki.setTextReference(this.set, this.setTo, this.getVariable('currentTiddler'))
     }
   }
 

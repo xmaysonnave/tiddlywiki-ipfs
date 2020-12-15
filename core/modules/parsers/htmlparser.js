@@ -18,34 +18,17 @@ The HTML parser displays text as raw HTML
   var HtmlParser = function (type, text, options) {
     var value = 'data:text/html;charset=utf-8,'
     var src
-    if (
-      $tw.browser &&
-      options.tiddler !== undefined &&
-      options.tiddler !== null
-    ) {
+    if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri =
-        canonicalUri === undefined ||
-        canonicalUri == null ||
-        canonicalUri.trim() === ''
-          ? null
-          : canonicalUri.trim()
+      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
       if (canonicalUri !== null) {
         var password = options.tiddler.fields._password
-        password =
-          password === undefined || password == null || password.trim() === ''
-            ? null
-            : password.trim()
+        password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
             var { normalizedUrl, resolvedUrl } = data
-            var url =
-              resolvedUrl !== null
-                ? resolvedUrl.toString()
-                : normalizedUrl !== null
-                ? normalizedUrl.toString()
-                : null
+            var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
             if (url !== null) {
               src = url
               var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
@@ -57,9 +40,7 @@ The HTML parser displays text as raw HTML
                 .then(data => {
                   if (data) {
                     src = value + encodeURIComponent(data)
-                    var parsedTiddler = $tw.utils.getChangedTiddler(
-                      options.tiddler
-                    )
+                    var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
                   }
                 })
@@ -82,9 +63,9 @@ The HTML parser displays text as raw HTML
         tag: 'iframe',
         attributes: {
           src: { type: 'string', value: src },
-          sandbox: { type: 'string', value: 'allow-scripts' }
-        }
-      }
+          sandbox: { type: 'string', value: 'allow-scripts' },
+        },
+      },
     ]
   }
 

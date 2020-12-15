@@ -11,8 +11,7 @@ IPFS Bundle
 
 const CID = require('cids')
 const EnsLibrary = require('./ipfs-bundle/ens-library.js').EnsLibrary
-const EthereumLibrary = require('./ipfs-bundle/ethereum-library.js')
-  .EthereumLibrary
+const EthereumLibrary = require('./ipfs-bundle/ethereum-library.js').EthereumLibrary
 const IpfsLibrary = require('./ipfs-bundle/ipfs-library.js').IpfsLibrary
 const IpfsLoader = require('./ipfs-bundle/ipfs-loader.js').IpfsLoader
 const IpfsUrl = require('./ipfs-bundle/ipfs-url.js').IpfsUrl
@@ -238,11 +237,7 @@ IpfsBundle.prototype.getEnabledWeb3Provider = async function () {
   const network = this.getNetworkRegistry()
   const provider = await this.getEthereumProvider()
   try {
-    var {
-      account,
-      chainId,
-      web3
-    } = await this.ethereumLibrary.getEnabledWeb3Provider(provider)
+    var { account, chainId, web3 } = await this.ethereumLibrary.getEnabledWeb3Provider(provider)
   } catch (error) {
     if (error.name === 'RejectedUserRequest') {
       throw error
@@ -260,7 +255,7 @@ Account: ${etherscan[chainId]}/address/${account}`
     account: account,
     chainId: chainId,
     provider: provider,
-    web3: web3
+    web3: web3,
   }
 }
 
@@ -283,7 +278,7 @@ ${network[chainId]}`
   return {
     chainId: chainId,
     provider: provider,
-    web3: web3
+    web3: web3,
   }
 }
 
@@ -368,7 +363,7 @@ var Base64Binary = {
       if (enc4 !== 64) ua[i + 2] = chr3
     }
     return ua
-  }
+  },
 }
 
 IpfsBundle.prototype.isJson = function (content) {
@@ -383,6 +378,22 @@ IpfsBundle.prototype.loadToUtf8 = async function (url, password) {
   return await this.ipfsLoader.loadToUtf8(url, password)
 }
 
+IpfsBundle.prototype.analyzeType = function (type) {
+  return this.ipfsLibrary.analyzeType(type)
+}
+
+IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
+  return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
+}
+
+IpfsBundle.prototype.addAll = async function (client, source, options) {
+  return await this.ipfsLibrary.addAll(client, source, options)
+}
+
+IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
+  return await this.ipfsLibrary.pinRm(client, cid, recursive)
+}
+
 IpfsBundle.prototype.decodeCid = function (decode) {
   // Check
   if (decode === undefined || decode == null) {
@@ -390,7 +401,7 @@ IpfsBundle.prototype.decodeCid = function (decode) {
       cid: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
   var cid = null
@@ -409,21 +420,11 @@ IpfsBundle.prototype.decodeCid = function (decode) {
     url = decode
   }
   if (url !== null) {
-    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeUrlCid(
-      url
-    )
+    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeUrlCid(url)
   } else {
-    var {
-      cid,
-      hostname,
-      ipnsIdentifier,
-      path,
-      protocol
-    } = this.decodeHostnameCid(decode)
+    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeHostnameCid(decode)
     if (protocol == null && cid == null && ipnsIdentifier == null) {
-      var { cid, ipnsIdentifier, path, protocol } = this.decodePathnameCid(
-        decode
-      )
+      var { cid, ipnsIdentifier, path, protocol } = this.decodePathnameCid(decode)
     }
   }
   return {
@@ -431,7 +432,7 @@ IpfsBundle.prototype.decodeCid = function (decode) {
     hostname: hostname,
     ipnsIdentifier: ipnsIdentifier,
     path: path,
-    protocol: protocol
+    protocol: protocol,
   }
 }
 
@@ -443,7 +444,7 @@ IpfsBundle.prototype.decodeUrlCid = function (url) {
       hostname: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
   if (url instanceof URL === false) {
@@ -452,7 +453,7 @@ IpfsBundle.prototype.decodeUrlCid = function (url) {
       hostname: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
   var cid = null
@@ -461,53 +462,34 @@ IpfsBundle.prototype.decodeUrlCid = function (url) {
   var protocol = null
   var path = `${url.pathname}${url.search}${url.hash}`
   if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
-    if (
-      url.hostname !== undefined &&
-      url.hostname !== null &&
-      url.hostname.trim() !== ''
-    ) {
+    if (url.hostname !== undefined && url.hostname !== null && url.hostname.trim() !== '') {
       if (url.protocol === 'ipns:') {
         ipnsIdentifier = url.hostname
         protocol = 'ipns'
-      } else if (url.protocol === 'ipfs:' && this.isCid(url.hostname)) {
+      } else if (url.protocol === 'ipfs:' && this.getCid(url.hostname)) {
         cid = url.hostname
         protocol = 'ipfs'
       }
-    } else if (
-      url.pathname !== undefined &&
-      url.pathname !== null &&
-      url.pathname.trim() !== ''
-    ) {
+    } else if (url.pathname !== undefined && url.pathname !== null && url.pathname.trim() !== '') {
       var pathname
       if (url.pathname.startsWith('//')) {
-        pathname = `/${protocol}/${url.pathname.slice(2)}${url.search}${
-          url.hash
-        }`
+        pathname = `/${protocol}/${url.pathname.slice(2)}${url.search}${url.hash}`
       } else {
         pathname = `/${protocol}/${url.pathname}${url.search}${url.hash}`
       }
-      var { cid, ipnsIdentifier, path, protocol } = this.decodePathnameCid(
-        pathname
-      )
+      var { cid, ipnsIdentifier, path, protocol } = this.decodePathnameCid(pathname)
     }
     return {
       cid: cid,
       hostname: null,
       ipnsIdentifier: ipnsIdentifier,
       path: path,
-      protocol: protocol
+      protocol: protocol,
     }
   }
-  var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostnameCid(
-    url.hostname
-  )
+  var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostnameCid(url.hostname)
   if (protocol == null && cid == null && ipnsIdentifier == null) {
-    var {
-      cid,
-      ipnsIdentifier,
-      path: innerPath,
-      protocol
-    } = this.decodePathnameCid(url.pathname)
+    var { cid, ipnsIdentifier, path: innerPath, protocol } = this.decodePathnameCid(url.pathname)
     if (innerPath) {
       path = `${innerPath}${url.search}${url.hash}`
     }
@@ -517,7 +499,7 @@ IpfsBundle.prototype.decodeUrlCid = function (url) {
     hostname: hostname,
     ipnsIdentifier: ipnsIdentifier,
     path: path,
-    protocol: protocol
+    protocol: protocol,
   }
 }
 
@@ -527,17 +509,16 @@ IpfsBundle.prototype.decodePathnameCid = function (pathname) {
       cid: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
-  pathname =
-    pathname.toString().trim() === '' ? null : pathname.toString().trim()
+  pathname = pathname.toString().trim() === '' ? null : pathname.toString().trim()
   if (pathname == null || pathname === '/') {
     return {
       cid: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
   var identifier = null
@@ -567,17 +548,14 @@ IpfsBundle.prototype.decodePathnameCid = function (pathname) {
       cid: null,
       ipnsIdentifier: null,
       path: pathname,
-      protocol: null
+      protocol: null,
     }
   }
   var cid = null
   var ipnsIdentifier = null
   if (protocol === 'ipns' || protocol === 'ipns:') {
     ipnsIdentifier = identifier
-  } else if (
-    (protocol === 'ipfs' || protocol === 'ipfs:') &&
-    this.isCid(identifier)
-  ) {
+  } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier)) {
     cid = identifier
   } else {
     protocol = null
@@ -586,7 +564,7 @@ IpfsBundle.prototype.decodePathnameCid = function (pathname) {
     cid: cid,
     ipnsIdentifier: ipnsIdentifier,
     path: protocol ? path : pathname,
-    protocol: protocol
+    protocol: protocol,
   }
 }
 
@@ -597,18 +575,17 @@ IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
       hostname: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
-  hostname =
-    hostname.toString().trim() === '' ? null : hostname.toString().trim()
+  hostname = hostname.toString().trim() === '' ? null : hostname.toString().trim()
   if (hostname == null) {
     return {
       cid: null,
       hostname: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
   var domain = null
@@ -653,17 +630,14 @@ IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
       cid: null,
       ipnsIdentifier: null,
       path: null,
-      protocol: null
+      protocol: null,
     }
   }
   var cid = null
   var ipnsIdentifier = null
   if (protocol === 'ipns' || protocol === 'ipns:') {
     ipnsIdentifier = identifier
-  } else if (
-    (protocol === 'ipfs' || protocol === 'ipfs:') &&
-    this.isCid(identifier)
-  ) {
+  } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier)) {
     cid = identifier
   } else {
     protocol = null
@@ -673,21 +647,24 @@ IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
     hostname: domain,
     ipnsIdentifier: ipnsIdentifier,
     path: path,
-    protocol: protocol
+    protocol: protocol,
   }
 }
 
-IpfsBundle.prototype.isCid = function (cid) {
+IpfsBundle.prototype.getCid = function (cid) {
   try {
     const newCid = new CID(cid)
-    return CID.isCID(newCid)
+    if (CID.isCID(newCid)) {
+      return newCid
+    }
   } catch (error) {
-    return false
+    // Ignore
   }
+  return null
 }
 
 IpfsBundle.prototype.cidToBase58CidV0 = function (cid, log) {
-  return this.convertCidToBase58CidV0(cid, log).toString()
+  return this.convertCidToBase58CidV0(cid, log)
 }
 
 IpfsBundle.prototype.convertCidToBase58CidV0 = function (cid, log) {
@@ -714,18 +691,13 @@ to '${convertedCodec}' "cidv0" (base58btc): ${cidAnalyser}${converted}`
 }
 
 IpfsBundle.prototype.cidToCidV1 = function (cid, protocol, log) {
-  return this.convertCidToCidV1(cid, protocol, log).toString()
+  return this.convertCidToCidV1(cid, protocol, log)
 }
 
 IpfsBundle.prototype.convertCidToCidV1 = function (cid, protocol, log) {
-  cid = new CID(cid)
+  cid = new CID(cid.toString())
   const { codec: cidCodec } = cid.toJSON()
-  var codec =
-    protocol !== undefined && protocol !== null
-      ? protocol === 'ipns'
-        ? libp2pKey
-        : dagPb
-      : dagPb
+  var codec = protocol !== undefined && protocol !== null ? (protocol === 'ipns' ? libp2pKey : dagPb) : dagPb
   var multibaseName = codec === libp2pKey ? 'base36' : 'base32'
   // Convert
   if (cid.version === 0) {
@@ -747,37 +719,18 @@ to '${codec}' "cidv1" (${multibaseName}): ${cidAnalyser}${converted}`
 }
 
 IpfsBundle.prototype.cidToLibp2pKeyCidV1 = function (cid, multibaseName, log) {
-  return this.convertCidToCid(
-    cid,
-    1,
-    'libp2p-key',
-    multibaseName,
-    log
-  ).toString()
+  return this.convertCidToCid(cid, 1, 'libp2p-key', multibaseName, log)
 }
 
-IpfsBundle.prototype.convertCidToCid = function (
-  cid,
-  version,
-  codec,
-  multibaseName,
-  log
-) {
+IpfsBundle.prototype.convertCidToCid = function (cid, version, codec, multibaseName, log) {
   cid = new CID(cid)
   const { codec: cidCodec, version: cidVersion } = cid.toJSON()
-  if (
-    cid.version === version &&
-    cidCodec === codec &&
-    cid.multibaseName === multibaseName
-  ) {
+  if (cid.version === version && cidCodec === codec && cid.multibaseName === multibaseName) {
     return cid
   }
   const converted = new CID(version, codec, cid.multihash, multibaseName)
   if (log) {
-    const {
-      codec: convertedCodec,
-      version: convertedVersion
-    } = converted.toJSON()
+    const { codec: convertedCodec, version: convertedVersion } = converted.toJSON()
     this.getLogger().info(
       `Converted:
 '${cidCodec}' "cidv${cidVersion}" (${cid.multibaseName}): ${cidAnalyser}${cid}
@@ -857,9 +810,7 @@ IpfsBundle.prototype.Utf8ArrayToStr = function (array) {
         // 1110 xxxx  10xx xxxx  10xx xxxx
         char2 = array[i++]
         char3 = array[i++]
-        out += String.fromCharCode(
-          ((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0)
-        )
+        out += String.fromCharCode(((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0))
         break
     }
   }
@@ -872,9 +823,7 @@ IpfsBundle.prototype.deflate = function (str) {
   var b64 = this.Uint8ArrayToBase64(ua)
   var tStop = new Date() - tStart
   var ratio = Math.floor((b64.length * 100) / str.length)
-  this.getLogger().info(
-    `Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`
-  )
+  this.getLogger().info(`Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`)
   return b64
 }
 
@@ -884,9 +833,7 @@ IpfsBundle.prototype.inflate = function (b64) {
   var str = globalThis.pako.inflate(ua, { to: 'string' })
   var tStop = new Date() - tStart
   var ratio = Math.floor((str.length * 100) / b64.length)
-  this.getLogger().info(
-    `Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`
-  )
+  this.getLogger().info(`Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`)
   return str
 }
 

@@ -26,18 +26,13 @@ const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
 const { expect } = chai
 
 const invalid = 'Wrong URL...'
-const baseFile = new URL(
-  'file:///work/tiddly/tiddlywiki-ipfs/production/index.html'
-)
+const baseFile = new URL('file:///work/tiddly/tiddlywiki-ipfs/production/index.html')
 const baseHttp = new URL('https://ipfs.bluelightav.org')
 const baseHttpPort = new URL('https://ipfs.bluelightav.org:443')
 const baseHttpNonDefaultPort = new URL('https://ipfs.bluelightav.org:4443')
 const absolute = new URL('https://bluelightav.eth')
-const ipfs = new URL(
-  'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-)
-const relative =
-  '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
+const ipfs = new URL('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
+const relative = '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
 
 before(() => {
   globalThis.log = log
@@ -119,8 +114,7 @@ describe('WHATWG-URL', () => {
       parsed.protocol === 'file:' &&
         parsed.origin === 'null' &&
         parsed.host === '' &&
-        parsed.pathname ===
-          '/work/tiddly/tiddlywiki-ipfs/production/index.html' &&
+        parsed.pathname === '/work/tiddly/tiddlywiki-ipfs/production/index.html' &&
         parsed.href === baseFile.href &&
         parsed.toString() === baseFile.toString()
     ).to.be.true
@@ -147,18 +141,12 @@ describe('WHATWG-URL', () => {
   })
   it('Updating IPFS scheme', () => {
     const base = new URL('https://ipfs.bluelightav.org')
-    const parsed = new URL(
-      'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-    )
+    const parsed = new URL('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
     parsed.pathname = `/ipfs/${parsed.hostname}`
     parsed.protocol = base.protocol
     parsed.host = base.host
-    expect(
-      parsed.protocol === 'ipfs:' &&
-        parsed.hostname === 'ipfs.bluelightav.org' &&
-        parsed.pathname ===
-          '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
-    ).to.be.true
+    expect(parsed.protocol === 'ipfs:' && parsed.hostname === 'ipfs.bluelightav.org' && parsed.pathname === '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy').to
+      .be.true
   })
   /*
    * This test shows that whatwg-url is unable to set an URL protocol
@@ -177,8 +165,7 @@ describe('WHATWG-URL', () => {
       parsed.protocol === 'ipfs:' &&
         parsed.host === 'ipfs.bluelightav.org' &&
         parsed.port === '' &&
-        parsed.pathname ===
-          '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
+        parsed.pathname === '/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy'
     ).to.be.true
   })
 })

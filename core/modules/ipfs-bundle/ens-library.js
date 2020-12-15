@@ -22,7 +22,7 @@ var EnsLibrary = function (ipfsBundle) {
     0x1: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     0x3: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     0x4: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-    0x5: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+    0x5: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
   }
 }
 
@@ -80,13 +80,14 @@ EnsLibrary.prototype.decodeContenthash = function (encoded) {
       } else {
         throw new Error(`Unsupported ENS Content Hash codec: ${codec}`)
       }
+      decoded = decoded.toString()
     } catch (error) {
       this.getLogger().error(error)
     }
   }
   return {
     decoded: decoded,
-    protocol: protocol
+    protocol: protocol,
   }
 }
 
@@ -96,17 +97,11 @@ EnsLibrary.prototype.encodeContenthash = function (content) {
   var type = null
   var text = null
   var encoded = null
-  content =
-    content === undefined || content == null || content.trim() === ''
-      ? null
-      : content.trim()
+  content = content === undefined || content == null || content.trim() === '' ? null : content.trim()
   if (content == null) {
     return null
   }
-  const matched =
-    content.match(/^(ipfs|ipns|bzz|onion|onion3):\/\/(.*)/) ||
-    content.match(/\/(ipfs)\/(.*)/) ||
-    content.match(/\/(ipns)\/(.*)/)
+  const matched = content.match(/^(ipfs|ipns|bzz|onion|onion3):\/\/(.*)/) || content.match(/\/(ipfs)\/(.*)/) || content.match(/\/(ipns)\/(.*)/)
   if (matched) {
     type = matched[1]
     text = matched[2]
@@ -117,7 +112,7 @@ EnsLibrary.prototype.encodeContenthash = function (content) {
   }
   if (type === 'ipfs') {
     encoded = this.ipfsBundle.cidToBase58CidV0(text, true)
-    encoded = new CID(1, 'dag-pb', multiH.fromB58String(encoded))
+    encoded = new CID(1, 'dag-pb', multiH.fromB58String(encoded.toString()))
     encoded = multiC.addPrefix('ipfs-ns', encoded.bytes)
     encoded = Array.from(encoded)
       .map(i2hex)
@@ -137,7 +132,7 @@ EnsLibrary.prototype.encodeContenthash = function (content) {
     throw new Error(`Unsupported ENS Content Hash type: ${type}`)
   }
   return {
-    encoded: encoded
+    encoded: encoded,
   }
 }
 
@@ -161,7 +156,7 @@ EnsLibrary.prototype.getRegistry = async function (web3) {
   // Return registry address
   return {
     chainId: chainId,
-    registry: registry
+    registry: registry,
   }
 }
 
@@ -169,23 +164,15 @@ EnsLibrary.prototype.getResolver = async function (web3, registry, node) {
   if (web3 === undefined || web3 == null) {
     throw new Error('Undefined Web3 provider...')
   }
-  node =
-    node === undefined || node == null || node.trim() === ''
-      ? null
-      : node.trim()
+  node = node === undefined || node == null || node.trim() === '' ? null : node.trim()
   if (node == null) {
     throw new Error('Undefined ENS domain resolver...')
   }
-  registry =
-    registry === undefined || registry == null || registry.trim() === ''
-      ? null
-      : registry.trim()
+  registry = registry === undefined || registry == null || registry.trim() === '' ? null : registry.trim()
   if (registry == null) {
     throw new Error('Undefined ENS registry address...')
   }
-  const abi = [
-    'function resolver(bytes32 node) external view returns (address)'
-  ]
+  const abi = ['function resolver(bytes32 node) external view returns (address)']
   const iface = new globalThis.ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('resolver', [node])
   const result = await web3.call({ to: registry, data: data })
@@ -194,12 +181,7 @@ EnsLibrary.prototype.getResolver = async function (web3, registry, node) {
   }
   try {
     const decoded = iface.decodeFunctionResult('resolver', result)
-    if (
-      decoded !== undefined &&
-      decoded !== null &&
-      Array.isArray(decoded) &&
-      decoded.length > 0
-    ) {
+    if (decoded !== undefined && decoded !== null && Array.isArray(decoded) && decoded.length > 0) {
       return decoded[0]
     }
   } catch (error) {
@@ -214,16 +196,11 @@ EnsLibrary.prototype.checkEip165 = async function (web3, address) {
   if (web3 === undefined || web3 == null) {
     throw new Error('Undefined Web3 provider...')
   }
-  address =
-    address === undefined || address == null || address.trim() === ''
-      ? null
-      : address.trim()
+  address = address === undefined || address == null || address.trim() === '' ? null : address.trim()
   if (address == null) {
     throw new Error('Undefined Ethereum address...')
   }
-  var abi = [
-    'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
-  ]
+  var abi = ['function supportsInterface(bytes4 interfaceID) public pure returns(bool)']
   var iface = new globalThis.ethers.utils.Interface(abi)
   var data = iface.encodeFunctionData('supportsInterface', ['0x01ffc9a7'])
   var result = await web3.call({ to: address, data: data })
@@ -232,12 +209,7 @@ EnsLibrary.prototype.checkEip165 = async function (web3, address) {
   }
   try {
     var decoded = iface.decodeFunctionResult('supportsInterface', result)
-    if (
-      decoded !== undefined &&
-      decoded !== null &&
-      Array.isArray(decoded) &&
-      decoded.length > 0
-    ) {
+    if (decoded !== undefined && decoded !== null && Array.isArray(decoded) && decoded.length > 0) {
       if (decoded[0] === false) {
         return false
       }
@@ -253,12 +225,7 @@ EnsLibrary.prototype.checkEip165 = async function (web3, address) {
   }
   try {
     var decoded = iface.decodeFunctionResult('supportsInterface', result)
-    if (
-      decoded !== undefined &&
-      decoded !== null &&
-      Array.isArray(decoded) &&
-      decoded.length > 0
-    ) {
+    if (decoded !== undefined && decoded !== null && Array.isArray(decoded) && decoded.length > 0) {
       // conform to spec
       if (decoded[0] === false) {
         return true
@@ -276,17 +243,12 @@ EnsLibrary.prototype.checkEip1577 = async function (web3, address) {
   if (web3 === undefined || web3 == null) {
     throw new Error('Undefined Web3 provider...')
   }
-  address =
-    address === undefined || address == null || address.trim() === ''
-      ? null
-      : address.trim()
+  address = address === undefined || address == null || address.trim() === '' ? null : address.trim()
   if (address == null) {
     throw new Error('Undefined Ethereum address...')
   }
   // contenthash, true when interfaceID is 0xbc1c58d1
-  var abi = [
-    'function supportsInterface(bytes4 interfaceID) public pure returns(bool)'
-  ]
+  var abi = ['function supportsInterface(bytes4 interfaceID) public pure returns(bool)']
   var iface = new globalThis.ethers.utils.Interface(abi)
   var data = iface.encodeFunctionData('supportsInterface', ['0xbc1c58d1'])
   var result = await web3.call({ to: address, data: data })
@@ -295,12 +257,7 @@ EnsLibrary.prototype.checkEip1577 = async function (web3, address) {
   }
   try {
     var decoded = iface.decodeFunctionResult('supportsInterface', result)
-    if (
-      decoded !== undefined &&
-      decoded !== null &&
-      Array.isArray(decoded) &&
-      decoded.length > 0
-    ) {
+    if (decoded !== undefined && decoded !== null && Array.isArray(decoded) && decoded.length > 0) {
       return decoded[0]
     }
   } catch (error) {
@@ -310,10 +267,7 @@ EnsLibrary.prototype.checkEip1577 = async function (web3, address) {
 }
 
 EnsLibrary.prototype.getContentHash = async function (domain, web3) {
-  domain =
-    domain === undefined || domain == null || domain.trim() === ''
-      ? null
-      : domain.trim()
+  domain = domain === undefined || domain == null || domain.trim() === '' ? null : domain.trim()
   if (domain == null) {
     throw new Error('Undefined ENS domain...')
   }
@@ -352,51 +306,36 @@ ${etherscan[chainId]}/address/${resolver}`
   }
   // Retrieve content hash
   this.getLogger().info('Retrieving ENS domain content...')
-  const abi = [
-    'function contenthash(bytes32 node) external view returns (bytes memory)'
-  ]
+  const abi = ['function contenthash(bytes32 node) external view returns (bytes memory)']
   const iface = new globalThis.ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('contenthash', [domainHash])
   const result = await web3.call({ to: resolver, data: data })
   if (result === undefined || result == null || result === '0x') {
     return {
       content: null,
-      protocol: null
+      protocol: null,
     }
   }
   var content = iface.decodeFunctionResult('contenthash', result)
-  if (
-    content !== undefined &&
-    content !== null &&
-    Array.isArray(content) &&
-    content.length > 0
-  ) {
+  if (content !== undefined && content !== null && Array.isArray(content) && content.length > 0) {
     var { decoded, protocol } = this.decodeContenthash(content[0])
     return {
       content: decoded,
-      protocol: protocol
+      protocol: protocol,
     }
   }
   return {
     content: null,
-    protocol: null
+    protocol: null,
   }
 }
 
 EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
-  domain =
-    domain === undefined || domain == null || domain.trim() === ''
-      ? null
-      : domain.trim()
+  domain = domain === undefined || domain == null || domain.trim() === '' ? null : domain.trim()
   if (domain == null) {
     throw new Error('Undefined ENS domain...')
   }
-  if (
-    account === undefined ||
-    account == null ||
-    web3 === undefined ||
-    web3 == null
-  ) {
+  if (account === undefined || account == null || web3 === undefined || web3 == null) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
   const etherscan = this.ipfsBundle.getEtherscanRegistry()
@@ -418,12 +357,7 @@ ${etherscan[chainId]}/address/${registry}`
   // decode if applicable
   try {
     var decoded = iface.decodeFunctionResult('owner', result)
-    if (
-      decoded !== undefined &&
-      decoded !== null &&
-      Array.isArray(decoded) &&
-      decoded.length > 0
-    ) {
+    if (decoded !== undefined && decoded !== null && Array.isArray(decoded) && decoded.length > 0) {
       return decoded[0].toLowerCase() === account.toLowerCase()
     }
   } catch (error) {
@@ -432,23 +366,12 @@ ${etherscan[chainId]}/address/${registry}`
   return false
 }
 
-EnsLibrary.prototype.setContentHash = async function (
-  domain,
-  cid,
-  web3,
-  account
-) {
-  cid =
-    cid === undefined || cid == null || cid.toString().trim() === ''
-      ? null
-      : cid.toString().trim()
+EnsLibrary.prototype.setContentHash = async function (domain, cid, web3, account) {
+  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
   if (cid == null) {
     throw new Error('Undefined IPFS identifier...')
   }
-  domain =
-    domain === undefined || domain == null || domain.trim() === ''
-      ? null
-      : domain.trim()
+  domain = domain === undefined || domain == null || domain.trim() === '' ? null : domain.trim()
   if (domain == null) {
     throw new Error('Undefined ENS domain...')
   }

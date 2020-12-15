@@ -30,10 +30,7 @@ Encrypt widget
     this.computeAttributes()
     this.execute()
     var textNode = this.document.createTextNode(this.encryptedText)
-    if (
-      typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
-      $tw.crypto.hasEncryptionPublicKey()
-    ) {
+    if (typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
       var sign = $tw.wiki.getTiddler('$:/isSigned')
       sign = sign !== undefined ? sign.fields.text === 'yes' : false
       if (sign) {
@@ -63,13 +60,10 @@ Encrypt widget
       json[title] = jsonTiddler
     })
     var content = $tw.crypto.encrypt(JSON.stringify(json))
-    if (
-      typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
-      $tw.crypto.hasEncryptionPublicKey()
-    ) {
+    if (typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
       content = JSON.stringify({
         encrypted: content,
-        keccak256: $tw.crypto.keccak256(content)
+        keccak256: $tw.crypto.keccak256(content),
       })
     }
     this.encryptedText = $tw.utils.htmlEncode(content)

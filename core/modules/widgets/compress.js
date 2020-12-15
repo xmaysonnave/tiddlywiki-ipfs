@@ -31,10 +31,7 @@ Compress widget
     this.computeAttributes()
     this.execute()
     var textNode = this.document.createTextNode(this.encryptedText)
-    if (
-      typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
-      $tw.crypto.hasEncryptionPublicKey()
-    ) {
+    if (typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
       var sign = $tw.wiki.getTiddler('$:/isSigned')
       sign = sign !== undefined ? sign.fields.text === 'yes' : false
       if (sign) {
@@ -70,10 +67,7 @@ Compress widget
       encrypt = encrypt !== undefined ? encrypt.fields.text === 'yes' : false
       if (encrypt) {
         content.compressed = $tw.crypto.encrypt(content.compressed)
-        if (
-          typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
-          $tw.crypto.hasEncryptionPublicKey()
-        ) {
+        if (typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
           content.keccak256 = $tw.crypto.keccak256(content.compressed)
         }
       }

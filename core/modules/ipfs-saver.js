@@ -12,8 +12,7 @@ IPFS Saver
   /*global $tw:false*/
   'use strict'
 
-  const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js')
-    .IpfsController
+  const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js').IpfsController
 
   const ensKeyword = 'ens'
   const ipfsKeyword = 'ipfs'
@@ -78,11 +77,7 @@ IPFS Saver
         // Resolve current IPNS
         if (ipnsKey !== null) {
           try {
-            var { cid: ipnsCid, ipnsName } = await $tw.ipfs.resolveUrl(
-              true,
-              false,
-              wiki
-            )
+            var { cid: ipnsCid, ipnsName } = await $tw.ipfs.resolveUrl(true, false, wiki)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
@@ -90,15 +85,9 @@ IPFS Saver
         } else {
           // Default IPNS
           ipnsKey = $tw.utils.getIpfsIpnsKey()
-          ipnsKey =
-            ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === ''
-              ? null
-              : ipnsKey.trim()
+          ipnsKey = ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '' ? null : ipnsKey.trim()
           ipnsName = $tw.utils.getIpfsIpnsName()
-          ipnsName =
-            ipnsName === undefined || ipnsName == null || ipnsName.trim() === ''
-              ? null
-              : ipnsName.trim()
+          ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
           if (ipnsKey == null && ipnsName == null) {
             callback(new Error('Unknown default IPNS identifiers...'))
             return true
@@ -109,11 +98,7 @@ IPFS Saver
             identifier = ipnsName
           }
           try {
-            var { cid: ipnsCid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(
-              true,
-              false,
-              `/${ipnsKeyword}/${identifier}`
-            )
+            var { cid: ipnsCid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(true, false, `/${ipnsKeyword}/${identifier}`)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
@@ -137,13 +122,7 @@ IPFS Saver
           err.name = 'OwnerError'
           throw err
         }
-        var { cid: ensCid } = await $tw.ipfs.resolveUrl(
-          false,
-          true,
-          ensDomain,
-          null,
-          web3
-        )
+        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
         if (ensCid != null) {
           await $tw.ipfs.requestToUnpin(ensCid)
         }
@@ -178,12 +157,7 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-          await $tw.ipfs.setContentHash(
-            ensDomain,
-            `/${ipfsKeyword}/${added}`,
-            web3,
-            account
-          )
+          await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${added}`, web3, account)
           $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
@@ -221,11 +195,7 @@ IPFS Saver
         window.location.assign(nextWiki.href)
       }
     } catch (error) {
-      if (
-        error.name !== 'OwnerError' &&
-        error.name !== 'RejectedUserRequest' &&
-        error.name !== 'UnauthorizedUserAccount'
-      ) {
+      if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
         $tw.ipfs.getLogger().error(error)
       }
       callback(error)
@@ -241,7 +211,7 @@ IPFS Saver
   IpfsSaver.prototype.info = {
     name: 'Ipfs',
     priority: 3100,
-    capabilities: ['save']
+    capabilities: ['save'],
   }
 
   /*

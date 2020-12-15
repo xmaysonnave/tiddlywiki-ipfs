@@ -84,11 +84,7 @@ IPFS link widget
           if (normalizedUrl !== null) {
             const sibling = self.findNextSiblingDomNode()
             self.removeChildDomNodes()
-            self.renderExternalLink(
-              parent,
-              nextSibling !== null ? nextSibling : sibling,
-              normalizedUrl
-            )
+            self.renderExternalLink(parent, nextSibling !== null ? nextSibling : sibling, normalizedUrl)
           }
         })
         .catch(error => {
@@ -100,11 +96,7 @@ IPFS link widget
   /*
    * Render this widget into the DOM
    */
-  IpfsLinkWidget.prototype.renderExternalLink = function (
-    parent,
-    nextSibling,
-    url
-  ) {
+  IpfsLinkWidget.prototype.renderExternalLink = function (parent, nextSibling, url) {
     // Sanitise the specified tag
     var tag = this.linkTag
     if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
@@ -112,7 +104,7 @@ IPFS link widget
     }
     // Create our element
     var namespace = this.getVariable('namespace', {
-      defaultValue: 'http://www.w3.org/1999/xhtml'
+      defaultValue: 'http://www.w3.org/1999/xhtml',
     })
     var domNode = this.document.createElementNS(namespace, tag)
     domNode.setAttribute('href', url.toString())
@@ -121,8 +113,8 @@ IPFS link widget
       {
         name: 'click',
         handlerObject: this,
-        handlerMethod: 'handleExternalClickEvent'
-      }
+        handlerMethod: 'handleExternalClickEvent',
+      },
     ])
     // Assign classes
     var classes = []
@@ -156,7 +148,7 @@ IPFS link widget
     var isShadow = this.wiki.isShadowTiddler(value)
     // Create our element
     var namespace = this.getVariable('namespace', {
-      defaultValue: 'http://www.w3.org/1999/xhtml'
+      defaultValue: 'http://www.w3.org/1999/xhtml',
     })
     var domNode = this.document.createElementNS(namespace, tag)
     // Assign classes
@@ -187,40 +179,23 @@ IPFS link widget
     var wikiLinkText
     if (wikilinkTransformFilter) {
       // Use the filter to construct the href
-      wikiLinkText = this.wiki.filterTiddlers(
-        wikilinkTransformFilter,
-        this,
-        function (iterator) {
-          iterator(self.wiki.getTiddler(value), value)
-        }
-      )[0]
+      wikiLinkText = this.wiki.filterTiddlers(wikilinkTransformFilter, this, function (iterator) {
+        iterator(self.wiki.getTiddler(value), value)
+      })[0]
     } else {
       // Expand the tv-wikilink-template variable to construct the href
       var wikiLinkTemplateMacro = this.getVariable('tv-wikilink-template')
-      var wikiLinkTemplate = wikiLinkTemplateMacro
-        ? wikiLinkTemplateMacro.trim()
-        : '#$uri_encoded$'
-      wikiLinkText = $tw.utils.replaceString(
-        wikiLinkTemplate,
-        '$uri_encoded$',
-        encodeURIComponent(value)
-      )
-      wikiLinkText = $tw.utils.replaceString(
-        wikiLinkText,
-        '$uri_doubleencoded$',
-        encodeURIComponent(encodeURIComponent(value))
-      )
+      var wikiLinkTemplate = wikiLinkTemplateMacro ? wikiLinkTemplateMacro.trim() : '#$uri_encoded$'
+      wikiLinkText = $tw.utils.replaceString(wikiLinkTemplate, '$uri_encoded$', encodeURIComponent(value))
+      wikiLinkText = $tw.utils.replaceString(wikiLinkText, '$uri_doubleencoded$', encodeURIComponent(encodeURIComponent(value)))
     }
     // Override with the value of tv-get-export-link if defined
     wikiLinkText = this.getVariable('tv-get-export-link', {
       params: [{ name: 'to', value: value }],
-      defaultValue: wikiLinkText
+      defaultValue: wikiLinkText,
     })
     if (tag === 'a') {
-      var namespaceHref =
-        namespace === 'http://www.w3.org/2000/svg'
-          ? 'http://www.w3.org/1999/xlink'
-          : undefined
+      var namespaceHref = namespace === 'http://www.w3.org/2000/svg' ? 'http://www.w3.org/1999/xlink' : undefined
       domNode.setAttributeNS(namespaceHref, 'href', wikiLinkText)
     }
     // Set the tabindex
@@ -229,21 +204,15 @@ IPFS link widget
     }
     // Set the tooltip
     // HACK: Performance issues with re-parsing the tooltip prevent us defaulting the tooltip to "<$transclude field='tooltip'><$transclude field='title'/></$transclude>"
-    var tooltipWikiText =
-      this.tooltip || this.getVariable('tv-wikilink-tooltip')
+    var tooltipWikiText = this.tooltip || this.getVariable('tv-wikilink-tooltip')
     if (tooltipWikiText) {
-      var tooltipText = this.wiki.renderText(
-        'text/plain',
-        'text/vnd.tiddlywiki',
-        tooltipWikiText,
-        {
-          parseAsInline: true,
-          variables: {
-            currentTiddler: value
-          },
-          parentWidget: this
-        }
-      )
+      var tooltipText = this.wiki.renderText('text/plain', 'text/vnd.tiddlywiki', tooltipWikiText, {
+        parseAsInline: true,
+        variables: {
+          currentTiddler: value,
+        },
+        parentWidget: this,
+      })
       domNode.setAttribute('title', tooltipText)
     }
     if (this['aria-label']) {
@@ -254,8 +223,8 @@ IPFS link widget
       {
         name: 'click',
         handlerObject: this,
-        handlerMethod: 'handleTiddlerClickEvent'
-      }
+        handlerMethod: 'handleTiddlerClickEvent',
+      },
     ])
     // Make the link draggable if required
     if (this.draggable === 'yes') {
@@ -264,7 +233,7 @@ IPFS link widget
         dragTiddlerFn: function () {
           return value
         },
-        widget: this
+        widget: this,
       })
     }
     parent.insertBefore(domNode, nextSibling)
@@ -316,14 +285,13 @@ IPFS link widget
         width: bounds.width,
         right: bounds.right,
         bottom: bounds.bottom,
-        height: bounds.height
+        height: bounds.height,
       },
-      navigateSuppressNavigation:
-        event.metaKey || event.ctrlKey || event.button === 1,
+      navigateSuppressNavigation: event.metaKey || event.ctrlKey || event.button === 1,
       metaKey: event.metaKey,
       ctrlKey: event.ctrlKey,
       altKey: event.altKey,
-      shiftKey: event.shiftKey
+      shiftKey: event.shiftKey,
     })
     if (this.domNodes[0].hasAttribute('href')) {
       event.preventDefault()
@@ -338,31 +306,17 @@ IPFS link widget
   IpfsLinkWidget.prototype.execute = function () {
     // Pick up our attributes
     this.url = undefined
-    this.tiddler = this.getAttribute('tiddler')
-      ? this.getAttribute('tiddler')
-      : this.getVariable('currentTiddler')
+    this.tiddler = this.getAttribute('tiddler') ? this.getAttribute('tiddler') : this.getVariable('currentTiddler')
     var tiddler
     if (this.tiddler) {
       tiddler = $tw.wiki.getTiddler(this.tiddler)
     }
     this.field = this.getAttribute('field')
     this.value = this.getAttribute('value')
-    this.value = this.value
-      ? this.value
-      : tiddler && tiddler.getFieldString(this.field) !== ''
-      ? tiddler.getFieldString(this.field)
-      : this.tiddler
+    this.value = this.value ? this.value : tiddler && tiddler.getFieldString(this.field) !== '' ? tiddler.getFieldString(this.field) : this.tiddler
     this.text = this.getAttribute('text')
-    this.text = this.text
-      ? tiddler && tiddler.getFieldString(this.text) !== ''
-        ? tiddler.getFieldString(this.text)
-        : this.tiddler
-      : this.value
-    if (
-      tiddler &&
-      this.getAttribute('value') &&
-      tiddler.getFieldString(this.getAttribute('value')) !== ''
-    ) {
+    this.text = this.text ? (tiddler && tiddler.getFieldString(this.text) !== '' ? tiddler.getFieldString(this.text) : this.tiddler) : this.value
+    if (tiddler && this.getAttribute('value') && tiddler.getFieldString(this.getAttribute('value')) !== '') {
       this.url = tiddler.getFieldString(this.getAttribute('value'))
     }
     this.tooltip = this.getAttribute('tooltip')

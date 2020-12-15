@@ -32,9 +32,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     // Only do dirty tracking if required
     if ($tw.browser && this.dirtyTracking) {
       // Compile the dirty tiddler filter
-      this.filterFn = this.wiki.compileFilter(
-        this.wiki.getTiddlerText(this.titleSyncFilter)
-      )
+      this.filterFn = this.wiki.compileFilter(this.wiki.getTiddlerText(this.titleSyncFilter))
       // Count of changes that have not yet been saved
       var filteredChanges = self.filterFn.call(self.wiki, function (iterator) {
         $tw.utils.each(self.preloadDirty, function (title) {
@@ -46,9 +44,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
       // Listen out for changes to tiddlers
       this.wiki.addEventListener('change', async function (changes) {
         // Filter the changes so that we only count changes to tiddlers that we care about
-        var filteredChanges = self.filterFn.call(self.wiki, function (
-          iterator
-        ) {
+        var filteredChanges = self.filterFn.call(self.wiki, function (iterator) {
           $tw.utils.each(changes, function (change, title) {
             var tiddler = self.wiki.getTiddler(title)
             iterator(tiddler, title)
@@ -58,31 +54,26 @@ The saver handler tracks changes to the store and handles saving the entire wiki
         self.numChanges += filteredChanges.length
         self.updateDirtyStatus()
         // Do any autosave if one is pending and there's no more change events
-        if (
-          self.pendingAutoSave &&
-          self.wiki.getSizeOfTiddlerEventQueue() === 0
-        ) {
+        if (self.pendingAutoSave && self.wiki.getSizeOfTiddlerEventQueue() === 0) {
           // Check if we're dirty
           if (self.numChanges > 0) {
             await self.saveWiki({
               method: 'autosave',
-              downloadType: 'text/plain'
+              downloadType: 'text/plain',
             })
           }
           self.pendingAutoSave = false
         }
       })
       // Listen for the autosave event
-      $tw.rootWidget.addEventListener('tm-auto-save-wiki', async function (
-        event
-      ) {
+      $tw.rootWidget.addEventListener('tm-auto-save-wiki', async function (event) {
         // Do the autosave unless there are outstanding tiddler change events
         if (self.wiki.getSizeOfTiddlerEventQueue() === 0) {
           // Check if we're dirty
           if (self.numChanges > 0) {
             await self.saveWiki({
               method: 'autosave',
-              downloadType: 'text/plain'
+              downloadType: 'text/plain',
             })
           }
         } else {
@@ -106,17 +97,15 @@ The saver handler tracks changes to the store and handles saving the entire wiki
         await self.saveWiki({
           template: event.param,
           downloadType: 'text/plain',
-          variables: event.paramObject
+          variables: event.paramObject,
         })
       })
-      $tw.rootWidget.addEventListener('tm-download-file', async function (
-        event
-      ) {
+      $tw.rootWidget.addEventListener('tm-download-file', async function (event) {
         await self.saveWiki({
           method: 'download',
           template: event.param,
           downloadType: 'text/plain',
-          variables: event.paramObject
+          variables: event.paramObject,
         })
       })
     }
@@ -124,8 +113,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
 
   SaverHandler.prototype.titleSyncFilter = '$:/config/SaverFilter'
   SaverHandler.prototype.titleAutoSave = '$:/config/AutoSave'
-  SaverHandler.prototype.titleSavedNotification =
-    '$:/language/Notifications/Save/Done'
+  SaverHandler.prototype.titleSavedNotification = '$:/language/Notifications/Save/Done'
 
   /**
    * Select the appropriate saver modules and set them up
@@ -172,27 +160,16 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     var self = this
     var method = options.method || 'save'
     // Ignore autosave if disabled
-    if (
-      method === 'autosave' &&
-      this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes'
-    ) {
+    if (method === 'autosave' && this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes') {
       return false
     }
-    if (
-      $tw.browser &&
-      typeof $tw.crypto.hasEncryptionPublicKey === 'function' &&
-      $tw.crypto.hasEncryptionPublicKey()
-    ) {
+    if ($tw.browser && typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
       await $tw.ipfs.loadEthSigUtilLibrary()
     }
     var variables = options.variables || {}
     var template = options.template || '$:/core/save/all'
     var downloadType = options.downloadType || 'text/plain'
-    var text = await this.wiki.renderTiddlerAndSign(
-      downloadType,
-      template,
-      options
-    )
+    var text = await this.wiki.renderTiddlerAndSign(downloadType, template, options)
     var callback = function (err) {
       if (err) {
         alert($tw.language.getString('Error/WhileSaving') + ':\n\n' + err)
@@ -213,16 +190,11 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')
     if (preferredSaver !== undefined && preferredSaver !== null) {
       var title = preferredSaver.fields.text
-      title =
-        title === undefined || title == null || title.trim() === ''
-          ? null
-          : title.trim()
+      title = title === undefined || title == null || title.trim() === '' ? null : title.trim()
       if (title !== null) {
         var saver = this.getSaver(title)
         if (saver !== null && saver.module !== undefined) {
-          if (
-            await this.save(saver.module, method, variables, text, callback)
-          ) {
+          if (await this.save(saver.module, method, variables, text, callback)) {
             return true
           }
         }
@@ -237,15 +209,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
         continue
       }
       // Process
-      if (
-        await this.save(
-          this.savers[t].module,
-          method,
-          variables,
-          text,
-          callback
-        )
-      ) {
+      if (await this.save(this.savers[t].module, method, variables, text, callback)) {
         return true
       }
     }
@@ -265,24 +229,13 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     return saver
   }
 
-  SaverHandler.prototype.save = async function (
-    saver,
-    method,
-    variables,
-    text,
-    callback
-  ) {
+  SaverHandler.prototype.save = async function (saver, method, variables, text, callback) {
     if (saver.info.capabilities.indexOf(method) !== -1) {
       var saved = await saver.save(text, method, callback, {
-        variables: { filename: variables.filename }
+        variables: { filename: variables.filename },
       })
       if (saved) {
-        this.logger.log(
-          'Saved wiki with method',
-          method,
-          'through saver',
-          saver.info.name
-        )
+        this.logger.log('Saved wiki with method', method, 'through saver', saver.info.name)
         return true
       }
     }
