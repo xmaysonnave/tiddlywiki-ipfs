@@ -52,7 +52,8 @@
     "test": "./bin/test.sh --verbose",
     "testc": "./bin/test.sh --coverage",
     "testw": "./bin/test.sh --watch",
-    "upload": "./bin/cli-upload.sh"
+    "upload": "./bin/cli-upload.sh",
+    "upload-node": "./bin/cli-upload-node.sh"
   },
   "lint-staged": {
     "*": [

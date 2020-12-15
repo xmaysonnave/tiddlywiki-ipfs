@@ -62,6 +62,16 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
+      "name": "Debug upload node",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["upload-node", "--dir=editions"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
       "name": "Debug Ipfs Publish",
       "type": "node",
       "request": "launch",
