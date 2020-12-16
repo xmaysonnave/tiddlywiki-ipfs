@@ -81,8 +81,9 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   var currentVersion = null
   var currentParentCid = null
   var currentCid = null
-  if (fs.existsSync(`./current/${dir}/current.json`)) {
-    const current = fs.readFileSync(`./current/${dir}/current.json`, 'utf8')
+  const path = `./current/${dir}/current.json`
+  if (fs.existsSync(path)) {
+    const current = fs.readFileSync(path, 'utf8')
     if (!current) {
       throw new Error('Unknown current version...')
     }
@@ -99,18 +100,29 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
     }
   }
 
-  // Replay
-  const replay = new Map()
-  if (fs.existsSync(`./production/${dir}/$_replay.json`)) {
-    const json = fs.readFileSync(`./production/${dir}/$_replay.json`, 'utf8')
-    const jsonObject = JSON.parse(json)
-    for (const key in jsonObject) {
-      replay.set(key, jsonObject[key])
+  // Load favicon
+  var favicon = null
+  var faviconName = 'favicon.ico'
+  var faviconPath = `./production/${dir}/${faviconName}`
+  const upload = []
+  if (fs.existsSync(faviconPath)) {
+    favicon = fs.readFileSync(faviconPath)
+  }
+  if (!favicon) {
+    faviconName = 'favicon.png'
+    faviconPath = `./production/${dir}/${faviconName}`
+    if (fs.existsSync(faviconPath)) {
+      favicon = fs.readFileSync(faviconPath)
     }
   }
+  if (favicon) {
+    upload.push({
+      path: `/${faviconName}`,
+      content: favicon,
+    })
+  }
 
-  // Load
-  const upload = []
+  // Load content
   var content = null
   var contentName = `${normalizedName}-${_version}.${extension}`
   var contentPath = `./production/${dir}/${contentName}`
@@ -132,33 +144,10 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
     content: StringToUint8Array(content),
   })
 
-  // favicon
-  var favicon = null
-  var faviconName = 'favicon.ico'
-  var faviconPath = `./production/${dir}/${faviconName}`
-  if (fs.existsSync(faviconPath)) {
-    favicon = fs.readFileSync(faviconPath)
-  }
-  if (!favicon) {
-    faviconName = 'favicon.png'
-    faviconPath = `./production/${dir}/${faviconName}`
-    if (fs.existsSync(faviconPath)) {
-      favicon = fs.readFileSync(faviconPath)
-    }
-  }
-  if (favicon) {
-    upload.push({
-      path: `/${faviconName}`,
-      content: favicon,
-    })
-  }
-
   // Ipfs Client
   const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
-
-  var gatewayUrl = process.env.GATEWAY ? process.env.GATEWAY : 'https://dweb.link'
-  gatewayUrl = `${gatewayUrl}/ipfs/`
+  const gatewayUrl = process.env.GATEWAY ? `${process.env.GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
 
   // Upload
   var cid = null
@@ -266,37 +255,6 @@ _size: ${toJson._size}`
 
   // Save Tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}_build.tid`, tid, 'utf8')
-
-  // content
-  if (!replay.has(cid.toString())) {
-    replay.set(cid.toString(), 'file')
-  }
-  // favicon
-  if (faviconCid) {
-    if (!replay.has(faviconCid.toString())) {
-      replay.set(faviconCid.toString(), 'file')
-    }
-  }
-  // parent directory
-  if (!replay.has(parentCid.toString())) {
-    replay.set(parentCid.toString(), 'dir')
-  }
-  // link
-  if (!replay.has(`${parentCid}/${contentName}`)) {
-    replay.set(`${parentCid}/${contentName}`, 'link')
-  }
-  if (faviconCid) {
-    if (!replay.has(`${parentCid}/${faviconName}`)) {
-      replay.set(`${parentCid}/${faviconName}`, 'link')
-    }
-  }
-
-  // Save
-  const jsonObject = {}
-  replay.forEach((value, key) => {
-    jsonObject[key] = value
-  })
-  fs.writeFileSync(`./production/${dir}/$_replay.json`, JSON.stringify(jsonObject), 'utf8')
 
   // Fetch
   if (!hashOnly) {

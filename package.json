@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta+build-201215384",
+  "version": "0.4.0-beta+build-201216274",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
@@ -32,6 +32,10 @@
     "build": "./bin/build.sh",
     "build-noclone": "./bin/build-noclone.sh",
     "bluelightav": "./bin/editions/bluelightav/build.sh",
+    "cli-publish-node": "./bin/cli-publish-node.sh",
+    "cli-semver": "./bin/cli-semver.sh",
+    "cli-upload": "./bin/cli-upload.sh",
+    "cli-upload-node": "./bin/cli-upload-node.sh",
     "dev": "./bin/editions/dev/build.sh",
     "documentation": "./bin/tiddlywiki-ipfs/documentation/build.sh",
     "download": "./bin/download.sh",
@@ -44,16 +48,11 @@
     "precommit": "lint-staged",
     "prepare": "yarn snyk-protect",
     "prettier-standard": "prettier-standard --format --lint",
-    "publish": "./bin/publish.sh",
-    "publish-boot": "./bin/tiddlywiki-ipfs/boot/publish.sh",
-    "semver": "./bin/cli-semver.sh",
     "snyk-monitor": "snyk monitor --all-projects",
     "snyk-protect": "snyk protect",
     "test": "./bin/test.sh --verbose",
     "testc": "./bin/test.sh --coverage",
-    "testw": "./bin/test.sh --watch",
-    "upload": "./bin/cli-upload.sh",
-    "upload-node": "./bin/cli-upload-node.sh"
+    "testw": "./bin/test.sh --watch"
   },
   "lint-staged": {
     "*": [
@@ -87,7 +86,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
     "@babel/runtime-corejs3": "^7.12.1",
     "@metamask/detect-provider": "^1.2.0",
     "abort-controller": "^3.0.0",
@@ -117,7 +116,7 @@
     "replace": "^1.2.0",
     "sinon": "^9.2.2",
     "sjcl": "^1.0.8",
-    "snyk": "^1.437.0",
+    "snyk": "^1.437.1",
     "terser": "^5.5.1",
     "tiddlywiki": "^5.1.22",
     "typescript": "^4.1.3",

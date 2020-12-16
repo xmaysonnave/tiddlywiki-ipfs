@@ -27,7 +27,9 @@ cp -R ./editions/tiddlywiki/* ./build || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # build raw
+echo '***'
 echo '*** raw tiddlywiki ***'
+echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
@@ -36,7 +38,6 @@ yarn ipfs-tiddlywiki build \
 node ./bin/dependency.js "$@" || exit 1
 
 # check hash and set version
-echo '*** semver tiddlywiki ***'
 ./bin/cli-semver.sh \
   --name=index \
   --extension=html \
@@ -44,14 +45,15 @@ echo '*** semver tiddlywiki ***'
   --env=TIDDLYWIKI || exit 1
 
 # build
+echo '***'
 echo '*** tiddlywiki ***'
+echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
   --verbose || exit 1
 
 # upload to ipfs
-echo '*** upload tiddlywiki ***'
 ./bin/cli-upload.sh \
   --name=index.html \
   --extension=html \

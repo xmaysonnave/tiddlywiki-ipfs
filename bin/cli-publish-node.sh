@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** publish ***'
+echo '*** cli-publish-node ***'
 echo '***'
 
 # nvm
@@ -9,11 +9,8 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
-# publish plugin
-./bin/tiddlywiki-ipfs/publish.sh "$@" || exit 1
-
-# publish editions
-./bin/editions/publish.sh "$@" || exit 1
+# build
+node ./bin/cli-publish-node.js "$@" || exit 1
 
 # done
 exit 0

@@ -38,7 +38,9 @@ cp -R ./download/tw5-relink/plugins/relink ./build/plugins || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # build raw
+echo '***'
 echo '*** raw dev ***'
+echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
   --verbose || exit 1
@@ -54,21 +56,21 @@ cp ./editions/dev/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 node ./bin/dependency.js "$@" || exit 1
 
 # check hash and set version
-echo '*** semver dev ***'
 ./bin/cli-semver.sh \
   --name=index \
   --extension=html \
   --dir=editions/dev \
   --env=DEV || exit 1
 
+echo '***'
 echo '*** dev ***'
+echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
   --verbose || exit 1
 
 # upload to ipfs
-echo '*** upload dev ***'
 ./bin/cli-upload.sh \
   --name=index.html \
   --extension=html \
