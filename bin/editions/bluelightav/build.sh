@@ -60,7 +60,7 @@ node ./bin/dependency.js "$@" || exit 1
   --name=index \
   --extension=html \
   --dir=editions/bluelightav \
-  --env=BLUELIGHTAV || exit 1
+  --env=BLUELIGHTAV "$@" || exit 1
 
 echo '***'
 echo '*** bluelightav ***'
@@ -68,14 +68,14 @@ echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=index.html \
   --extension=html \
   --dir=editions/bluelightav \
-  --tags=$:/ipfs/editions || exit 1
+  --tags=$:/ipfs/editions "$@" || exit 1
 
 # compress
 # yarn gzipper compress --brotli production/editions/bluelightav/index.html build/output/editions/bluelightav

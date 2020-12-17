@@ -3,24 +3,33 @@
 
 const beautify = require('json-beautify')
 const dotenv = require('dotenv')
+const fetch = require('node-fetch')
 const filenamify = require('filenamify')
+const fileType = require('file-type')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
-const FetchStream = require('fetch').FetchStream
+const { pipeline } = require('stream')
+const { promisify } = require('util')
 
-function fetch (url) {
-  return new Promise((resolve, reject) => {
-    const request = new FetchStream(url)
-    request.on('error', error => {
-      reject(error)
-    })
-    request.on('data', function (chunk) {
-      // Load
-    })
-    request.on('end', () => {
-      resolve(true)
-    })
-  })
+async function load (url, stream) {
+  if (url instanceof URL === false) {
+    url = new URL(url)
+  }
+  var options = {
+    compress: false,
+    method: 'GET',
+  }
+  const response = await fetch(url, options)
+  if (!response.ok) {
+    throw new Error(`unexpected response ${response.statusText}`)
+  }
+  if (stream) {
+    const streamPipeline = promisify(pipeline)
+    await streamPipeline(response.body, stream)
+    return
+  }
+  const buffer = await response.buffer()
+  return await fileType.fromBuffer(buffer)
 }
 
 // String to uint array
@@ -85,7 +94,7 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   if (fs.existsSync(path)) {
     const current = fs.readFileSync(path, 'utf8')
     if (!current) {
-      throw new Error('Unknown current version...')
+      throw new Error(`Unknown current: ${path}...`)
     }
     var { _parent_cid: currentParentCid, _cid: currentCid, _version: currentVersion, _raw_hash: currentRawHash, _semver: currentSemver } = JSON.parse(current)
     // Check
@@ -256,20 +265,20 @@ _size: ${toJson._size}`
   // Save Tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}_build.tid`, tid, 'utf8')
 
-  // Fetch
+  // Load
   if (!hashOnly) {
-    await fetch(`${gatewayUrl}${toJson._cid}`)
+    await load(`${gatewayUrl}${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
     if (faviconCid) {
-      await fetch(`${gatewayUrl}${faviconCid}`)
+      await load(`${gatewayUrl}${faviconCid}`)
       console.log(`*** Fetched ${gatewayUrl}${faviconCid} ***`)
     }
-    await fetch(`${gatewayUrl}${toJson._parent_cid}`)
+    await load(`${gatewayUrl}${toJson._parent_cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid} ***`)
-    await fetch(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
+    await load(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`)
     if (faviconCid) {
-      await fetch(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
+      await load(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
       console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid}/${faviconName} ***`)
     }
   }

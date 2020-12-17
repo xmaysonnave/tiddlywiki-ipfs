@@ -6,7 +6,7 @@
     "plugin": [
       "--render",
         "[tag[$:/ipfs/core]]",
-        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.js-%BUILD_PLUGIN_SEMVER%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.js-%BUILD_PLUGIN_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

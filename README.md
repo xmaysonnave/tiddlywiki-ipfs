@@ -1,29 +1,51 @@
 <h1 align="center">IPFS with TiddyWiki</h1>
 
 <h1 align="center">
-  <a href="https://bluelightav.eth.link"><img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light"/></a>
+  <a href="https://bluelightav.eth.link">
+    <img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light"/>
+  </a>
 </h1>
 
 <p align="center">
-  <a href="https://github.com/ContributorCovenant/contributor_covenant"><img alt="An ethical open source project" src="https://img.shields.io/badge/open-ethical-%234baaaa"/></a>
-  <a href="LICENSE"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a>
-  <a href="CODE_OF_CONDUCT.md"><img alt="Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg"/></a>
+  <a href="https://github.com/ContributorCovenant/contributor_covenant">
+    <img alt="An ethical open source project" src="https://img.shields.io/badge/open-ethical-%234baaaa"/>
+  </a>
+  <a href="LICENSE">
+    <img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/>
+  </a>
+  <a href="CODE_OF_CONDUCT.md">
+    <img alt="Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg"/>
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs?ref=badge_shield" alt="FOSSA Status">
+    <img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs.svg?type=shield"/>
+  </a>
+  <a href="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs">
+    <img alt="TravisCI" src="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=main"/>
+  </a>
+  <a href="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs">
+    <img alt="Snyk" src="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg"/>
+  </a>
 </p>
 
 <p align="center">
   <img alt="CodeQL" src="https://github.com/xmaysonnave/tiddlywiki-ipfs/workflows/CodeQL/badge.svg?branch=main"/>
-  <a href="https://github.com/prettier/prettier"><img alt="Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"/></a>
+  <a href="https://github.com/prettier/prettier">
+    <img alt="Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"/>
+  </a>
 </p>
 
 <p align="center">
-  <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs.svg?type=shield"/></a>
-  <a href="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs"><img alt="TravisCI" src="https://travis-ci.com/xmaysonnave/tiddlywiki-ipfs.svg?branch=main"/></a>
-  <a href="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs"><img alt="Snyk" src="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg"/></a>
+  <a href="https://dweb.link/ipfs/http://127.0.0.1:8080/ipfs/QmVWo2oXn7b7zjqmBw8zbqh8j68Ccy99yFqm2W4zYK6HDX">
+    <img alt="Hosted on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
+  </a>
 </p>
 
 <a name="ipfs-with-tiddlywiki"/>
 
-This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors and developers to manage their wikis over [IPFS](https://ipfs.io).
+This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors and developers to manage their wikis on [IPFS](https://ipfs.io).
 
 This plugin provides the following features:
 
@@ -36,7 +58,7 @@ This plugin provides the following features:
   - [SHA-3](https://en.wikipedia.org/wiki/SHA-3)
 - Import and Export
 - Publish and Manage IPNS Names and Keys
-- Interact with [Metamask](https://metamask.io) Ethereum wallets
+- [Metamask](https://metamask.io) Ethereum wallets support
 - Publish to [ENS](https://ens.domains)
 - Share over [IPFS](https://ipfs.io/) `TiddlyWiki`'s [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments
 
@@ -60,15 +82,23 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 <a name="using-ipfs-with-tiddlywiki"/>
 
-With a capable [ENS](https://ens.domains/) browser:
+Build available on IPFS:
+
+- [IPFS with TiddlyWiki](https://dweb.link/ipfs/http://127.0.0.1:8080/ipfs/QmVWo2oXn7b7zjqmBw8zbqh8j68Ccy99yFqm2W4zYK6HDX)
+
+Release available with a capable [ENS](https://ens.domains/) browser:
 
 - [IPFS with TiddlyWiki](https://bluelightav.eth)
+- [IPFS with TiddlyWiki Boot](https://bluelightav.eth/#%24%3A%2Fboot%2Fboot.js)
+- [IPFS with TiddlyWiki Library](https://bluelightav.eth/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
 - [IPFS with TiddlyWiki Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
 - [IPFS with TiddlyWiki Documentation](https://bluelightav.eth/#IPFS%20Documentation)
 
-With a non capable [ENS](https://ens.domains/) browser
+Release available with a non capable [ENS](https://ens.domains/) browser:
 
 - [IPFS with TiddlyWiki](https://bluelightav.eth.link)
+- [IPFS with TiddlyWiki Boot](https://bluelightav.eth.link/#%24%3A%2Fboot%2Fboot.js)
+- [IPFS with TiddlyWiki Library](https://bluelightav.eth.link/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
 - [IPFS with TiddlyWiki Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
 - [IPFS with TiddlyWiki Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
 
@@ -110,8 +140,8 @@ To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
 To run a local IPFS node, you need:
 
-- IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
-- IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) or
+- [IPFS Companion](https://ipfs-shipyard.github.io/ipfs-companion/)
+- [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop)
 - [IPFS Server](https://github.com/ipfs/go-ipfs)
 
 More informations about IPFS:
@@ -138,10 +168,6 @@ According to the `ipfs-desktop` [README.md](https://github.com/ipfs-shipyard/ipf
 - [IPFS Companion for Firefox](https://addons.mozilla.org/fr/firefox/addon/ipfs-companion/)
 
 According to the `ipfs-companion` [README.md](https://github.com/ipfs-shipyard/ipfs-companion/blob/master/README.md), `This add-on enables everyone to access IPFS resources the way they were meant: from locally running IPFS node :-)`.
-
-#### `Warning`
-
-The `IPFS Companion` support is [Temporarily Disabled](https://docs-beta.ipfs.io/how-to/companion-window-ipfs/) and will be back in Q3 2020.
 
 #### Supported ENS Ethereum Networks
 
@@ -336,23 +362,31 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 
 The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/package.json) references several options:
 
-- build-all-noclone
+- boot
 - build
-- build-tiddlywiki
-- build-tiddlywiki-empty
-- debug
-- format
+- build-noclone
+- bluelightav
+- cli-publish-node
+- cli-semver
+- cli-upload
+- cli-upload-node
+- dev
+- documentation
+- download
+- editions
+- empty
 - ipfs-tiddlywiki
-- lint
+- library
+- tiddlywiki-ipfs
+- tiddlywiki
 - precommit
 - prepare
-- run-build-number
-- run-browserify
-- run-prepare-clone
-- run-prepare
+- prettier-standard
 - snyk-monitor
 - snyk-protect
 - test
+- testc
+- testw
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 
@@ -362,14 +396,14 @@ yarn build
 
 The `production` directory contains production ready runnable `TiddlyWikis`:
 
-- [index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html)
-- [empty.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/empty.html)
+- [index.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html)
+- [empty.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/empty.html)
 
 and `IPFS with TiddlyWiki` boot, libraries and plugin as json files:
 
-- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fboot%252Fboot.js.json)
-- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Flibrary%252Fipfs-library.js.json)
-- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/production/%2524%253A%252Fplugins%252Fipfs.json)
+- [\$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/boot/%2524%253A%252Fboot%252Fboot.js-0.4.0-beta-TW-v5.1.23-pre+build-201217444.json)
+- [\$:/library/ipfs-library-modules.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/productiontiddlywiki-ipfs/library/%2524%253A%252Flibrary%252Fipfs-library.js-1.0.0+build-201217444.json)
+- [\$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/boot/%2524%253A%252Fplugins%252Fipfs.js-0.4.0-beta+build-201217444.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 
@@ -387,7 +421,7 @@ This project is integrated with Travis CI:
 
 <a name="developer-running"/>
 
-Open [production/index.html](https://htmlpreview.github.com/?https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html) file in your favorite browser.
+Open [production/index.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/index.html) file in your favorite browser.
 
 ## Contributor Covenant Code of Conduct
 

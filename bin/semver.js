@@ -39,12 +39,12 @@ module.exports = function main (name, extension, dir, env) {
   var raw = null
   const fileName = filenamify(name, { replacement: '_' })
   // Load
-  var path = `./build/output/${dir}/${fileName}-%BUILD_${env}_SEMVER%.${extension}`
+  var path = `./build/output/${dir}/${fileName}-%BUILD_${env}_VERSION%.${extension}`
   if (fs.existsSync(path)) {
     raw = fs.readFileSync(path, 'utf8')
   }
   if (!raw) {
-    path = `./build/output/${dir}/${fileName}.${extension}-%BUILD_${env}_SEMVER%.json`
+    path = `./build/output/${dir}/${fileName}.${extension}-%BUILD_${env}_VERSION%.json`
     if (fs.existsSync(path)) {
       raw = fs.readFileSync(path, 'utf8')
     }
@@ -89,7 +89,7 @@ module.exports = function main (name, extension, dir, env) {
 
   // Set version
   replace({
-    regex: `%BUILD_${env}_SEMVER%`,
+    regex: `%BUILD_${env}_VERSION%`,
     replacement: version,
     paths: ['./build/tiddlywiki.info'],
     recursive: false,

@@ -16,7 +16,7 @@
 
 # build node
 ./bin/cli-upload-node.sh \
-  --dir=editions || exit 1
+  --dir=editions "$@" || exit 1
 
 # done
 exit 0

@@ -32,7 +32,7 @@ echo '*** raw tiddlywiki ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # set dependency
 node ./bin/dependency.js "$@" || exit 1
@@ -42,7 +42,7 @@ node ./bin/dependency.js "$@" || exit 1
   --name=index \
   --extension=html \
   --dir=editions/tiddlywiki \
-  --env=TIDDLYWIKI || exit 1
+  --env=TIDDLYWIKI "$@" || exit 1
 
 # build
 echo '***'
@@ -51,14 +51,14 @@ echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=index.html \
   --extension=html \
   --dir=editions/tiddlywiki \
-  --tags=$:/ipfs/editions || exit 1
+  --tags=$:/ipfs/editions "$@" || exit 1
 
 # compress
 # yarn gzipper compress --brotli production/editions/tiddlywiki/index.html build/output/editions/tiddlywiki

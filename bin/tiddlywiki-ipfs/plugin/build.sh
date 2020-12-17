@@ -35,7 +35,7 @@ echo '***'
 yarn browserify \
   core/modules/ipfs-bundle.js \
   -s IpfsBundle \
-    -o build/plugins/ipfs/modules/ipfs-bundle.js || exit 1
+    -o build/plugins/ipfs/modules/ipfs-bundle.js "$@" || exit 1
 
 # build raw
 echo '***'
@@ -43,7 +43,7 @@ echo '*** raw plugin ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # check hash and set version
 echo '***'
@@ -58,7 +58,7 @@ echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-upload.sh \
@@ -66,7 +66,7 @@ yarn ipfs-tiddlywiki build \
   --owner=$:/plugins/ipfs \
   --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
-  --tags=$:/ipfs/documentation || exit 1
+  --tags=$:/ipfs/documentation"$@" || exit 1
 
 # done
 exit 0

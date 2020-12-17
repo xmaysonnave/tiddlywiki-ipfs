@@ -1,7 +1,7 @@
 title: $:/boot/boot.js
 tags: $:/ipfs/boot/modules
 type: application/javascript
-version: %BUILD_BOOT_SEMVER%
+version: %BUILD_BOOT_VERSION%
 _boot_license_uri: https://raw.githubusercontent.com/Jermolene/TiddlyWiki5/master/license
 _boot_project_uri: https://github.com/Jermolene/TiddlyWiki5
 _boot_source_uri: https://github.com/Jermolene/TiddlyWiki5/commit/ecb3c86e7bff8205043f397848355d5cefe7f470#diff-4f4fd537c2dfea828c3bf2b8df492c2caf8f5b3777178b63b0b110acb26e4d2b

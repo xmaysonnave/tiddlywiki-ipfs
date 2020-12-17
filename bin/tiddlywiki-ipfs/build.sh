@@ -13,7 +13,7 @@
 
 # build node
 ./bin/cli-upload-node.sh \
-  --dir=tiddlywiki-ipfs || exit 1
+  --dir=tiddlywiki-ipfs "$@" || exit 1
 
 # done
 exit 0

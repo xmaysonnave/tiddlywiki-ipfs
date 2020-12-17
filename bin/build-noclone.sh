@@ -20,7 +20,10 @@ nvm use > /dev/null 2>&1
 
 # build node
 ./bin/cli-upload-node.sh \
-  --dir=. || exit 1
+  --dir=. "$@" || exit 1
+
+# set root node
+./bin/cli-root-node.sh "$@" || exit 1
 
 # done
 exit 0

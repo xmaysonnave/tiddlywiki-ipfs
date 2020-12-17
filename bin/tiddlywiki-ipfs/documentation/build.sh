@@ -30,7 +30,7 @@ echo '*** raw documentation ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # check hash and set version
 echo '***'
@@ -40,7 +40,7 @@ echo '***'
   --name=$:/ipfs/documentation \
   --extension=json \
   --dir=tiddlywiki-ipfs/documentation \
-  --env=DOCUMENTATION || exit 1
+  --env=DOCUMENTATION "$@" || exit 1
 
 # build
 echo '***'
@@ -49,7 +49,7 @@ echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-upload.sh \
@@ -57,7 +57,7 @@ yarn ipfs-tiddlywiki build \
   --owner=$:/ipfs/documentation \
   --extension=json \
   --dir=tiddlywiki-ipfs/documentation \
-  --tags=$:/ipfs/documentation || exit 1
+  --tags=$:/ipfs/documentation "$@" || exit 1
 
 # done
 exit 0

@@ -14,7 +14,7 @@ function main () {
     const version = semver(name, extension, dir, env)
 
     replace({
-      regex: `%BUILD_${env}_SEMVER%`,
+      regex: `%BUILD_${env}_VERSION%`,
       replacement: version,
       paths: ['./build/tiddlers/$_boot_boot.js.meta'],
       recursive: false,

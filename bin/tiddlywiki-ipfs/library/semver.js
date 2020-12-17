@@ -22,7 +22,7 @@ function main () {
     for (var i = 0; i < files.length; i++) {
       if (files[i].endsWith('.meta')) {
         replace({
-          regex: `%BUILD_${env}_SEMVER%`,
+          regex: `%BUILD_${env}_VERSION%`,
           replacement: version,
           paths: [`./build/tiddlers/${files[i]}`],
           recursive: false,

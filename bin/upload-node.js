@@ -3,24 +3,33 @@
 
 const beautify = require('json-beautify')
 const dotenv = require('dotenv')
+const fetch = require('node-fetch')
+const fileType = require('file-type')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
+const { pipeline } = require('stream')
+const { promisify } = require('util')
 const CID = require('cids')
-const FetchStream = require('fetch').FetchStream
 
-function fetch (url) {
-  return new Promise((resolve, reject) => {
-    const request = new FetchStream(url)
-    request.on('error', error => {
-      reject(error)
-    })
-    request.on('data', function (chunk) {
-      // Load
-    })
-    request.on('end', () => {
-      resolve(true)
-    })
-  })
+async function load (url, stream) {
+  if (url instanceof URL === false) {
+    url = new URL(url)
+  }
+  var options = {
+    compress: false,
+    method: 'GET',
+  }
+  const response = await fetch(url, options)
+  if (!response.ok) {
+    throw new Error(`unexpected response ${response.statusText}`)
+  }
+  if (stream) {
+    const streamPipeline = promisify(pipeline)
+    await streamPipeline(response.body, stream)
+    return
+  }
+  const buffer = await response.buffer()
+  return await fileType.fromBuffer(buffer)
 }
 
 /*
@@ -101,7 +110,7 @@ module.exports = async function main (dir, hashOnly) {
   fs.writeFileSync(`./current/${dir}/node.json`, beautify(toJson, null, 2, 80), 'utf8')
   // Fetch
   if (!hashOnly) {
-    await fetch(`${gatewayUrl}${toJson._cid}`)
+    await load(`${gatewayUrl}${toJson._cid}`)
     console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
   }
 }

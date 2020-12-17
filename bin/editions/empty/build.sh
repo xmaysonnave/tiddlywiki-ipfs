@@ -35,7 +35,7 @@ echo '*** raw empty ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # init
 rm -f -R ./build/tiddlers > /dev/null 2>&1
@@ -52,7 +52,7 @@ node ./bin/dependency.js "$@" || exit 1
   --name=index \
   --extension=html \
   --dir=editions/empty \
-  --env=EMPTY || exit 1
+  --env=EMPTY "$@" || exit 1
 
 echo '***'
 echo '*** empty ***'
@@ -60,14 +60,14 @@ echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=index.html \
   --extension=html \
   --dir=editions/empty \
-  --tags=$:/ipfs/editions || exit 1
+  --tags=$:/ipfs/editions "$@" || exit 1
 
 # compress
 # yarn gzipper compress --brotli production/editions/empty/index.html build/output/editions/empty

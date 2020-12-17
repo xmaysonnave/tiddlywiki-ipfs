@@ -6,7 +6,7 @@
     "library": [
       "--render",
         "[tag[$:/ipfs/library/modules]]",
-        "[filenamify[]addprefix[./tiddlywiki-ipfs/library/]addsuffix[-%BUILD_LIBRARY_SEMVER%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/library/]addsuffix[-%BUILD_LIBRARY_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

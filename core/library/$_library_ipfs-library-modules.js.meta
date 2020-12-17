@@ -1,7 +1,7 @@
 title: $:/library/ipfs-library-modules.js
 tags: $:/ipfs/library/modules
 type: application/javascript
-version: %BUILD_LIBRARY_SEMVER%
+version: %BUILD_LIBRARY_VERSION%
 library: yes
 _detect_provider_license_uri: https://raw.githubusercontent.com/MetaMask/detect-provider/main/LICENSE
 _detect_provider_project_uri: https://github.com/MetaMask/detect-provider

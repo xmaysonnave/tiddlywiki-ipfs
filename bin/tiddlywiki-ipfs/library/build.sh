@@ -41,7 +41,7 @@ echo '*** bundle library ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
@@ -61,7 +61,7 @@ echo '*** raw library ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # check hash and set version
 echo '***'
@@ -76,7 +76,7 @@ echo '***'
 yarn ipfs-tiddlywiki build \
   --output production \
   --build \
-  --verbose || exit 1
+  --verbose "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-upload.sh \
@@ -84,7 +84,7 @@ yarn ipfs-tiddlywiki build \
   --owner=$:/library/ipfs-library-modules.js \
   --extension=json \
   --dir=tiddlywiki-ipfs/library \
-  --tags=$:/ipfs/core || exit 1
+  --tags=$:/ipfs/core "$@" || exit 1
 
 # done
 exit 0
