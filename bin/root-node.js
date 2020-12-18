@@ -13,6 +13,8 @@ module.exports = function main (branch) {
   }
   branch = branch == null || branch === undefined || branch.trim() === '' ? null : branch.trim()
   branch = branch || process.env.BRANCH || 'main'
+  const gateway = process.env.GATEWAY ? process.env.GATEWAY : 'https://dweb.link/'
+
   // current root node
   var node = null
   var path = './current/node.json'
@@ -28,12 +30,21 @@ module.exports = function main (branch) {
   var readmeRawPath = './README_RAW.md'
   var readmePath = './README.md'
   if (fs.existsSync(readmeRawPath)) {
-    fs.copyFileSync(readmeRawPath, path)
+    fs.copyFileSync(readmeRawPath, readmePath)
     readme = fs.readFileSync(readmePath, 'utf8')
   }
   if (!readme) {
     throw new Error('Unknown README.md...')
   }
+
+  // gateway
+  replace({
+    regex: `%GATEWAY%`,
+    replacement: gateway,
+    paths: [readmePath],
+    recursive: false,
+    silent: true,
+  })
 
   // branch
   replace({
@@ -53,7 +64,7 @@ module.exports = function main (branch) {
 
   replace({
     regex: `%BUILD_ROOT_NODE%`,
-    replacement: _cid_uri,
+    replacement: `ipfs/${_cid_uri}`,
     paths: [readmePath],
     recursive: false,
     silent: true,
@@ -109,6 +120,24 @@ module.exports = function main (branch) {
   var { _version: version } = JSON.parse(plugin)
   replace({
     regex: `%BUILD_PLUGIN_VERSION%`,
+    replacement: version,
+    paths: [readmePath],
+    recursive: false,
+    silent: true,
+  })
+
+  // documentation
+  var doc = null
+  var path = './current/tiddlywiki-ipfs/documentation/current.json'
+  if (fs.existsSync(path)) {
+    doc = fs.readFileSync(path, 'utf8')
+  }
+  if (!doc) {
+    throw new Error(`Unknown current: ${path}`)
+  }
+  var { _version: version } = JSON.parse(doc)
+  replace({
+    regex: `%BUILD_DOCUMENTATION_VERSION%`,
     replacement: version,
     paths: [readmePath],
     recursive: false,
