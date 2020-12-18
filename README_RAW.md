@@ -291,7 +291,7 @@ nvm -v
 0.37.0
 ```
 
-This repository contains a [.nvmrc](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/.nvmrc) who describes the node version to use.
+This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/.nvmrc) who describes the node version to use.
 
 ```
 v15
@@ -368,7 +368,7 @@ yarn
 
 The repository contains several scripts who build TiddWiki instances bundled with `IPFS with TiddlyWiki`.
 
-The [package.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/package.json) references several options:
+The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/package.json) references several options:
 
 - boot
 - build
