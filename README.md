@@ -291,7 +291,7 @@ nvm -v
 0.37.0
 ```
 
-This repository contains a [.nvmrc](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/.nvmrc) who describes the node version to use.
+This repository contains a [.nvmrc](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/.nvmrc) who describes the node version to use.
 
 ```
 v15
@@ -368,7 +368,7 @@ yarn
 
 The repository contains several scripts who build TiddWiki instances bundled with `IPFS with TiddlyWiki`.
 
-The [package.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/package.json) references several options:
+The [package.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/package.json) references several options:
 
 - boot
 - build
@@ -404,15 +404,15 @@ yarn build
 
 Current `production` bluelightav.eth and empty `TiddlyWikis` editions from this respository:
 
-- [bluelightav.eth](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/editions/bluelightav)
-- [empty.html](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/editions/empty)
+- [bluelightav.eth](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/editions/bluelightav)
+- [empty.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/editions/empty)
 
 Current `IPFS with TiddlyWiki` boot, libraries and plugin from this repository:
 
-- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/boot)
-- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/documentation)
-- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/library)
-- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/plugin)
+- [\$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/boot)
+- [\$:/ipfs/documentation.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/documentation)
+- [\$:/library/ipfs-library-modules.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/library)
+- [\$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/plugin)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 
