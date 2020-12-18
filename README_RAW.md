@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <a href="https://dweb.link/ipfs/%BUILD_ROOT_NODE%">
+  <a href="%BUILD_ROOT_NODE%">
     <img alt="Hosted on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>

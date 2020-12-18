@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <a href="https://dweb.link/ipfs/http://127.0.0.1:8080/ipfs/QmcAfZpXFayYRuwfYs9ojL2LUQzVgcS63QXQH2EbNXxZbt">
+  <a href="http://127.0.0.1:8080/ipfs/QmcAfZpXFayYRuwfYs9ojL2LUQzVgcS63QXQH2EbNXxZbt">
     <img alt="Hosted on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
