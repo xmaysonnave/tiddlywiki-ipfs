@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <a href="https://dweb.link/ipfs/ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss">
+  <a href="https://dweb.link/ipfs/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT">
     <img alt="Hosted on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
@@ -78,29 +78,37 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 <a name="using-ipfs-with-tiddlywiki"/>
 
-Build available on IPFS:
+Current `IPFS` build:
 
-- [IPFS](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss)
-- [Boot](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201218355.json)
-- [Library](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201218354.json)
-- [Plugin](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201218355.json)
-- [Documentation](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201218355.json)
+- [IPFS](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT)
+
+Current `IPFS` <b>bluelightav.eth</b> and <b>empty</b> `TiddlyWikis` editions:
+
+- [bluelightav.eth](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT/editions/bluelightav/index.html)
+- [empty](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT/editions/empty/index.html)
+
+Current `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
+
+- [Boot](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201218355.json)
+- [Documentation](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201218355.json)-
+- [Library](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201218354.json)
+- [Plugin](http://127.0.0.1:8080/ipfs/http://127.0.0.1:8080/ipfs/QmdcwdJZ9rvTCawzSDMhXnFGUE8QSiyBdfDRqpEMF5r9MT/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201218355.json)
 
 Release available with a capable [ENS](https://ens.domains/) browser:
 
-- [bluelightav.eth](https://bluelightav.eth)
 - [Boot](https://bluelightav.eth/#%24%3A%2Fboot%2Fboot.js)
+- [Documentation](https://bluelightav.eth/#IPFS%20Documentation)-
 - [Library](https://bluelightav.eth/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
 - [Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
-- [Documentation](https://bluelightav.eth/#IPFS%20Documentation)
+- [bluelightav.eth](https://bluelightav.eth)
 
 Release available with [EthDNS and EthLink](https://eth.link)
 
-- [bluelightav.eth.link](https://bluelightav.eth.link)
 - [Boot](https://bluelightav.eth.link/#%24%3A%2Fboot%2Fboot.js)
+- [Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)-
 - [Library](https://bluelightav.eth.link/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
 - [Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
-- [Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
+- [bluelightav.eth.link](https://bluelightav.eth.link)
 
 Recommended TiddlyWiki Plugins:
 
@@ -394,17 +402,17 @@ Use the `build` script to build `IPFS with TiddlyWiki`.
 yarn build
 ```
 
-Current `production` bluelightav.eth and empty `TiddlyWikis`:
+Current `production` bluelightav.eth and empty `TiddlyWikis` editions from this respository:
 
-- [bluelightav.eth](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/editions/bluelightav/index.html)
-- [empty.html](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/empty/index.html)
+- [bluelightav.eth](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/editions/bluelightav)
+- [empty.html](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/editions/empty)
 
 Current `IPFS with TiddlyWiki` boot, libraries and plugin from this repository:
 
-- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201218355.json)
-- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201218354.json)
-- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201218355.json)
-- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201218355.json)
+- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/boot)
+- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/documentation)
+- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/library)
+- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/plugin)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 

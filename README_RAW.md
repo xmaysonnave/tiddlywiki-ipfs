@@ -78,29 +78,37 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 <a name="using-ipfs-with-tiddlywiki"/>
 
-Build available on IPFS:
+Current `IPFS` build:
 
-- [IPFS](%GATEWAY%%BUILD_ROOT_NODE%)
-- [Boot](%GATEWAY%%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)
-- [Library](%GATEWAY%%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
-- [Plugin](%GATEWAY%%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
-- [Documentation](%GATEWAY%%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)
+- [IPFS](%GATEWAY%/%BUILD_ROOT_NODE%)
+
+Current `IPFS` <b>bluelightav.eth</b> and <b>empty</b> `TiddlyWikis` editions:
+
+- [bluelightav.eth](%GATEWAY%/%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
+- [empty](%GATEWAY%/%BUILD_ROOT_NODE%/editions/empty/index.html)
+
+Current `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
+
+- [Boot](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)
+- [Documentation](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)-
+- [Library](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
+- [Plugin](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
 
 Release available with a capable [ENS](https://ens.domains/) browser:
 
-- [bluelightav.eth](https://bluelightav.eth)
 - [Boot](https://bluelightav.eth/#%24%3A%2Fboot%2Fboot.js)
+- [Documentation](https://bluelightav.eth/#IPFS%20Documentation)-
 - [Library](https://bluelightav.eth/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
 - [Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
-- [Documentation](https://bluelightav.eth/#IPFS%20Documentation)
+- [bluelightav.eth](https://bluelightav.eth)
 
 Release available with [EthDNS and EthLink](https://eth.link)
 
-- [bluelightav.eth.link](https://bluelightav.eth.link)
 - [Boot](https://bluelightav.eth.link/#%24%3A%2Fboot%2Fboot.js)
+- [Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)-
 - [Library](https://bluelightav.eth.link/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
 - [Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
-- [Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
+- [bluelightav.eth.link](https://bluelightav.eth.link)
 
 Recommended TiddlyWiki Plugins:
 
@@ -394,17 +402,17 @@ Use the `build` script to build `IPFS with TiddlyWiki`.
 yarn build
 ```
 
-Current `production` bluelightav.eth and empty `TiddlyWikis`:
+Current `production` bluelightav.eth and empty `TiddlyWikis` editions from this respository:
 
-- [bluelightav.eth](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/bluelightav/index.html)
-- [empty.html](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/empty/index.html)
+- [bluelightav.eth](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/bluelightav)
+- [empty.html](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/empty)
 
 Current `IPFS with TiddlyWiki` boot, libraries and plugin from this repository:
 
-- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)
-- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
-- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
-- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)
+- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
+- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/documentation)
+- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/library)
+- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/plugin)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 
