@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <a href="https://dweb.link/ipfs/ipfs/http://127.0.0.1:8080/ipfs/QmTEYbS7qCQJpdQ3yohrN2FfjKVUDhhemTJztLoe8a5q3m">
+  <a href="https://dweb.link/ipfs/ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss">
     <img alt="Hosted on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
@@ -80,11 +80,11 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 Build available on IPFS:
 
-- [IPFS](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmTEYbS7qCQJpdQ3yohrN2FfjKVUDhhemTJztLoe8a5q3m)
-- [Boot](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmTEYbS7qCQJpdQ3yohrN2FfjKVUDhhemTJztLoe8a5q3m/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201217444.json)
-- [Library](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmTEYbS7qCQJpdQ3yohrN2FfjKVUDhhemTJztLoe8a5q3m/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201217444.json)
-- [Plugin](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmTEYbS7qCQJpdQ3yohrN2FfjKVUDhhemTJztLoe8a5q3m/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201217444.json)
-- [Documentation](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmTEYbS7qCQJpdQ3yohrN2FfjKVUDhhemTJztLoe8a5q3m/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201217450.json)
+- [IPFS](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss)
+- [Boot](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201218355.json)
+- [Library](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201218354.json)
+- [Plugin](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201218355.json)
+- [Documentation](http://127.0.0.1:8080ipfs/http://127.0.0.1:8080/ipfs/QmUaDirwFt48t7kdbhZ7Cxkq3D8nAgP4QE7q6npT3XSqss/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201218355.json)
 
 Release available with a capable [ENS](https://ens.domains/) browser:
 
@@ -401,10 +401,10 @@ Current `production` bluelightav.eth and empty `TiddlyWikis`:
 
 Current `IPFS with TiddlyWiki` boot, libraries and plugin from this repository:
 
-- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/boot/%2524%253A%252Fboot%252Fboot.js-0.4.0-beta-TW-v5.1.23-pre+build-201217444.json)
-- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/library/%2524%253A%252Flibrary%252Fipfs-library.js-1.0.0+build-201217444.json)
-- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/plugin/%2524%253A%252Fplugins%252Fipfs.js-0.4.0-beta+build-201217444.json)
-- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/documentation/%2524%253A%252Fipfs%252Fdocumentation.json-0.4.0-beta+build-201217450.json)
+- [\$:/boot/boot.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201218355.json)
+- [\$:/library/ipfs-library-modules.js.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201218354.json)
+- [\$:/plugin/ipfs.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201218355.json)
+- [\$:/ipfs/documentation.json](https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/develop/production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201218355.json)
 
 The `sample` directory contains several sample runnable `TiddlyWikis`:
 
