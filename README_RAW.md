@@ -80,19 +80,19 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 Current `IPFS` build:
 
-- [IPFS](%GATEWAY%/%BUILD_ROOT_NODE%)
+- [IPFS](%BUILD_ROOT_NODE%)
 
 Current `IPFS` <b>bluelightav.eth</b> and <b>empty</b> `TiddlyWikis` editions:
 
-- [bluelightav.eth](%GATEWAY%/%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
-- [empty](%GATEWAY%/%BUILD_ROOT_NODE%/editions/empty/index.html)
+- [bluelightav.eth](%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
+- [empty](%BUILD_ROOT_NODE%/editions/empty/index.html)
 
 Current `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
-- [Boot](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)
-- [Documentation](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)-
-- [Library](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
-- [Plugin](%GATEWAY%/%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
+- [Boot](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)
+- [Documentation](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)-
+- [Library](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
+- [Plugin](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
 
 Release available with a capable [ENS](https://ens.domains/) browser:
 

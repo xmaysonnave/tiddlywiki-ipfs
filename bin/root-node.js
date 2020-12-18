@@ -13,7 +13,6 @@ module.exports = function main (branch) {
   }
   branch = branch == null || branch === undefined || branch.trim() === '' ? null : branch.trim()
   branch = branch || process.env.BRANCH || 'main'
-  const gateway = process.env.GATEWAY ? process.env.GATEWAY : 'https://dweb.link/'
 
   // current root node
   var node = null
@@ -37,18 +36,9 @@ module.exports = function main (branch) {
     throw new Error('Unknown README.md...')
   }
 
-  // gateway
-  replace({
-    regex: `%GATEWAY%`,
-    replacement: gateway,
-    paths: [readmePath],
-    recursive: false,
-    silent: true,
-  })
-
   // branch
   replace({
-    regex: `%BRANCH%`,
+    regex: '%BRANCH%',
     replacement: branch,
     paths: [readmePath],
     recursive: false,
@@ -63,8 +53,8 @@ module.exports = function main (branch) {
   }
 
   replace({
-    regex: `%BUILD_ROOT_NODE%`,
-    replacement: `ipfs/${_cid_uri}`,
+    regex: '%BUILD_ROOT_NODE%',
+    replacement: _cid_uri,
     paths: [readmePath],
     recursive: false,
     silent: true,
@@ -83,7 +73,7 @@ module.exports = function main (branch) {
   }
   var { _version: version } = JSON.parse(boot)
   replace({
-    regex: `%BUILD_BOOT_VERSION%`,
+    regex: '%BUILD_BOOT_VERSION%',
     replacement: version,
     paths: [readmePath],
     recursive: false,
@@ -101,7 +91,7 @@ module.exports = function main (branch) {
   }
   var { _version: version } = JSON.parse(library)
   replace({
-    regex: `%BUILD_LIBRARY_VERSION%`,
+    regex: '%BUILD_LIBRARY_VERSION%',
     replacement: version,
     paths: [readmePath],
     recursive: false,
@@ -119,7 +109,7 @@ module.exports = function main (branch) {
   }
   var { _version: version } = JSON.parse(plugin)
   replace({
-    regex: `%BUILD_PLUGIN_VERSION%`,
+    regex: '%BUILD_PLUGIN_VERSION%',
     replacement: version,
     paths: [readmePath],
     recursive: false,
@@ -137,7 +127,7 @@ module.exports = function main (branch) {
   }
   var { _version: version } = JSON.parse(doc)
   replace({
-    regex: `%BUILD_DOCUMENTATION_VERSION%`,
+    regex: '%BUILD_DOCUMENTATION_VERSION%',
     replacement: version,
     paths: [readmePath],
     recursive: false,

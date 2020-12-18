@@ -53,7 +53,7 @@ function main () {
     }
 
     replace({
-      regex: `%BUILD_BOOT_VERSION%`,
+      regex: '%BUILD_BOOT_VERSION%',
       replacement: _version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
@@ -67,7 +67,7 @@ function main () {
     }
 
     replace({
-      regex: `%BUILD_LIBRARY_VERSION%`,
+      regex: '%BUILD_LIBRARY_VERSION%',
       replacement: _version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
@@ -81,7 +81,7 @@ function main () {
     }
 
     replace({
-      regex: `%BUILD_PLUGIN_VERSION%`,
+      regex: '%BUILD_PLUGIN_VERSION%',
       replacement: _version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
@@ -95,7 +95,7 @@ function main () {
     }
 
     replace({
-      regex: `%BUILD_DOCUMENTATION_VERSION%`,
+      regex: '%BUILD_DOCUMENTATION_VERSION%',
       replacement: _version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
