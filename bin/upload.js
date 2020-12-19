@@ -46,6 +46,7 @@ function StringToUint8Array (string) {
 }
 
 /*
+ * https://infura.io/docs
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
@@ -74,38 +75,35 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   const normalizedName = filenamify(name, { replacement: '_' })
 
   // build
-  const build = fs.readFileSync(`./build/output/${dir}/${normalizedName}_build.json`, 'utf8')
-  var { _raw_hash: _rawHash, _semver, _version } = JSON.parse(build)
-  if (_version === undefined || _version == null) {
+  var path = `./build/output/${dir}/${normalizedName}_build.json`
+  if (!fs.existsSync(path)) {
+    throw new Error(`Unknown build: ${path}...`)
+  }
+  const build = JSON.parse(fs.readFileSync(path, 'utf8'))
+  if (build._version === undefined || build._version == null) {
     throw new Error('Unknown version...')
   }
-  if (_rawHash === undefined || _rawHash == null) {
+  if (build._raw_hash === undefined || build._raw_hash == null) {
     throw new Error('Unknown raw hash...')
   }
-  if (_semver === undefined || _semver == null) {
+  if (build._semver === undefined || build._semver == null) {
     throw new Error('Unknown semver...')
   }
 
   // current
-  var currentVersion = null
-  var currentParentCid = null
-  var currentCid = null
-  const path = `./current/${dir}/current.json`
-  if (fs.existsSync(path)) {
-    const current = fs.readFileSync(path, 'utf8')
-    if (!current) {
-      throw new Error(`Unknown current: ${path}...`)
+  var path = `./current/${dir}/current.json`
+  if (!fs.existsSync(path)) {
+    throw new Error(`Unknown current: ${path}...`)
+  }
+  const current = JSON.parse(fs.readFileSync(path, 'utf8'))
+  // Check
+  if (current._version === build._version) {
+    if (current._raw_hash !== build._raw_hash) {
+      throw new Error('Matching version but not raw hash...')
     }
-    var { _parent_cid: currentParentCid, _cid: currentCid, _version: currentVersion, _raw_hash: currentRawHash, _semver: currentSemver } = JSON.parse(current)
-    // Check
-    if (currentVersion === _version) {
-      if (_rawHash !== currentRawHash) {
-        throw new Error('Matching version but not raw hash...')
-      }
-    } else {
-      if (_semver === currentSemver && _rawHash === currentRawHash) {
-        throw new Error('Raw hash inconsistency...')
-      }
+  } else {
+    if (current._semver === build._semver && current._raw_hash === build._raw_hash) {
+      throw new Error('Raw hash inconsistency...')
     }
   }
 
@@ -133,7 +131,7 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
 
   // Load content
   var content = null
-  var contentName = `${normalizedName}-${_version}.${extension}`
+  var contentName = `${normalizedName}-${build._version}.${extension}`
   var contentPath = `./production/${dir}/${contentName}`
   if (fs.existsSync(contentPath)) {
     content = fs.readFileSync(contentPath, 'utf8')
@@ -162,7 +160,9 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   var cid = null
   var parentCid = null
   var faviconCid = null
-  var size = null
+  var contentSize = null
+  var faviconSize = null
+  var parentSize = null
   var msg = 'added'
   if (hashOnly) {
     msg = 'hashed'
@@ -184,11 +184,13 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
     }
     if (result.path === '') {
       parentCid = result.cid
+      parentSize = result.size
     } else if (result.path === contentName) {
       cid = result.cid
-      size = result.size
+      contentSize = result.size
     } else if (result.path === faviconName) {
       faviconCid = result.cid
+      faviconSize = result.size
     }
   }
   if (!parentCid) {
@@ -209,33 +211,40 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   }
 
   // Check
-  if (currentVersion === _version) {
-    if (cid.toString() !== currentCid) {
+  if (current._version === build._version) {
+    if (current._cid !== cid.toString()) {
       throw new Error('Matching version but not cid...')
     }
-    if (parentCid.toString() !== currentParentCid) {
+    if (current._parent_cid !== parentCid.toString()) {
       throw new Error('Matching version but not parent cid...')
     }
   }
 
   // Json
-  const toJson = {
-    _parent_cid: parentCid.toString(),
-    _parent_uri: `${gatewayUrl}${parentCid}`,
-    _source_path: contentName,
-    _source_uri: `${gatewayUrl}${parentCid}/${contentName}`,
-    _cid: cid.toString(),
-    _cid_uri: `${gatewayUrl}${cid}`,
-    _semver: _semver,
-    _version: _version,
-    _raw_hash: _rawHash,
-    _size: size,
+  const toJson = {}
+  if (tags) {
+    toJson._tags = tags
   }
   if (owner) {
     toJson._owner = owner
   }
-  if (tags) {
-    toJson._tags = tags
+  toJson._parent_cid = parentCid.toString()
+  toJson._parent_size = parentSize
+  toJson._parent_uri = `${gatewayUrl}${parentCid}`
+  toJson._source_path = contentName
+  toJson._source_size = contentSize
+  toJson._source_uri = `${gatewayUrl}${parentCid}/${contentName}`
+  toJson._cid = `${cid.toString()}`
+  toJson._cid_uri = `${gatewayUrl}${cid}`
+  toJson._semver = build._semver
+  toJson._version = build._version
+  toJson._raw_hash = build._raw_hash
+  if (faviconCid) {
+    toJson._favicon_path = faviconName
+    toJson._favicon_size = faviconSize
+    toJson._favicon_uri = `${gatewayUrl}${parentCid}/${faviconName}`
+    toJson._favicon_cid = `${faviconCid.toString()}`
+    toJson._favicon_cid_uri = `${gatewayUrl}${faviconCid}`
   }
   // Save current
   fs.writeFileSync(`./current/${dir}/current.json`, beautify(toJson, null, 2, 80), 'utf8')
@@ -252,15 +261,25 @@ _owner: ${toJson._owner}`
   }
   tid = `${tid}
 _parent_cid: ${toJson._parent_cid}
+_parent_size: ${toJson._parent_size}
 _parent_uri: ipfs://${toJson._parent_cid}
 _source_path: ${toJson._source_path}
+_source_size: ${toJson._source_size}
 _source_uri: ipfs://${toJson._parent_cid}/${contentName}
 _cid: ${toJson._cid}
 _cid_uri: ipfs://${toJson._cid_uri}
 _semver: ${toJson._semver}
 _version: ${toJson._version}
-_raw_hash: ${toJson.__raw_hash}
-_size: ${toJson._size}`
+_raw_hash: ${toJson.__raw_hash}`
+  if (faviconCid) {
+    tid = `${tid}
+_parent_cid: ${toJson._parent_cid}
+  _favicon_path: ${toJson._favicon_path}
+  _favicon_size: ${toJson._favicon_size}
+  _favicon_uri: ipfs://${toJson._parent_cid}/${faviconName}
+  _favicon_cid: ${toJson._favicon_cid}
+  _favicon_cid_uri: ipfs://${toJson._favicon_cid}`
+  }
 
   // Save Tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}_build.tid`, tid, 'utf8')

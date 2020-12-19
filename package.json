@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta+build-201218355",
+  "version": "0.4.0-beta+build-201219376",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
@@ -81,7 +81,7 @@
     "filenamify": "^4.2.0",
     "ipfs-provider": "^1.1.0",
     "ipld-dag-pb": "^0.20.0",
-    "uint8arrays": "^1.1.0"
+    "uint8arrays": "^2.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -97,7 +97,7 @@
     "core-js": "^3.8.1",
     "dotenv": "^8.2.0",
     "eruda": "^2.4.1",
-    "eslint": "^7.15.0",
+    "eslint": "^7.16.0",
     "eth-sig-util": "https://github.com/xmaysonnave/eth-sig-util#v3.0.1",
     "ethers": "^5.0.24",
     "gzipper": "^4.1.0",

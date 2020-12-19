@@ -6,6 +6,7 @@ const providers = require('ipfs-provider').providers
 const { httpClient, windowIpfs } = providers
 
 /*
+ * https://infura.io/docs
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 var IpfsLibrary = function (ipfsBundle) {

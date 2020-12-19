@@ -55,6 +55,7 @@ async function manageUnpin (api, key) {
 }
 
 /*
+ * https://infura.io/docs
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 

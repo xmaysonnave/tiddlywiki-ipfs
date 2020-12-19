@@ -1,12 +1,19 @@
 title: index.html/build
 tags: $:/ipfs/editions
-_parent_cid: QmVcUGBT3L3vGtvhgHTrph7BxnaeLQMMVNFMo8gHqMaWmd
-_parent_uri: ipfs://QmVcUGBT3L3vGtvhgHTrph7BxnaeLQMMVNFMo8gHqMaWmd
+_parent_cid: QmZPvye9xhXTQgmD9d5wbv6UzdPcuyL3STf9HiYEmjZVmX
+_parent_size: 999340
+_parent_uri: ipfs://QmZPvye9xhXTQgmD9d5wbv6UzdPcuyL3STf9HiYEmjZVmX
 _source_path: index.html
-_source_uri: ipfs://QmVcUGBT3L3vGtvhgHTrph7BxnaeLQMMVNFMo8gHqMaWmd/index.html
-_cid: QmVcgSoeccp2uGUWzA9BU3g3RzznsRwpP5KEhat4Jodbeu
-_cid_uri: ipfs://http://127.0.0.1:8080/ipfs/QmVcgSoeccp2uGUWzA9BU3g3RzznsRwpP5KEhat4Jodbeu
+_source_size: 994931
+_source_uri: ipfs://QmZPvye9xhXTQgmD9d5wbv6UzdPcuyL3STf9HiYEmjZVmX/index.html
+_cid: QmYWbB1CL9hWpN37GyExcjTb3DNeQeTDHzAmv69f14up2N
+_cid_uri: ipfs://http://127.0.0.1:8080/ipfs/QmYWbB1CL9hWpN37GyExcjTb3DNeQeTDHzAmv69f14up2N
 _semver: 0.4.0-beta-TW-v5.1.22+build
-_version: 0.4.0-beta-TW-v5.1.22+build-201218355
+_version: 0.4.0-beta-TW-v5.1.22+build-201219376
 _raw_hash: undefined
-_size: 993469
+_parent_cid: QmZPvye9xhXTQgmD9d5wbv6UzdPcuyL3STf9HiYEmjZVmX
+  _favicon_path: favicon.png
+  _favicon_size: 4297
+  _favicon_uri: ipfs://QmZPvye9xhXTQgmD9d5wbv6UzdPcuyL3STf9HiYEmjZVmX/favicon.png
+  _favicon_cid: QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF
+  _favicon_cid_uri: ipfs://QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF

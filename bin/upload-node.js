@@ -10,6 +10,7 @@ const IpfsHttpClient = require('ipfs-http-client')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
 const CID = require('cids')
+const { DAGNode } = require('ipld-dag-pb')
 
 async function load (url, stream) {
   if (url instanceof URL === false) {
@@ -33,6 +34,7 @@ async function load (url, stream) {
 }
 
 /*
+ * https://infura.io/docs
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
@@ -49,7 +51,7 @@ module.exports = async function main (dir, hashOnly) {
   hashOnly = hashOnly ? hashOnly === 'true' : process.env.HASH_ONLY ? process.env.HASH_ONLY === 'true' : true
   // Read sub directory current.json or node.json
   const content = fs.readdirSync(`./current/${dir}`).sort()
-  const upload = []
+  const links = []
   for (var i = 0; i < content.length; i++) {
     try {
       if (fs.statSync(`./current/${dir}/${content[i]}`).isDirectory()) {
@@ -57,18 +59,20 @@ module.exports = async function main (dir, hashOnly) {
         if (fs.existsSync(path)) {
           const current = fs.readFileSync(path)
           const jsonObject = JSON.parse(current)
-          upload.push({
-            name: content[i],
-            cid: new CID(jsonObject._parent_cid),
+          links.push({
+            Name: content[i],
+            Hash: new CID(jsonObject._parent_cid),
+            Tsize: jsonObject._parent_size,
           })
         }
         var path = `./current/${dir}/${content[i]}/node.json`
         if (fs.existsSync(path)) {
           const current = fs.readFileSync(path)
           const jsonObject = JSON.parse(current)
-          upload.push({
-            name: content[i],
-            cid: new CID(jsonObject._cid),
+          links.push({
+            Name: content[i],
+            Hash: new CID(jsonObject._cid),
+            Tsize: jsonObject._cid_size,
           })
         }
       }
@@ -80,30 +84,19 @@ module.exports = async function main (dir, hashOnly) {
   const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
   const gatewayUrl = process.env.GATEWAY ? `${process.env.GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
-  // Build Directory
-  const options = {
-    chunker: 'rabin-262144-524288-1048576',
-    cidVersion: 0,
+  // Root
+  const root = new DAGNode('\u0008\u0001', links)
+  const rootOptions = {
+    format: 'dag-pb',
     hashAlg: 'sha2-256',
     pin: false,
-    rawLeaves: false,
   }
-  if (hashOnly) {
-    options.onlyHash = true
-  }
-  var node = await api.add(
-    {
-      path: '/',
-    },
-    options
-  )
-  var cid = node.cid
-  for (var i = 0; i < upload.length; i++) {
-    cid = await api.object.patch.addLink(cid, upload[i])
-  }
+  const cid = await api.dag.put(root, rootOptions)
+  const stat = await api.object.stat(cid)
   // Json
   const toJson = {
     _cid: cid.toString(),
+    _cid_size: stat.CumulativeSize,
     _cid_uri: `${gatewayUrl}${cid}`,
   }
   // Save node
