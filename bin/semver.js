@@ -64,22 +64,23 @@ module.exports = function main (name, extension, dir, env) {
   const rawHash = keccak.digest('hex')
   console.log(`*** ${name}, hash: ${rawHash} ***`)
 
-  var _rawHash = null
   var version = null
 
   // Current
-  if (fs.existsSync(`./current/${dir}/current.json`)) {
-    const current = fs.readFileSync(`./current/${dir}/current.json`, 'utf8')
-    var { _raw_hash: _rawHash, _version: version } = JSON.parse(current)
+  var current = null
+  var path = `./current/${dir}/current.json`
+  if (fs.existsSync(path)) {
+    current = JSON.parse(fs.readFileSync(path, 'utf8'))
   }
 
   // Version
-  if (rawHash !== _rawHash) {
+  if (!current || (current && current._raw_hash !== rawHash)) {
     if (!validate(rawSemver)) {
       version = generate({ version: rawSemver, versionSeparator: '-' })
       console.log(`*** new version: ${version} ***`)
     }
   } else {
+    version = current._version
     console.log(`*** use current version: ${version} ***`)
   }
   // Check
