@@ -1,11 +1,11 @@
 {
-  "_cid": "QmUR982HbhvES15o4bpX6qZ1WkafRiQiLXM1LJupStP6zt",
-  "_cid_size": 12932099,
-  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmUR982HbhvES15o4bpX6qZ1WkafRiQiLXM1LJupStP6zt",
-  "_parent_cid": "QmTEXif6cWPkCnY2AS2jzqXyaKU9p11KdP4iqJUHr36mUT",
-  "_parent_parent": 12932174,
-  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmTEXif6cWPkCnY2AS2jzqXyaKU9p11KdP4iqJUHr36mUT",
-  "_source_path": "0.4.0-beta+build-201221372",
-  "_source_size": 12932099,
-  "_source_uri": "http://127.0.0.1:8080/ipfs/QmTEXif6cWPkCnY2AS2jzqXyaKU9p11KdP4iqJUHr36mUT/0.4.0-beta+build-201221372"
+  "_cid": "Qmf6ojBtKR3FJSyAhowjSyg8CA7jWe4TSwzxMtcAALnLvg",
+  "_cid_size": 12932033,
+  "_cid_uri": "https://dweb.link/ipfs/Qmf6ojBtKR3FJSyAhowjSyg8CA7jWe4TSwzxMtcAALnLvg",
+  "_parent_cid": "QmS1C7hEdbcU1R7s9GLdbzyjcpwDRVDvPJFpavzdBUYL8X",
+  "_parent_parent": 12932108,
+  "_parent_uri": "https://dweb.link/ipfs/QmS1C7hEdbcU1R7s9GLdbzyjcpwDRVDvPJFpavzdBUYL8X",
+  "_source_path": "0.4.0-beta+build-201221405",
+  "_source_size": 12932033,
+  "_source_uri": "https://dweb.link/ipfs/QmS1C7hEdbcU1R7s9GLdbzyjcpwDRVDvPJFpavzdBUYL8X/0.4.0-beta+build-201221405"
 }
