@@ -91,19 +91,22 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   }
 
   // current
+  var current = null
   var path = `./current/${dir}/current.json`
-  if (!fs.existsSync(path)) {
-    throw new Error(`Unknown current: ${path}...`)
-  }
-  const current = JSON.parse(fs.readFileSync(path, 'utf8'))
-  // Check
-  if (current._version === build._version) {
-    if (current._raw_hash !== build._raw_hash) {
-      throw new Error('Matching version but not raw hash...')
+  if (fs.existsSync(path)) {
+    current = JSON.parse(fs.readFileSync(path, 'utf8'))
+    if (!current) {
+      throw new Error(`Unknown current: ${path}...`)
     }
-  } else {
-    if (current._semver === build._semver && current._raw_hash === build._raw_hash) {
-      throw new Error('Raw hash inconsistency...')
+    // Check
+    if (current._version === build._version) {
+      if (current._raw_hash !== build._raw_hash) {
+        throw new Error('Matching version but not raw hash...')
+      }
+    } else {
+      if (current._semver === build._semver && current._raw_hash === build._raw_hash) {
+        throw new Error('Raw hash inconsistency...')
+      }
     }
   }
 
@@ -211,7 +214,7 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   }
 
   // Check
-  if (current._version === build._version) {
+  if (current && current._version === build._version) {
     if (current._cid !== cid.toString()) {
       throw new Error('Matching version but not cid...')
     }
@@ -221,64 +224,79 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   }
 
   // Json
-  const toJson = {}
+  const node = {}
   if (tags) {
-    toJson._tags = tags
+    node._tags = tags
   }
   if (owner) {
-    toJson._owner = owner
+    node._owner = owner
   }
-  toJson._parent_cid = parentCid.toString()
-  toJson._parent_size = parentSize
-  toJson._parent_uri = `${gatewayUrl}${parentCid}`
-  toJson._source_path = contentName
-  toJson._source_size = contentSize
-  toJson._source_uri = `${gatewayUrl}${parentCid}/${contentName}`
-  toJson._cid = `${cid.toString()}`
-  toJson._cid_uri = `${gatewayUrl}${cid}`
-  toJson._semver = build._semver
-  toJson._version = build._version
-  toJson._raw_hash = build._raw_hash
+  node._parent_cid = `${parentCid}`
+  node._parent_size = parentSize
+  node._parent_uri = `${gatewayUrl}${parentCid}`
+  node._source_path = contentName
+  node._source_size = contentSize
+  node._source_uri = `${gatewayUrl}${parentCid}/${contentName}`
+  node._cid = `${cid.toString()}`
+  node._cid_uri = `${gatewayUrl}${cid}`
+  node._semver = build._semver
+  node._version = build._version
+  node._raw_hash = build._raw_hash
   if (faviconCid) {
-    toJson._favicon_path = faviconName
-    toJson._favicon_size = faviconSize
-    toJson._favicon_uri = `${gatewayUrl}${parentCid}/${faviconName}`
-    toJson._favicon_cid = `${faviconCid.toString()}`
-    toJson._favicon_cid_uri = `${gatewayUrl}${faviconCid}`
+    node._favicon_path = faviconName
+    node._favicon_size = faviconSize
+    node._favicon_uri = `${gatewayUrl}${parentCid}/${faviconName}`
+    node._favicon_cid = `${faviconCid.toString()}`
+    node._favicon_cid_uri = `${gatewayUrl}${faviconCid}`
   }
   // Save current
-  fs.writeFileSync(`./current/${dir}/current.json`, beautify(toJson, null, 2, 80), 'utf8')
+  fs.writeFileSync(`./current/${dir}/current.json`, beautify(node, null, 2, 80), 'utf8')
+  // Build version
+  if (name === '$:/plugins/ipfs.js') {
+    fs.writeFileSync(
+      './current/build.json',
+      beautify(
+        {
+          _version: build._version,
+        },
+        null,
+        2,
+        80
+      ),
+      'utf8'
+    )
+  }
 
   // Tiddler
   var tid = `title: ${name}/build`
   if (tags) {
     tid = `${tid}
-tags: ${toJson._tags}`
+tags: ${node._tags}`
   }
   if (owner) {
     tid = `${tid}
-_owner: ${toJson._owner}`
+_owner: ${node._owner}`
   }
   tid = `${tid}
-_parent_cid: ${toJson._parent_cid}
-_parent_size: ${toJson._parent_size}
-_parent_uri: ipfs://${toJson._parent_cid}
-_source_path: ${toJson._source_path}
-_source_size: ${toJson._source_size}
-_source_uri: ipfs://${toJson._parent_cid}/${contentName}
-_cid: ${toJson._cid}
-_cid_uri: ipfs://${toJson._cid_uri}
-_semver: ${toJson._semver}
-_version: ${toJson._version}
-_raw_hash: ${toJson.__raw_hash}`
+_parent_cid: ${node._parent_cid}
+_parent_size: ${node._parent_size}
+_parent_uri: ipfs://${node._parent_cid}
+_source_path: ${node._source_path}
+_source_size: ${node._source_size}
+_source_uri: ipfs://${node._parent_cid}/${contentName}
+_cid: ${node._cid}
+_cid_uri: ipfs://${node._cid_uri}
+_semver: ${node._semver}
+_version: ${node._version}
+_raw_hash: ${node.__raw_hash}`
   if (faviconCid) {
     tid = `${tid}
-_parent_cid: ${toJson._parent_cid}
-  _favicon_path: ${toJson._favicon_path}
-  _favicon_size: ${toJson._favicon_size}
-  _favicon_uri: ipfs://${toJson._parent_cid}/${faviconName}
-  _favicon_cid: ${toJson._favicon_cid}
-  _favicon_cid_uri: ipfs://${toJson._favicon_cid}`
+_parent_cid: ${node._parent_cid}
+  _favicon_path: ${node._favicon_path}
+  _favicon_size: ${node._favicon_size}
+  _favicon_uri: ipfs://${node._parent_cid}/${faviconName}
+  _favicon_cid: ${node._favicon_cid}
+  _favicon_cid_uri: ipfs://${node._favicon_cid}`
   }
 
   // Save Tiddler
@@ -286,19 +304,17 @@ _parent_cid: ${toJson._parent_cid}
 
   // Load
   if (!hashOnly) {
-    await load(`${gatewayUrl}${toJson._cid}`)
-    console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
+    await load(node._parent_uri)
+    console.log(`*** Fetched ${node._parent_uri} ***`)
+    await load(node._source_uri)
+    console.log(`*** Fetched ${node._source_uri} ***`)
+    await load(node._cid_uri)
+    console.log(`*** Fetched ${node._cid_uri} ***`)
     if (faviconCid) {
-      await load(`${gatewayUrl}${faviconCid}`)
-      console.log(`*** Fetched ${gatewayUrl}${faviconCid} ***`)
-    }
-    await load(`${gatewayUrl}${toJson._parent_cid}`)
-    console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid} ***`)
-    await load(`${gatewayUrl}${toJson._parent_cid}/${toJson._source_path}`)
-    console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid}/${toJson._source_path} ***`)
-    if (faviconCid) {
-      await load(`${gatewayUrl}${toJson._parent_cid}/${faviconName}`)
-      console.log(`*** Fetched ${gatewayUrl}${toJson._parent_cid}/${faviconName} ***`)
+      await load(node._favicon_uri)
+      console.log(`*** Fetched ${node._favicon_uri} ***`)
+      await load(node._favicon_cid_uri)
+      console.log(`*** Fetched ${node._favicon_cid_uri} ***`)
     }
   }
 }

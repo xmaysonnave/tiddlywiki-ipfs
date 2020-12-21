@@ -6,97 +6,83 @@ const replace = require('replace')
 
 function main () {
   try {
+    var build = null
+
     // boot
-    var boot = null
     var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js_build.json'
     if (fs.existsSync(path)) {
-      boot = fs.readFileSync(path, 'utf8')
+      build = fs.readFileSync(path, 'utf8')
     }
-    if (!boot) {
+    if (!build) {
       throw new Error('Unknown boot build...')
     }
-
-    // library
-    var library = null
-    path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.json'
-    if (fs.existsSync(path)) {
-      library = fs.readFileSync(path, 'utf8')
-    }
-    if (!library) {
-      throw new Error('Unknown library build...')
-    }
-
-    // plugin
-    var plugin = null
-    path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.json'
-    if (fs.existsSync(path)) {
-      plugin = fs.readFileSync(path, 'utf8')
-    }
-    if (!plugin) {
-      throw new Error('Unknown plugin build...')
-    }
-
-    // documentation
-    var documentation = null
-    path = './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.json'
-    if (fs.existsSync(path)) {
-      documentation = fs.readFileSync(path, 'utf8')
-    }
-    if (!documentation) {
-      throw new Error('Unknown documentation build...')
-    }
-
-    // boot
-    var { _version } = JSON.parse(boot)
-    if (_version === undefined || _version == null) {
+    const boot = JSON.parse(build)
+    if (!boot._version) {
       throw new Error('Unknown boot version...')
     }
-
     replace({
       regex: '%BUILD_BOOT_VERSION%',
-      replacement: _version,
+      replacement: boot._version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
       silent: true,
     })
 
     // library
-    var { _version } = JSON.parse(library)
-    if (_version === undefined || _version == null) {
+    path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (!build) {
+      throw new Error('Unknown library build...')
+    }
+    const library = JSON.parse(build)
+    if (!library._version) {
       throw new Error('Unknown library version...')
     }
-
     replace({
       regex: '%BUILD_LIBRARY_VERSION%',
-      replacement: _version,
+      replacement: library._version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
       silent: true,
     })
 
     // plugin
-    var { _version } = JSON.parse(plugin)
-    if (_version === undefined || _version == null) {
+    path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (!build) {
+      throw new Error('Unknown plugin build...')
+    }
+    const plugin = JSON.parse(build)
+    if (!plugin._version) {
       throw new Error('Unknown plugin version...')
     }
-
     replace({
       regex: '%BUILD_PLUGIN_VERSION%',
-      replacement: _version,
+      replacement: plugin._version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
       silent: true,
     })
 
     // documentation
-    var { _version } = JSON.parse(documentation)
-    if (_version === undefined || _version == null) {
+    path = './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (!build) {
+      throw new Error('Unknown documentation build...')
+    }
+    const doc = JSON.parse(build)
+    if (!doc._version) {
       throw new Error('Unknown documentation version...')
     }
-
     replace({
       regex: '%BUILD_DOCUMENTATION_VERSION%',
-      replacement: _version,
+      replacement: doc._version,
       paths: ['./build/tiddlywiki.info'],
       recursive: false,
       silent: true,

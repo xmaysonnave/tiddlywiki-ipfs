@@ -46,89 +46,83 @@ module.exports = function main (branch) {
   })
 
   // root node
-  /*eslint camelcase:"off"*/
-  var { _cid_uri } = JSON.parse(node)
-  if (_cid_uri === undefined || _cid_uri == null) {
+  const root = JSON.parse(node)
+  if (!root._cid_uri) {
     throw new Error('Unknown root node uri...')
   }
-
   replace({
     regex: '%BUILD_ROOT_NODE%',
-    replacement: _cid_uri,
+    replacement: root._parent_uri ? root._parent_uri : root._cid_uri,
     paths: [readmePath],
     recursive: false,
     silent: true,
   })
 
-  var version = null
+  var current = null
 
   // boot
-  var boot = null
   var path = './current/tiddlywiki-ipfs/boot/current.json'
   if (fs.existsSync(path)) {
-    boot = fs.readFileSync(path, 'utf8')
+    current = fs.readFileSync(path, 'utf8')
   }
-  if (!boot) {
+  if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  var { _version: version } = JSON.parse(boot)
+  const boot = JSON.parse(current)
   replace({
     regex: '%BUILD_BOOT_VERSION%',
-    replacement: version,
+    replacement: boot._version,
     paths: [readmePath],
     recursive: false,
     silent: true,
   })
 
   // library
-  var library = null
   var path = './current/tiddlywiki-ipfs/library/current.json'
   if (fs.existsSync(path)) {
-    library = fs.readFileSync(path, 'utf8')
+    current = fs.readFileSync(path, 'utf8')
   }
-  if (!library) {
+  if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  var { _version: version } = JSON.parse(library)
+  const library = JSON.parse(current)
   replace({
     regex: '%BUILD_LIBRARY_VERSION%',
-    replacement: version,
+    replacement: library._version,
     paths: [readmePath],
     recursive: false,
     silent: true,
   })
 
   // plugin
-  var plugin = null
   var path = './current/tiddlywiki-ipfs/plugin/current.json'
   if (fs.existsSync(path)) {
-    plugin = fs.readFileSync(path, 'utf8')
+    current = fs.readFileSync(path, 'utf8')
   }
-  if (!plugin) {
+  if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  var { _version: version } = JSON.parse(plugin)
+  const plugin = JSON.parse(current)
   replace({
     regex: '%BUILD_PLUGIN_VERSION%',
-    replacement: version,
+    replacement: plugin._version,
     paths: [readmePath],
     recursive: false,
     silent: true,
   })
 
   // documentation
-  var doc = null
   var path = './current/tiddlywiki-ipfs/documentation/current.json'
   if (fs.existsSync(path)) {
-    doc = fs.readFileSync(path, 'utf8')
+    current = fs.readFileSync(path, 'utf8')
   }
-  if (!doc) {
+  if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  var { _version: version } = JSON.parse(doc)
+  const doc = JSON.parse(current)
   replace({
     regex: '%BUILD_DOCUMENTATION_VERSION%',
-    replacement: version,
+    replacement: doc._version,
     paths: [readmePath],
     recursive: false,
     silent: true,

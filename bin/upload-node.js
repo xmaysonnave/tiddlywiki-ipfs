@@ -10,7 +10,7 @@ const IpfsHttpClient = require('ipfs-http-client')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
 const CID = require('cids')
-const { DAGNode } = require('ipld-dag-pb')
+const uint8ArrayFromString = require('uint8arrays/from-string')
 
 async function load (url, stream) {
   if (url instanceof URL === false) {
@@ -33,6 +33,27 @@ async function load (url, stream) {
   return await fileType.fromBuffer(buffer)
 }
 
+// TODO: HashOnly
+async function dagPut (api, gatewayUrl, links) {
+  const cid = await api.dag.put(
+    {
+      Data: uint8ArrayFromString('\u0008\u0001'),
+      Links: links,
+    },
+    {
+      format: 'dag-pb',
+      hashAlg: 'sha2-256',
+      pin: false,
+    }
+  )
+  const stat = await api.object.stat(cid)
+  return {
+    _cid: `${cid}`,
+    _cid_size: stat.CumulativeSize,
+    _cid_uri: `${gatewayUrl}${cid}`,
+  }
+}
+
 /*
  * https://infura.io/docs
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
@@ -50,29 +71,27 @@ module.exports = async function main (dir, hashOnly) {
   hashOnly = hashOnly == null || hashOnly === undefined || hashOnly.trim() === '' ? null : hashOnly.trim()
   hashOnly = hashOnly ? hashOnly === 'true' : process.env.HASH_ONLY ? process.env.HASH_ONLY === 'true' : true
   // Read sub directory current.json or node.json
-  const content = fs.readdirSync(`./current/${dir}`).sort()
   const links = []
+  const content = fs.readdirSync(`./current/${dir}`).sort()
   for (var i = 0; i < content.length; i++) {
     try {
       if (fs.statSync(`./current/${dir}/${content[i]}`).isDirectory()) {
         var path = `./current/${dir}/${content[i]}/current.json`
         if (fs.existsSync(path)) {
-          const current = fs.readFileSync(path)
-          const jsonObject = JSON.parse(current)
+          const current = JSON.parse(fs.readFileSync(path, 'utf8'))
           links.push({
             Name: content[i],
-            Hash: new CID(jsonObject._parent_cid),
-            Tsize: jsonObject._parent_size,
+            Tsize: current._parent_size,
+            Hash: new CID(current._parent_cid),
           })
         }
         var path = `./current/${dir}/${content[i]}/node.json`
         if (fs.existsSync(path)) {
-          const current = fs.readFileSync(path)
-          const jsonObject = JSON.parse(current)
+          const node = JSON.parse(fs.readFileSync(path, 'utf8'))
           links.push({
             Name: content[i],
-            Hash: new CID(jsonObject._cid),
-            Tsize: jsonObject._cid_size,
+            Tsize: node._cid_size,
+            Hash: new CID(node._cid),
           })
         }
       }
@@ -84,26 +103,41 @@ module.exports = async function main (dir, hashOnly) {
   const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
   const gatewayUrl = process.env.GATEWAY ? `${process.env.GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
-  // Root
-  const root = new DAGNode('\u0008\u0001', links)
-  const rootOptions = {
-    format: 'dag-pb',
-    hashAlg: 'sha2-256',
-    pin: false,
-  }
-  const cid = await api.dag.put(root, rootOptions)
-  const stat = await api.object.stat(cid)
-  // Json
-  const toJson = {
-    _cid: cid.toString(),
-    _cid_size: stat.CumulativeSize,
-    _cid_uri: `${gatewayUrl}${cid}`,
+  // Node
+  const node = await dagPut(api, gatewayUrl, links)
+  // Root Node
+  if (dir === '.') {
+    const path = './current/build.json'
+    if (fs.existsSync(path)) {
+      const build = JSON.parse(fs.readFileSync(path, 'utf8'))
+      const buildNode = await dagPut(api, gatewayUrl, [
+        {
+          Name: build._version,
+          Tsize: node._cid_size,
+          Hash: new CID(node._cid),
+        },
+      ])
+      node._parent_cid = buildNode._cid
+      node._parent_parent = buildNode._cid_size
+      node._parent_uri = buildNode._cid_uri
+      node._source_path = build._version
+      node._source_size = node._cid_size
+      node._source_uri = `${gatewayUrl}${buildNode._cid}/${build._version}`
+    }
   }
   // Save node
-  fs.writeFileSync(`./current/${dir}/node.json`, beautify(toJson, null, 2, 80), 'utf8')
+  fs.writeFileSync(`./current/${dir}/node.json`, beautify(node, null, 2, 80), 'utf8')
   // Fetch
   if (!hashOnly) {
-    await load(`${gatewayUrl}${toJson._cid}`)
-    console.log(`*** Fetched ${gatewayUrl}${toJson._cid} ***`)
+    if (node._parent_uri) {
+      await load(node._parent_uri)
+      console.log(`*** Fetched ${node._parent_uri} ***`)
+    }
+    if (node._source_uri) {
+      await load(node._source_uri)
+      console.log(`*** Fetched ${node._source_uri} ***`)
+    }
+    await load(node._cid_uri)
+    console.log(`*** Fetched ${node._cid_uri} ***`)
   }
 }

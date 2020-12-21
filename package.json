@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta+build-201219376",
+  "version": "0.4.0-beta+build-201221372",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
@@ -80,7 +80,6 @@
     "cids": "1.1.4",
     "filenamify": "^4.2.0",
     "ipfs-provider": "^1.1.0",
-    "ipld-dag-pb": "^0.20.0",
     "uint8arrays": "^2.0.5"
   },
   "devDependencies": {

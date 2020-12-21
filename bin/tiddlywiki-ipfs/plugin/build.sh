@@ -66,7 +66,7 @@ yarn ipfs-tiddlywiki build \
   --owner=$:/plugins/ipfs \
   --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
-  --tags=$:/ipfs/documentation"$@" || exit 1
+  --tags=$:/ipfs/documentation "$@" || exit 1
 
 # done
 exit 0
