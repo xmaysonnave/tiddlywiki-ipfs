@@ -5,7 +5,7 @@ dist: focal
 arch: amd64
 
 node_js:
-  - '14'
+  - '15'
 
 python:
   - '3.8'
