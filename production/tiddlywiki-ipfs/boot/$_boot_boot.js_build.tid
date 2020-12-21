@@ -8,7 +8,7 @@ _source_path: $_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201221372.json
 _source_size: 119172
 _source_uri: ipfs://QmXECtcgn5jsHNf6Er72sd3mrg6MqEtwSut8NmPcE84qU6/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201221372.json
 _cid: Qmc59XqAQDNv71dGBbYGthLuwa4c5JzCZVc7D3r5aMqoa4
-_cid_uri: ipfs://http://127.0.0.1:8080/ipfs/Qmc59XqAQDNv71dGBbYGthLuwa4c5JzCZVc7D3r5aMqoa4
+_cid_uri: ipfs://https://dweb.link/ipfs/Qmc59XqAQDNv71dGBbYGthLuwa4c5JzCZVc7D3r5aMqoa4
 _semver: 0.4.0-beta-TW-v5.1.23-pre+build
 _version: 0.4.0-beta-TW-v5.1.23-pre+build-201221372
 _raw_hash: undefined

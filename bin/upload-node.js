@@ -33,12 +33,11 @@ async function load (url, stream) {
   return await fileType.fromBuffer(buffer)
 }
 
-// TODO: HashOnly
+// https://discuss.ipfs.io/t/what-is-the-data-in-object/5221
+// https://github.com/ipfs/go-unixfs/blob/master/pb/unixfs.pb.go
 async function dagPut (api, gatewayUrl, links) {
   const cid = await api.dag.put(
     {
-      // https://discuss.ipfs.io/t/what-is-the-data-in-object/5221
-      // https://github.com/ipfs/go-unixfs/blob/master/pb/unixfs.pb.go
       Data: uint8ArrayFromString('\u0008\u0001'),
       Links: links,
     },

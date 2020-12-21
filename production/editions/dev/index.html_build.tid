@@ -1,19 +1,19 @@
 title: index.html/build
 tags: $:/ipfs/editions
-_parent_cid: QmVmSXPzxfcgNr9smve8cinFbmXXHbkxed5pWP8NnyrHKC
-_parent_size: 3457915
-_parent_uri: ipfs://QmVmSXPzxfcgNr9smve8cinFbmXXHbkxed5pWP8NnyrHKC
+_parent_cid: QmRjR6LEFqVxfUeQKUyDENahW79hGFRRDBXgPpiQtdzrUN
+_parent_size: 3457945
+_parent_uri: ipfs://QmRjR6LEFqVxfUeQKUyDENahW79hGFRRDBXgPpiQtdzrUN
 _source_path: index.html
-_source_size: 3453505
-_source_uri: ipfs://QmVmSXPzxfcgNr9smve8cinFbmXXHbkxed5pWP8NnyrHKC/index.html
-_cid: QmSKeRHmxvLqYhtTLesTz3Xegqv36Kx7BwAz44EwEo7Ppd
-_cid_uri: ipfs://http://127.0.0.1:8080/ipfs/QmSKeRHmxvLqYhtTLesTz3Xegqv36Kx7BwAz44EwEo7Ppd
+_source_size: 3453535
+_source_uri: ipfs://QmRjR6LEFqVxfUeQKUyDENahW79hGFRRDBXgPpiQtdzrUN/index.html
+_cid: QmW7MTjfp4B7Ttun9rDNLeAyou3RJifHjnNz2ZjPUvzkLh
+_cid_uri: ipfs://https://dweb.link/ipfs/QmW7MTjfp4B7Ttun9rDNLeAyou3RJifHjnNz2ZjPUvzkLh
 _semver: 0.4.0-beta-TW-v5.1.22+build
-_version: 0.4.0-beta-TW-v5.1.22+build-201221432
+_version: 0.4.0-beta-TW-v5.1.22+build-201221437
 _raw_hash: undefined
-_parent_cid: QmVmSXPzxfcgNr9smve8cinFbmXXHbkxed5pWP8NnyrHKC
+_parent_cid: QmRjR6LEFqVxfUeQKUyDENahW79hGFRRDBXgPpiQtdzrUN
   _favicon_path: favicon.png
   _favicon_size: 4297
-  _favicon_uri: ipfs://QmVmSXPzxfcgNr9smve8cinFbmXXHbkxed5pWP8NnyrHKC/favicon.png
+  _favicon_uri: ipfs://QmRjR6LEFqVxfUeQKUyDENahW79hGFRRDBXgPpiQtdzrUN/favicon.png
   _favicon_cid: QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF
   _favicon_cid_uri: ipfs://QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF
