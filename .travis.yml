@@ -7,12 +7,6 @@ arch: amd64
 node_js:
   - '15'
 
-python:
-  - '3.8'
-
-install:
-  - pip install deepcode
-
 after_success:
   - snyk monitor
 
