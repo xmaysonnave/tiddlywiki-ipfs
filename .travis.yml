@@ -7,6 +7,9 @@ arch: amd64
 node_js:
   - '15'
 
+install:
+  - sudo apt get zsh
+
 after_success:
   - snyk monitor
 
