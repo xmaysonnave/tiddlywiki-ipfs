@@ -20,7 +20,7 @@ const { expect } = chai
 
 async function start () {
   fs.rmSync('.ipfs', { recursive: true, force: true })
-  fse.copySync('tests/.ipfs', '.ipfs')
+  fse.copySync('tests/repo', '.ipfs')
   api = await IPFS.create({
     repo: new Repo('.ipfs'),
   })
