@@ -196,7 +196,7 @@ IpfsLibrary.prototype.pinRm = async function (client, cid, recursive) {
   }
 }
 
-IpfsLibrary.prototype.add = async function (client, content, hashOnly) {
+IpfsLibrary.prototype.add = async function (client, content) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }
@@ -215,9 +215,6 @@ IpfsLibrary.prototype.add = async function (client, content, hashOnly) {
       hashAlg: 'sha2-256',
       pin: true,
       rawLeaves: false,
-    }
-    if (hashOnly) {
-      options.onlyHash = true
     }
     // Process
     this.getLogger().info('Processing IPFS add...')

@@ -239,9 +239,9 @@ ${url}`)
   throw new Error('Failed to fetch from IPFS...')
 }
 
-IpfsWrapper.prototype.addToIpfs = async function (ipfs, content, hashOnly) {
+IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
   try {
-    const { hash, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content), hashOnly)
+    const { hash, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content))
     const pathname = '/' + ipfsKeyword + '/' + hash
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(`Successfully added: ${size} bytes,

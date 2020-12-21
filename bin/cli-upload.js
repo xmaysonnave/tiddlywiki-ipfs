@@ -22,8 +22,7 @@ async function main () {
       throw new Error('Unknown output dir...')
     }
     const tags = argv.tags ? argv.tags.trim() : null
-    const hashOnly = argv.hashOnly ? argv.hashOnly.trim() : null
-    await upload(name, owner, extension, dir, tags, hashOnly)
+    await upload(name, owner, extension, dir, tags)
   } catch (error) {
     console.error(error)
     process.exit(1)

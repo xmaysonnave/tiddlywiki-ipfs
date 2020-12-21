@@ -50,7 +50,7 @@ function StringToUint8Array (string) {
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (name, owner, extension, dir, tags, hashOnly) {
+module.exports = async function main (name, owner, extension, dir, tags) {
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
@@ -69,8 +69,6 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
     throw new Error('Unknown directory...')
   }
   tags = tags == null || tags === undefined || tags.trim() === '' ? null : tags.trim()
-  hashOnly = hashOnly == null || hashOnly === undefined || hashOnly.trim() === '' ? null : hashOnly.trim()
-  hashOnly = hashOnly ? hashOnly === 'true' : process.env.HASH_ONLY ? process.env.HASH_ONLY === 'true' : true
 
   const normalizedName = filenamify(name, { replacement: '_' })
 
@@ -166,10 +164,6 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
   var contentSize = null
   var faviconSize = null
   var parentSize = null
-  var msg = 'added'
-  if (hashOnly) {
-    msg = 'hashed'
-  }
   const options = {
     chunker: 'rabin-262144-524288-1048576',
     cidVersion: 0,
@@ -177,9 +171,6 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
     pin: false,
     rawLeaves: false,
     wrapWithDirectory: true,
-  }
-  if (hashOnly) {
-    options.onlyHash = true
   }
   for await (const result of api.addAll(upload, options)) {
     if (!result) {
@@ -203,14 +194,14 @@ module.exports = async function main (name, owner, extension, dir, tags, hashOnl
     throw new Error('Unknown cid...')
   }
 
-  console.log(`*** ${msg} ${cid} ***`)
+  console.log(`*** added ${cid} ***`)
   if (faviconCid) {
-    console.log(`*** ${msg} ${faviconCid} ***`)
+    console.log(`*** added ${faviconCid} ***`)
   }
-  console.log(`*** ${msg} ${parentCid} ***`)
-  console.log(`*** ${msg} ${parentCid}/${contentName} ***`)
+  console.log(`*** added ${parentCid} ***`)
+  console.log(`*** added ${parentCid}/${contentName} ***`)
   if (faviconCid) {
-    console.log(`*** ${msg} ${parentCid}/${faviconName} ***`)
+    console.log(`*** added ${parentCid}/${faviconName} ***`)
   }
 
   // Check
@@ -303,18 +294,16 @@ _parent_cid: ${node._parent_cid}
   fs.writeFileSync(`./production/${dir}/${normalizedName}_build.tid`, tid, 'utf8')
 
   // Load
-  if (!hashOnly) {
-    await load(node._parent_uri)
-    console.log(`*** Fetched ${node._parent_uri} ***`)
-    await load(node._source_uri)
-    console.log(`*** Fetched ${node._source_uri} ***`)
-    await load(node._cid_uri)
-    console.log(`*** Fetched ${node._cid_uri} ***`)
-    if (faviconCid) {
-      await load(node._favicon_uri)
-      console.log(`*** Fetched ${node._favicon_uri} ***`)
-      await load(node._favicon_cid_uri)
-      console.log(`*** Fetched ${node._favicon_cid_uri} ***`)
-    }
+  await load(node._parent_uri)
+  console.log(`*** Fetched ${node._parent_uri} ***`)
+  await load(node._source_uri)
+  console.log(`*** Fetched ${node._source_uri} ***`)
+  await load(node._cid_uri)
+  console.log(`*** Fetched ${node._cid_uri} ***`)
+  if (faviconCid) {
+    await load(node._favicon_uri)
+    console.log(`*** Fetched ${node._favicon_uri} ***`)
+    await load(node._favicon_cid_uri)
+    console.log(`*** Fetched ${node._favicon_cid_uri} ***`)
   }
 }

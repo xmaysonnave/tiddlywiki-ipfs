@@ -60,7 +60,7 @@ async function dagPut (api, gatewayUrl, links) {
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (dir, hashOnly) {
+module.exports = async function main (dir) {
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
@@ -69,8 +69,6 @@ module.exports = async function main (dir, hashOnly) {
   if (dir == null) {
     throw new Error('Unknown directory...')
   }
-  hashOnly = hashOnly == null || hashOnly === undefined || hashOnly.trim() === '' ? null : hashOnly.trim()
-  hashOnly = hashOnly ? hashOnly === 'true' : process.env.HASH_ONLY ? process.env.HASH_ONLY === 'true' : true
   // Read sub directory current.json or node.json
   const links = []
   const content = fs.readdirSync(`./current/${dir}`).sort()
@@ -129,16 +127,14 @@ module.exports = async function main (dir, hashOnly) {
   // Save node
   fs.writeFileSync(`./current/${dir}/node.json`, beautify(node, null, 2, 80), 'utf8')
   // Fetch
-  if (!hashOnly) {
-    if (node._parent_uri) {
-      await load(node._parent_uri)
-      console.log(`*** Fetched ${node._parent_uri} ***`)
-    }
-    if (node._source_uri) {
-      await load(node._source_uri)
-      console.log(`*** Fetched ${node._source_uri} ***`)
-    }
-    await load(node._cid_uri)
-    console.log(`*** Fetched ${node._cid_uri} ***`)
+  if (node._parent_uri) {
+    await load(node._parent_uri)
+    console.log(`*** Fetched ${node._parent_uri} ***`)
   }
+  if (node._source_uri) {
+    await load(node._source_uri)
+    console.log(`*** Fetched ${node._source_uri} ***`)
+  }
+  await load(node._cid_uri)
+  console.log(`*** Fetched ${node._cid_uri} ***`)
 }
