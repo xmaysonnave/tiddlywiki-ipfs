@@ -8,9 +8,9 @@ const chai = require('chai')
 
 const { expect } = chai
 
-const publicKey = '0x526883Cff4F761343181999f47b76B9271Aa73Dc'
-const derivedPublicKey = '6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI='
-const privateKeyHex = '63c350a479ced6783e76c68668d7b639f8dd38bdf3d83f68d1a77a41feab26e7'
+const publicKey = process.env.DEV_PUBLIC_KEY
+const derivedPublicKey = process.env.DEV_DERIVED_PUBLIC_KEY
+const privateKeyHex = process.env.DEV_PRIVATE_KEY
 const message = 'Hello, world!'
 
 describe('Encrypt', () => {

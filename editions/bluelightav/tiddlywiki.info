@@ -89,7 +89,7 @@
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
       "--encryptionpublickey",
-        "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
+        "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
         "../sample/index-plain-and-ethereum.html",

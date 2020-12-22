@@ -30,7 +30,7 @@
 			"--compress",
         "yes",
       "--encryptionpublickey",
-        "6yzMxyMBxlKRxZSGaLuN3GEZkOaFjuejFGhYfKIRXWI=",
+        "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
         "./editions/dev/index.html",

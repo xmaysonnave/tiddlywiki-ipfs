@@ -8,6 +8,15 @@ function main () {
   try {
     var build = null
 
+    // Derived Public Key
+    replace({
+      regex: '%DEV_DERIVED_PUBLIC_KEY%',
+      replacement: process.env.DEV_DERIVED_PUBLIC_KEY,
+      paths: ['./build/tiddlywiki.info'],
+      recursive: false,
+      silent: true,
+    })
+
     // boot
     var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js_build.json'
     if (fs.existsSync(path)) {

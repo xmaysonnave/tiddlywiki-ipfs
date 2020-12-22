@@ -126,7 +126,7 @@ module.exports = async function main (dir) {
   }
   // Save node
   fs.writeFileSync(`./current/${dir}/node.json`, beautify(node, null, 2, 80), 'utf8')
-  // Fetch
+  // Load
   if (node._parent_uri) {
     await load(node._parent_uri)
     console.log(`*** Fetched ${node._parent_uri} ***`)
@@ -137,4 +137,14 @@ module.exports = async function main (dir) {
   }
   await load(node._cid_uri)
   console.log(`*** Fetched ${node._cid_uri} ***`)
+  // Load links
+  for (var i = 0; i < links.length; i++) {
+    const link = links[i]
+    var uri = `${gatewayUrl}${node._cid}/${link.Name}`
+    await load(uri)
+    console.log(`*** Fetched ${uri} ***`)
+    var uri = `${gatewayUrl}${link.Hash}`
+    await load(uri)
+    console.log(`*** Fetched ${uri} ***`)
+  }
 }

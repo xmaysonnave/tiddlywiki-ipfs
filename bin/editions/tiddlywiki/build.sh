@@ -23,8 +23,8 @@ mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 # assets
 cp -R ./editions/tiddlywiki/* ./build || exit 1
 
-# set dependency
-node ./bin/dependency.js "$@" || exit 1
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 # build raw
 echo '***'
@@ -34,8 +34,8 @@ yarn ipfs-tiddlywiki build \
   --build \
   --verbose "$@" || exit 1
 
-# set dependency
-node ./bin/dependency.js "$@" || exit 1
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \

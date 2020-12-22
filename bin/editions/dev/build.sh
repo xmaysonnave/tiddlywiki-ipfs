@@ -34,8 +34,8 @@ rm -f -R ./build/plugins/relink > /dev/null 2>&1
 mkdir -p ./build/plugins/relink > /dev/null 2>&1
 cp -R ./download/tw5-relink/plugins/relink ./build/plugins || exit 1
 
-# set dependency
-node ./bin/dependency.js "$@" || exit 1
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 # build raw
 echo '***'
@@ -52,8 +52,8 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 # assets
 cp ./editions/dev/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
-# set dependency
-node ./bin/dependency.js "$@" || exit 1
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
