@@ -78,18 +78,19 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 <a name="using-ipfs-with-tiddlywiki"/>
 
-Current `IPFS` build:
+Latest build:
 
 - [IPFS](%BUILD_ROOT_NODE%)
 
-Current `IPFS` <b>bluelightav.eth</b> and <b>empty</b> `TiddlyWikis` editions:
+Latest <b>bluelightav.eth</b> and <b>empty</b> `TiddlyWikis` editions:
 
 - [bluelightav.eth](%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
 - [empty](%BUILD_ROOT_NODE%/editions/empty/index.html)
 
-Current `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
+Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
-- [Boot](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)
+- [![Boot](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)[![Boot](/images/github.png)](<[%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)>)
+  - Enhanced boot with compression and Ethereum encryption support
 - [Documentation](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)
 - [Library](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
 - [Plugin](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
