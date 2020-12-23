@@ -74,9 +74,7 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 ## Using `IPFS with TiddlyWiki`
 
-Latest:
-
-- [IPFS](%BUILD_ROOT_NODE%)
+- **Latest** [![Latest](/images/ipfs.png)](%BUILD_ROOT_NODE%) [![Latest](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production)
 
 Latest **bluelightav.eth** and **empty** `TiddlyWikis` editions:
 
@@ -92,9 +90,9 @@ Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
 Release:
 
-- **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ens.png)](https://bluelightav.eth/#IPFS%20Documentation) [![$:/ipfs/documentation](/images/dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation))
-- **\$:/plugins/ipfs** [![$:/plugins/ipfs](/images/ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs) [![$:/ipfs/documentation](/images/dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs))
-- **bluelightav.eth** [![bluelightav.eth](/images/ens.png)](https://bluelightav.eth) [![bluelightav.eth](/images/dns.png)](https://bluelightav.eth.link))
+- **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ens.png)](https://bluelightav.eth/#IPFS%20Documentation) [![$:/ipfs/documentation](/images/dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation)
+- **\$:/plugins/ipfs** [![$:/plugins/ipfs](/images/ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs) [![$:/ipfs/documentation](/images/dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
+- **bluelightav.eth** [![bluelightav.eth](/images/ens.png)](https://bluelightav.eth) [![bluelightav.eth](/images/dns.png)](https://bluelightav.eth.link)
 
 Recommended TiddlyWiki Plugins:
 
@@ -125,7 +123,6 @@ To resolve **.eth** domains you need an [Ethereum](https://ethereum.org/) capabl
 
 - Use [Metamask](https://metamask.io) as a browser extension
 - Use [Metamask](https://metamask.io) as an Android mobile application
-- Use [IPFS with TiddlyWiki](https://bluelightav.eth.link)
 
 To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
@@ -144,7 +141,7 @@ More informations about IPFS:
 
 Remarks:
 
-[EthDNS and EthLink](https://eth.link) are able to resolve https://bluelightav.eth.link to IPFS.
+**_EthDNS and EthLink_** [![EthDNS and EthLink](/images/dns.png)](https://eth.link) are able to resolve [bluelightav.eth.link](https://bluelightav.eth.link) to IPFS.
 
 #### Run a local IPFS node with IPFS Desktop
 
@@ -293,7 +290,7 @@ Check:
 
 ```text
 node -v
-v15.0.1
+v15.5.0
 ```
 
 Install `yarn`.
@@ -322,7 +319,7 @@ yarn set version latest
 Check your environment:
 
 ```text
-yarn --version
+yarn -v
 1.22.10
 ```
 
