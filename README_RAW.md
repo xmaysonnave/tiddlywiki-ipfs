@@ -82,14 +82,14 @@ Latest build:
 
 - [IPFS](%BUILD_ROOT_NODE%)
 
-Latest <b>bluelightav.eth</b> and <b>empty</b> `TiddlyWikis` editions:
+Latest **bluelightav.eth** and **empty** `TiddlyWikis` editions:
 
 - [bluelightav.eth](%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
 - [empty](%BUILD_ROOT_NODE%/editions/empty/index.html)
 
 Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
-- [![Boot](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json)[![Boot](/images/github.png)](<[%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)>)
+- **Boot** [![Boot](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json) [![Boot](/images/github.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/\$\_boot_boot.js-%BUILD_BOOT_VERSION%.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
   - Enhanced boot with compression and Ethereum encryption support
 - [Documentation](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)
 - [Library](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
@@ -136,7 +136,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 Starting from the file system, Follow the developer instructions [Running TiddlyWiki](#developer-running)
 
-To resolve <b>.eth</b> domains you need an [Ethereum](https://ethereum.org/) capable browser:
+To resolve **.eth** domains you need an [Ethereum](https://ethereum.org/) capable browser:
 
 - Use [Metamask](https://metamask.io) as a browser extension
 - Use [Metamask](https://metamask.io) as an Android mobile application
@@ -431,7 +431,7 @@ This project is integrated with Travis CI:
 
 <a name="developer-running"/>
 
-Open `IPFS` <b>bluelightav.eth</b> or <b>empty</b> `TiddlyWikis` editions in your favorite browser:
+Open `IPFS` **bluelightav.eth** or **empty** `TiddlyWikis` editions in your favorite browser:
 
 - [bluelightav.eth](%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
 - [empty](%BUILD_ROOT_NODE%/editions/empty/index.html)
