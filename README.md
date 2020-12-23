@@ -36,7 +36,7 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 </p>
 
 <p align="center">
-  <a rel="noopener noreferrer" target="_blank" href="http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281">
+  <a rel="noopener noreferrer" target="_blank" href="http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281">
     <img alt="Hosted on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
@@ -74,19 +74,19 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 ## Using `IPFS with TiddlyWiki`
 
-- **Latest** [![Latest](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281) [![Latest](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production)
+- **Latest** [![Latest](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281) [![Latest](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production)
 
 Latest **bluelightav.eth** and **empty** `TiddlyWikis` editions:
 
-- **bluelightav.eth** [![bluelightav.eth](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/editions/bluelightav) [![bluelightav.eth](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/editions/bluelightav)
-- **empty** [![empty](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/editions/empty) [![empty](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/editions/empty)
+- **bluelightav.eth** [![bluelightav.eth](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281/editions/bluelightav) [![bluelightav.eth](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/editions/bluelightav)
+- **empty** [![empty](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281/editions/empty) [![empty](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/editions/empty)
 
 Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
-- **\$:/boot/boot.js** [![$:/boot/boot.js](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201221372.json) [![$:/boot/boot.js](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/boot)
-- **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201223282.json) [![$:/ipfs/documentation](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/documentation)
-- **\$:/ipfs/library/modules** [![$:/ipfs/library/modules](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201221372.json) [![$:/ipfs/library/modules](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/library)
-- **\$:/plugins/ipfs** [![$:/ipfs/library/modules](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201223281.json) [![$:/plugins/ipfs](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/plugin)
+- **\$:/boot/boot.js** [![$:/boot/boot.js](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.23-pre+build-201221372.json) [![$:/boot/boot.js](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/boot)
+- **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta+build-201223282.json) [![$:/ipfs/documentation](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/documentation)
+- **\$:/ipfs/library/modules** [![$:/ipfs/library/modules](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-201221372.json) [![$:/ipfs/library/modules](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/library)
+- **\$:/plugins/ipfs** [![$:/ipfs/library/modules](/images/ipfs.png)](http://127.0.0.1:8080/ipfs/QmdSHeQyaYvr694fjmVF2VbsoNqbLLvH1PQEBdEHcgUeKb/0.4.0-beta+build-201223281/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta+build-201223281.json) [![$:/plugins/ipfs](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/production/tiddlywiki-ipfs/plugin)
 
 Release:
 
@@ -121,13 +121,11 @@ Starting from the file system, Follow the developer instructions [Running Tiddly
 
 To resolve **.eth** domains you need an [Ethereum](https://ethereum.org/) capable browser:
 
-- Use [Metamask](https://metamask.io) as a browser extension
-- Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [Metamask](https://metamask.io) as a browser extension or as an Android mobile application
 
 To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
-- Use [Metamask](https://metamask.io) as a browser extension
-- Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [Metamask](https://metamask.io) as a browser extension or as an Android mobile application
 
 To run a local IPFS node, you need:
 
@@ -188,7 +186,7 @@ Setup a nodejs environment to build tiddlywiki instances bundled with `IPFS with
 - [Node.js](https://nodejs.org/)
 - [Snyk](https://github.com/snyk)
 - [TiddyWiki5](https://www.npmjs.com/package/tiddlywiki)
-- [Travis CI](https://github.com/marketplace/travis-ci)
+- [Travis CI](https://travis-ci.com/)
 
 #### Node.js
 
@@ -229,13 +227,13 @@ Follow the [nvm installation and update tutorial](https://github.com/nvm-sh/nvm#
 Current installation and update script:
 
 ```text
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 ```
 
 or
 
 ```text
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 ```
 
 As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
@@ -271,7 +269,7 @@ Check:
 
 ```text
 nvm -v
-0.37.0
+0.37.2
 ```
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop/.nvmrc) who describes the node version to use.
@@ -394,15 +392,6 @@ yarn test
 This project is integrated with Travis CI:
 
 - <https://travis-ci.com/github/xmaysonnave/tiddlywiki-ipfs>
-
-#### Running TiddlyWiki
-
-<a name="developer-running"/>
-
-Open `IPFS` **bluelightav.eth** or **empty** `TiddlyWikis` editions in your favorite browser:
-
-- [bluelightav.eth](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/editions/bluelightav/index.html)
-- [empty](http://127.0.0.1:8080/ipfs/QmeSnXt5GUq32cvx4CEzhRekgVjDW2FF5r1rWyt6Cr1ouz/0.4.0-beta+build-201223281/editions/empty/index.html)
 
 ## Contributor Covenant Code of Conduct
 

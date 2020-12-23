@@ -121,13 +121,11 @@ Starting from the file system, Follow the developer instructions [Running Tiddly
 
 To resolve **.eth** domains you need an [Ethereum](https://ethereum.org/) capable browser:
 
-- Use [Metamask](https://metamask.io) as a browser extension
-- Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [Metamask](https://metamask.io) as a browser extension or as an Android mobile application
 
 To update [ENS](https://app.ens.domains/) domains you need an Ethereum wallet:
 
-- Use [Metamask](https://metamask.io) as a browser extension
-- Use [Metamask](https://metamask.io) as an Android mobile application
+- Use [Metamask](https://metamask.io) as a browser extension or as an Android mobile application
 
 To run a local IPFS node, you need:
 
@@ -188,7 +186,7 @@ Setup a nodejs environment to build tiddlywiki instances bundled with `IPFS with
 - [Node.js](https://nodejs.org/)
 - [Snyk](https://github.com/snyk)
 - [TiddyWiki5](https://www.npmjs.com/package/tiddlywiki)
-- [Travis CI](https://github.com/marketplace/travis-ci)
+- [Travis CI](https://travis-ci.com/)
 
 #### Node.js
 
@@ -229,13 +227,13 @@ Follow the [nvm installation and update tutorial](https://github.com/nvm-sh/nvm#
 Current installation and update script:
 
 ```text
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 ```
 
 or
 
 ```text
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 ```
 
 As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
@@ -271,7 +269,7 @@ Check:
 
 ```text
 nvm -v
-0.37.0
+0.37.2
 ```
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/.nvmrc) who describes the node version to use.
@@ -394,15 +392,6 @@ yarn test
 This project is integrated with Travis CI:
 
 - <https://travis-ci.com/github/xmaysonnave/tiddlywiki-ipfs>
-
-#### Running TiddlyWiki
-
-<a name="developer-running"/>
-
-Open `IPFS` **bluelightav.eth** or **empty** `TiddlyWikis` editions in your favorite browser:
-
-- [bluelightav.eth](%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
-- [empty](%BUILD_ROOT_NODE%/editions/empty/index.html)
 
 ## Contributor Covenant Code of Conduct
 
