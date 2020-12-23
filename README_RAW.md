@@ -1,5 +1,7 @@
 <h1 align="center">IPFS with TiddyWiki</h1>
 
+This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors and developers to manage their wikis on [IPFS](https://ipfs.io).
+
 <h1 align="center">
   <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link">
     <img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light"/>
@@ -39,10 +41,6 @@
   </a>
 </p>
 
-<a name="ipfs-with-tiddlywiki"/>
-
-This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors and developers to manage their wikis on [IPFS](https://ipfs.io).
-
 This plugin provides the following features:
 
 - Store `TiddlyWiki`'s and attachments on [IPFS](https://ipfs.io/)
@@ -74,9 +72,7 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 - Unhackable
 - Unstoppable
 
-## Using `IPFS with TiddlyWiki`:
-
-<a name="using-ipfs-with-tiddlywiki"/>
+## Using `IPFS with TiddlyWiki`
 
 Latest build:
 
@@ -84,16 +80,17 @@ Latest build:
 
 Latest **bluelightav.eth** and **empty** `TiddlyWikis` editions:
 
-- [bluelightav.eth](%BUILD_ROOT_NODE%/editions/bluelightav/index.html)
-- [empty](%BUILD_ROOT_NODE%/editions/empty/index.html)
+- **bluelightav.eth** [![bluelightav.eth](/images/ipfs.png)](%BUILD_ROOT_NODE%/editions/bluelightav) [![bluelightav.eth](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/bluelightav)
+- **empty** [![empty](/images/ipfs.png)](%BUILD_ROOT_NODE%/editions/empty) [![empty](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/empty)
 
 Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
-- **Boot** [![Boot](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json) [![Boot](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
+- **\$:/boot/boot.js** [![$:/boot/boot.js](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json) [![$:/boot/boot.js](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
   - Enhanced boot with compression and Ethereum encryption support
-- [Documentation](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)
-- [Library](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
+- **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json) [![$:/ipfs/documentation](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/documentation)
+- **\$:/ipfs/library/modules** [![$:/ipfs/library/modules](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json) [![$:/ipfs/library/modules](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/library)
 - [Plugin](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
+- **\$:/plugins/ipfs** [![$:/ipfs/library/modules](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json) [![$:/plugins/ipfs](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/plugin)
 
 Release available with a capable [ENS](https://ens.domains/) browser:
 
@@ -246,19 +243,19 @@ Follow the [nvm installation and update tutorial](https://github.com/nvm-sh/nvm#
 
 Current installation and update script:
 
-```
+```text
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
 ```
 
 or
 
-```
+```text
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
 ```
 
 As we are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH), here is an excerpt of our .zshrc
 
-```
+```text
 # nvm initialization!
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -287,26 +284,26 @@ load-nvmrc
 
 Check:
 
-```
+```text
 nvm -v
 0.37.0
 ```
 
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/.nvmrc) who describes the node version to use.
 
-```
+```text
 v15
 ```
 
 Install the recommended `node` version.
 
-```
+```text
 nvm install v15
 ```
 
 Check:
 
-```
+```text
 node -v
 v15.0.1
 ```
@@ -316,27 +313,27 @@ Install `yarn`.
 
 On Debian setup the `yarn` repository:
 
-```
+```text
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 ```
 
 As we are using `nvm`, we avoid the `node` installation:
 
-```
+```text
 sudo apt update
 sudo apt install --no-install-recommends yarn
 ```
 
 Or Upgrade `yarn`.
 
-```
+```text
 yarn set version latest
 ```
 
 Check your environment:
 
-```
+```text
 yarn --version
 1.22.10
 ```
@@ -347,19 +344,19 @@ yarn --version
 
 Clone this repository in a local folder:
 
-```
+```text
 git clone https://github.com/xmaysonnave/tiddlywiki-ipfs --depth 1
 ```
 
 Change directory:
 
-```
+```text
 cd tiddlywiki-ipfs
 ```
 
 Install dependencies, [Node.js](https://nodejs.org/) should be installed and setup:
 
-```
+```text
 yarn
 ```
 
@@ -399,27 +396,13 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/packa
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 
-```
+```text
 yarn build
 ```
 
-Current `production` bluelightav.eth and empty `TiddlyWikis` editions from this respository:
-
-- [bluelightav.eth](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/bluelightav)
-- [empty.html](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/editions/empty)
-
-Current `IPFS with TiddlyWiki` boot, libraries and plugin from this repository:
-
-- [\$:/boot/boot.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
-- [\$:/ipfs/documentation.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/documentation)
-- [\$:/library/ipfs-library-modules.js.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/library)
-- [\$:/plugin/ipfs.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/plugin)
-
-The `sample` directory contains several sample runnable `TiddlyWikis`:
-
 Use the `test` script to run the tests.
 
-```
+```text
 yarn test
 ```
 
