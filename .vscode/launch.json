@@ -52,12 +52,12 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
-      "name": "Debug publish boot",
+      "name": "Debug publish node",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["publish-boot"],
+      "runtimeArgs": ["cli-publish-node", "--dir=.", "--pin=true"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },

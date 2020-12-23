@@ -1,10 +1,10 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta+build-201223364",
+  "version": "0.4.0-beta+build-201223383",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
-    "test": "test"
+    "test": "tests"
   },
   "type": "commonjs",
   "browserslist": [

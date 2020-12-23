@@ -1,15 +1,15 @@
 {
   "_tags": "$:/ipfs/documentation",
   "_owner": "$:/ipfs/documentation",
-  "_parent_cid": "QmbyqR6D4nWGE9seAcLV9FWFMRRPoPsyv3m2jxz2QWqDr4",
+  "_parent_cid": "QmSzu1MR3QeERrigViuWr2Ajo45u1bifNbM1JwZnHzDbi7",
   "_parent_size": 1583984,
-  "_parent_uri": "https://dweb.link/ipfs/QmbyqR6D4nWGE9seAcLV9FWFMRRPoPsyv3m2jxz2QWqDr4",
-  "_source_path": "$_ipfs_documentation.json-0.4.0-beta+build-201223364.json",
+  "_parent_uri": "https://dweb.link/ipfs/QmSzu1MR3QeERrigViuWr2Ajo45u1bifNbM1JwZnHzDbi7",
+  "_source_path": "$_ipfs_documentation.json-0.4.0-beta+build-201223383.json",
   "_source_size": 1583879,
-  "_source_uri": "https://dweb.link/ipfs/QmbyqR6D4nWGE9seAcLV9FWFMRRPoPsyv3m2jxz2QWqDr4/$_ipfs_documentation.json-0.4.0-beta+build-201223364.json",
-  "_cid": "QmbaTuXCWMMdjAprHKbiCGVzfJ9Nz3ce4sePwC6pLNJASv",
-  "_cid_uri": "https://dweb.link/ipfs/QmbaTuXCWMMdjAprHKbiCGVzfJ9Nz3ce4sePwC6pLNJASv",
+  "_source_uri": "https://dweb.link/ipfs/QmSzu1MR3QeERrigViuWr2Ajo45u1bifNbM1JwZnHzDbi7/$_ipfs_documentation.json-0.4.0-beta+build-201223383.json",
+  "_cid": "QmP1ZmLZrqTY72x9vqsZ7DZe5RmSMxLv9ZmAe443Qxh6H5",
+  "_cid_uri": "https://dweb.link/ipfs/QmP1ZmLZrqTY72x9vqsZ7DZe5RmSMxLv9ZmAe443Qxh6H5",
   "_semver": "0.4.0-beta+build",
-  "_version": "0.4.0-beta+build-201223364",
-  "_raw_hash": "d286b5db4366d3908fd3784f76cdb20047a760fbe195572f53ff747991723185"
+  "_version": "0.4.0-beta+build-201223383",
+  "_raw_hash": "9d27e5d30c998e4a509ff441713bc7222a3f349306e29498f7100a40f4832fe8"
 }
