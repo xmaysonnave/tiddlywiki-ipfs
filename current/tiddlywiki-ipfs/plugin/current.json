@@ -1,15 +1,15 @@
 {
   "_tags": "$:/ipfs/documentation",
   "_owner": "$:/plugins/ipfs",
-  "_parent_cid": "QmeYeHdMr8tV1apothZpPtLfGHx7jwHrJSmyPxK99SXcfC",
-  "_parent_size": 927969,
-  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmeYeHdMr8tV1apothZpPtLfGHx7jwHrJSmyPxK99SXcfC",
-  "_source_path": "$_plugins_ipfs.js-0.4.0-beta+build-201222274.json",
-  "_source_size": 927872,
-  "_source_uri": "http://127.0.0.1:8080/ipfs/QmeYeHdMr8tV1apothZpPtLfGHx7jwHrJSmyPxK99SXcfC/$_plugins_ipfs.js-0.4.0-beta+build-201222274.json",
-  "_cid": "QmR2sBBvbbCo3V4s3rP4Q16qu4DcR2mvS7BTcge2m5yMtE",
-  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmR2sBBvbbCo3V4s3rP4Q16qu4DcR2mvS7BTcge2m5yMtE",
+  "_parent_cid": "QmYjjPNPEvQuk86GV8mSzQUpGwSW8umLsr52bAoT7T4rJy",
+  "_parent_size": 927927,
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmYjjPNPEvQuk86GV8mSzQUpGwSW8umLsr52bAoT7T4rJy",
+  "_source_path": "$_plugins_ipfs.js-0.4.0-beta+build-201223281.json",
+  "_source_size": 927830,
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmYjjPNPEvQuk86GV8mSzQUpGwSW8umLsr52bAoT7T4rJy/$_plugins_ipfs.js-0.4.0-beta+build-201223281.json",
+  "_cid": "Qme7vugyxbK2NXino6jbfGaaUds15xjxE1oSR9cTg5o6EQ",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/Qme7vugyxbK2NXino6jbfGaaUds15xjxE1oSR9cTg5o6EQ",
   "_semver": "0.4.0-beta+build",
-  "_version": "0.4.0-beta+build-201222274",
-  "_raw_hash": "7e38fb949ec2f98d9ac21dbcf0e204eae9be2476bc0d2f715ba01a874f4a38ec"
+  "_version": "0.4.0-beta+build-201223281",
+  "_raw_hash": "ca8ffb2873f990e93834c1079bac48799dc3bf61b6a818cfc34836ce502a857d"
 }

@@ -1,12 +1,12 @@
 title: $:/core/ui/Buttons/ipfs/export/attachment
 tags: $:/ipfs/core $:/tags/ViewToolbar
-caption: {{$:/core/images/ipfs}} {{$:/language/Buttons/Ipfs/Export/Attachment/Caption}}
+caption: {{$:/ipfs/images/ipfs}} {{$:/language/Buttons/Ipfs/Export/Attachment/Caption}}
 description: {{$:/language/Buttons/Ipfs/Export/Attachment/Hint}}
 
 \whitespace trim
 <$button message="tm-ipfs-export-attachment" param=<<currentTiddler>> tooltip={{$:/language/Buttons/Ipfs/Export/Attachment/Hint}} aria-label={{$:/language/Buttons/Ipfs/Export/Attachment/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/core/images/ipfs}}
+{{$:/ipfs/images/ipfs}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text">

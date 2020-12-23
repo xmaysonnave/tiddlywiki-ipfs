@@ -50,9 +50,13 @@ module.exports = function main (branch) {
   if (!root._cid_uri) {
     throw new Error('Unknown root node uri...')
   }
+  var rootUri = root._cid_uri
+  if (root._parent_uri) {
+    rootUri = `${root._parent_uri}/${root._source_path}`
+  }
   replace({
     regex: '%BUILD_ROOT_NODE%',
-    replacement: root._parent_uri ? root._parent_uri : root._cid_uri,
+    replacement: rootUri,
     paths: [readmePath],
     recursive: false,
     silent: true,

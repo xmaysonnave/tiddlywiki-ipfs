@@ -104,7 +104,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </div>
 
 <div class="tc-splash-text">
-<img src="data:image/jpeg;base64,{{$:/core/images/bluelight||$:/core/templates/plain-text-tiddler}}" width="100"/>
+<img src="data:image/jpeg;base64,{{$:/ipfs/images/bluelight||$:/core/templates/plain-text-tiddler}}" width="100"/>
 </div>
 
 <div class="tc-splash-text">
