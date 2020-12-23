@@ -89,7 +89,7 @@ Latest **bluelightav.eth** and **empty** `TiddlyWikis` editions:
 
 Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
-- **Boot** [![Boot](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json) [![Boot](/images/github.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/\$\_boot_boot.js-%BUILD_BOOT_VERSION%.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
+- **Boot** [![Boot](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json) [![Boot](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
   - Enhanced boot with compression and Ethereum encryption support
 - [Documentation](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json)
 - [Library](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json)
