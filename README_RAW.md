@@ -74,7 +74,7 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 ## Using `IPFS with TiddlyWiki`
 
-Latest build:
+Latest:
 
 - [IPFS](%BUILD_ROOT_NODE%)
 
@@ -86,27 +86,15 @@ Latest **bluelightav.eth** and **empty** `TiddlyWikis` editions:
 Latest `IPFS with TiddlyWiki` boot, documentation, libraries and plugin:
 
 - **\$:/boot/boot.js** [![$:/boot/boot.js](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json) [![$:/boot/boot.js](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/boot)
-  - Enhanced boot with compression and Ethereum encryption support
 - **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json) [![$:/ipfs/documentation](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/documentation)
 - **\$:/ipfs/library/modules** [![$:/ipfs/library/modules](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json) [![$:/ipfs/library/modules](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/library)
-- [Plugin](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json)
 - **\$:/plugins/ipfs** [![$:/ipfs/library/modules](/images/ipfs.png)](%BUILD_ROOT_NODE%/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json) [![$:/plugins/ipfs](/images/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/production/tiddlywiki-ipfs/plugin)
 
-Release available with a capable [ENS](https://ens.domains/) browser:
+Release:
 
-- [Boot](https://bluelightav.eth/#%24%3A%2Fboot%2Fboot.js)
-- [Documentation](https://bluelightav.eth/#IPFS%20Documentation)
-- [Library](https://bluelightav.eth/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
-- [Plugin](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs)
-- [bluelightav.eth](https://bluelightav.eth)
-
-Release available with [EthDNS and EthLink](https://eth.link)
-
-- [Boot](https://bluelightav.eth.link/#%24%3A%2Fboot%2Fboot.js)
-- [Documentation](https://bluelightav.eth.link/#IPFS%20Documentation)
-- [Library](https://bluelightav.eth.link/#%24%3A%2Flibrary%2Fipfs-library-modules.js)
-- [Plugin](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs)
-- [bluelightav.eth.link](https://bluelightav.eth.link)
+- **\$:/ipfs/documentation** [![$:/ipfs/documentation](/images/ens.png)](https://bluelightav.eth/#IPFS%20Documentation) [![$:/ipfs/documentation](/images/dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation))
+- **\$:/plugins/ipfs** [![$:/plugins/ipfs](/images/ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs) [![$:/ipfs/documentation](/images/dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs))
+- **bluelightav.eth** [![bluelightav.eth](/images/ens.png)](https://bluelightav.eth) [![bluelightav.eth](/images/dns.png)](https://bluelightav.eth.link))
 
 Recommended TiddlyWiki Plugins:
 
