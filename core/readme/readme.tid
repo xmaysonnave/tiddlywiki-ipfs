@@ -48,7 +48,7 @@ Resources:
 Requirement:
 
 * [[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]
-** Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build"/>
+** Available on IPFS <$image src="$:/ipfs/icons/ipfs" width="16" height="16"><$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build"/></image>
 * [[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]]
-** Available on from IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build"/>
+** Available on from IPFS <$image src="$:/ipfs/icons/ipfs" width="16" height="16"><$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build"/></image>
 * [[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]

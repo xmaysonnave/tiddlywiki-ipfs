@@ -1,19 +1,19 @@
 title: index.html/build
 tags: $:/ipfs/editions
-_parent_cid: QmRBRrCEXLE6zRhunCGhErv7m2xMUgmxbRvDNzmWcyTpLn
-_parent_size: 3021096
-_parent_uri: ipfs://QmRBRrCEXLE6zRhunCGhErv7m2xMUgmxbRvDNzmWcyTpLn
+_parent_cid: QmRAhbYWewGiavXi5MWGjFmsPvZ8Do4RTKBFRFa77X18VF
+_parent_size: 3075146
+_parent_uri: ipfs://QmRAhbYWewGiavXi5MWGjFmsPvZ8Do4RTKBFRFa77X18VF
 _source_path: index.html
-_source_size: 3016686
-_source_uri: ipfs://QmRBRrCEXLE6zRhunCGhErv7m2xMUgmxbRvDNzmWcyTpLn/index.html
-_cid: QmeBc8wdrzDevbmPtL8fWvJoyay8AbxaGJF8rxQ8tiGfrP
-_cid_uri: ipfs://https://dweb.link/ipfs/QmeBc8wdrzDevbmPtL8fWvJoyay8AbxaGJF8rxQ8tiGfrP
+_source_size: 3070736
+_source_uri: ipfs://QmRAhbYWewGiavXi5MWGjFmsPvZ8Do4RTKBFRFa77X18VF/index.html
+_cid: QmPxaUmPv5ELGHMeBkAUuWxPyxbqudecMWFzk9UvEbCC6f
+_cid_uri: ipfs://https://bluelightav.tk/ipfs/QmPxaUmPv5ELGHMeBkAUuWxPyxbqudecMWFzk9UvEbCC6f
 _semver: 0.4.0-beta-TW-v5.1.22+build
-_version: 0.4.0-beta-TW-v5.1.22+build-201223384
+_version: 0.4.0-beta-TW-v5.1.22+build-201229326
 _raw_hash: undefined
-_parent_cid: QmRBRrCEXLE6zRhunCGhErv7m2xMUgmxbRvDNzmWcyTpLn
+_parent_cid: QmRAhbYWewGiavXi5MWGjFmsPvZ8Do4RTKBFRFa77X18VF
   _favicon_path: favicon.ico
   _favicon_size: 4297
-  _favicon_uri: ipfs://QmRBRrCEXLE6zRhunCGhErv7m2xMUgmxbRvDNzmWcyTpLn/favicon.ico
+  _favicon_uri: ipfs://QmRAhbYWewGiavXi5MWGjFmsPvZ8Do4RTKBFRFa77X18VF/favicon.ico
   _favicon_cid: QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF
   _favicon_cid_uri: ipfs://QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF

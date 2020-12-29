@@ -1898,9 +1898,9 @@
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
 "@types/node@*":
-  version "14.14.14"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.14.tgz#f7fd5f3cc8521301119f63910f0fb965c7d761ae"
-  integrity sha512-UHnOPWVWV1z+VV8k6L1HhG7UbGBgIdghqF3l9Ny9ApPghbjICXkUJSd/b9gOgQfjM1r+37cipdw/HJ3F6ICEnQ==
+  version "14.14.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.16.tgz#3cc351f8d48101deadfed4c9e4f116048d437b4b"
+  integrity sha512-naXYePhweTi+BMv11TgioE2/FXU4fSl29HAH1ffxVciNsH3rYXjNP2yM8wqmSm7jS20gM8TIklKiTen+1iVncw==
 
 "@types/node@^13.7.0":
   version "13.13.36"
@@ -10988,10 +10988,10 @@ thunky@^1.0.2:
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
-tiddlywiki@^5.1.22:
-  version "5.1.22"
-  resolved "https://registry.yarnpkg.com/tiddlywiki/-/tiddlywiki-5.1.22.tgz#09a7ed46f6ed08791ecf424ff7c4f3ed1c682618"
-  integrity sha512-Iav0iC9SnwN6HTYGRfEI7kYDoq+hlKr9fw9o8aTs0wxMp0UzqlvthGwlK1JwrdVIRL92no1lpVGhQQj16ncSQQ==
+tiddlywiki@^5.1.23:
+  version "5.1.23"
+  resolved "https://registry.yarnpkg.com/tiddlywiki/-/tiddlywiki-5.1.23.tgz#05c2b8c6075309300efb4bf53340a21807bcf0b2"
+  integrity sha512-U5P6CdVncHqfoMRAYGj8NxqbP2JJICdLre+jAlXzV8nhllRL9ZFIE0y80wASXc6xip6++TA67Pam7+FJ73A1Vw==
 
 time-cache@^0.3.0:
   version "0.3.0"

@@ -52,11 +52,23 @@ module.exports = function main (branch) {
   }
   var rootUri = root._cid_uri
   if (root._parent_uri) {
-    rootUri = `${root._parent_uri}/${root._source_path}`
+    rootUri = `${root._parent_uri}`
   }
   replace({
     regex: '%BUILD_ROOT_NODE%',
     replacement: rootUri,
+    paths: [readmePath],
+    recursive: false,
+    silent: true,
+  })
+  // build node
+  var buildUri = root._cid_uri
+  if (root._parent_uri) {
+    buildUri = `${root._parent_uri}/${root._source_path}`
+  }
+  replace({
+    regex: '%BUILD_NODE%',
+    replacement: buildUri,
     paths: [readmePath],
     recursive: false,
     silent: true,
