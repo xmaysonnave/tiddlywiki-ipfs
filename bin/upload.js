@@ -283,11 +283,11 @@ _raw_hash: ${node.__raw_hash}`
   if (faviconCid) {
     tid = `${tid}
 _parent_cid: ${node._parent_cid}
-  _favicon_path: ${node._favicon_path}
-  _favicon_size: ${node._favicon_size}
-  _favicon_uri: ipfs://${node._parent_cid}/${faviconName}
-  _favicon_cid: ${node._favicon_cid}
-  _favicon_cid_uri: ipfs://${node._favicon_cid}`
+_favicon_path: ${node._favicon_path}
+_favicon_size: ${node._favicon_size}
+_favicon_uri: ipfs://${node._parent_cid}/${faviconName}
+_favicon_cid: ${node._favicon_cid}
+_favicon_cid_uri: ipfs://${node._favicon_cid}`
   }
 
   // Save Tiddler

@@ -27,10 +27,6 @@ yarn terser \
 # down
 cd download
 
-# tiddlywiki
-mkdir tiddlywiki > /dev/null 2>&1
-wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
-
 # @metamask/detect-provider
 mkdir detect-provider > /dev/null 2>&1
 wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/dist/detect-provider.min.js -O ./detect-provider/detect-provider.min.js || exit 1
@@ -55,7 +51,7 @@ cd tw5-relink
 git checkout tags/v1.10.2 || exit 1
 cd ..
 
-#up
+# up
 cd ..
 
 # done

@@ -1,5 +1,5 @@
 title: Welcome
-modified: 20201116094915385
+modified: 20201229094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -33,7 +33,7 @@ type: text/vnd.tiddlywiki
 </ul>
 <h3>Project</h3>
 <ul>
-  <li><$ipfslink value="bluelightav.eth"/>IPFS with ~TiddlyWiki</$ipfslink></li>
+  <li><$ipfslink value="bluelightav.eth">IPFS with ~TiddlyWiki</$ipfslink></li>
   <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
 </ul>
 <h3>~TiddlyWiki</h3>

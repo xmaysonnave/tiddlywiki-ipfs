@@ -19,6 +19,17 @@ rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 rm -f -R ./build/plugins > /dev/null 2>&1
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
+rm -f -R ./download/tiddlywiki > /dev/null 2>&1
+
+# down
+cd download
+
+# tiddlywiki
+mkdir tiddlywiki > /dev/null 2>&1
+wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
+
+# up
+cd ..
 
 # assets
 cp -R ./editions/tiddlywiki/* ./build || exit 1

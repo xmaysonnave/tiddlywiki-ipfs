@@ -1,56 +1,27 @@
 title: IPFS Quick Start
-modified: 20201117094915385
+modified: 20201229094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
 <h2>IPFS Quick Start</h2>
-<h3>Live version</h3>
-<p>
-  The easiest way to start with <b>IPFS with ~TiddlyWiki</b> is to use a live version.
-</p>
+<h4>Current</h4>
+<ul>
+  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Documentation|IPFS Documentation]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation.json/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+</ul>
 <h4>Release</h4>
 <ul>
-  <li><$ipfslink value="bluelightav.eth"/></li>
-  <li><$ipfslink value="empty.bluelightav.eth"/></li>
-  <li><$ipfslink value="doc.bluelightav.eth"/></li>
+  <li>[[IPFS with TiddlyWiki Documentation|IPFS Documentation]] <$ipfslink value="https://bluelightav.eth/#IPFS%20Documentation">[img[Resolve with ENS|$:/ipfs/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link/#IPFS%20Documentation">[img[Resolve with DNS Link|$:/ipfs/icons/dns]]</a></li>
+  <li>[[$:/plugins/ipfs]] <$ipfslink value="https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs">[img[Resolve with ENS|$:/ipfs/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs">[img[Resolve with DNS Link|$:/ipfs/icons/dns]]</a></li>
+  <li><b>bluelightav.eth</b> <$ipfslink value="https://bluelightav.eth">[img[Resolve with ENS|$:/ipfs/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link">[img[Resolve with DNS Link|$:/ipfs/icons/dns]]</a></li>
 </ul>
-<h4><$text text={{$:/build/ipfs/semver!!_kind}} /> <$text text={{$:/build/ipfs/semver!!_version}} /></h4>
-<ul>
-  <li><$ipfslink field="_source_uri" text="_owner" tiddler="$:/bluelightav.eth/build"/></li>
-  <li><$ipfslink field="_source_uri" text="_owner" tiddler="$:/empty.bluelightav.eth/build"/></li>
-  <li><$ipfslink field="_source_uri" text="_owner" tiddler="$:/doc.bluelightav.eth/build"/></li>
-</ul>
-<h3>Drag and Drop</h3>
-<p>
-  Another way is to drag and drop the required files in a live version.
-</p>
-<h4>Release</h4>
-<ul>
-  <li><$ipfslink value="bluelightav.eth/#%24%3A%2Fboot%2Fboot.js"><$text text="IPFS with TiddlyWiki Boot"/></$ipfslink></li>
-  <li><$ipfslink value="bluelightav.eth/#%24%3A%2Flibrary%2Fipfs-library-modules.js"><$text text="IPFS with TiddlyWiki Library"/></$ipfslink></li>
-  <li><$ipfslink value="bluelightav.eth/#%24%3A%2Fplugins%2Fipfs"><$text text="IPFS with TiddlyWiki Plugin"/></$ipfslink></li>
-  <li><$ipfslink value="bluelightav.eth/#IPFS%20Documentation"><$text text="IPFS with TiddlyWiki Documentation"/></$ipfslink></li>
-</ul>
-<h4><$text text={{$:/build/ipfs/semver!!_kind}} /> <$text text={{$:/build/ipfs/semver!!_version}} /></h4>
-<ul>
-  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build"/></li></ul>
-  </li>
-  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build"/></li></ul>
-  </li>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs/build"/></li></ul>
-  </li>
-  <li>[[IPFS Documentation]]
-    <ul><li>Available on IPFS <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation/build"/></li></ul>
-  </li>
-</ul>
-<h4>Mandatory Third parties plugins</h4>
+<h4>Mandatory Third parties plugin</h4>
 <ul>
   <li>[ext[Locator Plugin|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
 </ul>
-<h4>Optional Third parties plugins</h4>
+<h4>Optional Third parties plugin</h4>
 <ul>
   <li>[ext[Relink Plugin|https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink]]</li>
 </ul>
@@ -77,7 +48,7 @@ type: text/vnd.tiddlywiki
   [ext[IPFS Go Server|https://github.com/ipfs/go-ipfs]].
 </p>
 <p>
-  This configuration is based on the [ext[v0.7.0|https://github.com/ipfs/go-ipfs/releases/tag/v0.7.0]] version.
+  This configuration is based on the [ext[v0.8.0-rc1|https://github.com/ipfs/go-ipfs/releases/tag/v0.8.0-rc1]] version.
 </p>
 <p>
   More informations about the configuration parameters are available [ext[here|https://github.com/ipfs/go-ipfs/blob/master/docs/config.md]]
