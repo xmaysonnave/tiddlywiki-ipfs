@@ -11,7 +11,7 @@ $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 
 <<lingo External/Hint>>
 
-<p><$ipfslink field="_canonical_uri" tiddler=<<currentTiddler>>/></p>
+<$ipfslink field="_canonical_uri" tiddler=<<currentTiddler>>/>
 
 </div>
 

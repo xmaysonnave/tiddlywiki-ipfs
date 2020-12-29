@@ -88,6 +88,11 @@ Navigator widget
     this.historyTitle = this.getAttribute('history')
     this.setVariable('tv-story-list', this.storyTitle)
     this.setVariable('tv-history-list', this.historyTitle)
+    this.story = new $tw.Story({
+      wiki: this.wiki,
+      storyTitle: this.storyTitle,
+      historyTitle: this.historyTitle,
+    })
     // Construct the child widgets
     this.makeChildWidgets()
   }
@@ -150,7 +155,7 @@ Navigator widget
 
   NavigatorWidget.prototype.addToStory = function (title, fromTitle) {
     if (this.storyTitle) {
-      this.wiki.addToStory(title, fromTitle, this.storyTitle, {
+      this.story.addToStory(title, fromTitle, {
         openLinkFromInsideRiver: this.getAttribute('openLinkFromInsideRiver', 'top'),
         openLinkFromOutsideRiver: this.getAttribute('openLinkFromOutsideRiver', 'top'),
       })
@@ -163,7 +168,7 @@ Navigator widget
    * fromPageRect: page coordinates of the origin of the navigation
    */
   NavigatorWidget.prototype.addToHistory = function (title, fromPageRect) {
-    this.wiki.addToHistory(title, fromPageRect, this.historyTitle)
+    this.story.addToHistory(title, fromPageRect, this.historyTitle)
   }
 
   /**
@@ -732,6 +737,7 @@ Navigator widget
     $tw.utils.each(importData.tiddlers, function (tiddler, title) {
       if ($tw.utils.count(tiddler) === 0) {
         newFields['selection-' + title] = 'unchecked'
+        newFields['suppressed-' + title] = 'yes'
       }
     })
     // Save the $:/Import tiddler
@@ -756,7 +762,7 @@ Navigator widget
   }
 
   //
-  NavigatorWidget.prototype.handlePerformImportEvent = async function (event) {
+  NavigatorWidget.prototype.handlePerformImportEvent = function (event) {
     var self = this
     var importTiddler = this.wiki.getTiddler(event.param)
     var importData = this.wiki.getTiddlerDataCached(event.param, {

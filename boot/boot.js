@@ -295,13 +295,21 @@ var _boot = (function($tw) {
   // Parse a date from a UTC YYYYMMDDHHMMSSmmm format string
   $tw.utils.parseDate = function(value) {
     if(typeof value === "string") {
-      return new Date(Date.UTC(parseInt(value.substr(0,4),10),
+		var negative = 1;
+		if(value.charAt(0) === "-") {
+			negative = -1;
+			value = value.substr(1);
+		}
+		var year = parseInt(value.substr(0,4),10) * negative,
+			d = new Date(Date.UTC(year,
           parseInt(value.substr(4,2),10)-1,
           parseInt(value.substr(6,2),10),
           parseInt(value.substr(8,2)||"00",10),
           parseInt(value.substr(10,2)||"00",10),
           parseInt(value.substr(12,2)||"00",10),
           parseInt(value.substr(14,3)||"000",10)));
+		  d.setUTCFullYear(year); // See https://stackoverflow.com/a/5870822
+		  return d;
     } else if($tw.utils.isDate(value)) {
       return value;
     } else {
@@ -1876,7 +1884,7 @@ var _boot = (function($tw) {
         });
       });
       if(isEditableFile) {
-        tiddlers.push({filepath: pathname, hasMetaFile: !!metadata && !isTiddlerFile, tiddlers: fileTiddlers});
+			tiddlers.push({filepath: pathname, hasMetaFile: !!metadata && !isTiddlerFile, isEditableFile: true, tiddlers: fileTiddlers});
       } else {
         tiddlers.push({tiddlers: fileTiddlers});
       }
@@ -1902,8 +1910,9 @@ var _boot = (function($tw) {
         }
       } else {
         // Process directory specifier
-        var dirPath = path.resolve(filepath,dirSpec.path),
-          files = fs.readdirSync(dirPath),
+			var dirPath = path.resolve(filepath,dirSpec.path);
+			if(fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
+				var	files = fs.readdirSync(dirPath),
           fileRegExp = new RegExp(dirSpec.filesRegExp || "^.*$"),
           metaRegExp = /^.*\.meta$/;
         for(var t=0; t<files.length; t++) {
@@ -1912,7 +1921,12 @@ var _boot = (function($tw) {
             processFile(dirPath + path.sep + filename,dirSpec.isTiddlerFile,dirSpec.fields,dirSpec.isEditableFile);
           }
         }
-      }
+			} else {
+				console.log("Warning: a directory in a tiddlywiki.files file does not exist.");
+				console.log("dirPath: " + dirPath);	
+				console.log("tiddlywiki.files location: " + filepath);
+			}
+		}
     });
     return tiddlers;
   };
@@ -2050,6 +2064,11 @@ var _boot = (function($tw) {
     } else {
       return null;
     }
+	// Save the path to the tiddlers folder for the filesystemadaptor
+	var config = wikiInfo.config || {};
+	if($tw.boot.wikiPath == wikiPath) {
+		$tw.boot.wikiTiddlersPath = path.resolve($tw.boot.wikiPath,config["default-tiddler-location"] || $tw.config.wikiTiddlersSubDir);
+	}
     // Load any parent wikis
     if(wikiInfo.includeWikis) {
       parentPaths = parentPaths.slice(0);
@@ -2083,62 +2102,65 @@ var _boot = (function($tw) {
           $tw.boot.files[tiddler.title] = {
             filepath: tiddlerFile.filepath,
             type: tiddlerFile.type,
-            hasMetaFile: tiddlerFile.hasMetaFile
+            hasMetaFile: tiddlerFile.hasMetaFile,
+            isEditableFile: config["retain-original-tiddler-path"] || tiddlerFile.isEditableFile || tiddlerFile.filepath.indexOf($tw.boot.wikiTiddlersPath) !== 0
           };
         });
       }
       $tw.wiki.addTiddlers(tiddlerFile.tiddlers);
     });
-    // Save the original tiddler file locations if requested
-    var config = wikiInfo.config || {};
-    if(config["retain-original-tiddler-path"]) {
-      var output = {}, relativePath;
-      for(var title in $tw.boot.files) {
-        relativePath = path.relative(resolvedWikiPath,$tw.boot.files[title].filepath);
-        output[title] =
-          path.sep === "/" ?
-          relativePath :
-          relativePath.split(path.sep).join("/");
-      }
-      $tw.wiki.addTiddler({title: "$:/config/OriginalTiddlerPaths", type: "application/json", text: JSON.stringify(output)});
-    }
-    // Save the path to the tiddlers folder for the filesystemadaptor
-    $tw.boot.wikiTiddlersPath = path.resolve($tw.boot.wikiPath,config["default-tiddler-location"] || $tw.config.wikiTiddlersSubDir);
-    // Load any plugins within the wiki folder
-    var wikiPluginsPath = path.resolve(wikiPath,$tw.config.wikiPluginsSubDir);
-    if(fs.existsSync(wikiPluginsPath)) {
-      var pluginFolders = fs.readdirSync(wikiPluginsPath);
-      for(var t=0; t<pluginFolders.length; t++) {
-        pluginFields = $tw.loadPluginFolder(path.resolve(wikiPluginsPath,"./" + pluginFolders[t]));
-        if(pluginFields) {
-          $tw.wiki.addTiddler(pluginFields);
-        }
-      }
-    }
-    // Load any themes within the wiki folder
-    var wikiThemesPath = path.resolve(wikiPath,$tw.config.wikiThemesSubDir);
-    if(fs.existsSync(wikiThemesPath)) {
-      var themeFolders = fs.readdirSync(wikiThemesPath);
-      for(var t=0; t<themeFolders.length; t++) {
-        pluginFields = $tw.loadPluginFolder(path.resolve(wikiThemesPath,"./" + themeFolders[t]));
-        if(pluginFields) {
-          $tw.wiki.addTiddler(pluginFields);
-        }
-      }
-    }
-    // Load any languages within the wiki folder
-    var wikiLanguagesPath = path.resolve(wikiPath,$tw.config.wikiLanguagesSubDir);
-    if(fs.existsSync(wikiLanguagesPath)) {
-      var languageFolders = fs.readdirSync(wikiLanguagesPath);
-      for(var t=0; t<languageFolders.length; t++) {
-        pluginFields = $tw.loadPluginFolder(path.resolve(wikiLanguagesPath,"./" + languageFolders[t]));
-        if(pluginFields) {
-          $tw.wiki.addTiddler(pluginFields);
-        }
-      }
-    }
-    return wikiInfo;
-  };
+	if ($tw.boot.wikiPath == wikiPath) {
+		// Save the original tiddler file locations if requested
+		var output = {}, relativePath, fileInfo;
+		for(var title in $tw.boot.files) {
+			fileInfo = $tw.boot.files[title];
+			if(fileInfo.isEditableFile) {
+				relativePath = path.relative($tw.boot.wikiTiddlersPath,fileInfo.filepath);
+				output[title] =
+					path.sep === "/" ?
+					relativePath :
+					relativePath.split(path.sep).join("/");
+			}
+		}
+		if(Object.keys(output).length > 0){
+			$tw.wiki.addTiddler({title: "$:/config/OriginalTiddlerPaths", type: "application/json", text: JSON.stringify(output)});
+		}
+	}
+	// Load any plugins within the wiki folder
+	var wikiPluginsPath = path.resolve(wikiPath,$tw.config.wikiPluginsSubDir);
+	if(fs.existsSync(wikiPluginsPath)) {
+		var pluginFolders = fs.readdirSync(wikiPluginsPath);
+		for(var t=0; t<pluginFolders.length; t++) {
+			pluginFields = $tw.loadPluginFolder(path.resolve(wikiPluginsPath,"./" + pluginFolders[t]));
+			if(pluginFields) {
+				$tw.wiki.addTiddler(pluginFields);
+			}
+		}
+	}
+	// Load any themes within the wiki folder
+	var wikiThemesPath = path.resolve(wikiPath,$tw.config.wikiThemesSubDir);
+	if(fs.existsSync(wikiThemesPath)) {
+		var themeFolders = fs.readdirSync(wikiThemesPath);
+		for(var t=0; t<themeFolders.length; t++) {
+			pluginFields = $tw.loadPluginFolder(path.resolve(wikiThemesPath,"./" + themeFolders[t]));
+			if(pluginFields) {
+				$tw.wiki.addTiddler(pluginFields);
+			}
+		}
+	}
+	// Load any languages within the wiki folder
+	var wikiLanguagesPath = path.resolve(wikiPath,$tw.config.wikiLanguagesSubDir);
+	if(fs.existsSync(wikiLanguagesPath)) {
+		var languageFolders = fs.readdirSync(wikiLanguagesPath);
+		for(var t=0; t<languageFolders.length; t++) {
+			pluginFields = $tw.loadPluginFolder(path.resolve(wikiLanguagesPath,"./" + languageFolders[t]));
+			if(pluginFields) {
+				$tw.wiki.addTiddler(pluginFields);
+			}
+		}
+	}
+	return wikiInfo;
+};
 
   $tw.loadTiddlersNode = function() {
     // Load the boot tiddlers
@@ -2150,7 +2172,7 @@ var _boot = (function($tw) {
     // Load any extra plugins
     $tw.utils.each($tw.boot.extraPlugins,function(name) {
       if(name.charAt(0) === "+") { // Relative path to plugin
-        var pluginFields = $tw.loadPluginFolder(name.substring(1));;
+			var pluginFields = $tw.loadPluginFolder(name.substring(1));
         if(pluginFields) {
           $tw.wiki.addTiddler(pluginFields);
         }

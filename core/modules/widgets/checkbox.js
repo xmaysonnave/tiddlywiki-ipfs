@@ -40,6 +40,9 @@ Render this widget into the DOM
     if (this.getValue()) {
       this.inputDomNode.setAttribute('checked', 'true')
     }
+    if (this.isDisabled === 'yes') {
+      this.inputDomNode.setAttribute('disabled', true)
+    }
     this.inputDomNode.setAttribute('title', this.checkboxTooltip)
     this.labelDomNode.appendChild(this.inputDomNode)
     this.spanDomNode = this.document.createElement('span')
@@ -186,6 +189,7 @@ Render this widget into the DOM
     this.checkboxDefault = this.getAttribute('default')
     this.checkboxClass = this.getAttribute('class', '')
     this.checkboxInvertTag = this.getAttribute('invertTag', '')
+    this.isDisabled = this.getAttribute('disabled', 'no')
     // Make the child widgets
     this.makeChildWidgets()
   }
@@ -205,7 +209,8 @@ Render this widget into the DOM
       changedAttributes.checked ||
       changedAttributes.unchecked ||
       changedAttributes.default ||
-      changedAttributes.class
+      changedAttributes.class ||
+      changedAttributes.disabled
     ) {
       this.refreshSelf()
       return true

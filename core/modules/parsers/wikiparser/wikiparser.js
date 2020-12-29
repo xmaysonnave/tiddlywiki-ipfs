@@ -4,7 +4,20 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: parser
 
-wikiparser
+The wiki text parser processes blocks of source text into a parse tree.
+
+The parse tree is made up of nested arrays of these JavaScript objects:
+
+	{type: "element", tag: <string>, attributes: {}, children: []} - an HTML element
+	{type: "text", text: <string>} - a text node
+	{type: "entity", value: <string>} - an entity
+	{type: "raw", html: <string>} - raw HTML
+
+Attributes are stored as hashmaps of the following objects:
+
+	{type: "string", value: <string>} - literal string
+	{type: "indirect", textReference: <textReference>} - indirect through a text reference
+	{type: "macro", macro: <TBD>} - indirect through a macro invocation
 
 \*/
 ;(function () {
@@ -192,7 +205,7 @@ Parse a block from the current position
   terminatorRegExpString: optional regular expression string that identifies the end of plain paragraphs. Must not include capturing parenthesis
 */
   WikiParser.prototype.parseBlock = function (terminatorRegExpString) {
-    var terminatorRegExp = terminatorRegExpString ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'gm') : /(\r?\n\r?\n)/gm
+    var terminatorRegExp = terminatorRegExpString ? new RegExp('(' + terminatorRegExpString + '|\\r?\\n\\r?\\n)', 'mg') : /(\r?\n\r?\n)/gm
     this.skipWhitespace()
     if (this.pos >= this.sourceLength) {
       return []
@@ -239,7 +252,7 @@ Parse a block from the current position to the end of the text
 Parse blocks of text until a terminating regexp is encountered
 */
   WikiParser.prototype.parseBlocksTerminated = function (terminatorRegExpString) {
-    var terminatorRegExp = new RegExp('(' + terminatorRegExpString + ')', 'gm')
+    var terminatorRegExp = new RegExp('(' + terminatorRegExpString + ')', 'mg')
     var tree = []
     // Skip any whitespace
     this.skipWhitespace()
@@ -385,22 +398,18 @@ Amend the rules used by this instance of the parser
   WikiParser.prototype.amendRules = function (type, names) {
     names = names || []
     // Define the filter function
-    var keepFilter
+    var target
     if (type === 'only') {
-      keepFilter = function (name) {
-        return names.indexOf(name) !== -1
-      }
+      target = true
     } else if (type === 'except') {
-      keepFilter = function (name) {
-        return names.indexOf(name) === -1
-      }
+      target = false
     } else {
       return
     }
     // Define a function to process each of our rule arrays
     var processRuleArray = function (ruleArray) {
       for (var t = ruleArray.length - 1; t >= 0; t--) {
-        if (!keepFilter(ruleArray[t].rule.name)) {
+        if ((names.indexOf(ruleArray[t].rule.name) === -1) === target) {
           ruleArray.splice(t, 1)
         }
       }

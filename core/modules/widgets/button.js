@@ -19,26 +19,28 @@ Button widget
   }
 
   /*
-Inherit from the base widget class
-*/
+   * Inherit from the base widget class
+   */
   ButtonWidget.prototype = new Widget()
 
   /*
-Render this widget into the DOM
-*/
+   * Render this widget into the DOM
+   */
   ButtonWidget.prototype.render = function (parent, nextSibling) {
     var self = this
+    var tag = 'button'
+    var domNode
     // Remember parent
     this.parentDomNode = parent
     // Compute attributes and execute state
     this.computeAttributes()
     this.execute()
     // Create element
-    var tag = 'button'
     if (this.buttonTag && $tw.config.htmlUnsafeElements.indexOf(this.buttonTag) === -1) {
       tag = this.buttonTag
     }
-    var domNode = this.document.createElement(tag)
+    domNode = this.document.createElement(tag)
+    this.domNode = domNode
     // Assign classes
     var classes = this.class.split(' ') || []
     var isPoppedUp = (this.popup || this.popupTitle) && this.isPoppedUp()
@@ -68,6 +70,9 @@ Render this widget into the DOM
     if (this.tabIndex) {
       domNode.setAttribute('tabindex', this.tabIndex)
     }
+    if (this.isDisabled === 'yes') {
+      domNode.setAttribute('disabled', true)
+    }
     // Add a click event handler
     domNode.addEventListener(
       'click',
@@ -93,7 +98,8 @@ Render this widget into the DOM
           handled = true
         }
         if (self.actions) {
-          self.invokeActionString(self.actions, self, event)
+          var modifierKey = $tw.keyboardManager.getEventModifierKeyDescriptor(event)
+          self.invokeActionString(self.actions, self, event, { modifier: modifierKey })
         }
         if (handled) {
           event.preventDefault()
@@ -123,8 +129,8 @@ Render this widget into the DOM
   }
 
   /*
-We don't allow actions to propagate because we trigger actions ourselves
-*/
+   * We don't allow actions to propagate because we trigger actions ourselves
+   */
   ButtonWidget.prototype.allowActionPropagation = function () {
     return false
   }
@@ -210,8 +216,8 @@ We don't allow actions to propagate because we trigger actions ourselves
   }
 
   /*
-Compute the internal state of the widget
-*/
+   * Compute the internal state of the widget
+   */
   ButtonWidget.prototype.execute = function () {
     // Get attributes
     this.actions = this.getAttribute('actions')
@@ -222,10 +228,10 @@ Compute the internal state of the widget
     this.setTo = this.getAttribute('setTo')
     this.popup = this.getAttribute('popup')
     this.hover = this.getAttribute('hover')
-    this.class = this.getAttribute('class', '')
     this['aria-label'] = this.getAttribute('aria-label')
     this.tooltip = this.getAttribute('tooltip')
     this.style = this.getAttribute('style')
+    this.class = this.getAttribute('class', '')
     this.selectedClass = this.getAttribute('selectedClass')
     this.defaultSetValue = this.getAttribute('default', '')
     this.buttonTag = this.getAttribute('tag')
@@ -236,13 +242,32 @@ Compute the internal state of the widget
     this.setIndex = this.getAttribute('setIndex')
     this.popupTitle = this.getAttribute('popupTitle')
     this.tabIndex = this.getAttribute('tabindex')
+    this.isDisabled = this.getAttribute('disabled', 'no')
     // Make child widgets
     this.makeChildWidgets()
   }
 
+  ButtonWidget.prototype.updateDomNodeClasses = function () {
+    var domNodeClasses = this.domNode.className.split(' ')
+    var oldClasses = this.class.split(' ')
+    var newClasses
+    this.class = this.getAttribute('class', '')
+    newClasses = this.class.split(' ')
+    //Remove classes assigned from the old value of class attribute
+    $tw.utils.each(oldClasses, function (oldClass) {
+      var i = domNodeClasses.indexOf(oldClass)
+      if (i !== -1) {
+        domNodeClasses.splice(i, 1)
+      }
+    })
+    //Add new classes from updated class attribute.
+    $tw.utils.pushTop(domNodeClasses, newClasses)
+    this.domNode.className = domNodeClasses.join(' ')
+  }
+
   /*
-Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
-*/
+   * Selectively refreshes the widget if needed. Returns true if the widget or any of its children needed re-rendering
+   */
   ButtonWidget.prototype.refresh = function (changedTiddlers) {
     var changedAttributes = this.computeAttributes()
     if (
@@ -255,7 +280,6 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
       changedAttributes.setTo ||
       changedAttributes.popup ||
       changedAttributes.hover ||
-      changedAttributes.class ||
       changedAttributes.selectedClass ||
       changedAttributes.style ||
       changedAttributes.dragFilter ||
@@ -266,10 +290,13 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
       changedAttributes.setTitle ||
       changedAttributes.setField ||
       changedAttributes.setIndex ||
-      changedAttributes.popupTitle
+      changedAttributes.popupTitle ||
+      changedAttributes.disabled
     ) {
       this.refreshSelf()
       return true
+    } else if (changedAttributes.class) {
+      this.updateDomNodeClasses()
     }
     return this.refreshChildren(changedTiddlers)
   }

@@ -102,6 +102,5 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
       }
     }
   }
-
   exports['text/csv'] = CsvParser
 })()

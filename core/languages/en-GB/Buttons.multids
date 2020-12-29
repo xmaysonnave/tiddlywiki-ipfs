@@ -1,9 +1,6 @@
 title: $:/language/Buttons/
 tags: $:/ipfs/core
 
-3Box/Profile/Caption: 3Box profile
-3Box/Profile/Hint: Load 3Box profile
-
 Ipfs/Export/Caption: export to IPFS
 Ipfs/Export/Hint: Export this tiddler to IPFS
 
