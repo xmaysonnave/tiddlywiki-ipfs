@@ -153,9 +153,9 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   })
 
   // Ipfs Client
-  const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
+  const apiUrl = process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
-  const gatewayUrl = process.env.GATEWAY ? `${process.env.GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
+  const gatewayUrl = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
 
   // Upload
   var cid = null
@@ -276,10 +276,10 @@ _source_path: ${node._source_path}
 _source_size: ${node._source_size}
 _source_uri: ipfs://${node._parent_cid}/${contentName}
 _cid: ${node._cid}
-_cid_uri: ipfs://${node._cid_uri}
+_cid_uri: ipfs://${node._cid}
 _semver: ${node._semver}
 _version: ${node._version}
-_raw_hash: ${node.__raw_hash}`
+_raw_hash: ${node._raw_hash}`
   if (faviconCid) {
     tid = `${tid}
 _parent_cid: ${node._parent_cid}

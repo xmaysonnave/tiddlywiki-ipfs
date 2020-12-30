@@ -99,9 +99,9 @@ module.exports = async function main (dir) {
     }
   }
   // Ipfs Client
-  const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
+  const apiUrl = process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
-  const gatewayUrl = process.env.GATEWAY ? `${process.env.GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
+  const gatewayUrl = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
   // Node
   const node = await dagPut(api, gatewayUrl, links)
   // Root Node

@@ -9,7 +9,7 @@ type: text/vnd.tiddlywiki
   <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
   <li>[[IPFS with TiddlyWiki Documentation|IPFS Documentation]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation.json/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
   <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs.js/build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Release</h4>
 <ul>

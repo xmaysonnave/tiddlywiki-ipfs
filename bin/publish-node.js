@@ -69,7 +69,7 @@ module.exports = async function main (dir, pin) {
   pin = pin ? pin === 'true' : process.env.PIN ? process.env.PIN === 'true' : true
 
   // Ipfs Client
-  const apiUrl = process.env.API ? process.env.API : 'https://ipfs.infura.io:5001'
+  const apiUrl = process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001'
   const api = IpfsHttpClient(apiUrl)
 
   // Read node.json
