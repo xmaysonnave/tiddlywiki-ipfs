@@ -6,7 +6,7 @@ module.exports = function (api) {
         '@babel/preset-env',
         {
           useBuiltIns: 'usage',
-          corejs: { version: '3.8', proposals: true },
+          corejs: { version: 3, proposals: true },
           debug: false,
         },
       ],
@@ -15,7 +15,7 @@ module.exports = function (api) {
       [
         '@babel/plugin-transform-runtime',
         {
-          version: '^7.12.0', // @babel/runtime-corejs3
+          version: '^7.12.1', // @babel/runtime-corejs3
         },
       ],
     ],

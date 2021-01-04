@@ -505,7 +505,7 @@ var _ipfs = function ($tw) {
               inflate(decrypted)
               if (recovered) {
                 $tw.utils.alert(
-                  name,
+                  'ipfs-boot',
                   `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
                 )
               }
@@ -541,7 +541,7 @@ var _ipfs = function ($tw) {
             $tw.boot.preloadTiddler(decrypted, callback)
             if (recovered) {
               $tw.utils.alert(
-                name,
+                'ipfs-boot',
                 `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
               )
             }
