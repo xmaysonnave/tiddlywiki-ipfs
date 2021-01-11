@@ -65,6 +65,35 @@ Functions to deserialise tiddlers from a block of text
     return undefined
   }
 
+  exports['application/json'] = function (text, fields) {
+    var incoming
+    var results = []
+    try {
+      incoming = JSON.parse(text)
+    } catch (e) {
+      incoming = [
+        {
+          title: 'JSON error: ' + e,
+          text: '',
+        },
+      ]
+    }
+    if (!$tw.utils.isArray(incoming)) {
+      incoming = [incoming]
+    }
+    for (var t = 0; t < incoming.length; t++) {
+      var incomingFields = incoming[t]
+      var fields = {}
+      for (var f in incomingFields) {
+        if (typeof incomingFields[f] === 'string') {
+          fields[f] = incomingFields[f]
+        }
+      }
+      results.push(fields)
+    }
+    return results
+  }
+
   /**
    * Parse an HTML file into tiddlers. There are three possibilities:
    * A TiddlyWiki classic HTML file containing `text/x-tiddlywiki` tiddlers

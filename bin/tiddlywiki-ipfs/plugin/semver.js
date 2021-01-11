@@ -15,24 +15,21 @@ function main () {
 
     const sourceMetadata = './core/plugin.info'
     const targetMetadata = './build/plugins/ipfs/plugin.info'
-    const sourcePackage = './package.json'
+    // const sourcePackage = './package.json'
 
     // retrieve current version from plugin.info
     const infoPlugin = JSON.parse(fs.readFileSync(sourceMetadata, 'utf8'))
-    // package.json
-    const infoProject = JSON.parse(fs.readFileSync(sourcePackage, 'utf8'))
-
-    // update version
-    infoProject.version = version
     infoPlugin.version = version
-
-    // update package.json
-    var data = JSON.stringify(infoProject, null, 2)
-    fs.writeFileSync(sourcePackage, data, 'utf8')
-
-    // update plugin.info
-    data = JSON.stringify(infoPlugin, null, 2)
+    // update
+    var data = JSON.stringify(infoPlugin, null, 2)
     fs.writeFileSync(targetMetadata, data, 'utf8')
+
+    // retrieve current version from package.json
+    // const infoProject = JSON.parse(fs.readFileSync(sourcePackage, 'utf8'))
+    // infoProject.version = version
+    // update
+    // data = JSON.stringify(infoProject, null, 2)
+    // fs.writeFileSync(sourcePackage, data, 'utf8')
   } catch (error) {
     console.error(error)
     process.exit(1)

@@ -36,6 +36,7 @@ Startup initialisation
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('application/x-tiddler-dictionary', 'utf8', '.dict')
+    $tw.utils.registerFileType('application/zlib', 'base64', '.zlib')
     $tw.utils.registerFileType('audio/mpeg', 'base64', '.mp2')
     $tw.utils.registerFileType('image/jpg', 'base64', ['.jpg', '.jpeg'], {
       flags: ['image'],
