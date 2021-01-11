@@ -42,7 +42,7 @@
         "$:/core/save/all",
         "../sample/empty-ethereum.html",
         "text/plain",
-      "--clearencryptionpublickey"
+      "--clearkeys"
     ],
 		"empty-standford": [
       "--import",
@@ -62,7 +62,7 @@
         "$:/core/save/all",
         "../sample/empty-standford.html",
         "text/plain",
-      "--clearpassword"
+      "--clearkeys"
     ],
 		"empty-plain": [
       "--import",
@@ -74,6 +74,8 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
 			"--rendertiddler",
         "$:/core/save/all",
         "../sample/empty-plain.html",
@@ -89,13 +91,15 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--encryptionpublickey",
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
         "../sample/empty-plain-and-ethereum.html",
         "text/plain",
-      "--clearencryptionpublickey"
+      "--clearkeys"
     ],
 		"empty-plain-and-standford": [
       "--import",
@@ -107,13 +111,15 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--password",
         "blue",
 			"--rendertiddler",
         "$:/core/save/all",
         "../sample/empty-plain-and-standford.html",
         "text/plain",
-      "--clearpassword"
+      "--clearkeys"
     ],
 		"favicon": [
 			"--savetiddler",

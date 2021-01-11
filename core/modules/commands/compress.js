@@ -28,9 +28,7 @@ Set compression state
     if (this.params.length > 0) {
       compress = this.params[0] === 'yes'
     }
-    if ($tw.compress && typeof $tw.compress.setCompressState === 'function') {
-      $tw.compress.setCompressState(compress)
-    }
+    $tw.compress.setCompressState(compress)
     return null
   }
 

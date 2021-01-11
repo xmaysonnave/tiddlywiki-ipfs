@@ -12,11 +12,11 @@ nvm use > /dev/null 2>&1
 # init
 rm -f -R ./build/output/tiddlywiki-ipfs/boot > /dev/null 2>&1
 mkdir -p ./build/output/tiddlywiki-ipfs/boot > /dev/null 2>&1
-rm -f -R ./production/tiddlywiki-ipfs/boot > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/boot > /dev/null 2>&1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./production/tiddlywiki-ipfs/boot > /dev/null 2>&1
+mkdir -p ./production/tiddlywiki-ipfs/boot > /dev/null 2>&1
 mkdir -p ./current/tiddlywiki-ipfs/boot > /dev/null 2>&1
 
 # boot

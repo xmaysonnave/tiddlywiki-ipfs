@@ -153,8 +153,21 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   })
 
   // Ipfs Client
-  const apiUrl = process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001'
-  const api = IpfsHttpClient(apiUrl)
+  const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
+  const protocol = apiUrl.protocol.slice(0, -1)
+  var port = apiUrl.port
+  if (port === undefined || port == null || port.trim() === '') {
+    port = 443
+    if (protocol === 'http') {
+      port = 80
+    }
+  }
+  const api = IpfsHttpClient({
+    protocol: protocol,
+    host: apiUrl.hostname,
+    port: port,
+    timeout: '4m',
+  })
   const gatewayUrl = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
 
   // Upload

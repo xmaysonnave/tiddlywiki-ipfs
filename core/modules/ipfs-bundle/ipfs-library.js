@@ -81,7 +81,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
       `Processing connection to IPFS API URL:
 ${apiUrl}`
     )
-    var protocol = apiUrl.protocol.slice(0, -1)
+    const protocol = apiUrl.protocol.slice(0, -1)
     var port = apiUrl.port
     if (port === undefined || port == null || port.trim() === '') {
       port = 443

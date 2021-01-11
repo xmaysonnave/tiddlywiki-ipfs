@@ -35,7 +35,7 @@
         "$:/core/save/all",
         "./editions/dev/index.html",
         "text/plain",
-      "--clearencryptionpublickey"
+      "--clearkeys"
     ],
 		"dev-compressed": [
       "--import",
@@ -78,7 +78,7 @@
         "$:/core/save/all",
         "../sample/dev-standford.html",
         "text/plain",
-      "--clearpassword"
+      "--clearkeys"
     ],
     "dev-plain": [
       "--import",
@@ -93,6 +93,8 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--rendertiddler",
         "$:/core/save/all",
         "../sample/dev-plain.html",
@@ -111,13 +113,15 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--encryptionpublickey",
         "%DEV_DERIVED_PUBLIC_KEY%",
       "--rendertiddler",
         "$:/core/save/all",
         "../sample/dev-plain-and-ethereum.html",
         "text/plain",
-      "--clearencryptionpublickey"
+      "--clearkeys"
     ],
     "dev-plain-and-standford": [
       "--import",
@@ -132,13 +136,15 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--password",
         "blue",
       "--rendertiddler",
         "$:/core/save/all",
         "../sample/dev-plain-and-standford.html",
         "text/plain",
-      "--clearpassword"
+      "--clearkeys"
     ],
 		"favicon": [
 			"--savetiddler",

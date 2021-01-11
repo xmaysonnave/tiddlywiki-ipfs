@@ -2,6 +2,19 @@ var _ipfs = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
+  const name = 'ipfs-boot'
+
+  /////////////////////////// Standard node.js libraries
+
+  var fs
+  var path
+  var vm
+  if($tw.node) {
+	  fs = require("fs");
+    path = require("path");
+    vm = require("vm");
+  }
+
   $tw.boot.getLogger = function () {
     var log = $tw.node ? global.log || require('loglevel') : window.log
     if (log !== undefined && log !== null) {
@@ -21,16 +34,63 @@ var _ipfs = function ($tw) {
     return console
   }
 
+/**
+ * Run code globally with specified context variables in scope
+ */
+$tw.utils.evalGlobal = function(code,context,filename) {
+	var contextCopy = $tw.utils.extend(Object.create(null),context);
+	// Get the context variables as a pair of arrays of names and values
+	var contextNames = [], contextValues = [];
+	$tw.utils.each(contextCopy,function(value,name) {
+		contextNames.push(name);
+		contextValues.push(value);
+	});
+	// Add the code prologue and epilogue
+	code = "(function(" + contextNames.join(",") + ") {(function(){\n" + code + "\n;})();\nreturn exports;\n})\n";
+	// Compile the code into a function
+	var fn;
+	if($tw.browser) {
+		fn = window["eval"](code + "\n\n//# sourceURL=" + filename);
+	} else {
+		fn = vm.runInThisContext(code,filename);
+	}
+	// Call the function and return the exports
+	return fn.apply(null,contextValues);
+};
+
+/**
+ * Run code in a sandbox with only the specified context variables in scope
+ */
+$tw.utils.evalSandboxed = $tw.browser ? $tw.utils.evalGlobal : function(code,context,filename) {
+  var sandbox = $tw.utils.extend(Object.create(null),context);
+  filename = $tw.wiki.pluginLookup(filename)
+	vm.runInNewContext(code,sandbox,filename);
+	return sandbox.exports;
+};
+
+$tw.Wiki.prototype.pluginLookup = function(title) {
+  const pluginInfo = $tw.wiki.readPluginInfo()
+  for (var i = 0; i < pluginInfo.modifiedPlugins.length; i++) {
+    const pluginTitle = pluginInfo.modifiedPlugins[i]
+    const plugin = $tw.wiki.getTiddler(pluginTitle)
+    if (plugin.fields.filepaths && plugin.fields.filepaths[title]) {
+      return plugin.fields.filepaths[title]
+    }
+  }
+  return title
+};
+
   /**
    * Crypto helper object for encrypted content. It maintains the password text in a closure, and provides methods to change
    * the password, and to encrypt/decrypt a block of text
    */
   $tw.utils.Crypto = function () {
     var currentPassword = null
+    var currentPrivateKey = null
     var currentPublicKey = null
     var callSjcl = function (method, inputText, password) {
       password = password || currentPassword
-      var outputText
+      var outputText = null
       var sjcl = $tw.node ? global.sjcl || require('sjcl') : window.sjcl
       try {
         if (password) {
@@ -41,14 +101,45 @@ var _ipfs = function ($tw) {
           var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
           $tw.boot.getLogger().info(`Standford ${uMethod}: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
         }
-      } catch (ex) {
-        $tw.boot.getLogger().error('Crypto error:' + ex)
+      } catch (error) {
+        $tw.boot.getLogger().error('Standford Crypto: ' + error)
+        outputText = null
+      }
+      return outputText
+    }
+    var callSigUtil = function (method, inputText, key) {
+      var outputText = null
+      var sigUtil = $tw.node ? global.sigUtil || require('eth-sig-util') : window.sigUtil
+      try {
+        if (method === 'encrypt') {
+          key = key || currentPublicKey
+          if (key) {
+            var tStart = new Date()
+            outputText = sigUtil.encrypt(key, { data: inputText }, 'x25519-xsalsa20-poly1305')
+            outputText = JSON.stringify(outputText)
+            var tStop = new Date() - tStart
+            var ratio = Math.floor((outputText.length * 100) / inputText.length)
+            $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
+          }
+        } else if (method === 'decrypt') {
+          key = key || currentPrivateKey
+          if (key) {
+            var tStart = new Date()
+            outputText = sigUtil.decrypt(JSON.parse(inputText), key)
+            var tStop = new Date() - tStart
+            var ratio = Math.floor((outputText.length * 100) / inputText.length)
+            $tw.boot.getLogger().info(`Ethereum Decryption: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
+          }
+        }
+      } catch (error) {
+        $tw.boot.getLogger().error('Ethereum Crypto: ' + error)
         outputText = null
       }
       return outputText
     }
     this.setPassword = function (newPassword) {
-      currentPassword = newPassword === undefined || newPassword == null ? null : newPassword
+      currentPassword = newPassword === undefined || newPassword == null || newPassword.trim() === '' ? null : newPassword
+      currentPrivateKey = null
       currentPublicKey = null
       if ($tw.wiki) {
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
@@ -63,12 +154,13 @@ var _ipfs = function ($tw) {
         this.updateCryptoStateTiddler()
       }
     }
-    this.setEncryptionPublicKey = function (newPublicKey) {
-      currentPublicKey = newPublicKey === undefined || newPublicKey == null ? null : newPublicKey
+    this.setEncryptionKey = function (newPublicKey, newPrivateKey) {
+      currentPrivateKey = newPrivateKey === undefined || newPrivateKey == null || newPrivateKey.trim() === '' ? null : newPrivateKey
+      currentPublicKey = newPublicKey === undefined || newPublicKey == null || newPublicKey.trim() === '' ? null : newPublicKey
       currentPassword = null
       if ($tw.wiki) {
         var encryption = $tw.wiki.getTiddler('$:/config/encryption')
-        if (currentPublicKey !== null) {
+        if (currentPrivateKey !== null || currentPublicKey !== null) {
           if (encryption.fields.text !== 'ethereum') {
             $tw.wiki.addTiddler(
               new $tw.Tiddler({
@@ -93,7 +185,7 @@ var _ipfs = function ($tw) {
     this.updateCryptoStateTiddler = function () {
       if ($tw.wiki) {
         var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        var state = currentPassword || currentPublicKey ? 'yes' : 'no'
+        var state = currentPassword || currentPublicKey || currentPrivateKey ? 'yes' : 'no'
         if (!encrypted || encrypted.fields.text !== state) {
           if (currentPublicKey) {
             $tw.wiki.addTiddler(
@@ -117,32 +209,29 @@ var _ipfs = function ($tw) {
     this.hasPassword = function () {
       return !!currentPassword
     }
+    this.hasEncryptionPrivateKey = function () {
+      return !!currentPrivateKey
+    }
     this.hasEncryptionPublicKey = function () {
       return !!currentPublicKey
     }
     this.encrypt = function (text, password, publicKey) {
+      password = password || currentPassword
       publicKey = publicKey || currentPublicKey
-      if (publicKey) {
-        var output
-        var sigUtil = $tw.node ? global.sigUtil || require('eth-sig-util') : window.sigUtil
-        var tStart = new Date()
-        try {
-          output = sigUtil.encrypt(publicKey, { data: text }, 'x25519-xsalsa20-poly1305')
-          output = JSON.stringify(output)
-          var tStop = new Date() - tStart
-          var ratio = Math.floor((output.length * 100) / text.length)
-          $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
-        } catch (error) {
-          $tw.boot.getLogger().error('Crypto error:' + error)
-          output = null
-        }
-        return output
-      } else {
+      if (password) {
         return callSjcl('encrypt', text, password)
+      } else if (publicKey) {
+        return callSigUtil('encrypt', text, publicKey)
       }
     }
-    this.decrypt = function (text, password) {
-      return callSjcl('decrypt', text, password)
+    this.decrypt = function (text, password, privateKey) {
+      password = password || currentPassword
+      privateKey = privateKey || currentPrivateKey
+      if (password) {
+        return callSjcl('decrypt', text, password)
+      } else if (privateKey) {
+        return callSigUtil('decrypt', text, privateKey)
+      }
     }
     this.keccak256 = function (text) {
       var createKeccakHash = $tw.node ? global.createKeccakHash || require('keccak') : window.createKeccakHash
@@ -160,14 +249,10 @@ var _ipfs = function ($tw) {
     var currentState = null
     this.setCompressState = function (state) {
       currentState = state ? 'yes' : 'no'
-      this.updateCompressStateTiddler()
-    }
-    this.updateCompressStateTiddler = function () {
       if ($tw.wiki) {
-        var state = currentState === 'yes' ? 'yes' : 'no'
         var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
-        if (!tiddler || tiddler.fields.text !== state) {
-          $tw.wiki.addTiddler(new $tw.Tiddler({ title: '$:/isCompressed', text: state }))
+        if (!tiddler || tiddler.fields.text !== currentState) {
+          $tw.wiki.addTiddler(new $tw.Tiddler({ title: '$:/isCompressed', text: currentState }))
         }
       }
     }
@@ -294,157 +379,285 @@ var _ipfs = function ($tw) {
     }
   }
 
-  /////////////////////////// Browser definitions
-
-  if ($tw.browser && !$tw.node) {
-    $tw.boot.metamaskPrompt = async function (encrypted, keccak256, signature, callback) {
-      var checkAccountPermission = async function (provider) {
-        if (typeof provider.request === 'function') {
-          const permissions = await provider.request({
-            method: 'wallet_getPermissions',
-          })
-          const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
-          if (accountsPermission) {
-            return true
-          }
-        }
-        return false
-      }
-      var requestAccountPermission = async function (provider) {
-        if (typeof provider.request === 'function') {
-          const permissions = await provider.request({
-            method: 'wallet_requestPermissions',
-            params: [{ eth_accounts: {} }],
-          })
-          const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
-          if (accountsPermission) {
-            return true
-          }
-        }
-        return false
-      }
-      var personalRecover = async function (provider, message, signature) {
-        var recovered = null
-        if (typeof provider.request === 'function') {
-          var params = [message, signature]
-          recovered = await provider.request({
-            method: 'personal_ecRecover',
-            params,
-          })
-        }
-        if (recovered === undefined || recovered == null) {
-          const err = new Error('Unrecoverable signature...')
-          err.name = 'UnrecoverableSignature'
-          throw err
-        }
-        return recovered
-      }
-      // Check hash
-      if (keccak256) {
-        const hash = $tw.crypto.keccak256(encrypted)
-        if (keccak256 !== hash) {
-          throw new Error('Tampered encrypted content, signature do not match...')
-        }
-      }
-      // Decrypt
-      var decrypted = null
-      var recovered = null
-      try {
-        const provider = await window.detectEthereumProvider({
-          mustBeMetaMask: true,
+  $tw.boot.metamaskPrompt = async function (encrypted, keccak256, signature, callback) {
+    if (!$tw.browser && $tw.node) {
+      callback(null)
+    }
+    var checkAccountPermission = async function (provider) {
+      if (typeof provider.request === 'function') {
+        const permissions = await provider.request({
+          method: 'wallet_getPermissions',
         })
-        if (provider === undefined || provider == null) {
-          throw new Error('Please install MetaMask...')
+        const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
+        if (accountsPermission) {
+          return true
         }
-        provider.autoRefreshOnNetworkChange = false
-        var accounts = null
-        var permission = false
-        // Permission Attempt
-        try {
-          permission = await checkAccountPermission(provider)
-          if (permission === false) {
-            permission = await requestAccountPermission(provider)
-          }
-        } catch (error) {
-          if (error.code === 4001) {
-            throw error
-          }
-          $tw.boot.getLogger().error(error)
+      }
+      return false
+    }
+    var requestAccountPermission = async function (provider) {
+      if (typeof provider.request === 'function') {
+        const permissions = await provider.request({
+          method: 'wallet_requestPermissions',
+          params: [{ eth_accounts: {} }],
+        })
+        const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
+        if (accountsPermission) {
+          return true
         }
-        // Request Accounts attempt
-        try {
-          if (permission === false || (await provider._metamask.isUnlocked()) === false) {
-            accounts = await provider.request({
-              method: 'eth_requestAccounts',
-            })
-          }
-          if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-            accounts = await provider.request({ method: 'eth_accounts' })
-          }
-        } catch (error) {
-          if (error.code === 4001) {
-            throw error
-          }
-          $tw.boot.getLogger().error(error)
-        }
-        // Enable attempt
-        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-          if (typeof provider.enable === 'function') {
-            accounts = await provider.enable()
-          }
-        }
-        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
-          throw new Error('Unable to retrieve any Ethereum accounts...')
-        }
-        if (provider.chainId !== undefined) {
-          $tw.boot.getLogger().log(`Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
-        } else {
-          $tw.boot.getLogger().log(`Ethereum Account: ${accounts[0]}`)
-        }
-        try {
-          if (signature) {
-            var tStart = new Date()
-            signature = await provider.request({
-              method: 'eth_decrypt',
-              params: [signature, accounts[0]],
-            })
-            if (signature !== undefined || signature !== null) {
-              var tStop = new Date() - tStart
-              $tw.boot.getLogger().info(`Ethereum Signature Decrypt: ${tStop}ms`)
-            }
-            recovered = await personalRecover(provider, keccak256, signature)
-            $tw.boot.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
-          }
-          var tStart = new Date()
-          decrypted = await provider.request({
-            method: 'eth_decrypt',
-            params: [encrypted, accounts[0]],
-          })
-          if (decrypted !== undefined || decrypted !== null) {
-            var tStop = new Date() - tStart
-            var ratio = Math.floor((decrypted.length * 100) / encrypted.length)
-            $tw.boot.getLogger().info(`Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`)
-          }
-        } catch (error) {
-          if (error.code === 4001) {
-            throw error
-          }
-          if (error.name === 'UnrecoverableSignature') {
-            throw new Error(`Tampered encrypted content. ${error.message}`)
-          }
-          $tw.boot.getLogger().error(error)
-          throw new Error('Unable to Decrypt Ethereum content...')
+      }
+      return false
+    }
+    var personalRecover = async function (provider, message, signature) {
+      var recovered = null
+      if (typeof provider.request === 'function') {
+        var params = [message, signature]
+        recovered = await provider.request({
+          method: 'personal_ecRecover',
+          params,
+        })
+      }
+      if (recovered === undefined || recovered == null) {
+        const err = new Error('Unrecoverable signature...')
+        err.name = 'UnrecoverableSignature'
+        throw err
+      }
+      return recovered
+    }
+    // Check hash
+    if (keccak256) {
+      const hash = $tw.crypto.keccak256(encrypted)
+      if (keccak256 !== hash) {
+        throw new Error('Tampered encrypted content, signature do not match...')
+      }
+    }
+    // Decrypt
+    var decrypted = null
+    var recovered = null
+    try {
+      const provider = await window.detectEthereumProvider({
+        mustBeMetaMask: true,
+      })
+      if (provider === undefined || provider == null) {
+        throw new Error('Please install MetaMask...')
+      }
+      provider.autoRefreshOnNetworkChange = false
+      var accounts = null
+      var permission = false
+      // Permission Attempt
+      try {
+        permission = await checkAccountPermission(provider)
+        if (permission === false) {
+          permission = await requestAccountPermission(provider)
         }
       } catch (error) {
         if (error.code === 4001) {
-          $tw.utils.error('Rejected User Request...')
-        } else {
-          $tw.utils.error(error.message)
+          throw error
+        }
+        $tw.boot.getLogger().error(error)
+      }
+      // Request Accounts attempt
+      try {
+        if (permission === false || (await provider._metamask.isUnlocked()) === false) {
+          accounts = await provider.request({
+            method: 'eth_requestAccounts',
+          })
+        }
+        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+          accounts = await provider.request({ method: 'eth_accounts' })
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
+        $tw.boot.getLogger().error(error)
+      }
+      // Enable attempt
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+        if (typeof provider.enable === 'function') {
+          accounts = await provider.enable()
         }
       }
-      callback(decrypted, recovered)
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+        throw new Error('Unable to retrieve any Ethereum accounts...')
+      }
+      if (provider.chainId !== undefined) {
+        $tw.boot.getLogger().log(`Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
+      } else {
+        $tw.boot.getLogger().log(`Ethereum Account: ${accounts[0]}`)
+      }
+      try {
+        if (signature) {
+          var tStart = new Date()
+          signature = await provider.request({
+            method: 'eth_decrypt',
+            params: [signature, accounts[0]],
+          })
+          if (signature !== undefined || signature !== null) {
+            var tStop = new Date() - tStart
+            $tw.boot.getLogger().info(`Ethereum Signature Decrypt: ${tStop}ms`)
+          }
+          recovered = await personalRecover(provider, keccak256, signature)
+          $tw.boot.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
+        }
+        var tStart = new Date()
+        decrypted = await provider.request({
+          method: 'eth_decrypt',
+          params: [encrypted, accounts[0]],
+        })
+        if (decrypted !== undefined || decrypted !== null) {
+          var tStop = new Date() - tStart
+          var ratio = Math.floor((decrypted.length * 100) / encrypted.length)
+          $tw.boot.getLogger().info(`Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`)
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
+        if (error.name === 'UnrecoverableSignature') {
+          throw new Error(`Tampered encrypted content. ${error.message}`)
+        }
+        $tw.boot.getLogger().error(error)
+        throw new Error('Unable to Decrypt Ethereum content...')
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        $tw.utils.error('Rejected User Request...')
+      } else {
+        $tw.utils.error(error.message)
+      }
+    }
+    callback(decrypted, recovered)
+  }
+
+  /////////////////////////// Module mechanism
+
+  /**
+   * Execute the module named 'moduleName'. The name can optionally be relative to the module named 'moduleRoot'
+   */
+  $tw.modules.execute = function (moduleName, moduleRoot) {
+    var name = moduleName
+    if (moduleName.charAt(0) === '.') {
+      name = $tw.utils.resolvePath(moduleName, moduleRoot)
+    }
+    if (!$tw.modules.titles[name]) {
+      if ($tw.modules.titles[name + '.js']) {
+        name = name + '.js'
+      } else if ($tw.modules.titles[name + '/index.js']) {
+        name = name + '/index.js'
+      } else if ($tw.modules.titles[moduleName]) {
+        name = moduleName
+      } else if ($tw.modules.titles[moduleName + '.js']) {
+        name = moduleName + '.js'
+      } else if ($tw.modules.titles[moduleName + '/index.js']) {
+        name = moduleName + '/index.js'
+      }
+    }
+    var moduleInfo = $tw.modules.titles[name]
+    var tiddler = $tw.wiki.getTiddler(name)
+    var _exports = {}
+    var sandbox = {
+      module: { exports: _exports },
+      //moduleInfo: moduleInfo,
+      exports: _exports,
+      console: console,
+      setInterval: setInterval,
+      clearInterval: clearInterval,
+      setTimeout: setTimeout,
+      clearTimeout: clearTimeout,
+      Buffer: $tw.browser ? undefined : Buffer,
+      $tw: $tw,
+      require: function (title) {
+        return $tw.modules.execute(title, name)
+      },
     }
 
+    Object.defineProperty(sandbox.module, 'id', {
+      value: name,
+      writable: false,
+      enumerable: true,
+      configurable: false,
+    })
+
+    if (!$tw.browser) {
+      $tw.utils.extend(sandbox, {
+        process: process,
+      })
+    } else {
+      /**
+       * CommonJS optional require.main property:
+       * In a browser we offer a fake main module which points back to the boot function
+       * (Theoretically, this may allow TW to eventually load itself as a module in the browser)
+       */
+      Object.defineProperty(sandbox.require, 'main', {
+        value: typeof require !== 'undefined' ? require.main : { TiddlyWiki: _ipfs },
+        writable: false,
+        enumerable: true,
+        configurable: false,
+      })
+    }
+    if (!moduleInfo) {
+      // We could not find the module on this path
+      // Try to defer to browserify etc, or node
+      if ($tw.browser) {
+        if (window.require) {
+          try {
+            return window.require(moduleName)
+          } catch (e) {}
+        }
+        throw new Error(`Cannot find module named '${moduleName}' required by module '${moduleRoot}', resolved to ${name}`)
+      } else {
+        // If we don't have a module with that name, let node.js try to find it
+        return require(moduleName)
+      }
+    }
+    // Execute the module if we haven't already done so
+    if (!moduleInfo.exports) {
+      try {
+        // Check the type of the definition
+        if (typeof moduleInfo.definition === 'function') {
+          // Function
+          moduleInfo.exports = _exports
+          moduleInfo.definition(moduleInfo, moduleInfo.exports, sandbox.require)
+        } else if (typeof moduleInfo.definition === 'string') {
+          // String
+          moduleInfo.exports = _exports
+          $tw.utils.evalSandboxed(moduleInfo.definition, sandbox, tiddler.fields.title)
+          if (sandbox.module.exports) {
+            moduleInfo.exports = sandbox.module.exports //more codemirror workaround
+          }
+        } else {
+          // Object
+          moduleInfo.exports = moduleInfo.definition
+        }
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          var line = e.lineNumber || e.line // Firefox || Safari
+          if (typeof line !== 'undefined' && line !== null) {
+            $tw.utils.error('Syntax error in boot module ' + name + ':' + line + ':\n' + e.stack)
+          } else if (!$tw.browser) {
+            // this is the only way to get node.js to display the line at which the syntax error appeared,
+            // and $tw.utils.error would exit anyway
+            // cf. https://bugs.chromium.org/p/v8/issues/detail?id=2589
+            throw e
+          } else {
+            // Opera: line number is included in e.message
+            // Chrome/IE: there's currently no way to get the line number
+            $tw.utils.error('Syntax error in boot module ' + name + ': ' + e.message + '\n' + e.stack)
+          }
+        } else {
+          // line number should be included in e.stack for runtime errors
+          $tw.utils.error('Error executing boot module ' + name + ': ' + JSON.stringify(e) + '\n\n' + e.stack)
+        }
+      }
+    }
+    // Return the exports of the module
+    return moduleInfo.exports
+  }
+
+  /////////////////////////// Browser definitions
+
+  if ($tw.browser && !$tw.node) {
     $tw.boot.passwordPrompt = function (text, callback) {
       var prompt = 'Enter a password to decrypt this TiddlyWiki'
       // Prompt for the password
@@ -505,7 +718,7 @@ var _ipfs = function ($tw) {
               inflate(decrypted)
               if (recovered) {
                 $tw.utils.alert(
-                  'ipfs-boot',
+                  name,
                   `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
                 )
               }
@@ -541,7 +754,7 @@ var _ipfs = function ($tw) {
             $tw.boot.preloadTiddler(decrypted, callback)
             if (recovered) {
               $tw.utils.alert(
-                'ipfs-boot',
+                name,
                 `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
               )
             }
@@ -574,6 +787,64 @@ var _ipfs = function ($tw) {
     }
   } // End of if($tw.browser && !$tw.node)
 
+  /////////////////////////// Node definitions
+
+  if($tw.node) {
+
+    /*
+    Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
+    */
+    $tw.loadPluginFolder = function(filepath,excludeRegExp) {
+      excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp;
+      var infoPath = filepath + path.sep + "plugin.info";
+      if(fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
+        // Read the plugin information
+        if(!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
+          console.log("Warning: missing plugin.info file in " + filepath);
+          return null;
+        }
+        var pluginInfo = JSON.parse(fs.readFileSync(infoPath,"utf8"));
+        // Read the plugin files
+        var pluginFiles = $tw.loadTiddlersFromPath(filepath,excludeRegExp);
+        // Save the plugin tiddlers into the plugin info
+        pluginInfo.filepaths = Object.create(null);
+        pluginInfo.tiddlers = pluginInfo.tiddlers || Object.create(null);
+        for(var f=0; f<pluginFiles.length; f++) {
+          var tiddlers = pluginFiles[f].tiddlers;
+          for(var t=0; t<tiddlers.length; t++) {
+            var tiddler= tiddlers[t];
+            if(tiddler.title) {
+              pluginInfo.filepaths[tiddler.title] = pluginFiles[f].filepath;
+              pluginInfo.tiddlers[tiddler.title] = tiddler;
+            }
+          }
+        }
+        // Give the plugin the same version number as the core if it doesn't have one
+        if(!("version" in pluginInfo)) {
+          pluginInfo.version = $tw.packageInfo.version;
+        }
+        // Use "plugin" as the plugin-type if we don't have one
+        if(!("plugin-type" in pluginInfo)) {
+          pluginInfo["plugin-type"] = "plugin";
+        }
+        pluginInfo.dependents = pluginInfo.dependents || [];
+        pluginInfo.type = "application/json";
+        // Set plugin text
+        pluginInfo.text = JSON.stringify({tiddlers: pluginInfo.tiddlers},null,4);
+        delete pluginInfo.tiddlers;
+        // Deserialise array fields (currently required for the dependents field)
+        for(var field in pluginInfo) {
+          if($tw.utils.isArray(pluginInfo[field])) {
+            pluginInfo[field] = $tw.utils.stringifyList(pluginInfo[field]);
+          }
+        }
+        return pluginInfo;
+      }
+      return null;
+    };
+
+  }
+
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
 
   $tw.boot.boot = function (callback) {
@@ -590,13 +861,11 @@ var _ipfs = function ($tw) {
       // Startup
       $tw.boot.startup({ callback: callback })
       // Make sure the crypto state tiddler is up to date
-      if ($tw.crypto) {
-        var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        if (encrypted && encrypted.fields._encryption_public_key) {
-          $tw.crypto.setEncryptionPublicKey(encrypted.fields._encryption_public_key)
-        } else {
-          $tw.crypto.updateCryptoStateTiddler()
-        }
+      var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+      if (encrypted && encrypted.fields._encryption_public_key) {
+        $tw.crypto.setEncryptionKey(encrypted.fields._encryption_public_key)
+      } else {
+        $tw.crypto.updateCryptoStateTiddler()
       }
     })
   }
@@ -609,7 +878,7 @@ var _ipfs = function ($tw) {
 }
 
 if (typeof exports !== 'undefined') {
-  exports.IpfsTiddlyWiki = _ipfs
+  exports.TiddlyWiki = _ipfs
 } else {
   _ipfs(window.$tw)
 }

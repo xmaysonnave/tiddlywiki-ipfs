@@ -37,7 +37,7 @@ wget https://cdn.jsdelivr.net/npm/loglevel@1.7.1/dist/loglevel.min.js -O ./logle
 
 # pako
 mkdir pako > /dev/null 2>&1
-wget https://cdn.jsdelivr.net/npm/pako@2.0.2/dist/pako.min.js -O ./pako/pako.min.js || exit 1
+wget https://cdn.jsdelivr.net/npm/pako@2.0.3/dist/pako.min.js -O ./pako/pako.min.js || exit 1
 
 # tw5-locator
 git clone https://github.com/bimlas/tw5-locator || exit 1

@@ -35,7 +35,7 @@
         "$:/core/save/all",
         "./editions/dev/index.html",
         "text/plain",
-      "--clearencryptionpublickey"
+      "--clearkeys"
     ]
   }
 }

@@ -1,15 +1,15 @@
 {
   "_tags": "$:/ipfs/core",
   "_owner": "$:/library/ipfs-library-modules.js",
-  "_parent_cid": "QmWvJN9P6VkEPgVwmTQUfatkRyaUhuGoAeZw1kqqihi4Rr",
+  "_parent_cid": "QmNiPNWLiyTDB7kxR3nCoDLm6HB4zkgPSiJFA2SBGJaAt7",
   "_parent_size": 133090,
-  "_parent_uri": "http://10.45.0.1:8080/ipfs/QmWvJN9P6VkEPgVwmTQUfatkRyaUhuGoAeZw1kqqihi4Rr",
-  "_source_path": "$_library_ipfs-library-modules.js-1.0.0+build-201221372.json",
+  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmNiPNWLiyTDB7kxR3nCoDLm6HB4zkgPSiJFA2SBGJaAt7",
+  "_source_path": "$_library_ipfs-library-modules.js-1.0.0+build-210110375.json",
   "_source_size": 132982,
-  "_source_uri": "http://10.45.0.1:8080/ipfs/QmWvJN9P6VkEPgVwmTQUfatkRyaUhuGoAeZw1kqqihi4Rr/$_library_ipfs-library-modules.js-1.0.0+build-201221372.json",
-  "_cid": "QmbjRvYV4uJYpb1CuPrZ46QpqdLJ7dRi5AvcRNZMp6MBcD",
-  "_cid_uri": "http://10.45.0.1:8080/ipfs/QmbjRvYV4uJYpb1CuPrZ46QpqdLJ7dRi5AvcRNZMp6MBcD",
+  "_source_uri": "http://127.0.0.1:8080/ipfs/QmNiPNWLiyTDB7kxR3nCoDLm6HB4zkgPSiJFA2SBGJaAt7/$_library_ipfs-library-modules.js-1.0.0+build-210110375.json",
+  "_cid": "Qmegy8MD8sjNdRqWTHGydiyLumEb2er85ZzPS2XYx6dfoi",
+  "_cid_uri": "http://127.0.0.1:8080/ipfs/Qmegy8MD8sjNdRqWTHGydiyLumEb2er85ZzPS2XYx6dfoi",
   "_semver": "1.0.0+build",
-  "_version": "1.0.0+build-201221372",
-  "_raw_hash": "57d61b2aae334a5f9dd3fa26a20e89529a3cf299d77eeb0f16dfc669c14dd97e"
+  "_version": "1.0.0+build-210110375",
+  "_raw_hash": "c433a3f253c68afc7979f15808a659a4c806e656264ccc564710851516883c50"
 }

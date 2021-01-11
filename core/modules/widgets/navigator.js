@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/widgets/navigator.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: widget
 
 Navigator widget

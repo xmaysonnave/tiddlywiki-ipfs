@@ -13,11 +13,11 @@ nvm use > /dev/null 2>&1
 ./bin/init-editions.sh "$@" || exit 1
 rm -f -R ./build/output/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./build/output/editions/tiddlywiki > /dev/null 2>&1
-rm -f -R ./production/editions/tiddlywiki > /dev/null 2>&1
-mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./production/editions/tiddlywiki > /dev/null 2>&1
+mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 rm -f -R ./download/tiddlywiki > /dev/null 2>&1
 
@@ -32,7 +32,7 @@ wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
 cd ..
 
 # assets
-cp -R ./editions/tiddlywiki/* ./build || exit 1
+cp ./editions/tiddlywiki/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

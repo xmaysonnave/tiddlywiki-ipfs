@@ -13,11 +13,11 @@ nvm use > /dev/null 2>&1
 ./bin/init-editions.sh "$@" || exit 1
 rm -f -R ./build/output/editions/dev > /dev/null 2>&1
 mkdir -p ./build/output/editions/dev > /dev/null 2>&1
-rm -f -R ./production/editions/dev > /dev/null 2>&1
-mkdir -p ./production/editions/dev > /dev/null 2>&1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./production/editions/dev > /dev/null 2>&1
+mkdir -p ./production/editions/dev > /dev/null 2>&1
 mkdir -p ./current/editions/dev > /dev/null 2>&1
 
 # assets

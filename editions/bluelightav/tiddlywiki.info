@@ -55,7 +55,7 @@
         "$:/core/save/all",
         "../sample/index-standford.html",
         "text/plain",
-      "--clearpassword"
+      "--clearkeys"
     ],
     "index-plain": [
       "--import",
@@ -70,6 +70,8 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--rendertiddler",
         "$:/core/save/all",
         "../sample/index-plain.html",
@@ -88,13 +90,15 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--encryptionpublickey",
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
         "../sample/index-plain-and-ethereum.html",
         "text/plain",
-      "--clearencryptionpublickey"
+      "--clearkeys"
     ],
 		"index-plain-and-standford": [
       "--import",
@@ -109,13 +113,15 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-%BUILD_DOCUMENTATION_VERSION%.json",
         "application/json",
+			"--compress",
+        "no",
       "--password",
         "blue",
 			"--rendertiddler",
         "$:/core/save/all",
         "../sample/index-plain-and-standford.html",
         "text/plain",
-      "--clearpassword"
+      "--clearkeys"
     ],
 		"prod_favicon": [
 			"--savetiddler",

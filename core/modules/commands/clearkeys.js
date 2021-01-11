@@ -1,6 +1,7 @@
 /*\
-title: $:/core/modules/commands/clearencryptionpublickey.js
+title: $:/core/modules/commands/clearkeys.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: command
 
 Clear encryption public key for crypto operations
@@ -12,7 +13,7 @@ Clear encryption public key for crypto operations
   'use strict'
 
   exports.info = {
-    name: 'clearencryptionpublickey',
+    name: 'clearkeys',
     synchronous: true,
   }
 
@@ -23,7 +24,7 @@ Clear encryption public key for crypto operations
   }
 
   Command.prototype.execute = function () {
-    $tw.crypto.setEncryptionPublicKey(null)
+    $tw.crypto.setEncryptionKey(null, null)
     return null
   }
 

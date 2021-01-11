@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/commands/encryptionpublickey.js
+title: $:/core/modules/commands/privatekey.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: command
@@ -13,7 +13,7 @@ Save encryption public key for crypto operations
   'use strict'
 
   exports.info = {
-    name: 'encryptionpublickey',
+    name: 'privatekey',
     synchronous: true,
   }
 
@@ -25,9 +25,9 @@ Save encryption public key for crypto operations
 
   Command.prototype.execute = function () {
     if (this.params.length < 1) {
-      return 'Missing encryption public key'
+      return 'Missing private key'
     }
-    $tw.crypto.setEncryptionKey(this.params[0], null)
+    $tw.crypto.setEncryptionKey(null, this.params[0])
     return null
   }
 

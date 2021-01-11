@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/utils/crypto.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: utils
 
 Utility functions related to crypto.
@@ -15,10 +16,10 @@ Utility functions related to crypto.
    * Look for an encrypted store area in the text of a TiddlyWiki file
    */
   exports.extractEncryptedStoreArea = function (text) {
-    var encryptedStoreAreaStartMarker = '<pre id="encryptedStoreArea" type="text/plain" style="display:none;">'
-    var encryptedStoreAreaStart = text.indexOf(encryptedStoreAreaStartMarker)
+    const encryptedStoreAreaStartMarker = '<pre id="encryptedStoreArea" type="text/plain" style="display:none;">'
+    const encryptedStoreAreaStart = text.indexOf(encryptedStoreAreaStartMarker)
     if (encryptedStoreAreaStart !== -1) {
-      var encryptedStoreAreaEnd = text.indexOf('</pre>', encryptedStoreAreaStart)
+      const encryptedStoreAreaEnd = text.indexOf('</pre>', encryptedStoreAreaStart)
       if (encryptedStoreAreaEnd !== -1) {
         return $tw.utils.htmlDecode(text.substring(encryptedStoreAreaStart + encryptedStoreAreaStartMarker.length, encryptedStoreAreaEnd - 1))
       }
@@ -30,16 +31,16 @@ Utility functions related to crypto.
     if (encryptedStoreArea) {
       if (encryptedStoreArea.match(/{"iv":/)) {
         $tw.utils.decryptStoreAreaInteractive(encryptedStoreArea, function (decrypted) {
-          var tiddlers = $tw.utils.loadTiddlers(decrypted)
+          const tiddlers = $tw.utils.loadTiddlers(decrypted)
           if (tiddlers) {
             callback(tiddlers)
           }
         })
         return true
       } else if (encryptedStoreArea.match(/{"encrypted":/)) {
-        var json = JSON.parse(encryptedStoreArea)
+        const json = JSON.parse(encryptedStoreArea)
         $tw.utils.decryptFromMetamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted) {
-          var tiddlers = $tw.utils.loadTiddlers(decrypted)
+          const tiddlers = $tw.utils.loadTiddlers(decrypted)
           if (tiddlers) {
             callback(tiddlers)
           }
@@ -54,13 +55,18 @@ Utility functions related to crypto.
    * Attempt to extract the tiddlers from an encrypted store area using the current password.
    * If the password is not provided then the password in the password store will be used
    */
-  exports.decryptStoreArea = function (encryptedStoreArea, password) {
-    return $tw.utils.loadTiddlers($tw.crypto.decrypt(encryptedStoreArea, password))
+  exports.decryptStoreArea = function (encryptedStoreArea, password, privateKey) {
+    const json = JSON.parse(encryptedStoreArea)
+    return $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
   }
 
-  exports.decryptFromMetamaskPrompt = function (encrypted, keccak256, signature, callback) {
-    if (encrypted) {
-      $tw.boot.metamaskPrompt(encrypted, keccak256, signature, function (decrypted) {
+  exports.decryptFromMetamaskPrompt = function (encryptedStoreArea, keccak256, signature, callback) {
+    // Try to decrypt with the current password
+    const decrypted = $tw.utils.decryptStoreArea(encryptedStoreArea)
+    if (decrypted) {
+      callback(decrypted)
+    } else {
+      $tw.boot.metamaskPrompt(encryptedStoreArea, keccak256, signature, function (decrypted) {
         if (decrypted) {
           callback(decrypted)
         }
@@ -81,7 +87,7 @@ Utility functions related to crypto.
    */
   exports.decryptStoreAreaInteractive = function (encryptedStoreArea, callback, options) {
     // Try to decrypt with the current password
-    var decrypted = $tw.crypto.decrypt(encryptedStoreArea)
+    const decrypted = $tw.utils.decryptStoreArea(encryptedStoreArea)
     if (decrypted) {
       callback(decrypted)
     } else {
@@ -97,12 +103,12 @@ Utility functions related to crypto.
             return false
           }
           // Attempt to decrypt the tiddlers
-          var decrypted = $tw.crypto.decrypt(encryptedStoreArea, data.password)
-          if (decrypted) {
+          const text = $tw.crypto.decrypt(encryptedStoreArea, data.password)
+          if (text) {
             if ($tw.config.usePasswordVault) {
               $tw.crypto.setPassword(data.password)
             }
-            callback(decrypted)
+            callback(text)
             // Exit and remove the password prompt
             return true
           } else {

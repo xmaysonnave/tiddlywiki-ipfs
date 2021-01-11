@@ -12,6 +12,8 @@ Compression handling
   /*global $tw:false*/
   'use strict'
 
+  const name = 'ipfs-password'
+
   // Export name and synchronous status
   exports.name = 'ipfs-password'
   exports.platforms = ['browser']
@@ -60,13 +62,13 @@ Compression handling
       } else {
         try {
           const encryptionKey = await $tw.ipfs.getPublicEncryptionKey()
-          $tw.crypto.setEncryptionPublicKey(encryptionKey)
+          $tw.crypto.setEncryptionKey(encryptionKey)
         } catch (error) {
           if (error.name !== 'RejectedUserRequest') {
             $tw.ipfs.getLogger().error(error)
           }
           $tw.utils.alert(name, error.message)
-          $tw.crypto.setEncryptionPublicKey(null)
+          $tw.crypto.setEncryptionKey()
         }
       }
     })
@@ -78,12 +80,12 @@ Compression handling
           if (!confirm($tw.language.getString('Encryption/ConfirmClearPassword'))) {
             return
           }
-          $tw.crypto.setPassword(null)
+          $tw.crypto.setPassword()
         } else if (hasEncryptionPublicKey) {
           if (!confirm($tw.language.getString('Encryption/ConfirmClearEncryptionPublicKey'))) {
             return
           }
-          $tw.crypto.setEncryptionPublicKey(null)
+          $tw.crypto.setEncryptionKey()
         }
       }
     })

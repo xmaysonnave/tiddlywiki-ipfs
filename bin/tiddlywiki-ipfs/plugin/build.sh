@@ -12,11 +12,11 @@ nvm use > /dev/null 2>&1
 # init
 rm -f -R ./build/output/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 mkdir -p ./build/output/tiddlywiki-ipfs/plugin > /dev/null 2>&1
-rm -f -R ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
+mkdir -p ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 mkdir -p ./current/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 
 # assets
@@ -35,7 +35,7 @@ echo '***'
 yarn browserify \
   core/modules/ipfs-bundle.js \
   -s IpfsBundle \
-    -o build/plugins/ipfs/modules/ipfs-bundle.js "$@" || exit 1
+  -o build/plugins/ipfs/modules/ipfs-bundle.js "$@" || exit 1
 
 # build raw
 echo '***'

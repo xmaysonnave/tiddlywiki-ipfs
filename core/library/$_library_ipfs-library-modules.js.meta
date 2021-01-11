@@ -14,4 +14,4 @@ _loglevel_project_uri: https://github.com/pimterry/loglevel
 _loglevel_source_uri: https://cdn.jsdelivr.net/npm/loglevel@1.7.1/dist/loglevel.min.js
 _pako_license_uri: https://raw.githubusercontent.com/nodeca/pako/master/LICENSE
 _pako_project_uri: https://github.com/nodeca/pako
-_pako_source_uri: https://cdn.jsdelivr.net/npm/pako@2.0.2/dist/pako.min.js
+_pako_source_uri: https://cdn.jsdelivr.net/npm/pako@2.0.3/dist/pako.min.js

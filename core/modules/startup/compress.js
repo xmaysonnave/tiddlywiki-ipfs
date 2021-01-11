@@ -22,10 +22,8 @@ Compression handling
     // Ensure that $:/isCompressed is maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/isCompressed')) {
-        var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
-        if ($tw.compress && typeof $tw.compress.setCompressState === 'function') {
-          $tw.compress.setCompressState(tiddler.fields.text === 'yes')
-        }
+        const tiddler = $tw.wiki.getTiddler('$:/isCompressed')
+        $tw.compress.setCompressState(tiddler.fields.text === 'yes')
       }
     })
   }

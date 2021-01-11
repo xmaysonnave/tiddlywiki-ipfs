@@ -1,6 +1,7 @@
 /*\
 title: $:/core/modules/widgets/checkbox.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: widget
 
 Checkbox widget

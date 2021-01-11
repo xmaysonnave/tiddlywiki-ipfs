@@ -31,7 +31,7 @@ Compress widget
     this.computeAttributes()
     this.execute()
     var textNode = this.document.createTextNode(this.encryptedText)
-    if (typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
+    if ($tw.crypto.hasEncryptionPublicKey()) {
       var sign = $tw.wiki.getTiddler('$:/isSigned')
       sign = sign !== undefined ? sign.fields.text === 'yes' : false
       if (sign) {
@@ -60,19 +60,16 @@ Compress widget
       }
       json[title] = jsonTiddler
     })
-    var content = JSON.stringify(json)
-    if ($tw.compress && typeof $tw.compress.deflate === 'function') {
-      content = { compressed: $tw.compress.deflate(content) }
-      var encrypt = $tw.wiki.getTiddler('$:/isEncrypted')
-      encrypt = encrypt !== undefined ? encrypt.fields.text === 'yes' : false
-      if (encrypt) {
-        content.compressed = $tw.crypto.encrypt(content.compressed)
-        if (typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
-          content.keccak256 = $tw.crypto.keccak256(content.compressed)
-        }
+    var content = { compressed: $tw.compress.deflate(JSON.stringify(json)) }
+    var encrypt = $tw.wiki.getTiddler('$:/isEncrypted')
+    encrypt = encrypt !== undefined ? encrypt.fields.text === 'yes' : false
+    if (encrypt) {
+      content.compressed = $tw.crypto.encrypt(content.compressed)
+      if ($tw.crypto.hasEncryptionPublicKey()) {
+        content.keccak256 = $tw.crypto.keccak256(content.compressed)
       }
-      content = JSON.stringify(content)
     }
+    content = JSON.stringify(content)
     this.encryptedText = $tw.utils.htmlEncode(content)
   }
 

@@ -69,8 +69,21 @@ module.exports = async function main (dir, pin) {
   pin = pin ? pin === 'true' : process.env.PIN ? process.env.PIN === 'true' : true
 
   // Ipfs Client
-  const apiUrl = process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001'
-  const api = IpfsHttpClient(apiUrl)
+  const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
+  const protocol = apiUrl.protocol.slice(0, -1)
+  var port = apiUrl.port
+  if (port === undefined || port == null || port.trim() === '') {
+    port = 443
+    if (protocol === 'http') {
+      port = 80
+    }
+  }
+  const api = IpfsHttpClient({
+    protocol: protocol,
+    host: apiUrl.hostname,
+    port: port,
+    timeout: '4m',
+  })
 
   // Read node.json
   const path = `./current/${dir}/node.json`

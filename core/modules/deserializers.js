@@ -1,0 +1,144 @@
+/*\
+title: $:/plugins/ipfs/ipfs-deserializer.js
+type: application/javascript
+module-type: tiddlerdeserializer
+
+Functions to deserialise tiddlers from a block of text
+
+\*/
+;(function () {
+  /*jslint node: true, browser: true */
+  /*global $tw: false */
+  'use strict'
+
+  /**
+   * Utility function to parse an old-style tiddler DIV in a *.tid file. It looks like this:
+   *
+   * <div title="Title" creator="JoeBloggs" modifier="JoeBloggs" created="201102111106" modified="201102111310" tags="myTag [[my long tag]]">
+   *   <pre>The text of the tiddler (without the expected HTML encoding).</pre>
+   * </div>
+   *
+   * Note that the field attributes are HTML encoded, but that the body of the <PRE> tag is not encoded.
+   *
+   * When these tiddler DIVs are encountered within a TiddlyWiki HTML file then the body is encoded in the usual way.
+   */
+  var parseTiddlerDiv = function (text /* [,fields] */) {
+    // Slot together the default results
+    var result = {}
+    if (arguments.length > 1) {
+      for (var f = 1; f < arguments.length; f++) {
+        var fields = arguments[f]
+        for (var t in fields) {
+          result[t] = fields[t]
+        }
+      }
+    }
+    // Parse the DIV body
+    var startRegExp = /^\s*<div\s+([^>]*)>(\s*<pre>)?/gi
+    var endRegExp
+    var match = startRegExp.exec(text)
+    if (match) {
+      // Old-style DIVs don't have the <pre> tag
+      if (match[2]) {
+        endRegExp = /<\/pre>\s*<\/div>\s*$/gi
+      } else {
+        endRegExp = /<\/div>\s*$/gi
+      }
+      var endMatch = endRegExp.exec(text)
+      if (endMatch) {
+        // Extract the text
+        result.text = text.substring(match.index + match[0].length, endMatch.index)
+        // Process the attributes
+        var attrRegExp = /\s*([^=\s]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
+        var attrMatch
+        do {
+          attrMatch = attrRegExp.exec(match[1])
+          if (attrMatch) {
+            var name = attrMatch[1]
+            var value = attrMatch[2] !== undefined ? attrMatch[2] : attrMatch[3]
+            result[name] = value
+          }
+        } while (attrMatch)
+        return result
+      }
+    }
+    return undefined
+  }
+
+  /**
+   * Parse an HTML file into tiddlers. There are three possibilities:
+   * A TiddlyWiki classic HTML file containing `text/x-tiddlywiki` tiddlers
+   * A TiddlyWiki5 HTML file containing `text/vnd.tiddlywiki` tiddlers
+   * An ordinary HTML file
+   */
+  exports['text/html'] = function (text, fields) {
+    // Check if we've got a store area
+    var storeAreaMarkerRegExp = /<div id=["']?storeArea['"]?( style=["']?display:none;["']?)?>/gi
+    var match = storeAreaMarkerRegExp.exec(text)
+    if (match) {
+      // If so, it's either a classic TiddlyWiki file or an unencrypted TW5 file
+      // First read the normal tiddlers
+      var results = deserializeTiddlyWikiFile(text, storeAreaMarkerRegExp.lastIndex, !!match[1], fields)
+      // Then any system tiddlers
+      var systemAreaMarkerRegExp = /<div id=["']?systemArea['"]?( style=["']?display:none;["']?)?>/gi
+      var sysMatch = systemAreaMarkerRegExp.exec(text)
+      if (sysMatch) {
+        results.push.apply(results, deserializeTiddlyWikiFile(text, systemAreaMarkerRegExp.lastIndex, !!sysMatch[1], fields))
+      }
+      return results
+    } else {
+      // Check whether this is a compressed TiddlyWiki file
+      var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
+      if (compressedStoreArea) {
+        return $tw.utils.inflateStoreArea(compressedStoreArea)
+      } else {
+        // Check whether this is an encrypted TiddlyWiki file
+        var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
+        if (encryptedStoreArea) {
+          // If so, attempt to decrypt it using the current password
+          return $tw.utils.decryptStoreArea(encryptedStoreArea)
+        } else {
+          // It's not a TiddlyWiki so we'll return the entire HTML file as a tiddler
+          return deserializeHtmlFile(text, fields)
+        }
+      }
+    }
+  }
+
+  function deserializeHtmlFile (text, fields) {
+    var result = {}
+    $tw.utils.each(fields, function (value, name) {
+      result[name] = value
+    })
+    result.text = text
+    result.type = 'text/html'
+    return [result]
+  }
+
+  function deserializeTiddlyWikiFile (text, storeAreaEnd, isTiddlyWiki5, fields) {
+    var results = []
+    var endOfDivRegExp = /(<\/div>\s*)/gi
+    var startPos = storeAreaEnd
+    var defaultType = isTiddlyWiki5 ? undefined : 'text/x-tiddlywiki'
+    endOfDivRegExp.lastIndex = startPos
+    var match = endOfDivRegExp.exec(text)
+    while (match) {
+      var endPos = endOfDivRegExp.lastIndex
+      var tiddlerFields = parseTiddlerDiv(text.substring(startPos, endPos), fields, { type: defaultType })
+      if (!tiddlerFields) {
+        break
+      }
+      $tw.utils.each(tiddlerFields, function (value, name) {
+        if (typeof value === 'string') {
+          tiddlerFields[name] = $tw.utils.htmlDecode(value)
+        }
+      })
+      if (tiddlerFields.text !== null) {
+        results.push(tiddlerFields)
+      }
+      startPos = endPos
+      match = endOfDivRegExp.exec(text)
+    }
+    return results
+  }
+})()

@@ -1,24 +1,23 @@
 title: $:/core/templates/store.area.template.html
 tags: $:/ipfs/core
-_comment_uri: https://stackoverflow.com/questions/9320427/best-practice-for-embedding-arbitrary-json-in-the-dom
 
 <$reveal type="nomatch" state="$:/isCompressed" text="yes">
 <$reveal type="nomatch" state="$:/isEncrypted" text="yes">
-`<div id="storeArea" style="display:none;">`
+`<div id="storeArea" type="text/plain" style="display:none;">`
 <$list filter=<<saveTiddlerFilter>> template="$:/core/templates/html-div-tiddler"/>
 <$list filter={{{ [<skinnySaveTiddlerFilter>] }}} template="$:/core/templates/html-div-skinny-tiddler"/>
 `</div>`
 </$reveal>
 <$reveal type="match" state="$:/isEncrypted" text="yes">
 `<!--~~ Encrypted tiddlers ~~-->`
-`<div id="encryptedStoreArea" style="display:none;">`
+`<pre id="encryptedStoreArea" type="text/plain" style="display:none;">`
 <$encrypt filter=<<saveTiddlerFilter>>/>
-`</div>`
+`</pre>`
 </$reveal>
 </$reveal>
 <$reveal type="match" state="$:/isCompressed" text="yes">
 `<!--~~ Compressed tiddlers ~~-->`
-`<div id="compressedStoreArea" style="display:none;">`
+`<pre id="compressedStoreArea" type="text/plain" style="display:none;">`
 <$compress filter=<<saveTiddlerFilter>>/>
-`</div>`
+`</pre>`
 </$reveal>

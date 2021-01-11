@@ -1,6 +1,7 @@
 /*\
 title: $:/plugins/ipfs/ipfs-filters.js
 type: application/javascript
+tags: $:/ipfs/core
 module-type: filteroperator
 
 

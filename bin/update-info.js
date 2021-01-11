@@ -17,6 +17,15 @@ function main () {
       silent: true,
     })
 
+    // Private Key
+    replace({
+      regex: '%DEV_PRIVATE_KEY%',
+      replacement: process.env.DEV_PRIVATE_KEY,
+      paths: ['./build/tiddlywiki.info'],
+      recursive: false,
+      silent: true,
+    })
+
     // boot
     var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js_build.json'
     if (fs.existsSync(path)) {
