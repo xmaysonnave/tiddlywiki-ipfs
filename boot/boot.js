@@ -505,39 +505,6 @@ var _boot = (function($tw) {
   };
 
   /*
-  Run code globally with specified context variables in scope
-  */
-  $tw.utils.evalGlobal = function(code,context,filename) {
-    var contextCopy = $tw.utils.extend(Object.create(null),context);
-    // Get the context variables as a pair of arrays of names and values
-    var contextNames = [], contextValues = [];
-    $tw.utils.each(contextCopy,function(value,name) {
-      contextNames.push(name);
-      contextValues.push(value);
-    });
-    // Add the code prologue and epilogue
-    code = "(function(" + contextNames.join(",") + ") {(function(){\n" + code + "\n;})();\nreturn exports;\n})\n";
-    // Compile the code into a function
-    var fn;
-    if($tw.browser) {
-      fn = window["eval"](code + "\n\n//# sourceURL=" + filename);
-    } else {
-      fn = vm.runInThisContext(code,filename);
-    }
-    // Call the function and return the exports
-    return fn.apply(null,contextValues);
-  };
-
-  /*
-  Run code in a sandbox with only the specified context variables in scope
-  */
-  $tw.utils.evalSandboxed = $tw.browser ? $tw.utils.evalGlobal : function(code,context,filename) {
-    var sandbox = $tw.utils.extend(Object.create(null),context);
-    vm.runInNewContext(code,sandbox,filename);
-    return sandbox.exports;
-  };
-
-  /*
   Creates a PasswordPrompt object
   */
   $tw.utils.PasswordPrompt = function() {
@@ -721,127 +688,6 @@ var _boot = (function($tw) {
   };
 
   /////////////////////////// Module mechanism
-
-  /*
-  Execute the module named 'moduleName'. The name can optionally be relative to the module named 'moduleRoot'
-  */
-  $tw.modules.execute = function(moduleName,moduleRoot) {
-    var name = moduleName;
-    if(moduleName.charAt(0) === ".") {
-      name = $tw.utils.resolvePath(moduleName,moduleRoot)
-    }
-    if(!$tw.modules.titles[name]) {
-      if($tw.modules.titles[name + ".js"]) {
-        name = name + ".js";
-      } else if($tw.modules.titles[name + "/index.js"]) {
-        name = name + "/index.js";
-      } else if($tw.modules.titles[moduleName]) {
-        name = moduleName;
-      } else if($tw.modules.titles[moduleName + ".js"]) {
-        name = moduleName + ".js";
-      } else if($tw.modules.titles[moduleName + "/index.js"]) {
-        name = moduleName + "/index.js";
-      }
-    }
-    var moduleInfo = $tw.modules.titles[name],
-      tiddler = $tw.wiki.getTiddler(name),
-      _exports = {},
-      sandbox = {
-        module: {exports: _exports},
-        //moduleInfo: moduleInfo,
-        exports: _exports,
-        console: console,
-        setInterval: setInterval,
-        clearInterval: clearInterval,
-        setTimeout: setTimeout,
-        clearTimeout: clearTimeout,
-        Buffer: $tw.browser ? undefined : Buffer,
-        $tw: $tw,
-        require: function(title) {
-          return $tw.modules.execute(title, name);
-        }
-      };
-
-    Object.defineProperty(sandbox.module, "id", {
-      value: name,
-      writable: false,
-      enumerable: true,
-      configurable: false
-    });
-
-    if(!$tw.browser) {
-      $tw.utils.extend(sandbox,{
-        process: process
-      });
-    } else {
-      /*
-      CommonJS optional require.main property:
-       In a browser we offer a fake main module which points back to the boot function
-       (Theoretically, this may allow TW to eventually load itself as a module in the browser)
-      */
-      Object.defineProperty(sandbox.require, "main", {
-        value: (typeof(require) !== "undefined") ? require.main : {TiddlyWiki: _boot},
-        writable: false,
-        enumerable: true,
-        configurable: false
-      });
-    }
-    if(!moduleInfo) {
-      // We could not find the module on this path
-      // Try to defer to browserify etc, or node
-      var deferredModule;
-      if($tw.browser) {
-        if(window.require) {
-          try {
-            return window.require(moduleName);
-          } catch(e) {}
-        }
-        throw "Cannot find module named '" + moduleName + "' required by module '" + moduleRoot + "', resolved to " + name;
-      } else {
-        // If we don't have a module with that name, let node.js try to find it
-        return require(moduleName);
-      }
-    }
-    // Execute the module if we haven't already done so
-    if(!moduleInfo.exports) {
-      try {
-        // Check the type of the definition
-        if(typeof moduleInfo.definition === "function") { // Function
-          moduleInfo.exports = _exports;
-          moduleInfo.definition(moduleInfo,moduleInfo.exports,sandbox.require);
-        } else if(typeof moduleInfo.definition === "string") { // String
-          moduleInfo.exports = _exports;
-          $tw.utils.evalSandboxed(moduleInfo.definition,sandbox,tiddler.fields.title);
-          if(sandbox.module.exports) {
-            moduleInfo.exports = sandbox.module.exports; //more codemirror workaround
-          }
-        } else { // Object
-          moduleInfo.exports = moduleInfo.definition;
-        }
-      } catch(e) {
-        if (e instanceof SyntaxError) {
-          var line = e.lineNumber || e.line; // Firefox || Safari
-          if (typeof(line) != "undefined" && line !== null) {
-            $tw.utils.error("Syntax error in boot module " + name + ":" + line + ":\n" + e.stack);
-          } else if(!$tw.browser) {
-            // this is the only way to get node.js to display the line at which the syntax error appeared,
-            // and $tw.utils.error would exit anyway
-            // cf. https://bugs.chromium.org/p/v8/issues/detail?id=2589
-            throw e;
-          } else {
-            // Opera: line number is included in e.message
-            // Chrome/IE: there's currently no way to get the line number
-            $tw.utils.error("Syntax error in boot module " + name + ": " + e.message + "\n" + e.stack);
-          }
-        } else {
-          // line number should be included in e.stack for runtime errors
-          $tw.utils.error("Error executing boot module " + name + ": " + JSON.stringify(e) + "\n\n" + e.stack);
-        }
-      }
-    }
-    // Return the exports of the module
-    return moduleInfo.exports;
-  };
 
   /*
   Apply a callback to each module of a particular type
@@ -1923,63 +1769,12 @@ var _boot = (function($tw) {
         }
 			} else {
 				console.log("Warning: a directory in a tiddlywiki.files file does not exist.");
-				console.log("dirPath: " + dirPath);	
+				console.log("dirPath: " + dirPath);
 				console.log("tiddlywiki.files location: " + filepath);
 			}
 		}
     });
     return tiddlers;
-  };
-
-  /*
-  Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
-  */
-  $tw.loadPluginFolder = function(filepath,excludeRegExp) {
-    excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp;
-    var infoPath = filepath + path.sep + "plugin.info";
-    if(fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
-      // Read the plugin information
-      if(!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
-        console.log("Warning: missing plugin.info file in " + filepath);
-        return null;
-      }
-      var pluginInfo = JSON.parse(fs.readFileSync(infoPath,"utf8"));
-      // Read the plugin files
-      var pluginFiles = $tw.loadTiddlersFromPath(filepath,excludeRegExp);
-      // Save the plugin tiddlers into the plugin info
-      pluginInfo.tiddlers = pluginInfo.tiddlers || Object.create(null);
-      for(var f=0; f<pluginFiles.length; f++) {
-        var tiddlers = pluginFiles[f].tiddlers;
-        for(var t=0; t<tiddlers.length; t++) {
-          var tiddler= tiddlers[t];
-          if(tiddler.title) {
-            pluginInfo.tiddlers[tiddler.title] = tiddler;
-          }
-        }
-      }
-      // Give the plugin the same version number as the core if it doesn't have one
-      if(!("version" in pluginInfo)) {
-        pluginInfo.version = $tw.packageInfo.version;
-      }
-      // Use "plugin" as the plugin-type if we don't have one
-      if(!("plugin-type" in pluginInfo)) {
-        pluginInfo["plugin-type"] = "plugin";
-      }
-      pluginInfo.dependents = pluginInfo.dependents || [];
-      pluginInfo.type = "application/json";
-      // Set plugin text
-      pluginInfo.text = JSON.stringify({tiddlers: pluginInfo.tiddlers},null,4);
-      delete pluginInfo.tiddlers;
-      // Deserialise array fields (currently required for the dependents field)
-      for(var field in pluginInfo) {
-        if($tw.utils.isArray(pluginInfo[field])) {
-          pluginInfo[field] = $tw.utils.stringifyList(pluginInfo[field]);
-        }
-      }
-      return pluginInfo;
-    } else {
-        return null;
-    }
   };
 
   /*

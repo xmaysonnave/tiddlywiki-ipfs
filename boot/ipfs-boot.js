@@ -9,10 +9,10 @@ var _ipfs = function ($tw) {
   var fs
   var path
   var vm
-  if($tw.node) {
-	  fs = require("fs");
-    path = require("path");
-    vm = require("vm");
+  if ($tw.node) {
+    fs = require('fs')
+    path = require('path')
+    vm = require('vm')
   }
 
   $tw.boot.getLogger = function () {
@@ -34,51 +34,49 @@ var _ipfs = function ($tw) {
     return console
   }
 
-/**
- * Run code globally with specified context variables in scope
- */
-$tw.utils.evalGlobal = function(code,context,filename) {
-	var contextCopy = $tw.utils.extend(Object.create(null),context);
-	// Get the context variables as a pair of arrays of names and values
-	var contextNames = [], contextValues = [];
-	$tw.utils.each(contextCopy,function(value,name) {
-		contextNames.push(name);
-		contextValues.push(value);
-	});
-	// Add the code prologue and epilogue
-	code = "(function(" + contextNames.join(",") + ") {(function(){\n" + code + "\n;})();\nreturn exports;\n})\n";
-	// Compile the code into a function
-	var fn;
-	if($tw.browser) {
-		fn = window["eval"](code + "\n\n//# sourceURL=" + filename);
-	} else {
-		fn = vm.runInThisContext(code,filename);
-	}
-	// Call the function and return the exports
-	return fn.apply(null,contextValues);
-};
-
-/**
- * Run code in a sandbox with only the specified context variables in scope
- */
-$tw.utils.evalSandboxed = $tw.browser ? $tw.utils.evalGlobal : function(code,context,filename) {
-  var sandbox = $tw.utils.extend(Object.create(null),context);
-  filename = $tw.wiki.pluginLookup(filename)
-	vm.runInNewContext(code,sandbox,filename);
-	return sandbox.exports;
-};
-
-$tw.Wiki.prototype.pluginLookup = function(title) {
-  const pluginInfo = $tw.wiki.readPluginInfo()
-  for (var i = 0; i < pluginInfo.modifiedPlugins.length; i++) {
-    const pluginTitle = pluginInfo.modifiedPlugins[i]
-    const plugin = $tw.wiki.getTiddler(pluginTitle)
-    if (plugin.fields.filepaths && plugin.fields.filepaths[title]) {
-      return plugin.fields.filepaths[title]
+  /**
+   * Run code globally with specified context variables in scope
+   */
+  $tw.utils.evalGlobal = function (code, context, filename) {
+    var contextCopy = $tw.utils.extend(Object.create(null), context)
+    // Get the context variables as a pair of arrays of names and values
+    var contextNames = []
+    var contextValues = []
+    $tw.utils.each(contextCopy, function (value, name) {
+      contextNames.push(name)
+      contextValues.push(value)
+    })
+    // Add the code prologue and epilogue
+    code = '(function(' + contextNames.join(',') + ') {(function(){\n' + code + '\n;})();\nreturn exports;\n})\n'
+    // Compile the code into a function
+    var fn
+    if ($tw.browser) {
+      /*eslint no-eval:"off"*/
+      fn = window.eval(code + '\n\n//# sourceURL=' + filename)
+    } else {
+      fn = vm.runInThisContext(code, $tw.wiki.getFileName(filename))
     }
+    // Call the function and return the exports
+    return fn.apply(null, contextValues)
   }
-  return title
-};
+
+  /**
+   * Run code in a sandbox with only the specified context variables in scope
+   */
+  $tw.utils.evalSandboxed = $tw.browser
+    ? $tw.utils.evalGlobal
+    : function (code, context, filename) {
+        var sandbox = $tw.utils.extend(Object.create(null), context)
+        vm.runInNewContext(code, sandbox, $tw.wiki.getFileName(filename))
+        return sandbox.exports
+      }
+
+  $tw.Wiki.prototype.getFileName = function (title) {
+    if ($tw.filepaths && $tw.filepaths[title]) {
+      return $tw.filepaths[title]
+    }
+    return title
+  }
 
   /**
    * Crypto helper object for encrypted content. It maintains the password text in a closure, and provides methods to change
@@ -249,10 +247,14 @@ $tw.Wiki.prototype.pluginLookup = function(title) {
     var currentState = null
     this.setCompressState = function (state) {
       currentState = state ? 'yes' : 'no'
+      this.updateCompressStateTiddler()
+    }
+    this.updateCompressStateTiddler = function () {
       if ($tw.wiki) {
+        var state = currentState === 'yes' ? 'yes' : 'no'
         var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
-        if (!tiddler || tiddler.fields.text !== currentState) {
-          $tw.wiki.addTiddler(new $tw.Tiddler({ title: '$:/isCompressed', text: currentState }))
+        if (!tiddler || tiddler.fields.text !== state) {
+          $tw.wiki.addTiddler(new $tw.Tiddler({ title: '$:/isCompressed', text: state }))
         }
       }
     }
@@ -789,60 +791,61 @@ $tw.Wiki.prototype.pluginLookup = function(title) {
 
   /////////////////////////// Node definitions
 
-  if($tw.node) {
+  if ($tw.node) {
+    $tw.filepaths = Object.create(null)
 
     /*
     Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
     */
-    $tw.loadPluginFolder = function(filepath,excludeRegExp) {
-      excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp;
-      var infoPath = filepath + path.sep + "plugin.info";
-      if(fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
+    $tw.loadPluginFolder = function (filepath, excludeRegExp) {
+      excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp
+      var infoPath = filepath + path.sep + 'plugin.info'
+      if (fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
         // Read the plugin information
-        if(!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
-          console.log("Warning: missing plugin.info file in " + filepath);
-          return null;
+        if (!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
+          console.log('Warning: missing plugin.info file in ' + filepath)
+          return null
         }
-        var pluginInfo = JSON.parse(fs.readFileSync(infoPath,"utf8"));
+        var pluginInfo = JSON.parse(fs.readFileSync(infoPath, 'utf8'))
         // Read the plugin files
-        var pluginFiles = $tw.loadTiddlersFromPath(filepath,excludeRegExp);
+        var pluginFiles = $tw.loadTiddlersFromPath(filepath, excludeRegExp)
         // Save the plugin tiddlers into the plugin info
-        pluginInfo.filepaths = Object.create(null);
-        pluginInfo.tiddlers = pluginInfo.tiddlers || Object.create(null);
-        for(var f=0; f<pluginFiles.length; f++) {
-          var tiddlers = pluginFiles[f].tiddlers;
-          for(var t=0; t<tiddlers.length; t++) {
-            var tiddler= tiddlers[t];
-            if(tiddler.title) {
-              pluginInfo.filepaths[tiddler.title] = pluginFiles[f].filepath;
-              pluginInfo.tiddlers[tiddler.title] = tiddler;
+        pluginInfo.tiddlers = pluginInfo.tiddlers || Object.create(null)
+        for (var f = 0; f < pluginFiles.length; f++) {
+          var tiddlers = pluginFiles[f].tiddlers
+          for (var t = 0; t < tiddlers.length; t++) {
+            var tiddler = tiddlers[t]
+            if (tiddler.title) {
+              if (pluginFiles[f].type === 'application/javascript') {
+                $tw.filepaths[tiddler.title] = pluginFiles[f].filepath
+              }
+              pluginInfo.tiddlers[tiddler.title] = tiddler
             }
           }
         }
         // Give the plugin the same version number as the core if it doesn't have one
-        if(!("version" in pluginInfo)) {
-          pluginInfo.version = $tw.packageInfo.version;
+        if (!('version' in pluginInfo)) {
+          pluginInfo.version = $tw.packageInfo.version
         }
         // Use "plugin" as the plugin-type if we don't have one
-        if(!("plugin-type" in pluginInfo)) {
-          pluginInfo["plugin-type"] = "plugin";
+        if (!('plugin-type' in pluginInfo)) {
+          pluginInfo['plugin-type'] = 'plugin'
         }
-        pluginInfo.dependents = pluginInfo.dependents || [];
-        pluginInfo.type = "application/json";
+        pluginInfo.dependents = pluginInfo.dependents || []
+        pluginInfo.type = 'application/json'
         // Set plugin text
-        pluginInfo.text = JSON.stringify({tiddlers: pluginInfo.tiddlers},null,4);
-        delete pluginInfo.tiddlers;
+        pluginInfo.text = JSON.stringify({ tiddlers: pluginInfo.tiddlers }, null, 4)
+        delete pluginInfo.tiddlers
         // Deserialise array fields (currently required for the dependents field)
-        for(var field in pluginInfo) {
-          if($tw.utils.isArray(pluginInfo[field])) {
-            pluginInfo[field] = $tw.utils.stringifyList(pluginInfo[field]);
+        for (var field in pluginInfo) {
+          if ($tw.utils.isArray(pluginInfo[field])) {
+            pluginInfo[field] = $tw.utils.stringifyList(pluginInfo[field])
           }
         }
-        return pluginInfo;
+        return pluginInfo
       }
-      return null;
-    };
-
+      return null
+    }
   }
 
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
@@ -866,6 +869,11 @@ $tw.Wiki.prototype.pluginLookup = function(title) {
         $tw.crypto.setEncryptionKey(encrypted.fields._encryption_public_key)
       } else {
         $tw.crypto.updateCryptoStateTiddler()
+      }
+      // Make sure the compress state tiddler is up to date
+      var compressed = $tw.wiki.getTiddler('$:/isCompressed')
+      if (!compressed) {
+        $tw.compress.updateCompressStateTiddler()
       }
     })
   }

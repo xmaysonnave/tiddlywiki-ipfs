@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-TW-v5.1.23+build-210110397",
+  "version": "0.4.0-beta-TW-v5.1.23+build-210111452",
   "description": "IPFS with TiddlyWiki",
   "main": "./ipfs-tiddlywiki.js",
   "directories": {
@@ -41,6 +41,7 @@
     "download": "./bin/download.sh",
     "editions": "./bin/editions/build.sh",
     "empty": "./bin/editions/empty/build.sh",
+    "empty-dev": "./bin/editions/empty-dev/build.sh",
     "ipfs-tiddlywiki": "./bin/ipfs-tiddlywiki.sh",
     "library": "./bin/tiddlywiki-ipfs/library/build.sh",
     "tiddlywiki-ipfs": "./bin/tiddlywiki-ipfs/build.sh",
