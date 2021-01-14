@@ -84,10 +84,23 @@ module.exports = function main (branch) {
   if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  const boot = JSON.parse(current)
+  current = JSON.parse(current)
+  if (!Array.isArray(current)) {
+    throw new Error(`Array expected: ${path}...`)
+  }
+  var version = null
+  for (var i = 0; i < current.length; i++) {
+    if (current[i]._name === '$:/boot/boot.js') {
+      version = current[i]._version
+      break
+    }
+  }
+  if (!version) {
+    throw new Error(`Unknown '$:/boot/boot.js': ${path}`)
+  }
   replace({
     regex: '%BUILD_BOOT_VERSION%',
-    replacement: boot._version,
+    replacement: version,
     paths: [readmePath],
     recursive: false,
     silent: true,
@@ -101,10 +114,23 @@ module.exports = function main (branch) {
   if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  const library = JSON.parse(current)
+  current = JSON.parse(current)
+  if (!Array.isArray(current)) {
+    throw new Error(`Array expected: ${path}...`)
+  }
+  version = null
+  for (var i = 0; i < current.length; i++) {
+    if (current[i]._name === '$:/library/ipfs-library-modules.js') {
+      version = current[i]._version
+      break
+    }
+  }
+  if (!version) {
+    throw new Error(`Unknown '$:/library/ipfs-library-modules.js': ${path}`)
+  }
   replace({
     regex: '%BUILD_LIBRARY_VERSION%',
-    replacement: library._version,
+    replacement: version,
     paths: [readmePath],
     recursive: false,
     silent: true,
@@ -118,10 +144,23 @@ module.exports = function main (branch) {
   if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  const plugin = JSON.parse(current)
+  current = JSON.parse(current)
+  if (!Array.isArray(current)) {
+    throw new Error(`Array expected: ${path}...`)
+  }
+  version = null
+  for (var i = 0; i < current.length; i++) {
+    if (current[i]._name === '$:/plugins/ipfs.js') {
+      version = current[i]._version
+      break
+    }
+  }
+  if (!version) {
+    throw new Error(`Unknown '$:/plugins/ipfs.js': ${path}`)
+  }
   replace({
     regex: '%BUILD_PLUGIN_VERSION%',
-    replacement: plugin._version,
+    replacement: version,
     paths: [readmePath],
     recursive: false,
     silent: true,
@@ -135,10 +174,23 @@ module.exports = function main (branch) {
   if (!current) {
     throw new Error(`Unknown current: ${path}`)
   }
-  const doc = JSON.parse(current)
+  current = JSON.parse(current)
+  if (!Array.isArray(current)) {
+    throw new Error(`Array expected: ${path}...`)
+  }
+  version = null
+  for (var i = 0; i < current.length; i++) {
+    if (current[i]._name === '$:/ipfs/documentation.json') {
+      version = current[i]._version
+      break
+    }
+  }
+  if (!version) {
+    throw new Error(`Unknown '$:/ipfs/documentation.json': ${path}`)
+  }
   replace({
     regex: '%BUILD_DOCUMENTATION_VERSION%',
-    replacement: doc._version,
+    replacement: version,
     paths: [readmePath],
     recursive: false,
     silent: true,
