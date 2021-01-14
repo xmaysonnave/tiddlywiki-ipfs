@@ -4,15 +4,15 @@
     "_tags": "$:/ipfs/core",
     "_owner": "$:/boot/boot.js",
     "_cid": "QmQAt2zsUynpSArUXrPWsFpjjTSDfPhpTxxBhxrJH3Wksn",
-    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmQAt2zsUynpSArUXrPWsFpjjTSDfPhpTxxBhxrJH3Wksn",
+    "_cid_uri": "https://dweb.link/ipfs/QmQAt2zsUynpSArUXrPWsFpjjTSDfPhpTxxBhxrJH3Wksn",
     "_parent_cid": "Qmbo94zEXRzzYZ3pZ4tS2V1i5jiZs5cFUsSY2HBRnwVU8w",
     "_parent_size": 122410,
-    "_parent_uri": "http://127.0.0.1:8080/ipfs/Qmbo94zEXRzzYZ3pZ4tS2V1i5jiZs5cFUsSY2HBRnwVU8w",
+    "_parent_uri": "https://dweb.link/ipfs/Qmbo94zEXRzzYZ3pZ4tS2V1i5jiZs5cFUsSY2HBRnwVU8w",
     "_raw_hash": "8cea540a2ab9081a47efc3961a9c80b35ae264e9a816e9aa41f018d3877a1b08",
     "_semver": "0.4.0-beta-TW-v5.1.24-pre+build",
     "_source_path": "$_boot_boot.js-0.4.0-beta-TW-v5.1.24-pre+build-210113450.json",
     "_source_size": 122301,
-    "_source_uri": "http://127.0.0.1:8080/ipfs/Qmbo94zEXRzzYZ3pZ4tS2V1i5jiZs5cFUsSY2HBRnwVU8w/$_boot_boot.js-0.4.0-beta-TW-v5.1.24-pre+build-210113450.json",
+    "_source_uri": "https://dweb.link/ipfs/Qmbo94zEXRzzYZ3pZ4tS2V1i5jiZs5cFUsSY2HBRnwVU8w/$_boot_boot.js-0.4.0-beta-TW-v5.1.24-pre+build-210113450.json",
     "_version": "0.4.0-beta-TW-v5.1.24-pre+build-210113450"
   },
   {
@@ -20,15 +20,15 @@
     "_tags": "$:/ipfs/core",
     "_owner": "$:/boot/boot.js",
     "_cid": "QmWWUENsRgqwN3ix9JDJ2DkgBiBcWzCqCHD6HT8Fk5kCDj",
-    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmWWUENsRgqwN3ix9JDJ2DkgBiBcWzCqCHD6HT8Fk5kCDj",
+    "_cid_uri": "https://dweb.link/ipfs/QmWWUENsRgqwN3ix9JDJ2DkgBiBcWzCqCHD6HT8Fk5kCDj",
     "_parent_cid": "QmQaEnUtz6jxjTBxo48MS3UnYde2XbCz5iwSEKCw639ADQ",
     "_parent_size": 38966,
-    "_parent_uri": "http://127.0.0.1:8080/ipfs/QmQaEnUtz6jxjTBxo48MS3UnYde2XbCz5iwSEKCw639ADQ",
+    "_parent_uri": "https://dweb.link/ipfs/QmQaEnUtz6jxjTBxo48MS3UnYde2XbCz5iwSEKCw639ADQ",
     "_raw_hash": "22d3ef82e9f2e6b36364bf947e5c7dc453162223f1e74f92ce92eb27da97379e",
     "_semver": "0.4.0-beta-TW-v5.1.24-pre+build",
     "_source_path": "$_boot_boot.js.zlib-0.4.0-beta-TW-v5.1.24-pre+build-210113450.json.zlib",
     "_source_size": 38847,
-    "_source_uri": "http://127.0.0.1:8080/ipfs/QmQaEnUtz6jxjTBxo48MS3UnYde2XbCz5iwSEKCw639ADQ/$_boot_boot.js.zlib-0.4.0-beta-TW-v5.1.24-pre+build-210113450.json.zlib",
+    "_source_uri": "https://dweb.link/ipfs/QmQaEnUtz6jxjTBxo48MS3UnYde2XbCz5iwSEKCw639ADQ/$_boot_boot.js.zlib-0.4.0-beta-TW-v5.1.24-pre+build-210113450.json.zlib",
     "_version": "0.4.0-beta-TW-v5.1.24-pre+build-210113450"
   }
 ]
