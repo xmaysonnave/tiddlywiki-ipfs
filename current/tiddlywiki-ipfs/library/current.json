@@ -4,15 +4,15 @@
     "_tags": "$:/ipfs/core",
     "_owner": "$:/library/ipfs-library-modules.js",
     "_cid": "QmPEkrxxYV7j3Dfv6zsw4To2TVRKmAmYdJHwkEF4MDj2TV",
-    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmPEkrxxYV7j3Dfv6zsw4To2TVRKmAmYdJHwkEF4MDj2TV",
+    "_cid_uri": "https://dweb.link/ipfs/QmPEkrxxYV7j3Dfv6zsw4To2TVRKmAmYdJHwkEF4MDj2TV",
     "_parent_cid": "QmbBM5hYK7ZZGY1j2wAm8i7zSvagt6fYgEpEwGCxSnTTu5",
     "_parent_size": 133090,
-    "_parent_uri": "http://127.0.0.1:8080/ipfs/QmbBM5hYK7ZZGY1j2wAm8i7zSvagt6fYgEpEwGCxSnTTu5",
+    "_parent_uri": "https://dweb.link/ipfs/QmbBM5hYK7ZZGY1j2wAm8i7zSvagt6fYgEpEwGCxSnTTu5",
     "_raw_hash": "ffa29e59777026489dfb9cef812d6af98372ac1ef13fad441b68bb3e6bd33c42",
     "_semver": "1.0.0+build",
     "_source_path": "$_library_ipfs-library-modules.js-1.0.0+build-210114340.json",
     "_source_size": 132982,
-    "_source_uri": "http://127.0.0.1:8080/ipfs/QmbBM5hYK7ZZGY1j2wAm8i7zSvagt6fYgEpEwGCxSnTTu5/$_library_ipfs-library-modules.js-1.0.0+build-210114340.json",
+    "_source_uri": "https://dweb.link/ipfs/QmbBM5hYK7ZZGY1j2wAm8i7zSvagt6fYgEpEwGCxSnTTu5/$_library_ipfs-library-modules.js-1.0.0+build-210114340.json",
     "_version": "1.0.0+build-210114340"
   },
   {
@@ -20,15 +20,15 @@
     "_tags": "$:/ipfs/core",
     "_owner": "$:/library/ipfs-library-modules.js",
     "_cid": "QmdvhfFd4ycxMpDSz5D8Je4dhhYZbZepZf4KGBKimXHybC",
-    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmdvhfFd4ycxMpDSz5D8Je4dhhYZbZepZf4KGBKimXHybC",
+    "_cid_uri": "https://dweb.link/ipfs/QmdvhfFd4ycxMpDSz5D8Je4dhhYZbZepZf4KGBKimXHybC",
     "_parent_cid": "QmaS2xfGBfU9WrhPYvLiT1fk8eM9EaFwGDxpm5545WvLeh",
     "_parent_size": 52673,
-    "_parent_uri": "http://127.0.0.1:8080/ipfs/QmaS2xfGBfU9WrhPYvLiT1fk8eM9EaFwGDxpm5545WvLeh",
+    "_parent_uri": "https://dweb.link/ipfs/QmaS2xfGBfU9WrhPYvLiT1fk8eM9EaFwGDxpm5545WvLeh",
     "_raw_hash": "3cc2b1c728b6635bb6d9265e52f17b900ea0512a5ff6fc47f25daaf8f3fe72a8",
     "_semver": "1.0.0+build",
     "_source_path": "$_library_ipfs-library-modules.js.zlib-1.0.0+build-210114340.json.zlib",
     "_source_size": 52555,
-    "_source_uri": "http://127.0.0.1:8080/ipfs/QmaS2xfGBfU9WrhPYvLiT1fk8eM9EaFwGDxpm5545WvLeh/$_library_ipfs-library-modules.js.zlib-1.0.0+build-210114340.json.zlib",
+    "_source_uri": "https://dweb.link/ipfs/QmaS2xfGBfU9WrhPYvLiT1fk8eM9EaFwGDxpm5545WvLeh/$_library_ipfs-library-modules.js.zlib-1.0.0+build-210114340.json.zlib",
     "_version": "1.0.0+build-210114340"
   }
 ]
