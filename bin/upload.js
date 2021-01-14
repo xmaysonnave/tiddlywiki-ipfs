@@ -89,21 +89,36 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   }
 
   // current
+  var i = null
   var current = null
+  var member = null
   var path = `./current/${dir}/current.json`
   if (fs.existsSync(path)) {
     current = JSON.parse(fs.readFileSync(path, 'utf8'))
     if (!current) {
       throw new Error(`Unknown current: ${path}...`)
     }
-    // Check
-    if (current._version === build._version) {
-      if (current._raw_hash !== build._raw_hash) {
-        throw new Error('Matching version but not raw hash...')
+    if (!Array.isArray(current)) {
+      throw new Error(`Unknown json array: ${path}...`)
+    }
+    // Member lookup
+    for (var j = 0; j < current.length; j++) {
+      if (current[j]._name === name) {
+        i = j
+        member = current[j]
+        break
       }
-    } else {
-      if (current._semver === build._semver && current._raw_hash === build._raw_hash) {
-        throw new Error('Raw hash inconsistency...')
+    }
+    // Check
+    if (member) {
+      if (member._version === build._version) {
+        if (member._raw_hash !== build._raw_hash) {
+          throw new Error('Matching version but not raw hash...')
+        }
+      } else {
+        if (member._semver === build._semver && member._raw_hash === build._raw_hash) {
+          throw new Error('Raw hash inconsistency...')
+        }
       }
     }
   }
@@ -175,7 +190,6 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   var parentCid = null
   var faviconCid = null
   var contentSize = null
-  var faviconSize = null
   var parentSize = null
   const options = {
     chunker: 'rabin-262144-524288-1048576',
@@ -197,7 +211,6 @@ module.exports = async function main (name, owner, extension, dir, tags) {
       contentSize = result.size
     } else if (result.path === faviconName) {
       faviconCid = result.cid
-      faviconSize = result.size
     }
   }
   if (!parentCid) {
@@ -218,43 +231,45 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   }
 
   // Check
-  if (current && current._version === build._version) {
-    if (current._cid !== cid.toString()) {
+  if (member && member._version === build._version) {
+    if (member._cid !== cid.toString()) {
       throw new Error('Matching version but not cid...')
     }
-    if (current._parent_cid !== parentCid.toString()) {
+    if (member._parent_cid !== parentCid.toString()) {
       throw new Error('Matching version but not parent cid...')
     }
   }
 
   // Json
   const node = {}
+  node._name = `${name}`
   if (tags) {
     node._tags = tags
   }
   if (owner) {
     node._owner = owner
   }
+  node._cid = `${cid.toString()}`
+  node._cid_uri = `${gatewayUrl}${cid}`
   node._parent_cid = `${parentCid}`
   node._parent_size = parentSize
   node._parent_uri = `${gatewayUrl}${parentCid}`
+  node._raw_hash = build._raw_hash
+  node._semver = build._semver
   node._source_path = contentName
   node._source_size = contentSize
   node._source_uri = `${gatewayUrl}${parentCid}/${contentName}`
-  node._cid = `${cid.toString()}`
-  node._cid_uri = `${gatewayUrl}${cid}`
-  node._semver = build._semver
   node._version = build._version
-  node._raw_hash = build._raw_hash
-  if (faviconCid) {
-    node._favicon_path = faviconName
-    node._favicon_size = faviconSize
-    node._favicon_uri = `${gatewayUrl}${parentCid}/${faviconName}`
-    node._favicon_cid = `${faviconCid.toString()}`
-    node._favicon_cid_uri = `${gatewayUrl}${faviconCid}`
-  }
   // Save current
-  fs.writeFileSync(`./current/${dir}/current.json`, beautify(node, null, 2, 80), 'utf8')
+  if (current == null) {
+    current = []
+  }
+  if (i !== null) {
+    current[i] = node
+  } else {
+    current.push(node)
+  }
+  fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
   // Build version
   if (name === '$:/plugins/ipfs.js') {
     fs.writeFileSync(
@@ -272,7 +287,7 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   }
 
   // Tiddler
-  var tid = `title: ${name}/build`
+  var tid = `title: ${name}_build`
   if (tags) {
     tid = `${tid}
 tags: ${node._tags}`
@@ -282,26 +297,17 @@ tags: ${node._tags}`
 _owner: ${node._owner}`
   }
   tid = `${tid}
+_cid: ${node._cid}
+_cid_uri: ipfs://${node._cid}
 _parent_cid: ${node._parent_cid}
 _parent_size: ${node._parent_size}
 _parent_uri: ipfs://${node._parent_cid}
+_raw_hash: ${node._raw_hash}
+_semver: ${node._semver}
 _source_path: ${node._source_path}
 _source_size: ${node._source_size}
 _source_uri: ipfs://${node._parent_cid}/${contentName}
-_cid: ${node._cid}
-_cid_uri: ipfs://${node._cid}
-_semver: ${node._semver}
-_version: ${node._version}
-_raw_hash: ${node._raw_hash}`
-  if (faviconCid) {
-    tid = `${tid}
-_parent_cid: ${node._parent_cid}
-_favicon_path: ${node._favicon_path}
-_favicon_size: ${node._favicon_size}
-_favicon_uri: ipfs://${node._parent_cid}/${faviconName}
-_favicon_cid: ${node._favicon_cid}
-_favicon_cid_uri: ipfs://${node._favicon_cid}`
-  }
+_version: ${node._version}`
 
   // Save Tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}_build.tid`, tid, 'utf8')
@@ -314,9 +320,11 @@ _favicon_cid_uri: ipfs://${node._favicon_cid}`
   await load(node._cid_uri)
   console.log(`*** Fetched ${node._cid_uri} ***`)
   if (faviconCid) {
-    await load(node._favicon_uri)
-    console.log(`*** Fetched ${node._favicon_uri} ***`)
-    await load(node._favicon_cid_uri)
-    console.log(`*** Fetched ${node._favicon_cid_uri} ***`)
+    const faviconUri = `${gatewayUrl}${parentCid}/${faviconName}`
+    await load(faviconUri)
+    console.log(`*** Fetched ${faviconUri} ***`)
+    const faviconBlockUri = `${gatewayUrl}${faviconCid}`
+    await load(faviconBlockUri)
+    console.log(`*** Fetched ${faviconBlockUri} ***`)
   }
 }

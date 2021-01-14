@@ -11,7 +11,6 @@ nvm use > /dev/null 2>&1
 
 # cleanup
 rm -f -R ./build > /dev/null 2>&1
-rm -f -R ./sample > /dev/null 2>&1
 
 # build directory layout
 mkdir -p ./build/output/pin > /dev/null 2>&1

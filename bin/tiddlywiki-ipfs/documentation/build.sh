@@ -25,21 +25,20 @@ cp './production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid' './build/ti
 
 # build raw
 echo '***'
-echo '*** raw documentation ***'
+echo '*** raw ***'
 echo '***'
 yarn ipfs-tiddlywiki build \
   --build \
-  --verbose "$@" || exit 1
+  --verbose || exit 1
 
 # check hash and set version
 echo '***'
 echo '*** semver documentation ***'
 echo '***'
-./bin/cli-semver.sh \
-  --name=$:/ipfs/documentation \
-  --extension=json \
-  --dir=tiddlywiki-ipfs/documentation \
-  --env=DOCUMENTATION "$@" || exit 1
+node ./bin/tiddlywiki-ipfs/documentation/semver.js "$@" || exit 1
+
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 # build
 echo '***'
@@ -55,6 +54,14 @@ yarn ipfs-tiddlywiki build \
   --name=$:/ipfs/documentation.json \
   --owner=$:/ipfs/documentation \
   --extension=json \
+  --dir=tiddlywiki-ipfs/documentation \
+  --tags=$:/ipfs/documentation "$@" || exit 1
+
+# upload to ipfs
+./bin/cli-upload.sh \
+  --name=$:/ipfs/documentation.json.zlib \
+  --owner=$:/ipfs/documentation \
+  --extension=json.zlib \
   --dir=tiddlywiki-ipfs/documentation \
   --tags=$:/ipfs/documentation "$@" || exit 1
 

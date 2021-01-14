@@ -1,19 +1,17 @@
-{
-  "_tags": "$:/ipfs/editions",
-  "_parent_cid": "QmP4VgBknPJMveRHTSyUCM8KYWbx4uHgH9hT96Bu7Ze6og",
-  "_parent_size": 2757862,
-  "_parent_uri": "http://127.0.0.1:8080/ipfs/QmP4VgBknPJMveRHTSyUCM8KYWbx4uHgH9hT96Bu7Ze6og",
-  "_source_path": "index.html",
-  "_source_size": 2753452,
-  "_source_uri": "http://127.0.0.1:8080/ipfs/QmP4VgBknPJMveRHTSyUCM8KYWbx4uHgH9hT96Bu7Ze6og/index.html",
-  "_cid": "QmNrZL3gVXbHzPLxvxHnVYPuEFbea6H4WVjaEXae8Rr6CC",
-  "_cid_uri": "http://127.0.0.1:8080/ipfs/QmNrZL3gVXbHzPLxvxHnVYPuEFbea6H4WVjaEXae8Rr6CC",
-  "_semver": "0.4.0-beta-TW-v5.1.23+build",
-  "_version": "0.4.0-beta-TW-v5.1.23+build-210111471",
-  "_raw_hash": "e2916cb41925606263bced8140c301bef81662a2c64f579337750f19139c095c",
-  "_favicon_path": "favicon.ico",
-  "_favicon_size": 4297,
-  "_favicon_uri": "http://127.0.0.1:8080/ipfs/QmP4VgBknPJMveRHTSyUCM8KYWbx4uHgH9hT96Bu7Ze6og/favicon.ico",
-  "_favicon_cid": "QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF",
-  "_favicon_cid_uri": "http://127.0.0.1:8080/ipfs/QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF"
-}
+[
+  {
+    "_name": "index.html",
+    "_tags": "$:/ipfs/editions",
+    "_cid": "QmUhzxxjDmAf3ncEaVZBX9gjfWaLVSzZsaSdbHf88rjYbo",
+    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmUhzxxjDmAf3ncEaVZBX9gjfWaLVSzZsaSdbHf88rjYbo",
+    "_parent_cid": "QmUYx1Yb2W7wJB9e3uAosej6dKA4oJgEmxXWLTvLhWPvWm",
+    "_parent_size": 2764149,
+    "_parent_uri": "http://127.0.0.1:8080/ipfs/QmUYx1Yb2W7wJB9e3uAosej6dKA4oJgEmxXWLTvLhWPvWm",
+    "_raw_hash": "fa70036731e7299f523058233d1855d07d99b885afe6959e053692a6f36f19a1",
+    "_semver": "0.4.0-beta-TW-v5.1.23+build",
+    "_source_path": "index.html",
+    "_source_size": 2759739,
+    "_source_uri": "http://127.0.0.1:8080/ipfs/QmUYx1Yb2W7wJB9e3uAosej6dKA4oJgEmxXWLTvLhWPvWm/index.html",
+    "_version": "0.4.0-beta-TW-v5.1.23+build-210114300"
+  }
+]

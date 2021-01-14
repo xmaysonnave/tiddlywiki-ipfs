@@ -50,7 +50,7 @@ node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index \
+  --name=index.html \
   --extension=html \
   --dir=editions/tiddlywiki \
   --env=TIDDLYWIKI "$@" || exit 1

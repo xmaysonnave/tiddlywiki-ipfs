@@ -135,7 +135,7 @@ wikimethod
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
-          if (!$tw.utils.decryptEncryptedStoreArea(encryptedStoreArea, callback)) {
+          if (!$tw.utils.decrypt(encryptedStoreArea, callback)) {
             callback(
               self.deserializeTiddlers(type, encryptedStoreArea, tiddlerFields, {
                 deserializer: deserializer,

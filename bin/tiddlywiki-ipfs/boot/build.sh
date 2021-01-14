@@ -66,6 +66,9 @@ echo '*** semver boot ***'
 echo '***'
 node ./bin/tiddlywiki-ipfs/boot/semver.js "$@" || exit 1
 
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
+
 # build
 echo '***'
 echo '*** boot ***'
@@ -80,6 +83,14 @@ yarn ipfs-tiddlywiki build \
   --name=$:/boot/boot.js \
   --owner=$:/boot/boot.js \
   --extension=json \
+  --dir=tiddlywiki-ipfs/boot \
+  --tags=$:/ipfs/core "$@" || exit 1
+
+# upload to ipfs
+./bin/cli-upload.sh \
+  --name=$:/boot/boot.js.zlib \
+  --owner=$:/boot/boot.js \
+  --extension=json.zlib \
   --dir=tiddlywiki-ipfs/boot \
   --tags=$:/ipfs/core "$@" || exit 1
 

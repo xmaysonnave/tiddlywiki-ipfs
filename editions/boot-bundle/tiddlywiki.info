@@ -3,7 +3,7 @@
 	"plugins": [],
 	"themes":[],
 	"build": {
-    "modules": [
+    "plain": [
 			"--rendertiddler",
         "$:/ipfs/boot/bundle",
         "tiddlywiki-ipfs/boot/$_boot_boot.js",

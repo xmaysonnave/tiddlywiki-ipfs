@@ -6,8 +6,8 @@ const semver = require('../../semver.js')
 
 function main () {
   try {
-    const name = '$:/boot/boot'
-    const extension = 'js'
+    const name = '$:/boot/boot.js'
+    const extension = 'json'
     const dir = 'tiddlywiki-ipfs/boot'
     const env = 'BOOT'
 
@@ -20,6 +20,8 @@ function main () {
       recursive: false,
       silent: true,
     })
+
+    semver('$:/boot/boot.js.zlib', 'json.zlib', dir, env, version)
   } catch (error) {
     console.error(error)
     process.exit(1)

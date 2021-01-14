@@ -5,10 +5,9 @@ const { generate, validate } = require('build-number-generator')
 const dotenv = require('dotenv')
 const filenamify = require('filenamify')
 const fs = require('fs')
-const replace = require('replace')
 const createKeccakHash = require('keccak')
 
-module.exports = function main (name, extension, dir, env) {
+module.exports = function main (name, extension, dir, env, version) {
   // Check
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
@@ -56,6 +55,12 @@ module.exports = function main (name, extension, dir, env) {
     }
   }
   if (!raw) {
+    path = `./build/output/${dir}/${fileName}`
+    if (fs.existsSync(path)) {
+      raw = fs.readFileSync(path, 'utf8')
+    }
+  }
+  if (!raw) {
     throw new Error('Unknown raw content...')
   }
   // Keccak
@@ -64,38 +69,44 @@ module.exports = function main (name, extension, dir, env) {
   const rawHash = keccak.digest('hex')
   console.log(`*** ${name}, hash: ${rawHash} ***`)
 
-  var version = null
-
   // Current
   var current = null
+  var member = null
   var path = `./current/${dir}/current.json`
   if (fs.existsSync(path)) {
     current = JSON.parse(fs.readFileSync(path, 'utf8'))
+    if (current) {
+      if (!Array.isArray(current)) {
+        throw new Error(`Unknown structure: ${path}...`)
+      }
+      // Member lookup
+      for (var j = 0; j < current.length; j++) {
+        if (current[j]._name === name) {
+          member = current[j]
+          break
+        }
+      }
+    }
   }
 
   // Version
-  if (!current || (current && current._raw_hash !== rawHash)) {
-    if (!validate(rawSemver)) {
-      version = generate({ version: rawSemver, versionSeparator: '-' })
-      console.log(`*** new version: ${version} ***`)
+  if (!version) {
+    if (!member || (member && member._raw_hash !== rawHash)) {
+      if (!validate(rawSemver)) {
+        version = generate({ version: rawSemver, versionSeparator: '-' })
+        console.log(`*** new version: ${version} ***`)
+      }
+    } else {
+      version = member._version
+      console.log(`*** use current version: ${version} ***`)
     }
   } else {
-    version = current._version
-    console.log(`*** use current version: ${version} ***`)
+    console.log(`*** use parent version: ${version} ***`)
   }
   // Check
   if (!validate(version)) {
     throw new Error(`Invalid version: ${version}`)
   }
-
-  // Set version
-  replace({
-    regex: `%BUILD_${env}_VERSION%`,
-    replacement: version,
-    paths: ['./build/tiddlywiki.info'],
-    recursive: false,
-    silent: true,
-  })
 
   // Save
   const toJson = {
@@ -103,7 +114,7 @@ module.exports = function main (name, extension, dir, env) {
     _semver: rawSemver,
     _version: version,
   }
-  fs.writeFileSync(`./build/output/${dir}/${fileName}.${extension}_build.json`, JSON.stringify(toJson), 'utf8')
+  fs.writeFileSync(`./build/output/${dir}/${fileName}_build.json`, JSON.stringify(toJson), 'utf8')
 
   return version
 }

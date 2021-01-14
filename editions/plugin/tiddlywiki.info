@@ -3,10 +3,21 @@
 	"plugins": [],
 	"themes":[],
 	"build": {
-    "plugin": [
+    "plain": [
+			"--compress",
+        "no",
       "--render",
         "[tag[$:/ipfs/core]]",
         "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.js-%BUILD_PLUGIN_VERSION%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ],
+    "compressed": [
+			"--compress",
+        "yes",
+      "--render",
+        "[tag[$:/ipfs/core]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.js.zlib-%BUILD_PLUGIN_VERSION%.json.zlib]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

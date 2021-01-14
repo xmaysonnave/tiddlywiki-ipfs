@@ -3,7 +3,7 @@
 	"plugins": [],
 	"themes":[],
 	"build": {
-    "modules": [
+    "plain": [
 			"--rendertiddler",
         "$:/ipfs/library/bundle",
         "tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js",

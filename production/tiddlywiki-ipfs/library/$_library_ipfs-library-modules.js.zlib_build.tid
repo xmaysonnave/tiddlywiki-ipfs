@@ -1,0 +1,14 @@
+title: $:/library/ipfs-library-modules.js.zlib_build
+tags: $:/ipfs/core
+_owner: $:/library/ipfs-library-modules.js
+_cid: QmZ2qdDZmucgUSWk6FbZpjjDYMPEGSHFQz9qCPPVg89tdd
+_cid_uri: ipfs://QmZ2qdDZmucgUSWk6FbZpjjDYMPEGSHFQz9qCPPVg89tdd
+_parent_cid: QmSZXCQAxSgSfwgvE2j6434sHcH7Ze1sf6bEQKfed3dEd6
+_parent_size: 52673
+_parent_uri: ipfs://QmSZXCQAxSgSfwgvE2j6434sHcH7Ze1sf6bEQKfed3dEd6
+_raw_hash: df4d465420fab7016eea1bdc263de459db21b480fc627a31f8543b74fa12f73a
+_semver: 1.0.0+build
+_source_path: $_library_ipfs-library-modules.js.zlib-1.0.0+build-210113283.json.zlib
+_source_size: 52555
+_source_uri: ipfs://QmSZXCQAxSgSfwgvE2j6434sHcH7Ze1sf6bEQKfed3dEd6/$_library_ipfs-library-modules.js.zlib-1.0.0+build-210113283.json.zlib
+_version: 1.0.0+build-210113283

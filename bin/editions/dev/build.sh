@@ -9,12 +9,15 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
+# cleanup
+find ./sample -name "dev*.*" -delete > /dev/null 2>&1
+
 # init
 ./bin/init-editions.sh "$@" || exit 1
 rm -f -R ./build/output/editions/dev > /dev/null 2>&1
 mkdir -p ./build/output/editions/dev > /dev/null 2>&1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 rm -f -R ./build/plugins > /dev/null 2>&1
 rm -f -R ./production/editions/dev > /dev/null 2>&1
 mkdir -p ./production/editions/dev > /dev/null 2>&1
@@ -23,6 +26,7 @@ mkdir -p ./current/editions/dev > /dev/null 2>&1
 # assets
 cp -R ./editions/bluelightav-raw/* ./build || exit 1
 cp -R ./editions/dev-raw/* ./build || exit 1
+cp './production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.tid' './build/tiddlers/config/$_ipfs_documentation.json_build.tid' || exit 1
 
 # tw5-locator
 rm -f -R ./build/plugins/locator > /dev/null 2>&1
@@ -47,17 +51,18 @@ yarn ipfs-tiddlywiki build \
 
 # init
 rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 
 # assets
 cp ./editions/dev/tiddlywiki.info ./build/tiddlywiki.info || exit 1
+cp './production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.tid' './build/tiddlers/config/$_ipfs_documentation.json_build.tid' || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index \
+  --name=index.html \
   --extension=html \
   --dir=editions/dev \
   --env=DEV "$@" || exit 1

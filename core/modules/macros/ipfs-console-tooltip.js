@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macro/ipfs-console-tooltip.js
+title: $:/plugins/ipfs/macros/ipfs-console-tooltip.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro

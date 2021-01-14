@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macro/ipfs-encryption-tooltip.js
+title: $:/plugins/ipfs/macros/ipfs-encryption-tooltip.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro

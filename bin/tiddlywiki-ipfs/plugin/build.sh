@@ -22,8 +22,8 @@ mkdir -p ./current/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 # assets
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./core/* ./build/plugins/ipfs || exit 1
-rm ./build/plugins/ipfs/modules/ipfs-bundle.js > /dev/null 2>&1
-rm -R ./build/plugins/ipfs/modules/ipfs-bundle > /dev/null 2>&1
+rm ./build/plugins/ipfs/modules/library/ipfs-bundle.js > /dev/null 2>&1
+rm -R ./build/plugins/ipfs/modules/library/ipfs-bundle > /dev/null 2>&1
 cp './production/tiddlywiki-ipfs/boot/$_boot_boot.js_build.tid' './build/plugins/ipfs/config/$_boot_boot.js_build.tid' || exit 1
 cp './production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.tid' './build/plugins/ipfs/config/$_library_ipfs-library-modules.js_build.tid' || exit 1
 cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info || exit 1
@@ -33,9 +33,9 @@ echo '***'
 echo '*** browserify ipfs-bundle ***'
 echo '***'
 yarn browserify \
-  core/modules/ipfs-bundle.js \
+  core/modules/library/ipfs-bundle.js \
   -s IpfsBundle \
-  -o build/plugins/ipfs/modules/ipfs-bundle.js "$@" || exit 1
+  -o build/plugins/ipfs/modules/library/ipfs-bundle.js "$@" || exit 1
 
 # build raw
 echo '***'
@@ -51,6 +51,9 @@ echo '*** semver plugin ***'
 echo '***'
 node ./bin/tiddlywiki-ipfs/plugin/semver.js "$@" || exit 1
 
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
+
 # build
 echo '***'
 echo '*** plugin ***'
@@ -65,6 +68,14 @@ yarn ipfs-tiddlywiki build \
   --name=$:/plugins/ipfs.js \
   --owner=$:/plugins/ipfs \
   --extension=json \
+  --dir=tiddlywiki-ipfs/plugin \
+  --tags=$:/ipfs/documentation "$@" || exit 1
+
+# upload to ipfs
+./bin/cli-upload.sh \
+  --name=$:/plugins/ipfs.js.zlib \
+  --owner=$:/plugins/ipfs \
+  --extension=json.zlib \
   --dir=tiddlywiki-ipfs/plugin \
   --tags=$:/ipfs/documentation "$@" || exit 1
 

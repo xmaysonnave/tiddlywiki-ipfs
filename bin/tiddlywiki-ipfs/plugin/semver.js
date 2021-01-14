@@ -6,8 +6,8 @@ const semver = require('../../semver.js')
 
 function main () {
   try {
-    const name = '$:/plugins/ipfs'
-    const extension = 'js'
+    const name = '$:/plugins/ipfs.js'
+    const extension = 'json'
     const dir = 'tiddlywiki-ipfs/plugin'
     const env = 'PLUGIN'
 
@@ -30,6 +30,7 @@ function main () {
     // update
     // data = JSON.stringify(infoProject, null, 2)
     // fs.writeFileSync(sourcePackage, data, 'utf8')
+    semver('$:/plugins/ipfs.js.zlib', 'json.zlib', dir, env, version)
   } catch (error) {
     console.error(error)
     process.exit(1)

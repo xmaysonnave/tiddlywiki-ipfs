@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macro/ipfs-plugin-version.js
+title: $:/plugins/ipfs/macros/ipfs-plugin-version.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro

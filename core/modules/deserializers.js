@@ -66,6 +66,10 @@ Functions to deserialise tiddlers from a block of text
   }
 
   exports['application/json'] = function (text, fields) {
+    const inflated = $tw.utils.inflate(text)
+    if (inflated !== null) {
+      return inflated
+    }
     var incoming
     var results = []
     try {
@@ -119,7 +123,7 @@ Functions to deserialise tiddlers from a block of text
       // Check whether this is a compressed TiddlyWiki file
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
-        return $tw.utils.inflateStoreArea(compressedStoreArea)
+        return $tw.utils.inflate(compressedStoreArea)
       } else {
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)

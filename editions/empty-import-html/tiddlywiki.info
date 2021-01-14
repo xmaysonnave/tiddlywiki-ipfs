@@ -1,5 +1,5 @@
 {
-	"description": "Empty dev",
+	"description": "Empty Import HTML",
 	"plugins": [
 	],
 	"themes": [
@@ -7,12 +7,15 @@
 		"tiddlywiki/snowwhite"
 	],
 	"build": {
-		"empty-dev-import": [
+		"empty-import-html": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json",
+        "application/json",
+      "--import",
+        "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
       "--privatekey",
         "%DEV_PRIVATE_KEY%",
@@ -24,7 +27,7 @@
         "yes",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-dev-import.html",
+        "./empty-import-html.html",
         "text/plain"
     ]
 	}

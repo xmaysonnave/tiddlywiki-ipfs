@@ -9,9 +9,12 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
+# cleanup
+find ./sample -name "empty*.*" -delete > /dev/null 2>&1
+
 # init
 ./bin/init-editions.sh "$@" || exit 1
-rm -f -R ./build/output/editions/ > /dev/null 2>&1
+rm -f -R ./build/output/editions/empty > /dev/null 2>&1
 mkdir -p ./build/output/editions/empty > /dev/null 2>&1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
@@ -46,7 +49,7 @@ node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index \
+  --name=index.html \
   --extension=html \
   --dir=editions/empty \
   --env=EMPTY "$@" || exit 1

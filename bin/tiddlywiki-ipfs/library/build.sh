@@ -48,8 +48,6 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
 cp './build/output/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js' './build/tiddlers/$_library_ipfs-library-modules.js' || exit 1
-
-# meta
 cp './core/library/$_library_ipfs-library-modules.js.meta' './build/tiddlers/$_library_ipfs-library-modules.js.meta' || exit 1
 
 # library
@@ -69,6 +67,9 @@ echo '*** semver library ***'
 echo '***'
 node ./bin/tiddlywiki-ipfs/library/semver.js "$@" || exit 1
 
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
+
 # build
 echo '***'
 echo '*** library ***'
@@ -83,6 +84,14 @@ yarn ipfs-tiddlywiki build \
   --name=$:/library/ipfs-library-modules.js \
   --owner=$:/library/ipfs-library-modules.js \
   --extension=json \
+  --dir=tiddlywiki-ipfs/library \
+  --tags=$:/ipfs/core "$@" || exit 1
+
+# upload to ipfs
+./bin/cli-upload.sh \
+  --name=$:/library/ipfs-library-modules.js.zlib \
+  --owner=$:/library/ipfs-library-modules.js \
+  --extension=json.zlib \
   --dir=tiddlywiki-ipfs/library \
   --tags=$:/ipfs/core "$@" || exit 1
 

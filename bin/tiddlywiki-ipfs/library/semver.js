@@ -7,8 +7,8 @@ const semver = require('../../semver.js')
 
 function main () {
   try {
-    const name = '$:/library/ipfs-library-modules'
-    const extension = 'js'
+    const name = '$:/library/ipfs-library-modules.js'
+    const extension = 'json'
     const dir = 'tiddlywiki-ipfs/library'
     const env = 'LIBRARY'
 
@@ -30,6 +30,8 @@ function main () {
         })
       }
     }
+
+    semver('$:/library/ipfs-library-modules.js.zlib', 'json.zlib', dir, env, version)
   } catch (error) {
     console.error(error)
     process.exit(1)
