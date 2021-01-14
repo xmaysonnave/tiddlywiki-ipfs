@@ -5,7 +5,7 @@
 const fs = require('fs')
 const pako = require('pako')
 const chai = require('chai')
-const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
 const { expect } = chai
 

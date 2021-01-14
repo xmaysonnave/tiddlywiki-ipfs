@@ -20,6 +20,17 @@ Navigator widget
 
   var NavigatorWidget = function (parseTreeNode, options) {
     this.initialise(parseTreeNode, options)
+  }
+
+  /*
+Inherit from the base widget class
+*/
+  NavigatorWidget.prototype = new Widget()
+
+  /*
+Render this widget into the DOM
+*/
+  NavigatorWidget.prototype.render = function (parent, nextSibling) {
     this.addEventListeners([
       { type: 'tm-navigate', handler: 'handleNavigateEvent' },
       { type: 'tm-edit-tiddler', handler: 'handleEditTiddlerEvent' },
@@ -63,17 +74,6 @@ Navigator widget
       },
       { type: 'tm-rename-tiddler', handler: 'handleRenameTiddlerEvent' },
     ])
-  }
-
-  /**
-   * Inherit from the base widget class
-   */
-  NavigatorWidget.prototype = new Widget()
-
-  /**
-   * Render this widget into the DOM
-   */
-  NavigatorWidget.prototype.render = function (parent, nextSibling) {
     this.parentDomNode = parent
     this.computeAttributes()
     this.execute()

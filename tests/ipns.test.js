@@ -6,8 +6,8 @@ const log = require('loglevel')
 const chai = require('chai')
 const sinon = require('sinon')
 
-const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
-const IpfsWrapper = require('../core/modules/ipfs-wrapper.js').IpfsWrapper
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsWrapper = require('../core/modules/library/ipfs-wrapper.js').IpfsWrapper
 
 const { expect } = chai
 

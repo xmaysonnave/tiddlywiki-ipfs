@@ -8,7 +8,7 @@ const CID = require('cids')
 const IPFS = require('ipfs')
 const Repo = require('ipfs-repo')
 const chai = require('chai')
-const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /*
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api

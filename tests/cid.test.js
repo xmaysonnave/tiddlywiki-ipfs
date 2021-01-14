@@ -4,7 +4,7 @@
 
 const log = require('loglevel')
 const chai = require('chai')
-const IpfsBundle = require('../core/modules/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
 const { assert, expect } = chai
 
