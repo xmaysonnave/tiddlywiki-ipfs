@@ -7,6 +7,8 @@ const fetch = require('node-fetch')
 const fileType = require('file-type')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
+const http = require('http')
+const https = require('https')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
 const CID = require('cids')
@@ -20,7 +22,7 @@ async function load (url, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
-  var options = {
+  const options = {
     compress: false,
     method: 'GET',
   }
@@ -84,6 +86,16 @@ module.exports = async function main (dir) {
   // Ipfs Client
   const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
   const protocol = apiUrl.protocol.slice(0, -1)
+  const agent = new http.Agent({
+    keepAlive: true,
+    // Similar to browsers which limit connections to six per host
+    maxSockets: 6,
+  })
+  const agents = new https.Agent({
+    keepAlive: true,
+    // Similar to browsers which limit connections to six per host
+    maxSockets: 6,
+  })
   var port = apiUrl.port
   if (port === undefined || port == null || port.trim() === '') {
     port = 443
@@ -92,6 +104,7 @@ module.exports = async function main (dir) {
     }
   }
   const api = IpfsHttpClient({
+    agent: protocol === 'http' ? agent : agents,
     protocol: protocol,
     host: apiUrl.hostname,
     port: port,

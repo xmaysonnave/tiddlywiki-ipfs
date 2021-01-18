@@ -289,7 +289,7 @@ Check:
 
 ```text
 node -v
-v15.5.0
+v15.6.0
 ```
 
 Install `yarn`.
