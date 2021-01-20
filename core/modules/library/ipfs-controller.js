@@ -148,7 +148,6 @@ IPFS Controller
             content = $tw.crypto.encrypt(content, password)
           }
         }
-        content = this.StringToUint8Array(content)
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, 'Failed to process encrypted content...')
@@ -159,13 +158,6 @@ IPFS Controller
         if (compress) {
           content = { compressed: this.deflate(content) }
           content = JSON.stringify(content)
-          content = this.StringToUint8Array(content)
-        } else {
-          if (encoding === 'base64') {
-            content = this.Base64ToUint8Array(content)
-          } else {
-            content = this.StringToUint8Array(content)
-          }
         }
       } catch (error) {
         $tw.ipfs.getLogger().error(error)

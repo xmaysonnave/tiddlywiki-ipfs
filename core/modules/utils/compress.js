@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/utils/compress.js
+title: $:/plugins/ipfs/utils/compress.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: utils

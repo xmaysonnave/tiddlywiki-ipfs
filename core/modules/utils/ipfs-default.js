@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/ipfs-default.js
+title: $:/plugins/ipfs/utils/ipfs-default.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: utils

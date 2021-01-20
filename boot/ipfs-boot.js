@@ -79,7 +79,8 @@ var _ipfs = function ($tw) {
   }
 
   /**
-   * Crypto helper object for encrypted content. It maintains the password text in a closure, and provides methods to change
+   * Crypto helper object for encrypted content.
+   * It maintains the password text in a closure, and provides methods to change
    * the password, and to encrypt/decrypt a block of text
    */
   $tw.utils.Crypto = function () {

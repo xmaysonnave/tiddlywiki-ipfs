@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/utils/crypto.js
+title: $:/plugins/ipfs/utils/crypto.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: utils

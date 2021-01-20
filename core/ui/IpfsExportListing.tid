@@ -1,5 +1,5 @@
 title: $:/core/ui/IpfsExportListing
-tags: :/ipfs/core
+tags: $:/ipfs/core
 
 \define lingo-base() $:/language/Export/
 
@@ -49,7 +49,7 @@ $(currentTiddler)$!!popup-$(payloadTiddler)$
 <td colspan="2">
 <$reveal type="match" text="yes" state=<<previewPopupState>> tag="div">
 <$list filter="[{$:/state/ipfsexportpreviewtype}has[text]]" variable="listItem" emptyMessage={{$:/core/ui/IpfsExportPreviews/Text}}>
-<$transclude tiddler={{$:/state/ipfsexportpreviewtype}}/>
+<$transclude tiddler={{$:/state/ipfsexportpreviewtype}} mode="inline"/>
 </$list>
 </$reveal>
 </td>

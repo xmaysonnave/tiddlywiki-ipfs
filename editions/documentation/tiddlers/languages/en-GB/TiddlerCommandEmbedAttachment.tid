@@ -24,7 +24,7 @@ type: text/vnd.tiddlywiki
   Edit [[IPFS - The Little Prince]] and remove the <b>_canonical_uri</b> field, save your Tiddler.
   The external resource will be embedded in your wiki.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/embedded]]
+[img class="tc-image-documentation" [/ipfs/image/embedded]]
 <p>
   When you'll save your document <b>IPFS with ~TiddlyWiki</b> will unpin the previous IPFS external
   resources if the [[Unpin]] has been selected.

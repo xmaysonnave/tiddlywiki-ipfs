@@ -4,7 +4,7 @@ tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
 <h2>Export Attachment</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/export/attachment]]
+[img class="tc-image-documentation" [/ipfs/image/export/attachment]]
 <p>
   Exporting an embedded attachment means exporting to IPFS a content from your wiki.
 </p>
@@ -18,7 +18,7 @@ type: text/vnd.tiddlywiki
   Use the [[https://ipfs.infura.io:5001 API URL|IPFS Server Settings]] and the
   [[https://ipfs.infura.io Gateway URL|IPFS Server Settings]] and experiment with [[Embedded - The Little Prince]].
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/console]]
+[img class="tc-image-documentation" [/ipfs/image/console]]
 <p>
   Another good experiment is to use the [[https://ipfs.infura.io:5001 API URL|IPFS Server Settings]] and the
   [[https://dweb.link Gateway URL|IPFS Server Settings]]. You upload your attachment on <b>infura</b>

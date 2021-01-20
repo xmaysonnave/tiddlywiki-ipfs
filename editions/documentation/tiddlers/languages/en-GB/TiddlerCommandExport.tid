@@ -4,7 +4,7 @@ tags: $:/ipfs/documentation [[Tiddler Commands]]
 type: text/vnd.tiddlywiki
 
 <h2>Export Tiddler</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/export/tiddler]]
+[img class="tc-image-documentation" [/ipfs/image/export/tiddler]]
 <p>
   Exporting a Tiddler means exporting to IPFS a Tiddler content from your wiki.
 </p>

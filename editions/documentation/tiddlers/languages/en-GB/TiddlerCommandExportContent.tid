@@ -37,16 +37,16 @@ type: text/vnd.tiddlywiki
 <p>
   Edit [[IPFS Documentation Assets]].
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/documentation/asset/content]]
+[img class="tc-image-documentation" [/ipfs/image/documentation/asset/content]]
 <p>
   Notice the transclusion notation available in the <b>text</b> field.
   Close the Tiddler and execute the following command.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/export/content]]
+[img class="tc-image-documentation" [/ipfs/image/export/content]]
 <p>
   Check the console output for more details.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/export/console]]
+[img class="tc-image-documentation" [/ipfs/image/export/console]]
 <p>
   Edit [[IPFS Documentation Assets]] and notice the new <b>_export_uri</b> field.
 </p>
@@ -54,7 +54,7 @@ type: text/vnd.tiddlywiki
 <p>
   Click the <b>_export_uri</b> field.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/export/json]]
+[img class="tc-image-documentation" [/ipfs/image/export/json]]
 <h3>_export_uri</h3>
 <p>
   The field <b>_export_uri</b> store your IPFS identifier. If you want to export to

@@ -8,11 +8,11 @@ type: text/vnd.tiddlywiki
 <p>
   The plugin provide feedback through dialog boxes.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/error]]
+[img class="tc-image-documentation" [/ipfs/image/error]]
 <p>
   Errors are always detailed in the [[Console]]. Useful when you need to fill a bug report.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/error/console]]
+[img class="tc-image-documentation" [/ipfs/image/error/console]]
 <p>
   Processing content over [[IPFS|IPFS Server Settings]] could be a lengthy process.
 </p>
