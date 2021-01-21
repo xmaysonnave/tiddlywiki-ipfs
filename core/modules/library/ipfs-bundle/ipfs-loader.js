@@ -141,12 +141,16 @@ IpfsLoader.prototype.isJson = function (content) {
 }
 
 IpfsLoader.prototype.fetchUint8Array = async function (url) {
+  var options = null
   try {
-    const options = fetch(url, {
+    options = await fetch(url, {
       method: 'options',
     })
-    console.log(options)
-    const response = await fetch(url)
+  } catch (error) {
+    // Ignore
+  }
+  try {
+    const response = await fetch(options && options.url ? options.url : url)
     if (response.ok) {
       const ab = await response.arrayBuffer()
       const ua = new Uint8Array(ab)
