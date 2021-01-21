@@ -1,11 +1,11 @@
 title: $:/core/ui/Buttons/ens/publish
 tags: $:/ipfs/core $:/tags/PageControls
-caption: {{$:/ipfs/images/ens}} {{$:/language/Buttons/Ens/Publish/Caption}}
+caption: {{$:/language/Buttons/Ens/Publish/Caption}}
 description: {{$:/language/Buttons/Ens/Publish/Hint}}
 
 <$button message="tm-ens-publish" tooltip={{$:/language/Buttons/Ens/Publish/Hint}} aria-label={{$:/language/Buttons/Ens/Publish/Caption}} class=<<tv-config-toolbar-class>>>
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/ipfs/images/ens}}
+{{$:/ipfs/image/ens}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text"><$text text={{$:/language/Buttons/Ens/Publish/Caption}}/></span>
