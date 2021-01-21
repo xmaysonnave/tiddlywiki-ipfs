@@ -16,4 +16,4 @@ type: text/vnd.tiddlywiki
 <p>
   <b>IPFS with ~TiddlyWiki</b> embeds a light console who provides feedback on mobile and desktop.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/mobile/console]]
+[img class="tc-image-documentation" [/ipfs/image/mobile/console]]

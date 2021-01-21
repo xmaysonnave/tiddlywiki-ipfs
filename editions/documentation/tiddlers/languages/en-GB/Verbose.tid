@@ -4,7 +4,7 @@ tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>Verbose Setting</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/settings/verbose]]
+[img class="tc-image-documentation" [/ipfs/image/settings/verbose]]
 <p>
   The plugin provide feedback through dialog boxes.
 </p>

@@ -1,0 +1,37 @@
+title: IPFS Provider
+modified: 20200420094915385
+tags: $:/ipfs/documentation Settings
+type: text/vnd.tiddlywiki
+
+<h2>IPFS Provider Setting</h2>
+<p>
+  <span style="color:red">Warning</span>
+  <br/>
+  The <b>IPFS Companion</b> support is <a href="https://docs-beta.ipfs.io/how-to/companion-window-ipfs/">temporarily disabled</a>.
+</p>
+[img class="tc-image-documentation" [/ipfs/image/settings/provider]]
+<p>
+  <b>IPFS with ~TiddlyWiki</b> is able to reach the IPFS network with multiple providers:
+</p>
+<ul>
+  <li>[ext[IPFS Companion|https://github.com/ipfs-shipyard/ipfs-companion]]</li>
+  <li>[ext[Http Client|https://github.com/ipfs/js-ipfs-http-client]]</li>
+</ul>
+<p>
+  Options:
+</p>
+<ol>
+  <li>
+    <b>Default</b>
+    <ul>
+      <li>Use <b>IPFS Companion</b> if available</li>
+      <li>Otherwise use the <b>HTTP Client</b> provider</li>
+    </ul>
+  </li>
+  <li>Use only the <b>IPFS Companion</b> provider if available</li>
+  <li>Use only the <b>HTTP Client</b> provider</li>
+</ol>
+<p>
+  When the [[Verbose]] property is selected, the console shows which provider has been selected.
+</p>
+[img class="tc-image-documentation" [/ipfs/image/settings/provider/console]]

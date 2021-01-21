@@ -21,18 +21,18 @@ type: text/vnd.tiddlywiki
   with the following URL [ext[Sample|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/root.json]].
   Save your Tiddler. You should see the following result.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/import]]
+[img class="tc-image-documentation" [/ipfs/image/import]]
 <p>
   Check the output from the browser [[Console]] for further details.
 <p>
-[img class="tc-image-documentation" [$:/ipfs/image/import/console]]
+[img class="tc-image-documentation" [/ipfs/image/import/console]]
 <p>
   Edit the imported Tiddlers and browse the [[URL]] associated with fields <b>_canonical_uri</b> or <b>_import_uri</b>.
 <p/>
 <p>
   The [[Refresh Tiddler]] command forces an import refresh. Deleted Tiddlers could occur.
 <p>
-[img class="tc-image-documentation" [$:/ipfs/image/import/deleted]]
+[img class="tc-image-documentation" [/ipfs/image/import/deleted]]
 <p>
   This imported sample references multiple files with relative [[URL]].
 </p>

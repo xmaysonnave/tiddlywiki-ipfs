@@ -1,0 +1,12 @@
+title: Tiddler Commands
+modified: 20200527094915385
+tags: $:/ipfs/documentation Commands
+type: text/vnd.tiddlywiki
+
+<h2>Requirement</h2>
+<ul>
+  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+</ul>
+<h2>Tiddler Commands</h2>
+[img class="tc-image-documentation" [/ipfs/image/view/toolbar]]
+<<locator-view baseTitle:"Tiddler Commands">>

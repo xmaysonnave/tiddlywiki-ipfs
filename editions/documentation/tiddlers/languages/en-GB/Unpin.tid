@@ -4,7 +4,7 @@ tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>Unpin Setting</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/settings/unpin]]
+[img class="tc-image-documentation" [/ipfs/image/settings/unpin]]
 <p>
   The <b>Unpin</b> checkbox when selected try to unpin previous contents while saving.
 </p>

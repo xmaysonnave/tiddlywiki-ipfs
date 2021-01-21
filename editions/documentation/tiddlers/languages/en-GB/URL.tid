@@ -4,7 +4,7 @@ tags: $:/ipfs/documentation [[IPFS Documentation]]
 type: text/vnd.tiddlywiki
 
 <h3>URL</h3>
-[img class="tc-image-documentation" [$:/ipfs/image/url/hovering]]
+[img class="tc-image-documentation" [/ipfs/image/url/hovering]]
 <p>
   Editing a Tiddler is improved while using the [[IPFS Link Widget]]. Fields could be processed as Tiddler links, External Links or plain texts.
 </p>

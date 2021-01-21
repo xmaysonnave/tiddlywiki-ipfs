@@ -4,7 +4,7 @@ tags: $:/ipfs/documentation Settings
 type: text/vnd.tiddlywiki
 
 <h2>Protocol Setting</h2>
-[img class="tc-image-documentation" [$:/ipfs/image/settings/protocol]]
+[img class="tc-image-documentation" [/ipfs/image/settings/protocol]]
 <p>
   The <b>Protocol</b> setting controls the way <b>IPFS with ~TiddlyWiki</b> saves your wiki over IPFS.
 </p>

@@ -1,0 +1,13 @@
+title: Pin TiddlyWiki
+modified: 20200529094915385
+tags: $:/ipfs/documentation [[Global Commands]]
+type: text/vnd.tiddlywiki
+
+<h2>Pin ~TiddlyWiki to IPFS</h2>
+[img class="tc-image-documentation" [/ipfs/image/page/pin]]
+<p>
+  The <b>pin to IPFS</b> command pins the current <b>~TiddlyWiki</b> IPFS identifier using the [[Default API URL|$:/ipfs/saver/api]].
+</p>
+<p>
+  A dialog box will be displayed at the end of the process.
+</p>

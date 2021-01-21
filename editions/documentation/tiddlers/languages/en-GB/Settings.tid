@@ -11,5 +11,5 @@ type: text/vnd.tiddlywiki
 <p>
   The [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/Ipfs]] lets you control the plugin behaviour.
 </p>
-[img class="tc-image-documentation" [$:/ipfs/image/settings]]
+[img class="tc-image-documentation" [/ipfs/image/settings]]
 <<locator-view baseTitle:"Settings">>

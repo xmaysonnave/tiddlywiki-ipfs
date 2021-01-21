@@ -1,0 +1,136 @@
+title: ENS Settings
+modified: 20201009094915385
+tags: $:/ipfs/documentation Settings
+type: text/vnd.tiddlywiki
+
+<h2>ENS Settings</h2>
+[img class="tc-image-documentation" [/ipfs/image/settings/ens]]
+<p>
+  <b>IPFS with ~TiddlyWiki</b> is able to publish <b>.eth</b> domains to [ext[ENS|https://ens.domains/]].
+  Either a new or updated wiki and attachments associated with an IPFS identifier could be publish to <b>ENS</b>.
+</p>
+<p>
+  <b>IPFS with ~TiddlyWiki</b> embeds an <b>ENS</b> resolver. Any <b>.eth</b> domains will be resolved to its associated IPFS
+  identifier on any supported [ext[ENS Networks|https://docs.ens.domains/ens-deployments]].
+</p>
+<p>
+  ENS is powered by a set of [ext[Ethereum Smart Contracts|https://ethereum.org/learn/]] and runs on the Ethereum blockchain.
+</p>
+<p>
+  Rather than accessing a wiki with a complex to remember URL:
+</p>
+<p>
+[ext[https://gateway.ipfs.io/ipfs/QmaPUjsVEmTZTXxrvxQDMcd7FpSPVac52mj72dkzRpUQQV]]
+</p>
+<p>
+<q>
+  ENS offers a secure & decentralised way to address resources both on and off the blockchain using simple, human-readable names.
+</q>
+</p>
+<p>
+<q>
+  ENS eliminates the need to copy or type long addresses.
+  With ENS, you'll be able to send money to your friend at 'aardvark.eth' instead of '0x4cbe58c50480...',
+  interact with your favorite contract at 'mycontract.eth', or visit an IPFS hosted site at 'ipfssite.eth'.
+</q>
+</p>
+<h3>Resolve ENS with IPFS with ~TiddlyWiki</h3>
+<p>
+<$ipfslink value="bluelightav.eth"/>
+</p>
+<h3>Resolve ENS with a browser extension</h3>
+<p>
+[ext[https://bluelightav.eth]]
+</p>
+<h3>Browsers</h3>
+<p>
+  To use the ENS feature your environment needs the Ethereum knowledge.
+<p>
+<p>
+  On Desktop you need a supported browser:
+</p>
+<ul>
+  <li>[ext[Firefox|https://www.mozilla.org]]</li>
+  <li>[ext[Chrome|https://www.google.com/chrome/]]</li>
+  <li>[ext[Chromium|https://www.chromium.org]]</li>
+</ul>
+<h3>Browser extensions</h3>
+<p>
+  With the following supported Ethereum browser extension:
+</p>
+<ul>
+  <li>[ext[Metamask|https://metamask.io]]</li>
+</ul>
+<p>
+  New browser extensions are landing who resolve <b>.eth</b> domain:
+</p>
+<ul>
+  <li>[ext[Almonit|https://github.com/almonit/almonit-plugin]]</li>
+  <li>[ext[Unstoppable Domain|https://github.com/unstoppabledomains/resolution-browser-extension]]</li>
+</ul>
+<h3>Mobile</h3>
+<p>
+  On Mobile you need a supported Đapp browser:
+</p>
+<ul>
+  <li>[ext[Metamask|https://metamask.io]]</li>
+</ul>
+<h3>Desktop</h3>
+<p>
+  We recommend [ext[Metamask|https://metamask.io]] as the browser extension is able to resolve the <b>.eth</b> domain name when you input an <b>.eth</b> domain in your browser address bar.
+</p>
+<h3>Publishing</h3>
+<p>
+  To publish to ENS while saving:
+</p>
+<ul>
+  <li>The [[ENS|Protocol]] protocol must be selected</li>
+  <li>The [[ENS domain|ENS Settings]] field must be filled</li>
+</ul>
+<p>
+  To publish without saving see [[Publish TiddlyWiki to ENS]].
+</p>
+<p>
+  While saving the plugin will:
+</p>
+<ul>
+  <li>Verify if the ENS domain is valid</li>
+  <li>Verify and load the associated ENS domain resolver</li>
+  <li>Save the wiki over IPFS</li>
+  <li>Interact with your Ethereum wallet</li>
+  <li>Update the associated ENS domain resolver content with the new IPFS identifier on the Ethereum blockchain</li>
+  <li>[[Unpin]] the previous version if this option is selected</li>
+  <li>Redirect to the ENS domain when the transaction is successfull</li>
+  <li>Or redirect to the IPFS saved wiki if the ENS transaction do not succeed.</li>
+</ul>
+<p>
+  The default ENS domain is stored in the following Tiddler [[$:/ipfs/saver/ens/domain]].
+</p>
+<h3>Supported ENS Ethereum Networks</h3>
+<ul>
+  <li>`Mainnet`: Ethereum Main Network</li>
+	<li>`Ropsten`: Ethereum Test Network (~PoW)</li>
+	<li>`Rinkeby`: Ethereum Test Network (~PoA)</li>
+	<li>`Goerli`: Ethereum Test Network (~PoA)</li>
+</ul>
+<h3>Reference</h3>
+<ul>
+  <li>[ext[ENS|https://ens.domains]]</li>
+  <li>[ext[ENS Application Manager|https://app.ens.domains]]</li>
+  <li>[ext[ENS Discourse|https://discuss.ens.domains/]]</li>
+  <li>[ext[ENS Documentation|https://docs.ens.domains]]</li>
+  <li>[ext[Ethereum|https://www.ethereum.org]]</li>
+</ul>
+<h3>ENS Domain Manager</h3>
+[img class="tc-image-documentation" [/ipfs/image/settings/ens/manager]]
+<p>
+  This command opens the default <b>ENS Domain Manager</b>.
+</p>
+<h3>Resolve ENS Domain</h3>
+[img class="tc-image-documentation" [/ipfs/image/settings/ens/resolve]]
+<p>
+  This command resolves and opens the default <b>ENS Domain</b>.
+</p>
+<p>
+  See the [ext[README.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/README.md]] for more informations.
+</p>
