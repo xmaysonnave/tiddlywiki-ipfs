@@ -159,7 +159,7 @@ IPFS Import
         var titles = $tw.wiki.getTiddlers({ includeSystem: true })
         for (var i = 0; i < titles.length; i++) {
           const title = titles[i]
-          const current = $tw.wiki.getTiddler(titles[i])
+          const current = $tw.wiki.getTiddler(title)
           canonicalUri = current.fields._canonical_uri
           canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
           if (canonicalUri !== null) {
@@ -168,10 +168,7 @@ IPFS Import
               var { key } = await this.getKey(canonicalUri, rootUri)
             }
             if (key === rootUri && this.merged.get(title) === undefined && deleted.get(title) === undefined) {
-              const object = this.getObject(`[[${title}]]`)
-              if (object !== null) {
-                deleted.set(title, object)
-              }
+              deleted.set(title, JSON.parse($tw.wiki.getTiddlerAsJson(title)))
             }
           }
           importUri = current.fields._import_uri
@@ -182,10 +179,7 @@ IPFS Import
               var { key } = await this.getKey(importUri, rootUri)
             }
             if (key === rootUri && this.merged.get(title) === undefined && deleted.get(title) === undefined) {
-              const object = this.getObject(`[[${title}]]`)
-              if (object !== null) {
-                deleted.set(title, object)
-              }
+              deleted.set(title, JSON.parse($tw.wiki.getTiddlerAsJson(title)))
             }
           }
         }
@@ -208,26 +202,6 @@ IPFS Import
     this.resolved = null
     this.notResolved = null
     this.merged = null
-  }
-
-  IpfsImport.prototype.getObject = function (filter) {
-    if (filter === undefined || filter == null || filter.trim() === '') {
-      return null
-    }
-    const contentType = 'text/raw'
-    const options = {
-      downloadType: contentType,
-      method: 'download',
-      template: '$:/core/templates/exporters/JsonFile',
-      variables: {
-        exportFilter: filter,
-      },
-    }
-    const deleted = $tw.wiki.renderTiddler(contentType, '$:/core/templates/exporters/JsonFile', options)
-    if (deleted !== undefined && deleted !== null && deleted.length > 0) {
-      return JSON.parse(deleted)[0]
-    }
-    return null
   }
 
   IpfsImport.prototype.load = async function (parentUrl, parentTitle, field, url, password, load) {
@@ -257,17 +231,14 @@ IPFS Import
     }
   }
 
-  IpfsImport.prototype.performImport = function (toBeAdded, toBeUpdated, toBeDeleted) {
-    // New and Updated
-    for (var [title, merged] of this.merged.entries()) {
-      if (toBeAdded.indexOf(title) || toBeUpdated.indexOf(title) !== -1) {
-        $tw.wiki.addTiddler(merged)
-      }
-    }
-    // Deleted
-    for (var i = 0; i < toBeDeleted.length; i++) {
-      $tw.wiki.deleteTiddler(toBeDeleted[i])
-    }
+  /**
+   * https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987
+   */
+  IpfsImport.prototype.isHTML = function (text) {
+    /*eslint max-len:"off"*/
+    return /<(br|basefont|hr|input|source|frame|param|area|meta|!--|col|link|option|base|img|wbr|!DOCTYPE).*?>|<(a|abbr|acronym|address|applet|article|aside|audio|b|bdi|bdo|big|blockquote|body|button|canvas|caption|center|cite|code|colgroup|command|datalist|dd|del|details|dfn|dialog|dir|div|dl|dt|em|embed|fieldset|figcaption|figure|font|footer|form|frameset|head|header|hgroup|h1|h2|h3|h4|h5|h6|html|i|iframe|ins|kbd|keygen|label|legend|li|map|mark|menu|meter|nav|noframes|noscript|object|ol|optgroup|output|p|pre|progress|q|rp|rt|ruby|s|samp|script|section|select|small|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|track|tt|u|ul|var|video).*?<\/\2>/i.test(
+      text
+    )
   }
 
   IpfsImport.prototype.loadResource = async function (parentUrl, parentTitle, parentField, url, key, resolvedKey, password) {
@@ -276,13 +247,24 @@ IPFS Import
     var content = null
     var imported = new Map()
     var tiddlers = null
+    const creationFields = $tw.wiki.getCreationFields()
     try {
       // Load
       content = await $tw.ipfs.loadToUtf8(resolvedKey, password)
-      if ($tw.ipfs.isJson(content)) {
-        tiddlers = $tw.wiki.deserializeTiddlers('.json', content, $tw.wiki.getCreationFields())
+      // HTML
+      if (this.isHTML(content)) {
+        content = $tw.wiki.deserializeTiddlers('.html', content, creationFields)
+        if ($tw.utils.isArray(content) && content.length === 1 && content[0].text && $tw.ipfs.isJson(content[0].text)) {
+          tiddlers = Object.values(JSON.parse(content[0].text))
+        } else {
+          tiddlers = content
+        }
       } else {
-        tiddlers = $tw.wiki.deserializeTiddlers('.tid', content, $tw.wiki.getCreationFields())
+        if ($tw.ipfs.isJson(content)) {
+          tiddlers = $tw.wiki.deserializeTiddlers('.json', content, creationFields)
+        } else {
+          tiddlers = $tw.wiki.deserializeTiddlers('.tid', content, creationFields)
+        }
       }
       // Loaded
       if (tiddlers !== undefined && tiddlers !== null) {
@@ -390,6 +372,19 @@ IPFS Import
     return {
       loaded: loaded,
       removed: removed,
+    }
+  }
+
+  IpfsImport.prototype.performImport = function (toBeAdded, toBeUpdated, toBeDeleted) {
+    // New and Updated
+    for (var [title, merged] of this.merged.entries()) {
+      if (toBeAdded.indexOf(title) || toBeUpdated.indexOf(title) !== -1) {
+        $tw.wiki.addTiddler(merged)
+      }
+    }
+    // Deleted
+    for (var i = 0; i < toBeDeleted.length; i++) {
+      $tw.wiki.deleteTiddler(toBeDeleted[i])
     }
   }
 

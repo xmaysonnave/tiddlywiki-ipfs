@@ -47,10 +47,14 @@ tags: $:/ipfs/core
 <tbody>
 <tr>
 <th align="left">
-<$checkbox title={{$:/language/Import/Listing/Import/Caption}} tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<select-all-actions>>/>
+<$checkbox tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<select-all-actions>>>
+<<lingo Listing/ImportAll/Caption>>
+</$checkbox>
 </th>
 <th>
-<$checkbox title={{$:/language/Import/Listing/Delete/Caption}} tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<delete-all-actions>>/>
+<$checkbox tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<delete-all-actions>>>
+<<lingo Listing/DeleteAll/Caption>>
+</$checkbox>
 </th>
 <th>
 <<lingo Listing/Title/Caption>>

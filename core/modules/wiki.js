@@ -103,6 +103,73 @@ wikimethod
   }
 
   /**
+   * Read an array of browser File objects, invoking callback(tiddlerFieldsArray) once they're all read
+   */
+  exports.readFiles = async function (files, options) {
+    var callback
+    if (typeof options === 'function') {
+      callback = options
+      options = {}
+    } else {
+      callback = options.callback
+    }
+    var result = []
+    var outstanding = files.length
+    var readFileCallback = function (tiddlerFieldsArray) {
+      result.push.apply(result, tiddlerFieldsArray)
+      if (--outstanding === 0) {
+        callback(result)
+      }
+    }
+    for (var f = 0; f < files.length; f++) {
+      await this.readFile(files[f], $tw.utils.extend({}, options, { callback: readFileCallback }))
+    }
+    return files.length
+  }
+
+  /**
+   * Read a browser File object, invoking callback(tiddlerFieldsArray) with an array of tiddler fields objects
+   */
+  exports.readFile = async function (file, options) {
+    var callback
+    if (typeof options === 'function') {
+      callback = options
+      options = {}
+    } else {
+      callback = options.callback
+    }
+    // Get the type, falling back to the filename extension
+    var type = file.type
+    if (type === '' || !type) {
+      var dotPos = file.name.lastIndexOf('.')
+      if (dotPos !== -1) {
+        var fileExtensionInfo = $tw.utils.getFileExtensionInfo(file.name.substr(dotPos))
+        if (fileExtensionInfo) {
+          type = fileExtensionInfo.type
+        }
+      }
+    }
+    // Figure out if we're reading a binary file
+    var contentTypeInfo = $tw.config.contentTypeInfo[type]
+    var isBinary = contentTypeInfo ? contentTypeInfo.encoding === 'base64' : false
+    // Log some debugging information
+    if ($tw.log.IMPORT) {
+      console.log("Importing file '" + file.name + "', type: '" + type + "', isBinary: " + isBinary)
+    }
+    // Give the hook a chance to process the drag
+    if (
+      (await $tw.hooks.invokeHook('th-importing-file', {
+        file: file,
+        type: type,
+        isBinary: isBinary,
+        callback: callback,
+      })) !== true
+    ) {
+      this.readFileContent(file, type, isBinary, options.deserializer, callback)
+    }
+  }
+
+  /**
    * Lower level utility to read the content of a browser File object,
    * invoking callback(tiddlerFieldsArray) with an array of tiddler fields objects
    */

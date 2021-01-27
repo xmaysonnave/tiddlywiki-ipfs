@@ -75,6 +75,9 @@ IPFS Tiddler
     $tw.hooks.addHook('th-deleting-tiddler', async function (tiddler) {
       return await self.handleDeleteTiddler(tiddler)
     })
+    $tw.hooks.addHook('th-importing-file', async function (info) {
+      return await self.handleImportFile(info)
+    })
     $tw.hooks.addHook('th-saving-tiddler', async function (tiddler) {
       return await self.handleSaveTiddler(tiddler)
     })
@@ -321,7 +324,7 @@ IPFS Tiddler
     }
     // Import
     if (canonicalUri !== null || importUri !== null) {
-      var ipfsImport = new IpfsImport()
+      const ipfsImport = new IpfsImport()
       ipfsImport
         .import(canonicalUri, importUri, tiddler)
         .then(data => {
@@ -345,6 +348,29 @@ IPFS Tiddler
     $tw.wiki.clearCache(title)
     const changedTiddler = $tw.utils.getChangedTiddler(title)
     $tw.rootWidget.refresh(changedTiddler)
+    return true
+  }
+
+  IpfsTiddler.prototype.handleImportFile = async function (info) {
+    const dummy = new $tw.Tiddler({
+      title: 'dummy',
+      type: info.type,
+    })
+    var url = null
+    try {
+      const ipfsImport = new IpfsImport()
+      url = URL.createObjectURL(info.file)
+      const data = await ipfsImport.import(null, url, dummy)
+      if (data) {
+        info.callback(data)
+      }
+    } catch (error) {
+      $tw.ipfs.getLogger().error(error)
+      $tw.utils.alert(name, error.message)
+    }
+    if (url) {
+      url.revokeObjectURL()
+    }
     return true
   }
 

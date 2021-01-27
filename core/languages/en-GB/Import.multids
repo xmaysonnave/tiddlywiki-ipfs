@@ -3,5 +3,5 @@ tags: $:/ipfs/core
 
 Deleted/Hint: The following tiddlers were deleted:
 Listing/Hint: These tiddlers are ready to be imported:
-Listing/Import/Caption: Import All
-Listing/Delete/Caption: Delete All
+Listing/ImportAll/Caption: Import
+Listing/DeleteAll/Caption: Delete

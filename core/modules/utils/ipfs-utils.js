@@ -188,7 +188,7 @@ IPFS utils
   }
 
   exports.loadTiddlers = function (text) {
-    if (text !== undefined && text !== null) {
+    if (text) {
       var json = JSON.parse(text)
       var tiddlers = []
       for (var title in json) {
@@ -197,9 +197,8 @@ IPFS utils
         }
       }
       return tiddlers
-    } else {
-      return null
     }
+    return null
   }
 
   exports.exportToIpfs = async function (target, content) {
