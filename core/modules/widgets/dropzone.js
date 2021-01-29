@@ -107,15 +107,24 @@ Dropzone widget
     $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
   }
 
-  DropZoneWidget.prototype.handleDropEvent = async function (event) {
+  DropZoneWidget.prototype.handleDropEvent = function (event) {
     var self = this
     var readFileCallback = function (tiddlerFieldsArray) {
-      self.dispatchEvent({
-        type: 'tm-ipfs-import-tiddlers',
-        param: tiddlerFieldsArray,
-        autoOpenOnImport: self.autoOpenOnImport,
-        importTitle: self.importTitle,
-      })
+      if (tiddlerFieldsArray.merged) {
+        self.dispatchEvent({
+          type: 'tm-ipfs-import-tiddlers',
+          param: tiddlerFieldsArray,
+          autoOpenOnImport: self.autoOpenOnImport,
+          importTitle: self.importTitle,
+        })
+      } else {
+        self.dispatchEvent({
+          type: 'tm-import-tiddlers',
+          param: tiddlerFieldsArray,
+          autoOpenOnImport: self.autoOpenOnImport,
+          importTitle: self.importTitle,
+        })
+      }
     }
     this.leaveDrag(event)
     // Check for being over a TEXTAREA or INPUT
@@ -131,32 +140,40 @@ Dropzone widget
     // Remove highlighting
     $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
     // Import any files in the drop
-    var numFiles = 0
-    if (dataTransfer.files) {
-      numFiles = await this.wiki.readFiles(dataTransfer.files, {
+    var hasFiles = dataTransfer.files && dataTransfer.files.length > 0
+    if (hasFiles) {
+      this.wiki.readFiles(dataTransfer.files, {
         callback: readFileCallback,
         deserializer: this.dropzoneDeserializer,
       })
     }
     // Try to import the various data types we understand
-    if (numFiles === 0) {
-      await $tw.utils.importDataTransfer(dataTransfer, this.wiki.generateNewTitle('Untitled'), readFileCallback)
+    if (!hasFiles) {
+      $tw.utils.importDataTransfer(dataTransfer, this.wiki.generateNewTitle('Untitled'), readFileCallback)
     }
     // Tell the browser that we handled the drop
     event.preventDefault()
-    // Stop the drop ripple up to any parent handlers
     event.stopPropagation()
   }
 
-  DropZoneWidget.prototype.handlePasteEvent = async function (event) {
+  DropZoneWidget.prototype.handlePasteEvent = function (event) {
     var self = this
     var readFileCallback = function (tiddlerFieldsArray) {
-      self.dispatchEvent({
-        type: 'tm-ipfs-import-tiddlers',
-        param: tiddlerFieldsArray,
-        autoOpenOnImport: self.autoOpenOnImport,
-        importTitle: self.importTitle,
-      })
+      if (tiddlerFieldsArray.merged) {
+        self.dispatchEvent({
+          type: 'tm-ipfs-import-tiddlers',
+          param: tiddlerFieldsArray,
+          autoOpenOnImport: self.autoOpenOnImport,
+          importTitle: self.importTitle,
+        })
+      } else {
+        self.dispatchEvent({
+          type: 'tm-import-tiddlers',
+          param: tiddlerFieldsArray,
+          autoOpenOnImport: self.autoOpenOnImport,
+          importTitle: self.importTitle,
+        })
+      }
     }
     // Let the browser handle it if we're in a textarea or input box
     if (['TEXTAREA', 'INPUT'].indexOf(event.target.tagName) === -1 && !event.target.isContentEditable) {
@@ -167,7 +184,7 @@ Dropzone widget
         var item = items[t]
         if (item.kind === 'file') {
           // Import any files
-          await this.wiki.readFile(item.getAsFile(), {
+          this.wiki.readFile(item.getAsFile(), {
             callback: readFileCallback,
             deserializer: this.dropzoneDeserializer,
           })

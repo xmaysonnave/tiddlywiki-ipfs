@@ -10,7 +10,8 @@
       "runtimeExecutable": "yarn",
       "runtimeArgs": ["empty-dev"],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "outFiles": ["${workspaceFolder}/bin/**/*.js", "${workspaceFolder}/core/**/*.js"]
     }
   ]
 }

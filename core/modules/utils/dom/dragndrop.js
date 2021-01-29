@@ -186,7 +186,11 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     {
       type: 'text/vnd.tiddler',
       IECompatible: false,
-      toTiddlerFieldsArray: function (data, fallbackTitle) {
+      toTiddlerFieldsArray: async function (data, fallbackTitle) {
+        const imported = await $tw.utils.handleImportURL(fallbackTitle, data)
+        if (imported) {
+          return imported
+        }
         return parseJSONTiddlers(data, fallbackTitle)
       },
     },
@@ -210,14 +214,21 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     {
       type: 'text/x-moz-url',
       IECompatible: false,
-      toTiddlerFieldsArray: function (data, fallbackTitle) {
+      toTiddlerFieldsArray: async function (data, fallbackTitle) {
         // Check for tiddler data URI
         var match = decodeURIComponent(data).match(/^data:text\/vnd\.tiddler,(.*)/i)
         if (match) {
           return parseJSONTiddlers(match[1], fallbackTitle)
-        } else {
-          return [{ title: fallbackTitle, text: data }] // As URL string
         }
+        var parts = data.split('\n')
+        var url = parts[0]
+        fallbackTitle = parts[1]
+        var imported = await $tw.utils.handleImportURL(fallbackTitle, url)
+        if (imported) {
+          return imported
+        }
+        // Fallback
+        return [{ title: fallbackTitle, text: data }] // As URL string
       },
     },
     {

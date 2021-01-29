@@ -87,54 +87,54 @@ var _ipfs = function ($tw) {
     var currentPassword = null
     var currentPrivateKey = null
     var currentPublicKey = null
-    var callSjcl = function (method, inputText, password) {
+    var callSjcl = function (method, text, password) {
       password = password || currentPassword
-      var outputText = null
+      var output = null
       var sjcl = $tw.node ? global.sjcl || require('sjcl') : window.sjcl
       try {
         if (password) {
           var tStart = new Date()
-          outputText = sjcl[method](password, inputText)
+          output = sjcl[method](password, text)
           var tStop = new Date() - tStart
-          var ratio = Math.floor((outputText.length * 100) / inputText.length)
+          var ratio = Math.floor((output.length * 100) / text.length)
           var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
-          $tw.boot.getLogger().info(`Standford ${uMethod}: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
+          $tw.boot.getLogger().info(`Standford ${uMethod}: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
         }
       } catch (error) {
         $tw.boot.getLogger().error('Standford Crypto: ' + error)
-        outputText = null
+        output = null
       }
-      return outputText
+      return output
     }
-    var callSigUtil = function (method, inputText, key) {
-      var outputText = null
+    var callSigUtil = function (method, text, key) {
+      var output = null
       var sigUtil = $tw.node ? global.sigUtil || require('eth-sig-util') : window.sigUtil
       try {
         if (method === 'encrypt') {
           key = key || currentPublicKey
           if (key) {
             var tStart = new Date()
-            outputText = sigUtil.encrypt(key, { data: inputText }, 'x25519-xsalsa20-poly1305')
-            outputText = JSON.stringify(outputText)
+            output = sigUtil.encrypt(key, { data: text }, 'x25519-xsalsa20-poly1305')
+            output = JSON.stringify(output)
             var tStop = new Date() - tStart
-            var ratio = Math.floor((outputText.length * 100) / inputText.length)
-            $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
+            var ratio = Math.floor((output.length * 100) / text.length)
+            $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
           }
         } else if (method === 'decrypt') {
           key = key || currentPrivateKey
           if (key) {
             var tStart = new Date()
-            outputText = sigUtil.decrypt(JSON.parse(inputText), key)
+            output = sigUtil.decrypt(JSON.parse(text), key)
             var tStop = new Date() - tStart
-            var ratio = Math.floor((outputText.length * 100) / inputText.length)
-            $tw.boot.getLogger().info(`Ethereum Decryption: ${tStop}ms, In: ${inputText.length} bytes, Out: ${outputText.length} bytes, Ratio: ${ratio}%`)
+            var ratio = Math.floor((output.length * 100) / text.length)
+            $tw.boot.getLogger().info(`Ethereum Decryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
           }
         }
       } catch (error) {
         $tw.boot.getLogger().error('Ethereum Crypto: ' + error)
-        outputText = null
+        output = null
       }
-      return outputText
+      return output
     }
     this.setPassword = function (newPassword) {
       currentPassword = newPassword === undefined || newPassword == null || newPassword.trim() === '' ? null : newPassword
@@ -217,26 +217,35 @@ var _ipfs = function ($tw) {
     this.encrypt = function (text, password, publicKey) {
       password = password || currentPassword
       publicKey = publicKey || currentPublicKey
-      if (password) {
-        return callSjcl('encrypt', text, password)
-      } else if (publicKey) {
-        return callSigUtil('encrypt', text, publicKey)
+      if (text) {
+        if (password) {
+          return callSjcl('encrypt', text, password)
+        } else if (publicKey) {
+          return callSigUtil('encrypt', text, publicKey)
+        }
       }
+      return null
     }
     this.decrypt = function (text, password, privateKey) {
       password = password || currentPassword
       privateKey = privateKey || currentPrivateKey
-      if (password) {
-        return callSjcl('decrypt', text, password)
-      } else if (privateKey) {
-        return callSigUtil('decrypt', text, privateKey)
+      if (text) {
+        if (password) {
+          return callSjcl('decrypt', text, password)
+        } else if (privateKey) {
+          return callSigUtil('decrypt', text, privateKey)
+        }
       }
+      return null
     }
     this.keccak256 = function (text) {
-      var createKeccakHash = $tw.node ? global.createKeccakHash || require('keccak') : window.createKeccakHash
-      var hash = createKeccakHash('keccak256')
-      hash.update(text)
-      return hash.digest('hex')
+      if (text) {
+        var createKeccakHash = $tw.node ? global.createKeccakHash || require('keccak') : window.createKeccakHash
+        var hash = createKeccakHash('keccak256')
+        hash.update(text)
+        return hash.digest('hex')
+      }
+      return null
     }
   }
 
