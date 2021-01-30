@@ -115,8 +115,12 @@ wikimethod
     }
     var result = []
     var outstanding = files.length
-    var readFileCallback = function (tiddlerFieldsArray) {
-      result.push.apply(result, tiddlerFieldsArray)
+    var readFileCallback = function (content) {
+      if ($tw.utils.isArray(content)) {
+        result.push.apply(result, content)
+      } else {
+        result = content
+      }
       if (--outstanding === 0) {
         callback(result)
       }

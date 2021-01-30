@@ -312,7 +312,10 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
   }
   var content = this.ipfsBundle.Utf8ArrayToStr(ua)
   if (content.match(/{"compressed":/)) {
-    content = $tw.utils.extractCompressedStoreArea(content)
+    const compressedStoreArea = $tw.utils.extractCompressedStoreArea(content)
+    if (compressedStoreArea) {
+      content = compressedStoreArea
+    }
     const json = JSON.parse(content)
     if (json.compressed.match(/{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
@@ -332,7 +335,10 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
       content = this.ipfsBundle.inflate(json.compressed)
     }
   } else if (content.match(/{"encrypted":/)) {
-    content = $tw.utils.extractEncryptedStoreArea(content)
+    const encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(content)
+    if (encryptedStoreArea) {
+      content = encryptedStoreArea
+    }
     const json = JSON.parse(content)
     if (json.signature) {
       const signature = await this.ipfsBundle.decrypt(json.signature)
@@ -340,7 +346,10 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
     }
     content = await this.ipfsBundle.decrypt(json.encrypted)
   } else if (content.match(/{"iv":/)) {
-    content = $tw.utils.extractEncryptedStoreArea(content)
+    const encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(content)
+    if (encryptedStoreArea) {
+      content = encryptedStoreArea
+    }
     if (password == null && $tw.crypto.hasPassword() === false) {
       content = await this.decryptFromPasswordPrompt(content)
     } else {

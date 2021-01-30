@@ -356,20 +356,21 @@ IPFS Tiddler
       title: 'dummy',
       type: info.type,
     })
-    var url = null
     try {
       const ipfsImport = new IpfsImport()
-      url = URL.createObjectURL(info.file)
-      const data = await ipfsImport.import(null, url, dummy)
-      if (data) {
-        info.callback(data)
+      const url = URL.createObjectURL(info.file)
+      try {
+        const data = await ipfsImport.import(null, url, dummy)
+        if (data.merged.size > 0 || data.deleted.size > 0) {
+          info.callback(data)
+        }
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
+        $tw.utils.alert(name, error.message)
       }
+      URL.revokeObjectURL(url)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
-    }
-    if (url) {
-      url.revokeObjectURL()
     }
     return true
   }
