@@ -1,8 +1,17 @@
 {
+<<<<<<< HEAD
   "_cid": "QmSwhEixzoVoRBuCeopUHK9jJ6jXHFA4pAb8jcXdEZmz3x",
   "_cid_size": 10206601,
   "_cid_uri": "http://127.0.0.1:8080/ipfs/QmSwhEixzoVoRBuCeopUHK9jJ6jXHFA4pAb8jcXdEZmz3x",
   "_parent_cid": "QmXdw6izq2sddnojVtFs2BhXd1pPBbmex1mTpPPTE1fmoq",
   "_parent_size": 14892706,
   "_parent_uri": "http://127.0.0.1:8080/ipfs/QmXdw6izq2sddnojVtFs2BhXd1pPBbmex1mTpPPTE1fmoq"
+=======
+  "_cid": "QmTVXUDjqmX1LRjSnPmBoHx7GT7sJZnZq265EYALVuPhQ6",
+  "_cid_size": 10205405,
+  "_cid_uri": "https://dweb.link/ipfs/QmTVXUDjqmX1LRjSnPmBoHx7GT7sJZnZq265EYALVuPhQ6",
+  "_parent_cid": "QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88",
+  "_parent_size": 14889116,
+  "_parent_uri": "https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88"
+>>>>>>> 3cab9ef (new build)
 }
