@@ -16,18 +16,20 @@ async function managePin (api, key) {
         break
       }
     }
-  } catch (error) {
-    // ignore
-  }
-  if (cid) {
-    console.log(`*** Pin status: ${cid}, type: ${type} ***`)
-  } else {
-    console.log(`*** Pinning: ${key} ***`)
-    cid = await api.pin.add(key, { recursive: true })
-    if (key.toString() !== cid.toString()) {
-      throw new Error(`Unable to pin: ${key}`)
+    if (cid) {
+      console.log(`*** Pin status: ${cid}, type: ${type} ***`)
+    } else {
+      console.log(`*** Pinning: ${key} ***`)
+      cid = await api.pin.add(key, { recursive: true })
+      if (key.toString() !== cid.toString()) {
+        throw new Error(`Unable to pin: ${key}`)
+      }
     }
+  } catch (error) {
+    console.log(error)
+    return false
   }
+  return true
 }
 
 async function manageUnpin (api, key) {
@@ -40,18 +42,20 @@ async function manageUnpin (api, key) {
         break
       }
     }
-  } catch (error) {
-    // ignore
-  }
-  if (cid) {
-    console.log(`*** Unpinning ${key}, type: ${type} ***`)
-    cid = await api.pin.rm(key, { recursive: true })
-    if (key.toString() !== cid.toString()) {
-      throw new Error(`Unable to unpin: ${key}`)
+    if (cid) {
+      console.log(`*** Unpinning ${key}, type: ${type} ***`)
+      cid = await api.pin.rm(key, { recursive: true })
+      if (key.toString() !== cid.toString()) {
+        console.log(`*** Unable to unpin: ${key} ***`)
+      }
+    } else {
+      console.log(`*** Unable to unpin ${key} ***`)
     }
-  } else {
-    console.log(`*** Unable to unpin non pinned ${key} ***`)
+  } catch (error) {
+    console.log(error)
+    return false
   }
+  return true
 }
 
 /*

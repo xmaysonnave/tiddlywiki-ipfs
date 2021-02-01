@@ -36,7 +36,7 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 </p>
 
 <p align="center">
-  <a rel="noopener noreferrer" target="_blank" href="https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88">
+  <a rel="noopener noreferrer" target="_blank" href="https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28">
     <img alt="Available from IPFS" title="Available from IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
@@ -74,26 +74,26 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 ## Using `IPFS with TiddlyWiki`
 
-### Latest [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production 'Available from GitHub')
+### Latest [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production 'Available from GitHub')
 
 #### `TiddlyWikis` editions
 
-- **bluelightav.eth** [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/editions/bluelightav 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/editions/bluelightav 'Available from GitHub')
-- **empty** [![empty](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/editions/empty 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/editions/empty 'Available from GitHub')
-- **tidlywiki.com** [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/editions/tiddlywiki 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/editions/tiddlywiki 'Available from GitHub')
+- **bluelightav.eth** [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/editions/bluelightav 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/editions/bluelightav 'Available from GitHub')
+- **empty** [![empty](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/editions/empty 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/editions/empty 'Available from GitHub')
+- **tidlywiki.com** [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/editions/tiddlywiki 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/editions/tiddlywiki 'Available from GitHub')
 
 #### `IPFS with TiddlyWiki` boot, documentation, library modules and plugin
 
-- **\$:/boot/boot.js** [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.24-pre+build-210128442.json 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/boot 'Available from GitHub')
-- **\$:/ipfs/documentation** [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta-TW-v5.1.23+build-210201352.json 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/documentation 'Available from GitHub')
-- **\$:/ipfs/library/modules** [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-210114340.json 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/library 'Available from GitHub')
-- **\$:/plugins/ipfs** [![Available from IPFS](/core/attachment/ipfs.png)](https://dweb.link/ipfs/QmcUHWZ8rynCtVuGdsopmUjpeJNPMuvt769dGPCxj23T88/0.4.0-beta-TW-v5.1.23+build-210201352/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta-TW-v5.1.23+build-210201352.json 'Available from IPFS') [![Available from GitHub](/core/attachment/github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/plugin 'Available from GitHub')
+- **\$:/boot/boot.js** [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.24-pre+build-210128442.json 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/boot 'Available from GitHub')
+- **\$:/ipfs/documentation** [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta-TW-v5.1.23+build-210201400.json 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/documentation 'Available from GitHub')
+- **\$:/ipfs/library/modules** [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-210114340.json 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/library 'Available from GitHub')
+- **\$:/plugins/ipfs** [![Available from IPFS](/core/attachment/_ipfs_icons_ipfs.png)](https://dweb.link/ipfs/QmfXtGU172auFrbNVFbAKEPgTFodB1XVNtqAwJwngWQQ28/0.4.0-beta-TW-v5.1.23+build-210201399/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta-TW-v5.1.23+build-210201399.json 'Available from IPFS') [![Available from GitHub](/core/attachment/_ipfs_icons_github.png)](https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/production/tiddlywiki-ipfs/plugin 'Available from GitHub')
 
 ### Release
 
-- **\$:/ipfs/documentation** [![Resolve with ENS](/core/attachment/ens.png)](https://bluelightav.eth/#IPFS%20Documentation 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation 'Resolve with DNS Link')
-- **\$:/plugins/ipfs** [![Resolve with ENS](/core/attachment/ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs 'Resolve with DNS Link')
-- **bluelightav.eth** [![Resolve with ENS](/core/attachment/ens.png)](https://bluelightav.eth 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/dns.png)](https://bluelightav.eth.link 'Resolve with DNS Link')
+- **\$:/ipfs/documentation** [![Resolve with ENS](/core/attachment/_ipfs_icons_ens.png)](https://bluelightav.eth/#IPFS%20Documentation 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_icons_dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation 'Resolve with DNS Link')
+- **\$:/plugins/ipfs** [![Resolve with ENS](/core/attachment/_ipfs_icons_ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_icons_dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs 'Resolve with DNS Link')
+- **bluelightav.eth** [![Resolve with ENS](/core/attachment/_ipfs_icons_ens.png)](https://bluelightav.eth 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_icons_dns.png)](https://bluelightav.eth.link 'Resolve with DNS Link')
 
 ### Recommended Plugins
 
@@ -140,7 +140,7 @@ More informations about IPFS:
 
 Remarks:
 
-**_EthDNS and EthLink_** [![EthDNS and EthLink](/core/attachment/dns.png)](https://eth.link) are able to resolve [bluelightav.eth.link](https://bluelightav.eth.link) to IPFS.
+**_EthDNS and EthLink_** [![EthDNS and EthLink](/core/attachment/_ipfs_icons_dns.png)](https://eth.link) are able to resolve [bluelightav.eth.link](https://bluelightav.eth.link) to IPFS.
 
 #### Run a local IPFS node with IPFS Desktop
 
@@ -289,7 +289,7 @@ Check:
 
 ```text
 node -v
-v15.6.0
+v15.7.0
 ```
 
 Install `yarn`.
