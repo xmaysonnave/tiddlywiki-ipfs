@@ -4285,10 +4285,10 @@ eslint@^6.8.0:
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
-eslint@^7.17.0:
-  version "7.18.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.18.0.tgz#7fdcd2f3715a41fe6295a16234bd69aed2c75e67"
-  integrity sha512-fbgTiE8BfUJZuBeq2Yi7J3RB3WGUQ9PNuNbmgi6jt9Iv8qrkxfy19Ds3OpL1Pm7zg3BtTVhvcUZbIRQ0wmSjAQ==
+eslint@^7.19.0:
+  version "7.19.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.19.0.tgz#6719621b196b5fad72e43387981314e5d0dc3f41"
+  integrity sha512-CGlMgJY56JZ9ZSYhJuhow61lMPPjUzWmChFya71Z/jilVos7mR/jPgaEfVGgMBY5DshbKdG8Ezb8FDCHcoMEMg==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     "@eslint/eslintrc" "^0.3.0"
@@ -5203,10 +5203,10 @@ gunzip-maybe@^1.4.2:
     pumpify "^1.3.3"
     through2 "^2.0.3"
 
-gzipper@^4.1.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/gzipper/-/gzipper-4.3.0.tgz#5f85cbc0b5cc7b7cf021ee699f8107d80e457b3b"
-  integrity sha512-tGrhFFew5dXKpmpNzxrbSpCgsGZN4hJ5t7URczalEdfYVf6zPvV+q2o4ruMeyLs1U/yCKZOYpr6jE6GFzgBT6w==
+gzipper@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/gzipper/-/gzipper-4.4.0.tgz#652a4a29aee4b10c19a7145d282fccad00daea63"
+  integrity sha512-cl+KoDIxDCaGlrmxfH2Z3EaLtYGv9mxPZXsGowHkGRANMggaGRpGvCXubfbQpD0mNGVcgz7csZ1nnQ6/h7EJQQ==
   dependencies:
     commander "^6.2.0"
     deep-equal "^2.0.4"

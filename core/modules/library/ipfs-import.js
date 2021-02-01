@@ -622,19 +622,25 @@ IPFS Import
           const merged = this.merged.get(title)
           var type = merged.type
           if (tiddlyWikiType !== type) {
-            merged._import_uri = rootUri
+            if (!rootUri.startsWith('blob:')) {
+              merged._import_uri = rootUri
+            }
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
               if (url !== rootUri) {
                 merged._canonical_uri = this.resolved.get(url)
-                merged._import_uri = rootUri
+                if (!rootUri.startsWith('blob:')) {
+                  merged._import_uri = rootUri
+                }
               } else {
-                merged._canonical_uri = rootUri
+                if (!rootUri.startsWith('blob:')) {
+                  merged._canonical_uri = rootUri
+                }
               }
             } else {
               merged._canonical_uri = this.resolved.get(canonicalUri)
-              if (canonicalUri !== rootUri) {
+              if (canonicalUri !== rootUri && !rootUri.startsWith('blob:')) {
                 merged._import_uri = rootUri
               }
             }
