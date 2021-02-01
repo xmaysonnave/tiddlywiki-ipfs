@@ -1,13 +1,19 @@
 title: index.html_build
 tags: $:/ipfs/editions
-_cid: QmTBPwm8hVr7iZxg1HYSJCuitDe9s5WpDCrfbB22CqzT6w
-_cid_uri: ipfs://QmTBPwm8hVr7iZxg1HYSJCuitDe9s5WpDCrfbB22CqzT6w
-_parent_cid: QmepNArqnaam4VcYcotQrkLzMJRJFLi2Am5RNnzzSpBVw9
-_parent_size: 2750019
-_parent_uri: ipfs://QmepNArqnaam4VcYcotQrkLzMJRJFLi2Am5RNnzzSpBVw9
-_raw_hash: 8550221c7668a6cd7247b375e6b1f4f64ce17901c598e9f1a32d7f810f21e5f9
+_cid: QmQLPDg4JgUNxwgGJDTki5opw7eJ4Yfd9bkjxfxre4hmEN
+_cid_uri: ipfs://QmQLPDg4JgUNxwgGJDTki5opw7eJ4Yfd9bkjxfxre4hmEN
+_parent_cid: QmPhtcucGUY3YKfU319dK6tYAeguEAwrd9rkkjTZYbPdGZ
+_parent_size: 2749921
+_parent_uri: ipfs://QmPhtcucGUY3YKfU319dK6tYAeguEAwrd9rkkjTZYbPdGZ
+_raw_hash: c2d0ef2d41269dd284c1c4f3fd66566465eb977fb773ebf667191cdf127a070a
 _semver: 0.4.0-beta-TW-v5.1.23+build
 _source_path: index.html
+<<<<<<< HEAD
 _source_size: 2745609
 _source_uri: ipfs://QmepNArqnaam4VcYcotQrkLzMJRJFLi2Am5RNnzzSpBVw9/index.html
 _version: 0.4.0-beta-TW-v5.1.23+build-210201388
+=======
+_source_size: 2745511
+_source_uri: ipfs://QmPhtcucGUY3YKfU319dK6tYAeguEAwrd9rkkjTZYbPdGZ/index.html
+_version: 0.4.0-beta-TW-v5.1.23+build-210201400
+>>>>>>> 781b0d2 (fix readme icons)
