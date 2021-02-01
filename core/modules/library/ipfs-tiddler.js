@@ -353,7 +353,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleImportFile = async function (info) {
     const dummy = new $tw.Tiddler({
-      title: 'dummy',
+      title: $tw.wiki.generateNewTitle('Untitled'),
       type: info.type,
     })
     try {
