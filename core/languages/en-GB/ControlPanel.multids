@@ -15,7 +15,8 @@ Saving/IpfsService/IpnsKey: IPNS key
 Saving/IpfsService/Resolved: Resolved
 Saving/IpfsService/Global: Global
 Saving/IpfsService/Verbose/Description: Verbose
-Saving/IpfsService/Unpin/Description: Unpin previous content
+Saving/IpfsService/Pin/Description: Pin Current
+Saving/IpfsService/Unpin/Description: Unpin Previous
 Saving/IpfsService/Wait/Description: Wait
 Saving/IpfsService/Policy: Relative URL Policy
 Saving/IpfsService/Policy/Origin/Description: Origin

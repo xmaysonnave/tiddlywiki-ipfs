@@ -12,6 +12,9 @@ IPFS Default
   /*global $tw:false*/
   'use strict'
 
+  /*eslint no-unused-vars:"off"*/
+  const ipfsDefaultName = 'ipfs-default'
+
   /*
    * Retrieve ipfs saver export protocol with default value if applicable
    */
@@ -171,7 +174,7 @@ IPFS Default
   }
 
   /*
-   * Retrieve ipfs saver verbose with default value if applicable
+   * Retrieve ipfs verbose preference with default value if applicable
    */
   exports.getIpfsVerbose = function () {
     var verbose = null
@@ -184,7 +187,7 @@ IPFS Default
       }
     }
     if (verbose == null) {
-      verbose = true // default, see ipfs-saver.tid
+      verbose = true // default, see Ipfs.tid
     } else {
       verbose = verbose === 'yes'
     }
@@ -192,7 +195,28 @@ IPFS Default
   }
 
   /*
-   * Retrieve ipfs saver unpin with default value if applicable
+   * Retrieve ipfs pin preference with default value if applicable
+   */
+  exports.getIpfsPin = function () {
+    var pin = null
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/pin')
+    if (tiddler !== undefined && tiddler !== null) {
+      var text = tiddler.fields.text
+      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      if (text !== null) {
+        pin = text
+      }
+    }
+    if (pin == null) {
+      pin = true // default, see Ipfs.tid
+    } else {
+      pin = pin === 'yes'
+    }
+    return pin
+  }
+
+  /*
+   * Retrieve ipfs unpin preference with default value if applicable
    */
   exports.getIpfsUnpin = function () {
     var unpin = null
@@ -205,7 +229,7 @@ IPFS Default
       }
     }
     if (unpin == null) {
-      unpin = false // default, see ipfs-saver.tid
+      unpin = false // default, see Ipfs.tid
     } else {
       unpin = unpin === 'yes'
     }

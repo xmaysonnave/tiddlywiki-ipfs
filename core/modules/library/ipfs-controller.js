@@ -171,7 +171,13 @@ IPFS Controller
   IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
     const self = this
     return new Promise((resolve, reject) => {
-      if (ipnsKey !== undefined && ipnsKey !== null) {
+      if ($tw.utils.getIpfsPin() === false) {
+        resolve(false)
+      }
+      cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
+      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.trim() !== '' ? ipnsKey.trim() : null
+      value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
+      if (ipnsKey !== null) {
         self
           .resolveUrl(true, true, value)
           .then(data => {
@@ -185,7 +191,7 @@ IPFS Controller
           .catch(error => {
             reject(error)
           })
-      } else if (cid !== undefined && cid !== null) {
+      } else if (cid !== null) {
         const normalizedUrl = self.normalizeUrl(`/${ipfsKeyword}/${cid}`)
         resolve(self.addToPin(cid, normalizedUrl))
       } else {
@@ -223,7 +229,10 @@ IPFS Controller
       if ($tw.utils.getIpfsUnpin() === false) {
         resolve(false)
       }
-      if (ipnsKey !== undefined && ipnsKey !== null) {
+      cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
+      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.trim() !== '' ? ipnsKey.trim() : null
+      value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
+      if (ipnsKey !== null) {
         self
           .resolveUrl(true, true, value)
           .then(data => {
@@ -237,7 +246,7 @@ IPFS Controller
           .catch(error => {
             reject(error)
           })
-      } else if (cid !== undefined && cid !== null) {
+      } else if (cid !== null) {
         const normalizedUrl = self.normalizeUrl(`/${ipfsKeyword}/${cid}`)
         resolve(self.addToUnpin(cid, normalizedUrl))
       } else {
@@ -383,7 +392,7 @@ IPFS Controller
     var ipnsName = null
     var normalizedUrl = null
     var resolvedUrl = null
-    value = value === undefined || value == null || value.toString().trim() === '' ? null : value.toString().trim()
+    value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
     if (value == null) {
       return {
         cid: null,
@@ -426,8 +435,8 @@ IPFS Controller
   }
 
   IpfsController.prototype.resolveIpns = async function (ipnsIdentifier, resolveIpns, base, path) {
-    ipnsIdentifier = ipnsIdentifier === undefined || ipnsIdentifier == null || ipnsIdentifier.toString().trim() === '' ? null : ipnsIdentifier.toString().trim()
-    path = path === undefined || path == null || path.trim() === '' ? '' : path.trim()
+    ipnsIdentifier = ipnsIdentifier !== undefined && ipnsIdentifier !== null && ipnsIdentifier.toString().trim() !== '' ? ipnsIdentifier.toString().trim() : null
+    path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
     if (ipnsIdentifier == null) {
       return {
         cid: null,
@@ -474,7 +483,7 @@ ${normalizedUrl}`
   }
 
   IpfsController.prototype.resolveEns = async function (ensDomain, base, path, web3) {
-    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.toString().trim() === '' ? null : ensDomain.toString().trim()
+    ensDomain = ensDomain !== undefined && ensDomain !== null && ensDomain.toString().trim() !== '' ? ensDomain.toString().trim() : null
     if (ensDomain == null) {
       return {
         cid: null,
@@ -482,7 +491,7 @@ ${normalizedUrl}`
         resolvedUrl: null,
       }
     }
-    path = path === undefined || path == null || path.trim() === '' ? '' : path.trim()
+    path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
     if (web3 === undefined || web3 == null) {
       var { web3 } = await this.getWeb3Provider()
     }

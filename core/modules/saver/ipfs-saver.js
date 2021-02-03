@@ -55,7 +55,6 @@ IPFS Saver
       const wiki = $tw.ipfs.getDocumentUrl()
       var base = $tw.ipfs.getIpfsBaseUrl()
       var nextWiki = $tw.ipfs.getUrl(wiki, base)
-      // https://github.com/jsdom/whatwg-url/issues/163#issuecomment-667732256
       base.pathname = nextWiki.pathname
       base.username = nextWiki.username
       base.password = nextWiki.password
@@ -64,9 +63,7 @@ IPFS Saver
       nextWiki = base
       try {
         var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki)
-        if (cid != null) {
-          await $tw.ipfs.requestToUnpin(cid)
-        }
+        await $tw.ipfs.requestToUnpin(cid)
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         callback(error)
@@ -104,9 +101,7 @@ IPFS Saver
             $tw.utils.alert(name, error.message)
           }
         }
-        if (ipnsCid != null) {
-          await $tw.ipfs.requestToUnpin(ipnsCid)
-        }
+        await $tw.ipfs.requestToUnpin(ipnsCid)
       }
       // ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
@@ -123,9 +118,7 @@ IPFS Saver
           throw err
         }
         var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
-        if (ensCid != null) {
-          await $tw.ipfs.requestToUnpin(ensCid)
-        }
+        await $tw.ipfs.requestToUnpin(ensCid)
       }
       // Upload  current document
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
@@ -134,12 +127,7 @@ IPFS Saver
       // Default next
       nextWiki.pathname = `/${ipfsKeyword}/${added}`
       // Pin
-      try {
-        await $tw.ipfs.pinToIpfs(added)
-      } catch (error) {
-        $tw.ipfs.getLogger().warn(error)
-        $tw.utils.alert(name, error.message)
-      }
+      await $tw.ipfs.requestToPin(added)
       // Publish to IPNS
       if (ipnsKey !== null && ipnsName !== null) {
         $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
@@ -150,7 +138,7 @@ IPFS Saver
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
-          $tw.ipfs.requestToPin(ipnsCid)
+          await $tw.ipfs.requestToPin(ipnsCid)
         }
       }
       // Publish to ENS
@@ -162,10 +150,9 @@ IPFS Saver
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
-          $tw.ipfs.requestToPin(ensCid)
+          await $tw.ipfs.requestToPin(ensCid)
         }
       }
-      $tw.ipfs.pin = []
       // Unpin
       if ($tw.utils.getIpfsUnpin()) {
         for (var i in $tw.ipfs.unpin) {
@@ -180,16 +167,21 @@ IPFS Saver
       }
       $tw.ipfs.unpin = []
       // Pin
-      for (var i in $tw.ipfs.pin) {
-        try {
-          const pin = $tw.ipfs.pin[i]
-          await $tw.ipfs.pinToIpfs(pin)
-        } catch (error) {
-          $tw.ipfs.getLogger().warn(error)
-          $tw.utils.alert(name, error.message)
+      if ($tw.utils.getIpfsPin()) {
+        for (var i in $tw.ipfs.pin) {
+          try {
+            const pin = $tw.ipfs.pin[i]
+            await $tw.ipfs.pinToIpfs(pin)
+          } catch (error) {
+            $tw.ipfs.getLogger().warn(error)
+            $tw.utils.alert(name, error.message)
+          }
         }
       }
+      $tw.ipfs.pin = []
+      // Callback
       callback(null)
+      // Next
       if (nextWiki.host !== wiki.host || nextWiki.pathname !== wiki.pathname) {
         $tw.ipfs.getLogger().info(`Loading: '${nextWiki.href}'`)
         window.location.assign(nextWiki.href)

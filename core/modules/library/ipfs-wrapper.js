@@ -315,7 +315,7 @@ ${url}`
 }
 
 IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
-  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
+  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
@@ -331,11 +331,11 @@ ${url}`
   } catch (error) {
     this.getLogger().error(error)
   }
-  throw new Error('Failed to pin to IPFS...')
+  throw new Error('Failed to pin...')
 }
 
 IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
-  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
+  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
@@ -351,7 +351,7 @@ ${url}`
   } catch (error) {
     this.getLogger().error(error)
   }
-  throw new Error('Failed to unpin from IPFS...')
+  throw new Error('Failed to unpin...')
 }
 
 exports.IpfsWrapper = IpfsWrapper

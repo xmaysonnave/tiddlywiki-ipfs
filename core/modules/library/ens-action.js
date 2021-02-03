@@ -165,11 +165,11 @@ ENS Action
             $tw.utils.alert(name, 'Successfully published to ENS...')
           })
           .catch(error => {
-            $tw.ipfs.requestToPin(ensCid)
             if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
               $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)
+            $tw.ipfs.requestToPin(ensCid)
           })
       })
       .catch(error => {

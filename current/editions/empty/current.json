@@ -2,16 +2,16 @@
   {
     "_name": "index.html",
     "_tags": "$:/ipfs/editions",
-    "_cid": "QmQd2NijCmkGbkp5o8S41fkGkR2KowbTGpktD5Z2mCbErf",
-    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmQd2NijCmkGbkp5o8S41fkGkR2KowbTGpktD5Z2mCbErf",
-    "_parent_cid": "QmXbEhdWGRUsLDV2kHKmchutRiFjJjfmdkttKJR4tG88d6",
-    "_parent_size": 1145484,
-    "_parent_uri": "http://127.0.0.1:8080/ipfs/QmXbEhdWGRUsLDV2kHKmchutRiFjJjfmdkttKJR4tG88d6",
-    "_raw_hash": "a0eb39a73c4fd5ce5f0325c52388933f6dbb94a5c1dbc5352d96d06c8faf7581",
+    "_cid": "QmX9bCNVnQ7BkvCCF9EkyDpJjbLr45n7e4bWPtn37KUPgM",
+    "_cid_uri": "http://127.0.0.1:8080/ipfs/QmX9bCNVnQ7BkvCCF9EkyDpJjbLr45n7e4bWPtn37KUPgM",
+    "_parent_cid": "QmYyxMZsme6VDFtJShU6RJUHzYt4JiekN4DrzeXF6tCv8S",
+    "_parent_size": 1145788,
+    "_parent_uri": "http://127.0.0.1:8080/ipfs/QmYyxMZsme6VDFtJShU6RJUHzYt4JiekN4DrzeXF6tCv8S",
+    "_raw_hash": "96ab5127da82f618b8f6cad46c65941141a717b4d75b61705359ac58cd582c7b",
     "_semver": "0.4.0-beta-TW-v5.1.23+build",
     "_source_path": "index.html",
-    "_source_size": 1141075,
-    "_source_uri": "http://127.0.0.1:8080/ipfs/QmXbEhdWGRUsLDV2kHKmchutRiFjJjfmdkttKJR4tG88d6/index.html",
-    "_version": "0.4.0-beta-TW-v5.1.23+build-210202264"
+    "_source_size": 1141379,
+    "_source_uri": "http://127.0.0.1:8080/ipfs/QmYyxMZsme6VDFtJShU6RJUHzYt4JiekN4DrzeXF6tCv8S/index.html",
+    "_version": "0.4.0-beta-TW-v5.1.23+build-210203356"
   }
 ]

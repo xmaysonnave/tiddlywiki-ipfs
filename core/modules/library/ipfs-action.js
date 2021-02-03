@@ -99,7 +99,7 @@ IPFS Action
       }
       $tw.ipfs.getLogger().info(`Uploading attachment content: ${content.length} bytes`)
       var { added } = await $tw.ipfs.addToIpfs(content)
-      $tw.ipfs.requestToPin(added)
+      await $tw.ipfs.requestToPin(added)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -402,8 +402,8 @@ IPFS Action
     $tw.ipfs
       .publishIpnsName(wikiCid, ipnsKey, ipnsName)
       .then(data => {
-        $tw.ipfs.requestToUnpin(cid)
         $tw.utils.alert(name, 'Successfully Published IPNS name: ' + ipnsName)
+        $tw.ipfs.requestToUnpin(cid)
       })
       .catch(error => {
         $tw.ipfs.getLogger().error(error)

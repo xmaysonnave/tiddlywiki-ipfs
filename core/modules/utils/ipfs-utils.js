@@ -12,6 +12,8 @@ IPFS utils
   /*global $tw:false*/
   'use strict'
 
+  const ipfsUtilsName = 'ipfs-utils'
+
   /**
    * $:/core/modules/utils/logger.js
    *
@@ -231,7 +233,7 @@ IPFS utils
       if (error.name !== 'OwnerError') {
         $tw.ipfs.getLogger().error(error)
       }
-      $tw.utils.alert(name, error.message)
+      $tw.utils.alert(ipfsUtilsName, error.message)
       return false
     }
     $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}`)
@@ -239,7 +241,7 @@ IPFS utils
       var { added } = await $tw.ipfs.addToIpfs(content)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
+      $tw.utils.alert(ipfsUtilsName, error.message)
       return false
     }
     // Prepare New value
@@ -251,7 +253,7 @@ IPFS utils
     })
     $tw.wiki.addTiddler(updatedTiddler)
     if (ipnsKey !== null && ipnsName !== null) {
-      $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
+      $tw.utils.alert(ipfsUtilsName, `Publishing IPNS name: ${ipnsName}`)
       $tw.ipfs
         .pinToIpfs(added)
         .then(data => {
@@ -265,7 +267,7 @@ IPFS utils
                 fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
+              $tw.utils.alert(ipfsUtilsName, `Successfully Published IPNS name: ${ipnsName}`)
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
                   .unpinFromIpfs(cid)
@@ -276,22 +278,22 @@ IPFS utils
                   })
                   .catch(error => {
                     $tw.ipfs.getLogger().error(error)
-                    $tw.utils.alert(name, error.message)
+                    $tw.utils.alert(ipfsUtilsName, error.message)
                   })
               }
             })
             .catch(error => {
-              $tw.ipfs.requestToUnpin(added)
               $tw.ipfs.getLogger().error(error)
-              $tw.utils.alert(name, error.message)
+              $tw.utils.alert(ipfsUtilsName, error.message)
+              $tw.ipfs.requestToUnpin(added)
             })
         })
         .catch(error => {
           $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
+          $tw.utils.alert(ipfsUtilsName, error.message)
         })
     } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
-      $tw.utils.alert(name, `Publishing to ENS: ${normalizedUrl.hostname}`)
+      $tw.utils.alert(ipfsUtilsName, `Publishing to ENS: ${normalizedUrl.hostname}`)
       $tw.ipfs
         .pinToIpfs(added)
         .then(data => {
@@ -305,7 +307,7 @@ IPFS utils
                 fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(name, 'Successfully Published to ENS...')
+              $tw.utils.alert(ipfsUtilsName, 'Successfully Published to ENS...')
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
                   .unpinFromIpfs(cid)
@@ -316,21 +318,21 @@ IPFS utils
                   })
                   .catch(error => {
                     $tw.ipfs.getLogger().error(error)
-                    $tw.utils.alert(name, error.message)
+                    $tw.utils.alert(ipfsUtilsName, error.message)
                   })
               }
             })
             .catch(error => {
-              $tw.ipfs.requestToUnpin(added)
               if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
                 $tw.ipfs.getLogger().error(error)
               }
-              $tw.utils.alert(name, error.message)
+              $tw.utils.alert(ipfsUtilsName, error.message)
+              $tw.ipfs.requestToUnpin(added)
             })
         })
         .catch(error => {
           $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
+          $tw.utils.alert(ipfsUtilsName, error.message)
         })
     }
     return true
@@ -381,7 +383,7 @@ IPFS utils
             var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
-            $tw.utils.alert(name, error.message)
+            $tw.utils.alert(ipfsUtilsName, error.message)
             return null
           }
           // IPNS
