@@ -45,8 +45,6 @@ ENS Action
 
   EnsAction.prototype.handleOpenEnsManager = function (event) {
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
-    // Check
     if (ensDomain == null) {
       window.open('https://app.ens.domains', '_blank', 'noopener,noreferrer')
     } else {
@@ -57,7 +55,6 @@ ENS Action
 
   EnsAction.prototype.handleResolveEnsAndOpen = async function (event) {
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
@@ -81,8 +78,7 @@ ENS Action
     var ipnsKey = null
     const wiki = $tw.ipfs.getDocumentUrl()
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
-    if (ensDomain == null) {
+    if (!ensDomain) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
     }
@@ -106,13 +102,11 @@ ENS Action
   EnsAction.prototype.handlePublishIpnsToEns = async function (event) {
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
     }
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    ensDomain = ensDomain === undefined || ensDomain == null || ensDomain.trim() === '' ? null : ensDomain.trim()
     if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false

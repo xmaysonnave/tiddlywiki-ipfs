@@ -34,9 +34,9 @@ Attributes are stored as hashmaps of the following objects:
     // Check for an externally linked tiddler
     if ($tw.browser && (text || '') === '' && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+      canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.toString().trim() !== '' ? canonicalUri.toString().trim() : null
       var importUri = options.tiddler.fields._import_uri
-      importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
+      importUri = importUri !== undefined && importUri !== null && importUri.toString().trim() !== '' ? importUri.toString().trim() : null
       if (canonicalUri !== null || importUri !== null) {
         var ipfsImport = new IpfsImport()
         ipfsImport

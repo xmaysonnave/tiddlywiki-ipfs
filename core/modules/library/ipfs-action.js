@@ -134,7 +134,6 @@ IPFS Action
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
@@ -166,7 +165,6 @@ IPFS Action
   IpfsAction.prototype.handleGenerateIpnsKey = async function (event) {
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
@@ -195,7 +193,6 @@ IPFS Action
     var ipnsKey = null
     var normalizedUrl = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
@@ -249,7 +246,6 @@ IPFS Action
   IpfsAction.prototype.handleFetchIpnsKey = async function (event) {
     var ipnsKey = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
@@ -278,7 +274,6 @@ IPFS Action
     var ipnsKey = null
     var resolvedUrl = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
@@ -377,7 +372,6 @@ IPFS Action
     var wikiIpnsKey = null
     const wiki = $tw.ipfs.getDocumentUrl()
     var ipnsName = $tw.utils.getIpfsIpnsName()
-    ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false

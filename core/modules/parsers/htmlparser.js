@@ -20,20 +20,15 @@ The HTML parser displays text as raw HTML
     var src
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
-      if (canonicalUri !== null) {
+      canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.toString().trim() !== '' ? canonicalUri.toString().trim() : null
+      if (canonicalUri) {
         var password = options.tiddler.fields._password
-        password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
+        password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {
             var { normalizedUrl, resolvedUrl } = data
             var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
-            if (url !== null) {
-              src = url
-              var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
-              $tw.rootWidget.refresh(parsedTiddler)
-            }
             if (url !== null) {
               $tw.ipfs
                 .loadToUtf8(url, password)

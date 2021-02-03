@@ -82,9 +82,7 @@ IPFS Saver
         } else {
           // Default IPNS
           ipnsKey = $tw.utils.getIpfsIpnsKey()
-          ipnsKey = ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '' ? null : ipnsKey.trim()
           ipnsName = $tw.utils.getIpfsIpnsName()
-          ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
           if (ipnsKey == null && ipnsName == null) {
             callback(new Error('Unknown default IPNS identifiers...'))
             return true

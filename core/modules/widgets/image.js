@@ -68,7 +68,7 @@ Render this widget into the DOM
         var type = tiddler.fields.type
         var text = tiddler.fields.text
         var canonicalUri = tiddler.fields._canonical_uri
-        canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+        canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.toString().trim() !== '' ? canonicalUri.toString().trim() : null
         // If the tiddler has body text then it doesn't need to be lazily loaded
         if (text) {
           // Render the appropriate element for the image type
@@ -86,12 +86,12 @@ Render this widget into the DOM
           }
         } else if (canonicalUri) {
           var password = tiddler.fields._password
-          password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
+          password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
           $tw.ipfs
             .resolveUrl(false, true, canonicalUri)
             .then(data => {
               var { normalizedUrl, resolvedUrl } = data
-              var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
+              var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl ? normalizedUrl.toString() : null
               if (url !== null) {
                 switch (type) {
                   case 'application/pdf':

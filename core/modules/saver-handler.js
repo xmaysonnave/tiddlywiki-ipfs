@@ -190,8 +190,8 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')
     if (preferredSaver !== undefined && preferredSaver !== null) {
       var title = preferredSaver.fields.text
-      title = title === undefined || title == null || title.trim() === '' ? null : title.trim()
-      if (title !== null) {
+      title = title !== undefined && title !== null && title.trim() !== '' ? title.trim() : null
+      if (title) {
         var saver = this.getSaver(title)
         if (saver !== null && saver.module !== undefined) {
           if (await this.save(saver.module, method, variables, text, callback)) {

@@ -22,10 +22,10 @@ The plain text parser processes blocks of source text into a degenerate parse tr
     }
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
-      canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+      canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.toString().trim() !== '' ? canonicalUri.toString().trim() : null
       if (canonicalUri !== null) {
         var password = options.tiddler.fields._password
-        password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
+        password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs
           .resolveUrl(false, true, canonicalUri)
           .then(data => {

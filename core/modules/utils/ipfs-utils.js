@@ -168,7 +168,7 @@ IPFS utils
   }
 
   exports.getContentType = function (title, type) {
-    type = type === undefined || type == null || type.trim() === '' ? null : type.trim()
+    type = type !== undefined && type !== null && type.trim() !== '' ? type.trim() : null
     if (type == null) {
       type = 'text/vnd.tiddlywiki'
     }
@@ -356,7 +356,7 @@ IPFS utils
   exports.exportTiddlersAsJson = async function (tiddlers, exportUri, spaces) {
     var json
     var data = []
-    var spaces = spaces === undefined || spaces == null ? $tw.config.preferences.jsonSpaces : spaces
+    var spaces = spaces !== undefined && spaces !== null ? spaces : $tw.config.preferences.jsonSpaces
     const ipnsKeyword = 'ipns'
     // Process Tiddlers
     if (tiddlers) {

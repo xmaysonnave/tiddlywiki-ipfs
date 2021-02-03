@@ -23,7 +23,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/export')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         output = text
       }
@@ -49,7 +49,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/protocol')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         protocol = text
       }
@@ -75,7 +75,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/api')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         api = text
       }
@@ -84,7 +84,7 @@ IPFS Default
       tiddler = $tw.wiki.getTiddler(api)
       if (tiddler !== undefined && tiddler !== null) {
         var text = tiddler.fields.text
-        text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+        text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
         if (text !== null) {
           api = text
         }
@@ -104,7 +104,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/gateway')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         gateway = text
       }
@@ -113,7 +113,7 @@ IPFS Default
       tiddler = $tw.wiki.getTiddler(gateway)
       if (tiddler !== undefined && tiddler !== null) {
         var text = tiddler.fields.text
-        text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+        text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
         if (text !== null) {
           gateway = text
         }
@@ -133,7 +133,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ens/domain')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         ensDomain = text
       }
@@ -149,7 +149,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/name')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         ipnsName = text
       }
@@ -165,7 +165,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/key')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         ipnsKey = text
       }
@@ -181,7 +181,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/verbose')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         verbose = text
       }
@@ -202,7 +202,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/pin')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         pin = text
       }
@@ -223,7 +223,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/unpin')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         unpin = text
       }
@@ -244,7 +244,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/policy')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         policy = text
       }
@@ -270,7 +270,7 @@ IPFS Default
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/provider')
     if (tiddler !== undefined && tiddler !== null) {
       var text = tiddler.fields.text
-      text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
       if (text !== null) {
         provider = text
       }

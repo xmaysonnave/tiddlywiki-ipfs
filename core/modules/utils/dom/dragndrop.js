@@ -165,7 +165,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
         var dataType = importDataTypes[t]
         var data = dataTransfer.getData(dataType.type)
         // Import the tiddlers in the data
-        if (data !== '' && data !== null) {
+        if (data !== null && data !== '') {
           if ($tw.log.IMPORT) {
             console.log("Importing data type '" + dataType.type + "', data: '" + data + "'")
           }
