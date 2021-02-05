@@ -378,16 +378,20 @@ IpfsBundle.prototype.loadToUtf8 = async function (url, password) {
   return await this.ipfsLoader.loadToUtf8(url, password)
 }
 
-IpfsBundle.prototype.analyzeType = function (type) {
-  return this.ipfsLibrary.analyzeType(type)
+IpfsBundle.prototype.analyzePinType = function (type) {
+  return this.ipfsLibrary.analyzePinType(type)
+}
+
+IpfsBundle.prototype.addAll = async function (client, source, options) {
+  return await this.ipfsLibrary.addAll(client, source, options)
 }
 
 IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
   return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
 }
 
-IpfsBundle.prototype.addAll = async function (client, source, options) {
-  return await this.ipfsLibrary.addAll(client, source, options)
+IpfsBundle.prototype.ls = async function (client, ipfsPath) {
+  return await this.ipfsLibrary.ls(client, ipfsPath)
 }
 
 IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
