@@ -26,7 +26,7 @@ async function managePin (api, key) {
       }
     }
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
     return false
   }
   return true
@@ -52,7 +52,7 @@ async function manageUnpin (api, key) {
       console.log(`*** Unable to unpin ${key} ***`)
     }
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
     return false
   }
   return true
