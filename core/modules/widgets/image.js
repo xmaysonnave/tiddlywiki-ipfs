@@ -91,7 +91,7 @@ Render this widget into the DOM
             .resolveUrl(false, true, canonicalUri)
             .then(data => {
               var { normalizedUrl, resolvedUrl } = data
-              var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl ? normalizedUrl.toString() : null
+              var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
               if (url !== null) {
                 switch (type) {
                   case 'application/pdf':

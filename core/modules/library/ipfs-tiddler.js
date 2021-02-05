@@ -181,7 +181,7 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          if (field) {
+          if (field !== undefined && field !== null) {
             $tw.ipfs.getLogger().info(
               `Pinning: "${field}"
  ${resolvedUrl}`
@@ -190,7 +190,7 @@ IPFS Tiddler
           $tw.ipfs
             .pinToIpfs(cid)
             .then(data => {
-              if (data) {
+              if (data !== undefined && data !== null) {
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
                 if (field) {
                   $tw.utils.alert(name, `Successfully Pinned : <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`)
@@ -222,7 +222,7 @@ IPFS Tiddler
           }
           var value = tiddler.getFieldString(field)
           value = value !== undefined && value !== null && value.trim() !== '' ? value.trim() : null
-          if (value) {
+          if (value !== null) {
             if (info.encoding !== 'base64' && type !== 'image/svg+xml') {
               if (field === '_canonical_uri' || field === '_import_uri') {
                 continue
@@ -247,7 +247,7 @@ IPFS Tiddler
       .then(data => {
         const { cid, resolvedUrl } = data
         if (resolvedUrl !== null && cid !== null) {
-          if (field) {
+          if (field !== null) {
             $tw.ipfs.getLogger().info(
               `Unpinning: "${field}
  ${resolvedUrl}`
@@ -258,7 +258,7 @@ IPFS Tiddler
             .then(data => {
               if (data !== undefined && data !== null) {
                 $tw.ipfs.removeFromPinUnpin(cid, resolvedUrl)
-                if (field) {
+                if (field !== null) {
                   $tw.utils.alert(name, `Successfully Unpinned : <a rel="noopener noreferrer" target="_blank" href="${resolvedUrl}">${field}</a>`)
                 }
               }
@@ -336,9 +336,9 @@ IPFS Tiddler
       ipfsImport
         .import(canonicalUri, importUri, tiddler)
         .then(data => {
-          if (data) {
+          if (data !== undefined && data !== null) {
             const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
-            if (navigator) {
+            if (navigator !== undefined && navigator !== null) {
               navigator.dispatchEvent({
                 type: 'tm-ipfs-import-tiddlers',
                 param: data,

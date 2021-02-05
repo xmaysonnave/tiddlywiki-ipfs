@@ -622,7 +622,7 @@ IPFS Import
           const merged = this.merged.get(title)
           var type = merged.type
           if (tiddlyWikiType !== type) {
-            if (!rootUri.startsWith('blob:')) {
+            if (rootUri.startsWith('blob:') === false) {
               merged._import_uri = rootUri
             }
           } else {
@@ -630,17 +630,17 @@ IPFS Import
             if (canonicalUri === undefined || canonicalUri == null) {
               if (url !== rootUri) {
                 merged._canonical_uri = this.resolved.get(url)
-                if (!rootUri.startsWith('blob:')) {
+                if (rootUri.startsWith('blob:') === false) {
                   merged._import_uri = rootUri
                 }
               } else {
-                if (!rootUri.startsWith('blob:')) {
+                if (rootUri.startsWith('blob:') === false) {
                   merged._canonical_uri = rootUri
                 }
               }
             } else {
               merged._canonical_uri = this.resolved.get(canonicalUri)
-              if (canonicalUri !== rootUri && !rootUri.startsWith('blob:')) {
+              if (canonicalUri !== rootUri && rootUri.startsWith('blob:') === false) {
                 merged._import_uri = rootUri
               }
             }

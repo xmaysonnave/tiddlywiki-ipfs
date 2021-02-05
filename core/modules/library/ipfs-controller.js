@@ -232,7 +232,7 @@ IPFS Controller
       cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
       ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.trim() !== '' ? ipnsKey.trim() : null
       value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
-      if (ipnsKey !== null) {
+      if (ipnsKey !== undefined && ipnsKey !== null) {
         self
           .resolveUrl(true, true, value)
           .then(data => {

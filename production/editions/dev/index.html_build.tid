@@ -1,19 +1,13 @@
 title: index.html_build
 tags: $:/ipfs/editions
-_cid: QmfXqUYoAPgW6URs1VNvkFfMWNbnMdvFq6EFoDi7d2rgJM
-_cid_uri: ipfs://QmfXqUYoAPgW6URs1VNvkFfMWNbnMdvFq6EFoDi7d2rgJM
-_parent_cid: QmermDCdXo7v73FwpmWikXG9TE4wEBKdMvXBxWNojb4QnJ
-_parent_size: 3546315
-_parent_uri: ipfs://QmermDCdXo7v73FwpmWikXG9TE4wEBKdMvXBxWNojb4QnJ
-_raw_hash: 95d841bcc32f0a177e3f7d63d3c9b5b9069725806e5e9cad7568b6992737116c
+_cid: QmPZUganxxjxr4mUv98y6QQ72zR8dj5fypeU2F5mFeHhKv
+_cid_uri: ipfs://QmPZUganxxjxr4mUv98y6QQ72zR8dj5fypeU2F5mFeHhKv
+_parent_cid: QmRrV3S4UGXc39GA6inM8LCLZDUNb4D5K7h2PtxuDnRj4s
+_parent_size: 3548011
+_parent_uri: ipfs://QmRrV3S4UGXc39GA6inM8LCLZDUNb4D5K7h2PtxuDnRj4s
+_raw_hash: 9225eaafe23325b382e0d6ad3a81f269af7afb6de62fa9f7774d0dc36aad2472
 _semver: 0.4.0-beta-TW-v5.1.23+build
 _source_path: index.html
-<<<<<<< HEAD
-_source_size: 3541911
-_source_uri: ipfs://QmcrbANhAriGQDLA6H1joLWM4AMhcDjtrHyPp75W6eKrcL/index.html
-_version: 0.4.0-beta-TW-v5.1.23+build-210201388
-=======
-_source_size: 3541905
-_source_uri: ipfs://QmermDCdXo7v73FwpmWikXG9TE4wEBKdMvXBxWNojb4QnJ/index.html
-_version: 0.4.0-beta-TW-v5.1.23+build-210201400
->>>>>>> 781b0d2 (fix readme icons)
+_source_size: 3543601
+_source_uri: ipfs://QmRrV3S4UGXc39GA6inM8LCLZDUNb4D5K7h2PtxuDnRj4s/index.html
+_version: 0.4.0-beta-TW-v5.1.23+build-210205348

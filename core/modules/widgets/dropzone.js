@@ -148,7 +148,7 @@ Dropzone widget
       })
     }
     // Try to import the various data types we understand
-    if (!hasFiles) {
+    if (hasFiles === false) {
       $tw.utils.importDataTransfer(dataTransfer, this.wiki.generateNewTitle('Untitled'), readFileCallback)
     }
     // Tell the browser that we handled the drop

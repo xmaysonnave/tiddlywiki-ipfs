@@ -78,7 +78,7 @@ ENS Action
     var ipnsKey = null
     const wiki = $tw.ipfs.getDocumentUrl()
     var ensDomain = $tw.utils.getIpfsEnsDomain()
-    if (!ensDomain) {
+    if (ensDomain == null) {
       $tw.utils.alert(name, 'Undefined ENS domain...')
       return false
     }
