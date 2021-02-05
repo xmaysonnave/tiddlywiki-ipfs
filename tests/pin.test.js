@@ -12,8 +12,6 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /*
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
- * export IPFS_PATH=.ipfs
- * yarn jsipfs init -e -p test
  **/
 
 const { expect } = chai
