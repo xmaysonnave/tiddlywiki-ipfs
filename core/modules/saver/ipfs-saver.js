@@ -54,13 +54,16 @@ IPFS Saver
       var web3 = null
       const wiki = $tw.ipfs.getDocumentUrl()
       var base = $tw.ipfs.getIpfsBaseUrl()
-      var nextWiki = $tw.ipfs.getUrl(wiki, base)
-      base.pathname = nextWiki.pathname
-      base.username = nextWiki.username
-      base.password = nextWiki.password
-      base.search = nextWiki.search
-      base.hash = nextWiki.hash
-      nextWiki = base
+      var current = $tw.ipfs.getUrl(wiki, base)
+      var protocol = current.protocol
+      var credential = ''
+      if (current.username && current.password) {
+        credential = `${current.username}:${current.password}@`
+      }
+      var host = current.host
+      var pathname = current.pathname
+      var search = current.search
+      var hash = current.hash
       try {
         var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki)
         await $tw.ipfs.requestToUnpin(cid)
@@ -118,12 +121,10 @@ IPFS Saver
         var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
         await $tw.ipfs.requestToUnpin(ensCid)
       }
-      // Upload  current document
+      // Upload
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
-      // Add
       const { added } = await $tw.ipfs.addToIpfs(text)
-      // Default next
-      nextWiki.pathname = `/${ipfsKeyword}/${added}`
+      pathname = `/${ipfsKeyword}/${added}`
       // Pin
       await $tw.ipfs.requestToPin(added)
       // Publish to IPNS
@@ -131,7 +132,7 @@ IPFS Saver
         $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
         try {
           await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
-          nextWiki.pathname = `/${ipnsKeyword}/${ipnsKey}`
+          pathname = `/${ipnsKeyword}/${ipnsKey}`
           $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
@@ -180,9 +181,10 @@ IPFS Saver
       // Callback
       callback(null)
       // Next
-      if (nextWiki.host !== wiki.host || nextWiki.pathname !== wiki.pathname) {
-        $tw.ipfs.getLogger().info(`Loading: '${nextWiki.href}'`)
-        window.location.assign(nextWiki.href)
+      const next = $tw.ipfs.getUrl(`${protocol}//${credential}${host}${pathname}${search}${hash}`)
+      if (next.host !== wiki.host || next.pathname !== wiki.pathname) {
+        $tw.ipfs.getLogger().info(`Loading: '${next.href}'`)
+        window.location.assign(next.href)
       }
     } catch (error) {
       if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
