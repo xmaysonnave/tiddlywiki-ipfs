@@ -1,4 +1,4 @@
-var _ipfs = function ($tw) {
+var ipfsBoot = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
@@ -596,13 +596,13 @@ var _ipfs = function ($tw) {
         process: process,
       })
     } else {
-      /**
-       * CommonJS optional require.main property:
-       * In a browser we offer a fake main module which points back to the boot function
-       * (Theoretically, this may allow TW to eventually load itself as a module in the browser)
-       */
+      /*
+      CommonJS optional require.main property:
+      In a browser we offer a fake main module which points back to the boot function
+      (Theoretically, this may allow TW to eventually load itself as a module in the browser)
+      */
       Object.defineProperty(sandbox.require, 'main', {
-        value: typeof require !== 'undefined' ? require.main : { TiddlyWiki: _ipfs },
+        value: typeof require !== 'undefined' ? require.main : { TiddlyWiki: ipfsBoot },
         writable: false,
         enumerable: true,
         configurable: false,
@@ -804,9 +804,9 @@ var _ipfs = function ($tw) {
   if ($tw.node) {
     $tw.filepaths = Object.create(null)
 
-    /*
-    Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
-    */
+    /**
+     * Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
+     */
     $tw.loadPluginFolder = function (filepath, excludeRegExp) {
       excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp
       var infoPath = filepath + path.sep + 'plugin.info'
@@ -896,7 +896,7 @@ var _ipfs = function ($tw) {
 }
 
 if (typeof exports !== 'undefined') {
-  exports.TiddlyWiki = _ipfs
+  exports.TiddlyWiki = ipfsBoot
 } else {
-  _ipfs(window.$tw)
+  ipfsBoot(window.$tw)
 }
