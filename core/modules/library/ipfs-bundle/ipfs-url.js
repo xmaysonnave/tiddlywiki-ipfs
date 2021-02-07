@@ -180,12 +180,16 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
     // Pathname
     var pathname = null
     if (url.hostname !== undefined && url.hostname !== null && url.hostname.trim() !== '') {
-      pathname = `/${protocol}/${url.hostname}`
+      if (url.pathname.startsWith('//')) {
+        pathname = `/${protocol}/${url.hostname}/${url.pathname.slice(2)}`
+      } else {
+        pathname = `/${protocol}/${url.hostname}${url.pathname}`
+      }
     } else if (url.pathname !== undefined && url.pathname !== null && url.pathname.trim() !== '') {
       if (url.pathname.startsWith('//')) {
         pathname = `/${protocol}/${url.pathname.slice(2)}`
       } else {
-        pathname = `/${protocol}/${url.pathname}`
+        pathname = `/${protocol}${url.pathname}`
       }
     }
     // Credential

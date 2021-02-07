@@ -672,7 +672,7 @@ IpfsBundle.prototype.cidToBase58CidV0 = function (cid, log) {
 }
 
 IpfsBundle.prototype.convertCidToBase58CidV0 = function (cid, log) {
-  cid = new CID(cid)
+  cid = new CID(cid.toString())
   const { codec: cidCodec } = cid.toJSON()
   if (cid.version === 1) {
     const converted = new CID(0, dagPb, cid.multihash, 'base58btc')
@@ -727,7 +727,7 @@ IpfsBundle.prototype.cidToLibp2pKeyCidV1 = function (cid, multibaseName, log) {
 }
 
 IpfsBundle.prototype.convertCidToCid = function (cid, version, codec, multibaseName, log) {
-  cid = new CID(cid)
+  cid = new CID(cid.toString())
   const { codec: cidCodec, version: cidVersion } = cid.toJSON()
   if (cid.version === version && cidCodec === codec && cid.multibaseName === multibaseName) {
     return cid

@@ -11,6 +11,8 @@ const { pipeline } = require('stream')
 const { promisify } = require('util')
 const CID = require('cids')
 const uint8ArrayFromString = require('uint8arrays/from-string')
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const ipfsBundle = new IpfsBundle()
 
 function getExtension (filename) {
   return filename.split('.').pop()
@@ -40,7 +42,7 @@ async function load (url, stream) {
 // https://discuss.ipfs.io/t/what-is-the-data-in-object/5221
 // https://github.com/ipfs/go-unixfs/blob/master/pb/unixfs.pb.go
 async function dagPut (api, gatewayUrl, links) {
-  const cid = await api.dag.put(
+  const put = await api.dag.put(
     {
       Data: uint8ArrayFromString('\u0008\u0001'),
       Links: links,
@@ -51,11 +53,12 @@ async function dagPut (api, gatewayUrl, links) {
       pin: false,
     }
   )
-  const stat = await api.object.stat(cid)
+  const stat = await api.object.stat(put)
+  const cidV1 = ipfsBundle.cidToCidV1(put)
   return {
-    _cid: `${cid}`,
+    _cid: `${cidV1}`,
     _cid_size: stat.CumulativeSize,
-    _cid_uri: `${gatewayUrl}${cid}`,
+    _cid_uri: `${gatewayUrl}${cidV1}`,
   }
 }
 
@@ -144,20 +147,21 @@ module.exports = async function main (dir) {
               } else {
                 if (getExtension(innerContent[j]) === 'tid') {
                   const loaded = fs.readFileSync(`./production/${dir}/${content[i]}/${innerContent[j]}`)
-                  const result = await api.add(
+                  const added = await api.add(
                     {
                       path: `/${innerContent[j]}`,
                       content: loaded,
                     },
                     options
                   )
-                  if (!result) {
+                  if (added === undefined || added == null) {
                     throw new Error('IPFS client returned an unknown result...')
                   }
+                  const cidV1 = ipfsBundle.cidToCidV1(added.cid)
                   innerLinks.push({
                     Name: innerContent[j],
-                    Tsize: result.size,
-                    Hash: result.cid,
+                    Tsize: added.size,
+                    Hash: cidV1,
                   })
                 }
               }

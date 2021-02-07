@@ -8,6 +8,8 @@ const filenamify = require('filenamify')
 const fileType = require('file-type')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const ipfsBundle = new IpfsBundle()
 const http = require('http')
 const https = require('https')
 const { pipeline } = require('stream')
@@ -212,18 +214,19 @@ module.exports = async function main (name, owner, extension, dir, tags) {
     rawLeaves: false,
     wrapWithDirectory: true,
   }
-  for await (const result of api.addAll(upload, options)) {
-    if (!result) {
+  for await (const added of api.addAll(upload, options)) {
+    if (!added) {
       throw new Error('IPFS client returned an unknown result...')
     }
-    if (result.path === '') {
-      parentCid = result.cid
-      parentSize = result.size
-    } else if (result.path === contentName) {
-      cid = result.cid
-      contentSize = result.size
-    } else if (result.path === faviconName) {
-      faviconCid = result.cid
+    const cidV1 = ipfsBundle.cidToCidV1(added.cid)
+    if (added.path === '') {
+      parentCid = cidV1
+      parentSize = added.size
+    } else if (added.path === contentName) {
+      cid = cidV1
+      contentSize = added.size
+    } else if (added.path === faviconName) {
+      faviconCid = cidV1
     }
   }
   if (!parentCid) {
@@ -233,14 +236,14 @@ module.exports = async function main (name, owner, extension, dir, tags) {
     throw new Error('Unknown cid...')
   }
 
-  console.log(`*** added ${cid} ***`)
+  console.log(`*** added ipfs://${cid} ***`)
   if (faviconCid) {
-    console.log(`*** added ${faviconCid} ***`)
+    console.log(`*** added ipfs://${faviconCid} ***`)
   }
-  console.log(`*** added ${parentCid} ***`)
-  console.log(`*** added ${parentCid}/${contentName} ***`)
+  console.log(`*** added ipfs://${parentCid} ***`)
+  console.log(`*** added ipfs://${parentCid}/${contentName} ***`)
   if (faviconCid) {
-    console.log(`*** added ${parentCid}/${faviconName} ***`)
+    console.log(`*** added ipfs://${parentCid}/${faviconName} ***`)
   }
 
   // Check
