@@ -301,14 +301,14 @@ IPFS Controller
     }
   }
 
-  IpfsController.prototype.pinToIpfs = async function (cid) {
+  IpfsController.prototype.pinToIpfs = async function (cid, recursive) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.pinToIpfs(ipfs, cid)
+    return await this.ipfsWrapper.pinToIpfs(ipfs, cid, recursive)
   }
 
-  IpfsController.prototype.unpinFromIpfs = async function (cid) {
+  IpfsController.prototype.unpinFromIpfs = async function (cid, recursive) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.unpinFromIpfs(ipfs, cid)
+    return await this.ipfsWrapper.unpinFromIpfs(ipfs, cid, recursive)
   }
 
   IpfsController.prototype.addToIpfs = async function (content) {

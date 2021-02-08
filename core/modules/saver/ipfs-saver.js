@@ -123,7 +123,7 @@ IPFS Saver
       }
       // Upload
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
-      const { added } = await $tw.ipfs.addToIpfs(text)
+      const { cid: added } = await $tw.ipfs.addToIpfs(text)
       pathname = `/${ipfsKeyword}/${added}`
       // Pin
       await $tw.ipfs.requestToPin(added)

@@ -140,12 +140,12 @@ describe('Single wrapped', () => {
     }
     expect(hashFile.toString()).to.equal(contentCidV1)
     expect(hashFilePath).to.equal('file1.txt')
-    expect(hashParent).to.equal(parentFile1CidV1)
+    expect(hashParent.toString()).to.equal(parentFile1CidV1)
     const content = await ipfsBundle.addAll(api, file1, options)
     for (const [key, value] of content.entries()) {
       if (hashFile !== null) {
-        expect(key).to.equal(hashFile)
-        expect(key).to.equal(contentCidV1)
+        expect(key.toString()).to.equal(hashFile.toString())
+        expect(key.toString()).to.equal(contentCidV1)
         expect(value.path).to.equal('file1.txt')
         hashFile = null
         hashFilePath = null
@@ -288,8 +288,14 @@ describe(`Single '${recursive}' pin and '${direct}' unpin`, () => {
   })
   it(`unpin '${direct}'...`, async () => {
     // Doesn't unpin
-    const unpinned = await ipfsBundle.pinRm(api, contentCid, false)
-    expect(unpinned.toString()).to.equal('')
+    var catched = null
+    try {
+      await ipfsBundle.pinRm(api, contentCid, false)
+    } catch (error) {
+      catched = error
+    }
+    chai.expect(catched).to.be.an('Error')
+    expect(catched.message).to.equal('QmNRCQWfgze6AbBCaT1rkrkV5tJ2aP4oTNPb5JZcXYywve is pinned recursively')
     // Content keeps its recursive pin
     const { cid: fetched, type } = await ipfsBundle.hasPin(api, contentCid, recursive)
     expect(fetched.toString()).to.equal(contentCidV1)
@@ -318,7 +324,7 @@ describe(`Wrapped '${direct}'`, () => {
     var pinned = await api.pin.add(hashParent, {
       recursive: false,
     })
-    expect(pinned.toString()).to.equal(hashParent)
+    expect(pinned.toString()).to.equal(hashParent.toString())
     var { cid: fetched, type } = await ipfsBundle.hasPin(api, hashParent, direct)
     expect(fetched.toString()).to.equal(hashParent.toString())
     expect(fetched.toString()).to.equal(parentFile1CidV1)
@@ -330,9 +336,9 @@ describe(`Wrapped '${direct}'`, () => {
     var pinned = await api.pin.add(hashFile, {
       recursive: false,
     })
-    expect(pinned.toString()).to.equal(hashFile)
+    expect(pinned.toString()).to.equal(hashFile.toString())
     var { cid: fetched, type } = await ipfsBundle.hasPin(api, hashFile)
-    expect(fetched.toString()).to.equal(hashFile)
+    expect(fetched.toString()).to.equal(hashFile.toString())
     expect(type).to.equal(direct)
     // Link
     var { cid: fetched, parentCid, type } = await ipfsBundle.hasPin(api, parentFile1Cid, indirect, '/file1.txt')
@@ -372,7 +378,7 @@ describe(`Wrapped '${recursive}'`, () => {
     const pinned = await api.pin.add(hashParent, {
       recursive: true,
     })
-    expect(pinned.toString()).to.equal(hashParent)
+    expect(pinned.toString()).to.equal(hashParent.toString())
     var { cid: fetched, type } = await ipfsBundle.hasPin(api, hashParent, recursive)
     expect(fetched.toString()).to.equal(hashParent.toString())
     expect(fetched.toString()).to.equal(parentFile1CidV1)

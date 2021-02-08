@@ -215,7 +215,7 @@ module.exports = async function main (name, owner, extension, dir, tags) {
     wrapWithDirectory: true,
   }
   for await (const added of api.addAll(upload, options)) {
-    if (!added) {
+    if (added === undefined || added == null) {
       throw new Error('IPFS client returned an unknown result...')
     }
     const cidV1 = ipfsBundle.cidToCidV1(added.cid)

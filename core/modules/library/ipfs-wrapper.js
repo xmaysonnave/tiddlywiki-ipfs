@@ -195,8 +195,8 @@ IpfsWrapper.prototype.removeIpnsKey = async function (ipfs, ipnsName) {
 
 IpfsWrapper.prototype.renameIpnsName = async function (ipfs, oldIpnsName, newIpnsName) {
   try {
-    const { id, was, now } = await this.ipfsLibrary.renameKey(ipfs, oldIpnsName, newIpnsName)
-    const key = this.ipfsBundle.cidToLibp2pKeyCidV1(id, 'base36', true).toString()
+    const { keyId, was, now } = await this.ipfsLibrary.keyRename(ipfs, oldIpnsName, newIpnsName)
+    const key = this.ipfsBundle.cidToLibp2pKeyCidV1(keyId, 'base36', true).toString()
     const msg = `Successfully renamed IPNS name: ${was} with ${now}`
     this.getLogger().info(msg)
     $tw.utils.alert(name, msg)
@@ -212,9 +212,9 @@ IpfsWrapper.prototype.renameIpnsName = async function (ipfs, oldIpnsName, newIpn
 
 IpfsWrapper.prototype.getIpnsKeys = async function (ipfs) {
   try {
-    const keys = await this.ipfsLibrary.getKeys(ipfs)
+    const keyList = await this.ipfsLibrary.keyList(ipfs)
     this.getLogger().info('Successfully fetched IPNS keys...')
-    return keys
+    return keyList
   } catch (error) {
     this.getLogger().error(error)
   }
@@ -241,13 +241,13 @@ ${url}`)
 
 IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
   try {
-    const { hash, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content))
-    const pathname = '/' + ipfsKeyword + '/' + hash
+    const { cid, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content))
+    const pathname = '/' + ipfsKeyword + '/' + cid
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(`Successfully added: ${size} bytes,
 ${url}`)
     return {
-      added: hash,
+      cid: cid,
       size: size,
     }
   } catch (error) {
@@ -264,7 +264,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
   const pathname = `/${ipnsKeyword}/${ipnsKey}`
   try {
     const url = this.ipfsUrl.normalizeUrl(pathname)
-    const resolved = await this.ipfsLibrary.resolve(ipfs, pathname)
+    const resolved = await this.ipfsLibrary.nameResolve(ipfs, pathname)
     const { cid } = this.ipfsBundle.decodeCid(resolved)
     if (cid !== null) {
       const parsed = this.ipfsUrl.normalizeUrl(resolved)
@@ -299,7 +299,7 @@ IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipns
   const pathname = `/${ipfsKeyword}/${cid}`
   try {
     // Publish
-    const result = await this.ipfsLibrary.publish(ipfs, ipnsName, pathname)
+    const result = await this.ipfsLibrary.namePublish(ipfs, ipnsName, pathname)
     const keyParsed = this.ipfsUrl.normalizeUrl(key)
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(
@@ -314,14 +314,14 @@ ${url}`
   throw new Error('Failed to publish an IPNS name...')
 }
 
-IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid) {
+IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid, recursive) {
   cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
   const pathname = `/${ipfsKeyword}/${cid}`
   try {
-    const pinned = await this.ipfsLibrary.pin(ipfs, pathname)
+    const pinned = await this.ipfsLibrary.pinAdd(ipfs, pathname, recursive)
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(
       `Successfully pinned:
@@ -334,14 +334,14 @@ ${url}`
   throw new Error('Failed to pin...')
 }
 
-IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid) {
+IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid, recursive) {
   cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
   const pathname = `/${ipfsKeyword}/${cid}`
   try {
-    const unpinned = await this.ipfsLibrary.unpin(ipfs, pathname)
+    const unpinned = await this.ipfsLibrary.pinRm(ipfs, pathname, recursive)
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(
       `Successfully unpinned:

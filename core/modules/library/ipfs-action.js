@@ -98,7 +98,7 @@ IPFS Action
         return false
       }
       $tw.ipfs.getLogger().info(`Uploading attachment content: ${content.length} bytes`)
-      var { added } = await $tw.ipfs.addToIpfs(content)
+      var { cid: added } = await $tw.ipfs.addToIpfs(content)
       await $tw.ipfs.requestToPin(added)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
