@@ -1,6 +1,6 @@
 1 - Init
 
- * export IPFS_PATH=.ipfs
+ * export IPFS_PATH=tests/repo
  * yarn jsipfs init -e -p test
 
 2 - Data
@@ -9,47 +9,43 @@
 
 3 - IPFS
 
- QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF production/editions/bluelightav/favicon.png
- Qmf8BuFQmoN9ssC5mA34RbjGiuMXkedxHgybB3usCxqUKC production/editions/bluelightav/index.html
- QmT8LimRir6VV23U3ZbUFSMi3UkK26ah7uEDFfcV7LbRVg production/editions/bluelightav/index.html_build.tid
+QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF production/editions/bluelightav/favicon.png
+ QmWdgVLZ689LPrmdbRcJa1TY6wr8Ye2gxBcGagKg6Jv3Ff production/editions/bluelightav/index.html
+ QmaB1cfwVC7fh31xXq4eM89uWxMB56pAxnyP5bQgTTW4mF production/editions/bluelightav/index.html_build.tid
  QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF production/editions/dev/favicon.png
- QmWP8qH5wXuSf1noNZGRSySj7H47nmqDvvQHsxbMLvdKPt production/editions/dev/index.html
- QmXCrxR9poZkdobZcRyhQ3AWyWZrBDyiZS73wb3Z8YZ3H6 production/editions/dev/index.html_build.tid
+ QmTHUQc89HTBCnN37PvfFrc4QzL2GWRL9QAyMg8Ucujhhk production/editions/dev/index.html
+ QmTRQNvzU6aBGGWLfm8quTSdYt1SgCwB22dAg1uQrBR55b production/editions/dev/index.html_build.tid
  QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF production/editions/empty/favicon.png
- QmZiYe5dXH8fvSBNfbJZk4HqWYytZuP7Ca3qJ9EQbgmfKi production/editions/empty/index.html
- QmUwGMmFfDBrM7DT2f1zDNzLmNVBapyJiFzyEiiyZ7BBer production/editions/empty/index.html_build.tid
+ QmdQrLKj8k8fYqskYqMz67HgxVYN91WEt59hjKGyX4LxRb production/editions/empty/index.html
+ QmP55R7h8LKmNAD2g7Vq8DmYuE4ZXu6yBRXGtdbHvFQCuV production/editions/empty/index.html_build.tid
  QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF production/editions/tiddlywiki/favicon.ico
- QmUHCmSBtT8Tfxk8EYCDiW6KRtSQjUaGMioXrd75AE7MPq production/editions/tiddlywiki/index.html
- QmeiuL7pCx4G267NULDqfQnw2ii47PhNxfrMtBuTSHCTbr production/editions/tiddlywiki/index.html_build.tid
+ QmNefpx3TjduAkjQFxpdA3x3fsMc1spdc5nNA6Xando7Bf production/editions/tiddlywiki/index.html
+ QmS2WQ31nVt79nftZQunH1NEDT2NDAXAFb4zLkvKcFHggA production/editions/tiddlywiki/index.html_build.tid
  QmWznCTdS2akNfhGRTmqhs2Fo1enK2pYjqECAPrbc9WKhm production/tiddlywiki-ipfs/boot/$_boot_boot.js-0.4.0-beta-TW-v5.1.24-pre+build-210207333.json
  QmbCBYDYoggT2Ue2fNEBL6QN96PaycBqj3qFavUdhzzsTd production/tiddlywiki-ipfs/boot/$_boot_boot.js.zlib-0.4.0-beta-TW-v5.1.24-pre+build-210207333.json.zlib
  QmSHE3sR863Wf5dmBxKcsDpZ9U6FN3FvvDSPaiNPao8GQ4 production/tiddlywiki-ipfs/boot/$_boot_boot.js.zlib_build.tid
  QmXDKFZnA1BF4KiDzJNGQ9oK6ootwn5zunuZBv8tbMmVRQ production/tiddlywiki-ipfs/boot/$_boot_boot.js_build.tid
- QmWaZKXVrzA6CFPsLdnWZjGXHZskecdFB8KoW7inRQNFDM production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta-TW-v5.1.23+build-210208474.json
- QmPk4inBc29BErPwcKmC9J4H86ykxDxy3dLUtLvwxZgugo production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json.zlib-0.4.0-beta-TW-v5.1.23+build-210208474.json.zlib
- QmXFJ4EDHLqEbErcpv6rc7UbGMVv8dGYKE3wWzKr2nQUub production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json.zlib_build.tid
- QmS7Ly93KBmtaUdJg8aRDfDjhWdTwXJ9tdDJRZ6H6kbiGL production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.tid
+ QmcrZq5CXcDf1USc7KELm4fuqtM1DBFRQQPQ8ToMnuXBKZ production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json-0.4.0-beta-TW-v5.1.23+build-210209257.json
+ QmXnQcVJByM2orriT6koXL5LcMryvS4eb2Y6V7h6gLAhDo production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json.zlib-0.4.0-beta-TW-v5.1.23+build-210209257.json.zlib
+ QmW1exEyDkfbNw8Vvw3qW928FD3Rit71L2xb5auKGAXyaG production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json.zlib_build.tid
+ QmbtMHqx53yGfKMvTmSXKSekK1FSXzfjQzdtTqMSxrwi55 production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.tid
  QmRoqA42kwR1jLxffc5Ku9nbgEQkP8HH54i8w3eKqrNV4Z production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js-1.0.0+build-210207333.json
  QmXJGMQQrg2VrGEjg9E8fu5Nz7QkWzBenPnHTRp9Dj69Mo production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js.zlib-1.0.0+build-210207333.json.zlib
  QmQgBKEeTP6reUUj9sh58dNKQPXfyLFfZdTqp6i4YDtBrT production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js.zlib_build.tid
  QmTUfNdMRFaYs82i7RunqhmqmdismCZmax21ZGkByXaZzV production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.tid
- QmY6VndwMGVqm8ZcBEZQT1xzsrjaUbtnwJKpx158icHAAp production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta-TW-v5.1.23+build-210208474.json
- QmV2tVyZ1SxTchGiAvSVYHwBsXL83sLdXhYqPyWMRuzNgm production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js.zlib-0.4.0-beta-TW-v5.1.23+build-210208474.json.zlib
- QmeCwc6CaSU86MxRBhWQqiqQ3zvzEX96s4TFxgJVFu5H8v production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js.zlib_build.tid
- QmXaezycAEyGkGxHt5iap1cNTzyxBHWyAgAhyBg4njJ7fr production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid
- QmRtR1pXm1L7wQSeAPmKrLBDJEZAizEHYiLorjtT8nzEQ9 production/editions/bluelightav
- QmNT6J9YPjUfn2dtcS5n3wRRoCXWJqiacRm7tqakjKy4pd production/editions/dev
- QmYVMVFZsU3wi6FF6ihz63NyBNCVfFsKvuLKmAwutuSVPX production/editions/empty
- QmcNwVBswSy9DsKrYdCKPfe1hqJkgRpghjqsjgkwUWP8bV production/editions/tiddlywiki
- QmZeietwM4Y29FX2KYYnyLV4zN483rXEwWtPmo69vbJHGc production/editions
+ QmRuFZUpn56XrHMmEKwYuuYxfqyob9DfubRG1UwgmYzZcp production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-0.4.0-beta-TW-v5.1.23+build-210209257.json
+ QmNfp6WSUwjJv14ko8gMoSEv9UxN5oKkKoXW9LkyzUGq36 production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js.zlib-0.4.0-beta-TW-v5.1.23+build-210209257.json.zlib
+ QmZy6RRqkdNbAbM5Q5nYyNUQnqkZLGqERnwPdrHb85fYrx production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js.zlib_build.tid
+ QmTAAehcGRVfa5dkTmY1Ziub9LSvWvKoogZVYGGAYPw6Ey production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid
+ QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme production/editions/bluelightav
+ QmeESjL79LKnxJypzfkGMdG6hQyDvmU2anpwawrFHMUw4C production/editions/dev
+ QmemSFCkLmMC4aps9bvdxVQ4MNiCLKNigG58oafoqG5wSH production/editions/empty
+ QmPahqVM6DHKTXK8qfetGJkHSyLRKAWr69WYeuij56HKVj production/editions/tiddlywiki
+ QmXLj5yxRfHWKK5BKwdZA6KNg4x7eV6J7CBgb2pUXHtXEB production/editions
  QmbTERJrfDzdUSQ78twZJfKyTWepkUxzzyPJ3MjKSCqi7m production/tiddlywiki-ipfs/boot
- QmRN7AqKPf9ygU3sBgzwwyUCTxkDZ2Qnk23eBStrRnfo3A production/tiddlywiki-ipfs/documentation
+ QmSdR1gM2ZCkPQnHYiZiwGxtT7Vm9MSQQC1rRC9rUdNvA8 production/tiddlywiki-ipfs/documentation
  Qmam6wyGBifSQdpTXEGZgDoXyhQq4iXtwqNkaMGFx6Wsd6 production/tiddlywiki-ipfs/library
- QmZwkjQ9skXrimAUGsHAh7nrPWKMJ5GDy5j2q4ETKhdN2G production/tiddlywiki-ipfs/plugin
- QmQcYLcqBNLdsbLHgC1JUdhtQBjFZC19Gsrz9aA7KFojFD production/tiddlywiki-ipfs
- QmR78SeRZpdU5tFt1RfmvWzw7ceQGAey7hgmSmQ2cbU38X production
- QmWUmVd5ye2T4pFwhhq1qBX5B1RbmRey8w5qvD4whivp9V
-
-4 - IPNS
-
-QmTuRTG6AhExY4CErdKTZ6imt1JTy3hPefi3xpAVz6Uvrx documentation
+ QmeYX59ygvdUfyCF8UBhDFFDust1wy7bHGE1o4mpAGGi8Q production/tiddlywiki-ipfs/plugin
+ QmYYemJXnmKKLkZgx4KkT1q5R4BmyZHx8QT1qMgqHwVHVj production/tiddlywiki-ipfs
+ QmXh7M7CtJ7qQesDZFjkHf69zkcyMYmXWTuz97bMw5SwMF production
+ QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ

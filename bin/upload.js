@@ -51,6 +51,7 @@ function StringToUint8Array (string) {
 
 /*
  * https://infura.io/docs
+ * https://cid.ipfs.io
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 

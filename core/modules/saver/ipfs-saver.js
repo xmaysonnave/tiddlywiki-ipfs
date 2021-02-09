@@ -44,7 +44,6 @@ IPFS Saver
     }
     try {
       var account = null
-      var cid = null
       var ensCid = null
       var ensDomain = null
       var ipnsCid = null
@@ -65,8 +64,15 @@ IPFS Saver
       var search = current.search
       var hash = current.hash
       try {
-        var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, true, wiki)
-        await $tw.ipfs.requestToUnpin(cid)
+        var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
+        if (ipnsKey == null) {
+          const directoryCid = await $tw.ipfs.getWrappedDirectoryCid(resolvedUrl)
+          if (directoryCid !== null) {
+            await $tw.ipfs.requestToUnpin(directoryCid)
+          } else if (cid !== null) {
+            await $tw.ipfs.requestToUnpin(cid)
+          }
+        }
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         callback(error)

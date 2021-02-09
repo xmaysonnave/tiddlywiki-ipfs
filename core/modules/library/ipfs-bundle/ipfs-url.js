@@ -116,7 +116,7 @@ IpfsUrl.prototype.getBase = function (base) {
     return this.getIpfsBaseUrl()
   }
   // Parse
-  var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.decodeCid(base)
+  var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.getIpfsIdentifier(base)
   if (hostname === undefined || hostname == null || hostname.trim() === '') {
     return url
   }

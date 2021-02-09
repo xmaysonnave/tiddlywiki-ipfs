@@ -265,7 +265,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
   try {
     const url = this.ipfsUrl.normalizeUrl(pathname)
     const resolved = await this.ipfsLibrary.nameResolve(ipfs, pathname)
-    const { cid } = this.ipfsBundle.decodeCid(resolved)
+    const { cid } = this.ipfsBundle.getIpfsIdentifier(resolved)
     if (cid !== null) {
       const parsed = this.ipfsUrl.normalizeUrl(resolved)
       this.getLogger().info(

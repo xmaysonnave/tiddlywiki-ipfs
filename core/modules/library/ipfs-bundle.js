@@ -403,13 +403,13 @@ IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
   return await this.ipfsLibrary.pinRm(client, cid, recursive)
 }
 
-IpfsBundle.prototype.getDirectoryIdentifier = async function (client, url, base) {
+IpfsBundle.prototype.getWrappedDirectoryCid = async function (client, url) {
   if (url === undefined || url == null || url.toString().trim() === '') {
     return null
   }
   if (url instanceof URL === false) {
     try {
-      url = this.ipfsUrl.getUrl(url, base)
+      url = this.ipfsUrl.getUrl(url)
     } catch (error) {
       url = null
     }
@@ -417,23 +417,11 @@ IpfsBundle.prototype.getDirectoryIdentifier = async function (client, url, base)
   if (url == null) {
     return null
   }
+  const base = this.getUrl(`${url.protocol}//${url.host}`)
   // Pathname
-  var credential = ''
-  if (url.username && url.password) {
-    credential = `${url.username}:${url.password}@`
-  }
-  if (base === undefined || base == null) {
-    base = this.getUrl(`${url.protocol}//${credential}${url.host}`)
-  }
-  var { cid, ipnsIdentifier, path, protocol } = this.decodePathname(url.pathname)
-  if (cid !== null || ipnsIdentifier !== null) {
-    var ipfsPath = null
-    if (cid !== null) {
-      ipfsPath = `/${protocol}/${cid}${path}`
-    } else {
-      // TODO: resolve ipns
-      ipfsPath = `/${protocol}/${ipnsIdentifier}${path}`
-    }
+  var { cid, path, protocol } = this.decodePathname(url.pathname)
+  if (cid !== null) {
+    const ipfsPath = `/${protocol}/${cid}${path}`
     const stat = await this.filesStat(client, ipfsPath)
     if (stat.type === 'directory') {
       return stat.cid
@@ -449,13 +437,34 @@ IpfsBundle.prototype.getDirectoryIdentifier = async function (client, url, base)
       }
     }
     const nextUrl = this.getUrl(nextPath, base)
-    return this.getDirectoryIdentifier(client, nextUrl, base)
+    return this.getWrappedDirectoryCid(client, nextUrl)
+  }
+  // Hostname
+  var { cid, protocol } = this.decodeHostname(base.hostname)
+  if (cid !== null) {
+    const ipfsPath = `/${protocol}/${cid}${url.pathname}`
+    const stat = await this.filesStat(client, ipfsPath)
+    if (stat.type === 'directory') {
+      return stat.cid
+    }
+    var nextPath = ''
+    const members = url.pathname.split('/')
+    for (var i = 0; i < members.length; i++) {
+      if (members[i].trim() === '') {
+        continue
+      }
+      if (i !== members.length - 1) {
+        nextPath = `${nextPath}/${members[i]}`
+      }
+    }
+    const nextUrl = this.getUrl(nextPath, base)
+    return this.getWrappedDirectoryCid(client, nextUrl)
   }
   return null
 }
 
-IpfsBundle.prototype.decodeCid = function (decode) {
-  if (decode === undefined || decode == null) {
+IpfsBundle.prototype.getIpfsIdentifier = function (value) {
+  if (value === undefined || value == null) {
     return {
       cid: null,
       ipnsIdentifier: null,
@@ -469,21 +478,21 @@ IpfsBundle.prototype.decodeCid = function (decode) {
   var path = null
   var protocol = null
   var url = null
-  if (decode instanceof URL === false) {
+  if (value instanceof URL === false) {
     try {
-      url = this.ipfsUrl.getUrl(decode)
+      url = this.ipfsUrl.getUrl(value)
     } catch (error) {
       url = null
     }
   } else {
-    url = decode
+    url = value
   }
   if (url !== null) {
-    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeUrlCid(url)
+    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeUrl(url)
   } else {
-    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeHostnameCid(decode)
+    var { cid, hostname, ipnsIdentifier, path, protocol } = this.decodeHostname(value)
     if (protocol == null && cid == null && ipnsIdentifier == null) {
-      var { cid, ipnsIdentifier, path, protocol } = this.decodePathname(decode)
+      var { cid, ipnsIdentifier, path, protocol } = this.decodePathname(value)
     }
   }
   return {
@@ -495,7 +504,7 @@ IpfsBundle.prototype.decodeCid = function (decode) {
   }
 }
 
-IpfsBundle.prototype.decodeUrlCid = function (url) {
+IpfsBundle.prototype.decodeUrl = function (url) {
   if (url === undefined || url == null || url.toString().trim() === '') {
     return {
       cid: null,
@@ -545,7 +554,7 @@ IpfsBundle.prototype.decodeUrlCid = function (url) {
       protocol: protocol,
     }
   }
-  var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostnameCid(url.hostname)
+  var { cid, hostname, ipnsIdentifier, protocol } = this.decodeHostname(url.hostname)
   if (protocol == null && cid == null && ipnsIdentifier == null) {
     var { cid, ipnsIdentifier, path: innerPath, protocol } = this.decodePathname(url.pathname)
     if (innerPath) {
@@ -623,7 +632,7 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
   }
 }
 
-IpfsBundle.prototype.decodeHostnameCid = function (hostname) {
+IpfsBundle.prototype.decodeHostname = function (hostname) {
   if (hostname === undefined || hostname == null) {
     return {
       cid: null,

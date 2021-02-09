@@ -297,7 +297,7 @@ IPFS Tiddler
         }
         // Process
         if (url) {
-          const { cid } = $tw.ipfs.decodeCid(url)
+          const { cid } = $tw.ipfs.getIpfsIdentifier(url)
           // Request to unpin
           if ($tw.utils.getIpfsUnpin()) {
             await $tw.ipfs.requestToUnpin(cid)

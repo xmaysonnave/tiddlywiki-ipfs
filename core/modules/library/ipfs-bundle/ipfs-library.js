@@ -7,6 +7,7 @@ const { httpClient, windowIpfs } = providers
 
 /*
  * https://infura.io/docs
+ * https://cid.ipfs.io
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 var IpfsLibrary = function (ipfsBundle) {
@@ -57,10 +58,7 @@ IpfsLibrary.prototype.add = async function (client, content) {
     if (result.cid !== undefined && result.cid !== null) {
       cid = result.cid
     }
-    var mode = null
-    if (result.mode !== undefined && result.mode !== null) {
-      mode = result.mode
-    }
+    const mode = result.mode
     const mtime = result.mtime
     var path = null
     if (result.path !== undefined && result.path !== null) {
@@ -70,7 +68,7 @@ IpfsLibrary.prototype.add = async function (client, content) {
     if (result.size !== undefined && result.size !== null) {
       size = result.size
     }
-    if (cid == null || mode == null || path == null || size == null) {
+    if (cid == null || path == null || size == null) {
       throw new Error('IPFS client returned an unknown result...')
     }
     const cidV1 = this.ipfsBundle.cidToCidV1(cid, 'ipfs', true)
@@ -114,16 +112,13 @@ IpfsLibrary.prototype.addAll = async function (client, content, options) {
       if (result.path !== undefined && result.path !== null) {
         path = result.path
       }
-      var mode = null
-      if (result.mode !== undefined && result.mode !== null) {
-        mode = result.mode
-      }
+      const mode = result.mode
       const mtime = result.mtime
       var size = null
       if (result.size !== undefined && result.size !== null) {
         size = result.size
       }
-      if (cid == null || path == null || mode == null || size == null) {
+      if (cid == null || path == null || size == null) {
         throw new Error('IPFS client returned an unknown result...')
       }
       const cidV1 = this.ipfsBundle.cidToCidV1(cid)
@@ -513,10 +508,7 @@ IpfsLibrary.prototype.ls = async function (client, ipfsPath) {
       if (result.depth !== undefined && result.depth !== null) {
         depth = result.depth
       }
-      var mode = null
-      if (result.mode !== undefined && result.mode !== null) {
-        mode = result.mode
-      }
+      const mode = result.mode
       const mtime = result.mtime
       var name = null
       if (result.name !== undefined && result.name !== null) {
@@ -534,7 +526,7 @@ IpfsLibrary.prototype.ls = async function (client, ipfsPath) {
       if (result.type !== undefined && result.type !== null) {
         type = result.type
       }
-      if (cid == null || depth == null || mode == null || name == null || path == null || size == null || type == null) {
+      if (cid == null || depth == null || name == null || path == null || size == null || type == null) {
         throw new Error('IPFS client returned an unknown result...')
       }
       const cidV1 = this.ipfsBundle.cidToCidV1(cid)

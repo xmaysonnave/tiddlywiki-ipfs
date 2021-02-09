@@ -10,6 +10,8 @@ const chai = require('chai')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /*
+ * https://infura.io/docs
+ * https://cid.ipfs.io
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
@@ -40,60 +42,86 @@ describe('bluelightav', () => {
     await start()
   })
   it('bluelightav directory', async () => {
-    const content = await ipfsBundle.ls(api, '/ipfs/QmRtR1pXm1L7wQSeAPmKrLBDJEZAizEHYiLorjtT8nzEQ9')
+    const content = await ipfsBundle.ls(api, '/ipfs/QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme')
     expect(content.size).to.equal(3)
     for (const [key, value] of content) {
       const cidV0 = ipfsBundle.cidToBase58CidV0(key)
       if (cidV0.toString() === 'QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF') {
         expect(value.name).to.equal('favicon.png')
-        expect(value.path).to.equal('QmRtR1pXm1L7wQSeAPmKrLBDJEZAizEHYiLorjtT8nzEQ9/favicon.png')
-        expect(value.size).to.equal(4286)
+        expect(value.path).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme/favicon.png')
         expect(value.type).to.equal('file')
-      } else if (cidV0.toString() === 'Qmf8BuFQmoN9ssC5mA34RbjGiuMXkedxHgybB3usCxqUKC') {
+      } else if (cidV0.toString() === 'QmWdgVLZ689LPrmdbRcJa1TY6wr8Ye2gxBcGagKg6Jv3Ff') {
         expect(value.name).to.equal('index.html')
-        expect(value.path).to.equal('QmRtR1pXm1L7wQSeAPmKrLBDJEZAizEHYiLorjtT8nzEQ9/index.html')
-        expect(value.size).to.equal(2667491)
+        expect(value.path).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme/index.html')
         expect(value.type).to.equal('file')
-      }
-      if (cidV0.toString() === 'QmT8LimRir6VV23U3ZbUFSMi3UkK26ah7uEDFfcV7LbRVg') {
+      } else if (cidV0.toString() === 'QmaB1cfwVC7fh31xXq4eM89uWxMB56pAxnyP5bQgTTW4mF') {
         expect(value.name).to.equal('index.html_build.tid')
-        expect(value.path).to.equal('QmRtR1pXm1L7wQSeAPmKrLBDJEZAizEHYiLorjtT8nzEQ9/index.html_build.tid')
-        expect(value.size).to.equal(598)
+        expect(value.path).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme/index.html_build.tid')
         expect(value.type).to.equal('file')
       }
     }
   })
   it('production directory', async () => {
-    const content = await ipfsBundle.ls(api, '/ipfs/QmWUmVd5ye2T4pFwhhq1qBX5B1RbmRey8w5qvD4whivp9V/production/editions/bluelightav')
+    const content = await ipfsBundle.ls(api, '/ipfs/QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/production/editions/bluelightav')
     expect(content.size).to.equal(3)
     for (const [key, value] of content) {
       const cidV0 = ipfsBundle.cidToBase58CidV0(key)
       if (cidV0.toString() === 'QmVFTC717mvmnyEMjdrdb62zjkBmdkZ1BqFSmaUa3mbGtF') {
         expect(value.name).to.equal('favicon.png')
-        expect(value.path).to.equal('QmWUmVd5ye2T4pFwhhq1qBX5B1RbmRey8w5qvD4whivp9V/production/editions/bluelightav/favicon.png')
-        expect(value.size).to.equal(4286)
+        expect(value.path).to.equal('QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/production/editions/bluelightav/favicon.png')
         expect(value.type).to.equal('file')
-      } else if (cidV0.toString() === 'Qmf8BuFQmoN9ssC5mA34RbjGiuMXkedxHgybB3usCxqUKC') {
+      } else if (cidV0.toString() === 'QmWdgVLZ689LPrmdbRcJa1TY6wr8Ye2gxBcGagKg6Jv3Ff') {
         expect(value.name).to.equal('index.html')
-        expect(value.path).to.equal('QmWUmVd5ye2T4pFwhhq1qBX5B1RbmRey8w5qvD4whivp9V/production/editions/bluelightav/index.html')
-        expect(value.size).to.equal(2667491)
+        expect(value.path).to.equal('QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/production/editions/bluelightav/index.html')
         expect(value.type).to.equal('file')
-      }
-      if (cidV0.toString() === 'QmT8LimRir6VV23U3ZbUFSMi3UkK26ah7uEDFfcV7LbRVg') {
+      } else if (cidV0.toString() === 'QmaB1cfwVC7fh31xXq4eM89uWxMB56pAxnyP5bQgTTW4mF') {
         expect(value.name).to.equal('index.html_build.tid')
-        expect(value.path).to.equal('QmWUmVd5ye2T4pFwhhq1qBX5B1RbmRey8w5qvD4whivp9V/production/editions/bluelightav/index.html_build.tid')
-        expect(value.size).to.equal(598)
+        expect(value.path).to.equal('QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/production/editions/bluelightav/index.html_build.tid')
         expect(value.type).to.equal('file')
       }
     }
   })
-  it('parent directory from file', async () => {
-    const url = await ipfsBundle.normalizeUrl('/ipfs/QmfEq9nRWGdFymxhgnC9H8L3zdPYuHbMhHYEwRJCAwiKFa/production/editions/bluelightav/index.html')
-    const cid = await ipfsBundle.getDirectoryIdentifier(api, url)
-    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
-    expect(cidV0.toString()).to.equal('QmR5LHKiUaD9zFQHb75i3Uab3ehh5KHJm1GaifPzJR5nzK')
+  it('no directory', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://tiddlywiki.com')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    expect(cid).to.equal(null)
   })
-
+  it('root directory', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://dweb.link/ipfs/QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
+    expect(cidV0.toString()).to.equal('QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ')
+  })
+  it('subdomain root directory', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://bafybeia6r5jklgmenmhly5lwfri24yqs4os4e3pa5apnrxqhpvjt22b4bm.ipfs.dweb.link')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
+    expect(cidV0.toString()).to.equal('QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ')
+  })
+  it('wrapped directory', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://dweb.link/ipfs/QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/production/editions/bluelightav')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
+    expect(cidV0.toString()).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme')
+  })
+  it('subdomain wrapped directory', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://bafybeia6r5jklgmenmhly5lwfri24yqs4os4e3pa5apnrxqhpvjt22b4bm.ipfs.dweb.link/production/editions/bluelightav')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
+    expect(cidV0.toString()).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme')
+  })
+  it('wrapped directory from file', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://dweb.link/ipfs/QmQPwhKKH4Cta8jwXNwEJQ64vF5g9kZTJcYEToJTTZAnmQ/production/editions/bluelightav/index.html')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
+    expect(cidV0.toString()).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme')
+  })
+  it('subdomain wrapped directory from file', async () => {
+    const url = await ipfsBundle.normalizeUrl('https://bafybeia6r5jklgmenmhly5lwfri24yqs4os4e3pa5apnrxqhpvjt22b4bm.ipfs.dweb.link/production/editions/bluelightav/index.html')
+    const cid = await ipfsBundle.getWrappedDirectoryCid(api, url)
+    const cidV0 = ipfsBundle.cidToBase58CidV0(cid)
+    expect(cidV0.toString()).to.equal('QmVCxrRp1Ne8VvwpcRVdD8P1YAoC97x6AMyRzARA9EMLme')
+  })
   after(async () => {
     await stop()
   })

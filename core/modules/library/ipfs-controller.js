@@ -175,7 +175,7 @@ IPFS Controller
         resolve(false)
       }
       cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
-      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.trim() !== '' ? ipnsKey.trim() : null
+      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
       value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
       if (ipnsKey !== null) {
         self
@@ -230,7 +230,7 @@ IPFS Controller
         resolve(false)
       }
       cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
-      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.trim() !== '' ? ipnsKey.trim() : null
+      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
       value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
       if (ipnsKey !== undefined && ipnsKey !== null) {
         self
@@ -416,7 +416,7 @@ IPFS Controller
         resolvedUrl: null,
       }
     }
-    var { cid, ipnsIdentifier, path, protocol } = this.decodeCid(normalizedUrl)
+    var { cid, ipnsIdentifier, path, protocol } = this.getIpfsIdentifier(normalizedUrl)
     if (protocol === ipnsKeyword && ipnsIdentifier !== null) {
       var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
     } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth') && protocol !== ipfsKeyword && protocol !== ipnsKeyword) {
@@ -584,8 +584,13 @@ ${url}`
     return true
   }
 
-  IpfsController.prototype.decodeCid = function (pathname) {
-    return this.ipfsBundle.decodeCid(pathname)
+  IpfsController.prototype.getWrappedDirectoryCid = async function (url) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsBundle.getWrappedDirectoryCid(ipfs, url)
+  }
+
+  IpfsController.prototype.getIpfsIdentifier = function (pathname) {
+    return this.ipfsBundle.getIpfsIdentifier(pathname)
   }
 
   IpfsController.prototype.getCid = function (cid) {

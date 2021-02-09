@@ -11,6 +11,8 @@ const chai = require('chai')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /*
+ * https://infura.io/docs
+ * https://cid.ipfs.io
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 

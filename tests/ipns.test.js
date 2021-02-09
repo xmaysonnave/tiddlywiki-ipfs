@@ -9,11 +9,17 @@ const sinon = require('sinon')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const IpfsWrapper = require('../core/modules/library/ipfs-wrapper.js').IpfsWrapper
 
+/*
+ * https://infura.io/docs
+ * https://cid.ipfs.io
+ * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
+ **/
+
 const { expect } = chai
 
 const base = new URL('https://ipfs.infura.io/')
 const resolvedTiddly = '/ipfs/bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
-const decodedCid = {
+const ipfsIdentifier = {
   protocol: 'ipfs',
   cid: 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy',
 }
@@ -137,8 +143,8 @@ describe('Resolve IPNS', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
-    ipfsWrapper.ipfsLibrary.resolve = sinon.fake.returns(resolvedTiddly)
-    ipfsWrapper.ipfsBundle.decodeCid = sinon.fake.returns(decodedCid)
+    ipfsWrapper.ipfsLibrary.nameResolve = sinon.fake.returns(resolvedTiddly)
+    ipfsWrapper.ipfsBundle.getIpfsIdentifier = sinon.fake.returns(ipfsIdentifier)
     const resolved = await ipfsWrapper.resolveIpnsKey(null, '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP')
     expect(resolved === 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy').to.be.true
   })
