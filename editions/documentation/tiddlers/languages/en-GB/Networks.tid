@@ -29,5 +29,5 @@ type: text/vnd.tiddlywiki
   <li>[ext[Mainnet: Etherscan|https://etherscan.io/]]</li>
   <li>[ext[Mainnet: Ethstats|https://ethstats.net/]]</li>
   <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (~PoA)</li>
-  <li>[ext[Ropsten|https://ropsten-stats.parity.io/]]: Ethereum Test Network (~PoW)</li>
+  <li>[ext[Ropsten|https://ropsten.etherscan.io/]]: Ethereum Test Network (~PoW)</li>
 </ul>
