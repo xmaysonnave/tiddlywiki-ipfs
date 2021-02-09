@@ -1,0 +1,1597 @@
+
+·Ø­Ø                 break;
+                case "modified":
+                  value = new Date(fs.statSync(pathname).mtime);
+                  break;
+              }
+              if(fieldInfo.prefix) {
+                value = fieldInfo.prefix + value;
+              }
+              if(fieldInfo.suffix) {
+                value = value + fieldInfo.suffix;
+              }
+              tiddler[name] = value;
+            }
+          });
+        });
+        if(isEditableFile) {
+        tiddlers.push({filepath: pathname, hasMetaFile: !!metadata && !isTiddlerFile, isEditableFile: true, tiddlers: fileTiddlers});
+        } else {
+          tiddlers.push({tiddlers: fileTiddlers});
+        }
+      };
+      // Process the listed tiddlers
+      $tw.utils.each(filesInfo.tiddlers,function(tidInfo) {
+        if(tidInfo.prefix && tidInfo.suffix) {
+          tidInfo.fields.text = {prefix: tidInfo.prefix,suffix: tidInfo.suffix};
+        } else if(tidInfo.prefix) {
+          tidInfo.fields.text = {prefix: tidInfo.prefix};
+        } else if(tidInfo.suffix) {
+          tidInfo.fields.text = {suffix: tidInfo.suffix};
+        }
+        processFile(tidInfo.file,tidInfo.isTiddlerFile,tidInfo.fields);
+      });
+      // Process any listed directories
+      $tw.utils.each(filesInfo.directories,function(dirSpec) {
+        // Read literal directories directly
+        if(typeof dirSpec === "string") {
+          var pathname = path.resolve(filepath,dirSpec);
+          if(fs.existsSync(pathname) && fs.statSync(pathname).isDirectory()) {
+            tiddlers.push.apply(tiddlers,$tw.loadTiddlersFromPath(pathname,excludeRegExp));
+          }
+        } else {
+          // Process directory specifier
+        var dirPath = path.resolve(filepath,dirSpec.path);
+        if(fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
+          var	files = fs.readdirSync(dirPath),
+            fileRegExp = new RegExp(dirSpec.filesRegExp || "^.*$"),
+            metaRegExp = /^.*\.meta$/;
+          for(var t=0; t<files.length; t++) {
+            var filename = files[t];
+            if(filename !== "tiddlywiki.files" && !metaRegExp.test(filename) && fileRegExp.test(filename)) {
+              processFile(dirPath + path.sep + filename,dirSpec.isTiddlerFile,dirSpec.fields,dirSpec.isEditableFile);
+            }
+          }
+        } else {
+          console.log("Warning: a directory in a tiddlywiki.files file does not exist.");
+          console.log("dirPath: " + dirPath);
+          console.log("tiddlywiki.files location: " + filepath);
+        }
+      }
+      });
+      return tiddlers;
+    };
+
+    /**
+     * Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
+     */
+    $tw.loadPluginFolder = function(filepath,excludeRegExp) {
+      excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp;
+      var infoPath = filepath + path.sep + "plugin.info";
+      if(fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
+        // Read the plugin information
+        if(!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
+          console.log("Warning: missing plugin.info file in " + filepath);
+          return null;
+        }
+        var pluginInfo = JSON.parse(fs.readFileSync(infoPath,"utf8"));
+        // Read the plugin files
+        var pluginFiles = $tw.loadTiddlersFromPath(filepath,excludeRegExp);
+        // Save the plugin tiddlers into the plugin info
+        pluginInfo.tiddlers = pluginInfo.tiddlers || Object.create(null);
+        for(var f=0; f<pluginFiles.length; f++) {
+          var tiddlers = pluginFiles[f].tiddlers;
+          for(var t=0; t<tiddlers.length; t++) {
+            var tiddler= tiddlers[t];
+            if(tiddler.title) {
+              pluginInfo.tiddlers[tiddler.title] = tiddler;
+            }
+          }
+        }
+        // Give the plugin the same version number as the core if it doesn't have one
+        if(!("version" in pluginInfo)) {
+          pluginInfo.version = $tw.packageInfo.version;
+        }
+        // Use "plugin" as the plugin-type if we don't have one
+        if(!("plugin-type" in pluginInfo)) {
+          pluginInfo["plugin-type"] = "plugin";
+        }
+        pluginInfo.dependents = pluginInfo.dependents || [];
+        pluginInfo.type = "application/json";
+        // Set plugin text
+        pluginInfo.text = JSON.stringify({tiddlers: pluginInfo.tiddlers},null,4);
+        delete pluginInfo.tiddlers;
+        // Deserialise array fields (currently required for the dependents field)
+        for(var field in pluginInfo) {
+          if($tw.utils.isArray(pluginInfo[field])) {
+            pluginInfo[field] = $tw.utils.stringifyList(pluginInfo[field]);
+          }
+        }
+        return pluginInfo;
+      } else {
+          return null;
+      }
+    };
+
+    /**
+     * name: Name of the plugin to find
+     * paths: array of file paths to search for it
+     * Returns the path of the plugin folder
+     */
+    $tw.findLibraryItem = function(name,paths) {
+      var pathIndex = 0;
+      do {
+        var pluginPath = path.resolve(paths[pathIndex],"./" + name)
+        if(fs.existsSync(pluginPath) && fs.statSync(pluginPath).isDirectory()) {
+          return pluginPath;
+        }
+      } while(++pathIndex < paths.length);
+      return null;
+    };
+
+    /**
+     * name: Name of the plugin to load
+     * paths: array of file paths to search for it
+     */
+    $tw.loadPlugin = function(name,paths) {
+      var pluginPath = $tw.findLibraryItem(name,paths);
+      if(pluginPath) {
+        var pluginFields = $tw.loadPluginFolder(pluginPath);
+        if(pluginFields) {
+          $tw.wiki.addTiddler(pluginFields);
+          return;
+        }
+      }
+      console.log("Warning: Cannot find plugin '" + name + "'");
+    };
+
+    /**
+     * libraryPath: Path of library folder for these plugins (relative to core path)
+     * envVar: Environment variable name for these plugins
+     * Returns an array of search paths
+     */
+    $tw.getLibraryItemSearchPaths = function(libraryPath,envVar) {
+      var pluginPaths = [path.resolve($tw.boot.corePath,libraryPath)],
+        env = process.env[envVar];
+      if(env) {
+        env.split(path.delimiter).map(function(item) {
+          if(item) {
+            pluginPaths.push(item);
+          }
+        });
+      }
+      return pluginPaths;
+    };
+
+    /**
+     * plugins: Array of names of plugins (eg, "tiddlywiki/filesystemadaptor")
+     * libraryPath: Path of library folder for these plugins (relative to core path)
+     * envVar: Environment variable name for these plugins
+     */
+    $tw.loadPlugins = function(plugins,libraryPath,envVar) {
+      if(plugins) {
+        var pluginPaths = $tw.getLibraryItemSearchPaths(libraryPath,envVar);
+        for(var t=0; t<plugins.length; t++) {
+          $tw.loadPlugin(plugins[t],pluginPaths);
+        }
+      }
+    };
+
+    /**
+     * path: path of wiki directory
+     * options:
+     * parentPaths: array of parent paths that we mustn't recurse into
+     * readOnly: true if the tiddler file paths should not be retained
+     */
+    $tw.loadWikiTiddlers = function(wikiPath,options) {
+      options = options || {};
+      var parentPaths = options.parentPaths || [],
+        wikiInfoPath = path.resolve(wikiPath,$tw.config.wikiInfo),
+        wikiInfo,
+        pluginFields;
+      // Bail if we don't have a wiki info file
+      if(fs.existsSync(wikiInfoPath)) {
+        wikiInfo = JSON.parse(fs.readFileSync(wikiInfoPath,"utf8"));
+      } else {
+        return null;
+      }
+    // Save the path to the tiddlers folder for the filesystemadaptor
+    var config = wikiInfo.config || {};
+    if($tw.boot.wikiPath == wikiPath) {
+      $tw.boot.wikiTiddlersPath = path.resolve($tw.boot.wikiPath,config["default-tiddler-location"] || $tw.config.wikiTiddlersSubDir);
+    }
+      // Load any parent wikis
+      if(wikiInfo.includeWikis) {
+        parentPaths = parentPaths.slice(0);
+        parentPaths.push(wikiPath);
+        $tw.utils.each(wikiInfo.includeWikis,function(info) {
+          if(typeof info === "string") {
+            info = {path: info};
+          }
+          var resolvedIncludedWikiPath = path.resolve(wikiPath,info.path);
+          if(parentPaths.indexOf(resolvedIncludedWikiPath) === -1) {
+            var subWikiInfo = $tw.loadWikiTiddlers(resolvedIncludedWikiPath,{
+              parentPaths: parentPaths,
+              readOnly: info["read-only"]
+            });
+            // Merge the build targets
+            wikiInfo.build = $tw.utils.extend([],subWikiInfo.build,wikiInfo.build);
+          } else {
+            $tw.utils.error("Cannot recursively include wiki " + resolvedIncludedWikiPath);
+          }
+        });
+      }
+      // Load any plugins, themes and languages listed in the wiki info file
+      $tw.loadPlugins(wikiInfo.plugins,$tw.config.pluginsPath,$tw.config.pluginsEnvVar);
+      $tw.loadPlugins(wikiInfo.themes,$tw.config.themesPath,$tw.config.themesEnvVar);
+      $tw.loadPlugins(wikiInfo.languages,$tw.config.languagesPath,$tw.config.languagesEnvVar);
+      // Load the wiki files, registering them as writable
+      var resolvedWikiPath = path.resolve(wikiPath,$tw.config.wikiTiddlersSubDir);
+      $tw.utils.each($tw.loadTiddlersFromPath(resolvedWikiPath),function(tiddlerFile) {
+        if(!options.readOnly && tiddlerFile.filepath) {
+          $tw.utils.each(tiddlerFile.tiddlers,function(tiddler) {
+            $tw.boot.files[tiddler.title] = {
+              filepath: tiddlerFile.filepath,
+              type: tiddlerFile.type,
+              hasMetaFile: tiddlerFile.hasMetaFile,
+              isEditableFile: config["retain-original-tiddler-path"] || tiddlerFile.isEditableFile || tiddlerFile.filepath.indexOf($tw.boot.wikiTiddlersPath) !== 0
+            };
+          });
+        }
+        $tw.wiki.addTiddlers(tiddlerFile.tiddlers);
+      });
+    if ($tw.boot.wikiPath == wikiPath) {
+      // Save the original tiddler file locations if requested
+      var output = {}, relativePath, fileInfo;
+      for(var title in $tw.boot.files) {
+        fileInfo = $tw.boot.files[title];
+        if(fileInfo.isEditableFile) {
+          relativePath = path.relative($tw.boot.wikiTiddlersPath,fileInfo.filepath);
+          output[title] =
+            path.sep === "/" ?
+            relativePath :
+            relativePath.split(path.sep).join("/");
+        }
+      }
+      if(Object.keys(output).length > 0){
+        $tw.wiki.addTiddler({title: "$:/config/OriginalTiddlerPaths", type: "application/json", text: JSON.stringify(output)});
+      }
+    }
+    // Load any plugins within the wiki folder
+    var wikiPluginsPath = path.resolve(wikiPath,$tw.config.wikiPluginsSubDir);
+    if(fs.existsSync(wikiPluginsPath)) {
+      var pluginFolders = fs.readdirSync(wikiPluginsPath);
+      for(var t=0; t<pluginFolders.length; t++) {
+        pluginFields = $tw.loadPluginFolder(path.resolve(wikiPluginsPath,"./" + pluginFolders[t]));
+        if(pluginFields) {
+          $tw.wiki.addTiddler(pluginFields);
+        }
+      }
+    }
+    // Load any themes within the wiki folder
+    var wikiThemesPath = path.resolve(wikiPath,$tw.config.wikiThemesSubDir);
+    if(fs.existsSync(wikiThemesPath)) {
+      var themeFolders = fs.readdirSync(wikiThemesPath);
+      for(var t=0; t<themeFolders.length; t++) {
+        pluginFields = $tw.loadPluginFolder(path.resolve(wikiThemesPath,"./" + themeFolders[t]));
+        if(pluginFields) {
+          $tw.wiki.addTiddler(pluginFields);
+        }
+      }
+    }
+    // Load any languages within the wiki folder
+    var wikiLanguagesPath = path.resolve(wikiPath,$tw.config.wikiLanguagesSubDir);
+    if(fs.existsSync(wikiLanguagesPath)) {
+      var languageFolders = fs.readdirSync(wikiLanguagesPath);
+      for(var t=0; t<languageFolders.length; t++) {
+        pluginFields = $tw.loadPluginFolder(path.resolve(wikiLanguagesPath,"./" + languageFolders[t]));
+        if(pluginFields) {
+          $tw.wiki.addTiddler(pluginFields);
+        }
+      }
+    }
+    return wikiInfo;
+  };
+
+    $tw.loadTiddlersNode = function() {
+      // Load the boot tiddlers
+      $tw.utils.each($tw.loadTiddlersFromPath($tw.boot.bootPath),function(tiddlerFile) {
+        $tw.wiki.addTiddlers(tiddlerFile.tiddlers);
+      });
+      // Load the core tiddlers
+      $tw.wiki.addTiddler($tw.loadPluginFolder($tw.boot.corePath));
+      // Load any extra plugins
+      $tw.utils.each($tw.boot.extraPlugins,function(name) {
+        if(name.charAt(0) === "+") { // Relative path to plugin
+        var pluginFields = $tw.loadPluginFolder(name.substring(1));
+          if(pluginFields) {
+            $tw.wiki.addTiddler(pluginFields);
+          }
+        } else {
+          var parts = name.split("/"),
+            type = parts[0];
+          if(parts.length  === 3 && ["plugins","themes","languages"].indexOf(type) !== -1) {
+            $tw.loadPlugins([parts[1] + "/" + parts[2]],$tw.config[type + "Path"],$tw.config[type + "EnvVar"]);
+          }
+        }
+      });
+      // Load the tiddlers from the wiki directory
+      if($tw.boot.wikiPath) {
+        $tw.boot.wikiInfo = $tw.loadWikiTiddlers($tw.boot.wikiPath);
+      }
+    };
+
+  }  // End of if($tw.node)
+
+  /////////////////////////// Main startup function called once tiddlers have been decrypted
+
+  /**
+   * Startup TiddlyWiki
+   */
+  $tw.boot.initStartup = function(options) {
+    // Get the URL hash and check for safe mode
+    $tw.locationHash = "#";
+    if($tw.browser && !$tw.node) {
+      if(location.hash === "#:safe") {
+        $tw.safeMode = true;
+      } else {
+        $tw.locationHash = $tw.utils.getLocationHash();
+      }
+    }
+    // Initialise some more $tw properties
+    $tw.utils.deepDefaults($tw,{
+      modules: { // Information about each module
+        titles: Object.create(null), // hashmap by module title of {fn:, exports:, moduleType:}
+        types: {} // hashmap by module type of hashmap of exports
+      },
+      config: { // Configuration overridables
+        pluginsPath: "../plugins/",
+        themesPath: "../themes/",
+        languagesPath: "../languages/",
+        editionsPath: "../editions/",
+        wikiInfo: "./tiddlywiki.info",
+        wikiPluginsSubDir: "./plugins",
+        wikiThemesSubDir: "./themes",
+        wikiLanguagesSubDir: "./languages",
+        wikiTiddlersSubDir: "./tiddlers",
+        wikiOutputSubDir: "./output",
+        jsModuleHeaderRegExpString: "^\\/\\*\\\\(?:\\r?\\n)((?:^[^\\r\\n]*(?:\\r?\\n))+?)(^\\\\\\*\\/$(?:\\r?\\n)?)",
+        fileExtensionInfo: Object.create(null), // Map file extension to {type:}
+        contentTypeInfo: Object.create(null), // Map type to {encoding:,extension:}
+        pluginsEnvVar: "TIDDLYWIKI_PLUGIN_PATH",
+        themesEnvVar: "TIDDLYWIKI_THEME_PATH",
+        languagesEnvVar: "TIDDLYWIKI_LANGUAGE_PATH",
+        editionsEnvVar: "TIDDLYWIKI_EDITION_PATH"
+      },
+      log: {}, // Log flags
+      unloadTasks: []
+    });
+    if(!$tw.boot.tasks.readBrowserTiddlers) {
+      // For writable tiddler files, a hashmap of title to {filepath:,type:,hasMetaFile:}
+      $tw.boot.files = Object.create(null);
+      // System paths and filenames
+      $tw.boot.bootPath = options.bootPath || path.dirname(module.filename);
+      $tw.boot.corePath = path.resolve($tw.boot.bootPath,"../core");
+      // If there's no arguments then default to `--help`
+      if($tw.boot.argv.length === 0) {
+        $tw.boot.argv = ["--help"];
+      }
+      // Parse any extra plugin references
+      $tw.boot.extraPlugins = $tw.boot.extraPlugins || [];
+      while($tw.boot.argv[0] && $tw.boot.argv[0].indexOf("+") === 0) {
+        $tw.boot.extraPlugins.push($tw.boot.argv[0].substring(1));
+        $tw.boot.argv.splice(0,1);
+      }
+      // If the first command line argument doesn't start with `--` then we
+      // interpret it as the path to the wiki folder, which will otherwise default
+      // to the current folder
+      if($tw.boot.argv[0] && $tw.boot.argv[0].indexOf("--") !== 0) {
+        $tw.boot.wikiPath = $tw.boot.argv[0];
+        $tw.boot.argv = $tw.boot.argv.slice(1);
+      } else {
+        $tw.boot.wikiPath = process.cwd();
+      }
+      // Read package info
+      $tw.packageInfo = $tw.packageInfo || require("../package.json");
+      // Check node version number
+      if(!$tw.utils.checkVersions(process.version.substr(1),$tw.packageInfo.engines.node.substr(2))) {
+        $tw.utils.error("TiddlyWiki5 requires node.js version " + $tw.packageInfo.engines.node);
+      }
+    }
+    // Add file extension information
+    $tw.utils.registerFileType("text/vnd.tiddlywiki","utf8",".tid");
+    $tw.utils.registerFileType("application/x-tiddler","utf8",".tid");
+    $tw.utils.registerFileType("application/x-tiddlers","utf8",".multids");
+    $tw.utils.registerFileType("application/x-tiddler-html-div","utf8",".tiddler");
+    $tw.utils.registerFileType("text/vnd.tiddlywiki2-recipe","utf8",".recipe");
+    $tw.utils.registerFileType("text/plain","utf8",".txt");
+    $tw.utils.registerFileType("text/css","utf8",".css");
+    $tw.utils.registerFileType("text/html","utf8",[".html",".htm"]);
+    $tw.utils.registerFileType("application/hta","utf16le",".hta",{deserializerType:"text/html"});
+    $tw.utils.registerFileType("application/javascript","utf8",".js");
+    $tw.utils.registerFileType("application/json","utf8",".json");
+    $tw.utils.registerFileType("application/pdf","base64",".pdf",{flags:["image"]});
+    $tw.utils.registerFileType("application/zip","base64",".zip");
+    $tw.utils.registerFileType("application/x-zip-compressed","base64",".zip");
+    $tw.utils.registerFileType("image/jpeg","base64",[".jpg",".jpeg"],{flags:["image"]});
+    $tw.utils.registerFileType("image/jpg","base64",[".jpg",".jpeg"],{flags:["image"]});
+    $tw.utils.registerFileType("image/png","base64",".png",{flags:["image"]});
+    $tw.utils.registerFileType("image/gif","base64",".gif",{flags:["image"]});
+    $tw.utils.registerFileType("image/webp","base64",".webp",{flags:["image"]});
+    $tw.utils.registerFileType("image/heic","base64",".heic",{flags:["image"]});
+    $tw.utils.registerFileType("image/heif","base64",".heif",{flags:["image"]});
+    $tw.utils.registerFileType("image/svg+xml","utf8",".svg",{flags:["image"]});
+	  $tw.utils.registerFileType("image/vnd.microsoft.icon","base64",".ico",{flags:["image"]});
+    $tw.utils.registerFileType("image/x-icon","base64",".ico",{flags:["image"]});
+    $tw.utils.registerFileType("application/font-woff","base64",".woff");
+    $tw.utils.registerFileType("application/x-font-ttf","base64",".woff");
+    $tw.utils.registerFileType("application/font-woff2","base64",".woff2");
+    $tw.utils.registerFileType("audio/ogg","base64",".ogg");
+    $tw.utils.registerFileType("video/ogg","base64",[".ogm",".ogv",".ogg"]);
+    $tw.utils.registerFileType("video/webm","base64",".webm");
+    $tw.utils.registerFileType("video/mp4","base64",".mp4");
+    $tw.utils.registerFileType("audio/mp3","base64",".mp3");
+    $tw.utils.registerFileType("audio/mp4","base64",[".mp4",".m4a"]);
+    $tw.utils.registerFileType("text/markdown","utf8",[".md",".markdown"],{deserializerType:"text/x-markdown"});
+    $tw.utils.registerFileType("text/x-markdown","utf8",[".md",".markdown"]);
+    $tw.utils.registerFileType("application/enex+xml","utf8",".enex");
+    $tw.utils.registerFileType("application/vnd.openxmlformats-officedocument.wordprocessingml.document","base64",".docx");
+    $tw.utils.registerFileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","base64",".xlsx");
+    $tw.utils.registerFileType("application/vnd.openxmlformats-officedocument.presentationml.presentation","base64",".pptx");
+    $tw.utils.registerFileType("text/x-bibtex","utf8",".bib",{deserializerType:"application/x-bibtex"});
+    $tw.utils.registerFileType("application/x-bibtex","utf8",".bib");
+    $tw.utils.registerFileType("application/epub+zip","base64",".epub");
+    $tw.utils.registerFileType("application/octet-stream","base64",".octet-stream");
+    // Create the wiki store for the app
+    $tw.wiki = new $tw.Wiki();
+    // Install built in tiddler fields modules
+    $tw.Tiddler.fieldModules = $tw.modules.getModulesByTypeAsHashmap("tiddlerfield");
+    // Install the tiddler deserializer modules
+    $tw.Wiki.tiddlerDeserializerModules = Object.create(null);
+    $tw.modules.applyMethods("tiddlerdeserializer",$tw.Wiki.tiddlerDeserializerModules);
+    // Call unload handlers in the browser
+    if($tw.browser) {
+      window.onbeforeunload = function(event) {
+        event = event || {};
+        var result;
+        $tw.utils.each($tw.unloadTasks,function(task) {
+          var r = task(event);
+          if(r) {
+            result = r;
+          }
+        });
+        return result;
+      }
+    }
+  };
+
+  $tw.boot.loadStartup = function(options){
+    // Load tiddlers
+    if($tw.boot.tasks.readBrowserTiddlers) {
+      $tw.loadTiddlersBrowser();
+    } else {
+      $tw.loadTiddlersNode();
+    }
+    // Load any preloaded tiddlers
+    if($tw.preloadTiddlers) {
+      $tw.wiki.addTiddlers($tw.preloadTiddlers);
+    }
+    // Give hooks a chance to modify the store
+    $tw.hooks.invokeHook("th-boot-tiddlers-loaded");
+  }
+
+  $tw.boot.execStartup = function(options){
+    // Unpack plugin tiddlers
+    $tw.wiki.readPluginInfo();
+    $tw.wiki.registerPluginTiddlers("plugin",$tw.safeMode ? ["$:/core"] : undefined);
+    $tw.wiki.unpackPluginTiddlers();
+    // Process "safe mode"
+    if($tw.safeMode) {
+      $tw.wiki.processSafeMode();
+    }
+    // Register typed modules from the tiddlers we've just loaded
+    $tw.wiki.defineTiddlerModules();
+    // And any modules within plugins
+    $tw.wiki.defineShadowModules();
+    // Gather up any startup modules
+    $tw.boot.remainingStartupModules = []; // Array of startup modules
+    $tw.modules.forEachModuleOfType("startup",function(title,module) {
+      if(module.startup) {
+        $tw.boot.remainingStartupModules.push(module);
+      }
+    });
+    // Keep track of the startup tasks that have been executed
+    $tw.boot.executedStartupModules = Object.create(null);
+    $tw.boot.disabledStartupModules = $tw.boot.disabledStartupModules || [];
+    // Repeatedly execute the next eligible task
+    $tw.boot.executeNextStartupTask(options.callback);
+  }
+
+  /**
+   * Startup TiddlyWiki
+   */
+  $tw.boot.startup = function(options) {
+    options = options || {};
+    // Get the URL hash and check for safe mode
+    $tw.boot.initStartup(options);
+    $tw.boot.loadStartup(options);
+    $tw.boot.execStartup(options);
+  };
+
+  /**
+   * Add another unload task
+   */
+  $tw.addUnloadTask = function(task) {
+    if($tw.unloadTasks.indexOf(task) === -1) {
+      $tw.unloadTasks.push(task);
+    }
+  }
+
+  /**
+   * Execute the remaining eligible startup tasks
+   */
+  $tw.boot.executeNextStartupTask = function(callback) {
+    // Find the next eligible task
+    var taskIndex = 0, task,
+      asyncTaskCallback = function() {
+        if(task.name) {
+          $tw.boot.executedStartupModules[task.name] = true;
+        }
+        return $tw.boot.executeNextStartupTask(callback);
+      };
+    while(taskIndex < $tw.boot.remainingStartupModules.length) {
+      task = $tw.boot.remainingStartupModules[taskIndex];
+      if($tw.boot.isStartupTaskEligible(task)) {
+        // Remove this task from the list
+        $tw.boot.remainingStartupModules.splice(taskIndex,1);
+        // Assemble log message
+        var s = ["Startup task:",task.name];
+        if(task.platforms) {
+          s.push("platforms:",task.platforms.join(","));
+        }
+        if(task.after) {
+          s.push("after:",task.after.join(","));
+        }
+        if(task.before) {
+          s.push("before:",task.before.join(","));
+        }
+        $tw.boot.log(s.join(" "));
+        // Execute task
+        if(!$tw.utils.hop(task,"synchronous") || task.synchronous) {
+          task.startup();
+          if(task.name) {
+            $tw.boot.executedStartupModules[task.name] = true;
+          }
+          return $tw.boot.executeNextStartupTask(callback);
+        } else {
+          task.startup(asyncTaskCallback);
+          return true;
+        }
+      }
+      taskIndex++;
+    }
+    if(typeof callback === 'function') {
+      callback();
+    }
+    return false;
+  };
+
+  /**
+   * Returns true if we are running on one platforms specified in a task modules `platforms` array
+   */
+  $tw.boot.doesTaskMatchPlatform = function(taskModule) {
+    var platforms = taskModule.platforms;
+    if(platforms) {
+      for(var t=0; t<platforms.length; t++) {
+        if((platforms[t] === "browser" && !$tw.browser) || (platforms[t] === "node" && !$tw.node)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  $tw.boot.isStartupTaskEligible = function(taskModule) {
+    var t;
+    // Check that the platform is correct
+    if(!$tw.boot.doesTaskMatchPlatform(taskModule)) {
+      return false;
+    }
+    var name = taskModule.name,
+      remaining = $tw.boot.remainingStartupModules;
+    if(name) {
+      // Fail if this module is disabled
+      if($tw.boot.disabledStartupModules.indexOf(name) !== -1) {
+        return false;
+      }
+      // Check that no other outstanding tasks must be executed before this one
+      for(t=0; t<remaining.length; t++) {
+        var task = remaining[t];
+        if(task.before && task.before.indexOf(name) !== -1) {
+          if($tw.boot.doesTaskMatchPlatform(task) || (task.name && $tw.boot.disabledStartupModules.indexOf(name) !== -1)) {
+            return false;
+          }
+        }
+      }
+    }
+    // Check that all of the tasks that we must be performed after has been done
+    var after = taskModule.after;
+    if(after) {
+      for(t=0; t<after.length; t++) {
+        if(!$tw.boot.executedStartupModules[after[t]]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  /**
+   * Global Hooks mechanism which allows plugins to modify default functionality
+   */
+  $tw.hooks = $tw.hooks || { names: {}};
+
+  /**
+   * Add hooks to the  hashmap
+   */
+  $tw.hooks.addHook = function(hookName,definition) {
+    if($tw.utils.hop($tw.hooks.names,hookName)) {
+      $tw.hooks.names[hookName].push(definition);
+    }
+    else {
+      $tw.hooks.names[hookName] = [definition];
+    }
+  };
+
+  /**
+   * Invoke the hook by key
+   */
+  $tw.hooks.invokeHook = function(hookName /*, value,... */) {
+    var args = Array.prototype.slice.call(arguments,1);
+    if($tw.utils.hop($tw.hooks.names,hookName)) {
+      for (var i = 0; i < $tw.hooks.names[hookName].length; i++) {
+        args[0] = $tw.hooks.names[hookName][i].apply(null,args);
+      }
+    }
+    return args[0];
+  };
+
+  /////////////////////////// Main boot function to decrypt tiddlers and then startup
+
+  $tw.boot.boot = function(callback) {
+    // Initialise crypto object
+    $tw.crypto = new $tw.utils.Crypto();
+    // Initialise password prompter
+    if($tw.browser && !$tw.node) {
+      $tw.passwordPrompt = new $tw.utils.PasswordPrompt();
+    }
+    // Preload any encrypted tiddlers
+    $tw.boot.decryptEncryptedTiddlers(function() {
+      // Startup
+      $tw.boot.startup({callback: callback});
+      // Make sure the crypto state tiddler is up to date
+      if($tw.crypto) {
+        $tw.crypto.updateCryptoStateTiddler();
+      }
+    });
+  };
+
+  return $tw;
+
+  });
+
+  if(typeof(exports) !== "undefined") {
+    exports.TiddlyWiki = _boot;
+  } else {
+    _boot(window.$tw);
+  }
+var ipfsBoot = function ($tw) {
+  /*jslint node: true, browser: true */
+  'use strict'
+
+  const name = 'ipfs-boot'
+
+  /////////////////////////// Standard node.js libraries
+
+  var fs
+  var path
+  var vm
+  if ($tw.node) {
+    fs = require('fs')
+    path = require('path')
+    vm = require('vm')
+  }
+
+  $tw.boot.getLogger = function () {
+    var log = $tw.node ? global.log || require('loglevel') : window.log
+    if (log !== undefined && log !== null) {
+      const loggers = log.getLoggers()
+      var eruda = loggers.eruda
+      if (eruda) {
+        return eruda
+      }
+      var ipfs = loggers.ipfs
+      if (!ipfs) {
+        ipfs = log.getLogger('ipfs')
+        ipfs.setLevel('info', false)
+        ipfs.info('Loglevel is starting up...')
+      }
+      return ipfs
+    }
+    return console
+  }
+
+  /**
+   * Run code globally with specified context variables in scope
+   */
+  $tw.utils.evalGlobal = function (code, context, filename) {
+    var contextCopy = $tw.utils.extend(Object.create(null), context)
+    // Get the context variables as a pair of arrays of names and values
+    var contextNames = []
+    var contextValues = []
+    $tw.utils.each(contextCopy, function (value, name) {
+      contextNames.push(name)
+      contextValues.push(value)
+    })
+    // Add the code prologue and epilogue
+    code = '(function(' + contextNames.join(',') + ') {(function(){\n' + code + '\n;})();\nreturn exports;\n})\n'
+    // Compile the code into a function
+    var fn
+    if ($tw.browser) {
+      /*eslint no-eval:"off"*/
+      fn = window.eval(code + '\n\n//# sourceURL=' + filename)
+    } else {
+      fn = vm.runInThisContext(code, $tw.wiki.getFileName(filename))
+    }
+    // Call the function and return the exports
+    return fn.apply(null, contextValues)
+  }
+
+  /**
+   * Run code in a sandbox with only the specified context variables in scope
+   */
+  $tw.utils.evalSandboxed = $tw.browser
+    ? $tw.utils.evalGlobal
+    : function (code, context, filename) {
+        var sandbox = $tw.utils.extend(Object.create(null), context)
+        vm.runInNewContext(code, sandbox, $tw.wiki.getFileName(filename))
+        return sandbox.exports
+      }
+
+  $tw.Wiki.prototype.getFileName = function (title) {
+    if ($tw.filepaths && $tw.filepaths[title]) {
+      return $tw.filepaths[title]
+    }
+    return title
+  }
+
+  /**
+   * Crypto helper object for encrypted content.
+   * It maintains the password text in a closure, and provides methods to change
+   * the password, and to encrypt/decrypt a block of text
+   */
+  $tw.utils.Crypto = function () {
+    var currentPassword = null
+    var currentPrivateKey = null
+    var currentPublicKey = null
+    var callSjcl = function (method, text, password) {
+      password = password || currentPassword
+      var output = null
+      var sjcl = $tw.node ? global.sjcl || require('sjcl') : window.sjcl
+      try {
+        if (password) {
+          var tStart = new Date()
+          output = sjcl[method](password, text)
+          var tStop = new Date() - tStart
+          var ratio = Math.floor((output.length * 100) / text.length)
+          var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
+          $tw.boot.getLogger().info(`Standford ${uMethod}: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
+        }
+      } catch (error) {
+        $tw.boot.getLogger().error('Standford Crypto: ' + error)
+        output = null
+      }
+      return output
+    }
+    var callSigUtil = function (method, text, key) {
+      var output = null
+      var sigUtil = $tw.node ? global.sigUtil || require('eth-sig-util') : window.sigUtil
+      try {
+        if (method === 'encrypt') {
+          key = key || currentPublicKey
+          if (key) {
+            var tStart = new Date()
+            output = sigUtil.encrypt(key, { data: text }, 'x25519-xsalsa20-poly1305')
+            output = JSON.stringify(output)
+            var tStop = new Date() - tStart
+            var ratio = Math.floor((output.length * 100) / text.length)
+            $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
+          }
+        } else if (method === 'decrypt') {
+          key = key || currentPrivateKey
+          if (key) {
+            var tStart = new Date()
+            output = sigUtil.decrypt(JSON.parse(text), key)
+            var tStop = new Date() - tStart
+            var ratio = Math.floor((output.length * 100) / text.length)
+            $tw.boot.getLogger().info(`Ethereum Decryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
+          }
+        }
+      } catch (error) {
+        $tw.boot.getLogger().error('Ethereum Crypto: ' + error)
+        output = null
+      }
+      return output
+    }
+    this.setPassword = function (newPassword) {
+      currentPassword = newPassword === undefined || newPassword == null || newPassword.trim() === '' ? null : newPassword
+      currentPrivateKey = null
+      currentPublicKey = null
+      if ($tw.wiki) {
+        var encryption = $tw.wiki.getTiddler('$:/config/encryption')
+        if (encryption.fields.text !== 'standford') {
+          $tw.wiki.addTiddler(
+            new $tw.Tiddler({
+              title: '$:/config/encryption',
+              text: 'standford',
+            })
+          )
+        }
+        this.updateCryptoStateTiddler()
+      }
+    }
+    this.setEncryptionKey = function (newPublicKey, newPrivateKey) {
+      currentPrivateKey = newPrivateKey === undefined || newPrivateKey == null || newPrivateKey.trim() === '' ? null : newPrivateKey
+      currentPublicKey = newPublicKey === undefined || newPublicKey == null || newPublicKey.trim() === '' ? null : newPublicKey
+      currentPassword = null
+      if ($tw.wiki) {
+        var encryption = $tw.wiki.getTiddler('$:/config/encryption')
+        if (currentPrivateKey !== null || currentPublicKey !== null) {
+          if (encryption.fields.text !== 'ethereum') {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/config/encryption',
+                text: 'ethereum',
+              })
+            )
+          }
+        } else {
+          if (encryption.fields.text !== 'standford') {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/config/encryption',
+                text: 'standford',
+              })
+            )
+          }
+        }
+        this.updateCryptoStateTiddler()
+      }
+    }
+    this.updateCryptoStateTiddler = function () {
+      if ($tw.wiki) {
+        var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+        var state = currentPassword || currentPublicKey || currentPrivateKey ? 'yes' : 'no'
+        if (!encrypted || encrypted.fields.text !== state) {
+          if (currentPublicKey) {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/isEncrypted',
+                _encryption_public_key: currentPublicKey,
+                text: state,
+              })
+            )
+          } else {
+            $tw.wiki.addTiddler(
+              new $tw.Tiddler({
+                title: '$:/isEncrypted',
+                text: state,
+              })
+            )
+          }
+        }
+      }
+    }
+    this.hasPassword = function () {
+      return !!currentPassword
+    }
+    this.hasEncryptionPrivateKey = function () {
+      return !!currentPrivateKey
+    }
+    this.hasEncryptionPublicKey = function () {
+      return !!currentPublicKey
+    }
+    this.encrypt = function (text, password, publicKey) {
+      password = password || currentPassword
+      publicKey = publicKey || currentPublicKey
+      if (text) {
+        if (password) {
+          return callSjcl('encrypt', text, password)
+        } else if (publicKey) {
+          return callSigUtil('encrypt', text, publicKey)
+        }
+      }
+      return null
+    }
+    this.decrypt = function (text, password, privateKey) {
+      password = password || currentPassword
+      privateKey = privateKey || currentPrivateKey
+      if (text) {
+        if (password) {
+          return callSjcl('decrypt', text, password)
+        } else if (privateKey) {
+          return callSigUtil('decrypt', text, privateKey)
+        }
+      }
+      return null
+    }
+    this.keccak256 = function (text) {
+      if (text) {
+        var createKeccakHash = $tw.node ? global.createKeccakHash || require('keccak') : window.createKeccakHash
+        var hash = createKeccakHash('keccak256')
+        hash.update(text)
+        return hash.digest('hex')
+      }
+      return null
+    }
+  }
+
+  /**
+   * Compress helper object for compressed content.
+   */
+  $tw.utils.Compress = function () {
+    var pako = $tw.node ? global.pako || require('pako') : window.pako
+    var currentState = null
+    this.setCompressState = function (state) {
+      currentState = state ? 'yes' : 'no'
+      this.updateCompressStateTiddler()
+    }
+    this.updateCompressStateTiddler = function () {
+      if ($tw.wiki) {
+        var state = currentState === 'yes' ? 'yes' : 'no'
+        var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
+        if (!tiddler || tiddler.fields.text !== state) {
+          $tw.wiki.addTiddler(new $tw.Tiddler({ title: '$:/isCompressed', text: state }))
+        }
+      }
+    }
+    this.deflate = function (str) {
+      var tStart = new Date()
+      var ua = pako.deflate(str, { raw: false })
+      var b64 = this.btoa(ua)
+      var tStop = new Date() - tStart
+      var ratio = Math.floor((b64.length * 100) / str.length)
+      $tw.boot.getLogger().info(`Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`)
+      return b64
+    }
+    this.inflate = function (b64) {
+      var tStart = new Date()
+      var ua = this.decode(b64)
+      var str = pako.inflate(ua, { to: 'string' })
+      var tStop = new Date() - tStart
+      var ratio = Math.floor((str.length * 100) / b64.length)
+      $tw.boot.getLogger().info(`Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`)
+      return str
+    }
+    this.decode = function (b64) {
+      return Base64Binary.decode(b64)
+    }
+    this.btoa = function (ua) {
+      try {
+        return this.Uint8ArrayToBase64(ua)
+      } catch (error) {
+        return Buffer.from(ua).toString('base64')
+      }
+    }
+    // https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
+    this.Uint8ArrayToBase64 = function (uint8) {
+      var CHUNK_SIZE = 0x8000
+      var index = 0
+      var length = uint8.length
+      var str = ''
+      var slice
+      while (index < length) {
+        slice = uint8.subarray(index, Math.min(index + CHUNK_SIZE, length))
+        str += String.fromCharCode.apply(null, slice)
+        index += CHUNK_SIZE
+      }
+      return btoa(str)
+    }
+    // https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer/21797381
+    // https://github.com/danguer/blog-examples/blob/master/js/base64-binary.js
+    /*
+     * Copyright (c) 2011, Daniel Guerrero
+     * All rights reserved.
+     * Redistribution and use in source and binary forms, with or without
+     * modification, are permitted provided that the following conditions are met:
+     * Redistributions of source code must retain the above copyright
+     * notice, this list of conditions and the following disclaimer.
+     * Redistributions in binary form must reproduce the above copyright
+     * notice, this list of conditions and the following disclaimer in the
+     * documentation and/or other materials provided with the distribution.
+     * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+     * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+     * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+     * DISCLAIMED. IN NO EVENT SHALL DANIEL GUERRERO BE LIABLE FOR ANY
+     * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+     * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+     * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+     * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+     * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     */
+    /**
+     * Uses the new array typed in javascript to binary base64 encode/decode
+     * at the moment just decodes a binary base64 encoded
+     * into either an ArrayBuffer (decodeArrayBuffer)
+     * or into an Uint8Array (decode)
+     *
+     * References:
+     * https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer
+     * https://developer.mozilla.org/en/JavaScript_typed_arrays/Uint8Array
+     */
+    var Base64Binary = {
+      _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+      /* will return a  Uint8Array type */
+      decodeArrayBuffer: function (input) {
+        var bytes = (input.length / 4) * 3
+        var ab = new ArrayBuffer(bytes)
+        this.decode(input, ab)
+        return ab
+      },
+      removePaddingChars: function (input) {
+        var lkey = this._keyStr.indexOf(input.charAt(input.length - 1))
+        if (lkey === 64) {
+          return input.substring(0, input.length - 1)
+        }
+        return input
+      },
+      decode: function (input, ab) {
+        //get last chars to see if are valid
+        input = this.removePaddingChars(input)
+        input = this.removePaddingChars(input)
+        var bytes = parseInt((input.length / 4) * 3, 10)
+        var ua
+        var chr1, chr2, chr3
+        var enc1, enc2, enc3, enc4
+        var i = 0
+        var j = 0
+        if (ab) ua = new Uint8Array(ab)
+        else ua = new Uint8Array(bytes)
+        /*eslint no-useless-escape:"off"*/
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '')
+        for (i = 0; i < bytes; i += 3) {
+          //get the 3 octects in 4 ascii chars
+          enc1 = this._keyStr.indexOf(input.charAt(j++))
+          enc2 = this._keyStr.indexOf(input.charAt(j++))
+          enc3 = this._keyStr.indexOf(input.charAt(j++))
+          enc4 = this._keyStr.indexOf(input.charAt(j++))
+          chr1 = (enc1 << 2) | (enc2 >> 4)
+          chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
+          chr3 = ((enc3 & 3) << 6) | enc4
+          ua[i] = chr1
+          if (enc3 !== 64) ua[i + 1] = chr2
+          if (enc4 !== 64) ua[i + 2] = chr3
+        }
+        return ua
+      },
+    }
+  }
+
+  $tw.boot.metamaskPrompt = async function (encrypted, keccak256, signature, callback) {
+    if (!$tw.browser && $tw.node) {
+      callback(null)
+    }
+    var checkAccountPermission = async function (provider) {
+      if (typeof provider.request === 'function') {
+        const permissions = await provider.request({
+          method: 'wallet_getPermissions',
+        })
+        const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
+        if (accountsPermission) {
+          return true
+        }
+      }
+      return false
+    }
+    var requestAccountPermission = async function (provider) {
+      if (typeof provider.request === 'function') {
+        const permissions = await provider.request({
+          method: 'wallet_requestPermissions',
+          params: [{ eth_accounts: {} }],
+        })
+        const accountsPermission = permissions.find(permission => permission.parentCapability === 'eth_accounts')
+        if (accountsPermission) {
+          return true
+        }
+      }
+      return false
+    }
+    var personalRecover = async function (provider, message, signature) {
+      var recovered = null
+      if (typeof provider.request === 'function') {
+        var params = [message, signature]
+        recovered = await provider.request({
+          method: 'personal_ecRecover',
+          params,
+        })
+      }
+      if (recovered === undefined || recovered == null) {
+        const err = new Error('Unrecoverable signature...')
+        err.name = 'UnrecoverableSignature'
+        throw err
+      }
+      return recovered
+    }
+    // Check hash
+    if (keccak256) {
+      const hash = $tw.crypto.keccak256(encrypted)
+      if (keccak256 !== hash) {
+        throw new Error('Tampered encrypted content, signature do not match...')
+      }
+    }
+    // Decrypt
+    var decrypted = null
+    var recovered = null
+    try {
+      const provider = await window.detectEthereumProvider({
+        mustBeMetaMask: true,
+      })
+      if (provider === undefined || provider == null) {
+        throw new Error('Please install MetaMask...')
+      }
+      provider.autoRefreshOnNetworkChange = false
+      var accounts = null
+      var permission = false
+      // Permission Attempt
+      try {
+        permission = await checkAccountPermission(provider)
+        if (permission === false) {
+          permission = await requestAccountPermission(provider)
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
+        $tw.boot.getLogger().error(error)
+      }
+      // Request Accounts attempt
+      try {
+        if (permission === false || (await provider._metamask.isUnlocked()) === false) {
+          accounts = await provider.request({
+            method: 'eth_requestAccounts',
+          })
+        }
+        if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+          accounts = await provider.request({ method: 'eth_accounts' })
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
+        $tw.boot.getLogger().error(error)
+      }
+      // Enable attempt
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+        if (typeof provider.enable === 'function') {
+          accounts = await provider.enable()
+        }
+      }
+      if (accounts === undefined || accounts == null || Array.isArray(accounts) === false || accounts.length === 0) {
+        throw new Error('Unable to retrieve any Ethereum accounts...')
+      }
+      if (provider.chainId !== undefined) {
+        $tw.boot.getLogger().log(`Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
+      } else {
+        $tw.boot.getLogger().log(`Ethereum Account: ${accounts[0]}`)
+      }
+      try {
+        if (signature) {
+          var tStart = new Date()
+          signature = await provider.request({
+            method: 'eth_decrypt',
+            params: [signature, accounts[0]],
+          })
+          if (signature !== undefined || signature !== null) {
+            var tStop = new Date() - tStart
+            $tw.boot.getLogger().info(`Ethereum Signature Decrypt: ${tStop}ms`)
+          }
+          recovered = await personalRecover(provider, keccak256, signature)
+          $tw.boot.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
+        }
+        var tStart = new Date()
+        decrypted = await provider.request({
+          method: 'eth_decrypt',
+          params: [encrypted, accounts[0]],
+        })
+        if (decrypted !== undefined || decrypted !== null) {
+          var tStop = new Date() - tStart
+          var ratio = Math.floor((decrypted.length * 100) / encrypted.length)
+          $tw.boot.getLogger().info(`Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`)
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          throw error
+        }
+        if (error.name === 'UnrecoverableSignature') {
+          throw new Error(`Tampered encrypted content. ${error.message}`)
+        }
+        $tw.boot.getLogger().error(error)
+        throw new Error('Unable to Decrypt Ethereum content...')
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        $tw.utils.error('Rejected User Request...')
+      } else {
+        $tw.utils.error(error.message)
+      }
+    }
+    callback(decrypted, recovered)
+  }
+
+  /////////////////////////// Module mechanism
+
+  /**
+   * Execute the module named 'moduleName'. The name can optionally be relative to the module named 'moduleRoot'
+   */
+  $tw.modules.execute = function (moduleName, moduleRoot) {
+    var name = moduleName
+    if (moduleName.charAt(0) === '.') {
+      name = $tw.utils.resolvePath(moduleName, moduleRoot)
+    }
+    if (!$tw.modules.titles[name]) {
+      if ($tw.modules.titles[name + '.js']) {
+        name = name + '.js'
+      } else if ($tw.modules.titles[name + '/index.js']) {
+        name = name + '/index.js'
+      } else if ($tw.modules.titles[moduleName]) {
+        name = moduleName
+      } else if ($tw.modules.titles[moduleName + '.js']) {
+        name = moduleName + '.js'
+      } else if ($tw.modules.titles[moduleName + '/index.js']) {
+        name = moduleName + '/index.js'
+      }
+    }
+    var moduleInfo = $tw.modules.titles[name]
+    var tiddler = $tw.wiki.getTiddler(name)
+    var _exports = {}
+    var sandbox = {
+      module: { exports: _exports },
+      //moduleInfo: moduleInfo,
+      exports: _exports,
+      console: console,
+      setInterval: setInterval,
+      clearInterval: clearInterval,
+      setTimeout: setTimeout,
+      clearTimeout: clearTimeout,
+      Buffer: $tw.browser ? undefined : Buffer,
+      $tw: $tw,
+      require: function (title) {
+        return $tw.modules.execute(title, name)
+      },
+    }
+
+    Object.defineProperty(sandbox.module, 'id', {
+      value: name,
+      writable: false,
+      enumerable: true,
+      configurable: false,
+    })
+
+    if (!$tw.browser) {
+      $tw.utils.extend(sandbox, {
+        process: process,
+      })
+    } else {
+      /*
+      CommonJS optional require.main property:
+      In a browser we offer a fake main module which points back to the boot function
+      (Theoretically, this may allow TW to eventually load itself as a module in the browser)
+      */
+      Object.defineProperty(sandbox.require, 'main', {
+        value: typeof require !== 'undefined' ? require.main : { TiddlyWiki: ipfsBoot },
+        writable: false,
+        enumerable: true,
+        configurable: false,
+      })
+    }
+    if (!moduleInfo) {
+      // We could not find the module on this path
+      // Try to defer to browserify etc, or node
+      if ($tw.browser) {
+        if (window.require) {
+          try {
+            return window.require(moduleName)
+          } catch (e) {}
+        }
+        throw new Error(`Cannot find module named '${moduleName}' required by module '${moduleRoot}', resolved to ${name}`)
+      } else {
+        // If we don't have a module with that name, let node.js try to find it
+        return require(moduleName)
+      }
+    }
+    // Execute the module if we haven't already done so
+    if (!moduleInfo.exports) {
+      try {
+        // Check the type of the definition
+        if (typeof moduleInfo.definition === 'function') {
+          // Function
+          moduleInfo.exports = _exports
+          moduleInfo.definition(moduleInfo, moduleInfo.exports, sandbox.require)
+        } else if (typeof moduleInfo.definition === 'string') {
+          // String
+          moduleInfo.exports = _exports
+          $tw.utils.evalSandboxed(moduleInfo.definition, sandbox, tiddler.fields.title)
+          if (sandbox.module.exports) {
+            moduleInfo.exports = sandbox.module.exports //more codemirror workaround
+          }
+        } else {
+          // Object
+          moduleInfo.exports = moduleInfo.definition
+        }
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          var line = e.lineNumber || e.line // Firefox || Safari
+          if (typeof line !== 'undefined' && line !== null) {
+            $tw.utils.error('Syntax error in boot module ' + name + ':' + line + ':\n' + e.stack)
+          } else if (!$tw.browser) {
+            // this is the only way to get node.js to display the line at which the syntax error appeared,
+            // and $tw.utils.error would exit anyway
+            // cf. https://bugs.chromium.org/p/v8/issues/detail?id=2589
+            throw e
+          } else {
+            // Opera: line number is included in e.message
+            // Chrome/IE: there's currently no way to get the line number
+            $tw.utils.error('Syntax error in boot module ' + name + ': ' + e.message + '\n' + e.stack)
+          }
+        } else {
+          // line number should be included in e.stack for runtime errors
+          $tw.utils.error('Error executing boot module ' + name + ': ' + JSON.stringify(e) + '\n\n' + e.stack)
+        }
+      }
+    }
+    // Return the exports of the module
+    return moduleInfo.exports
+  }
+
+  /////////////////////////// Browser definitions
+
+  if ($tw.browser && !$tw.node) {
+    $tw.boot.passwordPrompt = function (text, callback) {
+      var prompt = 'Enter a password to decrypt this TiddlyWiki'
+      // Prompt for the password
+      if ($tw.utils.hop($tw.boot, 'encryptionPrompts')) {
+        prompt = $tw.boot.encryptionPrompts.decrypt
+      }
+      $tw.passwordPrompt.createPrompt({
+        serviceName: prompt,
+        noUserName: true,
+        submitText: 'Decrypt',
+        callback: function (data) {
+          // Attempt to decrypt the tiddlers
+          $tw.crypto.setPassword(data.password)
+          var decryptedText = $tw.crypto.decrypt(text)
+          if (decryptedText) {
+            callback(decryptedText)
+            // Exit and remove the password prompt
+            return true
+          } else {
+            // We didn't decrypt everything, so continue to prompt for password
+            return false
+          }
+        },
+      })
+    }
+
+    $tw.boot.preloadTiddler = function (text, callback) {
+      try {
+        if (text !== undefined && text !== null) {
+          var json = JSON.parse(text)
+          for (var title in json) {
+            $tw.preloadTiddler(json[title])
+          }
+        }
+      } catch (error) {
+        $tw.boot.getLogger().error(error)
+      }
+      callback()
+    }
+
+    $tw.boot.inflateTiddlers = function (callback) {
+      var compressedStoreArea = document.getElementById('compressedStoreArea')
+      if (compressedStoreArea) {
+        var inflate = function (b64) {
+          if (b64 !== undefined && b64 !== null) {
+            $tw.boot.preloadTiddler($tw.compress.inflate(b64), callback)
+          }
+        }
+        var content = compressedStoreArea.innerHTML
+        if (content.match(/{"compressed":/)) {
+          var json = JSON.parse(content)
+          if (json.compressed.match(/{"iv":/)) {
+            $tw.boot.passwordPrompt(json.compressed, function (decrypted) {
+              inflate(decrypted)
+            })
+          } else if (json.compressed.match(/{"version":/)) {
+            $tw.boot.metamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted, recovered) {
+              inflate(decrypted)
+              if (recovered) {
+                $tw.utils.alert(
+                  name,
+                  `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+                )
+              }
+            })
+          } else {
+            inflate(json.compressed)
+          }
+        } else {
+          $tw.boot.preloadTiddler(content, callback)
+        }
+      } else {
+        // Preload any encrypted tiddlers
+        $tw.boot.decryptEncryptedTiddlers(callback)
+      }
+    }
+
+    /**
+     * Decrypt any tiddlers stored within the element with the ID "encryptedArea".
+     * The function is asynchronous to allow the user to be prompted for a password
+     * callback: function to be called the decryption is complete
+     */
+    $tw.boot.decryptEncryptedTiddlers = function (callback) {
+      var encryptedStoreArea = document.getElementById('encryptedStoreArea')
+      if (encryptedStoreArea) {
+        var content = encryptedStoreArea.innerHTML
+        if (content.match(/{"iv":/)) {
+          $tw.boot.passwordPrompt(content, function (decrypted) {
+            $tw.boot.preloadTiddler(decrypted, callback)
+          })
+        } else if (content.match(/{"encrypted":/)) {
+          const json = JSON.parse(content)
+          $tw.boot.metamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted, recovered) {
+            $tw.boot.preloadTiddler(decrypted, callback)
+            if (recovered) {
+              $tw.utils.alert(
+                name,
+                `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+              )
+            }
+          })
+        } else {
+          $tw.boot.preloadTiddler(content, callback)
+        }
+      } else {
+        // Just invoke the callback straight away if there weren't any encrypted tiddlers
+        callback()
+      }
+    }
+  } else {
+    /////////////////////////// Server definitions
+
+    /**
+     * Get any compressed tiddlers
+     */
+    $tw.boot.inflateTiddlers = function (callback) {
+      // Storing compressed tiddlers on the server isn't supported yet
+      callback()
+    }
+
+    /**
+     * Get any encrypted tiddlers
+     */
+    $tw.boot.decryptEncryptedTiddlers = function (callback) {
+      // Storing encrypted tiddlers on the server isn't supported yet
+      callback()
+    }
+  } // End of if($tw.browser && !$tw.node)
+
+  /////////////////////////// Node definitions
+
+  if ($tw.node) {
+    $tw.filepaths = Object.create(null)
+
+    /**
+     * Load the tiddlers from a plugin folder, and package them up into a proper JSON plugin tiddler
+     */
+    $tw.loadPluginFolder = function (filepath, excludeRegExp) {
+      excludeRegExp = excludeRegExp || $tw.boot.excludeRegExp
+      var infoPath = filepath + path.sep + 'plugin.info'
+      if (fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
+        // Read the plugin information
+        if (!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
+          console.log('Warning: missing plugin.info file in ' + filepath)
+          return null
+        }
+        var pluginInfo = JSON.parse(fs.readFileSync(infoPath, 'utf8'))
+        // Read the plugin files
+        var pluginFiles = $tw.loadTiddlersFromPath(filepath, excludeRegExp)
+        // Save the plugin tiddlers into the plugin info
+        pluginInfo.tiddlers = pluginInfo.tiddlers || Object.create(null)
+        for (var f = 0; f < pluginFiles.length; f++) {
+          var tiddlers = pluginFiles[f].tiddlers
+          for (var t = 0; t < tiddlers.length; t++) {
+            var tiddler = tiddlers[t]
+            if (tiddler.title) {
+              if (pluginFiles[f].type === 'application/javascript') {
+                $tw.filepaths[tiddler.title] = pluginFiles[f].filepath
+              }
+              pluginInfo.tiddlers[tiddler.title] = tiddler
+            }
+          }
+        }
+        // Give the plugin the same version number as the core if it doesn't have one
+        if (!('version' in pluginInfo)) {
+          pluginInfo.version = $tw.packageInfo.version
+        }
+        // Use "plugin" as the plugin-type if we don't have one
+        if (!('plugin-type' in pluginInfo)) {
+          pluginInfo['plugin-type'] = 'plugin'
+        }
+        pluginInfo.dependents = pluginInfo.dependents || []
+        pluginInfo.type = 'application/json'
+        // Set plugin text
+        pluginInfo.text = JSON.stringify({ tiddlers: pluginInfo.tiddlers }, null, 4)
+        delete pluginInfo.tiddlers
+        // Deserialise array fields (currently required for the dependents field)
+        for (var field in pluginInfo) {
+          if ($tw.utils.isArray(pluginInfo[field])) {
+            pluginInfo[field] = $tw.utils.stringifyList(pluginInfo[field])
+          }
+        }
+        return pluginInfo
+      }
+      return null
+    }
+  }
+
+  /////////////////////////// Main boot function to decrypt tiddlers and then startup
+
+  $tw.boot.boot = function (callback) {
+    // Initialise crypto object
+    $tw.crypto = new $tw.utils.Crypto()
+    // Initialise password prompter
+    if ($tw.browser && !$tw.node) {
+      $tw.passwordPrompt = new $tw.utils.PasswordPrompt()
+    }
+    // Initialise compress object
+    $tw.compress = new $tw.utils.Compress()
+    // Preload any compressed tiddlers
+    $tw.boot.inflateTiddlers(function () {
+      // Startup
+      $tw.boot.startup({ callback: callback })
+      // Make sure the crypto state tiddler is up to date
+      var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+      if (encrypted && encrypted.fields._encryption_public_key) {
+        $tw.crypto.setEncryptionKey(encrypted.fields._encryption_public_key)
+      } else {
+        $tw.crypto.updateCryptoStateTiddler()
+      }
+      // Make sure the compress state tiddler is up to date
+      var compressed = $tw.wiki.getTiddler('$:/isCompressed')
+      if (!compressed) {
+        $tw.compress.updateCompressStateTiddler()
+      }
+    })
+  }
+
+  if ($tw.browser && !$tw.boot.suppressBoot) {
+    $tw.boot.boot()
+  }
+
+  return $tw
+}
+
+if (typeof exports !== 'undefined') {
+  exports.TiddlyWiki = ipfsBoot
+} else {
+  ipfsBoot(window.$tw)
+}
+
+</script>
+</div>
+<!--~~ Raw markup for the bottom of the body section ~~-->
+
+</body>
+</html>
+­Ø
