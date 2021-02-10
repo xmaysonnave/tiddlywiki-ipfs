@@ -274,14 +274,14 @@ EnsLibrary.prototype.getContentHash = async function (domain, web3) {
   if (web3 === undefined) {
     var { web3 } = await this.ipfsBundle.getWeb3Provider()
   }
-  const etherscan = this.ipfsBundle.getEtherscanRegistry()
+  const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
   const domainHash = globalThis.ethers.utils.namehash(domain)
   // Fetch ens registry address
   const { chainId, registry } = await this.getRegistry(web3)
   this.getLogger().info(
     `ENS registry:
-${etherscan[chainId]}/address/${registry}`
+${explorer[chainId]}/address/${registry}`
   )
   // Fetch resolver address
   var resolver = await this.getResolver(web3, registry, domainHash)
@@ -292,7 +292,7 @@ ${etherscan[chainId]}/address/${registry}`
   // Log
   this.getLogger().info(
     `ENS domain resolver:
-${etherscan[chainId]}/address/${resolver}`
+${explorer[chainId]}/address/${resolver}`
   )
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3, resolver)
@@ -338,14 +338,14 @@ EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
   if (account === undefined || account == null || web3 === undefined || web3 == null) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
-  const etherscan = this.ipfsBundle.getEtherscanRegistry()
+  const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
   const domainHash = globalThis.ethers.utils.namehash(domain)
   // Fetch ens registry address
   const { chainId, registry } = await this.getRegistry(web3)
   this.getLogger().info(
     `ENS registry:
-${etherscan[chainId]}/address/${registry}`
+${explorer[chainId]}/address/${registry}`
   )
   const abi = ['function owner(bytes32 node) public view returns(address)']
   const iface = new globalThis.ethers.utils.Interface(abi)
@@ -378,14 +378,14 @@ EnsLibrary.prototype.setContentHash = async function (domain, cid, web3, account
   if (account === undefined || web3 === undefined) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
-  const etherscan = this.ipfsBundle.getEtherscanRegistry()
+  const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
   const domainHash = globalThis.ethers.utils.namehash(domain)
   // Fetch ens registry address
   const { chainId, registry } = await this.getRegistry(web3)
   this.getLogger().info(
     `ENS registry:
-${etherscan[chainId]}/address/${registry}`
+${explorer[chainId]}/address/${registry}`
   )
   var resolver = await this.getResolver(web3, registry, domainHash)
   if (resolver == null || /^0x0+$/.test(resolver) === true) {
@@ -393,7 +393,7 @@ ${etherscan[chainId]}/address/${registry}`
   }
   this.getLogger().info(
     `ENS domain resolver:
-${etherscan[chainId]}/address/${resolver}`
+${explorer[chainId]}/address/${resolver}`
   )
   // Check if resolver is EIP165
   const eip165 = await this.checkEip165(web3, resolver)
@@ -417,7 +417,7 @@ ${etherscan[chainId]}/address/${resolver}`
     const tx = await signer.sendTransaction({ to: resolver, data: data })
     this.getLogger().info(
       `Processing Transaction:
-${etherscan[chainId]}/tx/${tx.hash}`
+${explorer[chainId]}/tx/${tx.hash}`
     )
     // Wait for transaction completion
     await tx.wait()

@@ -5,18 +5,24 @@ var EthereumLibrary = function (ipfsBundle) {
   this.ipfsBundle = ipfsBundle
   this.name = 'ethereum-library'
   this.network = {
-    0x1: 'Ethereum Main Network: "Mainnet", chainId: "0x1"',
-    0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3"',
-    0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "0x4"',
-    0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "0x5"',
-    0x2a: 'Ethereum Test Network (PoA): "Kovan", chainId: "0x2a"',
+    0x1: 'Ethereum Main Network: "Mainnet", chainId: "0x1": "1"',
+    0x2a: 'Ethereum Test Network (PoA): "Kovan", chainId: "0x2a": "42"',
+    0x3: 'Ethereum Test Network (PoW): "Ropsten", chainId: "0x3": "3"',
+    0x38: 'Binance Smart Chain Main Network (bsc-mainnet): "0x38": "56"', // https://bsc-dataseed.binance.org/
+    0x4: 'Ethereum Test Network (PoA): "Rinkeby", chainId: "0x4": "4"',
+    0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "0x5": "5"',
+    0x61: 'Binance Smart Chain Test Network (bsc-testnet): "0x61": "97"', // https://data-seed-prebsc-1-s1.binance.org:8545/
+    0x64: 'xDai Main Network: "Mainnet", chainId: "0x64": "100"', // https://rpc.xdaichain.com/
   }
-  this.etherscan = {
+  this.explorer = {
     0x1: 'https://etherscan.io',
+    0x2a: 'https://kovan.etherscan.io',
     0x3: 'https://ropsten.etherscan.io',
+    0x38: 'https://bscscan.com',
     0x4: 'https://rinkeby.etherscan.io',
     0x5: 'https://goerli.etherscan.io',
-    0x2a: 'https://kovan.etherscan.io',
+    0x61: 'https://testnet.bscscan.com/',
+    0x64: 'https://blockscout.com/poa/xdai',
   }
   this.once = false
   this.provider = null
@@ -83,7 +89,7 @@ EthereumLibrary.prototype.getChainId = async function (provider) {
   var chainId = await provider.request({
     method: 'eth_chainId',
   })
-  chainId = chainId === undefined || chainId == null || chainId.trim() === '' ? null : chainId.trim()
+  chainId = chainId !== undefined && chainId !== null && chainId.trim() !== '' ? chainId.trim() : null
   return chainId !== null ? parseInt(chainId, 16) : null
 }
 
@@ -92,7 +98,7 @@ EthereumLibrary.prototype.accounts = async function (provider, accounts) {
     try {
       const chainId = await this.getChainId(provider)
       this.getLogger().info(`Chain: ${this.network[chainId]}`)
-      this.getLogger().info(`Ethereum account: ${this.etherscan[chainId]}/address/${accounts[0]}`)
+      this.getLogger().info(`Ethereum account: ${this.explorer[chainId]}/address/${accounts[0]}`)
     } catch (error) {
       this.getLogger().error(error)
       $tw.utils.alert(this.name, error.message)
@@ -110,8 +116,8 @@ EthereumLibrary.prototype.providerMessage = function (message) {
   this.getLogger().info(`Ethereum Provider message: ${message}`)
 }
 
-EthereumLibrary.prototype.getEtherscanRegistry = function () {
-  return this.etherscan
+EthereumLibrary.prototype.getBlockExplorerRegistry = function () {
+  return this.explorer
 }
 
 EthereumLibrary.prototype.getNetworkRegistry = function () {
@@ -119,7 +125,7 @@ EthereumLibrary.prototype.getNetworkRegistry = function () {
 }
 
 EthereumLibrary.prototype.personalSign = async function (message, provider) {
-  message = message === undefined || message == null || message.trim() === '' ? null : message.trim()
+  message = message !== undefined && message !== null && message.trim() !== '' ? message.trim() : null
   if (message == null) {
     throw new Error('Undefined Message....')
   }
@@ -145,11 +151,11 @@ EthereumLibrary.prototype.personalSign = async function (message, provider) {
 }
 
 EthereumLibrary.prototype.personalRecover = async function (message, signature) {
-  message = message === undefined || message == null || message.trim() === '' ? null : message.trim()
+  message = message !== undefined && message !== null && message.trim() !== '' ? message.trim() : null
   if (message == null) {
     throw new Error('Undefined Message....')
   }
-  signature = signature === undefined || signature == null || signature.trim() === '' ? null : signature.trim()
+  signature = signature !== undefined && signature !== null && signature.trim() !== '' ? signature.trim() : null
   if (signature == null) {
     throw new Error('Undefined Signature....')
   }
@@ -165,7 +171,7 @@ EthereumLibrary.prototype.personalRecover = async function (message, signature) 
 }
 
 EthereumLibrary.prototype.decrypt = async function (text, provider) {
-  text = text === undefined || text == null || text.trim() === '' ? null : text.trim()
+  text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
   if (text == null) {
     throw new Error('Undefined Text....')
   }

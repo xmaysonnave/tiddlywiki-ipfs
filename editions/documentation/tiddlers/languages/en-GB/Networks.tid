@@ -1,17 +1,17 @@
 title: Networks
-modified: 20210209094915385
+modified: 20210209104915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
 <h3>IPFS</h3>
 <p>
-  You can check the <b>IPFS</b> identifier with the following tool:
+  <b>IPFS</b> identifiers analysis with the following tool:
 </p>
 <ul>
   <li>[ext[CID Inspector|https://cid.ipfs.io]]</li>
 </ul>
 <p>
-  You can check the <b>IPFS</b> network with the following tools:
+  <b>IPFS</b> networks :
 </p>
 <ul>
   <li>[ext[Infura Status|https://status.infura.io]]</li>
@@ -19,15 +19,23 @@ type: text/vnd.tiddlywiki
 </ul>
 <h3>Ethereum</h3>
 <p>
-  You can check the <b>Ethereum</b> networks with the following tools:
+  <b>Ethereum</b> networks:
 </p>
 <ul>
+  <li>[ext[Binance|https://bscscan.com/]]: Binance Smart Chain Network (~PoSA)</li>
+  <li>[ext[Binance|https://testnet.bscscan.com/]]: Binance Smart Chain Test Network (~PoSA)</li>
+  <li>[ext[Etherchain Charts|https://www.etherchain.org/charts]]</li>
+  <li>[ext[Ethereum Gas Station|https://ethgasstation.info/]]</li>
+  <li>[ext[Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
+  <li>[ext[Etherscan|https://etherscan.io/]]</li>
+  <li>[ext[Ethstats|https://ethstats.net/]]</li>
   <li>[ext[Goerli|https://stats.goerli.net/]]: Ethereum Test Network (~PoA)</li>
-  <li>[ext[Mainnet: Etherchain Charts|https://www.etherchain.org/charts]]</li>
-  <li>[ext[Mainnet: Ethereum Gas Station|https://ethgasstation.info/]]</li>
-  <li>[ext[Mainnet: Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
-  <li>[ext[Mainnet: Etherscan|https://etherscan.io/]]</li>
-  <li>[ext[Mainnet: Ethstats|https://ethstats.net/]]</li>
+  <li>[ext[Kovan|https://kovan.etherscan.io]]: Ethereum Test Network (~PoA)</li>
   <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (~PoA)</li>
   <li>[ext[Ropsten|https://ropsten.etherscan.io/]]: Ethereum Test Network (~PoW)</li>
+  <li>[ext[xDai|https://blockscout.com/poa/xdai]]: xDai Main Network (~PoA)</li>
+</ul>
+<h3>Mnemonic</h3>
+<ul>
+  <li>[ext[Mnemonic Code Converter|https://dweb.link/ipfs/QmQUnT2jeuLnR223EakuvH9ad47DperLxTVs1wFCptqwvE]]</li>
 </ul>

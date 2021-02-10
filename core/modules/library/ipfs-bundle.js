@@ -19,7 +19,6 @@ const IpfsUrl = require('./ipfs-bundle/ipfs-url.js').IpfsUrl
 const cidInspector = 'https://cid.ipfs.io/#'
 const libp2pKey = 'libp2p-key'
 const dagPb = 'dag-pb'
-const dir = 'dir'
 
 var IpfsBundle = function () {
   this.once = false
@@ -105,8 +104,8 @@ IpfsBundle.prototype.getENSRegistry = function () {
   return this.ensLibrary.getENSRegistry()
 }
 
-IpfsBundle.prototype.getEtherscanRegistry = function () {
-  return this.ethereumLibrary.getEtherscanRegistry()
+IpfsBundle.prototype.getBlockExplorerRegistry = function () {
+  return this.ethereumLibrary.getBlockExplorerRegistry()
 }
 
 IpfsBundle.prototype.getNetworkRegistry = function () {
@@ -205,8 +204,8 @@ IpfsBundle.prototype.decrypt = async function (text, provider) {
   }
 }
 
-IpfsBundle.prototype.getEtherscanRegistry = function () {
-  return this.ethereumLibrary.getEtherscanRegistry()
+IpfsBundle.prototype.getBlockExplorerRegistry = function () {
+  return this.ethereumLibrary.getBlockExplorerRegistry()
 }
 
 IpfsBundle.prototype.getEnabledWeb3Provider = async function (provider) {
@@ -234,7 +233,7 @@ IpfsBundle.prototype.getEnabledWeb3Provider = async function () {
   var account = null
   var chainId = null
   var web3 = null
-  const etherscan = this.getEtherscanRegistry()
+  const explorer = this.getBlockExplorerRegistry()
   const network = this.getNetworkRegistry()
   const provider = await this.getEthereumProvider()
   try {
@@ -250,7 +249,7 @@ IpfsBundle.prototype.getEnabledWeb3Provider = async function () {
   this.getLogger().info(
     `New Enabled Web3 provider:
 Chain: ${network[chainId]}
-Account: ${etherscan[chainId]}/address/${account}`
+Account: ${explorer[chainId]}/address/${account}`
   )
   return {
     account: account,

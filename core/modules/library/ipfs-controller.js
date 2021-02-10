@@ -641,8 +641,8 @@ ${url}`
     return await this.ipfsBundle.getWeb3Provider()
   }
 
-  IpfsController.prototype.getEtherscanRegistry = function () {
-    return this.ipfsBundle.getEtherscanRegistry()
+  IpfsController.prototype.getBlockExplorerRegistry = function () {
+    return this.ipfsBundle.getBlockExplorerRegistry()
   }
 
   IpfsController.prototype.getNetworkRegistry = function () {
