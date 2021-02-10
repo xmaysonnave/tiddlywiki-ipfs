@@ -403,23 +403,23 @@ IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
   return await this.ipfsLibrary.pinRm(client, cid, recursive)
 }
 
-IpfsBundle.prototype.getWrappedDirectoryCid = async function (client, url) {
-  if (url === undefined || url == null || url.toString().trim() === '') {
+IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value) {
+  if (value === undefined || value == null || value.toString().trim() === '') {
     return null
   }
-  if (url instanceof URL === false) {
+  if (value instanceof URL === false) {
     try {
-      url = this.ipfsUrl.getUrl(url)
+      value = this.ipfsUrl.getUrl(value)
     } catch (error) {
-      url = null
+      value = null
     }
   }
-  if (url == null) {
+  if (value == null) {
     return null
   }
-  const base = this.getUrl(`${url.protocol}//${url.host}`)
+  const base = this.getUrl(`${value.protocol}//${value.host}`)
   // Pathname
-  var { cid, path, protocol } = this.decodePathname(url.pathname)
+  var { cid, path, protocol } = this.decodePathname(value.pathname)
   if (cid !== null) {
     const ipfsPath = `/${protocol}/${cid}${path}`
     const stat = await this.filesStat(client, ipfsPath)
@@ -427,7 +427,7 @@ IpfsBundle.prototype.getWrappedDirectoryCid = async function (client, url) {
       return stat.cid
     }
     var nextPath = ''
-    const members = url.pathname.split('/')
+    const members = value.pathname.split('/')
     for (var i = 0; i < members.length; i++) {
       if (members[i].trim() === '') {
         continue
@@ -437,18 +437,18 @@ IpfsBundle.prototype.getWrappedDirectoryCid = async function (client, url) {
       }
     }
     const nextUrl = this.getUrl(nextPath, base)
-    return this.getWrappedDirectoryCid(client, nextUrl)
+    return this.getIpfsParentIdentifier(client, nextUrl)
   }
   // Hostname
   var { cid, protocol } = this.decodeHostname(base.hostname)
   if (cid !== null) {
-    const ipfsPath = `/${protocol}/${cid}${url.pathname}`
+    const ipfsPath = `/${protocol}/${cid}${value.pathname}`
     const stat = await this.filesStat(client, ipfsPath)
     if (stat.type === 'directory') {
       return stat.cid
     }
     var nextPath = ''
-    const members = url.pathname.split('/')
+    const members = value.pathname.split('/')
     for (var i = 0; i < members.length; i++) {
       if (members[i].trim() === '') {
         continue
@@ -458,7 +458,7 @@ IpfsBundle.prototype.getWrappedDirectoryCid = async function (client, url) {
       }
     }
     const nextUrl = this.getUrl(nextPath, base)
-    return this.getWrappedDirectoryCid(client, nextUrl)
+    return this.getIpfsParentIdentifier(client, nextUrl)
   }
   return null
 }

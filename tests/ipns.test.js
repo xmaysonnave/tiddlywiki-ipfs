@@ -50,7 +50,7 @@ describe('IPNS', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     try {
-      await ipfsWrapper.getIpnsIdentifiers()
+      await ipfsWrapper.getIpnsIdentifier()
     } catch (error) {
       expect(error.message).to.equal('Undefined IPNS identifiers...')
     }
@@ -61,7 +61,7 @@ describe('IPNS', () => {
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(null)
     try {
-      await ipfsWrapper.getIpnsIdentifiers(null, 'dummy')
+      await ipfsWrapper.getIpnsIdentifier(null, 'dummy')
     } catch (error) {
       expect(error.message).to.equal('Unknown IPNS identifier...')
     }
@@ -74,7 +74,7 @@ describe('IPNS key and IPNS name', () => {
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
     try {
-      await ipfsWrapper.getIpnsIdentifiers(null, 'dummy', 'dummy')
+      await ipfsWrapper.getIpnsIdentifier(null, 'dummy', 'dummy')
     } catch (error) {
       expect(error.message).to.equal('Unknown IPNS identifier...')
     }
@@ -84,7 +84,7 @@ describe('IPNS key and IPNS name', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0', null, null, 'tiddly')
+    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifier(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0', null, null, 'tiddly')
     expect(ipnsName === 'tiddly' && ipnsKey === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
 })
@@ -95,7 +95,7 @@ describe('IPNS name', () => {
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
     try {
-      await ipfsWrapper.getIpnsIdentifiers(null, null, null, null, 'dummy')
+      await ipfsWrapper.getIpnsIdentifier(null, null, null, null, 'dummy')
     } catch (error) {
       expect(error.message).to.equal('Unknown IPNS identifier...')
     }
@@ -105,7 +105,7 @@ describe('IPNS name', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(null, null, null, null, 'tiddly')
+    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifier(null, null, null, null, 'tiddly')
     expect(ipnsName === 'tiddly' && ipnsKey === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
 })
@@ -116,7 +116,7 @@ describe('IPNS identifier', () => {
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
     try {
-      await ipfsWrapper.getIpnsIdentifiers(null, 'dummy')
+      await ipfsWrapper.getIpnsIdentifier(null, 'dummy')
     } catch (error) {
       expect(error.message).to.equal('Unknown IPNS identifier...')
     }
@@ -126,7 +126,7 @@ describe('IPNS identifier', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0')
+    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifier(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0')
     expect(ipnsName === 'tiddly' && ipnsKey === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
   it('Fetch IPNS key and IPNS name from an IPNS name', async () => {
@@ -134,7 +134,7 @@ describe('IPNS identifier', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifiers(null, 'tiddly')
+    const { ipnsKey, ipnsName } = await ipfsWrapper.getIpnsIdentifier(null, 'tiddly')
     expect(ipnsName === 'tiddly' && ipnsKey === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
 })

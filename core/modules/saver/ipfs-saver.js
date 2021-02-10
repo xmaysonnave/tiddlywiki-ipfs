@@ -52,21 +52,21 @@ IPFS Saver
       var options = options || {}
       var web3 = null
       const wiki = $tw.ipfs.getDocumentUrl()
-      var base = $tw.ipfs.getIpfsBaseUrl()
-      var current = $tw.ipfs.getUrl(wiki, base)
-      var protocol = current.protocol
+      const base = $tw.ipfs.getIpfsBaseUrl()
+      const protocol = base.protocol
+      const host = base.host
+      const current = $tw.ipfs.getUrl(wiki, base)
       var credential = ''
       if (current.username && current.password) {
         credential = `${current.username}:${current.password}@`
       }
-      var host = current.host
       var pathname = current.pathname
-      var search = current.search
-      var hash = current.hash
+      const search = current.search
+      const hash = current.hash
       try {
         var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
         if (ipnsKey == null) {
-          const directoryCid = await $tw.ipfs.getWrappedDirectoryCid(resolvedUrl)
+          const directoryCid = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
           if (directoryCid !== null) {
             await $tw.ipfs.requestToUnpin(directoryCid)
           } else if (cid !== null) {
@@ -188,7 +188,7 @@ IPFS Saver
       callback(null)
       // Next
       const next = $tw.ipfs.getUrl(`${protocol}//${credential}${host}${pathname}${search}${hash}`)
-      if (next.host !== wiki.host || next.pathname !== wiki.pathname) {
+      if (next.protocol !== wiki.protocol || next.host !== wiki.host || next.pathname !== wiki.pathname) {
         $tw.ipfs.getLogger().info(`Loading: '${next.href}'`)
         window.location.assign(next.href)
       }

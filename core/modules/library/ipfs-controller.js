@@ -331,9 +331,14 @@ IPFS Controller
     return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName)
   }
 
-  IpfsController.prototype.getIpnsIdentifiers = async function (identifier, base, path, ipnsName) {
+  IpfsController.prototype.getIpfsParentIdentifier = async function (url) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpnsIdentifiers(ipfs, identifier, base, path, ipnsName)
+    return await this.ipfsWrapper.getIpfsParentIdentifier(ipfs, url)
+  }
+
+  IpfsController.prototype.getIpnsIdentifier = async function (identifier, base, path, ipnsName) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, base, path, ipnsName)
   }
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
@@ -448,7 +453,7 @@ IPFS Controller
     }
     var cid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifiers(ipnsIdentifier, base, path)
+    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifier(ipnsIdentifier, base, path)
     if (resolveIpns) {
       $tw.ipfs.getLogger().info(
         `Resolving IPNS key:
@@ -584,13 +589,8 @@ ${url}`
     return true
   }
 
-  IpfsController.prototype.getWrappedDirectoryCid = async function (url) {
-    const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsBundle.getWrappedDirectoryCid(ipfs, url)
-  }
-
-  IpfsController.prototype.getIpfsIdentifier = function (pathname) {
-    return this.ipfsBundle.getIpfsIdentifier(pathname)
+  IpfsController.prototype.getIpfsIdentifier = function (value) {
+    return this.ipfsBundle.getIpfsIdentifier(value)
   }
 
   IpfsController.prototype.getCid = function (cid) {

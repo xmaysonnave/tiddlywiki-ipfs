@@ -198,7 +198,7 @@ IPFS Action
       return false
     }
     try {
-      var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifiers(ipnsName)
+      var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifier(ipnsName)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -251,7 +251,7 @@ IPFS Action
       return false
     }
     try {
-      var { ipnsKey } = await $tw.ipfs.getIpnsIdentifiers(ipnsName)
+      var { ipnsKey } = await $tw.ipfs.getIpnsIdentifier(ipnsName)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)

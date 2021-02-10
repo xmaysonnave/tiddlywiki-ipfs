@@ -76,13 +76,13 @@ IpfsWrapper.prototype.getIpfsClient = async function (url) {
   throw new Error('Failed to retrieve an IPFS provider...')
 }
 
-IpfsWrapper.prototype.getIpnsIdentifiers = async function (ipfs, identifier, base, path, ipnsName) {
-  identifier = identifier === undefined || identifier == null || identifier.trim() === '' ? null : identifier.trim()
-  ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
+IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base, path, ipnsName) {
+  identifier = identifier !== undefined && identifier !== null && identifier.toString().trim() !== '' ? identifier.toString().trim() : null
+  ipnsName = ipnsName !== undefined && ipnsName !== null && ipnsName.trim() !== '' ? ipnsName.trim() : null
   if (identifier == null && ipnsName == null) {
     throw new Error('Undefined IPNS identifiers...')
   }
-  path = path === undefined || path == null || path.trim() === '' ? '' : path.trim()
+  path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
   var found = false
   var ipnsKey = null
   var keys = null
@@ -222,7 +222,7 @@ IpfsWrapper.prototype.getIpnsKeys = async function (ipfs) {
 }
 
 IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
-  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
+  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
@@ -239,10 +239,28 @@ ${url}`)
   throw new Error('Failed to fetch from IPFS...')
 }
 
+IpfsWrapper.prototype.getIpfsParentIdentifier = async function (ipfs, value) {
+  value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
+  if (value == null) {
+    throw new Error('Undefined URL...')
+  }
+  var cid = null
+  try {
+    cid = await this.ipfsBundle.getIpfsParentIdentifier(ipfs, value)
+    const pathname = `/${ipfsKeyword}/${cid}`
+    const url = this.ipfsUrl.normalizeUrl(pathname)
+    this.getLogger().info(`Successfully fetched parent identifier:
+${url}`)
+  } catch (error) {
+    this.getLogger().error(error)
+  }
+  return cid
+}
+
 IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
   try {
     const { cid, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content))
-    const pathname = '/' + ipfsKeyword + '/' + cid
+    const pathname = `/${ipfsKeyword}/${cid}`
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(`Successfully added: ${size} bytes,
 ${url}`)
@@ -257,7 +275,7 @@ ${url}`)
 }
 
 IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
-  ipnsKey = ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '' ? null : ipnsKey.trim()
+  ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
   }
@@ -282,15 +300,15 @@ ${parsed}`
 }
 
 IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipnsName) {
-  ipnsKey = ipnsKey === undefined || ipnsKey == null || ipnsKey.trim() === '' ? null : ipnsKey.trim()
+  ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
   }
-  ipnsName = ipnsName === undefined || ipnsName == null || ipnsName.trim() === '' ? null : ipnsName.trim()
+  ipnsName = ipnsName !== undefined && ipnsName !== null && ipnsName.trim() !== '' ? ipnsName.trim() : null
   if (ipnsName == null) {
     throw new Error('Undefined IPNS name...')
   }
-  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
+  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
