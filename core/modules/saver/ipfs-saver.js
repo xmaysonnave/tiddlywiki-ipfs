@@ -42,9 +42,25 @@ IPFS Saver
     if ($tw.saverHandler.isDirty() === false) {
       return false
     }
+    const publishToIpns = async function (added, ipnsCid, ipnsKey, ipnsName) {
+      $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
+      try {
+        await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
+        pathname = `/${ipnsKeyword}/${ipnsKey}`
+        $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
+      } catch (error) {
+        $tw.ipfs.getLogger().warn(error)
+        $tw.utils.alert(name, error.message)
+        if (ipnsCid !== null) {
+          await $tw.ipfs.requestToPin(ipnsCid)
+        }
+      }
+    }
     try {
       var account = null
       var ensCid = null
+      var ensIpnsKey = null
+      var ensIpnsName = null
       var ensDomain = null
       var ipnsCid = null
       var ipnsKey = null
@@ -108,7 +124,9 @@ IPFS Saver
             $tw.utils.alert(name, error.message)
           }
         }
-        await $tw.ipfs.requestToUnpin(ipnsCid)
+        if (ipnsCid !== null) {
+          await $tw.ipfs.requestToUnpin(ipnsCid)
+        }
       }
       // ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword) {
@@ -124,8 +142,10 @@ IPFS Saver
           err.name = 'OwnerError'
           throw err
         }
-        var { cid: ensCid } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
-        await $tw.ipfs.requestToUnpin(ensCid)
+        var { cid: ensCid, ipnsKey: ensIpnsKey, ipnsName: ensIpnsName } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
+        if (ensCid !== null) {
+          await $tw.ipfs.requestToUnpin(ensCid)
+        }
       }
       // Upload
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
@@ -135,19 +155,13 @@ IPFS Saver
       await $tw.ipfs.requestToPin(added)
       // Publish to IPNS
       if (ipnsKey !== null && ipnsName !== null) {
-        $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
-        try {
-          await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
-          pathname = `/${ipnsKeyword}/${ipnsKey}`
-          $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
-        } catch (error) {
-          $tw.ipfs.getLogger().warn(error)
-          $tw.utils.alert(name, error.message)
-          await $tw.ipfs.requestToPin(ipnsCid)
-        }
+        await publishToIpns(added, ipnsCid, ipnsKey, ipnsName)
+      }
+      if (ensIpnsKey !== null && ensIpnsName !== null) {
+        await publishToIpns(added, ensCid, ensIpnsKey, ensIpnsName)
       }
       // Publish to ENS
-      if ($tw.utils.getIpfsProtocol() === ensKeyword) {
+      if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsKey == null) {
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${added}`, web3, account)
@@ -155,7 +169,9 @@ IPFS Saver
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
-          await $tw.ipfs.requestToPin(ensCid)
+          if (ensCid !== null) {
+            await $tw.ipfs.requestToPin(ensCid)
+          }
         }
       }
       // Unpin

@@ -40,9 +40,9 @@ ENS Wrapper
     }
   }
 
-  EnsWrapper.prototype.setContentHash = async function (domain, cid, web3, account) {
+  EnsWrapper.prototype.setContentHash = async function (domain, identifier, web3, account) {
     try {
-      await this.ensLibrary.setContentHash(domain, cid, web3, account)
+      await this.ensLibrary.setContentHash(domain, identifier, web3, account)
     } catch (error) {
       if (error.name === 'OwnerError' || error.name === 'RejectedUserRequest' || error.name === 'UnauthorizedUserAccount') {
         throw error

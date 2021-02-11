@@ -94,9 +94,9 @@ ENS Action
       return false
     }
     if (cid !== null) {
-      return await this.publishToEns(ensDomain, `/${ipfsKeyword}/${cid}`)
+      return await this.publishToEns(ensDomain, ipfsKeyword, cid)
     }
-    return await this.publishToEns(ensDomain, `/${ipnsKeyword}/${ipnsKey}`)
+    return await this.publishToEns(ensDomain, ipnsKeyword, ipnsKey)
   }
 
   EnsAction.prototype.handlePublishIpnsToEns = async function (event) {
@@ -118,18 +118,23 @@ ENS Action
       $tw.utils.alert(name, error.message)
       return false
     }
-    return await this.publishToEns(ensDomain, `/${ipnsKeyword}/${ipnsKey}`)
+    return await this.publishToEns(ensDomain, ipnsKeyword, ipnsKey)
   }
 
-  EnsAction.prototype.publishToEns = async function (ensDomain, cid) {
+  EnsAction.prototype.publishToEns = async function (ensDomain, protocol, identifier) {
     var account = null
     var ensCid = null
+    var ensIpnsKey = null
     var ensResolvedUrl = null
     var web3 = null
     try {
       var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-      var { cid: ensCid, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
-      if (ensCid !== null && cid === ensResolvedUrl.pathname) {
+      var { cid: ensCid, ipnsKey: ensIpnsKey, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
+      if (protocol === ipfsKeyword && identifier === ensCid) {
+        $tw.utils.alert(name, 'The current resolved ENS domain content is up to date...')
+        return false
+      }
+      if (protocol === ipnsKeyword && identifier === ensIpnsKey) {
         $tw.utils.alert(name, 'The current resolved ENS domain content is up to date...')
         return false
       }
@@ -154,7 +159,7 @@ ENS Action
           $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
         }
         $tw.ipfs
-          .setContentHash(ensDomain, cid, web3, account)
+          .setContentHash(ensDomain, `/${protocol}/${identifier}`, web3, account)
           .then(data => {
             $tw.utils.alert(name, 'Successfully published to ENS...')
           })

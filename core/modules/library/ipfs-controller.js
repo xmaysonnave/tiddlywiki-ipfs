@@ -581,12 +581,12 @@ ${url}`
     }
   }
 
-  IpfsController.prototype.setContentHash = async function (ensDomain, cid, web3, account) {
+  IpfsController.prototype.setContentHash = async function (ensDomain, identifier, web3, account) {
     if (account === undefined || account == null || web3 === undefined || web3 == null) {
       var { account, web3 } = await this.getEnabledWeb3Provider()
     }
-    await this.ensWrapper.setContentHash(ensDomain, cid, web3, account)
-    const url = this.normalizeUrl(cid)
+    await this.ensWrapper.setContentHash(ensDomain, identifier, web3, account)
+    const url = this.normalizeUrl(identifier)
     $tw.ipfs.getLogger().info(
       `Successfully set ENS domain content:
  ${url}

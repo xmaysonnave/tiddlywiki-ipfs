@@ -366,12 +366,12 @@ ${explorer[chainId]}/address/${registry}`
   return false
 }
 
-EnsLibrary.prototype.setContentHash = async function (domain, cid, web3, account) {
-  cid = cid === undefined || cid == null || cid.toString().trim() === '' ? null : cid.toString().trim()
-  if (cid == null) {
+EnsLibrary.prototype.setContentHash = async function (domain, identifier, web3, account) {
+  identifier = identifier !== undefined && identifier !== null && identifier.toString().trim() !== '' ? identifier.toString().trim() : null
+  if (identifier == null) {
     throw new Error('Undefined IPFS identifier...')
   }
-  domain = domain === undefined || domain == null || domain.trim() === '' ? null : domain.trim()
+  domain = domain !== undefined && domain !== null && domain.trim() !== '' ? domain.trim() : null
   if (domain == null) {
     throw new Error('Undefined ENS domain...')
   }
@@ -405,8 +405,8 @@ ${explorer[chainId]}/address/${resolver}`
   if (eip1577 === false) {
     throw new Error('ENS resolver do not conform to EIP1577...')
   }
-  // Encode cid
-  const { encoded } = this.encodeContenthash(cid)
+  // Encode identifier
+  const { encoded } = this.encodeContenthash(identifier)
   // Set Contenthash
   this.getLogger().info('Processing ENS domain content...')
   const abi = ['function setContenthash(bytes32 node, bytes calldata hash)']
