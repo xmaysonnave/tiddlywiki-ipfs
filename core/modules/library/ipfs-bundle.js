@@ -532,7 +532,7 @@ IpfsBundle.prototype.decodeUrl = function (url) {
       if (url.protocol === 'ipns:') {
         ipnsIdentifier = url.hostname
         protocol = 'ipns'
-      } else if (url.protocol === 'ipfs:' && this.getCid(url.hostname)) {
+      } else if (url.protocol === 'ipfs:' && this.getCid(url.hostname) !== null) {
         cid = url.hostname
         protocol = 'ipfs'
       }
@@ -618,7 +618,7 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
   var ipnsIdentifier = null
   if (protocol === 'ipns' || protocol === 'ipns:') {
     ipnsIdentifier = identifier
-  } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier)) {
+  } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier) !== null) {
     cid = identifier
   } else {
     protocol = null
@@ -697,7 +697,7 @@ IpfsBundle.prototype.decodeHostname = function (hostname) {
   var ipnsIdentifier = null
   if (protocol === 'ipns' || protocol === 'ipns:') {
     ipnsIdentifier = identifier
-  } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier)) {
+  } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier) !== null) {
     cid = identifier
   } else {
     protocol = null

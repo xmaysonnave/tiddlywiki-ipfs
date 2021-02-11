@@ -131,18 +131,24 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base
     }
   }
   if (found === false) {
-    // Unable to resolve the keys, check if identifier is a an IPFS cid
-    if (!this.ipfsBundle.getCid(identifier)) {
+    // Unable to resolve the keys, check if identifier is an IPFS cid
+    if (this.ipfsBundle.getCid(identifier) == null) {
       throw new Error('Unknown IPNS identifier...')
     }
     ipnsKey = identifier
   }
+  // Path
+  const startPath = `/${ipnsKeyword}/${ipnsKey}`
+  if (path.startsWith(startPath)) {
+    path = path.slice(startPath.length)
+  }
+  path = `${startPath}${path}`
   // Lets build an url, the resolver will do the final check, we cannot do more here
   if (found) {
     const cidv0 = this.ipfsBundle.cidToBase58CidV0(ipnsKey, false).toString()
     const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv0, 'base32', false).toString()
     ipnsKey = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1b32, 'base36', false)
-    normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}${path}`, base)
+    normalizedUrl = this.ipfsUrl.normalizeUrl(path, base)
     this.getLogger().info(
       `Successfully Fetched IPNS identifiers: '${ipnsName}':
 'dag-pb' "cidv0" (base58btc): ${cidAnalyser}${cidv0}
@@ -151,7 +157,7 @@ to 'libp2p-key' "cidv1" (base36): ${cidAnalyser}${ipnsKey}
 ${normalizedUrl}`
     )
   } else {
-    normalizedUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsKey}${path}`, base)
+    normalizedUrl = this.ipfsUrl.normalizeUrl(path, base)
     this.getLogger().info(
       `Unable to Fetch IPNS identifiers, default to
 ${normalizedUrl}`

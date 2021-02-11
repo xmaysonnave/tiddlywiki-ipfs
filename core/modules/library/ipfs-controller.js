@@ -463,10 +463,16 @@ ${normalizedUrl}`
       try {
         cid = await this.resolveIpnsKey(ipnsKey)
         if (cid !== null) {
-          resolvedUrl = this.normalizeUrl(`/${ipfsKeyword}/${cid}${path}`, base)
+          // Path
+          const startPath = `/${ipnsKeyword}/${ipnsKey}`
+          if (path.startsWith(startPath)) {
+            path = path.slice(startPath.length)
+          }
+          path = `${startPath}${path}`
+          resolvedUrl = this.normalizeUrl(path, base)
           $tw.ipfs.getLogger().info(
             `Successfully resolved IPNS key:
-${normalizedUrl}`
+${resolvedUrl}`
           )
           $tw.utils.alert(name, 'Successfully resolved an IPNS key...')
         }
