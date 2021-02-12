@@ -124,7 +124,7 @@
 		"favicon": [
 			"--savetiddler",
         "$:/favicon.ico",
-        "../production/editions/empty/favicon.png"
+        "../production/editions/empty/favicon.ico"
     ]
 	}
 }

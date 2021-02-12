@@ -149,7 +149,7 @@
 		"favicon": [
 			"--savetiddler",
         "$:/favicon.ico",
-        "../production/editions/dev/favicon.png"
+        "../production/editions/dev/favicon.ico"
     ]
   }
 }

@@ -126,12 +126,12 @@
 		"prod_favicon": [
 			"--savetiddler",
         "$:/favicon.ico",
-        "../production/editions/bluelightav/favicon.png"
+        "../production/editions/bluelightav/favicon.ico"
     ],
 		"sample_favicon": [
 			"--savetiddler",
         "$:/favicon.ico",
-        "../sample/favicon.png"
+        "../sample/favicon.ico"
     ]
   }
 }
