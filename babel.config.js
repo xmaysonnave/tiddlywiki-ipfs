@@ -15,7 +15,7 @@ module.exports = function (api) {
       [
         '@babel/plugin-transform-runtime',
         {
-          version: '^7.12.1', // @babel/runtime-corejs3
+          version: '^7.12.15', // @babel/runtime-corejs3
         },
       ],
     ],

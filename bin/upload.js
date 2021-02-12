@@ -136,7 +136,7 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   if (fs.existsSync(faviconPath)) {
     favicon = fs.readFileSync(faviconPath)
   }
-  if (!favicon) {
+  if (favicon === false) {
     faviconName = 'favicon.png'
     faviconPath = `./production/${dir}/${faviconName}`
     if (fs.existsSync(faviconPath)) {
@@ -270,7 +270,7 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   node._cid_uri = `${gatewayUrl}${cid}`
   node._parent_cid = `${parentCid}`
   node._parent_size = parentSize
-  node._parent_uri = `${gatewayUrl}${parentCid}`
+  node._parent_uri = `${gatewayUrl}${parentCid}/`
   node._raw_hash = build._raw_hash
   node._semver = build._semver
   node._source_path = contentName

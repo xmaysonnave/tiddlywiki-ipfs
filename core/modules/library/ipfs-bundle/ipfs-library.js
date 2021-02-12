@@ -353,7 +353,8 @@ IpfsLibrary.prototype.keyList = async function (client) {
   throw new Error('Undefined IPFS key list...')
 }
 
-IpfsLibrary.prototype.filesStat = async function (client, ipfsPath) {
+IpfsLibrary.prototype.filesStat = async function (client, ipfsPath, timeout) {
+  timeout = timeout !== undefined && timeout !== null ? timeout : 2000
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }
@@ -368,7 +369,9 @@ IpfsLibrary.prototype.filesStat = async function (client, ipfsPath) {
   if (client !== undefined && client.files !== undefined && client.files.stat !== undefined) {
     // Process
     this.getLogger().info('Processing IPFS files stat...')
-    const result = await client.files.stat(ipfsPath)
+    const result = await client.files.stat(ipfsPath, {
+      timeout: timeout,
+    })
     // Check
     if (result === undefined || result == null) {
       throw new Error('IPFS client returned an unknown result...')

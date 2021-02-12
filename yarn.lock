@@ -2178,13 +2178,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/bn.js@^4.11.3":
-  version "4.11.6"
-  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.6.tgz#c306c70d9358aaea33cd4eda092a742b9505967c"
-  integrity sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==
-  dependencies:
-    "@types/node" "*"
-
 "@types/cacheable-request@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/cacheable-request/-/cacheable-request-6.0.1.tgz#5d22f3dded1fd3a84c0bbeb5039a7419c2c91976"
@@ -2918,7 +2911,7 @@ blob@0.0.5:
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
   integrity sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==
 
-bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^4.11.8, bn.js@^4.11.9, bn.js@^4.4.0:
+bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.10.0, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^4.11.9, bn.js@^4.4.0, bn.js@^4.8.0:
   version "4.11.9"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.9.tgz#26d556829458f9d1e81fc48952493d0ba3507828"
   integrity sha512-E6QoYqCKZfgatHTdHzs1RRKP7ip4vvm+EyRUeE2RF0NblwVvb0p6jSVeNTOFxPn26QXN2o6SMfNxKp6kU8zQaw==
@@ -3173,7 +3166,7 @@ buffer-xor@^1.0.3:
   resolved "https://registry.yarnpkg.com/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
   integrity sha1-JuYe0UIvtw3ULm42cp7VHYVf6Nk=
 
-buffer@^5.4.3, buffer@^5.5.0, buffer@^5.6.0:
+buffer@^5.2.1, buffer@^5.4.3, buffer@^5.5.0, buffer@^5.6.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
@@ -4418,7 +4411,7 @@ elliptic@6.5.3, elliptic@^6.5.3:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-elliptic@6.5.4, elliptic@^6.5.2:
+elliptic@6.5.4, elliptic@^6.4.0, elliptic@^6.5.2:
   version "6.5.4"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.4.tgz#da37cebd31e79a1367e941b592ed1fbebd58abbb"
   integrity sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ==
@@ -4849,15 +4842,16 @@ esutils@2.0.3, esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-eth-sig-util@^3.0.1:
+"eth-sig-util@https://github.com/xmaysonnave/eth-sig-util#v3.0.1":
   version "3.0.1"
-  resolved "https://registry.yarnpkg.com/eth-sig-util/-/eth-sig-util-3.0.1.tgz#8753297c83a3f58346bd13547b59c4b2cd110c96"
-  integrity sha512-0Us50HiGGvZgjtWTyAI/+qTzYPMLy5Q451D0Xy68bxq1QMWdoOddDwGvsqcFT27uohKgalM9z/yxplyt+mY2iQ==
+  resolved "https://github.com/xmaysonnave/eth-sig-util#5dfbf631d2349891d64f2cdca166886a38c74d5f"
   dependencies:
-    ethereumjs-abi "^0.6.8"
+    buffer "^5.2.1"
+    elliptic "^6.4.0"
+    ethereumjs-abi "0.6.5"
     ethereumjs-util "^5.1.1"
     tweetnacl "^1.0.3"
-    tweetnacl-util "^0.15.0"
+    tweetnacl-util "^0.15.1"
 
 ethereum-cryptography@^0.1.3:
   version "0.1.3"
@@ -4880,13 +4874,24 @@ ethereum-cryptography@^0.1.3:
     secp256k1 "^4.0.1"
     setimmediate "^1.0.5"
 
-ethereumjs-abi@^0.6.8:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz#71bc152db099f70e62f108b7cdfca1b362c6fcae"
-  integrity sha512-Tx0r/iXI6r+lRsdvkFDlut0N08jWMnKRZ6Gkq+Nmw75lZe4e6o3EkSnkaBP5NF6+m5PTGAr9JP43N3LyeoglsA==
+ethereumjs-abi@0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/ethereumjs-abi/-/ethereumjs-abi-0.6.5.tgz#5a637ef16ab43473fa72a29ad90871405b3f5241"
+  integrity sha1-WmN+8Wq0NHP6cqKa2QhxQFs/UkE=
   dependencies:
-    bn.js "^4.11.8"
-    ethereumjs-util "^6.0.0"
+    bn.js "^4.10.0"
+    ethereumjs-util "^4.3.0"
+
+ethereumjs-util@^4.3.0:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-4.5.1.tgz#f4bf9b3b515a484e3cc8781d61d9d980f7c83bd0"
+  integrity sha512-WrckOZ7uBnei4+AKimpuF1B3Fv25OmoRgmYCpGsP7u8PFxXAmAgiJSYT2kRWnt6fVIlKaQlZvuwXp7PIrmn3/w==
+  dependencies:
+    bn.js "^4.8.0"
+    create-hash "^1.1.2"
+    elliptic "^6.5.2"
+    ethereum-cryptography "^0.1.3"
+    rlp "^2.0.0"
 
 ethereumjs-util@^5.1.1:
   version "5.2.1"
@@ -4900,19 +4905,6 @@ ethereumjs-util@^5.1.1:
     ethjs-util "^0.1.3"
     rlp "^2.0.0"
     safe-buffer "^5.1.1"
-
-ethereumjs-util@^6.0.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-6.2.1.tgz#fcb4e4dd5ceacb9d2305426ab1a5cd93e3163b69"
-  integrity sha512-W2Ktez4L01Vexijrm5EB6w7dg4n/TgpoYU4avuT5T3Vmnw/eCRtiBrJfQYS/DCSvDIOLn2k57GcHdeBcgVxAqw==
-  dependencies:
-    "@types/bn.js" "^4.11.3"
-    bn.js "^4.11.0"
-    create-hash "^1.1.2"
-    elliptic "^6.5.2"
-    ethereum-cryptography "^0.1.3"
-    ethjs-util "0.1.6"
-    rlp "^2.2.3"
 
 ethers@^5.0.30:
   version "5.0.30"
@@ -4950,7 +4942,7 @@ ethers@^5.0.30:
     "@ethersproject/web" "5.0.13"
     "@ethersproject/wordlists" "5.0.9"
 
-ethjs-util@0.1.6, ethjs-util@^0.1.3:
+ethjs-util@^0.1.3:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/ethjs-util/-/ethjs-util-0.1.6.tgz#f308b62f185f9fe6237132fb2a9818866a5cd536"
   integrity sha512-CUnVOQq7gSpDHZVVrQW8ExxUETWrnrvXYvYz55wOU8Uj4VCgw56XC2B/fVqQN+f7gmrnRHSLVnFAwsCuNwji8w==
@@ -10649,7 +10641,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rlp@^2.0.0, rlp@^2.2.3:
+rlp@^2.0.0:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/rlp/-/rlp-2.2.6.tgz#c80ba6266ac7a483ef1e69e8e2f056656de2fb2c"
   integrity sha512-HAfAmL6SDYNWPUOJNrM500x4Thn4PZsEy5pijPh40U9WfNk0z15hUYzO9xVIMAdIHdFtD8CBDHd75Td1g36Mjg==
@@ -12065,7 +12057,7 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-tweetnacl-util@^0.15.0:
+tweetnacl-util@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/tweetnacl-util/-/tweetnacl-util-0.15.1.tgz#b80fcdb5c97bcc508be18c44a4be50f022eea00b"
   integrity sha512-RKJBIj8lySrShN4w6i/BonWp2Z/uxwC3h4y7xsRrpP59ZboCd0GpEVsOnMDYLMmKBpYhb5TgHzZXy7wTfYFBRw==

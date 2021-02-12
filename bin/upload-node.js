@@ -58,7 +58,7 @@ async function dagPut (api, gatewayUrl, links) {
   return {
     _cid: `${cidV1}`,
     _cid_size: stat.CumulativeSize,
-    _cid_uri: `${gatewayUrl}${cidV1}`,
+    _cid_uri: `${gatewayUrl}${cidV1}/`,
   }
 }
 

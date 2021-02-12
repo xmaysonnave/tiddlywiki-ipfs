@@ -727,12 +727,14 @@ var ipfsBoot = function ($tw) {
             })
           } else if (json.compressed.match(/{"version":/)) {
             $tw.boot.metamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted, recovered) {
-              inflate(decrypted)
-              if (recovered) {
-                $tw.utils.alert(
-                  name,
-                  `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
-                )
+              if (decrypted !== null) {
+                inflate(decrypted)
+                if (recovered) {
+                  $tw.utils.alert(
+                    name,
+                    `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+                  )
+                }
               }
             })
           } else {
@@ -763,12 +765,14 @@ var ipfsBoot = function ($tw) {
         } else if (content.match(/{"encrypted":/)) {
           const json = JSON.parse(content)
           $tw.boot.metamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted, recovered) {
-            $tw.boot.preloadTiddler(decrypted, callback)
-            if (recovered) {
-              $tw.utils.alert(
-                name,
-                `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
-              )
+            if (decrypted !== null) {
+              $tw.boot.preloadTiddler(decrypted, callback)
+              if (recovered) {
+                $tw.utils.alert(
+                  name,
+                  `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
+                )
+              }
             }
           })
         } else {

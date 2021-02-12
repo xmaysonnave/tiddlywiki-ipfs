@@ -390,8 +390,8 @@ IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
   return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
 }
 
-IpfsBundle.prototype.filesStat = async function (client, ipfsPath) {
-  return await this.ipfsLibrary.filesStat(client, ipfsPath)
+IpfsBundle.prototype.filesStat = async function (client, ipfsPath, timeout) {
+  return await this.ipfsLibrary.filesStat(client, ipfsPath, timeout)
 }
 
 IpfsBundle.prototype.ls = async function (client, ipfsPath) {
@@ -402,7 +402,7 @@ IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
   return await this.ipfsLibrary.pinRm(client, cid, recursive)
 }
 
-IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value) {
+IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value, timeout) {
   if (value === undefined || value == null || value.toString().trim() === '') {
     return null
   }
@@ -416,48 +416,37 @@ IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value) {
   if (value == null) {
     return null
   }
+  const self = this
+  const stat = async function (client, ipfsPath, base, timeout) {
+    const fileStat = await self.filesStat(client, ipfsPath, timeout)
+    if (fileStat.type === 'directory') {
+      return fileStat.cid
+    }
+    var nextPath = ''
+    const members = value.pathname.split('/')
+    for (var i = 0; i < members.length; i++) {
+      if (members[i].trim() === '') {
+        continue
+      }
+      if (i !== members.length - 1) {
+        nextPath = `${nextPath}/${members[i]}`
+      }
+    }
+    const nextUrl = self.getUrl(nextPath, base)
+    return await self.getIpfsParentIdentifier(client, nextUrl, timeout)
+  }
   const base = this.getUrl(`${value.protocol}//${value.host}`)
   // Pathname
   var { cid, path, protocol } = this.decodePathname(value.pathname)
   if (cid !== null) {
     const ipfsPath = `/${protocol}/${cid}${path}`
-    const stat = await this.filesStat(client, ipfsPath)
-    if (stat.type === 'directory') {
-      return stat.cid
-    }
-    var nextPath = ''
-    const members = value.pathname.split('/')
-    for (var i = 0; i < members.length; i++) {
-      if (members[i].trim() === '') {
-        continue
-      }
-      if (i !== members.length - 1) {
-        nextPath = `${nextPath}/${members[i]}`
-      }
-    }
-    const nextUrl = this.getUrl(nextPath, base)
-    return this.getIpfsParentIdentifier(client, nextUrl)
+    return await stat(client, ipfsPath, base, timeout)
   }
   // Hostname
   var { cid, protocol } = this.decodeHostname(base.hostname)
   if (cid !== null) {
     const ipfsPath = `/${protocol}/${cid}${value.pathname}`
-    const stat = await this.filesStat(client, ipfsPath)
-    if (stat.type === 'directory') {
-      return stat.cid
-    }
-    var nextPath = ''
-    const members = value.pathname.split('/')
-    for (var i = 0; i < members.length; i++) {
-      if (members[i].trim() === '') {
-        continue
-      }
-      if (i !== members.length - 1) {
-        nextPath = `${nextPath}/${members[i]}`
-      }
-    }
-    const nextUrl = this.getUrl(nextPath, base)
-    return this.getIpfsParentIdentifier(client, nextUrl)
+    return await stat(client, ipfsPath, base, timeout)
   }
   return null
 }
@@ -570,20 +559,12 @@ IpfsBundle.prototype.decodeUrl = function (url) {
 }
 
 IpfsBundle.prototype.decodePathname = function (pathname) {
-  if (pathname === undefined || pathname == null) {
-    return {
-      cid: null,
-      ipnsIdentifier: null,
-      path: null,
-      protocol: null,
-    }
-  }
-  pathname = pathname.toString().trim() === '' ? null : pathname.toString().trim()
+  pathname = pathname !== undefined && pathname !== null && pathname.trim() !== '' ? pathname.trim() : null
   if (pathname == null || pathname === '/') {
     return {
       cid: null,
       ipnsIdentifier: null,
-      path: null,
+      path: pathname,
       protocol: null,
     }
   }
@@ -606,6 +587,9 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
     }
     path = `${path}/${members[i]}`
   }
+  if (pathname.slice(-1) === '/') {
+    path = `${path}/`
+  }
   if (protocol == null || identifier == null) {
     return {
       cid: null,
@@ -626,23 +610,14 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
   return {
     cid: cid,
     ipnsIdentifier: ipnsIdentifier,
-    path: protocol ? path : pathname,
+    path: protocol !== null ? path : pathname,
     protocol: protocol,
   }
 }
 
 IpfsBundle.prototype.decodeHostname = function (hostname) {
+  hostname = hostname !== undefined && hostname !== null && hostname.trim() !== '' ? hostname.trim() : null
   if (hostname === undefined || hostname == null) {
-    return {
-      cid: null,
-      hostname: null,
-      ipnsIdentifier: null,
-      path: null,
-      protocol: null,
-    }
-  }
-  hostname = hostname.toString().trim() === '' ? null : hostname.toString().trim()
-  if (hostname == null) {
     return {
       cid: null,
       hostname: null,

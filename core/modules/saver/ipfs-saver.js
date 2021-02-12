@@ -81,11 +81,11 @@ IPFS Saver
       const hash = current.hash
       try {
         var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
-        if (ipnsKey == null) {
+        if (cid !== null && ipnsKey == null) {
           const directoryCid = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
           if (directoryCid !== null) {
             await $tw.ipfs.requestToUnpin(directoryCid)
-          } else if (cid !== null) {
+          } else {
             await $tw.ipfs.requestToUnpin(cid)
           }
         }
