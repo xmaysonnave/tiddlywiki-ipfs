@@ -12,10 +12,9 @@ nvm use > /dev/null 2>&1
 # cleanup
 find ./sample -name "empty-import-json*.*" -delete > /dev/null 2>&1
 
-# init
-./bin/init-editions.sh "$@" || exit 1
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
+
 rm -f -R ./build/plugins > /dev/null 2>&1
 
 # assets
@@ -27,7 +26,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** empty import json ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --output sample \
   --build \
   --verbose "$@" || exit 1

@@ -352,7 +352,6 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 
 The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/package.json) references several options:
 
-- boot
 - build
 - build-noclone
 - bluelightav
@@ -360,15 +359,9 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/packa
 - cli-semver
 - cli-upload
 - cli-upload-node
-- dev
-- documentation
 - download
-- editions
-- empty
-- ipfs-tiddlywiki
-- library
+- cli-tiddlywiki-ipfs
 - tiddlywiki-ipfs
-- tiddlywiki
 - precommit
 - prepare
 - prettier-standard

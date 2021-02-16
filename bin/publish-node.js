@@ -69,8 +69,8 @@ module.exports = async function main (dir, pin) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  dir = dir == null || dir === undefined || dir.trim() === '' ? '.' : dir.trim()
-  pin = pin == null || pin === undefined || pin.trim() === '' ? null : pin.trim()
+  dir = dir !== undefined && dir !== null && dir.trim() !== '' ? dir.trim() : '.'
+  pin = pin !== undefined && pin !== null && pin.trim() !== '' ? pin.trim() : null
   pin = pin ? pin === 'true' : process.env.PIN ? process.env.PIN === 'true' : true
 
   // Ipfs Client
@@ -87,7 +87,7 @@ module.exports = async function main (dir, pin) {
     protocol: protocol,
     host: apiUrl.hostname,
     port: port,
-    timeout: '4m',
+    timeout: 2 * 60 * 1000,
   })
 
   // Read node.json

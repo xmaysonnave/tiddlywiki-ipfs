@@ -262,7 +262,7 @@ ${apiUrl}`
             protocol: protocol,
             host: apiUrl.hostname,
             port: port,
-            timeout: '4m',
+            timeout: 4 * 60 * 1000,
           },
         }),
       ],
@@ -354,7 +354,7 @@ IpfsLibrary.prototype.keyList = async function (client) {
 }
 
 IpfsLibrary.prototype.filesStat = async function (client, ipfsPath, timeout) {
-  timeout = timeout !== undefined && timeout !== null ? timeout : 2000
+  timeout = timeout !== undefined && timeout !== null ? timeout : 2 * 1000
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }

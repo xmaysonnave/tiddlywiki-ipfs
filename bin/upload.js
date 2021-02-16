@@ -10,8 +10,6 @@ const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
-const http = require('http')
-const https = require('https')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
 
@@ -24,10 +22,10 @@ async function load (url, stream) {
     method: 'GET',
   }
   const response = await fetch(url, options)
-  if (!response.ok) {
+  if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)
   }
-  if (stream) {
+  if (stream !== undefined && stream !== null) {
     const streamPipeline = promisify(pipeline)
     await streamPipeline(response.body, stream)
     return
@@ -60,29 +58,29 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  name = name == null || name === undefined || name.trim() === '' ? null : name.trim()
+  name = name !== undefined && name !== null && name.trim() !== '' ? name.trim() : null
   if (name == null) {
     throw new Error('Unknown name...')
   }
-  owner = owner == null || owner === undefined || owner.trim() === '' ? null : owner.trim()
-  extension = extension == null || extension === undefined || extension.trim() === '' ? null : extension.trim()
+  owner = owner !== undefined && owner !== null && owner.trim() !== '' ? owner.trim() : null
+  extension = extension !== undefined && extension !== null && extension.trim() !== '' ? extension.trim() : null
   if (extension == null) {
     throw new Error('Unknown file extension...')
   }
-  dir = dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
+  dir = dir !== undefined && dir !== null && dir.trim() !== '' ? dir.trim() : null
   if (dir == null) {
     throw new Error('Unknown directory...')
   }
-  tags = tags == null || tags === undefined || tags.trim() === '' ? null : tags.trim()
+  tags = tags !== undefined && tags !== null && tags.trim() !== '' ? tags.trim() : null
 
   const normalizedName = filenamify(name, { replacement: '_' })
 
   // build
-  var path = `./build/output/${dir}/${normalizedName}_build.json`
-  if (!fs.existsSync(path)) {
-    throw new Error(`Unknown build: ${path}...`)
+  const buildPath = `./build/output/${dir}/${normalizedName}_build.json`
+  if (fs.existsSync(buildPath) === false) {
+    throw new Error(`Unknown build: ${buildPath}...`)
   }
-  const build = JSON.parse(fs.readFileSync(path, 'utf8'))
+  const build = JSON.parse(fs.readFileSync(buildPath, 'utf8'))
   if (build._version === undefined || build._version == null) {
     throw new Error('Unknown version...')
   }
@@ -93,29 +91,28 @@ module.exports = async function main (name, owner, extension, dir, tags) {
     throw new Error('Unknown semver...')
   }
 
-  // current
-  var i = null
   var current = null
   var member = null
-  var path = `./current/${dir}/current.json`
-  if (fs.existsSync(path)) {
-    current = JSON.parse(fs.readFileSync(path, 'utf8'))
-    if (!current) {
-      throw new Error(`Unknown current: ${path}...`)
+  var memberPosition = null
+  const currentPath = `./current/${dir}/current.json`
+  if (fs.existsSync(currentPath)) {
+    current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
+    if (current === undefined || current == null) {
+      throw new Error(`Unknown current: ${currentPath}...`)
     }
-    if (!Array.isArray(current)) {
-      throw new Error(`Unknown json array: ${path}...`)
+    if (Array.isArray(current) === false) {
+      throw new Error(`Unknown json array: ${currentPath}...`)
     }
     // Member lookup
     for (var j = 0; j < current.length; j++) {
       if (current[j]._name === name) {
-        i = j
         member = current[j]
+        memberPosition = j
         break
       }
     }
     // Check
-    if (member) {
+    if (member !== null) {
       if (member._version === build._version) {
         if (member._raw_hash !== build._raw_hash) {
           throw new Error('Matching version but not raw hash...')
@@ -136,14 +133,14 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   if (fs.existsSync(faviconPath)) {
     favicon = fs.readFileSync(faviconPath)
   }
-  if (favicon === false) {
+  if (favicon === undefined || favicon == null) {
     faviconName = 'favicon.png'
     faviconPath = `./production/${dir}/${faviconName}`
     if (fs.existsSync(faviconPath)) {
       favicon = fs.readFileSync(faviconPath)
     }
   }
-  if (favicon) {
+  if (favicon !== undefined && favicon !== null) {
     upload.push({
       path: `/${faviconName}`,
       content: favicon,
@@ -157,14 +154,14 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   if (fs.existsSync(contentPath)) {
     content = fs.readFileSync(contentPath, 'utf8')
   }
-  if (!content) {
+  if (content === undefined || content == null) {
     contentName = normalizedName
     contentPath = `./build/output/${dir}/${normalizedName}`
     if (fs.existsSync(contentPath)) {
       content = fs.readFileSync(contentPath, 'utf8')
     }
   }
-  if (!content) {
+  if (content === undefined || content == null) {
     throw new Error('Unknown content...')
   }
   upload.push({
@@ -175,16 +172,6 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   // Ipfs Client
   const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
   const protocol = apiUrl.protocol.slice(0, -1)
-  const agent = new http.Agent({
-    keepAlive: true,
-    // Similar to browsers which limit connections to six per host
-    maxSockets: 6,
-  })
-  const agents = new https.Agent({
-    keepAlive: true,
-    // Similar to browsers which limit connections to six per host
-    maxSockets: 6,
-  })
   var port = apiUrl.port
   if (port === undefined || port == null || port.trim() === '') {
     port = 443
@@ -193,11 +180,10 @@ module.exports = async function main (name, owner, extension, dir, tags) {
     }
   }
   const api = IpfsHttpClient({
-    agent: protocol === 'http' ? agent : agents,
     protocol: protocol,
     host: apiUrl.hostname,
     port: port,
-    timeout: '4m',
+    timeout: 2 * 60 * 1000,
   })
   const gatewayUrl = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
 
@@ -230,10 +216,10 @@ module.exports = async function main (name, owner, extension, dir, tags) {
       faviconCid = cidV1
     }
   }
-  if (!parentCid) {
+  if (parentCid === undefined || parentCid == null) {
     throw new Error('Unknown parent cid...')
   }
-  if (!cid) {
+  if (cid === undefined || cid == null) {
     throw new Error('Unknown cid...')
   }
 
@@ -248,7 +234,7 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   }
 
   // Check
-  if (member && member._version === build._version) {
+  if (member !== null && member._version === build._version) {
     if (member._cid !== cid.toString()) {
       throw new Error('Matching version but not cid...')
     }
@@ -267,6 +253,7 @@ module.exports = async function main (name, owner, extension, dir, tags) {
     node._owner = owner
   }
   node._cid = `${cid.toString()}`
+  node._cid_size = contentSize
   node._cid_uri = `${gatewayUrl}${cid}`
   node._parent_cid = `${parentCid}`
   node._parent_size = parentSize
@@ -274,15 +261,14 @@ module.exports = async function main (name, owner, extension, dir, tags) {
   node._raw_hash = build._raw_hash
   node._semver = build._semver
   node._source_path = contentName
-  node._source_size = contentSize
   node._source_uri = `${gatewayUrl}${parentCid}/${contentName}`
   node._version = build._version
   // Save current
   if (current == null) {
     current = []
   }
-  if (i !== null) {
-    current[i] = node
+  if (memberPosition !== null) {
+    current[memberPosition] = node
   } else {
     current.push(node)
   }
@@ -315,6 +301,7 @@ _owner: ${node._owner}`
   }
   tid = `${tid}
 _cid: ${node._cid}
+_cid_size: ${node._cid_size}
 _cid_uri: ipfs://${node._cid}
 _parent_cid: ${node._parent_cid}
 _parent_size: ${node._parent_size}
@@ -322,7 +309,6 @@ _parent_uri: ipfs://${node._parent_cid}
 _raw_hash: ${node._raw_hash}
 _semver: ${node._semver}
 _source_path: ${node._source_path}
-_source_size: ${node._source_size}
 _source_uri: ipfs://${node._parent_cid}/${contentName}
 _version: ${node._version}`
 

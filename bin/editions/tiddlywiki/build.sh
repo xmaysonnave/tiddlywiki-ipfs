@@ -9,16 +9,19 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
-# init
-./bin/init-editions.sh "$@" || exit 1
 rm -f -R ./build/output/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./build/output/editions/tiddlywiki > /dev/null 2>&1
+
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
+
 rm -f -R ./build/plugins > /dev/null 2>&1
+
 rm -f -R ./production/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
+
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
+
 rm -f -R ./download/tiddlywiki > /dev/null 2>&1
 
 # down
@@ -41,7 +44,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** raw tiddlywiki ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --build \
   --verbose "$@" || exit 1
 
@@ -59,7 +62,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** tiddlywiki ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --output production \
   --build \
   --verbose "$@" || exit 1

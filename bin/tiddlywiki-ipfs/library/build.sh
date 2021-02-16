@@ -12,11 +12,15 @@ nvm use > /dev/null 2>&1
 # init
 rm -f -R ./build/output/tiddlywiki-ipfs/library > /dev/null 2>&1
 mkdir -p ./build/output/tiddlywiki-ipfs/library > /dev/null 2>&1
+
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
+
 rm -f -R ./build/plugins > /dev/null 2>&1
+
 rm -f -R ./production/tiddlywiki-ipfs/library > /dev/null 2>&1
 mkdir -p ./production/tiddlywiki-ipfs/library > /dev/null 2>&1
+
 mkdir -p ./current/tiddlywiki-ipfs/library > /dev/null 2>&1
 
 # libraries
@@ -39,7 +43,7 @@ cp ./editions/library-bundle/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 echo '***'
 echo '*** bundle library ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --build \
   --verbose "$@" || exit 1
 
@@ -57,7 +61,7 @@ cp ./editions/library/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 echo '***'
 echo '*** raw library ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --build \
   --verbose "$@" || exit 1
 
@@ -74,7 +78,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** library ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --output production \
   --build \
   --verbose "$@" || exit 1

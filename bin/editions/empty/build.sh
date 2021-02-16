@@ -12,15 +12,17 @@ nvm use > /dev/null 2>&1
 # cleanup
 find ./sample -name "empty*.*" -delete > /dev/null 2>&1
 
-# init
-./bin/init-editions.sh "$@" || exit 1
 rm -f -R ./build/output/editions/empty > /dev/null 2>&1
 mkdir -p ./build/output/editions/empty > /dev/null 2>&1
+
 rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
+
 rm -f -R ./build/plugins > /dev/null 2>&1
+
 rm -f -R ./production/editions/empty > /dev/null 2>&1
 mkdir -p ./production/editions/empty > /dev/null 2>&1
+
 mkdir -p ./current/editions/empty > /dev/null 2>&1
 
 # assets
@@ -33,7 +35,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** raw empty ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --build \
   --verbose "$@" || exit 1
 
@@ -57,7 +59,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** empty ***'
 echo '***'
-yarn ipfs-tiddlywiki build \
+yarn cli-tiddlywiki-ipfs build \
   --output production \
   --build \
   --verbose "$@" || exit 1

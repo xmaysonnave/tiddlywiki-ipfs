@@ -27,10 +27,10 @@ async function load (url, stream) {
     method: 'GET',
   }
   const response = await fetch(url, options)
-  if (!response.ok) {
+  if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)
   }
-  if (stream) {
+  if (stream !== undefined && stream !== null) {
     const streamPipeline = promisify(pipeline)
     await streamPipeline(response.body, stream)
     return
@@ -53,11 +53,26 @@ async function dagPut (api, gatewayUrl, links) {
       pin: false,
     }
   )
-  const stat = await api.object.stat(put)
+  var size = null
+  var stat = null
+  try {
+    stat = await api.files.stat(`/ipfs/${put}/`)
+    size = stat.cumulativeSize
+  } catch (error) {
+    console.error(error)
+  }
+  if (stat == null) {
+    try {
+      stat = await api.object.stat(put)
+      size = stat.CumulativeSize
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const cidV1 = ipfsBundle.cidToCidV1(put)
   return {
     _cid: `${cidV1}`,
-    _cid_size: stat.CumulativeSize,
+    _cid_size: size,
     _cid_uri: `${gatewayUrl}${cidV1}/`,
   }
 }
@@ -99,7 +114,7 @@ module.exports = async function main (dir) {
     protocol: protocol,
     host: apiUrl.hostname,
     port: port,
-    timeout: '4m',
+    timeout: 2 * 60 * 1000,
   })
   const gatewayUrl = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
   // Read sub directory current.json or node.json
@@ -111,46 +126,49 @@ module.exports = async function main (dir) {
   for (var i = 0; i < content.length; i++) {
     try {
       if (fs.statSync(`./current/${dir}/${content[i]}`).isDirectory()) {
+        const currentPath = `./current/${dir}/${content[i]}/current.json`
+        const nodePath = `./current/${dir}/${content[i]}/node.json`
+        const productionPath = `./production/${dir}/${content[i]}`
         // Current
-        var path = `./current/${dir}/${content[i]}/current.json`
-        if (fs.existsSync(path)) {
-          const current = JSON.parse(fs.readFileSync(path, 'utf8'))
-          if (current) {
-            if (!Array.isArray(current)) {
-              throw new Error(`Array expected: ${path}...`)
-            }
+        if (fs.existsSync(currentPath)) {
+          const current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
+          if (current === undefined || current == null) {
+            throw new Error(`Unknown current: ${currentPath}...`)
           }
-          if (current && current.length === 1) {
+          if (Array.isArray(current) === false) {
+            throw new Error(`Unknown array: ${currentPath}...`)
+          }
+          if (current.length === 1) {
             links.push({
               Name: content[i],
               Tsize: current[0]._parent_size,
               Hash: new CID(current[0]._parent_cid),
             })
           } else {
-            const innerLinks = []
-            const innerContent = fs.readdirSync(`./production/${dir}/${content[i]}`).sort((a, b) => {
+            const productionLinks = []
+            const production = fs.readdirSync(productionPath).sort((a, b) => {
               return a.localeCompare(b)
             })
-            for (var j = 0; j < innerContent.length; j++) {
+            for (var j = 0; j < production.length; j++) {
               var found = null
               for (var k = 0; k < current.length; k++) {
-                if (current[k]._source_path === innerContent[j]) {
+                if (current[k]._source_path === production[j]) {
                   found = current[k]
                   break
                 }
               }
-              if (found) {
-                innerLinks.push({
+              if (found !== null) {
+                productionLinks.push({
                   Name: found._source_path,
                   Tsize: found._source_size,
                   Hash: new CID(found._cid),
                 })
               } else {
-                if (getExtension(innerContent[j]) === 'tid') {
-                  const loaded = fs.readFileSync(`./production/${dir}/${content[i]}/${innerContent[j]}`)
+                if (getExtension(production[j]) === 'tid') {
+                  const loaded = fs.readFileSync(`./production/${dir}/${content[i]}/${production[j]}`)
                   const added = await api.add(
                     {
-                      path: `/${innerContent[j]}`,
+                      path: `/${production[j]}`,
                       content: loaded,
                     },
                     options
@@ -159,15 +177,15 @@ module.exports = async function main (dir) {
                     throw new Error('IPFS client returned an unknown result...')
                   }
                   const cidV1 = ipfsBundle.cidToCidV1(added.cid)
-                  innerLinks.push({
-                    Name: innerContent[j],
+                  productionLinks.push({
+                    Name: production[j],
                     Tsize: added.size,
                     Hash: cidV1,
                   })
                 }
               }
             }
-            const node = await dagPut(api, gatewayUrl, innerLinks)
+            const node = await dagPut(api, gatewayUrl, productionLinks)
             links.push({
               Name: content[i],
               Tsize: node._cid_size,
@@ -176,15 +194,14 @@ module.exports = async function main (dir) {
           }
         }
         // Node
-        path = `./current/${dir}/${content[i]}/node.json`
-        if (fs.existsSync(path)) {
-          const node = JSON.parse(fs.readFileSync(path, 'utf8'))
+        if (fs.existsSync(nodePath)) {
+          const node = JSON.parse(fs.readFileSync(nodePath, 'utf8'))
           links.push({
             Name: content[i],
             Tsize: node._cid_size,
             Hash: new CID(node._cid),
           })
-          nodes.set(path, node)
+          nodes.set(nodePath, node)
         }
       }
     } catch (error) {
@@ -209,18 +226,16 @@ module.exports = async function main (dir) {
       node._parent_size = buildNode._cid_size
       node._parent_uri = buildNode._cid_uri
       node._source_path = build._version
-      node._source_size = node._cid_size
       node._source_uri = `${gatewayUrl}${buildNode._cid}/${build._version}`
     }
-    delete node._cid_size
   }
   // Save node
   fs.writeFileSync(`./current/${dir}/node.json`, beautify(node, null, 2, 80), 'utf8')
   // Update child nodes
   for (const [key, value] of nodes) {
-    value._parent_cid = node._parent_cid
-    value._parent_size = node._parent_size
-    value._parent_uri = node._parent_uri
+    value._parent_cid = node._cid
+    value._parent_size = node._cid_size
+    value._parent_uri = node._cid_uri
     // Save child node
     fs.writeFileSync(key, beautify(value, null, 2, 80), 'utf8')
   }

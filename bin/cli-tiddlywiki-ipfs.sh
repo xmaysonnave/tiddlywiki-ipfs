@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** ipfs-tiddlywiki ***'
+echo '*** cli-tiddlywiki-ipfs ***'
 echo '***'
 
 # nvm
@@ -10,7 +10,7 @@ echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
 # run
-node ./ipfs-tiddlywiki.js "$@" || exit 1
+node ./cli-tiddlywiki-ipfs.js "$@" || exit 1
 
 # done
 exit 0

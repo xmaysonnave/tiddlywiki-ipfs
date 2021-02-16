@@ -67,10 +67,10 @@ IPFS Saver
       var ipnsName = null
       var options = options || {}
       var web3 = null
+      var host = null
       const wiki = $tw.ipfs.getDocumentUrl()
       const base = $tw.ipfs.getIpfsBaseUrl()
       const protocol = base.protocol
-      const host = base.host
       const current = $tw.ipfs.getUrl(wiki, base)
       var credential = ''
       if (current.username && current.password) {
@@ -80,19 +80,20 @@ IPFS Saver
       const search = current.search
       const hash = current.hash
       try {
-        var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
-        if (cid !== null && ipnsKey == null) {
-          const directoryCid = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
-          if (directoryCid !== null) {
-            await $tw.ipfs.requestToUnpin(directoryCid)
-          } else {
-            await $tw.ipfs.requestToUnpin(cid)
-          }
-        }
+        var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         callback(error)
         return true
+      }
+      host = normalizedUrl.host
+      if (cid !== null && ipnsKey == null) {
+        const directoryCid = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
+        if (directoryCid !== null) {
+          await $tw.ipfs.requestToUnpin(directoryCid)
+        } else {
+          await $tw.ipfs.requestToUnpin(cid)
+        }
       }
       // IPNS
       if (ipnsKey !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {

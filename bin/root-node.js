@@ -11,7 +11,7 @@ module.exports = function main (branch) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  branch = branch == null || branch === undefined || branch.trim() === '' ? null : branch.trim()
+  branch = branch !== undefined && branch !== null && branch.trim() !== '' ? branch.trim() : null
   branch = branch || process.env.BRANCH || 'main'
 
   // current root node
@@ -32,7 +32,7 @@ module.exports = function main (branch) {
     fs.copyFileSync(readmeRawPath, readmePath)
     readme = fs.readFileSync(readmePath, 'utf8')
   }
-  if (!readme) {
+  if (readme == null) {
     throw new Error('Unknown README.md...')
   }
 
@@ -47,11 +47,11 @@ module.exports = function main (branch) {
 
   // root node
   const root = JSON.parse(node)
-  if (!root._cid_uri) {
+  if (root._cid_uri === undefined || root._cid_uri === null) {
     throw new Error('Unknown root node uri...')
   }
   var rootUri = root._cid_uri
-  if (root._parent_uri) {
+  if (root._parent_uri !== undefined && root._parent_uri !== null) {
     rootUri = `${root._parent_uri}`
   }
   replace({
@@ -63,7 +63,7 @@ module.exports = function main (branch) {
   })
   // build node
   var buildUri = root._cid_uri
-  if (root._parent_uri) {
+  if (root._parent_uri !== undefined && root._parent_uri !== null) {
     buildUri = `${root._parent_uri}/${root._source_path}`
   }
   replace({
@@ -74,18 +74,17 @@ module.exports = function main (branch) {
     silent: true,
   })
 
-  var current = null
-
   // boot
+  var current = null
   var path = './current/tiddlywiki-ipfs/boot/current.json'
   if (fs.existsSync(path)) {
     current = fs.readFileSync(path, 'utf8')
   }
-  if (!current) {
+  if (current == null) {
     throw new Error(`Unknown current: ${path}`)
   }
   current = JSON.parse(current)
-  if (!Array.isArray(current)) {
+  if (Array.isArray(current) === false) {
     throw new Error(`Array expected: ${path}...`)
   }
   var version = null
@@ -95,7 +94,7 @@ module.exports = function main (branch) {
       break
     }
   }
-  if (!version) {
+  if (version == null) {
     throw new Error(`Unknown '$:/boot/boot.js': ${path}`)
   }
   replace({
@@ -107,25 +106,26 @@ module.exports = function main (branch) {
   })
 
   // library
+  var current = null
   var path = './current/tiddlywiki-ipfs/library/current.json'
   if (fs.existsSync(path)) {
     current = fs.readFileSync(path, 'utf8')
   }
-  if (!current) {
+  if (current == null) {
     throw new Error(`Unknown current: ${path}`)
   }
   current = JSON.parse(current)
-  if (!Array.isArray(current)) {
+  if (Array.isArray(current) === false) {
     throw new Error(`Array expected: ${path}...`)
   }
-  version = null
+  var version = null
   for (var i = 0; i < current.length; i++) {
     if (current[i]._name === '$:/library/ipfs-library-modules.js') {
       version = current[i]._version
       break
     }
   }
-  if (!version) {
+  if (version == null) {
     throw new Error(`Unknown '$:/library/ipfs-library-modules.js': ${path}`)
   }
   replace({
@@ -137,25 +137,26 @@ module.exports = function main (branch) {
   })
 
   // plugin
+  var current = null
   var path = './current/tiddlywiki-ipfs/plugin/current.json'
   if (fs.existsSync(path)) {
     current = fs.readFileSync(path, 'utf8')
   }
-  if (!current) {
+  if (current == null) {
     throw new Error(`Unknown current: ${path}`)
   }
   current = JSON.parse(current)
-  if (!Array.isArray(current)) {
+  if (Array.isArray(current) === false) {
     throw new Error(`Array expected: ${path}...`)
   }
-  version = null
+  var version = null
   for (var i = 0; i < current.length; i++) {
     if (current[i]._name === '$:/plugins/ipfs.js') {
       version = current[i]._version
       break
     }
   }
-  if (!version) {
+  if (version == null) {
     throw new Error(`Unknown '$:/plugins/ipfs.js': ${path}`)
   }
   replace({
@@ -167,25 +168,26 @@ module.exports = function main (branch) {
   })
 
   // documentation
+  var current = null
   var path = './current/tiddlywiki-ipfs/documentation/current.json'
   if (fs.existsSync(path)) {
     current = fs.readFileSync(path, 'utf8')
   }
-  if (!current) {
+  if (current == null) {
     throw new Error(`Unknown current: ${path}`)
   }
   current = JSON.parse(current)
-  if (!Array.isArray(current)) {
+  if (Array.isArray(current) === false) {
     throw new Error(`Array expected: ${path}...`)
   }
-  version = null
+  var version = null
   for (var i = 0; i < current.length; i++) {
     if (current[i]._name === '$:/ipfs/documentation.json') {
       version = current[i]._version
       break
     }
   }
-  if (!version) {
+  if (version == null) {
     throw new Error(`Unknown '$:/ipfs/documentation.json': ${path}`)
   }
   replace({

@@ -1,7 +1,4 @@
 #!/usr/bin/env zsh
-# init
-./bin/init-editions.sh "$@" || exit 1
-
 # build bluelightav.eth
 ./bin/editions/bluelightav/build.sh "$@" || exit 1
 

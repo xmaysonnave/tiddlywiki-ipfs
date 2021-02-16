@@ -16,6 +16,11 @@ rm -f -R ./build > /dev/null 2>&1
 mkdir -p ./build/output/pin > /dev/null 2>&1
 mkdir ./sample > /dev/null 2>&1
 
+rm -f -R ./production/editions > /dev/null 2>&1
+
+rm -f -R ./production/tiddlywiki-ipfs > /dev/null 2>&1
+mkdir -p ./production/tiddlywiki-ipfs > /dev/null 2>&1
+
 # format and lint
 echo '***'
 echo '*** prettier-standard ***'

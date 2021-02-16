@@ -13,24 +13,24 @@ module.exports = function main (name, extension, dir, env, version) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  name = name == null || name === undefined || name.trim() === '' ? null : name.trim()
+  name = name !== undefined && name !== null && name.trim() !== '' ? name.trim() : null
   if (name == null) {
     throw new Error('Unknown name...')
   }
-  extension = extension == null || extension === undefined || extension.trim() === '' ? null : extension.trim()
+  extension = extension !== undefined && extension !== null && extension.trim() !== '' ? extension.trim() : null
   if (extension == null) {
     throw new Error('Unknown file extension...')
   }
-  dir = dir == null || dir === undefined || dir.trim() === '' ? null : dir.trim()
+  dir = dir !== undefined && dir !== null && dir.trim() !== '' ? dir.trim() : null
   if (dir == null) {
     throw new Error('Unknown output dir...')
   }
-  env = env == null || env === undefined || env.trim() === '' ? null : env.trim()
-  if (!env) {
+  env = env !== undefined && env !== undefined && env.trim() !== '' ? env.trim() : null
+  if (env == null) {
     throw new Error('Unknown env...')
   }
   const rawSemver = process.env[`${env}_SEMVER`]
-  if (!rawSemver || rawSemver.trim() === '') {
+  if (rawSemver === undefined || rawSemver == null || rawSemver.trim() === '') {
     throw new Error(`Undefined 'env.${env}_SEMVER'...`)
   }
 
@@ -42,25 +42,25 @@ module.exports = function main (name, extension, dir, env, version) {
   if (fs.existsSync(path)) {
     raw = fs.readFileSync(path, 'utf8')
   }
-  if (!raw) {
+  if (raw == null) {
     path = `./build/output/${dir}/${fileName}.${extension}-%BUILD_${env}_VERSION%.json`
     if (fs.existsSync(path)) {
       raw = fs.readFileSync(path, 'utf8')
     }
   }
-  if (!raw) {
+  if (raw == null) {
     path = `./build/output/${dir}/${fileName}.${extension}`
     if (fs.existsSync(path)) {
       raw = fs.readFileSync(path, 'utf8')
     }
   }
-  if (!raw) {
+  if (raw == null) {
     path = `./build/output/${dir}/${fileName}`
     if (fs.existsSync(path)) {
       raw = fs.readFileSync(path, 'utf8')
     }
   }
-  if (!raw) {
+  if (raw == null) {
     throw new Error('Unknown raw content...')
   }
   // Keccak
@@ -76,7 +76,7 @@ module.exports = function main (name, extension, dir, env, version) {
   if (fs.existsSync(path)) {
     current = JSON.parse(fs.readFileSync(path, 'utf8'))
     if (current) {
-      if (!Array.isArray(current)) {
+      if (Array.isArray(current) === false) {
         throw new Error(`Unknown structure: ${path}...`)
       }
       // Member lookup
@@ -90,9 +90,9 @@ module.exports = function main (name, extension, dir, env, version) {
   }
 
   // Version
-  if (!version) {
-    if (!member || (member && member._raw_hash !== rawHash)) {
-      if (!validate(rawSemver)) {
+  if (version === undefined || version == null) {
+    if (member === undefined || member == null || (member !== undefined && member !== null && member._raw_hash !== rawHash)) {
+      if (validate(rawSemver) === false) {
         version = generate({ version: rawSemver, versionSeparator: '-' })
         console.log(`*** new version: ${version} ***`)
       }
@@ -104,7 +104,7 @@ module.exports = function main (name, extension, dir, env, version) {
     console.log(`*** use parent version: ${version} ***`)
   }
   // Check
-  if (!validate(version)) {
+  if (validate(version) === false) {
     throw new Error(`Invalid version: ${version}`)
   }
 

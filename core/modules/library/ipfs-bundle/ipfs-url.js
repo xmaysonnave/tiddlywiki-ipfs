@@ -105,39 +105,48 @@ IpfsUrl.prototype.getIpfsBaseUrl = function () {
 }
 
 IpfsUrl.prototype.getBase = function (base) {
-  base = base === undefined || base == null || base.toString().trim() === '' ? null : base.toString().trim()
-  var url
+  base = base !== undefined && base !== null && base.toString().trim() !== '' ? base.toString().trim() : null
+  var url = null
   if (base == null) {
-    return this.getIpfsBaseUrl()
+    return {
+      cid: null,
+      ipnsIdentifier: null,
+      base: this.getIpfsBaseUrl(),
+    }
   }
   try {
     url = this.getUrl(base)
   } catch (error) {
-    return this.getIpfsBaseUrl()
+    return {
+      cid: null,
+      ipnsIdentifier: null,
+      base: this.getIpfsBaseUrl(),
+    }
   }
   // Parse
-  var { cid, hostname, ipnsIdentifier, protocol } = this.ipfsBundle.getIpfsIdentifier(base)
+  var { cid, hostname, ipnsIdentifier } = this.ipfsBundle.getIpfsIdentifier(base)
   if (hostname === undefined || hostname == null || hostname.trim() === '') {
-    return url
-  }
-  if (!protocol || (!cid && !ipnsIdentifier)) {
-    return url
-  }
-  if (protocol !== 'ipfs' && protocol !== 'ipfs:' && protocol !== 'ipns' && protocol !== 'ipns:') {
-    return url
+    return {
+      cid: null,
+      ipnsIdentifier: null,
+      base: url,
+    }
   }
   const host = url.port ? `${hostname}:${url.port}` : hostname
-  return this.getUrl(`${url.protocol}//${host}`)
+  return {
+    cid: cid,
+    ipnsIdentifier: ipnsIdentifier,
+    base: this.getUrl(`${url.protocol}//${host}`),
+  }
 }
 
 IpfsUrl.prototype.normalizeUrl = function (value, base) {
-  value = value === undefined || value == null || value.toString().trim() === '' ? null : value.toString().trim()
+  value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
   if (value == null) {
     return null
   }
-  base = this.getBase(base)
-  // Parse
   var url = null
+  var { base } = this.getBase(base)
   // Text or URL
   try {
     url = this.getUrl(value)
@@ -159,26 +168,19 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
       }
     }
   }
-  // Invalid URL, try to parse with a Base URL
   var credential = ''
-  var search = ''
   var hash = ''
+  var search = ''
   if (url == null) {
-    // URL
     url = this.getUrl(value, base)
-    // Credential
     if (url.username && url.password) {
       credential = `${url.username}:${url.password}@`
     }
-    // Hash
     hash = url.hash
-    // Search
     search = url.search
   } else if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
-    // Protocol
-    const protocol = url.protocol.slice(0, -1)
-    // Pathname
     var pathname = null
+    const protocol = url.protocol.slice(0, -1)
     if (url.hostname !== undefined && url.hostname !== null && url.hostname.trim() !== '') {
       if (url.pathname.startsWith('//')) {
         pathname = `/${protocol}/${url.hostname}/${url.pathname.slice(2)}`
@@ -192,28 +194,31 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
         pathname = `/${protocol}${url.pathname}`
       }
     }
-    // Credential
     if (url.username && url.password) {
       credential = `${url.username}:${url.password}@`
     }
-    // Hash
     hash = url.hash
-    // Search
     search = url.search
-    // URL
     url = this.getUrl(`${base.protocol}//${credential}${base.host}${pathname}${search}${hash}`)
+  } else {
+    var { cid, ipnsIdentifier, base } = this.getBase(url)
+    if (url.username && url.password) {
+      credential = `${url.username}:${url.password}@`
+    }
+    hash = url.hash
+    search = url.search
+    if (cid == null && ipnsIdentifier == null) {
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}${url.pathname}${search}${hash}`)
+    } else if (cid !== null) {
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${cid}${url.pathname}${search}${hash}`)
+    } else {
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipns/${ipnsIdentifier}${url.pathname}${search}${hash}`)
+    }
   }
-  // Remove .link from .eth.link
   if (url.hostname.endsWith('.eth.link')) {
     const hostname = url.hostname.substring(0, url.hostname.indexOf('.link'))
-    var host = null
-    if (url.port && url.port.trim() !== '') {
-      host = `${hostname}:${url.port}`
-    } else {
-      host = hostname
-    }
-    // URL
-    url = this.getUrl(`${base.protocol}//${credential}${host}${url.pathname}${search}${hash}`)
+    const host = url.port ? `${hostname}:${url.port}` : hostname
+    url = this.getUrl(`${url.protocol}//${credential}${host}${url.pathname}${search}${hash}`)
   }
   return url
 }
