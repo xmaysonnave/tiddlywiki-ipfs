@@ -1,0 +1,17 @@
+[
+  {
+    "_name": "index.html",
+    "_tags": "$:/ipfs/editions",
+    "_cid": "bafybeic2jlcyqqfehkcj72vfbrwwrmlpm6dyokscuo4iagsaszxtirbx4i",
+    "_cid_size": 3551175,
+    "_cid_uri": "https://bluelight.link/ipfs/bafybeic2jlcyqqfehkcj72vfbrwwrmlpm6dyokscuo4iagsaszxtirbx4i",
+    "_parent_cid": "bafybeieody2eiea4df53hi6iagp67dz7wtznezsfit4rsurcr26o226nxe",
+    "_parent_size": 3555585,
+    "_parent_uri": "https://bluelight.link/ipfs/bafybeieody2eiea4df53hi6iagp67dz7wtznezsfit4rsurcr26o226nxe/",
+    "_raw_hash": "8a8c6b1862505bed66591d8f8623349421b237c9c13e5a62c18a1f17411045a5",
+    "_semver": "0.4.0-beta-TW-v5.1.23+build",
+    "_source_path": "index.html",
+    "_source_uri": "https://bluelight.link/ipfs/bafybeieody2eiea4df53hi6iagp67dz7wtznezsfit4rsurcr26o226nxe/index.html",
+    "_version": "0.4.0-beta-TW-v5.1.23+build-210216381"
+  }
+]
