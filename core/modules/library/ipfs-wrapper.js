@@ -250,17 +250,16 @@ IpfsWrapper.prototype.getIpfsParentIdentifier = async function (ipfs, value) {
   if (value == null) {
     throw new Error('Undefined URL...')
   }
-  var cid = null
+  var ipfsPath = null
   try {
-    cid = await this.ipfsBundle.getIpfsParentIdentifier(ipfs, value)
-    const pathname = `/${ipfsKeyword}/${cid}`
-    const url = this.ipfsUrl.normalizeUrl(pathname)
+    ipfsPath = await this.ipfsBundle.getIpfsParentIdentifier(ipfs, value)
+    const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(`Successfully fetched parent identifier:
 ${url}`)
   } catch (error) {
     this.getLogger().error(error)
   }
-  return cid
+  return ipfsPath
 }
 
 IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
@@ -338,15 +337,14 @@ ${url}`
   throw new Error('Failed to publish an IPNS name...')
 }
 
-IpfsWrapper.prototype.pinToIpfs = async function (ipfs, cid, recursive) {
-  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
-  if (cid == null) {
-    throw new Error('Undefined IPNS identifier...')
+IpfsWrapper.prototype.pinToIpfs = async function (ipfs, ipfsPath, recursive) {
+  ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? ipfsPath.toString().trim() : null
+  if (ipfsPath == null) {
+    throw new Error('Undefined IPFS path...')
   }
-  const pathname = `/${ipfsKeyword}/${cid}`
   try {
-    const pinned = await this.ipfsLibrary.pinAdd(ipfs, pathname, recursive)
-    const url = this.ipfsUrl.normalizeUrl(pathname)
+    const pinned = await this.ipfsLibrary.pinAdd(ipfs, ipfsPath, recursive)
+    const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(
       `Successfully pinned:
 ${url}`
@@ -358,15 +356,14 @@ ${url}`
   throw new Error('Failed to pin...')
 }
 
-IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, cid, recursive) {
-  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
-  if (cid == null) {
-    throw new Error('Undefined IPNS identifier...')
+IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, ipfsPath, recursive) {
+  ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? ipfsPath.toString().trim() : null
+  if (ipfsPath == null) {
+    throw new Error('Undefined IPFS path...')
   }
-  const pathname = `/${ipfsKeyword}/${cid}`
   try {
-    const unpinned = await this.ipfsLibrary.pinRm(ipfs, pathname, recursive)
-    const url = this.ipfsUrl.normalizeUrl(pathname)
+    const unpinned = await this.ipfsLibrary.pinRm(ipfs, ipfsPath, recursive)
+    const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(
       `Successfully unpinned:
 ${url}`

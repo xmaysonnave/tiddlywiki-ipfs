@@ -58,6 +58,7 @@ describe('API URL', () => {
     }
   })
 })
+
 describe('Document URL', () => {
   it('Valid', () => {
     const ipfsBundle = new IpfsBundle()
@@ -76,6 +77,7 @@ describe('Document URL', () => {
     }
   })
 })
+
 describe('Gateway URL', () => {
   it('Valid Default', () => {
     const ipfsBundle = new IpfsBundle()
@@ -99,6 +101,7 @@ describe('Gateway URL', () => {
     }
   })
 })
+
 describe('URL', () => {
   it('Valid', () => {
     const ipfsBundle = new IpfsBundle()
@@ -128,6 +131,7 @@ describe('URL', () => {
     expect(url.hostname === 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy' && url.protocol === 'ipns:').to.be.true
   })
 })
+
 describe('Base URL', () => {
   it('Origin', () => {
     const ipfsBundle = new IpfsBundle()
@@ -145,6 +149,7 @@ describe('Base URL', () => {
     expect(base.toString() === 'https://dweb.link/').to.be.true
   })
 })
+
 describe('Normalize URL', () => {
   it('Text...', () => {
     const ipfsBundle = new IpfsBundle()
@@ -197,20 +202,23 @@ describe('Normalize URL', () => {
     expect(parsed.toString() === 'https://bluelightav.eth/ipfs/cid').to.be.true
   })
   it('Relative IPFS Protocol...', () => {
+    const documentUrl = new URL('https://ipfs.bluelightav.org/import/analyze/root.json')
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    ipfsBundle.getDocumentUrl = sinon.fake.returns(new URL('https://ipfs.bluelightav.org/import/analyze/root.json'))
-    const parsed = ipfsBundle.normalizeUrl('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy', new URL('https://ipfs.bluelightav.org/import/analyze/root.json'))
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(documentUrl)
+    var parsed = ipfsBundle.normalizeUrl('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
+    expect(parsed.toString() === 'https://dweb.link/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy').to.be.true
+    var parsed = ipfsBundle.normalizeUrl('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy', documentUrl)
     expect(parsed.toString() === 'https://ipfs.bluelightav.org/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy').to.be.true
   })
   it('Base Relative IPFS Protocol...', () => {
+    const documentUrl = new URL('http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/')
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    ipfsBundle.getDocumentUrl = sinon.fake.returns('http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/')
-    const parsed = ipfsBundle.normalizeUrl(
-      'ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy',
-      new URL('http://bafybeighpwr5cnqu2lbu6h5rx6mgeunl56drhg7yz3crxbli3rzewql44u.ipfs.localhost:8080/')
-    )
+    ipfsBundle.getDocumentUrl = sinon.fake.returns(documentUrl)
+    var parsed = ipfsBundle.normalizeUrl('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
+    expect(parsed.toString() === 'https://dweb.link/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy').to.be.true
+    var parsed = ipfsBundle.normalizeUrl('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy', documentUrl)
     expect(parsed.toString() === 'http://localhost:8080/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy').to.be.true
   })
 })

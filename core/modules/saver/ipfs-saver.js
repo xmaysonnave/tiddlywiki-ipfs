@@ -52,7 +52,7 @@ IPFS Saver
         $tw.ipfs.getLogger().warn(error)
         $tw.utils.alert(name, error.message)
         if (ipnsCid !== null) {
-          await $tw.ipfs.requestToPin(ipnsCid)
+          await $tw.ipfs.requestToPin(`/ipfs/${ipnsCid}`)
         }
       }
     }
@@ -69,9 +69,8 @@ IPFS Saver
       var web3 = null
       var host = null
       const wiki = $tw.ipfs.getDocumentUrl()
-      const base = $tw.ipfs.getIpfsBaseUrl()
-      const protocol = base.protocol
-      const current = $tw.ipfs.getUrl(wiki, base)
+      const current = $tw.ipfs.getUrl(wiki)
+      const protocol = current.protocol
       var credential = ''
       if (current.username && current.password) {
         credential = `${current.username}:${current.password}@`
@@ -88,11 +87,9 @@ IPFS Saver
       }
       host = normalizedUrl.host
       if (cid !== null && ipnsKey == null) {
-        const directoryCid = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
-        if (directoryCid !== null) {
-          await $tw.ipfs.requestToUnpin(directoryCid)
-        } else {
-          await $tw.ipfs.requestToUnpin(cid)
+        const ipfsPath = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
+        if (ipfsPath !== null) {
+          await $tw.ipfs.requestToUnpin(ipfsPath)
         }
       }
       // IPNS
@@ -126,7 +123,7 @@ IPFS Saver
           }
         }
         if (ipnsCid !== null) {
-          await $tw.ipfs.requestToUnpin(ipnsCid)
+          await $tw.ipfs.requestToUnpin(`/ipfs/${ipnsCid}`)
         }
       }
       // ENS
@@ -145,7 +142,7 @@ IPFS Saver
         }
         var { cid: ensCid, ipnsKey: ensIpnsKey, ipnsName: ensIpnsName } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
         if (ensCid !== null) {
-          await $tw.ipfs.requestToUnpin(ensCid)
+          await $tw.ipfs.requestToUnpin(`/ipfs/${ensCid}`)
         }
       }
       // Upload
@@ -153,7 +150,7 @@ IPFS Saver
       const { cid: added } = await $tw.ipfs.addToIpfs(text)
       pathname = `/${ipfsKeyword}/${added}`
       // Pin
-      await $tw.ipfs.requestToPin(added)
+      await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${added}`)
       // Publish to IPNS
       if (ipnsKey !== null && ipnsName !== null) {
         await publishToIpns(added, ipnsCid, ipnsKey, ipnsName)
@@ -171,7 +168,7 @@ IPFS Saver
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
           if (ensCid !== null) {
-            await $tw.ipfs.requestToPin(ensCid)
+            await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${ensCid}`)
           }
         }
       }

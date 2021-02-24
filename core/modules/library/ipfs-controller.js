@@ -168,22 +168,24 @@ IPFS Controller
     return content
   }
 
-  IpfsController.prototype.requestToPin = function (cid, ipnsKey, value) {
+  IpfsController.prototype.requestToPin = function (ipfsPath, value) {
     const self = this
     return new Promise((resolve, reject) => {
       if ($tw.utils.getIpfsPin() === false) {
         resolve(false)
       }
-      cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
-      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
+      ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? ipfsPath.toString().trim() : null
+      if (ipfsPath == null) {
+        resolve(false)
+      }
       value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
-      if (ipnsKey !== null) {
+      if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
         self
           .resolveUrl(true, true, value)
           .then(data => {
             const { cid, resolvedUrl } = data
             if (resolvedUrl !== null && cid !== null) {
-              resolve(self.addToPin(cid, resolvedUrl))
+              resolve(self.addToPin(`/${ipfsKeyword}/${cid}`, resolvedUrl))
             } else {
               resolve(false)
             }
@@ -191,18 +193,16 @@ IPFS Controller
           .catch(error => {
             reject(error)
           })
-      } else if (cid !== null) {
-        const normalizedUrl = self.normalizeUrl(`/${ipfsKeyword}/${cid}`)
-        resolve(self.addToPin(cid, normalizedUrl))
       } else {
-        resolve(false)
+        const normalizedUrl = self.normalizeUrl(ipfsPath)
+        resolve(self.addToPin(ipfsPath, normalizedUrl))
       }
     })
   }
 
-  IpfsController.prototype.addToPin = function (cid, normalizedUrl) {
-    if (cid !== undefined && cid !== null) {
-      var index = this.unpin.indexOf(cid)
+  IpfsController.prototype.addToPin = function (ipfsPath, normalizedUrl) {
+    if (ipfsPath !== undefined && ipfsPath !== null) {
+      var index = this.unpin.indexOf(ipfsPath)
       if (index !== -1) {
         this.unpin.splice(index, 1)
         $tw.ipfs.getLogger().info(
@@ -211,8 +211,8 @@ IPFS Controller
         )
         return false
       }
-      if (this.pin.indexOf(cid) === -1) {
-        this.pin.push(cid)
+      if (this.pin.indexOf(ipfsPath) === -1) {
+        this.pin.push(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Request to Pin:
  ${normalizedUrl}`
@@ -223,22 +223,24 @@ IPFS Controller
     return false
   }
 
-  IpfsController.prototype.requestToUnpin = function (cid, ipnsKey, value) {
+  IpfsController.prototype.requestToUnpin = function (ipfsPath, value) {
     const self = this
     return new Promise((resolve, reject) => {
       if ($tw.utils.getIpfsUnpin() === false) {
         resolve(false)
       }
-      cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
-      ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
+      ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? ipfsPath.toString().trim() : null
+      if (ipfsPath == null) {
+        resolve(false)
+      }
       value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
-      if (ipnsKey !== undefined && ipnsKey !== null) {
+      if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
         self
           .resolveUrl(true, true, value)
           .then(data => {
             const { cid, resolvedUrl } = data
             if (resolvedUrl !== null && cid !== null) {
-              resolve(self.addToUnpin(cid, resolvedUrl))
+              resolve(self.addToUnpin(`/${ipfsKeyword}/${cid}`, resolvedUrl))
             } else {
               resolve(false)
             }
@@ -246,19 +248,17 @@ IPFS Controller
           .catch(error => {
             reject(error)
           })
-      } else if (cid !== null) {
-        const normalizedUrl = self.normalizeUrl(`/${ipfsKeyword}/${cid}`)
-        resolve(self.addToUnpin(cid, normalizedUrl))
       } else {
-        resolve(false)
+        const normalizedUrl = self.normalizeUrl(ipfsPath)
+        resolve(self.addToUnpin(ipfsPath, normalizedUrl))
       }
     })
   }
 
-  IpfsController.prototype.addToUnpin = function (cid, normalizedUrl) {
-    if (cid !== undefined && cid !== null) {
+  IpfsController.prototype.addToUnpin = function (ipfsPath, normalizedUrl) {
+    if (ipfsPath !== undefined && ipfsPath !== null) {
       // Discard
-      var index = this.pin.indexOf(cid)
+      var index = this.pin.indexOf(ipfsPath)
       if (index !== -1) {
         this.pin.splice(index, 1)
         $tw.ipfs.getLogger().info(
@@ -268,8 +268,8 @@ IPFS Controller
         return false
       }
       // Add to unpin
-      if (this.unpin.indexOf(cid) === -1) {
-        this.unpin.push(cid)
+      if (this.unpin.indexOf(ipfsPath) === -1) {
+        this.unpin.push(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Request to unpin:
  ${normalizedUrl}`
@@ -280,9 +280,9 @@ IPFS Controller
     return false
   }
 
-  IpfsController.prototype.removeFromPinUnpin = function (cid, normalizedUrl) {
-    if (cid !== undefined && cid !== null) {
-      var index = this.pin.indexOf(cid)
+  IpfsController.prototype.removeFromPinUnpin = function (ipfsPath, normalizedUrl) {
+    if (ipfsPath !== undefined && ipfsPath !== null) {
+      var index = this.pin.indexOf(ipfsPath)
       if (index !== -1) {
         this.pin.splice(index, 1)
         $tw.ipfs.getLogger().info(
@@ -290,7 +290,7 @@ IPFS Controller
  ${normalizedUrl}`
         )
       }
-      index = this.unpin.indexOf(cid)
+      index = this.unpin.indexOf(ipfsPath)
       if (index !== -1) {
         this.unpin.splice(index, 1)
         $tw.ipfs.getLogger().info(
@@ -301,14 +301,14 @@ IPFS Controller
     }
   }
 
-  IpfsController.prototype.pinToIpfs = async function (cid, recursive) {
+  IpfsController.prototype.pinToIpfs = async function (ipfsPath, recursive) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.pinToIpfs(ipfs, cid, recursive)
+    return await this.ipfsWrapper.pinToIpfs(ipfs, ipfsPath, recursive)
   }
 
-  IpfsController.prototype.unpinFromIpfs = async function (cid, recursive) {
+  IpfsController.prototype.unpinFromIpfs = async function (ipfsPath, recursive) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.unpinFromIpfs(ipfs, cid, recursive)
+    return await this.ipfsWrapper.unpinFromIpfs(ipfs, ipfsPath, recursive)
   }
 
   IpfsController.prototype.addToIpfs = async function (content) {
@@ -421,10 +421,10 @@ IPFS Controller
         resolvedUrl: null,
       }
     }
-    var { cid, ipnsIdentifier, path, protocol } = this.getIpfsIdentifier(normalizedUrl)
-    if (protocol === ipnsKeyword && ipnsIdentifier !== null) {
+    var { cid, ipnsIdentifier, path } = this.getIpfsIdentifier(normalizedUrl)
+    if (ipnsIdentifier !== null) {
       var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
-    } else if (resolveEns && normalizedUrl.hostname.endsWith('.eth') && protocol !== ipfsKeyword && protocol !== ipnsKeyword) {
+    } else if (cid == null && ipnsIdentifier == null && resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
       var { cid, protocol, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
       if (protocol === ipnsKeyword) {
         var { cid, ipnsKey, ipnsName, resolvedUrl } = await this.resolveIpns(cid, resolveIpns, base, path)

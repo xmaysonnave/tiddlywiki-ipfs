@@ -298,9 +298,8 @@ IPFS Tiddler
         // Process
         if (url) {
           const { cid } = $tw.ipfs.getIpfsIdentifier(url)
-          // Request to unpin
-          if ($tw.utils.getIpfsUnpin()) {
-            await $tw.ipfs.requestToUnpin(cid)
+          if (cid !== null) {
+            await $tw.ipfs.requestToUnpin(`/ipfs/${cid}`)
           }
         }
       }
@@ -439,7 +438,11 @@ IPFS Tiddler
             return tiddler
           }
         }
-        await $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl)
+        if (oldCid !== null) {
+          await $tw.ipfs.requestToUnpin(`/ipfs/${oldCid}`, oldNormalizedUrl)
+        } else if (oldIpnsKey !== null) {
+          await $tw.ipfs.requestToUnpin(`/ipns/${oldIpnsKey}`, oldNormalizedUrl)
+        }
       }
     }
     // Process new and updated fields
@@ -510,8 +513,16 @@ IPFS Tiddler
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       }
-      await $tw.ipfs.requestToPin(cid, ipnsKey, normalizedUrl)
-      await $tw.ipfs.requestToUnpin(oldCid, oldIpnsKey, oldNormalizedUrl)
+      if (cid !== null) {
+        await $tw.ipfs.requestToPin(`/ipfs/${cid}`, normalizedUrl)
+      } else if (ipnsKey !== null) {
+        await $tw.ipfs.requestToPin(`/ipns/${ipnsKey}`, normalizedUrl)
+      }
+      if (oldCid !== null) {
+        await $tw.ipfs.requestToUnpin(`/ipfs/${oldCid}`, oldNormalizedUrl)
+      } else if (oldIpnsKey !== null) {
+        await $tw.ipfs.requestToUnpin(`/ipns/${oldIpnsKey}`, oldNormalizedUrl)
+      }
     }
     // Tag management
     var addTags = []

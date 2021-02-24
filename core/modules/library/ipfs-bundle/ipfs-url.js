@@ -104,39 +104,79 @@ IpfsUrl.prototype.getIpfsBaseUrl = function () {
   return this.getUrl(base)
 }
 
+IpfsUrl.prototype.resolveProtocol = function (value, base) {
+  value = value !== undefined && value !== null && value.toString().trim() !== '' ? value : null
+  if (value instanceof URL === false) {
+    return value
+  }
+  if (value.protocol !== 'ipfs:' && value.protocol !== 'ipns:') {
+    return value
+  }
+  if (base === undefined || base == null) {
+    base = this.getIpfsBaseUrl()
+  }
+  var credential = ''
+  var pathname = '/'
+  const protocol = value.protocol.slice(0, -1)
+  if (value.hostname !== undefined && value.hostname !== null && value.hostname.trim() !== '') {
+    if (value.pathname.startsWith('//')) {
+      pathname = `/${protocol}/${value.hostname}/${value.pathname.slice(2)}`
+    } else {
+      pathname = `/${protocol}/${value.hostname}${value.pathname}`
+    }
+  } else if (value.pathname !== undefined && value.pathname !== null && value.pathname.trim() !== '') {
+    if (value.pathname.startsWith('//')) {
+      pathname = `/${protocol}/${value.pathname.slice(2)}`
+    } else {
+      pathname = `/${protocol}${value.pathname}`
+    }
+  }
+  if (value.username && value.password) {
+    credential = `${value.username}:${value.password}@`
+  }
+  return this.getUrl(`${base.protocol}//${credential}${base.host}${pathname}${value.search}${value.hash}`)
+}
+
 IpfsUrl.prototype.getBase = function (base) {
   base = base !== undefined && base !== null && base.toString().trim() !== '' ? base.toString().trim() : null
-  var url = null
   if (base == null) {
-    return {
-      cid: null,
-      ipnsIdentifier: null,
-      base: this.getIpfsBaseUrl(),
-    }
+    base = this.getIpfsBaseUrl()
   }
   try {
-    url = this.getUrl(base)
+    base = this.getUrl(base)
   } catch (error) {
-    return {
-      cid: null,
-      ipnsIdentifier: null,
-      base: this.getIpfsBaseUrl(),
-    }
+    base = this.getIpfsBaseUrl()
   }
+  // Resolve
+  base = this.resolveProtocol(base)
   // Parse
-  var { cid, hostname, ipnsIdentifier } = this.ipfsBundle.getIpfsIdentifier(base)
+  var { cid, hostname, ipnsIdentifier } = this.ipfsBundle.decodeHostname(base.hostname)
   if (hostname === undefined || hostname == null || hostname.trim() === '') {
     return {
+      base: base,
       cid: null,
       ipnsIdentifier: null,
-      base: url,
     }
   }
-  const host = url.port ? `${hostname}:${url.port}` : hostname
+  var credential = ''
+  const host = base.port ? `${hostname}:${base.port}` : hostname
+  if (base.username && base.password) {
+    credential = `${base.username}:${base.password}@`
+  }
+  const path = `${base.pathname}${base.search}${base.hash}`
+  if (cid !== null || ipnsIdentifier !== null) {
+    if (cid !== null) {
+      base = this.getUrl(`${base.protocol}//${credential}${host}/ipfs/${cid}${path}`)
+    } else {
+      base = this.getUrl(`${base.protocol}//${credential}${host}/ipns/${ipnsIdentifier}${path}`)
+    }
+  } else {
+    base = this.getUrl(`${base.protocol}//${credential}${host}${path}`)
+  }
   return {
+    base: base,
     cid: cid,
     ipnsIdentifier: ipnsIdentifier,
-    base: this.getUrl(`${url.protocol}//${host}`),
   }
 }
 
@@ -168,57 +208,32 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
       }
     }
   }
-  var credential = ''
-  var hash = ''
-  var search = ''
   if (url == null) {
     url = this.getUrl(value, base)
-    if (url.username && url.password) {
-      credential = `${url.username}:${url.password}@`
-    }
-    hash = url.hash
-    search = url.search
   } else if (url.protocol === 'ipfs:' || url.protocol === 'ipns:') {
-    var pathname = null
-    const protocol = url.protocol.slice(0, -1)
-    if (url.hostname !== undefined && url.hostname !== null && url.hostname.trim() !== '') {
-      if (url.pathname.startsWith('//')) {
-        pathname = `/${protocol}/${url.hostname}/${url.pathname.slice(2)}`
-      } else {
-        pathname = `/${protocol}/${url.hostname}${url.pathname}`
-      }
-    } else if (url.pathname !== undefined && url.pathname !== null && url.pathname.trim() !== '') {
-      if (url.pathname.startsWith('//')) {
-        pathname = `/${protocol}/${url.pathname.slice(2)}`
-      } else {
-        pathname = `/${protocol}${url.pathname}`
-      }
-    }
-    if (url.username && url.password) {
-      credential = `${url.username}:${url.password}@`
-    }
-    hash = url.hash
-    search = url.search
-    url = this.getUrl(`${base.protocol}//${credential}${base.host}${pathname}${search}${hash}`)
+    url = this.resolveProtocol(url, base)
   } else {
-    var { cid, ipnsIdentifier, base } = this.getBase(url)
+    var credential = ''
+    var { base, cid, ipnsIdentifier } = this.getBase(url)
     if (url.username && url.password) {
       credential = `${url.username}:${url.password}@`
     }
-    hash = url.hash
-    search = url.search
     if (cid == null && ipnsIdentifier == null) {
-      url = this.getUrl(`${base.protocol}//${credential}${base.host}${url.pathname}${search}${hash}`)
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}${url.pathname}${url.search}${url.hash}`)
     } else if (cid !== null) {
-      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${cid}${url.pathname}${search}${hash}`)
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${cid}${url.pathname}${url.search}${url.hash}`)
     } else {
-      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipns/${ipnsIdentifier}${url.pathname}${search}${hash}`)
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipns/${ipnsIdentifier}${url.pathname}${url.search}${url.hash}`)
     }
   }
   if (url.hostname.endsWith('.eth.link')) {
     const hostname = url.hostname.substring(0, url.hostname.indexOf('.link'))
     const host = url.port ? `${hostname}:${url.port}` : hostname
-    url = this.getUrl(`${url.protocol}//${credential}${host}${url.pathname}${search}${hash}`)
+    var credential = ''
+    if (url.username && url.password) {
+      credential = `${url.username}:${url.password}@`
+    }
+    url = this.getUrl(`${url.protocol}//${credential}${host}${url.pathname}${url.search}${url.hash}`)
   }
   return url
 }

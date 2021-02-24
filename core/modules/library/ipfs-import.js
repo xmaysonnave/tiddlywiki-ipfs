@@ -120,8 +120,8 @@ IPFS Import
     if (key == null) {
       return false
     }
-    const { cid, ipnsIdentifier, protocol } = $tw.ipfs.getIpfsIdentifier(key)
-    if (key.endsWith('.eth') || key.endsWith('.eth.link') || (protocol !== null && (cid !== null || ipnsIdentifier !== null))) {
+    const { cid, ipnsIdentifier } = $tw.ipfs.getIpfsIdentifier(key)
+    if (key.endsWith('.eth') || key.endsWith('.eth.link') || cid !== null || ipnsIdentifier !== null) {
       return true
     }
     return false

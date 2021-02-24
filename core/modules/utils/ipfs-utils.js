@@ -285,7 +285,7 @@ IPFS utils
             .catch(error => {
               $tw.ipfs.getLogger().error(error)
               $tw.utils.alert(ipfsUtilsName, error.message)
-              $tw.ipfs.requestToUnpin(added)
+              $tw.ipfs.requestToUnpin(`/ipfs/${added}`)
             })
         })
         .catch(error => {
@@ -327,7 +327,7 @@ IPFS utils
                 $tw.ipfs.getLogger().error(error)
               }
               $tw.utils.alert(ipfsUtilsName, error.message)
-              $tw.ipfs.requestToUnpin(added)
+              $tw.ipfs.requestToUnpin(`/ipfs/${added}`)
             })
         })
         .catch(error => {

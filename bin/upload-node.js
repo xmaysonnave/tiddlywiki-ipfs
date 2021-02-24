@@ -59,14 +59,14 @@ async function dagPut (api, gatewayUrl, links) {
     stat = await api.files.stat(`/ipfs/${put}/`)
     size = stat.cumulativeSize
   } catch (error) {
-    console.error(error)
+    // Ignore
   }
   if (stat == null) {
     try {
       stat = await api.object.stat(put)
       size = stat.CumulativeSize
     } catch (error) {
-      console.error(error)
+      // Ignore
     }
   }
   const cidV1 = ipfsBundle.cidToCidV1(put)

@@ -152,11 +152,12 @@ ENS Action
       return false
     }
     $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
+    const ipfsPath = `/ipfs/${ensCid}`
     $tw.ipfs
-      .requestToUnpin(ensCid)
+      .requestToUnpin(ipfsPath)
       .then(data => {
         if (data) {
-          $tw.ipfs.removeFromPinUnpin(ensCid, ensResolvedUrl)
+          $tw.ipfs.removeFromPinUnpin(ipfsPath, ensResolvedUrl)
         }
         $tw.ipfs
           .setContentHash(ensDomain, `/${protocol}/${identifier}`, web3, account)
@@ -168,7 +169,7 @@ ENS Action
               $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)
-            $tw.ipfs.requestToPin(ensCid)
+            $tw.ipfs.requestToPin(ipfsPath)
           })
       })
       .catch(error => {
