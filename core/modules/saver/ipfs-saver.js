@@ -67,10 +67,11 @@ IPFS Saver
       var ipnsName = null
       var options = options || {}
       var web3 = null
-      var host = null
       const wiki = $tw.ipfs.getDocumentUrl()
-      const current = $tw.ipfs.getUrl(wiki)
-      const protocol = current.protocol
+      const base = $tw.ipfs.getIpfsBaseUrl()
+      const protocol = base.protocol
+      const host = base.host
+      const current = $tw.ipfs.getUrl(wiki, base)
       var credential = ''
       if (current.username && current.password) {
         credential = `${current.username}:${current.password}@`
@@ -79,15 +80,14 @@ IPFS Saver
       const search = current.search
       const hash = current.hash
       try {
-        var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
+        var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         callback(error)
         return true
       }
-      host = normalizedUrl.host
       if (cid !== null && ipnsKey == null) {
-        const ipfsPath = await $tw.ipfs.getIpfsParentIdentifier(resolvedUrl)
+        const ipfsPath = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
         if (ipfsPath !== null) {
           await $tw.ipfs.requestToUnpin(ipfsPath)
         }
@@ -149,8 +149,7 @@ IPFS Saver
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
       const { cid: added } = await $tw.ipfs.addToIpfs(text)
       pathname = `/${ipfsKeyword}/${added}`
-      // Pin
-      await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${added}`)
+      await $tw.ipfs.requestToPin(pathname)
       // Publish to IPNS
       if (ipnsKey !== null && ipnsName !== null) {
         await publishToIpns(added, ipnsCid, ipnsKey, ipnsName)

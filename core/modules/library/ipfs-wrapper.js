@@ -245,17 +245,19 @@ ${url}`)
   throw new Error('Failed to fetch from IPFS...')
 }
 
-IpfsWrapper.prototype.getIpfsParentIdentifier = async function (ipfs, value) {
+IpfsWrapper.prototype.resolveIpfsContainer = async function (ipfs, value) {
   value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
   if (value == null) {
     throw new Error('Undefined URL...')
   }
   var ipfsPath = null
   try {
-    ipfsPath = await this.ipfsBundle.getIpfsParentIdentifier(ipfs, value)
-    const url = this.ipfsUrl.normalizeUrl(ipfsPath)
-    this.getLogger().info(`Successfully fetched parent identifier:
-${url}`)
+    ipfsPath = await this.ipfsBundle.resolveIpfsContainer(ipfs, value)
+    if (ipfsPath !== null) {
+      const url = this.ipfsUrl.normalizeUrl(ipfsPath)
+      this.getLogger().info(`Successfully resolved IPFS container:
+  ${url}`)
+    }
   } catch (error) {
     this.getLogger().error(error)
   }

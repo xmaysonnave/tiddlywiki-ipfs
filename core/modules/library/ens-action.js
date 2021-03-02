@@ -125,11 +125,10 @@ ENS Action
     var account = null
     var ensCid = null
     var ensIpnsKey = null
-    var ensResolvedUrl = null
     var web3 = null
     try {
       var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-      var { cid: ensCid, ipnsKey: ensIpnsKey, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
+      var { cid: ensCid, ipnsKey: ensIpnsKey } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
       if (protocol === ipfsKeyword && identifier === ensCid) {
         $tw.utils.alert(name, 'The current resolved ENS domain content is up to date...')
         return false
@@ -155,9 +154,9 @@ ENS Action
     const ipfsPath = `/ipfs/${ensCid}`
     $tw.ipfs
       .requestToUnpin(ipfsPath)
-      .then(data => {
-        if (data) {
-          $tw.ipfs.removeFromPinUnpin(ipfsPath, ensResolvedUrl)
+      .then(unpin => {
+        if (unpin) {
+          $tw.ipfs.removeFromPinUnpin(ipfsPath)
         }
         $tw.ipfs
           .setContentHash(ensDomain, `/${protocol}/${identifier}`, web3, account)

@@ -99,7 +99,9 @@ IPFS Action
       }
       $tw.ipfs.getLogger().info(`Uploading attachment content: ${content.length} bytes`)
       var { cid: added } = await $tw.ipfs.addToIpfs(content)
-      await $tw.ipfs.requestToPin(`/ipfs/${added}`)
+      if (added !== null) {
+        await $tw.ipfs.requestToPin(`/ipfs/${added}`)
+      }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -191,14 +193,13 @@ IPFS Action
 
   IpfsAction.prototype.handleRemoveIpnsKey = async function (event) {
     var ipnsKey = null
-    var normalizedUrl = null
     var ipnsName = $tw.utils.getIpfsIpnsName()
     if (ipnsName == null) {
       $tw.utils.alert(name, 'Undefined IPNS name....')
       return false
     }
     try {
-      var { ipnsKey, normalizedUrl } = await $tw.ipfs.getIpnsIdentifier(ipnsName)
+      var { ipnsKey } = await $tw.ipfs.getIpnsIdentifier(ipnsName)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -206,8 +207,8 @@ IPFS Action
     }
     // Async
     $tw.ipfs
-      .requestToUnpin(`/ipns/${ipnsKey}`, normalizedUrl)
-      .then(data => {
+      .requestToUnpin(`/ipns/${ipnsKey}`)
+      .then(unpin => {
         $tw.ipfs
           .removeIpnsKey(ipnsName)
           .then(data => {

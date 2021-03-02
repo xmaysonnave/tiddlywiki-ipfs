@@ -255,11 +255,11 @@ IPFS utils
     if (ipnsKey !== null && ipnsName !== null) {
       $tw.utils.alert(ipfsUtilsName, `Publishing IPNS name: ${ipnsName}`)
       $tw.ipfs
-        .pinToIpfs(added)
-        .then(data => {
+        .pinToIpfs(`/ipfs/${added}`)
+        .then(pin => {
           $tw.ipfs
             .publishIpnsName(added, ipnsKey, ipnsName)
-            .then(data => {
+            .then(dummy => {
               fields.push({ key: '_export_uri', value: exportUri })
               const updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: target,
@@ -270,10 +270,10 @@ IPFS utils
               $tw.utils.alert(ipfsUtilsName, `Successfully Published IPNS name: ${ipnsName}`)
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
-                  .unpinFromIpfs(cid)
-                  .then(data => {
-                    if (data !== undefined && data !== null) {
-                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
+                  .unpinFromIpfs(`/ipfs/${cid}`)
+                  .then(unpin => {
+                    if (unpin !== undefined && unpin !== null) {
+                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${cid}`)
                     }
                   })
                   .catch(error => {
@@ -295,11 +295,11 @@ IPFS utils
     } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
       $tw.utils.alert(ipfsUtilsName, `Publishing to ENS: ${normalizedUrl.hostname}`)
       $tw.ipfs
-        .pinToIpfs(added)
-        .then(data => {
+        .pinToIpfs(`/ipfs/${added}`)
+        .then(pin => {
           $tw.ipfs
             .setContentHash(normalizedUrl.hostname, `/${ipfsKeyword}/${added}`, web3, account)
-            .then(data => {
+            .then(dummy => {
               fields.push({ key: '_export_uri', value: exportUri })
               const updatedTiddler = $tw.utils.updateTiddler({
                 tiddler: target,
@@ -310,10 +310,10 @@ IPFS utils
               $tw.utils.alert(ipfsUtilsName, 'Successfully Published to ENS...')
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
-                  .unpinFromIpfs(cid)
-                  .then(data => {
-                    if (data !== undefined && data !== null) {
-                      $tw.ipfs.removeFromPinUnpin(cid, normalizedUrl)
+                  .unpinFromIpfs(`/ipfs/${cid}`)
+                  .then(unpin => {
+                    if (unpin !== undefined && unpin !== null) {
+                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${cid}`)
                     }
                   })
                   .catch(error => {

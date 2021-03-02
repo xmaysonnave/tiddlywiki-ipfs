@@ -168,7 +168,7 @@ IPFS Controller
     return content
   }
 
-  IpfsController.prototype.requestToPin = function (ipfsPath, value) {
+  IpfsController.prototype.requestToPin = function (ipfsPath) {
     const self = this
     return new Promise((resolve, reject) => {
       if ($tw.utils.getIpfsPin() === false) {
@@ -178,14 +178,13 @@ IPFS Controller
       if (ipfsPath == null) {
         resolve(false)
       }
-      value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
       if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
         self
-          .resolveUrl(true, true, value)
+          .resolveUrl(true, true, ipfsPath)
           .then(data => {
-            const { cid, resolvedUrl } = data
-            if (resolvedUrl !== null && cid !== null) {
-              resolve(self.addToPin(`/${ipfsKeyword}/${cid}`, resolvedUrl))
+            const { cid } = data
+            if (cid !== null) {
+              resolve(self.addToPin(`/${ipfsKeyword}/${cid}`))
             } else {
               resolve(false)
             }
@@ -194,20 +193,19 @@ IPFS Controller
             reject(error)
           })
       } else {
-        const normalizedUrl = self.normalizeUrl(ipfsPath)
-        resolve(self.addToPin(ipfsPath, normalizedUrl))
+        resolve(self.addToPin(ipfsPath))
       }
     })
   }
 
-  IpfsController.prototype.addToPin = function (ipfsPath, normalizedUrl) {
+  IpfsController.prototype.addToPin = function (ipfsPath) {
     if (ipfsPath !== undefined && ipfsPath !== null) {
       var index = this.unpin.indexOf(ipfsPath)
       if (index !== -1) {
         this.unpin.splice(index, 1)
         $tw.ipfs.getLogger().info(
           `Cancel request to Unpin:
- ${normalizedUrl}`
+${ipfsPath}`
         )
         return false
       }
@@ -215,7 +213,7 @@ IPFS Controller
         this.pin.push(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Request to Pin:
- ${normalizedUrl}`
+${ipfsPath}`
         )
         return true
       }
@@ -223,7 +221,7 @@ IPFS Controller
     return false
   }
 
-  IpfsController.prototype.requestToUnpin = function (ipfsPath, value) {
+  IpfsController.prototype.requestToUnpin = function (ipfsPath) {
     const self = this
     return new Promise((resolve, reject) => {
       if ($tw.utils.getIpfsUnpin() === false) {
@@ -233,14 +231,13 @@ IPFS Controller
       if (ipfsPath == null) {
         resolve(false)
       }
-      value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
       if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
         self
-          .resolveUrl(true, true, value)
+          .resolveUrl(true, true, ipfsPath)
           .then(data => {
-            const { cid, resolvedUrl } = data
-            if (resolvedUrl !== null && cid !== null) {
-              resolve(self.addToUnpin(`/${ipfsKeyword}/${cid}`, resolvedUrl))
+            const { cid } = data
+            if (cid !== null) {
+              resolve(self.addToUnpin(`/${ipfsKeyword}/${cid}`))
             } else {
               resolve(false)
             }
@@ -249,13 +246,12 @@ IPFS Controller
             reject(error)
           })
       } else {
-        const normalizedUrl = self.normalizeUrl(ipfsPath)
-        resolve(self.addToUnpin(ipfsPath, normalizedUrl))
+        resolve(self.addToUnpin(ipfsPath))
       }
     })
   }
 
-  IpfsController.prototype.addToUnpin = function (ipfsPath, normalizedUrl) {
+  IpfsController.prototype.addToUnpin = function (ipfsPath) {
     if (ipfsPath !== undefined && ipfsPath !== null) {
       // Discard
       var index = this.pin.indexOf(ipfsPath)
@@ -263,7 +259,7 @@ IPFS Controller
         this.pin.splice(index, 1)
         $tw.ipfs.getLogger().info(
           `Cancel request to Pin:
- ${normalizedUrl}`
+${ipfsPath}`
         )
         return false
       }
@@ -272,7 +268,7 @@ IPFS Controller
         this.unpin.push(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Request to unpin:
- ${normalizedUrl}`
+${ipfsPath}`
         )
         return true
       }
@@ -280,14 +276,14 @@ IPFS Controller
     return false
   }
 
-  IpfsController.prototype.removeFromPinUnpin = function (ipfsPath, normalizedUrl) {
+  IpfsController.prototype.removeFromPinUnpin = function (ipfsPath) {
     if (ipfsPath !== undefined && ipfsPath !== null) {
       var index = this.pin.indexOf(ipfsPath)
       if (index !== -1) {
         this.pin.splice(index, 1)
         $tw.ipfs.getLogger().info(
           `Cancel request to Pin:
- ${normalizedUrl}`
+ ${ipfsPath}`
         )
       }
       index = this.unpin.indexOf(ipfsPath)
@@ -295,7 +291,7 @@ IPFS Controller
         this.unpin.splice(index, 1)
         $tw.ipfs.getLogger().info(
           `Cancel request to Unpin:
- ${normalizedUrl}`
+ ${ipfsPath}`
         )
       }
     }
@@ -331,9 +327,9 @@ IPFS Controller
     return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName)
   }
 
-  IpfsController.prototype.getIpfsParentIdentifier = async function (url) {
+  IpfsController.prototype.resolveIpfsContainer = async function (url) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpfsParentIdentifier(ipfs, url)
+    return await this.ipfsWrapper.resolveIpfsContainer(ipfs, url)
   }
 
   IpfsController.prototype.getIpnsIdentifier = async function (identifier, base, path, ipnsName) {

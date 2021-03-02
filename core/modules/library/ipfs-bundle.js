@@ -394,19 +394,90 @@ IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
   return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
 }
 
+IpfsBundle.prototype.dagResolve = async function (client, ipfsPath, timeout) {
+  return await this.ipfsLibrary.dagResolve(client, ipfsPath, timeout)
+}
+
 IpfsBundle.prototype.filesStat = async function (client, ipfsPath, timeout) {
   return await this.ipfsLibrary.filesStat(client, ipfsPath, timeout)
+}
+
+IpfsBundle.prototype.isDirectory = async function (client, cid, timeout) {
+  return await this.ipfsLibrary.isDirectory(client, cid, timeout)
 }
 
 IpfsBundle.prototype.ls = async function (client, ipfsPath) {
   return await this.ipfsLibrary.ls(client, ipfsPath)
 }
 
+IpfsBundle.prototype.objectData = async function (client, cid, recursive) {
+  return await this.ipfsLibrary.objectData(client, cid, recursive)
+}
+
+IpfsBundle.prototype.objectStat = async function (client, cid, recursive) {
+  return await this.ipfsLibrary.objectStat(client, cid, recursive)
+}
+
 IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
   return await this.ipfsLibrary.pinRm(client, cid, recursive)
 }
 
-IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value, timeout) {
+IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {
+  if (value === undefined || value == null || value.toString().trim() === '') {
+    return {
+      cid: null,
+      remainderPath: '',
+    }
+  }
+  if (value instanceof URL === false) {
+    try {
+      value = this.ipfsUrl.getUrl(value)
+    } catch (error) {
+      value = null
+    }
+  }
+  if (value == null) {
+    return {
+      cid: null,
+      remainderPath: '',
+    }
+  }
+  // Pathname
+  var ipfsPath = null
+  var { cid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
+  if (cid !== null) {
+    ipfsPath = `/ipfs/${cid}${path}`
+  } else if (ipnsIdentifier !== null) {
+    ipfsPath = `/ipns/${ipnsIdentifier}${path}`
+  }
+  if (ipfsPath !== null) {
+    var { cid, remainderPath } = await this.dagResolve(client, ipfsPath, timeout)
+    return {
+      cid: cid,
+      remainderPath: remainderPath,
+    }
+  }
+  // Hostname
+  var { cid, ipnsIdentifier, path } = this.decodeHostname(value.hostname)
+  if (cid !== null) {
+    ipfsPath = `/ipfs/${cid}${path}`
+  } else if (ipnsIdentifier !== null) {
+    ipfsPath = `/ipns/${ipnsIdentifier}${path}`
+  }
+  if (ipfsPath !== null) {
+    var { cid, remainderPath } = await this.dagResolve(client, ipfsPath, timeout)
+    return {
+      cid: cid,
+      remainderPath: remainderPath,
+    }
+  }
+  return {
+    cid: null,
+    remainderPath: '',
+  }
+}
+
+IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeout) {
   if (value === undefined || value == null || value.toString().trim() === '') {
     return null
   }
@@ -421,11 +492,15 @@ IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value, ti
     return null
   }
   const self = this
-  const stat = async function (client, ipfsPath, base, timeout) {
+  const resolveContainer = async function (client, ipfsPath, base, timeout) {
     try {
-      const fileStat = await self.filesStat(client, ipfsPath, timeout)
-      if (fileStat.type === 'directory') {
-        return `/ipfs/${fileStat.cid}`
+      const currentUrl = self.getUrl(ipfsPath, base)
+      const { cid } = await self.resolveIpfs(client, currentUrl, timeout)
+      if (cid == null) {
+        return null
+      }
+      if (await self.isDirectory(client, cid, timeout)) {
+        return `/ipfs/${cid}`
       }
       var nextPath = ''
       const members = value.pathname.split('/')
@@ -438,7 +513,11 @@ IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value, ti
         }
       }
       const nextUrl = self.getUrl(nextPath, base)
-      return await self.getIpfsParentIdentifier(client, nextUrl, timeout)
+      ipfsPath = await self.resolveIpfsContainer(client, nextUrl, timeout)
+      if (ipfsPath == null) {
+        ipfsPath = `/ipfs/${cid}`
+      }
+      return ipfsPath
     } catch (error) {
       self.getLogger().error(error)
     }
@@ -450,23 +529,24 @@ IpfsBundle.prototype.getIpfsParentIdentifier = async function (client, value, ti
   const base = this.getUrl(`${value.protocol}//${value.host}`)
   // Pathname
   var ipfsPath = null
-  var { cid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
-  if (cid !== null) {
-    ipfsPath = `/ipfs/${cid}${path}`
-  }
-  if (ipfsPath !== null) {
-    return await stat(client, ipfsPath, base, timeout)
-  }
-  // Hostname
-  var ipfsPath = null
-  var { cid, ipnsIdentifier, path } = this.decodeHostname(base.hostname)
-  if (cid !== null) {
-    ipfsPath = `/ipfs/${cid}${path}`
+  var { cid: innerCid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
+  if (innerCid !== null) {
+    ipfsPath = `/ipfs/${innerCid}${path}`
   } else if (ipnsIdentifier !== null) {
     ipfsPath = `/ipns/${ipnsIdentifier}${path}`
   }
   if (ipfsPath !== null) {
-    return await stat(client, ipfsPath, base, timeout)
+    return await resolveContainer(client, ipfsPath, base, timeout)
+  }
+  // Hostname
+  var { cid: innerCid, ipnsIdentifier, path } = this.decodeHostname(value.hostname)
+  if (innerCid !== null) {
+    ipfsPath = `/ipfs/${innerCid}${path}`
+  } else if (ipnsIdentifier !== null) {
+    ipfsPath = `/ipns/${ipnsIdentifier}${path}`
+  }
+  if (ipfsPath !== null) {
+    return await resolveContainer(client, ipfsPath, base, timeout)
   }
   return null
 }
