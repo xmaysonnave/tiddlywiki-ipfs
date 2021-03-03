@@ -153,7 +153,7 @@ IPFS Tiddler
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
     // Tiddler
-    if (tiddler) {
+    if (tiddler !== undefined) {
       if (event.param) {
         // Tiddler
         for (var field in tiddler.fields) {
@@ -212,8 +212,8 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    if (tiddler) {
-      const { type, info } = $tw.utils.getContentType(title, tiddler.fields.type)
+    if (tiddler !== undefined) {
+      const { type, info } = $tw.utils.getContentType(tiddler)
       if (event.param) {
         // Tiddler
         for (var field in tiddler.fields) {
@@ -277,7 +277,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
-      const { type, info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
+      const { type, info } = $tw.utils.getContentType(tiddler)
       // Process
       var field = null
       if (info.encoding === 'base64' || type === 'image/svg+xml') {
@@ -384,7 +384,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
-    const { info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
+    const { info } = $tw.utils.getContentType(tiddler)
     var password = tiddler.fields._password
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     // Prepare
@@ -459,7 +459,7 @@ IPFS Tiddler
     var exportCid = null
     var importCid = null
     var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
-    const { type, info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
+    const { type, info } = $tw.utils.getContentType(tiddler)
     // Process
     for (var field in tiddler.fields) {
       // Not a reserved keyword

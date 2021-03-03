@@ -96,11 +96,11 @@ IPFS Controller
   }
 
   IpfsController.prototype.processContent = async function (tiddler, content, encoding) {
-    if (content === undefined || content == null) {
-      throw new Error('Unable to process undefined content...')
+    if (content === undefined || content == null || content.trim() === '') {
+      throw new Error('Unknown content...')
     }
-    if (encoding === undefined || encoding == null) {
-      encoding = 'utf8'
+    if (encoding === undefined || encoding == null || encoding.trim() === '') {
+      throw new Error('Unknown encoding...')
     }
     var compress = $tw.wiki.getTiddler('$:/isCompressed')
     compress = compress !== undefined ? compress.fields.text === 'yes' : false
@@ -130,6 +130,7 @@ IPFS Controller
             content.signature = $tw.crypto.encrypt(content.signature, null, publicKey)
           }
           content = JSON.stringify(content)
+          encoding = 'text'
         } else {
           // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/9
           if (encoding === 'base64') {
@@ -144,8 +145,10 @@ IPFS Controller
               content.signature = $tw.crypto.encrypt(content.signature, null, publicKey)
             }
             content = JSON.stringify(content)
+            encoding = 'text'
           } else {
             content = $tw.crypto.encrypt(content, password)
+            encoding = 'text'
           }
         }
       } catch (error) {
@@ -158,6 +161,7 @@ IPFS Controller
         if (compress) {
           content = { compressed: this.deflate(content) }
           content = JSON.stringify(content)
+          encoding = 'text'
         }
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
@@ -165,7 +169,10 @@ IPFS Controller
         return null
       }
     }
-    return content
+    return {
+      content: content,
+      encoding: encoding,
+    }
   }
 
   IpfsController.prototype.requestToPin = function (ipfsPath) {
@@ -307,9 +314,14 @@ ${ipfsPath}`
     return await this.ipfsWrapper.unpinFromIpfs(ipfs, ipfsPath, recursive)
   }
 
-  IpfsController.prototype.addToIpfs = async function (content) {
+  IpfsController.prototype.addAttachmentToIpfs = async function (content, encoding, ipfsPath) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.addToIpfs(ipfs, content)
+    return await this.ipfsWrapper.addAttachmentToIpfs(ipfs, content, encoding, ipfsPath)
+  }
+
+  IpfsController.prototype.addToIpfs = async function (content, encoding) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsWrapper.addToIpfs(ipfs, content, encoding)
   }
 
   IpfsController.prototype.generateIpnsKey = async function (ipnsName) {

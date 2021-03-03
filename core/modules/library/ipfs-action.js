@@ -12,7 +12,6 @@ IPFS Action
   /*global $tw:false*/
   'use strict'
 
-  const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
 
   const name = 'ipfs-action'
@@ -71,7 +70,11 @@ IPFS Action
       return false
     }
     // Retrieve content
-    const content = await this.exportTiddler(target, child)
+    var content = null
+    const data = await this.exportTiddler(target, child)
+    if (data !== undefined && data !== null) {
+      var { content } = data
+    }
     // Check
     if (content === undefined || content == null) {
       return false
@@ -89,16 +92,22 @@ IPFS Action
     // Do not process if _canonical_uri is set and the text field is empty
     const canonicalUri = tiddler.fields._canonical_uri
     if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '') {
-      $tw.utils.alert(name, 'Attachment content is already exported...')
+      $tw.utils.alert(name, 'Attachment is already exported...')
+      return false
+    }
+    if (tiddler.fields.text === undefined || tiddler.fields.text == null || tiddler.fields.text.trim() === '') {
+      $tw.utils.alert(name, 'Empty attachment...')
       return false
     }
     try {
-      const content = await this.getAttachmentContent(tiddler)
-      if (content == null) {
-        return false
+      const { info } = $tw.utils.getContentType(tiddler)
+      const { content, encoding } = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
+      var filename = $tw.ipfs.filenamify(title)
+      if (filename.endsWith(info.extension) === false) {
+        filename = `${filename}${info.extension}`
       }
-      $tw.ipfs.getLogger().info(`Uploading attachment content: ${content.length} bytes`)
-      var { cid: added } = await $tw.ipfs.addToIpfs(content)
+      $tw.ipfs.getLogger().info(`Uploading attachment: ${content.length} bytes`)
+      var { cid: added, path } = await $tw.ipfs.addAttachmentToIpfs(content, encoding, `/${filename}`)
       if (added !== null) {
         await $tw.ipfs.requestToPin(`/ipfs/${added}`)
       }
@@ -116,21 +125,11 @@ IPFS Action
       removeTags: removeTags,
       fields: [
         { key: 'text', value: '' },
-        { key: '_canonical_uri', value: `${ipfsKeyword}://${added}` },
+        { key: '_canonical_uri', value: `${path}` },
       ],
     })
     $tw.wiki.addTiddler(tiddler)
     return true
-  }
-
-  IpfsAction.prototype.getAttachmentContent = async function (tiddler) {
-    const { info } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
-    var content = tiddler.fields.text
-    if (content === undefined || content == null || content === '') {
-      $tw.utils.alert(name, 'Empty attachment content...')
-      return null
-    }
-    return await $tw.ipfs.processContent(tiddler, content, info.encoding)
   }
 
   IpfsAction.prototype.handleRenameIpnsName = async function (event) {
@@ -212,7 +211,7 @@ IPFS Action
         $tw.ipfs
           .removeIpnsKey(ipnsName)
           .then(data => {
-            $tw.utils.alert(name, 'Succesfully removed Ipns key....')
+            $tw.utils.alert(name, 'Succesfully removed IPNS key....')
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
@@ -438,7 +437,7 @@ IPFS Action
     var contentType = 'text/plain'
     if (child || $tw.utils.getIpfsExport() === 'json') {
       content = await $tw.utils.exportTiddlersAsJson($tw.wiki.filterTiddlers(exportFilter), target.fields._export_uri)
-      if (content) {
+      if (content !== null) {
         const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
         if (navigator) {
           navigator.dispatchEvent({
@@ -446,7 +445,7 @@ IPFS Action
             type: 'tm-ipfs-export-tiddlers',
             param: content,
           })
-          return
+          return null
         }
       }
     } else if ($tw.utils.getIpfsExport() === 'static') {
@@ -473,6 +472,7 @@ IPFS Action
     if (content) {
       return await $tw.ipfs.processContent(target, content, 'utf8')
     }
+    return null
   }
 
   IpfsAction.prototype.transcludeContent = function (title) {

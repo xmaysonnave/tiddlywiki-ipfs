@@ -46,7 +46,6 @@ IPFS Saver
       $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
       try {
         await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
-        pathname = `/${ipnsKeyword}/${ipnsKey}`
         $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
       } catch (error) {
         $tw.ipfs.getLogger().warn(error)
@@ -54,7 +53,9 @@ IPFS Saver
         if (ipnsCid !== null) {
           await $tw.ipfs.requestToPin(`/ipfs/${ipnsCid}`)
         }
+        return false
       }
+      return true
     }
     try {
       var account = null
@@ -66,19 +67,19 @@ IPFS Saver
       var ipnsKey = null
       var ipnsName = null
       var options = options || {}
+      var resolvedUrl = null
       var web3 = null
-      const wiki = $tw.ipfs.getDocumentUrl()
       const base = $tw.ipfs.getIpfsBaseUrl()
+      const wiki = $tw.ipfs.normalizeUrl($tw.ipfs.getDocumentUrl(), base)
       const protocol = base.protocol
       const host = base.host
-      const current = $tw.ipfs.getUrl(wiki, base)
       var credential = ''
-      if (current.username && current.password) {
-        credential = `${current.username}:${current.password}@`
+      if (wiki.username && wiki.password) {
+        credential = `${wiki.username}:${wiki.password}@`
       }
-      var pathname = current.pathname
-      const search = current.search
-      const hash = current.hash
+      var pathname = wiki.pathname
+      const search = wiki.search
+      const hash = wiki.hash
       try {
         var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
       } catch (error) {
@@ -97,7 +98,7 @@ IPFS Saver
         // Resolve current IPNS
         if (ipnsKey !== null) {
           try {
-            var { cid: ipnsCid, ipnsName } = await $tw.ipfs.resolveUrl(true, false, wiki)
+            var { cid: ipnsCid, ipnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(true, false, wiki)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
@@ -116,14 +117,17 @@ IPFS Saver
             identifier = ipnsName
           }
           try {
-            var { cid: ipnsCid, ipnsKey, ipnsName } = await $tw.ipfs.resolveUrl(true, false, `/${ipnsKeyword}/${identifier}`)
+            var { cid: ipnsCid, ipnsKey, ipnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(true, false, `/${ipnsKeyword}/${identifier}`)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           }
         }
         if (ipnsCid !== null) {
-          await $tw.ipfs.requestToUnpin(`/ipfs/${ipnsCid}`)
+          const ipfsPath = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+          if (ipfsPath !== null) {
+            await $tw.ipfs.requestToUnpin(ipfsPath)
+          }
         }
       }
       // ENS
@@ -140,22 +144,29 @@ IPFS Saver
           err.name = 'OwnerError'
           throw err
         }
-        var { cid: ensCid, ipnsKey: ensIpnsKey, ipnsName: ensIpnsName } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
+        var { cid: ensCid, ipnsKey: ensIpnsKey, ipnsName: ensIpnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
         if (ensCid !== null) {
-          await $tw.ipfs.requestToUnpin(`/ipfs/${ensCid}`)
+          const ipfsPath = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+          if (ipfsPath !== null) {
+            await $tw.ipfs.requestToUnpin(ipfsPath)
+          }
         }
       }
       // Upload
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
-      const { cid: added } = await $tw.ipfs.addToIpfs(text)
-      pathname = `/${ipfsKeyword}/${added}`
-      await $tw.ipfs.requestToPin(pathname)
+      const { cid: added } = await $tw.ipfs.addToIpfs(text, 'utf8')
+      await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${added}`)
       // Publish to IPNS
+      pathname = `/${ipfsKeyword}/${added}/`
       if (ipnsKey !== null && ipnsName !== null) {
-        await publishToIpns(added, ipnsCid, ipnsKey, ipnsName)
+        if (await publishToIpns(added, ipnsCid, ipnsKey, ipnsName)) {
+          pathname = `/${ipnsKeyword}/${ipnsKey}/`
+        }
       }
       if (ensIpnsKey !== null && ensIpnsName !== null) {
-        await publishToIpns(added, ensCid, ensIpnsKey, ensIpnsName)
+        if (await publishToIpns(added, ensCid, ensIpnsKey, ensIpnsName)) {
+          pathname = `/${ipnsKeyword}/${ensIpnsKey}/`
+        }
       }
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsKey == null) {

@@ -12,11 +12,15 @@ IpfsUrl.prototype.getLogger = function () {
   return this.ipfsBundle.getLogger()
 }
 
-IpfsUrl.prototype.filenamify = function (name, options) {
-  if (name === undefined || name == null || name.trim() === '') {
-    throw new Error('Undefined name...')
+IpfsUrl.prototype.filenamify = function (filename, options) {
+  filename = filename !== undefined && filename !== null && filename.trim() !== '' ? filename.trim() : null
+  if (filename === null) {
+    throw new Error('Undefined filename...')
   }
-  return filenamify.replace(name, options)
+  if (options === undefined || options == null) {
+    options = { replacement: '_' }
+  }
+  return filenamify(filename, options)
 }
 
 IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {

@@ -264,15 +264,78 @@ IpfsWrapper.prototype.resolveIpfsContainer = async function (ipfs, value) {
   return ipfsPath
 }
 
-IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
+IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, encoding, ipfsPath) {
   try {
-    const { cid, size } = await this.ipfsLibrary.add(ipfs, $tw.ipfs.StringToUint8Array(content))
+    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '' ? ipfsPath.trim() : '/'
+    encoding = encoding !== undefined && encoding !== null && encoding.trim() !== '' ? encoding.trim() : 'base64'
+    if (encoding === 'base64') {
+      content = $tw.ipfs.Base64ToUint8Array(content)
+    } else {
+      content = $tw.ipfs.StringToUint8Array(content)
+    }
+    const upload = []
+    upload.push({
+      path: `${ipfsPath}`,
+      content: content,
+    })
+    const options = {
+      chunker: 'rabin-262144-524288-1048576',
+      cidVersion: 0,
+      hashAlg: 'sha2-256',
+      pin: false,
+      rawLeaves: false,
+      wrapWithDirectory: true,
+    }
+    if (ipfsPath === '/') {
+      options.wrapWithDirectory = false
+    }
+    var cid = null
+    var parentCid = null
+    var parentSize = null
+    var contentCid = null
+    var contentPath = ''
+    var contentSize = null
+    const added = await this.ipfsLibrary.addAll(ipfs, upload, options)
+    for (var [cid, details] of added.entries()) {
+      if (added.size === 1 || details.path === '') {
+        parentCid = cid
+        parentSize = details.size
+      } else {
+        contentCid = cid
+        contentPath = `/${details.path}`
+        contentSize = details.size
+      }
+    }
+    const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}`)
+    this.getLogger().info(`Successfully added: ${parentSize} bytes,
+${url}`)
+    return {
+      cid: contentCid !== null ? contentCid : parentCid,
+      path: `ipfs://${parentCid}${contentPath}`,
+      size: parentSize,
+    }
+  } catch (error) {
+    this.getLogger().error(error)
+  }
+  throw new Error('Failed to add content to IPFS...')
+}
+
+IpfsWrapper.prototype.addToIpfs = async function (ipfs, content, encoding) {
+  try {
+    encoding = encoding !== undefined && encoding !== null && encoding.trim() !== '' ? encoding.trim() : 'base64'
+    if (encoding === 'base64') {
+      content = $tw.ipfs.Base64ToUint8Array(content)
+    } else {
+      content = $tw.ipfs.StringToUint8Array(content)
+    }
+    const { cid, path, size } = await this.ipfsLibrary.add(ipfs, content)
     const pathname = `/${ipfsKeyword}/${cid}`
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(`Successfully added: ${size} bytes,
 ${url}`)
     return {
       cid: cid,
+      path: path,
       size: size,
     }
   } catch (error) {

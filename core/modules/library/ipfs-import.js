@@ -88,7 +88,7 @@ IPFS Import
     var key = null
     var normalizedUrl = null
     var resolvedUrl = null
-    value = value === undefined || value == null || value.toString().trim() === '' ? null : value.toString().trim()
+    value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
     if (value == null) {
       return {
         key: null,
@@ -116,7 +116,7 @@ IPFS Import
   }
 
   IpfsImport.prototype.isIpfs = async function (key) {
-    key = key === undefined || key == null || key.trim() === '' ? null : key.trim()
+    key = key !== undefined && key !== null && key.trim() !== '' ? key.trim() : null
     if (key == null) {
       return false
     }
@@ -128,11 +128,11 @@ IPFS Import
   }
 
   IpfsImport.prototype.import = async function (canonicalUri, importUri, tiddler) {
-    canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
-    importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
+    canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.toString().trim() !== '' ? canonicalUri.toString().trim() : null
+    importUri = importUri !== undefined && importUri !== null && importUri.toString().trim() !== '' ? importUri.toString().trim() : null
     var password = tiddler.fields._password
-    password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
-    const { type } = $tw.utils.getContentType(tiddler.fields.title, tiddler.fields.type)
+    password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+    const { type } = $tw.utils.getContentType(tiddler)
     this.loaded = new Map()
     this.notLoaded = []
     this.isEmpty = []
@@ -161,7 +161,7 @@ IPFS Import
           const title = titles[i]
           const current = $tw.wiki.getTiddler(title)
           canonicalUri = current.fields._canonical_uri
-          canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+          canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
           if (canonicalUri !== null) {
             var key = this.resolved.get(canonicalUri)
             if (key === undefined) {
@@ -172,7 +172,7 @@ IPFS Import
             }
           }
           importUri = current.fields._import_uri
-          importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
+          importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
           if (importUri !== null) {
             var key = this.resolved.get(importUri)
             if (key === undefined) {
@@ -321,14 +321,14 @@ IPFS Import
           tiddler.type = type
           // Next
           var canonicalUri = tiddler._canonical_uri
-          canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+          canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
           tiddler._canonical_uri = canonicalUri
           var importUri = tiddler._import_uri
-          importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
+          importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
           tiddler._import_uri = importUri
           if (canonicalUri !== null || importUri !== null) {
             password = tiddler._password
-            password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
+            password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
             if (importUri !== null) {
               const { loaded: loadedAdded, removed: loadedRemoved } = await this.load(resolvedKey, title, '_import_uri', importUri, password, true)
               loaded += loadedAdded
@@ -402,9 +402,9 @@ IPFS Import
         const tiddler = imported.get(title)
         var type = tiddler.type
         var canonicalUri = tiddler._canonical_uri
-        canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+        canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
         var importUri = tiddler._import_uri
-        importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
+        importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
         if (canonicalUri == null && importUri == null) {
           keys.push(key)
         } else if (canonicalUri == null && importUri !== null) {
@@ -492,7 +492,7 @@ IPFS Import
       return false
     }
     var canonicalUri = tiddler._canonical_uri
-    canonicalUri = canonicalUri == null || canonicalUri === undefined || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+    canonicalUri = (canonicalUri !== undefined && canonicalUri !== null) || canonicalUri.trim() !== '' ? canonicalUri.trim() : null
     if (canonicalUri !== null) {
       const msg = 'Inconsistency:'
       const field = '_canonical_uri'
@@ -505,7 +505,7 @@ IPFS Import
       return false
     }
     var importUri = tiddler._import_uri
-    importUri = importUri == null || importUri === undefined || importUri.trim() === '' ? null : importUri.trim()
+    importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
     if (importUri !== null) {
       const msg = 'Inconsistency:'
       const field = '_import_uri'
@@ -537,7 +537,7 @@ IPFS Import
       return
     }
     var targetCanonicalUri = tiddler._canonical_uri
-    targetCanonicalUri = targetCanonicalUri == null || targetCanonicalUri === undefined || targetCanonicalUri.trim() === '' ? null : targetCanonicalUri.trim()
+    targetCanonicalUri = targetCanonicalUri !== undefined && targetCanonicalUri !== null && targetCanonicalUri.trim() === '' ? targetCanonicalUri.trim() : null
     var targetCanonicalKey = null
     if (targetCanonicalUri !== null && this.notResolved.indexOf(targetCanonicalUri) === -1) {
       targetCanonicalKey = this.resolved.get(targetCanonicalUri)
@@ -554,7 +554,7 @@ IPFS Import
       return
     }
     var nextImportUri = tiddler._import_uri
-    nextImportUri = nextImportUri == null || nextImportUri === undefined || nextImportUri.trim() === '' ? null : nextImportUri.trim()
+    nextImportUri = nextImportUri !== undefined && nextImportUri !== null && nextImportUri.trim() !== '' ? nextImportUri.trim() : null
     if (targetCanonicalUri == null && nextImportUri !== null) {
       const msg = 'Missing:'
       const field = '_canonical_uri'
@@ -608,9 +608,9 @@ IPFS Import
         const tiddler = imported.get(title)
         var type = tiddler.type
         var canonicalUri = tiddler._canonical_uri
-        canonicalUri = canonicalUri === undefined || canonicalUri == null || canonicalUri.trim() === '' ? null : canonicalUri.trim()
+        canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
         var importUri = tiddler._import_uri
-        importUri = importUri === undefined || importUri == null || importUri.trim() === '' ? null : importUri.trim()
+        importUri = importUri === undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
         var processed
         if (importUri !== null) {
           processed = this.importTiddler(title, importUri)
@@ -669,14 +669,14 @@ IPFS Import
     }
     var type = tiddler.type
     var importUri = tiddler._import_uri
-    importUri = importUri == null || importUri === undefined || importUri.trim() === '' ? null : importUri.trim()
+    importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
     var canonicalUri = tiddler._canonical_uri
-    canonicalUri = canonicalUri == null || canonicalUri === undefined || canonicalUri.trim() === '' ? null : canonicalUri.trim()
-    var processed
+    canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
+    var processed = false
     if (importUri !== null) {
       processed = this.importTiddler(title, importUri)
     }
-    if (!processed && canonicalUri !== null && tiddlyWikiType === type) {
+    if (processed === false && canonicalUri !== null && tiddlyWikiType === type) {
       this.importTiddler(title, canonicalUri)
     }
     return this.mergeTiddler(title, uri)

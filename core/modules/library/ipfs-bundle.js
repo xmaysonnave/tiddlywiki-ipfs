@@ -431,15 +431,12 @@ IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {
   }
   if (value instanceof URL === false) {
     try {
-      value = this.ipfsUrl.getUrl(value)
+      value = this.getUrl(value)
     } catch (error) {
-      value = null
-    }
-  }
-  if (value == null) {
-    return {
-      cid: null,
-      remainderPath: '',
+      return {
+        cid: null,
+        remainderPath: '',
+      }
     }
   }
   // Pathname
@@ -483,13 +480,10 @@ IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeo
   }
   if (value instanceof URL === false) {
     try {
-      value = this.ipfsUrl.getUrl(value)
+      value = this.getUrl(value)
     } catch (error) {
-      value = null
+      return null
     }
-  }
-  if (value == null) {
-    return null
   }
   const self = this
   const resolveContainer = async function (client, ipfsPath, base, timeout) {
@@ -566,7 +560,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
   var url = null
   if (value instanceof URL === false) {
     try {
-      url = this.ipfsUrl.getUrl(value)
+      url = this.getUrl(value)
     } catch (error) {
       url = null
     }

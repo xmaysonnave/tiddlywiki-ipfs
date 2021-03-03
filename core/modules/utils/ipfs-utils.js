@@ -167,21 +167,18 @@ IPFS utils
     return new $tw.Tiddler(updates.tiddler, fields)
   }
 
-  exports.getContentType = function (title, type) {
-    type = type !== undefined && type !== null && type.trim() !== '' ? type.trim() : null
+  exports.getContentType = function (tiddler) {
+    tiddler = tiddler !== undefined && tiddler !== null ? tiddler : null
+    if (tiddler == null) {
+      throw new Error('Undefined Tiddler...')
+    }
+    var type = tiddler.fields.type !== undefined && tiddler.fields.type !== null && tiddler.fields.type.trim() !== '' ? tiddler.fields.type.trim() : null
     if (type == null) {
       type = 'text/vnd.tiddlywiki'
     }
     var info = $tw.config.contentTypeInfo[type]
     if (info === undefined || info == null) {
-      const url = $tw.ipfs.getDocumentUrl()
-      url.hash = title
-      $tw.ipfs.getLogger().info(
-        `Unknown Content-Type: "${type}", default: "text/vnd.tiddlywiki":
- ${url}`
-      )
-      type = 'text/vnd.tiddlywiki'
-      info = $tw.config.contentTypeInfo[type]
+      throw new Error(`Unknown Content-Type: "${type}" from Tidler: "${tiddler.fields.title}"`)
     }
     return {
       type: type,
@@ -238,7 +235,7 @@ IPFS utils
     }
     $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}`)
     try {
-      var { cid: added } = await $tw.ipfs.addToIpfs(content)
+      var { cid: added } = await $tw.ipfs.addToIpfs(content, 'utf8')
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(ipfsUtilsName, error.message)
