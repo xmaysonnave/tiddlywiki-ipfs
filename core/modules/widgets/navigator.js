@@ -606,7 +606,7 @@ Render this widget into the DOM
     })
     var content = await $tw.utils.exportTiddlersAsJson(tiddlers, target.fields._export_uri)
     if (content !== null) {
-      var { content } = await $tw.ipfs.processContent(target, content, 'utf8')
+      content = await $tw.ipfs.processContent(target, content, 'utf8')
     }
     if (content !== null) {
       if (await $tw.utils.exportToIpfs(target, content)) {

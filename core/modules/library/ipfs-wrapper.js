@@ -264,15 +264,12 @@ IpfsWrapper.prototype.resolveIpfsContainer = async function (ipfs, value) {
   return ipfsPath
 }
 
-IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, encoding, ipfsPath) {
+IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, ipfsPath) {
   try {
-    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '' ? ipfsPath.trim() : '/'
-    encoding = encoding !== undefined && encoding !== null && encoding.trim() !== '' ? encoding.trim() : 'base64'
-    if (encoding === 'base64') {
-      content = $tw.ipfs.Base64ToUint8Array(content)
-    } else {
-      content = $tw.ipfs.StringToUint8Array(content)
+    if (content === undefined || content == null) {
+      throw new Error('Undefined content...')
     }
+    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '' ? ipfsPath.trim() : '/'
     const upload = []
     upload.push({
       path: `${ipfsPath}`,
@@ -320,13 +317,10 @@ ${url}`)
   throw new Error('Failed to add content to IPFS...')
 }
 
-IpfsWrapper.prototype.addToIpfs = async function (ipfs, content, encoding) {
+IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
   try {
-    encoding = encoding !== undefined && encoding !== null && encoding.trim() !== '' ? encoding.trim() : 'base64'
-    if (encoding === 'base64') {
-      content = $tw.ipfs.Base64ToUint8Array(content)
-    } else {
-      content = $tw.ipfs.StringToUint8Array(content)
+    if (content === undefined || content == null) {
+      throw new Error('Undefined content...')
     }
     const { cid, path, size } = await this.ipfsLibrary.add(ipfs, content)
     const pathname = `/${ipfsKeyword}/${cid}`

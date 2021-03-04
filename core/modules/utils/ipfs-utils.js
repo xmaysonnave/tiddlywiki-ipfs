@@ -235,7 +235,7 @@ IPFS utils
     }
     $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}`)
     try {
-      var { cid: added } = await $tw.ipfs.addToIpfs(content, 'utf8')
+      var { cid: added } = await $tw.ipfs.addToIpfs(content)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(ipfsUtilsName, error.message)

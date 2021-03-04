@@ -69,13 +69,7 @@ IPFS Action
     if (target === undefined) {
       return false
     }
-    // Retrieve content
-    var content = null
-    const data = await this.exportTiddler(target, child)
-    if (data !== undefined && data !== null) {
-      var { content } = data
-    }
-    // Check
+    const content = await this.exportTiddler(target, child)
     if (content === undefined || content == null) {
       return false
     }
@@ -101,13 +95,13 @@ IPFS Action
     }
     try {
       const { info } = $tw.utils.getContentType(tiddler)
-      const { content, encoding } = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
+      const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
       var filename = $tw.ipfs.filenamify(title)
       if (filename.endsWith(info.extension) === false) {
         filename = `${filename}${info.extension}`
       }
       $tw.ipfs.getLogger().info(`Uploading attachment: ${content.length} bytes`)
-      var { cid: added, path } = await $tw.ipfs.addAttachmentToIpfs(content, encoding, `/${filename}`)
+      var { cid: added, path } = await $tw.ipfs.addAttachmentToIpfs(content, `/${filename}`)
       if (added !== null) {
         await $tw.ipfs.requestToPin(`/ipfs/${added}`)
       }
