@@ -6,6 +6,9 @@ const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const CID = require('cids')
 
+const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const ipfsBundle = new IpfsBundle()
+
 async function managePin (api, key) {
   var cid = null
   var type = null
@@ -65,15 +68,17 @@ async function manageUnpin (api, key) {
  **/
 
 module.exports = async function main (dir, pin) {
+  // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
   }
+  ipfsBundle.init()
+  // Params
   dir = dir !== undefined && dir !== null && dir.trim() !== '' ? dir.trim() : '.'
   pin = pin !== undefined && pin !== null && pin.trim() !== '' ? pin.trim() : null
   pin = pin ? pin === 'true' : process.env.PIN ? process.env.PIN === 'true' : true
-
-  // Ipfs Client
+  // Ipfs
   const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
   const protocol = apiUrl.protocol.slice(0, -1)
   var port = apiUrl.port
@@ -89,16 +94,15 @@ module.exports = async function main (dir, pin) {
     port: port,
     timeout: 2 * 60 * 1000,
   })
-
-  // Read node.json
+  // Read
   const path = `./current/${dir}/node.json`
-  if (!fs.existsSync(path)) {
-    throw Error(`Unknown ./current/${dir}/node.json`)
+  if (fs.existsSync(path) === false) {
+    throw Error(`Unknown ${path}`)
   }
   const current = fs.readFileSync(path)
   const jsonObject = JSON.parse(current)
-  const cid = jsonObject._cid
-
+  const sourceUri = jsonObject._source_uri
+  const { cid } = ipfsBundle.getIpfsIdentifier(sourceUri)
   // Pin or Unpin
   if (pin) {
     await managePin(api, cid)

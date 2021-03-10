@@ -44,7 +44,6 @@ IpfsLibrary.prototype.add = async function (client, content, options) {
       rawLeaves: false,
     }
   }
-  this.getLogger().info('Process IPFS add...')
   // 1 - https://github.com/ipfs/go-ipfs/issues/5683
   // default chunker: "size-262144"
   // chunker: "rabin-262144-524288-1048576"
@@ -54,7 +53,7 @@ IpfsLibrary.prototype.add = async function (client, content, options) {
   // https://github.com/xmaysonnave/tiddlywiki-ipfs/issues/14
   const result = await client.add(content, options)
   if (result === undefined || result == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var cid = null
   if (result.cid !== undefined && result.cid !== null) {
@@ -71,7 +70,7 @@ IpfsLibrary.prototype.add = async function (client, content, options) {
     size = result.size
   }
   if (cid == null || path == null || size == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   const cidV1 = this.ipfsBundle.cidToCidV1(cid, 'ipfs', true)
   return {
@@ -105,11 +104,10 @@ IpfsLibrary.prototype.addAll = async function (client, content, options) {
       rawLeaves: false,
     }
   }
-  this.getLogger().info('Process IPFS addAll...')
   const added = new Map()
   for await (const result of client.addAll(content, options)) {
     if (result === undefined || result == null) {
-      throw new Error('IPFS client returned an unknown result...')
+      throw new Error('IPFS returned an unknown result...')
     }
     var cid = null
     if (result.cid !== undefined && result.cid !== null) {
@@ -126,7 +124,7 @@ IpfsLibrary.prototype.addAll = async function (client, content, options) {
       size = result.size
     }
     if (cid == null || path == null || size == null) {
-      throw new Error('IPFS client returned an unknown result...')
+      throw new Error('IPFS returned an unknown result...')
     }
     const cidV1 = this.ipfsBundle.cidToCidV1(cid)
     added.set(cidV1, {
@@ -189,15 +187,11 @@ IpfsLibrary.prototype.dagResolve = async function (client, ipfsPath, timeout) {
   if (client === undefined || client.dag === undefined || client.dag.resolve === undefined) {
     throw new Error('Undefined IPFS dag resolve...')
   }
-  this.getLogger().info(
-    `Resolve IPFS dag:
-${ipfsPath}`
-  )
   const result = await client.dag.resolve(ipfsPath, {
     timeout: timeout,
   })
   if (result === undefined || result == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var cid = null
   if (result.cid !== undefined && result.cid !== null) {
@@ -208,7 +202,7 @@ ${ipfsPath}`
     remainderPath = result.remainderPath
   }
   if (cid == null || remainderPath == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   const cidV1 = this.ipfsBundle.cidToCidV1(cid)
   return {
@@ -232,15 +226,11 @@ IpfsLibrary.prototype.filesStat = async function (client, ipfsPath, timeout) {
   if (client === undefined || client.files === undefined || client.files.stat === undefined) {
     throw new Error('Undefined IPFS files stat...')
   }
-  this.getLogger().info(
-    `Retrieve IPFS files stat:
-${ipfsPath}`
-  )
   const result = await client.files.stat(ipfsPath, {
     timeout: timeout,
   })
   if (result === undefined || result == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var cid = null
   if (result.cid !== undefined && result.cid !== null) {
@@ -275,11 +265,11 @@ ${ipfsPath}`
     withLocality = result.withLocality
   }
   if (cid == null || blocks == null || cumulativeSize == null || size == null || type == null || withLocality == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   if (withLocality) {
     if (local == null || sizeLocal == null) {
-      throw new Error('IPFS client returned an unknown result...')
+      throw new Error('IPFS returned an unknown result...')
     }
   }
   const cidV1 = this.ipfsBundle.cidToCidV1(cid)
@@ -311,19 +301,18 @@ IpfsLibrary.prototype.genKey = async function (client, ipnsName) {
   if (client === undefined || client.key === undefined || client.key.gen === undefined) {
     throw new Error('Undefined IPFS key gen...')
   }
-  this.getLogger().info('Process IPFS key gen...')
   const key = await client.key.gen(ipnsName, {
     type: 'ed25519',
   })
   if (key === undefined || key == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var keyId = null
   if (key.id !== undefined && key.id !== null) {
     keyId = key.id
   }
   if (keyId == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return keyId
 }
@@ -459,7 +448,7 @@ IpfsLibrary.prototype.hasPin = async function (client, key, type, ipfsPath) {
   }
 }
 
-IpfsLibrary.prototype.isDirectory = async function (client, cid, timeout) {
+IpfsLibrary.prototype.isIpfsDirectory = async function (client, cid, timeout) {
   timeout = timeout !== undefined && timeout !== null ? timeout : 2 * 1000
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
@@ -487,10 +476,9 @@ IpfsLibrary.prototype.keyList = async function (client) {
   if (client === undefined || client.key === undefined || client.key.list === undefined) {
     throw new Error('Undefined IPFS key list...')
   }
-  this.getLogger().info('Process IPFS key list...')
   const result = await client.key.list()
   if (result === undefined || result == null || Array.isArray(result) === false) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return result
 }
@@ -513,10 +501,9 @@ IpfsLibrary.prototype.keyRename = async function (client, oldIpnsName, newIpnsNa
   if (client === undefined || client.key === undefined || client.key.rename === undefined) {
     throw new Error('Undefined IPFS key rename...')
   }
-  this.getLogger().info('Process IPFS key rename...')
   const key = await client.key.rename(oldIpnsName, newIpnsName)
   if (key === undefined || key == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var keyId = null
   if (key.id !== undefined && key.id !== null) {
@@ -535,7 +522,7 @@ IpfsLibrary.prototype.keyRename = async function (client, oldIpnsName, newIpnsNa
     overwrite = key.overwrite
   }
   if (keyId == null || was == null || now == null || overwrite == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return {
     keyId: keyId,
@@ -559,11 +546,10 @@ IpfsLibrary.prototype.ls = async function (client, ipfsPath) {
   if (client === undefined || client.ls === undefined) {
     throw new Error('Undefined IPFS ls...')
   }
-  this.getLogger().info('Process IPFS ls...')
   const content = new Map()
   for await (const result of client.ls(ipfsPath)) {
     if (result === undefined || result == null) {
-      throw new Error('IPFS client returned an unknown result...')
+      throw new Error('IPFS returned an unknown result...')
     }
     var cid = null
     if (result.cid !== undefined && result.cid !== null) {
@@ -592,7 +578,7 @@ IpfsLibrary.prototype.ls = async function (client, ipfsPath) {
       type = result.type
     }
     if (cid == null || depth == null || name == null || path == null || size == null || type == null) {
-      throw new Error('IPFS client returned an unknown result...')
+      throw new Error('IPFS returned an unknown result...')
     }
     const cidV1 = this.ipfsBundle.cidToCidV1(cid)
     content.set(cidV1, {
@@ -626,14 +612,13 @@ IpfsLibrary.prototype.namePublish = async function (client, ipnsName, cid) {
   if (client === undefined || client.name === undefined || client.name.publish === undefined) {
     throw new Error('Undefined IPFS name publish...')
   }
-  this.getLogger().info('Process IPFS name publish...')
   const result = await client.name.publish(cid, {
     resolve: true,
     key: ipnsName,
     allowOffline: false,
   })
   if (result === undefined || result == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var name = null
   if (result.name !== undefined && result.name !== null) {
@@ -644,7 +629,7 @@ IpfsLibrary.prototype.namePublish = async function (client, ipnsName, cid) {
     value = result.value
   }
   if (name == null || value == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return {
     name: name,
@@ -666,13 +651,12 @@ IpfsLibrary.prototype.nameResolve = async function (client, value) {
   if (client === undefined || client.name === undefined || client.name.resolve === undefined) {
     throw new Error('Undefined IPFS name resolve...')
   }
-  this.getLogger().info('Process IPFS name resolve...')
   const resolvedPaths = await client.name.resolve(value, {
     nocache: false,
     recursive: true,
   })
   if (resolvedPaths === undefined || resolvedPaths == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   // https://gist.github.com/alanshaw/04b2ddc35a6fff25c040c011ac6acf26
   var lastPath = null
@@ -680,7 +664,7 @@ IpfsLibrary.prototype.nameResolve = async function (client, value) {
     lastPath = path !== undefined || path !== null ? path : null
   }
   if (lastPath == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return lastPath
 }
@@ -700,15 +684,11 @@ IpfsLibrary.prototype.objectData = async function (client, cid, timeout) {
   if (client === undefined || client.object === undefined || client.object.data === undefined) {
     throw new Error('Undefined IPFS object data...')
   }
-  this.getLogger().info(
-    `Retrieve IPFS object data:
-${cid}`
-  )
   const ua = await client.object.data(cid, {
     timeout: timeout,
   })
   if (ua === undefined || ua == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return ua
 }
@@ -728,15 +708,11 @@ IpfsLibrary.prototype.objectStat = async function (client, cid, timeout) {
   if (client === undefined || client.object === undefined || client.object.stat === undefined) {
     throw new Error('Undefined IPFS object stat...')
   }
-  this.getLogger().info(
-    `Retrieve IPFS object stat:
-${cid}`
-  )
   const stat = await client.object.stat(cid, {
     timeout: timeout,
   })
   if (stat === undefined || stat == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var Hash = null
   if (stat.Hash !== undefined && stat.Hash !== null) {
@@ -763,7 +739,7 @@ ${cid}`
     CumulativeSize = stat.CumulativeSize
   }
   if (Hash == null || NumLinks == null || BlockSize == null || LinksSize == null || DataSize == null || CumulativeSize == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   const cidV1 = this.ipfsBundle.cidToCidV1(Hash)
   return {
@@ -791,12 +767,11 @@ IpfsLibrary.prototype.pinAdd = async function (client, cid, recursive) {
   if (client === undefined || client.pin === undefined || client.pin.add === undefined) {
     throw new Error('Undefined IPFS pin add...')
   }
-  this.getLogger().info('Process IPFS pin add...')
   const result = await client.pin.add(cid, {
     recursive: recursive,
   })
   if (result === undefined || result == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return this.ipfsBundle.cidToCidV1(result, 'ipfs', true)
 }
@@ -816,12 +791,11 @@ IpfsLibrary.prototype.pinRm = async function (client, cid, recursive) {
   if (client === undefined || client.pin === undefined || client.pin.rm === undefined) {
     throw new Error('Undefined IPFS pin rm...')
   }
-  this.getLogger().info('Process IPFS pin rm...')
   const result = await client.pin.rm(cid, {
     recursive: recursive,
   })
   if (result === undefined || result == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return this.ipfsBundle.cidToCidV1(result, 'ipfs', true)
 }
@@ -840,17 +814,16 @@ IpfsLibrary.prototype.rmKey = async function (client, ipnsName) {
   if (client === undefined || client.key === undefined || client.key.rm === undefined) {
     throw new Error('Undefined IPFS key rm...')
   }
-  this.getLogger().info('Process IPFS key rm...')
   const key = await client.key.rm(ipnsName)
   if (key === undefined || key == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   var keyId = null
   if (key.id !== undefined && key.id !== null) {
     keyId = key.id
   }
   if (keyId == null) {
-    throw new Error('IPFS client returned an unknown result...')
+    throw new Error('IPFS returned an unknown result...')
   }
   return keyId
 }

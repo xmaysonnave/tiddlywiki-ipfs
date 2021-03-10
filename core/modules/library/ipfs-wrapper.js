@@ -56,7 +56,6 @@ IpfsWrapper.prototype.getHttpIpfsClient = async function (url) {
 }
 
 IpfsWrapper.prototype.getIpfsClient = async function (url) {
-  // IPFS client
   try {
     var policy = null
     const ipfsProvider = $tw.utils.getIpfsProvider()
@@ -250,18 +249,18 @@ IpfsWrapper.prototype.resolveIpfsContainer = async function (ipfs, value) {
   if (value == null) {
     throw new Error('Undefined URL...')
   }
-  var ipfsPath = null
+  var cid = null
   try {
-    ipfsPath = await this.ipfsBundle.resolveIpfsContainer(ipfs, value)
-    if (ipfsPath !== null) {
-      const url = this.ipfsUrl.normalizeUrl(ipfsPath)
+    cid = await this.ipfsBundle.resolveIpfsContainer(ipfs, value)
+    if (cid !== null) {
+      const url = this.ipfsUrl.normalizeUrl(`/ipfs/${cid}`)
       this.getLogger().info(`Successfully resolved IPFS container:
   ${url}`)
     }
   } catch (error) {
     this.getLogger().error(error)
   }
-  return ipfsPath
+  return cid
 }
 
 IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, ipfsPath) {

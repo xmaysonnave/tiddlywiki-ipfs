@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # init
-./bin/init-build-tiddlywiki-ipfs.sh "$@" || exit 1
+./bin/init.sh "$@" || exit 1
 
 # build plugin
 ./bin/tiddlywiki-ipfs/build.sh "$@" || exit 1

@@ -402,8 +402,8 @@ IpfsBundle.prototype.filesStat = async function (client, ipfsPath, timeout) {
   return await this.ipfsLibrary.filesStat(client, ipfsPath, timeout)
 }
 
-IpfsBundle.prototype.isDirectory = async function (client, cid, timeout) {
-  return await this.ipfsLibrary.isDirectory(client, cid, timeout)
+IpfsBundle.prototype.isIpfsDirectory = async function (client, cid, timeout) {
+  return await this.ipfsLibrary.isIpfsDirectory(client, cid, timeout)
 }
 
 IpfsBundle.prototype.ls = async function (client, ipfsPath) {
@@ -487,38 +487,30 @@ IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeo
   }
   const self = this
   const resolveContainer = async function (client, ipfsPath, base, timeout) {
-    try {
-      const currentUrl = self.getUrl(ipfsPath, base)
-      const { cid } = await self.resolveIpfs(client, currentUrl, timeout)
-      if (cid == null) {
-        return null
-      }
-      if (await self.isDirectory(client, cid, timeout)) {
-        return `/ipfs/${cid}`
-      }
-      var nextPath = ''
-      const members = value.pathname.split('/')
-      for (var i = 0; i < members.length; i++) {
-        if (members[i].trim() === '') {
-          continue
-        }
-        if (i !== members.length - 1) {
-          nextPath = `${nextPath}/${members[i]}`
-        }
-      }
-      const nextUrl = self.getUrl(nextPath, base)
-      ipfsPath = await self.resolveIpfsContainer(client, nextUrl, timeout)
-      if (ipfsPath == null) {
-        ipfsPath = `/ipfs/${cid}`
-      }
-      return ipfsPath
-    } catch (error) {
-      self.getLogger().error(error)
+    const currentUrl = self.getUrl(ipfsPath, base)
+    const { cid } = await self.resolveIpfs(client, currentUrl, timeout)
+    if (cid == null) {
+      return null
     }
-    return ipfsPath
-      .split('/')
-      .slice(0, -1)
-      .join('/') // get dir of filepath
+    if (await self.isIpfsDirectory(client, cid, timeout)) {
+      return cid
+    }
+    var nextPath = ''
+    const members = value.pathname.split('/')
+    for (var i = 0; i < members.length; i++) {
+      if (members[i].trim() === '') {
+        continue
+      }
+      if (i !== members.length - 1) {
+        nextPath = `${nextPath}/${members[i]}`
+      }
+    }
+    const nextUrl = self.getUrl(nextPath, base)
+    const innerCid = await self.resolveIpfsContainer(client, nextUrl, timeout)
+    if (innerCid == null) {
+      return cid
+    }
+    return innerCid
   }
   const base = this.getUrl(`${value.protocol}//${value.host}`)
   // Pathname

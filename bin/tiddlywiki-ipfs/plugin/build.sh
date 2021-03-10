@@ -28,8 +28,8 @@ mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./core/* ./build/plugins/ipfs || exit 1
 rm ./build/plugins/ipfs/modules/library/ipfs-bundle.js > /dev/null 2>&1
 rm -R ./build/plugins/ipfs/modules/library/ipfs-bundle > /dev/null 2>&1
-cp './production/tiddlywiki-ipfs/boot/$_boot_boot.js_build.tid' './build/plugins/ipfs/config/$_boot_boot.js_build.tid' || exit 1
-cp './production/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.tid' './build/plugins/ipfs/config/$_library_ipfs-library-modules.js_build.tid' || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js-build.tid ./build/plugins/ipfs/config || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js-build.tid ./build/plugins/ipfs/config || exit 1
 cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # bundle
@@ -79,7 +79,7 @@ yarn cli-tiddlywiki-ipfs build \
 ./bin/cli-upload.sh \
   --name=$:/plugins/ipfs.js.zlib \
   --owner=$:/plugins/ipfs \
-  --extension=json.zlib \
+  --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
   --tags=$:/ipfs/documentation "$@" || exit 1
 

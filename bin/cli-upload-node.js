@@ -12,7 +12,8 @@ async function main () {
     if (dir == null) {
       throw new Error('Unknown output dir...')
     }
-    await upload(dir)
+    const load = argv.load ? argv.load.trim() : null
+    await upload(dir, load)
   } catch (error) {
     console.error(error)
     process.exit(1)

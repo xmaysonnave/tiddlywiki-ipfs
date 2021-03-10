@@ -27,7 +27,7 @@ function main () {
     })
 
     // boot
-    var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js_build.json'
+    var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }
@@ -46,7 +46,7 @@ function main () {
     }
 
     // library
-    path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js_build.json'
+    path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-modules.js-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }
@@ -65,7 +65,7 @@ function main () {
     }
 
     // plugin
-    path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.json'
+    path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }
@@ -84,7 +84,7 @@ function main () {
     }
 
     // documentation
-    path = './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation.json_build.json'
+    path = './build/output/tiddlywiki-ipfs/documentation/$_ipfs_documentation-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }

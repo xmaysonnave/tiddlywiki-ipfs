@@ -6,10 +6,10 @@ type: text/vnd.tiddlywiki
 <h2>IPFS Quick Start</h2>
 <h4>Current</h4>
 <ul>
-  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js_build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Documentation|IPFS Documentation]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation.json_build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-library-modules.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-library-modules.js_build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs.js_build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js-build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Documentation|IPFS Documentation]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation-build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-modules.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-modules.js-build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs.js-build">[img[Available from IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Release</h4>
 <ul>

@@ -1,17 +1,13 @@
 [
   {
-    "_name": "index.html",
-    "_tags": "$:/ipfs/editions",
-    "_cid": "bafybeihxibo6jfzykfbtlcqf4w5oolpxsmccrky7hmlmdvjjw737y6vapm",
-    "_cid_size": 1161321,
-    "_cid_uri": "https://bluelight.link/ipfs/bafybeihxibo6jfzykfbtlcqf4w5oolpxsmccrky7hmlmdvjjw737y6vapm",
-    "_parent_cid": "bafybeie67slsaod3msqlrgyvkjwluu5grt3nfxel622osufbgf32ggqks4",
-    "_parent_size": 1165730,
-    "_parent_uri": "https://bluelight.link/ipfs/bafybeie67slsaod3msqlrgyvkjwluu5grt3nfxel622osufbgf32ggqks4/",
-    "_raw_hash": "312a70831c6df51af16071a82b7d3c6856e6afe644b099da17c2b7a4bf91c7e0",
-    "_semver": "0.4.0-beta-TW-v5.1.23+build",
-    "_source_path": "index.html",
-    "_source_uri": "https://bluelight.link/ipfs/bafybeie67slsaod3msqlrgyvkjwluu5grt3nfxel622osufbgf32ggqks4/index.html",
-    "_version": "0.4.0-beta-TW-v5.1.23+build-210304292"
+    "title": "empty",
+    "tags": "$:/ipfs/editions",
+    "_favicon_size": 4297,
+    "_favicon_uri": "https://bluelight.link/ipfs/bafybeiea7oifvsb6iealisg5qgcigl3gj2cavmw7iweeumbysgua2bnouu/favicon.ico",
+    "_name": "index",
+    "_raw_hash": "c876a920f1cbb79c3bdd449139d3849f15768867ddf6c4d5a2bfe4e20b89582d",
+    "_source_size": 1160633,
+    "_source_uri": "https://bluelight.link/ipfs/bafybeiea7oifvsb6iealisg5qgcigl3gj2cavmw7iweeumbysgua2bnouu/index.html",
+    "_version": "0.4.0-beta-tw-v5.1.23+build-210309320"
   }
 ]

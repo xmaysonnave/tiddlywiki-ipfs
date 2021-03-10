@@ -7,13 +7,11 @@ const semver = require('../../semver.js')
 
 function main () {
   try {
-    const name = '$:/ipfs/documentation.json'
+    const name = '$:/ipfs/documentation'
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/documentation'
     const env = 'DOCUMENTATION'
-
     const version = semver(name, extension, dir, env)
-
     // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
     var files = fs
       .readdirSync('./build/tiddlers', { withFileTypes: true })
@@ -30,8 +28,8 @@ function main () {
         })
       }
     }
-
-    semver('$:/ipfs/documentation.json.zlib', 'json.zlib', dir, env, version)
+    semver(`${name}.zlib`, extension, dir, env, version)
+    console.log('***')
   } catch (error) {
     console.error(error)
     process.exit(1)

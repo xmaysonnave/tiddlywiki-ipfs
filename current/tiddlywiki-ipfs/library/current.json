@@ -1,34 +1,22 @@
 [
   {
-    "_name": "$:/library/ipfs-library-modules.js",
-    "_tags": "$:/ipfs/core",
-    "_owner": "$:/library/ipfs-library-modules.js",
-    "_cid": "bafybeihmg7p3alg5tuinr6fs5fk66kjkhcxgj7q3fm76odwzdxtbanyjci",
-    "_cid_size": 132982,
-    "_cid_uri": "https://bluelight.link/ipfs/bafybeihmg7p3alg5tuinr6fs5fk66kjkhcxgj7q3fm76odwzdxtbanyjci",
-    "_parent_cid": "bafybeifak7bcjf7rv36v5riaung72hucs2hgicfkb7kgmwrpwex3n5m7he",
-    "_parent_size": 133090,
-    "_parent_uri": "https://bluelight.link/ipfs/bafybeifak7bcjf7rv36v5riaung72hucs2hgicfkb7kgmwrpwex3n5m7he/",
-    "_raw_hash": "ffa29e59777026489dfb9cef812d6af98372ac1ef13fad441b68bb3e6bd33c42",
-    "_semver": "1.0.0+build",
-    "_source_path": "$_library_ipfs-library-modules.js-1.0.0+build-210215352.json",
-    "_source_uri": "https://bluelight.link/ipfs/bafybeifak7bcjf7rv36v5riaung72hucs2hgicfkb7kgmwrpwex3n5m7he/$_library_ipfs-library-modules.js-1.0.0+build-210215352.json",
-    "_version": "1.0.0+build-210215352"
+    "title": "$_library_ipfs-modules.js-1.0.0+build-210308401",
+    "tags": "$:/ipfs/core",
+    "_name": "$:/library/ipfs-modules.js",
+    "_owner": "$:/library/ipfs-modules.js",
+    "_raw_hash": "c6513c87b8feec060c179f552a6c14f2784892ef1ef824d734104fbcccfd9b60",
+    "_source_size": 132974,
+    "_source_uri": "https://bluelight.link/ipfs/bafybeia46io2roaejwevyfvjasupdlwizhvvvf5zxvglnobqnox5dn3wlu/$_library_ipfs-modules.js-1.0.0+build-210308401.json",
+    "_version": "1.0.0+build-210308401"
   },
   {
-    "_name": "$:/library/ipfs-library-modules.js.zlib",
-    "_tags": "$:/ipfs/core",
-    "_owner": "$:/library/ipfs-library-modules.js",
-    "_cid": "bafybeiehumuaczwzjjlrfklwimoq5zfgpoovx4toi7kwgwgdzc6uucrfnm",
-    "_cid_size": 52555,
-    "_cid_uri": "https://bluelight.link/ipfs/bafybeiehumuaczwzjjlrfklwimoq5zfgpoovx4toi7kwgwgdzc6uucrfnm",
-    "_parent_cid": "bafybeihqzc7htz2k4vqvvwxsg2tt3miwk2czzpj5zw6c4lt5fcig4fxq74",
-    "_parent_size": 52673,
-    "_parent_uri": "https://bluelight.link/ipfs/bafybeihqzc7htz2k4vqvvwxsg2tt3miwk2czzpj5zw6c4lt5fcig4fxq74/",
-    "_raw_hash": "3cc2b1c728b6635bb6d9265e52f17b900ea0512a5ff6fc47f25daaf8f3fe72a8",
-    "_semver": "1.0.0+build",
-    "_source_path": "$_library_ipfs-library-modules.js.zlib-1.0.0+build-210215352.json.zlib",
-    "_source_uri": "https://bluelight.link/ipfs/bafybeihqzc7htz2k4vqvvwxsg2tt3miwk2czzpj5zw6c4lt5fcig4fxq74/$_library_ipfs-library-modules.js.zlib-1.0.0+build-210215352.json.zlib",
-    "_version": "1.0.0+build-210215352"
+    "title": "$_library_ipfs-modules.js.zlib-1.0.0+build-210308401",
+    "tags": "$:/ipfs/core",
+    "_name": "$:/library/ipfs-modules.js.zlib",
+    "_owner": "$:/library/ipfs-modules.js",
+    "_raw_hash": "c7fdc2b958e28eba56639200e4b9ff4f621891396a2c28257c807704e6ae73a2",
+    "_source_size": 52551,
+    "_source_uri": "https://bluelight.link/ipfs/bafybeiaai2qoad57plhiaxkzk6ij4uwwixh5lrxta7vmxilkrzdwlsesk4/$_library_ipfs-modules.js.zlib-1.0.0+build-210308401.json",
+    "_version": "1.0.0+build-210308401"
   }
 ]

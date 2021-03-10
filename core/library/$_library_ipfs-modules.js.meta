@@ -1,4 +1,4 @@
-title: $:/library/ipfs-library-modules.js
+title: $:/library/ipfs-modules.js
 tags: $:/ipfs/library/modules
 type: application/javascript
 version: %BUILD_LIBRARY_VERSION%

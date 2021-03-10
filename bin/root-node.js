@@ -47,10 +47,10 @@ module.exports = function main (branch) {
 
   // root node
   const root = JSON.parse(node)
-  if (root._cid_uri === undefined || root._cid_uri === null) {
+  if (root._source_uri === undefined || root._source_uri === null) {
     throw new Error('Unknown root node uri...')
   }
-  var rootUri = root._cid_uri
+  var rootUri = root._source_uri
   if (root._parent_uri !== undefined && root._parent_uri !== null) {
     rootUri = `${root._parent_uri}`
   }
@@ -62,10 +62,7 @@ module.exports = function main (branch) {
     silent: true,
   })
   // build node
-  var buildUri = root._cid_uri
-  if (root._parent_uri !== undefined && root._parent_uri !== null) {
-    buildUri = `${root._parent_uri}/${root._source_path}`
-  }
+  var buildUri = root._source_uri
   replace({
     regex: '%BUILD_NODE%',
     replacement: buildUri,
@@ -120,13 +117,13 @@ module.exports = function main (branch) {
   }
   var version = null
   for (var i = 0; i < current.length; i++) {
-    if (current[i]._name === '$:/library/ipfs-library-modules.js') {
+    if (current[i]._name === '$:/library/ipfs-modules.js') {
       version = current[i]._version
       break
     }
   }
   if (version == null) {
-    throw new Error(`Unknown '$:/library/ipfs-library-modules.js': ${path}`)
+    throw new Error(`Unknown '$:/library/ipfs-modules.js': ${path}`)
   }
   replace({
     regex: '%BUILD_LIBRARY_VERSION%',
@@ -182,13 +179,13 @@ module.exports = function main (branch) {
   }
   var version = null
   for (var i = 0; i < current.length; i++) {
-    if (current[i]._name === '$:/ipfs/documentation.json') {
+    if (current[i]._name === '$:/ipfs/documentation') {
       version = current[i]._version
       break
     }
   }
   if (version == null) {
-    throw new Error(`Unknown '$:/ipfs/documentation.json': ${path}`)
+    throw new Error(`Unknown '$:/ipfs/documentation': ${path}`)
   }
   replace({
     regex: '%BUILD_DOCUMENTATION_VERSION%',

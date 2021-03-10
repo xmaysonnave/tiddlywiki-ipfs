@@ -8,11 +8,12 @@ const fs = require('fs')
 const createKeccakHash = require('keccak')
 
 module.exports = function main (name, extension, dir, env, version) {
-  // Check
+  // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
   }
+  // Params
   name = name !== undefined && name !== null && name.trim() !== '' ? name.trim() : null
   if (name == null) {
     throw new Error('Unknown name...')
@@ -33,7 +34,6 @@ module.exports = function main (name, extension, dir, env, version) {
   if (rawSemver === undefined || rawSemver == null || rawSemver.trim() === '') {
     throw new Error(`Undefined 'env.${env}_SEMVER'...`)
   }
-
   // Process Raw
   var raw = null
   const fileName = filenamify(name, { replacement: '_' })
@@ -41,12 +41,6 @@ module.exports = function main (name, extension, dir, env, version) {
   var path = `./build/output/${dir}/${fileName}-%BUILD_${env}_VERSION%.${extension}`
   if (fs.existsSync(path)) {
     raw = fs.readFileSync(path, 'utf8')
-  }
-  if (raw == null) {
-    path = `./build/output/${dir}/${fileName}.${extension}-%BUILD_${env}_VERSION%.json`
-    if (fs.existsSync(path)) {
-      raw = fs.readFileSync(path, 'utf8')
-    }
   }
   if (raw == null) {
     path = `./build/output/${dir}/${fileName}.${extension}`
@@ -61,14 +55,14 @@ module.exports = function main (name, extension, dir, env, version) {
     }
   }
   if (raw == null) {
-    throw new Error('Unknown raw content...')
+    throw new Error(`Unknown raw content: ${fileName}`)
   }
   // Keccak
   const keccak = createKeccakHash('keccak256')
   keccak.update(raw)
   const rawHash = keccak.digest('hex')
+  console.log('***')
   console.log(`*** ${name}, hash: ${rawHash} ***`)
-
   // Current
   var current = null
   var member = null
@@ -88,33 +82,31 @@ module.exports = function main (name, extension, dir, env, version) {
       }
     }
   }
-
   // Version
+  var kind = null
   if (version === undefined || version == null) {
     if (member === undefined || member == null || (member !== undefined && member !== null && member._raw_hash !== rawHash)) {
-      if (validate(rawSemver) === false) {
-        version = generate({ version: rawSemver, versionSeparator: '-' })
-        console.log(`*** new version: ${version} ***`)
-      }
+      version = generate({ version: rawSemver, versionSeparator: '-' })
+      kind = 'New version'
     } else {
       version = member._version
-      console.log(`*** use current version: ${version} ***`)
+      kind = 'Current version'
     }
   } else {
-    console.log(`*** use parent version: ${version} ***`)
+    kind = 'Parent version'
   }
   // Check
   if (validate(version) === false) {
     throw new Error(`Invalid version: ${version}`)
   }
-
+  console.log(`*** ${kind}: ${version}`)
   // Save
   const toJson = {
     _raw_hash: rawHash,
     _semver: rawSemver,
     _version: version,
   }
-  fs.writeFileSync(`./build/output/${dir}/${fileName}_build.json`, JSON.stringify(toJson), 'utf8')
-
+  fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, JSON.stringify(toJson), 'utf8')
+  // Done
   return version
 }

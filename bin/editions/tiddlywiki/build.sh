@@ -22,17 +22,15 @@ mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
 
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 
-rm -f -R ./download/tiddlywiki > /dev/null 2>&1
-
-# down
-cd download
-
 # tiddlywiki
-mkdir tiddlywiki > /dev/null 2>&1
-wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
-
-# up
-cd ..
+if [ ! -e ./download/tiddlywiki/index.html ]
+then
+  rm -f -R ./download/tiddlywiki > /dev/null 2>&1
+  cd download
+  mkdir tiddlywiki > /dev/null 2>&1
+  wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
+  cd ..
+fi
 
 # assets
 cp ./editions/tiddlywiki/tiddlywiki.info ./build/tiddlywiki.info || exit 1
@@ -53,7 +51,7 @@ node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index.html \
+  --name=index \
   --extension=html \
   --dir=editions/tiddlywiki \
   --env=TIDDLYWIKI "$@" || exit 1
@@ -69,7 +67,7 @@ yarn cli-tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=index.html \
+  --name=index \
   --extension=html \
   --dir=editions/tiddlywiki \
   --tags=$:/ipfs/editions "$@" || exit 1

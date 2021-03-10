@@ -10,9 +10,7 @@ function main () {
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/boot'
     const env = 'BOOT'
-
     const version = semver(name, extension, dir, env)
-
     replace({
       regex: `%BUILD_${env}_VERSION%`,
       replacement: version,
@@ -20,8 +18,8 @@ function main () {
       recursive: false,
       silent: true,
     })
-
-    semver('$:/boot/boot.js.zlib', 'json.zlib', dir, env, version)
+    semver(`${name}.zlib`, extension, dir, env, version)
+    console.log('***')
   } catch (error) {
     console.error(error)
     process.exit(1)

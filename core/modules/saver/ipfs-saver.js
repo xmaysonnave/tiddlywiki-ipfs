@@ -88,9 +88,9 @@ IPFS Saver
         return true
       }
       if (cid !== null && ipnsKey == null) {
-        const ipfsPath = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
-        if (ipfsPath !== null) {
-          await $tw.ipfs.requestToUnpin(ipfsPath)
+        const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+        if (resolvedCid !== null) {
+          await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
         }
       }
       // IPNS
@@ -124,9 +124,9 @@ IPFS Saver
           }
         }
         if (ipnsCid !== null) {
-          const ipfsPath = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
-          if (ipfsPath !== null) {
-            await $tw.ipfs.requestToUnpin(ipfsPath)
+          const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+          if (resolvedCid !== null) {
+            await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
           }
         }
       }
@@ -146,9 +146,9 @@ IPFS Saver
         }
         var { cid: ensCid, ipnsKey: ensIpnsKey, ipnsName: ensIpnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
         if (ensCid !== null) {
-          const ipfsPath = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
-          if (ipfsPath !== null) {
-            await $tw.ipfs.requestToUnpin(ipfsPath)
+          const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+          if (resolvedCid !== null) {
+            await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
           }
         }
       }

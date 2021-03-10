@@ -6,7 +6,7 @@
     "plain": [
 			"--rendertiddler",
         "$:/ipfs/library/bundle",
-        "tiddlywiki-ipfs/library/$_library_ipfs-library-modules.js",
+        "tiddlywiki-ipfs/library/$_library_ipfs-modules.js",
         "text/plain"
     ]
 	}

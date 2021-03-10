@@ -51,7 +51,7 @@ node ./bin/update-info.js "$@" || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index.html \
+  --name=index \
   --extension=html \
   --dir=editions/empty \
   --env=EMPTY "$@" || exit 1
@@ -66,7 +66,7 @@ yarn cli-tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=index.html \
+  --name=index \
   --extension=html \
   --dir=editions/empty \
   --tags=$:/ipfs/editions "$@" || exit 1

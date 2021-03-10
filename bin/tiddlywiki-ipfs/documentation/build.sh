@@ -25,7 +25,7 @@ mkdir -p ./current/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 
 # assets
 cp -R ./editions/documentation/* ./build || exit 1
-cp './production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js_build.tid' './build/tiddlers/config/$_plugins_ipfs.js_build.tid' || exit 1
+cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.js-build.tid ./build/tiddlers/config || exit 1
 
 # build raw
 echo '***'
@@ -55,7 +55,7 @@ yarn cli-tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=$:/ipfs/documentation.json \
+  --name=$:/ipfs/documentation \
   --owner=$:/ipfs/documentation \
   --extension=json \
   --dir=tiddlywiki-ipfs/documentation \
@@ -63,9 +63,9 @@ yarn cli-tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=$:/ipfs/documentation.json.zlib \
+  --name=$:/ipfs/documentation.zlib \
   --owner=$:/ipfs/documentation \
-  --extension=json.zlib \
+  --extension=json \
   --dir=tiddlywiki-ipfs/documentation \
   --tags=$:/ipfs/documentation "$@" || exit 1
 

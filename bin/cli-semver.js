@@ -25,6 +25,7 @@ function main () {
       throw new Error('Unknown env...')
     }
     semver(name, extension, dir, env)
+    console.log('***')
   } catch (error) {
     console.error(error)
     process.exit(1)

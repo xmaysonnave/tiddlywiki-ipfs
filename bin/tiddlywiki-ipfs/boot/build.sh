@@ -94,7 +94,7 @@ yarn cli-tiddlywiki-ipfs build \
 ./bin/cli-upload.sh \
   --name=$:/boot/boot.js.zlib \
   --owner=$:/boot/boot.js \
-  --extension=json.zlib \
+  --extension=json \
   --dir=tiddlywiki-ipfs/boot \
   --tags=$:/ipfs/core "$@" || exit 1
 

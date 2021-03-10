@@ -1,17 +1,13 @@
 [
   {
-    "_name": "index.html",
-    "_tags": "$:/ipfs/editions",
-    "_cid": "bafybeihgywmc5a2s2sb2y5pn4juri6topqiwkfskqgdyqjvukgevhf7hfa",
-    "_cid_size": 3567079,
-    "_cid_uri": "https://bluelight.link/ipfs/bafybeihgywmc5a2s2sb2y5pn4juri6topqiwkfskqgdyqjvukgevhf7hfa",
-    "_parent_cid": "bafybeicdme4qbuo7wmb44vc5kcigm4eh7kmwczsasewsmk2mgr4lk3bfmm",
-    "_parent_size": 3571489,
-    "_parent_uri": "https://bluelight.link/ipfs/bafybeicdme4qbuo7wmb44vc5kcigm4eh7kmwczsasewsmk2mgr4lk3bfmm/",
-    "_raw_hash": "bfb7b5106b2314deccaf3592d03c953b6fd8b7b5c134481a8ffc3bacf97c2af2",
-    "_semver": "0.4.0-beta-TW-v5.1.23+build",
-    "_source_path": "index.html",
-    "_source_uri": "https://bluelight.link/ipfs/bafybeicdme4qbuo7wmb44vc5kcigm4eh7kmwczsasewsmk2mgr4lk3bfmm/index.html",
-    "_version": "0.4.0-beta-TW-v5.1.23+build-210304300"
+    "title": "dev",
+    "tags": "$:/ipfs/editions",
+    "_favicon_size": 4297,
+    "_favicon_uri": "https://bluelight.link/ipfs/bafybeicjlxmqhk66k7mcw5wm5s4dg2uzdmbui6libfvscbxso75ac2djxa/favicon.ico",
+    "_name": "index",
+    "_raw_hash": "de0b34e9efafd8b81b055983dfa962180fda2cdc034267551077660d3a5deeaf",
+    "_source_size": 3565547,
+    "_source_uri": "https://bluelight.link/ipfs/bafybeicjlxmqhk66k7mcw5wm5s4dg2uzdmbui6libfvscbxso75ac2djxa/index.html",
+    "_version": "0.4.0-beta-tw-v5.1.23+build-210310387"
   }
 ]
