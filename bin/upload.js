@@ -261,7 +261,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     current.push(node)
   }
   fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
-  // Build version
+  // Build
   if (name === '$:/plugins/ipfs.js') {
     fs.writeFileSync(
       './current/build.json',

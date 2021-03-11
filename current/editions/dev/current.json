@@ -3,11 +3,11 @@
     "title": "dev",
     "tags": "$:/ipfs/editions",
     "_favicon_size": 4297,
-    "_favicon_uri": "https://bluelight.link/ipfs/bafybeicjlxmqhk66k7mcw5wm5s4dg2uzdmbui6libfvscbxso75ac2djxa/favicon.ico",
+    "_favicon_uri": "https://bluelight.link/ipfs/bafybeibajlprqdcwmz4cop52ibud3t7d4456mjrmzzios54z3lvo4ivnle/favicon.ico",
     "_name": "index",
-    "_raw_hash": "de0b34e9efafd8b81b055983dfa962180fda2cdc034267551077660d3a5deeaf",
-    "_source_size": 3565547,
-    "_source_uri": "https://bluelight.link/ipfs/bafybeicjlxmqhk66k7mcw5wm5s4dg2uzdmbui6libfvscbxso75ac2djxa/index.html",
-    "_version": "0.4.0-beta-tw-v5.1.23+build-210310387"
+    "_raw_hash": "0048cbcf5a14c86044b3b17edbbb85c59d48a4aaaa1243657bc2fa3a3c1adecf",
+    "_source_size": 3565625,
+    "_source_uri": "https://bluelight.link/ipfs/bafybeibajlprqdcwmz4cop52ibud3t7d4456mjrmzzios54z3lvo4ivnle/index.html",
+    "_version": "0.4.0-beta-tw-v5.1.23+build-210311361"
   }
 ]

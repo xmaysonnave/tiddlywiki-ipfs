@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * This is invoked as a shell script by NPM when the `tiddlywiki` command is typed
+ * This is invoked as a shell script by NPM when the `tiddlywiki-ipfs` command is typed
  */
 
 const path = require('path')

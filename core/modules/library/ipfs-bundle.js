@@ -394,6 +394,10 @@ IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
   return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
 }
 
+IpfsBundle.prototype.dagPut = async function (client, dagNode, options) {
+  return await this.ipfsLibrary.dagPut(client, dagNode, options)
+}
+
 IpfsBundle.prototype.dagResolve = async function (client, ipfsPath, timeout) {
   return await this.ipfsLibrary.dagResolve(client, ipfsPath, timeout)
 }
@@ -408,6 +412,10 @@ IpfsBundle.prototype.isIpfsDirectory = async function (client, cid, timeout) {
 
 IpfsBundle.prototype.ls = async function (client, ipfsPath) {
   return await this.ipfsLibrary.ls(client, ipfsPath)
+}
+
+IpfsBundle.prototype.namePublish = async function (client, ipnsName, cid, options) {
+  return await this.ipfsLibrary.namePublish(client, ipnsName, cid, options)
 }
 
 IpfsBundle.prototype.objectData = async function (client, cid, recursive) {

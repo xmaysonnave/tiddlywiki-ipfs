@@ -3779,6 +3779,11 @@ chownr@^1.1.1:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
   integrity sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==
 
+chownr@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
+  integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
+
 ci-info@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
@@ -5679,6 +5684,13 @@ fs-minipass@^1.2.5:
   dependencies:
     minipass "^2.6.0"
 
+fs-minipass@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-2.1.0.tgz#7f5036fdbf12c63c169190cbe4199c852271f9fb"
+  integrity sha512-V/JgOLFCS+R6Vcq0slCuaeWEdNC3ouDlJMNIsacH2VtALiu9mV4LPrHc5cDl8k5aw6J8jwgWWpiTo5RYhmIzvg==
+  dependencies:
+    minipass "^3.0.0"
+
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -6543,10 +6555,10 @@ ipfs-block-service@^0.18.0:
     err-code "^2.0.0"
     streaming-iterables "^5.0.2"
 
-ipfs-cli@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/ipfs-cli/-/ipfs-cli-0.4.3.tgz#f4defd9ee4a307d10995f298e23511364a4c1b3a"
-  integrity sha512-vIhd9pO/JAGJecrEPo6eX9ERffc/uYNRYKbjiHCwPjp5ehY7IiFwyT+l/GnJVV6/gwEG1hi4EpvuM4CuhamcLQ==
+ipfs-cli@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/ipfs-cli/-/ipfs-cli-0.4.4.tgz#f575de1d2fc0845044b0d8da066019b5ca2fffa8"
+  integrity sha512-7fUwHxmh2dPpd/Hn21yC2WWBR75HB9H15Slot0XD+6pJeB/77krf2drSbdOtQ8zjXMUuRh+lqhLtqjMWsg5PYQ==
   dependencies:
     bignumber.js "^9.0.1"
     byteman "^1.3.5"
@@ -6556,10 +6568,10 @@ ipfs-cli@^0.4.3:
     err-code "^2.0.3"
     execa "^5.0.0"
     get-folder-size "^2.0.1"
-    ipfs-core "^0.5.3"
+    ipfs-core "^0.5.4"
     ipfs-core-utils "^0.7.2"
-    ipfs-daemon "^0.5.3"
-    ipfs-http-client "^49.0.3"
+    ipfs-daemon "^0.5.4"
+    ipfs-http-client "^49.0.4"
     ipfs-repo "^8.0.0"
     ipfs-utils "^6.0.1"
     ipld-dag-cbor "^0.17.0"
@@ -6615,10 +6627,10 @@ ipfs-core-utils@^0.7.2:
     timeout-abort-controller "^1.1.1"
     uint8arrays "^2.1.3"
 
-ipfs-core@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/ipfs-core/-/ipfs-core-0.5.3.tgz#02fa1fb87b3d5493b58c93946a32a49fc30a2ea7"
-  integrity sha512-4NwzshxzATeAq6/1Qz2Y9FTb9DI9oGc0Zku16hXzPyLMmcxEMG2tr0X6jjN/F8AtQeicYAG4X1FvkR1Ex0VnEQ==
+ipfs-core@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/ipfs-core/-/ipfs-core-0.5.4.tgz#d08d9e581554dd34e7f1124725c19be1faffb381"
+  integrity sha512-gyv3slu7FuaN1wxfDPhNoWiTSvUJ1pq0Nx2NsU3WWzOvKCaacHtE8HXO51AAuQUMUEN0thYGzVHziHGLI9udNQ==
   dependencies:
     abort-controller "^3.0.0"
     array-shuffle "^2.0.0"
@@ -6684,18 +6696,18 @@ ipfs-core@^0.5.3:
     streaming-iterables "^5.0.2"
     uint8arrays "^2.1.3"
 
-ipfs-daemon@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/ipfs-daemon/-/ipfs-daemon-0.5.3.tgz#0c3e704ed5162e1aeb466a61846c9c2ca373f033"
-  integrity sha512-FPnD19iKQD2VgN8O4ChprJuw9TwTsQIOUGi3KGnL4t+CuDOt4cJtM0feC0/vKzkGJnHrKiePVqUNY98YVPPbtQ==
+ipfs-daemon@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/ipfs-daemon/-/ipfs-daemon-0.5.4.tgz#08c14142b0a30266276ceb29dacb6c8e5bda4634"
+  integrity sha512-N6q4HiMxyq6/x5hkHpULx6OjMV2SnEpJRCGmma+myNAJhu/MVbTtLf2X0GvlaPLvbOAtdR2IclZrACHkNu1U2Q==
   dependencies:
     debug "^4.1.1"
     dlv "^1.1.3"
-    ipfs-core "^0.5.3"
-    ipfs-grpc-server "^0.2.3"
-    ipfs-http-client "^49.0.3"
+    ipfs-core "^0.5.4"
+    ipfs-grpc-server "^0.2.4"
+    ipfs-http-client "^49.0.4"
     ipfs-http-gateway "^0.3.2"
-    ipfs-http-server "^0.3.3"
+    ipfs-http-server "^0.3.4"
     ipfs-utils "^6.0.1"
     just-safe-set "^2.1.0"
     libp2p "^0.30.7"
@@ -6712,10 +6724,10 @@ ipfs-grpc-protocol@^0.2.0:
   resolved "https://registry.yarnpkg.com/ipfs-grpc-protocol/-/ipfs-grpc-protocol-0.2.0.tgz#16d5e25798c0cc790710b99b230816a954fa8f6b"
   integrity sha512-XQB67HO8ti36HhGxompsoZxKfareIE6jetOAWVrfbKyPVi75JtUjQ7euhNxbxw2xS3/H8Jd8bsIU/qwKe1tVig==
 
-ipfs-grpc-server@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/ipfs-grpc-server/-/ipfs-grpc-server-0.2.3.tgz#f643f78e536e45c1ea356c610d1b22c087baf054"
-  integrity sha512-TD8yov2zd/g5Oj3h4FwX2m9F7QUUw5FArPte4ODDd2LnQRWuWEYVl9ox1pdN91j9UtPx71aa0TN/gGt1UlvN8A==
+ipfs-grpc-server@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/ipfs-grpc-server/-/ipfs-grpc-server-0.2.4.tgz#480f4c08791146635679d7a4931dab0e1c60a9d7"
+  integrity sha512-4MYFjkWsgq7Vi3wAXuvUALbWl6k1TFTsmbrj+e3Meh/Rpmp2CJ9JyZQB3fxEvXsrBjQphX45Rf0KAipVoImpxg==
   dependencies:
     "@grpc/grpc-js" "^1.1.8"
     change-case "^4.1.1"
@@ -6730,10 +6742,10 @@ ipfs-grpc-server@^0.2.3:
     protobufjs "^6.10.2"
     ws "^7.3.1"
 
-ipfs-http-client@49.0.3, ipfs-http-client@^49.0.3:
-  version "49.0.3"
-  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-49.0.3.tgz#3a33b9e7bb54a4c03b523ebc636104989b954a84"
-  integrity sha512-cosOuN3KaMeOMEHi+g54UNF0fOJR3lyFOLOH4tAMkm/OTQa74i/SfFbfBtAIwC7nFymFs9iQAV0nXStVelrpdA==
+ipfs-http-client@49.0.4, ipfs-http-client@^49.0.4:
+  version "49.0.4"
+  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-49.0.4.tgz#a7b5a696ab755ce1e822240e1774caab6cffa117"
+  integrity sha512-qgWbkcB4glQrUkE2tZR+GVXyrO6aJyspWBjyct/6TzrhCHx7evjz+kUTK+wNm4S9zccUePEml5VNZUmUhoQtbA==
   dependencies:
     abort-controller "^3.0.0"
     any-signal "^2.1.2"
@@ -6800,10 +6812,10 @@ ipfs-http-response@^0.6.0:
     multihashes "^3.0.1"
     p-try-each "^1.0.1"
 
-ipfs-http-server@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/ipfs-http-server/-/ipfs-http-server-0.3.3.tgz#580e760c007f26df6f4171f6d32cf75567ed3ff1"
-  integrity sha512-u2RMiuyqlRviZIC5DjbqmcFe2/cf16Uw7/puUmumpgqxcTXezCux5MfjnTgOu0uEUFiG5Zulm+nHnR/q2BQ0Cg==
+ipfs-http-server@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/ipfs-http-server/-/ipfs-http-server-0.3.4.tgz#15a1a83f9ba1aaa0c4a3ab458b868b7360dbe873"
+  integrity sha512-EVN6GbB5YNJ1f/UFpEHeED88yElvAoNUrN4HsPSnrgnLzZLK5VlQwWPmduCh08SOKBy4Ks/yGRIeAP27U8x5vQ==
   dependencies:
     "@hapi/boom" "^9.1.0"
     "@hapi/content" "^5.0.2"
@@ -7029,14 +7041,14 @@ ipfs-utils@^6.0.1:
     stream-to-it "^0.2.2"
     web-encoding "^1.0.6"
 
-ipfs@^0.54.3:
-  version "0.54.3"
-  resolved "https://registry.yarnpkg.com/ipfs/-/ipfs-0.54.3.tgz#2c1ad4cfc881d255bef23c3db9853e6a04a73b3f"
-  integrity sha512-9uTI8JjYgYozHQYMWNUs8QHtqTe/L6r2U+x8dq+b6cgbKai34IIoZmoOzWn8GAczCpqoszG4smaTXHmcKugHcw==
+ipfs@^0.54.4:
+  version "0.54.4"
+  resolved "https://registry.yarnpkg.com/ipfs/-/ipfs-0.54.4.tgz#9bcac907d82f89796f1ab4fafefd096a7b2ceff0"
+  integrity sha512-2ip0BFF+ivze+7vVPGIk/5mYGdbDDGB+JoGA12Phicw8JxHcA7Xc/lVA6yP1Ydvbl77qB26Z3aeW5k2PlcOT8A==
   dependencies:
     debug "^4.1.1"
-    ipfs-cli "^0.4.3"
-    ipfs-core "^0.5.3"
+    ipfs-cli "^0.4.4"
+    ipfs-core "^0.5.4"
     ipfs-repo "^8.0.0"
     semver "^7.3.2"
     update-notifier "^5.0.0"
@@ -9246,12 +9258,27 @@ minipass@^2.6.0, minipass@^2.8.6, minipass@^2.9.0:
     safe-buffer "^5.1.2"
     yallist "^3.0.0"
 
+minipass@^3.0.0:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/minipass/-/minipass-3.1.3.tgz#7d42ff1f39635482e15f9cdb53184deebd5815fd"
+  integrity sha512-Mgd2GdMVzY+x3IJ+oHnVM+KG3lA5c8tnabyJKmHSaG2kAGpudxuOf8ToDkhumF7UzME7DecbQE9uOZhNm7PuJg==
+  dependencies:
+    yallist "^4.0.0"
+
 minizlib@^1.2.1:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.3.3.tgz#2290de96818a34c29551c8a8d301216bd65a861d"
   integrity sha512-6ZYMOEnmVsdCeTJVE0W9ZD+pVnE8h9Hma/iOwwRDsdQoePpoX56/8B6z3P9VNwppJuBKNRuFDRNRqRWexT9G9Q==
   dependencies:
     minipass "^2.9.0"
+
+minizlib@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-2.1.2.tgz#e90d3466ba209b932451508a11ce3d3632145931"
+  integrity sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==
+  dependencies:
+    minipass "^3.0.0"
+    yallist "^4.0.0"
 
 mkdirp-classic@^0.5.2:
   version "0.5.3"
@@ -9265,7 +9292,7 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.5"
 
-mkdirp@^1.0.4:
+mkdirp@^1.0.3, mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
@@ -11814,10 +11841,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@^1.478.0:
-  version "1.478.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.478.0.tgz#93b834da938837ca25d80f84edbad44901a47c29"
-  integrity sha512-AraadpSqe6VzGOBxBVhUHJwBaWl3V5d+0DQ3uy4i57RXGymzNjpwo7jEToa5tWaEZZkeACHYt/OHMKdLBbAY1w==
+snyk@^1.483.0:
+  version "1.483.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.483.0.tgz#f6d145d2108614f6e08b877f467e979410afcfac"
+  integrity sha512-rnvzOEktnqfAtifW9j7//GQBZug5d+yDc2N4FmwkkB2lMQx9X1imdCykIuhekpY5m137RmB+a7KFQYRyg4XkMA==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -11879,6 +11906,7 @@ snyk@^1.478.0:
     snyk-try-require "1.3.1"
     source-map-support "^0.5.11"
     strip-ansi "^5.2.0"
+    tar "^6.1.0"
     tempfile "^2.0.0"
     update-notifier "^4.1.0"
     uuid "^3.3.2"
@@ -12418,6 +12446,18 @@ tar@^4:
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
+
+tar@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-6.1.0.tgz#d1724e9bcc04b977b18d5c573b333a2207229a83"
+  integrity sha512-DUCttfhsnLCjwoDoFcI+B2iJgYa93vBnDUATYEeRx6sntCTdN01VnqsIuTlALXla/LWooNg0yEGeB+Y8WdFxGA==
+  dependencies:
+    chownr "^2.0.0"
+    fs-minipass "^2.0.0"
+    minipass "^3.0.0"
+    minizlib "^2.1.1"
+    mkdirp "^1.0.3"
+    yallist "^4.0.0"
 
 tdigest@^0.1.1:
   version "0.1.1"

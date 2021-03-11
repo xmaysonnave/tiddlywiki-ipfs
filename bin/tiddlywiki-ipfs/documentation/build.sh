@@ -31,7 +31,7 @@ cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.js-build.tid ./build/tidd
 echo '***'
 echo '*** raw ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --build \
   --verbose || exit 1
 
@@ -48,7 +48,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** documentation ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --output production \
   --build \
   --verbose "$@" || exit 1

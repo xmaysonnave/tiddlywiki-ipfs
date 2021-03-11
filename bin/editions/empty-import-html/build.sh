@@ -26,7 +26,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** empty import html ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --output sample \
   --build \
   --verbose "$@" || exit 1

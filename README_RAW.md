@@ -353,23 +353,23 @@ The repository contains several scripts who build TiddWiki instances bundled wit
 The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/%BRANCH%/package.json) references several options:
 
 - build
-- build-noclone
-- bluelightav
-- cli-publish-node
-- cli-semver
-- cli-upload
-- cli-upload-node
+- build-bluelightav
+- build-tiddlywiki-ipfs
 - download
-- cli-tiddlywiki-ipfs
-- tiddlywiki-ipfs
 - precommit
 - prepare
 - prettier-standard
+- publish-build
+- publish-node
+- semver
 - snyk-monitor
 - snyk-protect
 - test
 - testc
 - testw
+- tiddlywiki-ipfs
+- upload
+- upload-node
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 

@@ -14,14 +14,14 @@ module.exports = function main (branch) {
   branch = branch !== undefined && branch !== null && branch.trim() !== '' ? branch.trim() : null
   branch = branch || process.env.BRANCH || 'main'
 
-  // current root node
+  // current build
   var node = null
-  var path = './current/node.json'
+  var path = './current/build.json'
   if (fs.existsSync(path)) {
     node = fs.readFileSync(path, 'utf8')
   }
-  if (!node) {
-    throw new Error(`Unknown root node: ${path}`)
+  if (node === false) {
+    throw new Error(`Unknown build: ${path}`)
   }
 
   // README.md
@@ -45,24 +45,13 @@ module.exports = function main (branch) {
     silent: true,
   })
 
-  // root node
-  const root = JSON.parse(node)
-  if (root._source_uri === undefined || root._source_uri === null) {
-    throw new Error('Unknown root node uri...')
+  const build = JSON.parse(node)
+  if (build._source_uri === undefined || build._source_uri === null) {
+    throw new Error('Unknown build uri...')
   }
-  var rootUri = root._source_uri
-  if (root._parent_uri !== undefined && root._parent_uri !== null) {
-    rootUri = `${root._parent_uri}`
-  }
-  replace({
-    regex: '%BUILD_ROOT_NODE%',
-    replacement: rootUri,
-    paths: [readmePath],
-    recursive: false,
-    silent: true,
-  })
-  // build node
-  var buildUri = root._source_uri
+
+  // build
+  var buildUri = build._source_uri
   replace({
     regex: '%BUILD_NODE%',
     replacement: buildUri,

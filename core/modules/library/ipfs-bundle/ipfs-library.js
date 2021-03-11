@@ -172,6 +172,40 @@ IpfsLibrary.prototype.analyzePinType = function (type) {
   }
 }
 
+// https://discuss.ipfs.io/t/what-is-the-data-in-object/5221
+// https://github.com/ipfs/go-unixfs/blob/master/pb/unixfs.pb.go
+IpfsLibrary.prototype.dagPut = async function (client, dagNode, options) {
+  if (client === undefined || client == null) {
+    throw new Error('Undefined IPFS provider...')
+  }
+  if (dagNode === undefined || dagNode == null) {
+    throw new Error('Undefined DAG node...')
+  }
+  if (client.enable) {
+    client = await client.enable({ commands: ['dag'] })
+  }
+  if (client === undefined || client.dag === undefined || client.dag.put === undefined) {
+    throw new Error('Undefined IPFS dag put...')
+  }
+  if (options === undefined || options == null) {
+    options = {
+      format: 'dag-pb',
+      hashAlg: 'sha2-256',
+      pin: false,
+    }
+  }
+  const result = await client.dag.put(dagNode, options)
+  if (result === undefined || result == null) {
+    throw new Error('IPFS returned an unknown result...')
+  }
+  const stat = await this.objectStat(client, result, options.timeout)
+  const cidV1 = this.ipfsBundle.cidToCidV1(result)
+  return {
+    cid: `${cidV1}`,
+    size: stat.CumulativeSize,
+  }
+}
+
 IpfsLibrary.prototype.dagResolve = async function (client, ipfsPath, timeout) {
   timeout = timeout !== undefined && timeout !== null ? timeout : 2 * 1000
   if (client === undefined || client == null) {
@@ -594,7 +628,7 @@ IpfsLibrary.prototype.ls = async function (client, ipfsPath) {
   return content
 }
 
-IpfsLibrary.prototype.namePublish = async function (client, ipnsName, cid) {
+IpfsLibrary.prototype.namePublish = async function (client, ipnsName, cid, options) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }
@@ -612,11 +646,14 @@ IpfsLibrary.prototype.namePublish = async function (client, ipnsName, cid) {
   if (client === undefined || client.name === undefined || client.name.publish === undefined) {
     throw new Error('Undefined IPFS name publish...')
   }
-  const result = await client.name.publish(cid, {
-    resolve: true,
-    key: ipnsName,
-    allowOffline: false,
-  })
+  if (options === undefined || options == null) {
+    options = {
+      resolve: false,
+      key: ipnsName,
+      allowOffline: false,
+    }
+  }
+  const result = await client.name.publish(cid, options)
   if (result === undefined || result == null) {
     throw new Error('IPFS returned an unknown result...')
   }
@@ -637,7 +674,7 @@ IpfsLibrary.prototype.namePublish = async function (client, ipnsName, cid) {
   }
 }
 
-IpfsLibrary.prototype.nameResolve = async function (client, value) {
+IpfsLibrary.prototype.nameResolve = async function (client, value, options) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }
@@ -651,10 +688,13 @@ IpfsLibrary.prototype.nameResolve = async function (client, value) {
   if (client === undefined || client.name === undefined || client.name.resolve === undefined) {
     throw new Error('Undefined IPFS name resolve...')
   }
-  const resolvedPaths = await client.name.resolve(value, {
-    nocache: false,
-    recursive: true,
-  })
+  if (options === undefined || options == null) {
+    options = {
+      nocache: false,
+      recursive: true,
+    }
+  }
+  const resolvedPaths = await client.name.resolve(value, options)
   if (resolvedPaths === undefined || resolvedPaths == null) {
     throw new Error('IPFS returned an unknown result...')
   }

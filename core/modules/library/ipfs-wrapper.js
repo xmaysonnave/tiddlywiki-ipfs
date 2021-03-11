@@ -337,7 +337,7 @@ ${url}`)
   throw new Error('Failed to add content to IPFS...')
 }
 
-IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
+IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey, options) {
   ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
@@ -345,7 +345,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey) {
   const pathname = `/${ipnsKeyword}/${ipnsKey}`
   try {
     const url = this.ipfsUrl.normalizeUrl(pathname)
-    const resolved = await this.ipfsLibrary.nameResolve(ipfs, pathname)
+    const resolved = await this.ipfsLibrary.nameResolve(ipfs, pathname, options)
     const { cid } = this.ipfsBundle.getIpfsIdentifier(resolved)
     if (cid !== null) {
       const parsed = this.ipfsUrl.normalizeUrl(resolved)
@@ -362,7 +362,7 @@ ${parsed}`
   throw new Error('Failed to resolve an IPNS key...')
 }
 
-IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipnsName) {
+IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipnsName, options) {
   ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
@@ -380,7 +380,7 @@ IpfsWrapper.prototype.publishIpnsName = async function (cid, ipfs, ipnsKey, ipns
   const pathname = `/${ipfsKeyword}/${cid}`
   try {
     // Publish
-    const result = await this.ipfsLibrary.namePublish(ipfs, ipnsName, pathname)
+    const result = await this.ipfsBundle.namePublish(ipfs, ipnsName, pathname, options)
     const keyParsed = this.ipfsUrl.normalizeUrl(key)
     const url = this.ipfsUrl.normalizeUrl(pathname)
     this.getLogger().info(

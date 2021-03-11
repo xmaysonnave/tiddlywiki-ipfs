@@ -39,7 +39,7 @@ cp ./editions/boot-bundle/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 echo '***'
 echo '*** bundle boot ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --build \
   --verbose || exit 1
 
@@ -60,7 +60,7 @@ cp ./editions/boot/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 echo '***'
 echo '*** raw boot ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --build \
   --verbose || exit 1
 
@@ -77,7 +77,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** boot ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --output production \
   --build \
   --verbose "$@" || exit 1

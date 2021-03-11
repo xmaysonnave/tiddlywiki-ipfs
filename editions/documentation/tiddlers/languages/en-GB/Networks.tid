@@ -1,5 +1,5 @@
 title: Networks
-modified: 20210308114915385
+modified: 20210310114915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
@@ -38,5 +38,5 @@ type: text/vnd.tiddlywiki
 </ul>
 <h3>Mnemonic</h3>
 <ul>
-  <li>[ext[Mnemonic Code Converter|https://bafybeie5dgvkrwfdh2x5q4cznxpkmkuyybmtrn7c7wyvscib35mndm6twu.ipfs.dweb.link/]]</li>
+  <li>[ext[Mnemonic Code Converter v0.5.2|https://bafybeifxjfycpkureyy47g6dmtiqckijybx3gehxakwnysz5qsjiosmysi.ipfs.dweb.link/]]</li>
 </ul>

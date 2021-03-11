@@ -2,6 +2,7 @@
 'use strict'
 
 const beautify = require('json-beautify')
+const CID = require('cids')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
 const fileType = require('file-type')
@@ -10,7 +11,6 @@ const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
-const CID = require('cids')
 const uint8ArrayFromString = require('uint8arrays/from-string')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
@@ -37,36 +37,12 @@ async function loadFromIpfs (url, stream) {
   return await fileType.fromBuffer(buffer)
 }
 
-// https://discuss.ipfs.io/t/what-is-the-data-in-object/5221
-// https://github.com/ipfs/go-unixfs/blob/master/pb/unixfs.pb.go
 async function dagPut (api, links) {
-  const put = await api.dag.put(
-    {
-      Data: uint8ArrayFromString('\u0008\u0001'),
-      Links: links,
-    },
-    {
-      format: 'dag-pb',
-      hashAlg: 'sha2-256',
-      pin: false,
-    }
-  )
-  if (put === undefined || put == null) {
-    throw new Error('IPFS returned an unknown result...')
+  const dagNode = {
+    Data: uint8ArrayFromString('\u0008\u0001'),
+    Links: links,
   }
-  var size = null
-  var stat = null
-  try {
-    stat = await api.object.stat(put)
-    size = stat.CumulativeSize
-  } catch (error) {
-    // Ignore
-  }
-  const cidV1 = ipfsBundle.cidToCidV1(put)
-  return {
-    _cid: `${cidV1}`,
-    _size: size,
-  }
+  return await ipfsBundle.dagPut(api, dagNode)
 }
 
 /*
@@ -184,8 +160,8 @@ module.exports = async function main (dir, load) {
         const node = await dagPut(api, productionLinks)
         links.push({
           Name: content[i],
-          Tsize: node._size,
-          Hash: new CID(node._cid),
+          Tsize: node.size,
+          Hash: new CID(node.cid),
         })
       } else if (fs.existsSync(nodePath)) {
         const node = JSON.parse(fs.readFileSync(nodePath, 'utf8'))
@@ -206,54 +182,42 @@ module.exports = async function main (dir, load) {
     }
   }
   // Node
-  var rootNode = null
+  var build = {}
   const node = {}
   const currentNode = await dagPut(api, links)
   if (dir === '.') {
     const path = './current/build.json'
-    if (fs.existsSync(path)) {
-      const build = JSON.parse(fs.readFileSync(path, 'utf8'))
-      rootNode = await dagPut(api, [
-        {
-          Name: build._version,
-          Tsize: currentNode._size,
-          Hash: new CID(currentNode._cid),
-        },
-      ])
-      node._source_size = rootNode._size
-      node._source_uri = `${publicGateway}${rootNode._cid}/`
+    if (fs.existsSync(path) === false) {
+      throw new Error(`Unknown build: ${path}...`)
     }
+    const current = JSON.parse(fs.readFileSync(path, 'utf8'))
+    build._source_size = currentNode.size
+    build._source_uri = `${publicGateway}${currentNode.cid}/`
+    build._version = current._version
+    fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
   } else {
-    node._source_size = currentNode._size
-    node._source_uri = `${publicGateway}${currentNode._cid}/`
+    node._source_size = currentNode.size
+    node._source_uri = `${publicGateway}${currentNode.cid}/`
+    fs.writeFileSync(`./current/${dir}/node.json`, beautify(node, null, 2, 80), 'utf8')
+  }
+  // Update child nodes
+  for (const [key, value] of nodes) {
+    value._parent_size = currentNode.size
+    value._parent_uri = `${publicGateway}${currentNode.cid}/`
+    fs.writeFileSync(key, beautify(value, null, 2, 80), 'utf8')
   }
   // Log
   console.log('***')
-  if (rootNode) {
-    console.log(`*** Added root node ***
- ipfs://${rootNode._cid}/`)
+  if (dir === '.') {
+    console.log(`*** Added build: ${build._version}/`)
   }
   console.log(`*** Added node ./current/${dir} ***
- ipfs://${currentNode._cid}/`)
-  // Save node
-  fs.writeFileSync(`./current/${dir}/node.json`, beautify(node, null, 2, 80), 'utf8')
-  // Update child nodes
-  for (const [key, value] of nodes) {
-    value._parent_size = currentNode._size
-    value._parent_uri = currentNode._uri
-    fs.writeFileSync(key, beautify(value, null, 2, 80), 'utf8')
-  }
+ ipfs://${currentNode.cid}/`)
   // Load
   if (load) {
-    const currentNodeUri = `${gateway}${currentNode._cid}/`
+    const currentNodeUri = `${gateway}${currentNode.cid}/`
     await loadFromIpfs(currentNodeUri)
     console.log(`*** Fetched ***
   ${currentNodeUri} ***`)
-    if (rootNode !== null) {
-      const rootNodeUri = `${gateway}${rootNode._cid}/`
-      await loadFromIpfs(rootNodeUri)
-      console.log(`*** Fetched ***
-  ${rootNodeUri} ***`)
-    }
   }
 }

@@ -47,7 +47,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** raw dev ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --build \
   --verbose || exit 1
 
@@ -72,7 +72,7 @@ node ./bin/update-info.js "$@" || exit 1
 echo '***'
 echo '*** dev ***'
 echo '***'
-yarn cli-tiddlywiki-ipfs build \
+yarn tiddlywiki-ipfs build \
   --output production \
   --build \
   --verbose "$@" || exit 1
