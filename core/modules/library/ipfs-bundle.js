@@ -10,6 +10,8 @@ IPFS Bundle
 'use strict'
 
 const CID = require('cids')
+const uint8ArrayFromString = require('uint8arrays/from-string')
+
 const EnsLibrary = require('./ipfs-bundle/ens-library.js').EnsLibrary
 const EthereumLibrary = require('./ipfs-bundle/ethereum-library.js').EthereumLibrary
 const IpfsLibrary = require('./ipfs-bundle/ipfs-library.js').IpfsLibrary
@@ -394,6 +396,10 @@ IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
   return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
 }
 
+IpfsBundle.prototype.dagGet = async function (client, cid, options) {
+  return await this.ipfsLibrary.dagGet(client, cid, options)
+}
+
 IpfsBundle.prototype.dagPut = async function (client, dagNode, options) {
   return await this.ipfsLibrary.dagPut(client, dagNode, options)
 }
@@ -418,12 +424,20 @@ IpfsBundle.prototype.namePublish = async function (client, ipnsName, cid, option
   return await this.ipfsLibrary.namePublish(client, ipnsName, cid, options)
 }
 
+IpfsBundle.prototype.nameResolve = async function (client, value, options) {
+  return await this.ipfsLibrary.nameResolve(client, value, options)
+}
+
 IpfsBundle.prototype.objectData = async function (client, cid, recursive) {
   return await this.ipfsLibrary.objectData(client, cid, recursive)
 }
 
 IpfsBundle.prototype.objectStat = async function (client, cid, recursive) {
   return await this.ipfsLibrary.objectStat(client, cid, recursive)
+}
+
+IpfsBundle.prototype.pinAdd = async function (client, cid, recursive) {
+  return await this.ipfsLibrary.pinAdd(client, cid, recursive)
 }
 
 IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
@@ -876,15 +890,7 @@ IpfsBundle.prototype.Uint8ArrayToBase64 = function (uint8) {
 
 // String to uint array
 IpfsBundle.prototype.StringToUint8Array = function (string) {
-  var escstr = encodeURIComponent(string)
-  var binstr = escstr.replace(/%([0-9A-F]{2})/g, function (match, p1) {
-    return String.fromCharCode('0x' + p1)
-  })
-  var ua = new Uint8Array(binstr.length)
-  Array.prototype.forEach.call(binstr, function (ch, i) {
-    ua[i] = ch.charCodeAt(0)
-  })
-  return ua
+  return uint8ArrayFromString(string)
 }
 
 // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt

@@ -1,15 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-const publish = require('./publish-build.js')
-const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
-const argv = yargs(hideBin(process.argv)).argv
+const PublishBuild = require('./publish-build.js')
 
 async function main () {
   try {
-    const dir = argv.dir ? argv.dir.trim() : null
-    await publish(dir)
+    const build = new PublishBuild()
+    await build.publish()
   } catch (error) {
     console.error(error)
     process.exit(1)

@@ -187,19 +187,16 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     path: `/${sourceFileName}`,
     content: ipfsBundle.StringToUint8Array(source),
   })
-  for await (const added of api.addAll(upload, options)) {
-    if (added === undefined || added == null) {
-      throw new Error('IPFS client returned an unknown result...')
-    }
-    const cidV1 = ipfsBundle.cidToCidV1(added.cid)
-    if (added.path === '') {
-      parentCid = cidV1
-    } else if (added.path === sourceFileName) {
-      sourceCid = cidV1
-      sourceSize = added.size
-    } else if (added.path === faviconFileName) {
-      faviconCid = cidV1
-      faviconSize = added.size
+  const added = await ipfsBundle.addAll(api, upload, options)
+  for (const [key, value] of added.entries()) {
+    if (value.path === '') {
+      parentCid = key
+    } else if (value.path === sourceFileName) {
+      sourceCid = key
+      sourceSize = value.size
+    } else if (value.path === faviconFileName) {
+      faviconCid = key
+      faviconSize = value.size
     }
   }
   if (parentCid === undefined || parentCid == null) {

@@ -11,7 +11,6 @@ const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
-const uint8ArrayFromString = require('uint8arrays/from-string')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
@@ -39,7 +38,7 @@ async function loadFromIpfs (url, stream) {
 
 async function dagPut (api, links) {
   const dagNode = {
-    Data: uint8ArrayFromString('\u0008\u0001'),
+    Data: ipfsBundle.StringToUint8Array('\u0008\u0001'),
     Links: links,
   }
   return await ipfsBundle.dagPut(api, dagNode)
