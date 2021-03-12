@@ -83,7 +83,7 @@ module.exports = class PublishBuild {
     try {
       stat = await this.ipfsBundle.objectStat(api, buildCid)
     } catch (error) {
-      if (error.name !== 'TimeoutError') {
+      if (error.name !== 'TimeoutError' && error.name !== 'IPFSUnknownResult') {
         throw error
       }
       throw Error(`Unknown ${this.build._source_uri}`)
@@ -93,16 +93,10 @@ module.exports = class PublishBuild {
     }
     console.log(`*** Resolved build:
  ${this.gateway}/ipfs/${buildCid} ***`)
+    // Process raw build node
     const { previousRawBuildCid, newRawBuildCid } = await this.processRawBuildNode(api)
-    if (newRawBuildCid !== null) {
-      try {
-        console.log(`*** Pin raw build node:
- ${this.gateway}/ipfs/${newRawBuildCid} ***`)
-        await this.ipfsBundle.pinAdd(api, newRawBuildCid, true)
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
+    // Process production build node
+    // Pin management
     if (previousRawBuildCid !== null) {
       try {
         console.log(`*** Unpin previous raw build node:
@@ -110,6 +104,15 @@ module.exports = class PublishBuild {
         await this.ipfsBundle.pinRm(api, previousRawBuildCid, true)
       } catch (error) {
         console.log(` ${error.message}`)
+      }
+    }
+    if (newRawBuildCid !== null) {
+      try {
+        console.log(`*** Pin raw build node:
+ ${this.gateway}/ipfs/${newRawBuildCid} ***`)
+        await this.ipfsBundle.pinAdd(api, newRawBuildCid, true)
+      } catch (error) {
+        console.log(error.message)
       }
     }
   }
@@ -131,8 +134,6 @@ module.exports = class PublishBuild {
     }
     if (previousRawBuildCid !== null) {
       var { cid: previousRawBuildCid } = this.ipfsBundle.getIpfsIdentifier(previousRawBuildCid)
-      console.log(`*** Resolved raw build node:
- ${this.gateway}/ipfs/${previousRawBuildCid} ***`)
       var rawBuildNode = null
       try {
         rawBuildNode = await this.ipfsBundle.dagGet(api, previousRawBuildCid)
@@ -142,6 +143,8 @@ module.exports = class PublishBuild {
         }
       }
       if (rawBuildNode !== null) {
+        console.log(`*** Resolved raw build node:
+ ${this.gateway}/ipfs/${previousRawBuildCid} ***`)
         const rawBuildNodeLinks = rawBuildNode.value.Links
         for (var i = 0; i < rawBuildNodeLinks.length; i++) {
           if (rawBuildNodeLinks[i].Name === this.build._version) {
@@ -152,7 +155,7 @@ module.exports = class PublishBuild {
               newRawBuildCid: null,
             }
           }
-          if (rawBuildNodeLinks[i].Name !== 'latest-build' && rawBuildNodeLinks[i].Name !== 'latestBuild') {
+          if (rawBuildNodeLinks[i].Name !== 'latest-build') {
             links.push({
               Name: rawBuildNodeLinks[i].Name,
               Tsize: rawBuildNodeLinks[i].Tsize,
@@ -193,6 +196,7 @@ module.exports = class PublishBuild {
       Tsize: currentBuildSize,
       Hash: currentBuildCid,
     })
+    // https://discuss.ipfs.io/t/why-sort-links-in-pbnode/3157/3
     links.sort((a, b) => {
       return b.Name.localeCompare(a.Name)
     })

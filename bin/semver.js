@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-const { generate, validate } = require('build-number-generator')
+const beautify = require('json-beautify')
+const createKeccakHash = require('keccak')
 const dotenv = require('dotenv')
 const filenamify = require('filenamify')
 const fs = require('fs')
-const createKeccakHash = require('keccak')
+const { generate, validate } = require('build-number-generator')
 
 module.exports = function main (name, extension, dir, env, version) {
   // Init
@@ -65,31 +66,24 @@ module.exports = function main (name, extension, dir, env, version) {
   console.log(`*** ${name}, hash: ${rawHash} ***`)
   // Current
   var current = null
-  var member = null
   var path = `./current/${dir}/current.json`
   if (fs.existsSync(path)) {
-    current = JSON.parse(fs.readFileSync(path, 'utf8'))
-    if (current) {
-      if (Array.isArray(current) === false) {
-        throw new Error(`Unknown structure: ${path}...`)
-      }
-      // Member lookup
-      for (var j = 0; j < current.length; j++) {
-        if (current[j]._name === name) {
-          member = current[j]
-          break
-        }
+    const currentObject = JSON.parse(fs.readFileSync(path, 'utf8'))
+    for (var j = 0; j < currentObject.length; j++) {
+      if (currentObject[j]._name === name) {
+        current = currentObject[j]
+        break
       }
     }
   }
   // Version
   var kind = null
   if (version === undefined || version == null) {
-    if (member === undefined || member == null || (member !== undefined && member !== null && member._raw_hash !== rawHash)) {
+    if (current === undefined || current == null || (current !== undefined && current !== null && current._raw_hash !== rawHash)) {
       version = generate({ version: rawSemver, versionSeparator: '-' })
       kind = 'New version'
     } else {
-      version = member._version
+      version = current._version
       kind = 'Current version'
     }
   } else {
@@ -101,12 +95,12 @@ module.exports = function main (name, extension, dir, env, version) {
   }
   console.log(`*** ${kind}: ${version}`)
   // Save
-  const toJson = {
+  const build = {
     _raw_hash: rawHash,
     _semver: rawSemver,
     _version: version,
   }
-  fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, JSON.stringify(toJson), 'utf8')
+  fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, beautify(build, null, 2, 80), 'utf8')
   // Done
   return version
 }

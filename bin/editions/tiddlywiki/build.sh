@@ -22,16 +22,6 @@ mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
 
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 
-# tiddlywiki
-if [ ! -e ./download/tiddlywiki/index.html ]
-then
-  rm -f -R ./download/tiddlywiki > /dev/null 2>&1
-  cd download
-  mkdir tiddlywiki > /dev/null 2>&1
-  wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
-  cd ..
-fi
-
 # assets
 cp ./editions/tiddlywiki/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 

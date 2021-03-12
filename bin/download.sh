@@ -66,6 +66,13 @@ then
   cd ..
 fi
 
+# tiddlywiki
+if [ ! -e ./tiddlywiki ]
+then
+  mkdir tiddlywiki > /dev/null 2>&1
+  wget https://tiddlywiki.com/index.html -O ./tiddlywiki/index.html || exit 1
+fi
+
 # up
 cd ..
 
