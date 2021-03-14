@@ -48,10 +48,10 @@ rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
-cp './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js' './build/tiddlers/$_boot_boot.js' || exit 1
+cp ./build/output/tiddlywiki-ipfs/boot/\$_boot_boot.js ./build/tiddlers/\$_boot_boot.js || exit 1
 
 # meta
-cp './core/boot/$_boot_boot.js.meta' './build/tiddlers/$_boot_boot.js.meta' || exit 1
+cp ./core/boot/\$_boot_boot.js.meta ./build/tiddlers/\$_boot_boot.js.meta || exit 1
 
 # boot
 cp ./editions/boot/tiddlywiki.info ./build/tiddlywiki.info || exit 1

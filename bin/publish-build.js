@@ -301,6 +301,8 @@ module.exports = class PublishBuild {
       if (this.previousRawBuildCid !== null) {
         this.build._previous_source_uri = `${this.publicGateway}/ipfs/${this.previousRawBuildCid}/`
         fs.writeFileSync(`./current/build.json`, beautify(this.build, null, 2, 80), 'utf8')
+      } else {
+        delete this.build._previous_source_uri
       }
       // Add current build
       const glob = globSource('./current', {
