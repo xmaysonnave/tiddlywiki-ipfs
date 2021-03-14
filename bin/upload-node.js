@@ -5,7 +5,6 @@ const beautify = require('json-beautify')
 const CID = require('cids')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
-const fileType = require('file-type')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
@@ -15,6 +14,9 @@ const { promisify } = require('util')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
+const shortTimeout = 4000
+const longTimeout = 2 * 60 * shortTimeout
+
 async function loadFromIpfs (url, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
@@ -22,6 +24,7 @@ async function loadFromIpfs (url, stream) {
   const options = {
     compress: false,
     method: 'GET',
+    timeout: longTimeout,
   }
   const response = await fetch(url, options)
   if (response.ok === false) {
@@ -32,8 +35,7 @@ async function loadFromIpfs (url, stream) {
     await streamPipeline(response.body, stream)
     return
   }
-  const buffer = await response.buffer()
-  return await fileType.fromBuffer(buffer)
+  return await response.buffer()
 }
 
 async function dagPut (api, links) {
@@ -41,7 +43,13 @@ async function dagPut (api, links) {
     Data: ipfsBundle.StringToUint8Array('\u0008\u0001'),
     Links: links,
   }
-  return await ipfsBundle.dagPut(api, dagNode)
+  const options = {
+    format: 'dag-pb',
+    hashAlg: 'sha2-256',
+    pin: false,
+    timeout: longTimeout,
+  }
+  return await ipfsBundle.dagPut(api, dagNode, options)
 }
 
 /*
@@ -62,7 +70,7 @@ module.exports = async function main (dir, load) {
   if (dir == null) {
     throw new Error('Unknown directory...')
   }
-  load = load ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
+  load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
   // Ipfs
   const options = {
     chunker: 'rabin-262144-524288-1048576',
@@ -85,7 +93,7 @@ module.exports = async function main (dir, load) {
     protocol: protocol,
     host: apiUrl.hostname,
     port: port,
-    timeout: 2 * 60 * 1000,
+    timeout: longTimeout,
   })
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
   var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}/ipfs/` : null
@@ -127,7 +135,7 @@ module.exports = async function main (dir, load) {
           }
           if (sourceUri !== null) {
             const { cid: sourceCid } = await ipfsBundle.resolveIpfs(api, sourceUri)
-            const stat = await ipfsBundle.objectStat(api, sourceCid)
+            const stat = await ipfsBundle.objectStat(api, sourceCid, shortTimeout)
             productionLinks.push({
               Name: sourceFile.base,
               Tsize: stat.CumutativeSize,
@@ -168,7 +176,7 @@ module.exports = async function main (dir, load) {
           throw new Error(`Unknown node: ${nodePath}...`)
         }
         const parentCid = await ipfsBundle.resolveIpfsContainer(api, node._source_uri)
-        const stat = await ipfsBundle.objectStat(api, parentCid)
+        const stat = await ipfsBundle.objectStat(api, parentCid, shortTimeout)
         links.push({
           Name: content[i],
           Tsize: stat.CumutativeSize,
@@ -217,6 +225,6 @@ module.exports = async function main (dir, load) {
     const currentNodeUri = `${gateway}${currentNode.cid}/`
     await loadFromIpfs(currentNodeUri)
     console.log(`*** Fetched ***
-  ${currentNodeUri} ***`)
+ ${currentNodeUri} ***`)
   }
 }

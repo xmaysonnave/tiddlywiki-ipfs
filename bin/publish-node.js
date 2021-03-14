@@ -32,6 +32,25 @@ async function managePin (api, key) {
     console.log(error.message)
     return false
   }
+  //     // Pin management
+  //     if (previousRawBuildCid !== null) {
+  //       try {
+  //         console.log(`*** Unpin previous raw build node:
+  //  ${this.gateway}/ipfs/${previousRawBuildCid} ***`)
+  //         await this.ipfsBundle.pinRm(api, previousRawBuildCid, false)
+  //       } catch (error) {
+  //         console.log(` ${error.message}`)
+  //       }
+  //     }
+  //     if (newRawBuildCid !== null) {
+  //       try {
+  //         console.log(`*** Pin raw build node:
+  //  ${this.gateway}/ipfs/${newRawBuildCid} ***`)
+  //         await this.ipfsBundle.pinAdd(api, newRawBuildCid, true)
+  //       } catch (error) {
+  //         console.log(error.message)
+  //       }
+  //     }
   return true
 }
 

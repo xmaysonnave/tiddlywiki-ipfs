@@ -5,7 +5,6 @@ const beautify = require('json-beautify')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
 const filenamify = require('filenamify')
-const fileType = require('file-type')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
@@ -15,6 +14,9 @@ const { promisify } = require('util')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
+const shortTimeout = 4000
+const longTimeout = 2 * 60 * shortTimeout
+
 async function loadFromIpfs (url, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
@@ -22,6 +24,7 @@ async function loadFromIpfs (url, stream) {
   const options = {
     compress: false,
     method: 'GET',
+    timeout: longTimeout,
   }
   const response = await fetch(url, options)
   if (response.ok === false) {
@@ -32,8 +35,7 @@ async function loadFromIpfs (url, stream) {
     await streamPipeline(response.body, stream)
     return
   }
-  const buffer = await response.buffer()
-  return await fileType.fromBuffer(buffer)
+  return await response.buffer()
 }
 
 /*
@@ -65,7 +67,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     throw new Error('Unknown directory...')
   }
   tags = tags !== undefined && tags !== null && tags.trim() !== '' ? tags.trim() : null
-  load = load ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
+  load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
   // Build
   const buildPath = `./build/output/${dir}/${normalizedName}-build.json`
   if (fs.existsSync(buildPath) === false) {

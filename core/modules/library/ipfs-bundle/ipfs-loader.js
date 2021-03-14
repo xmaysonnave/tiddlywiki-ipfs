@@ -216,7 +216,7 @@ ${xhr.responseURL}`
 }
 
 IpfsLoader.prototype.checkMessage = async function (message, keccak256, signature) {
-  message = message === undefined || message == null || message.trim() === '' ? null : message.trim()
+  message = message !== undefined && message !== null && message.trim() !== '' ? message.trim() : null
   if (message == null) {
     throw new Error('Undefined encrypted content...')
   }
@@ -247,11 +247,11 @@ IpfsLoader.prototype.checkMessage = async function (message, keccak256, signatur
  * Load to Base64
  */
 IpfsLoader.prototype.loadToBase64 = async function (url, password) {
-  url = url === undefined || url == null || url.toString().trim() === '' ? null : url.toString().trim()
+  url = url !== undefined && url !== null && url.toString().trim() !== '' ? url.toString().trim() : null
   if (url == null) {
     throw new Error('Undefined URL...')
   }
-  password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
+  password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
   const ua = await this.fetchUint8Array(url)
   if (ua.length === 0) {
     return ''
@@ -301,11 +301,11 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
  * Load to UTF-8
  */
 IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
-  url = url === undefined || url == null || url.toString().trim() === '' ? null : url.toString().trim()
+  url = url !== undefined && url !== null && url.toString().trim() !== '' ? url.toString().trim() : null
   if (url == null) {
     throw new Error('Undefined URL...')
   }
-  password = password === undefined || password == null || password.trim() === '' ? null : password.trim()
+  password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
   const ua = await this.fetchUint8Array(url)
   if (ua.length === 0) {
     return ''
