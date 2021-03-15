@@ -98,7 +98,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
       const ua = await loadFromIpfs(uri)
       current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
       console.log(`*** Fetched:
-${uri} ***`)
+ ${uri} ***`)
     } catch (error) {
       console.log(error.message)
     }
