@@ -217,25 +217,25 @@ module.exports = class PublishBuild {
       builds.sort((a, b) => {
         return b.Name.localeCompare(a.Name)
       })
-    }
-    // Create a new build
-    var newBuildCid = null
-    var { cid: newBuildCid } = await this.dagPut(api, builds)
-    this.newBuildCid = newBuildCid
-    try {
-      const { name, value } = await this.ipfsBundle.namePublish(api, this.buildName, this.newBuildCid, {
-        resolve: false,
-        key: this.buildName,
-        allowOffline: false,
-        timeout: this.longTimeout,
-      })
-      console.log(
-        `*** Published build node:
+      // Create a new build
+      var newBuildCid = null
+      var { cid: newBuildCid } = await this.dagPut(api, builds)
+      this.newBuildCid = newBuildCid
+      try {
+        const { name, value } = await this.ipfsBundle.namePublish(api, this.buildName, this.newBuildCid, {
+          resolve: false,
+          key: this.buildName,
+          allowOffline: false,
+          timeout: this.longTimeout,
+        })
+        console.log(
+          `*** Published build node:
  ${this.gateway}/ipns/${name}
  ${this.gateway}${value} ***`)
-    } catch (error) {
-      console.log(`*** Unable to perform ipfs.name.publish:
+      } catch (error) {
+        console.log(`*** Unable to perform ipfs.name.publish:
  ${error.message} ***`)
+      }
     }
   }
 
