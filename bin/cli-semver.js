@@ -6,7 +6,7 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
 
-function main () {
+async function main () {
   try {
     const name = argv.name ? argv.name.trim() : null
     if (name == null) {
@@ -24,7 +24,7 @@ function main () {
     if (!env) {
       throw new Error('Unknown env...')
     }
-    semver(name, extension, dir, env)
+    await semver(name, extension, dir, env)
     console.log('***')
   } catch (error) {
     console.error(error)

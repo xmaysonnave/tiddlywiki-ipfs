@@ -4,13 +4,13 @@
 const replace = require('replace')
 const semver = require('../../semver.js')
 
-function main () {
+async function main () {
   try {
     const name = '$:/boot/boot.js'
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/boot'
     const env = 'BOOT'
-    const version = semver(name, extension, dir, env)
+    const version = await semver(name, extension, dir, env)
     replace({
       regex: `%BUILD_${env}_VERSION%`,
       replacement: version,
@@ -18,7 +18,7 @@ function main () {
       recursive: false,
       silent: true,
     })
-    semver(`${name}.zlib`, extension, dir, env, version)
+    await semver(`${name}.zlib`, extension, dir, env, version)
     console.log('***')
   } catch (error) {
     console.error(error)

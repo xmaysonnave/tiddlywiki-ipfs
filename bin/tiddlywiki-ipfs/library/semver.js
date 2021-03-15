@@ -5,13 +5,13 @@ const fs = require('fs')
 const replace = require('replace')
 const semver = require('../../semver.js')
 
-function main () {
+async function main () {
   try {
     const name = '$:/library/ipfs-modules.js'
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/library'
     const env = 'LIBRARY'
-    const version = semver(name, extension, dir, env)
+    const version = await semver(name, extension, dir, env)
     // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
     var files = fs
       .readdirSync('./build/tiddlers', { withFileTypes: true })
@@ -28,7 +28,7 @@ function main () {
         })
       }
     }
-    semver(`${name}.zlib`, extension, dir, env, version)
+    await semver(`${name}.zlib`, extension, dir, env, version)
     console.log('***')
   } catch (error) {
     console.error(error)

@@ -14,6 +14,9 @@ const { promisify } = require('util')
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
+// bluelight.link
+const IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
+
 const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
 
@@ -77,19 +80,31 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   if (build._version === undefined || build._version == null) {
     throw new Error('Unknown version...')
   }
+  const rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : IPNS_RAW_BUILD_NAME
+  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
+  var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}` : null
+  if (publicGateway == null) {
+    publicGateway = gateway
+  }
   var current = null
   var member = null
   var memberPosition = null
   const currentPath = `./current/${dir}/current.json`
   if (fs.existsSync(currentPath)) {
     current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
-    if (current === undefined || current == null) {
-      throw new Error(`Unknown current: ${currentPath}...`)
+  } else {
+    const uri = `${gateway}/ipns/${rawBuildName}/latest-build/current/${dir}/current.json`
+    try {
+      const ua = await loadFromIpfs(uri)
+      current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
+      console.log(`*** Fetched:
+${uri} ***`)
+    } catch (error) {
+      console.log(error.message)
     }
-    if (Array.isArray(current) === false) {
-      throw new Error(`Unknown json array: ${currentPath}...`)
-    }
-    // Member lookup
+  }
+  // Member lookup
+  if (current !== null) {
     for (var j = 0; j < current.length; j++) {
       if (current[j]._name === name) {
         member = current[j]
@@ -126,11 +141,6 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     port: port,
     timeout: 2 * 60 * 1000,
   })
-  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
-  var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}/ipfs/` : null
-  if (publicGateway == null) {
-    publicGateway = gateway
-  }
   const options = {
     chunker: 'rabin-262144-524288-1048576',
     cidVersion: 0,
@@ -240,7 +250,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   }
   if (faviconCid !== null) {
     node._favicon_size = faviconSize
-    node._favicon_uri = `${publicGateway}${parentCid}/${faviconFileName}`
+    node._favicon_uri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
   }
   node._name = name
   if (owner !== null) {
@@ -248,7 +258,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   }
   node._raw_hash = build._raw_hash
   node._source_size = sourceSize
-  node._source_uri = `${publicGateway}${parentCid}/${sourceFileName}`
+  node._source_uri = `${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
   node._version = build._version
   // Save current
   if (current == null) {
@@ -300,12 +310,12 @@ _version: ${node._version}`
   fs.writeFileSync(`./production/${dir}/${normalizedName}-build.tid`, tid, 'utf8')
   // Load
   if (load) {
-    const sourceUri = `${gateway}${parentCid}/${sourceFileName}`
+    const sourceUri = `${gateway}/ipfs/${parentCid}/${sourceFileName}`
     await loadFromIpfs(sourceUri)
     console.log(`*** Fetched content ***
   ${sourceUri}`)
     if (faviconCid !== null) {
-      const faviconUri = `${gateway}${parentCid}/${faviconFileName}`
+      const faviconUri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
       await loadFromIpfs(faviconUri)
       console.log(`*** Fetched favicon ***
   ${faviconUri}`)

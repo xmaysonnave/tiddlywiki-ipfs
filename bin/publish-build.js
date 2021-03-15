@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 'use strict'
 
-const beautify = require('json-beautify')
 const CID = require('cids')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
@@ -24,7 +23,7 @@ module.exports = class PublishBuild {
   longTimeout = 2 * 60 * this.shortTimeout
 
   // bluelight.link
-  IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dllr1ovhxtqndtbz21nc0mxhtn5158fea3zqv15c6wf7lc5lss5'
+  IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
   IPNS_BUILD_NAME = 'k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl'
 
   constructor (load) {
@@ -103,7 +102,7 @@ module.exports = class PublishBuild {
       this.build = JSON.parse(fs.readFileSync(path))
     }
     // Ipfs
-    const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'http://10.45.0.1:5001')
+    const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
     const protocol = apiUrl.protocol.slice(0, -1)
     var port = apiUrl.port
     if (port === undefined || port == null || port.trim() === '') {
@@ -240,6 +239,7 @@ module.exports = class PublishBuild {
   async processRawBuildNode (api) {
     var currentBuildCid = null
     var currentBuildSize = null
+    var latestBuild = null
     this.links = []
     try {
       const options = {
@@ -271,7 +271,6 @@ module.exports = class PublishBuild {
           throw error
         }
       }
-      var latestBuild = null
       if (rawBuildNode !== null) {
         const published = {}
         const rawBuildNodeLinks = rawBuildNode.value.Links
@@ -297,13 +296,6 @@ module.exports = class PublishBuild {
       }
     }
     if (this.build !== null) {
-      // Set previous
-      if (this.previousRawBuildCid !== null) {
-        this.build._previous_source_uri = `${this.publicGateway}/ipfs/${this.previousRawBuildCid}/`
-        fs.writeFileSync(`./current/build.json`, beautify(this.build, null, 2, 80), 'utf8')
-      } else {
-        delete this.build._previous_source_uri
-      }
       // Add current build
       const glob = globSource('./current', {
         recursive: true,
@@ -325,6 +317,12 @@ module.exports = class PublishBuild {
       }
       console.log(`*** Added current build: ${this.build._version}
  ${this.gateway}/ipfs/${currentBuildCid} ***`)
+      if (this.previousRawBuildCid !== null) {
+        this.links.push({
+          Name: 'previous-build',
+          Hash: new CID(this.previousRawBuildCid),
+        })
+      }
       this.links.push({
         Name: this.build._version,
         Tsize: currentBuildSize,

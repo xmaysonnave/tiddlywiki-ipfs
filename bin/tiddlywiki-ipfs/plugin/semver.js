@@ -4,13 +4,13 @@
 const fs = require('fs')
 const semver = require('../../semver.js')
 
-function main () {
+async function main () {
   try {
     const name = '$:/plugins/ipfs.js'
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/plugin'
     const env = 'PLUGIN'
-    const version = semver(name, extension, dir, env)
+    const version = await semver(name, extension, dir, env)
     const sourceMetadata = './core/plugin.info'
     const targetMetadata = './build/plugins/ipfs/plugin.info'
     // const sourcePackage = './package.json'
@@ -26,7 +26,7 @@ function main () {
     // update
     // data = JSON.stringify(infoProject, null, 2)
     // fs.writeFileSync(sourcePackage, data, 'utf8')
-    semver(`${name}.zlib`, extension, dir, env, version)
+    await semver(`${name}.zlib`, extension, dir, env, version)
     console.log('***')
   } catch (error) {
     console.error(error)
