@@ -93,9 +93,6 @@ module.exports = class PublishBuild {
   }
 
   async publish () {
-    console.log('***')
-    console.log(`*** Publish ***`)
-    console.log('***')
     // Load current build
     const path = `./current/build.json`
     if (fs.existsSync(path)) {
@@ -103,6 +100,9 @@ module.exports = class PublishBuild {
     }
     // Ipfs
     const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
+    console.log('***')
+    console.log(`*** Publish ${apiUrl} ***`)
+    console.log('***')
     const protocol = apiUrl.protocol.slice(0, -1)
     var port = apiUrl.port
     if (port === undefined || port == null || port.trim() === '') {
