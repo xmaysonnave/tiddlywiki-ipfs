@@ -170,9 +170,8 @@ module.exports = class PublishBuild {
     try {
       this.previousBuildCid = await this.ipfsBundle.nameResolve(api, this.buildName)
     } catch (error) {
-      if (error.name !== 'TimeoutError' && error.name !== 'IPFSUnknownResult') {
-        throw error
-      }
+      console.log(`*** Unable to perform ipfs.name.resolve:
+ ${error.message} ***`)
     }
     if (this.previousBuildCid !== null) {
       var previousBuildCid = null
@@ -223,17 +222,21 @@ module.exports = class PublishBuild {
     var newBuildCid = null
     var { cid: newBuildCid } = await this.dagPut(api, builds)
     this.newBuildCid = newBuildCid
-    const { name, value } = await this.ipfsBundle.namePublish(api, this.buildName, this.newBuildCid, {
-      resolve: false,
-      key: this.buildName,
-      allowOffline: false,
-      timeout: this.longTimeout,
-    })
-    console.log(
-      `*** Published build node:
+    try {
+      const { name, value } = await this.ipfsBundle.namePublish(api, this.buildName, this.newBuildCid, {
+        resolve: false,
+        key: this.buildName,
+        allowOffline: false,
+        timeout: this.longTimeout,
+      })
+      console.log(
+        `*** Published build node:
  ${this.gateway}/ipns/${name}
- ${this.gateway}${value} ***`
-    )
+ ${this.gateway}${value} ***`)
+    } catch (error) {
+      console.log(`*** Unable to perform ipfs.name.publish:
+ ${error.message} ***`)
+    }
   }
 
   async processRawBuildNode (api) {
@@ -249,9 +252,8 @@ module.exports = class PublishBuild {
       }
       this.previousRawBuildCid = await this.ipfsBundle.nameResolve(api, this.rawBuildName, options)
     } catch (error) {
-      if (error.name !== 'TimeoutError' && error.name !== 'IPFSUnknownResult') {
-        throw error
-      }
+      console.log(`*** Unable to perform ipfs.name.resolve:
+ ${error.message} ***`)
     }
     if (this.previousRawBuildCid !== null) {
       var previousRawBuildCid = null
@@ -342,15 +344,20 @@ module.exports = class PublishBuild {
       var newRawBuildCid = null
       var { cid: newRawBuildCid } = await this.dagPut(api, this.links)
       this.newRawBuildCid = newRawBuildCid
-      const { name, value } = await this.ipfsBundle.namePublish(api, this.rawBuildName, this.newRawBuildCid, {
-        resolve: false,
-        key: this.rawBuildName,
-        allowOffline: false,
-        timeout: this.longTimeout,
-      })
-      console.log(`*** Published raw build node:
+      try {
+        const { name, value } = await this.ipfsBundle.namePublish(api, this.rawBuildName, this.newRawBuildCid, {
+          resolve: false,
+          key: this.rawBuildName,
+          allowOffline: false,
+          timeout: this.longTimeout,
+        })
+        console.log(`*** Published raw build node:
  ${this.gateway}/ipns/${name}
  ${this.gateway}${value} ***`)
+      } catch (error) {
+        console.log(`*** Unable to perform ipfs.name.publish:
+ ${error.message} ***`)
+      }
     }
   }
 }
