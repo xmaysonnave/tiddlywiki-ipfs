@@ -37,6 +37,9 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 
 <p align="center">
   <p>Builds available from IPFS</p>
+</p>
+
+<p align="center">
   <a rel="noopener noreferrer" target="_blank" href="https://dweb.link/ipns/k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl">
     <img alt="Builds available from IPFS" title="Builds available from IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
