@@ -36,7 +36,7 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 </p>
 
 <p align="center">
-  <p>Builds available from IPFS</p>
+  <b>Builds available from IPFS</b>
 </p>
 
 <p align="center">
