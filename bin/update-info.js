@@ -33,7 +33,7 @@ function main () {
     }
     if (build) {
       const boot = JSON.parse(build)
-      if (!boot._version) {
+      if (boot._version === undefined || boot._version == null) {
         throw new Error('Unknown boot version...')
       }
       replace({
@@ -52,7 +52,7 @@ function main () {
     }
     if (build) {
       const library = JSON.parse(build)
-      if (!library._version) {
+      if (library._version === undefined || library._version == null) {
         throw new Error('Unknown library version...')
       }
       replace({
@@ -71,7 +71,7 @@ function main () {
     }
     if (build) {
       const plugin = JSON.parse(build)
-      if (!plugin._version) {
+      if (plugin._version === undefined || plugin._version == null) {
         throw new Error('Unknown plugin version...')
       }
       replace({
@@ -90,7 +90,7 @@ function main () {
     }
     if (build) {
       const doc = JSON.parse(build)
-      if (!doc._version) {
+      if (doc._version === undefined || doc._version == null) {
         throw new Error('Unknown documentation version...')
       }
       replace({

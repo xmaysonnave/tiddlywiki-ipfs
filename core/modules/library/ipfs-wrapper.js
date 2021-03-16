@@ -401,7 +401,9 @@ IpfsWrapper.prototype.pinToIpfs = async function (ipfs, ipfsPath, recursive) {
     throw new Error('Undefined IPFS path...')
   }
   try {
-    const pinned = await this.ipfsLibrary.pinAdd(ipfs, ipfsPath, recursive)
+    const pinned = await this.ipfsLibrary.pinAdd(ipfs, ipfsPath, {
+      recursive: recursive,
+    })
     const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(
       `Successfully pinned:
@@ -420,7 +422,9 @@ IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, ipfsPath, recursive)
     throw new Error('Undefined IPFS path...')
   }
   try {
-    const unpinned = await this.ipfsLibrary.pinRm(ipfs, ipfsPath, recursive)
+    const unpinned = await this.ipfsLibrary.pinRm(ipfs, ipfsPath, {
+      recursive: recursive,
+    })
     const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(
       `Successfully unpinned:

@@ -36,8 +36,9 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
 </p>
 
 <p align="center">
+  <p>Builds available from IPFS</p>
   <a rel="noopener noreferrer" target="_blank" href="https://dweb.link/ipns/k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl">
-    <img alt="Available from IPFS" title="Available from IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
+    <img alt="Builds available from IPFS" title="Builds available from IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
 
@@ -360,7 +361,6 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 - prepare
 - prettier-standard
 - publish-build
-- publish-node
 - semver
 - snyk-monitor
 - snyk-protect
@@ -368,6 +368,7 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 - testc
 - testw
 - tiddlywiki-ipfs
+- update-builds
 - upload
 - upload-node
 

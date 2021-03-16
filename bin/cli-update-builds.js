@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const PublishBuild = require('./publish-build.js')
+const UpdateBuilds = require('./update-builds.js')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
@@ -9,7 +9,7 @@ const argv = yargs(hideBin(process.argv)).argv
 async function main () {
   try {
     const load = argv.load ? argv.load.trim() : null
-    const build = new PublishBuild(load)
+    const build = new UpdateBuilds(load)
     await build.publish()
   } catch (error) {
     console.error(error)

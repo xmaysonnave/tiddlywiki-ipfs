@@ -16,8 +16,8 @@
 ./bin/cli-upload-node.sh \
   --dir=. "$@" || exit 1
 
-# publish build
-./bin/cli-publish-build.sh "$@" || exit 1
+# update builds
+./bin/cli-update-builds.sh "$@" || exit 1
 
 # done
 exit 0

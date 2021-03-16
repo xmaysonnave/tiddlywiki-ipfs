@@ -941,7 +941,7 @@ IpfsLibrary.prototype.objectStat = async function (client, cid, timeout) {
   }
 }
 
-IpfsLibrary.prototype.pinAdd = async function (client, cid, recursive) {
+IpfsLibrary.prototype.pinAdd = async function (client, cid, options) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }
@@ -949,16 +949,18 @@ IpfsLibrary.prototype.pinAdd = async function (client, cid, recursive) {
   if (cid == null) {
     throw new Error('Undefined IPFS identifier...')
   }
-  recursive = recursive === undefined || recursive == null ? true : recursive === true
   if (client.enable) {
     client = await client.enable({ commands: ['pin'] })
   }
   if (client === undefined || client.pin === undefined || client.pin.add === undefined) {
     throw new Error('Undefined IPFS pin add...')
   }
-  const result = await client.pin.add(cid, {
-    recursive: recursive,
-  })
+  if (options === undefined || options == null) {
+    options = {
+      recursive: true,
+    }
+  }
+  const result = await client.pin.add(cid, options)
   if (result === undefined || result == null) {
     const err = new Error('IPFS returned an unknown result...')
     err.name = 'IPFSUnknownResult'
@@ -967,7 +969,7 @@ IpfsLibrary.prototype.pinAdd = async function (client, cid, recursive) {
   return this.ipfsBundle.cidToCidV1(result, 'ipfs', true)
 }
 
-IpfsLibrary.prototype.pinRm = async function (client, cid, recursive) {
+IpfsLibrary.prototype.pinRm = async function (client, cid, options) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
   }
@@ -975,16 +977,18 @@ IpfsLibrary.prototype.pinRm = async function (client, cid, recursive) {
   if (cid == null) {
     throw new Error('Undefined IPFS identifier...')
   }
-  recursive = recursive === undefined || recursive == null ? true : recursive === true
   if (client.enable) {
     client = await client.enable({ commands: ['pin'] })
   }
   if (client === undefined || client.pin === undefined || client.pin.rm === undefined) {
     throw new Error('Undefined IPFS pin rm...')
   }
-  const result = await client.pin.rm(cid, {
-    recursive: recursive,
-  })
+  if (options === undefined || options == null) {
+    options = {
+      recursive: true,
+    }
+  }
+  const result = await client.pin.rm(cid, options)
   if (result === undefined || result == null) {
     const err = new Error('IPFS returned an unknown result...')
     err.name = 'IPFSUnknownResult'

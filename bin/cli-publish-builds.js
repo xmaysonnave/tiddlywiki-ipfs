@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const publish = require('./publish-node.js')
+const publish = require('./publish-builds.js')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv

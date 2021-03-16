@@ -210,7 +210,7 @@ describe(`Single '${direct}'`, () => {
     expect(type).to.equal(direct)
   })
   it(`unpin '${direct}'..`, async () => {
-    const unpinned = await ipfsBundle.pinRm(api, contentCid, false)
+    const unpinned = await ipfsBundle.pinRm(api, contentCid, { recursive: false })
     expect(unpinned.toString()).to.equal(contentCidV1)
     const { cid: fetched } = await ipfsBundle.hasPin(api, contentCid, direct)
     expect(fetched.toString()).to.equal('')
@@ -236,7 +236,7 @@ describe(`Single '${recursive}'`, () => {
     expect(type).to.equal(recursive)
   })
   it(`unpin '${recursive}'...`, async () => {
-    const unpinned = await ipfsBundle.pinRm(api, contentCid, true)
+    const unpinned = await ipfsBundle.pinRm(api, contentCid, { recursive: true })
     expect(unpinned.toString()).to.equal(contentCidV1)
     const { cid: fetched } = await ipfsBundle.hasPin(api, contentCid, recursive)
     expect(fetched.toString()).to.equal('')
@@ -263,7 +263,7 @@ describe(`Single '${direct}' pin and '${recursive}' unpin`, () => {
   })
   it(`unpin '${recursive}'...`, async () => {
     // recursive unpin direct pin
-    const unpinned = await ipfsBundle.pinRm(api, contentCid, true)
+    const unpinned = await ipfsBundle.pinRm(api, contentCid, { recursive: true })
     expect(unpinned.toString()).to.equal(contentCidV1)
     const { cid: fetched } = await ipfsBundle.hasPin(api, contentCid, direct)
     expect(fetched.toString()).to.equal('')
@@ -292,7 +292,7 @@ describe(`Single '${recursive}' pin and '${direct}' unpin`, () => {
     // Doesn't unpin
     var catched = null
     try {
-      await ipfsBundle.pinRm(api, contentCid, false)
+      await ipfsBundle.pinRm(api, contentCid, { recursive: false })
     } catch (error) {
       catched = error
     }
@@ -349,7 +349,7 @@ describe(`Wrapped '${direct}'`, () => {
     expect(type).to.equal(direct)
   })
   it(`unpin '${direct}'...`, async () => {
-    const unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, false)
+    const unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, { recursive: false })
     expect(unpinned.toString()).to.equal(parentFile1CidV1)
     var { cid: fetched } = await ipfsBundle.hasPin(api, parentFile1Cid, recursive)
     expect(fetched.toString()).to.equal('')
@@ -390,7 +390,7 @@ describe(`Wrapped '${recursive}'`, () => {
     expect(type).to.equal(indirect)
   })
   it(`unpin '${recursive}'...`, async () => {
-    const unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, true)
+    const unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, { recursive: true })
     expect(unpinned.toString()).to.equal(parentFile1CidV1)
     var { cid: fetched } = await ipfsBundle.hasPin(api, parentFile1Cid, recursive)
     expect(fetched.toString()).to.equal('')
@@ -425,7 +425,7 @@ describe(`Wrapped '${direct}' pin and '${recursive}' unpin`, () => {
     expect(type).to.equal(direct)
   })
   it(`unpin '${recursive}'...`, async () => {
-    var unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, true)
+    var unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, { recursive: true })
     expect(unpinned.toString()).to.equal(parentFile1CidV1)
     var { cid: fetched } = await ipfsBundle.hasPin(api, parentFile1Cid, recursive)
     expect(fetched.toString()).to.equal('')
@@ -433,7 +433,7 @@ describe(`Wrapped '${direct}' pin and '${recursive}' unpin`, () => {
     var { cid: fetched } = await ipfsBundle.hasPin(api, contentCid)
     expect(fetched.toString()).to.equal(contentCidV1)
     // Unpin recursive
-    var unpinned = await ipfsBundle.pinRm(api, contentCid, true)
+    var unpinned = await ipfsBundle.pinRm(api, contentCid, { recursive: true })
     expect(unpinned.toString()).to.equal(contentCidV1)
     var { cid: fetched } = await ipfsBundle.hasPin(api, contentCid)
     expect(fetched.toString()).to.equal('')

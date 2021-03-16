@@ -440,12 +440,12 @@ IpfsBundle.prototype.objectStat = async function (client, cid, timeout) {
   return await this.ipfsLibrary.objectStat(client, cid, timeout)
 }
 
-IpfsBundle.prototype.pinAdd = async function (client, cid, recursive) {
-  return await this.ipfsLibrary.pinAdd(client, cid, recursive)
+IpfsBundle.prototype.pinAdd = async function (client, cid, options) {
+  return await this.ipfsLibrary.pinAdd(client, cid, options)
 }
 
-IpfsBundle.prototype.pinRm = async function (client, cid, recursive) {
-  return await this.ipfsLibrary.pinRm(client, cid, recursive)
+IpfsBundle.prototype.pinRm = async function (client, cid, options) {
+  return await this.ipfsLibrary.pinRm(client, cid, options)
 }
 
 IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {

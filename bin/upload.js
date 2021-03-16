@@ -313,12 +313,12 @@ _version: ${node._version}`
     const sourceUri = `${gateway}/ipfs/${parentCid}/${sourceFileName}`
     await loadFromIpfs(sourceUri)
     console.log(`*** Fetched content ***
-  ${sourceUri}`)
+ ${sourceUri}`)
     if (faviconCid !== null) {
       const faviconUri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
       await loadFromIpfs(faviconUri)
       console.log(`*** Fetched favicon ***
-  ${faviconUri}`)
+ ${faviconUri}`)
     }
   }
 }
