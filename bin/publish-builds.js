@@ -219,6 +219,9 @@ module.exports = async function main (dir, pin, load) {
   // Build node
   var buildCid = await resolveIPNS(api, gateway, buildName)
   if (buildCid !== null) {
+    console.log(`*** Publish build node:
+ ${gateway}/ipns/${buildName}
+ ${gateway}/ipfs/${buildCid} ***`)
     if (pin) {
       await managePin(api, gateway, buildCid, true)
       const { name, value } = await ipfsBundle.namePublish(api, buildName, buildCid, {
