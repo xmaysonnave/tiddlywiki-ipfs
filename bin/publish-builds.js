@@ -8,6 +8,7 @@ const IpfsHttpClient = require('ipfs-http-client')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
+const UpdateBuilds = require('./update-builds.js')
 
 // bluelight.link
 const IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
@@ -107,7 +108,7 @@ async function resolveIPNS (api, gateway, ipnsName) {
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (dir, pin) {
+module.exports = async function main (dir, pin, load) {
   // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
@@ -118,6 +119,7 @@ module.exports = async function main (dir, pin) {
   dir = dir !== undefined && dir !== null && dir.trim() !== '' ? dir.trim() : '.'
   pin = pin !== undefined && pin !== null && pin.trim() !== '' ? pin.trim() : null
   pin = pin ? pin === 'true' : process.env.PIN ? process.env.PIN === 'true' : true
+  load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
   const rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : IPNS_RAW_BUILD_NAME
   const buildName = process.env.IPNS_BUILD_NAME ? `${process.env.IPNS_BUILD_NAME}` : IPNS_BUILD_NAME
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
@@ -154,37 +156,42 @@ module.exports = async function main (dir, pin) {
     }
   }
   // Raw build node
-  console.log(`*** Publish raw build node:
- ${gateway}/ipns/${rawBuildName} ***`)
-  var cid = await resolveIPNS(api, gateway, rawBuildName)
-  if (cid !== null) {
+  const links = []
+  var previousRawBuildCid = null
+  var rawBuildCid = await resolveIPNS(api, gateway, rawBuildName)
+  if (rawBuildCid !== null) {
+    console.log(`*** Publish raw build node:
+ ${gateway}/ipns/${rawBuildName}
+ ${gateway}/ipfs/${rawBuildCid} ***`)
     var node = null
-    var previous = null
     try {
       const options = {
         localResolve: false,
         timeout: shortTimeout,
       }
-      node = await ipfsBundle.dagGet(api, cid, options)
+      node = await ipfsBundle.dagGet(api, rawBuildCid, options)
     } catch (error) {
       if (error.name !== 'TimeoutError' && error.name !== 'IPFSUnknownResult') {
         throw error
       }
     }
     if (node !== null) {
-      const links = node.value.Links
-      for (var i = 0; i < links.length; i++) {
+      for (var i = 0; i < node.value.Links.length; i++) {
+        links.push({
+          Name: node.value.Links[i].Name,
+          Hash: node.value.Links[i].Hash,
+        })
         if (links[i].Name === 'previous') {
-          previous = links[i].Hash
+          previousRawBuildCid = node.value.Links[i].Hash
         }
       }
     }
     if (pin) {
-      if (previous !== null) {
-        await manageUnpin(api, gateway, previous, false)
+      if (previousRawBuildCid !== null) {
+        await manageUnpin(api, gateway, previousRawBuildCid, false)
       }
-      await managePin(api, gateway, cid, true)
-      const { name, value } = await ipfsBundle.namePublish(api, rawBuildName, cid, {
+      await managePin(api, gateway, rawBuildCid, true)
+      const { name, value } = await ipfsBundle.namePublish(api, rawBuildName, rawBuildCid, {
         resolve: false,
         key: rawBuildName,
         allowOffline: false,
@@ -194,53 +201,27 @@ module.exports = async function main (dir, pin) {
  ${gateway}/ipns/${name}
  ${gateway}${value} ***`)
     } else {
-      if (previous !== null) {
-        await managePin(api, gateway, previous, true)
-      }
-      await manageUnpin(api, gateway, cid, false)
-      const { name, value } = await ipfsBundle.namePublish(api, rawBuildName, previous, {
-        resolve: false,
-        key: rawBuildName,
-        allowOffline: false,
-        timeout: longTimeout,
-      })
-      console.log(`*** Published previous raw build node:
+      await manageUnpin(api, gateway, rawBuildCid, false)
+      if (previousRawBuildCid !== null) {
+        await managePin(api, gateway, previousRawBuildCid, true)
+        const { name, value } = await ipfsBundle.namePublish(api, rawBuildName, previousRawBuildCid, {
+          resolve: false,
+          key: rawBuildName,
+          allowOffline: false,
+          timeout: longTimeout,
+        })
+        console.log(`*** Published previous raw build node:
  ${gateway}/ipns/${name}
  ${gateway}${value} ***`)
+      }
     }
   }
   // Build node
-  console.log(`*** Publish build node:
- ${gateway}/ipns/${buildName} ***`)
-  var cid = await resolveIPNS(api, gateway, buildName)
-  if (cid !== null) {
-    var node = null
-    var previous = null
-    try {
-      const options = {
-        localResolve: false,
-        timeout: shortTimeout,
-      }
-      node = await ipfsBundle.dagGet(api, cid, options)
-    } catch (error) {
-      if (error.name !== 'TimeoutError' && error.name !== 'IPFSUnknownResult') {
-        throw error
-      }
-    }
-    if (node !== null) {
-      const links = node.value.Links
-      for (var i = 0; i < links.length; i++) {
-        if (links[i].Name === 'previous') {
-          previous = links[i].Hash
-        }
-      }
-    }
+  var buildCid = await resolveIPNS(api, gateway, buildName)
+  if (buildCid !== null) {
     if (pin) {
-      if (previous !== null) {
-        await manageUnpin(api, gateway, previous, false)
-      }
-      await managePin(api, gateway, cid, true)
-      const { name, value } = await ipfsBundle.namePublish(api, buildName, cid, {
+      await managePin(api, gateway, buildCid, true)
+      const { name, value } = await ipfsBundle.namePublish(api, buildName, buildCid, {
         resolve: false,
         key: buildName,
         allowOffline: false,
@@ -250,19 +231,10 @@ module.exports = async function main (dir, pin) {
  ${gateway}/ipns/${name}
  ${gateway}${value} ***`)
     } else {
-      if (previous !== null) {
-        await managePin(api, gateway, previous, true)
-      }
-      await manageUnpin(api, gateway, cid, false)
-      const { name, value } = await ipfsBundle.namePublish(api, buildName, previous, {
-        resolve: false,
-        key: buildName,
-        allowOffline: false,
-        timeout: longTimeout,
-      })
-      console.log(`*** Published previous build node:
- ${gateway}/ipns/${name}
- ${gateway}${value} ***`)
+      const build = new UpdateBuilds(load)
+      const newBuildCid = await build.publishProductionBuildNode(api, links)
+      await manageUnpin(api, gateway, buildCid, false)
+      await managePin(api, gateway, newBuildCid, true)
     }
   }
 }

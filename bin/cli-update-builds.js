@@ -9,8 +9,13 @@ const argv = yargs(hideBin(process.argv)).argv
 async function main () {
   try {
     const load = argv.load ? argv.load.trim() : null
+    const reset = argv.reset ? argv.reset.trim() === 'true' : false
     const build = new UpdateBuilds(load)
-    await build.publish()
+    if (reset) {
+      await build.resetBuild()
+    } else {
+      await build.publishCurrentBuild()
+    }
   } catch (error) {
     console.error(error)
     process.exit(1)
