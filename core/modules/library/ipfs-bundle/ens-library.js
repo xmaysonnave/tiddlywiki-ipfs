@@ -74,8 +74,6 @@ EnsLibrary.prototype.decodeContenthash = function (encoded) {
         decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
       } else if (codec === 'ipns-ns') {
         protocol = 'ipns'
-        decoded = bs58.decode(decoded).slice(2)
-        decoded = $tw.ipfs.Utf8ArrayToStr(decoded)
         decoded = this.ipfsBundle.cidToCidV1(decoded, protocol, true)
       } else {
         throw new Error(`Unsupported ENS Content Hash codec: ${codec}`)

@@ -4,6 +4,7 @@ const CID = require('cids')
 const fromString = require('uint8arrays').fromString
 const dagDirectory = fromString('\u0008\u0001')
 const getIpfs = require('ipfs-provider').getIpfs
+const Mutex = require('async-mutex').Mutex
 const providers = require('ipfs-provider').providers
 
 const { httpClient, windowIpfs } = providers
@@ -15,6 +16,8 @@ const { httpClient, windowIpfs } = providers
  **/
 var IpfsLibrary = function (ipfsBundle) {
   this.ipfsBundle = ipfsBundle
+  this.ipfsClients = new Map()
+  this.mutex = new Mutex()
   /*eslint no-unused-vars:"off"*/
   this.name = 'ipfs-library'
 }
@@ -494,31 +497,54 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
   if (apiUrl instanceof URL === false) {
     apiUrl = this.ipfsBundle.getUrl(apiUrl)
   }
+  const self = this
   try {
-    await this.ipfsBundle.loadIpfsHttpLibrary()
-    this.getLogger().info(
-      `Processing connection to IPFS API URL:
-${apiUrl}`
-    )
-    const protocol = apiUrl.protocol.slice(0, -1)
-    var port = apiUrl.port
-    if (port === undefined || port == null || port.trim() === '') {
-      port = 443
-      if (protocol === 'http') {
-        port = 80
+    if (typeof globalThis.IpfsHttpClient === 'undefined') {
+      await this.ipfsBundle.loadIpfsHttpLibrary()
+    }
+    const client = this.ipfsClients.get(apiUrl.toString())
+    if (client !== undefined) {
+      $tw.ipfs.getLogger().info(`Reuse IPFS provider: "${apiUrl}"`)
+      return {
+        ipfs: client.ipfs,
+        provider: client.provider,
       }
     }
-    const { ipfs, provider } = await getIpfs({
-      providers: [
-        httpClient({
-          apiAddress: {
-            protocol: protocol,
-            host: apiUrl.hostname,
-            port: port,
-            timeout: 4 * 60 * 1000,
-          },
-        }),
-      ],
+    const { ipfs, provider } = await this.mutex.runExclusive(async () => {
+      const protocol = apiUrl.protocol.slice(0, -1)
+      var port = apiUrl.port
+      if (port === undefined || port == null || port.trim() === '') {
+        port = 443
+        if (protocol === 'http') {
+          port = 80
+        }
+      }
+      const client = self.ipfsClients.get(apiUrl.toString())
+      if (client !== undefined) {
+        $tw.ipfs.getLogger().info(`Reuse IPFS provider: "${apiUrl}"`)
+        return {
+          ipfs: client.ipfs,
+          provider: client.provider,
+        }
+      }
+      const { ipfs, provider } = await getIpfs({
+        providers: [
+          httpClient({
+            apiAddress: {
+              protocol: protocol,
+              host: apiUrl.hostname,
+              port: port,
+              timeout: 4 * 60 * 1000,
+            },
+          }),
+        ],
+      })
+      self.ipfsClients.set(apiUrl.toString(), { ipfs, provider })
+      $tw.ipfs.getLogger().info(`New IPFS provider: "${apiUrl}"`)
+      return {
+        ipfs: ipfs,
+        provider: provider,
+      }
     })
     return {
       ipfs: ipfs,
@@ -527,7 +553,6 @@ ${apiUrl}`
   } catch (error) {
     this.getLogger().error(error)
   }
-  throw new Error('Unreachable IPFS API URL...')
 }
 
 // IPFS companion

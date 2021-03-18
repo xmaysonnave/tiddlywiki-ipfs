@@ -286,7 +286,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     )
   }
   // Tiddler
-  var tid = `title: ${titleName}-build`
+  var tid = `title: ${node._name}-build`
   if (tags !== null) {
     tid = `${tid}
 tags: ${node.tags}`

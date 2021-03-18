@@ -1,8 +1,8 @@
-title: dev-build
+title: index-build
 tags: $:/ipfs/editions
 _favicon_size: 4297
-_favicon_uri: ipfs://bafybeid2a37u3aozwqdxngw7rh2nh25tmszz7bdfxkrq5j2j3yrzqym7ly/favicon.ico
+_favicon_uri: ipfs://bafybeicargkj5h25xkbxdiiko2v653ni75dfbgmoog7oyoty2wepmoande/favicon.ico
 _name: index
-_source_size: 1687454
-_source_uri: ipfs://bafybeid2a37u3aozwqdxngw7rh2nh25tmszz7bdfxkrq5j2j3yrzqym7ly/index.html
-_version: 0.4.0-beta-tw-v5.1.23+build-210317385
+_source_size: 1699051
+_source_uri: ipfs://bafybeicargkj5h25xkbxdiiko2v653ni75dfbgmoog7oyoty2wepmoande/index.html
+_version: 0.4.0-beta-tw-v5.1.23+build-210318412

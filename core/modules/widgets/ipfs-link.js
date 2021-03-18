@@ -254,7 +254,7 @@ IPFS link widget
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     const value = this.url !== undefined ? this.url : this.value
     $tw.ipfs
-      .resolveUrl(true, true, value)
+      .resolveUrl(false, true, value)
       .then(data => {
         const { resolvedUrl } = data
         if (resolvedUrl !== null) {
@@ -315,7 +315,7 @@ IPFS link widget
     this.value = this.getAttribute('value')
     this.value = this.value ? this.value : tiddler && tiddler.getFieldString(this.field) !== '' ? tiddler.getFieldString(this.field) : this.tiddler
     this.text = this.getAttribute('text')
-    this.text = this.text ? (tiddler && tiddler.getFieldString(this.text) !== '' ? tiddler.getFieldString(this.text) : this.tiddler) : this.value
+    this.text = this.text ? (tiddler && tiddler.getFieldString(this.text) !== '' ? tiddler.getFieldString(this.text) : this.text) : this.value
     if (tiddler && this.getAttribute('value') && tiddler.getFieldString(this.getAttribute('value')) !== '') {
       this.url = tiddler.getFieldString(this.getAttribute('value'))
     }

@@ -45,9 +45,12 @@ IpfsWrapper.prototype.getWindowIpfsClient = async function () {
 IpfsWrapper.prototype.getHttpIpfsClient = async function (url) {
   // HTTP Client
   try {
-    const policy = await this.ipfsLibrary.getHttpIpfs(url)
-    if (policy !== null && policy.ipfs !== null && policy.provider !== null) {
-      return policy
+    const { ipfs, provider } = await this.ipfsLibrary.getHttpIpfs(url)
+    if (ipfs !== null && provider !== null) {
+      return {
+        ipfs: ipfs,
+        provider: provider,
+      }
     }
   } catch (error) {
     this.getLogger().error(error)
@@ -308,7 +311,7 @@ ${url}`)
     return {
       cid: contentCid !== null ? contentCid : parentCid,
       path: `ipfs://${parentCid}${contentPath}`,
-      size: parentSize,
+      size: contentCid !== null ? contentSize : parentSize,
     }
   } catch (error) {
     this.getLogger().error(error)

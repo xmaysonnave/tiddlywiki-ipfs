@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macros/ipfs-plugin-version.js
+title: $:/plugins/ipfs/macros/plugins-ipfs-build-version-url.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
@@ -15,7 +15,7 @@ IPFS plugin version
   /*
    * Information about this macro
    */
-  exports.name = 'ipfs-plugin-version'
+  exports.name = 'plugins-ipfs-build-version-url'
 
   exports.params = []
 
@@ -23,6 +23,6 @@ IPFS plugin version
    * Run the macro
    */
   exports.run = function () {
-    return $tw.wiki.getTiddler('$:/plugins/ipfs').fields.version
+    return `${$tw.wiki.getTiddler('$:/plugins/ipfs.js-build').fields._source_uri}`
   }
 })()

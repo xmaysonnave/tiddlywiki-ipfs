@@ -26,7 +26,6 @@ IPFS Controller
   const name = 'ipfs-controller'
 
   var IpfsController = function () {
-    this.ipfsClients = new Map()
     this.pin = []
     this.unpin = []
   }
@@ -49,7 +48,7 @@ IPFS Controller
     this.ipfsAction.init()
     this.ipfsTiddler.init()
     // Load sigUtil early if needed
-    if ($tw.crypto.hasEncryptionPublicKey()) {
+    if ($tw.crypto.hasEncryptionPublicKey() && globalThis.sigUtil === 'undefined') {
       this.loadEthSigUtilLibrary()
     }
     // Init once
@@ -119,7 +118,7 @@ IPFS Controller
     var hasPublicKey = publicKey || $tw.crypto.hasEncryptionPublicKey()
     if (encrypted || password || hasPublicKey) {
       try {
-        if (hasPublicKey) {
+        if (hasPublicKey && globalThis.sigUtil === 'undefined') {
           await this.loadEthSigUtilLibrary()
         }
         if (compress) {
@@ -559,32 +558,11 @@ ${url}`
         // Ignore, fallback to HTTP
       }
     }
-    // Current API URL
     const url = this.getIpfsApiUrl()
-    // Check
     if (url === undefined || url == null || url.toString().trim() === '') {
       throw new Error('Undefined IPFS API URL...')
     }
-    // HTTP Client
-    const client = this.ipfsClients.get(url.toString())
-    if (client !== undefined) {
-      // Log
-      $tw.ipfs.getLogger().info(`Reuse IPFS provider: "${client.provider}"`)
-      // Done
-      return {
-        ipfs: client.ipfs,
-        provider: client.provider,
-      }
-    }
-    // Build a new HTTP client
-    const policy = await this.ipfsWrapper.getHttpIpfsClient(url)
-    const ipfs = policy.ipfs
-    const provider = policy.provider
-    // Store
-    this.ipfsClients.set(url.toString(), { ipfs, provider })
-    // Log
-    $tw.ipfs.getLogger().info(`New IPFS provider: "${policy.provider}"`)
-    // Done
+    const { ipfs, provider } = await this.ipfsWrapper.getHttpIpfsClient(url)
     return {
       ipfs: ipfs,
       provider: provider,
@@ -670,11 +648,11 @@ ${url}`
   }
 
   IpfsController.prototype.loadErudaLibrary = async function () {
-    return await this.ipfsBundle.loadErudaLibrary()
+    await this.ipfsBundle.loadErudaLibrary()
   }
 
   IpfsController.prototype.loadEthSigUtilLibrary = async function () {
-    return await this.ipfsBundle.loadEthSigUtilLibrary()
+    await this.ipfsBundle.loadEthSigUtilLibrary()
   }
 
   IpfsController.prototype.deflate = function (str) {

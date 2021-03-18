@@ -1,7 +1,10 @@
 'use strict'
 
+const Mutex = require('async-mutex').Mutex
+
 var IpfsLoader = function (ipfsBundle) {
   this.ipfsBundle = ipfsBundle
+  this.mutex = new Mutex()
   this.name = 'ipfs-loader'
 }
 
@@ -9,50 +12,25 @@ IpfsLoader.prototype.getLogger = function () {
   return this.ipfsBundle.getLogger()
 }
 
-// https://www.srihash.org/
-IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj, module) {
-  if (globalThis[obj] === undefined) {
-    const tiddler = $tw.wiki.getTiddler(title)
-    if (tiddler) {
-      const sourceUri = tiddler.fields._source_uri
-      const sourceSri = tiddler.fields._source_sri
-      const loaded = await this.loadLibrary(title, sourceUri, sourceSri, module)
-      if (loaded !== undefined && globalThis[obj] !== undefined) {
-        this.getLogger().info(
-          `Loaded ${title}:
-${sourceUri}`
-        )
-        return true
-      }
-      throw new Error(`Unable to load Library: ${title}`)
-    }
-    throw new Error(`Undefined Library: ${title}`)
-  }
-  return false
-}
-
 // https://github.com/liriliri/eruda
 IpfsLoader.prototype.loadErudaLibrary = async function () {
   if (typeof globalThis.eruda === 'undefined') {
-    return await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda', true)
   }
-  return false
 }
 
 // https://github.com/ethers-io/ethers.js/
 IpfsLoader.prototype.loadEtherJsLibrary = async function () {
   if (typeof globalThis.ethers === 'undefined') {
-    return await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
   }
-  return false
 }
 
 // https://github.com/xmaysonnave/eth-sig-util
 IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
   if (typeof globalThis.sigUtil === 'undefined') {
-    return await this.loadTiddlerLibrary('$:/ipfs/library/eth-sig-util', 'sigUtil', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/eth-sig-util', 'sigUtil', true)
   }
-  return false
 }
 
 // https://github.com/ipfs/js-ipfs-http-client
@@ -60,7 +38,6 @@ IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
   if (typeof globalThis.IpfsHttpClient === 'undefined') {
     await this.loadTiddlerLibrary('$:/ipfs/library/ipfs-http-client', 'IpfsHttpClient', true)
   }
-  return false
 }
 
 /*eslint no-new:"off",no-new-func:"off"*/
@@ -73,8 +50,35 @@ IpfsLoader.prototype.supportDynamicImport = function () {
   }
 }
 
+// https://www.srihash.org/
+IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj, isModule) {
+  if (globalThis[obj] !== undefined && globalThis[obj] !== null) {
+    return
+  }
+  const self = this
+  const tiddler = $tw.wiki.getTiddler(title)
+  if (tiddler === undefined || tiddler == null) {
+    throw new Error(`Undefined Library: ${title}`)
+  }
+  const sourceUri = tiddler.fields._source_uri
+  const sourceSri = tiddler.fields._source_sri
+  await this.mutex.runExclusive(async () => {
+    if (globalThis[obj] === undefined || globalThis[obj] == null) {
+      const loaded = await self.loadLibrary(title, sourceUri, sourceSri, isModule)
+      if (loaded !== undefined && loaded !== null && globalThis[obj] !== undefined && globalThis[obj] !== null) {
+        self.getLogger().info(
+          `Loaded ${title}:
+ ${sourceUri}`
+        )
+        return
+      }
+      throw new Error(`Unable to load Library: ${title}`)
+    }
+  })
+}
+
 // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
-IpfsLoader.prototype.loadLibrary = function (id, url, sri, asModule) {
+IpfsLoader.prototype.loadLibrary = function (id, url, sri, isModule) {
   // Dynamic import
   // if (this.supportDynamicImport()) {
   //   try {
@@ -109,7 +113,7 @@ IpfsLoader.prototype.loadLibrary = function (id, url, sri, asModule) {
       cleanup()
     }
     // Attributes
-    if (asModule) {
+    if (isModule) {
       script.type = 'module'
     } else {
       script.type = 'text/javascript'
@@ -156,7 +160,7 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
       const ua = new Uint8Array(ab)
       this.getLogger().info(
         `[${response.status}] Loaded:
-  ${response.url}`
+ ${response.url}`
       )
       return ua
     }
@@ -195,7 +199,7 @@ IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
           }
           self.getLogger().info(
             `[${xhr.status}] Loaded:
-${xhr.responseURL}`
+ ${xhr.responseURL}`
           )
           resolve(result)
         } catch (error) {

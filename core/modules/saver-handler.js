@@ -163,7 +163,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     if (method === 'autosave' && this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes') {
       return false
     }
-    if ($tw.browser && typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey()) {
+    if ($tw.browser && typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey() && typeof globalThis.sigUtil === 'undefined') {
       await $tw.ipfs.loadEthSigUtilLibrary()
     }
     var variables = options.variables || {}

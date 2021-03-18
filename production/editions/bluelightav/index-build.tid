@@ -1,8 +1,8 @@
-title: bluelightav-build
+title: index-build
 tags: $:/ipfs/editions
 _favicon_size: 4297
-_favicon_uri: ipfs://bafybeibdjmzfwny2kv3uws3cgm6kuucwautmfq5g3vbdgckpupl54fyqhy/favicon.ico
+_favicon_uri: ipfs://bafybeicdtc3iykuo3qsj7rswifw3w2ghu74kdli4jme2garntk5bohuij4/favicon.ico
 _name: index
-_source_size: 1355674
-_source_uri: ipfs://bafybeibdjmzfwny2kv3uws3cgm6kuucwautmfq5g3vbdgckpupl54fyqhy/index.html
-_version: 0.4.0-beta-tw-v5.1.23+build-210317384
+_source_size: 1364425
+_source_uri: ipfs://bafybeicdtc3iykuo3qsj7rswifw3w2ghu74kdli4jme2garntk5bohuij4/index.html
+_version: 0.4.0-beta-tw-v5.1.23+build-210318412

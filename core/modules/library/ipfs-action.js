@@ -311,7 +311,9 @@ IPFS Action
     }
     // Load library
     try {
-      await $tw.ipfs.loadErudaLibrary()
+      if (typeof globalThis.eruda === 'undefined') {
+        await $tw.ipfs.loadErudaLibrary()
+      }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
