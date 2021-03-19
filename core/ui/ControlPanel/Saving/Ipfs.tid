@@ -23,6 +23,14 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <td width="90%">''<$link to="$:/ipfs/saver/unpin"><<lingo Unpin/Description>></$link>''</td>
 <td width="10%"><$checkbox tiddler="$:/ipfs/saver/unpin" field="text" checked="yes" unchecked="no" default="no"/></td>
 </tr>
+<tr>
+<td width="90%">''<$link to="$:/ipfs/saver/ipns/resolve"><<lingo IPNS/Resolve/Description>></$link>''</td>
+<td width="10%"><$checkbox tiddler="$:/ipfs/saver/ipns/resolve" field="text" checked="yes" unchecked="no" default="no"/></td>
+</tr>
+<tr>
+<td width="90%">''<$link to="$:/ipfs/saver/eth-link/resolve"><<lingo ethLink/Resolve/Description>></$link>''</td>
+<td width="10%"><$checkbox tiddler="$:/ipfs/saver/eth-link/resolve" field="text" checked="yes" unchecked="no" default="no"/></td>
+</tr>
 </tbody>
 </table>
 

@@ -12,8 +12,6 @@ IPFS plugin version
   /*global $tw:false*/
   'use strict'
 
-  const buildName = 'ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/'
-
   /*
    * Information about this macro
    */
@@ -25,6 +23,11 @@ IPFS plugin version
    * Run the macro
    */
   exports.run = function () {
-    return `${buildName}${$tw.wiki.getTiddler('$:/library/ipfs-modules.js').fields.version}/tiddlywiki-ipfs/library/`
+    const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
+    const library = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/library/ipfs-modules.js') : null
+    if (buildName !== null && library !== null) {
+      return `${buildName.fields.text}/${library.fields.version}/tiddlywiki-ipfs/library/`
+    }
+    return 'Unavailable...'
   }
 })()

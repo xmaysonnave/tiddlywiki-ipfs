@@ -85,19 +85,24 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base
     throw new Error('Undefined IPNS identifiers...')
   }
   path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
-  var found = false
   var ipnsKey = null
+  if (this.ipfsBundle.getCid(identifier) !== null) {
+    ipnsKey = identifier
+  }
+  var found = false
   var keys = null
   var normalizedUrl = null
-  try {
-    // Only the server who generates the key has the knowledge
-    keys = await this.getIpnsKeys(ipfs)
-  } catch (error) {
-    this.getLogger().error(error)
+  if ($tw.utils.getIpnsResolve() || ipnsKey == null) {
+    try {
+      // Load IPNS keys
+      keys = await this.getIpnsKeys(ipfs)
+    } catch (error) {
+      this.getLogger().error(error)
+    }
   }
   // Do our best
-  if (ipnsName !== null && identifier !== null) {
-    if (keys !== null && keys !== undefined && Array.isArray(keys)) {
+  if (keys !== null && keys !== undefined && Array.isArray(keys)) {
+    if (ipnsName !== null && identifier !== null) {
       for (var index = 0; index < keys.length; index++) {
         const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base32', false).toString()
         const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base36', false).toString()
@@ -107,9 +112,7 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base
           break
         }
       }
-    }
-  } else if (ipnsName !== null) {
-    if (keys !== null && keys !== undefined && Array.isArray(keys)) {
+    } else if (ipnsName !== null) {
       for (var index = 0; index < keys.length; index++) {
         if (keys[index].name === ipnsName) {
           ipnsKey = keys[index].id
@@ -117,9 +120,7 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base
           break
         }
       }
-    }
-  } else {
-    if (keys !== null && keys !== undefined && Array.isArray(keys)) {
+    } else {
       for (var index = 0; index < keys.length; index++) {
         const cidv1b32 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base32', false).toString()
         const cidv1b36 = this.ipfsBundle.cidToLibp2pKeyCidV1(keys[index].id, 'base36', false).toString()
@@ -131,13 +132,11 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base
         }
       }
     }
-  }
-  if (found === false) {
-    // Unable to resolve the keys, check if identifier is an IPFS cid
-    if (this.ipfsBundle.getCid(identifier) == null) {
-      throw new Error('Unknown IPNS identifier...')
+    if (found === false) {
+      if (this.ipfsBundle.getCid(identifier) == null) {
+        throw new Error('Unknown IPNS identifier...')
+      }
     }
-    ipnsKey = identifier
   }
   // Path
   const startPath = `/${ipnsKeyword}/${ipnsKey}`

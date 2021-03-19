@@ -6,10 +6,17 @@ type: text/vnd.tiddlywiki
 <h2>IPFS Quick Start</h2>
 <h4>Current</h4>
 <ul>
-  <li>[[IPFS with TiddlyWiki Boot|$:/boot/boot.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/boot/boot.js-build">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Documentation|IPFS Documentation]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/ipfs/documentation-build">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Library|$:/library/ipfs-modules.js]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/library/ipfs-modules.js-build">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS with TiddlyWiki Plugin|$:/plugins/ipfs]] <$ipfslink field="_source_uri" text="_owner" tiddler="$:/plugins/ipfs-build">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<boot-boot-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS Documentation|IPFS Documentation Assets]] {{IPFS Documentation Assets!!version}} <$ipfslink value=<<ipfs-documentation-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/library/ipfs-modules.js]] {{$:/library/ipfs-modules.js!!version}} <$ipfslink value=<<library-ipfs-modules-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<plugins-ipfs-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+</ul>
+<h4>Latest</h4>
+<ul>
+  <li>`$:/boot/boot.js` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/boot/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`IPFS Documentation` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/documentation/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/library/ipfs-modules.js`  <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/library/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/plugins/ipfs` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/plugin/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Release</h4>
 <ul>

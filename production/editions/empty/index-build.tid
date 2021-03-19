@@ -1,8 +1,8 @@
 title: index-build
 tags: $:/ipfs/editions
 _favicon_size: 4297
-_favicon_uri: ipfs://bafybeicecbzsvzv5tr6ynnmhznmazjttkbmxc7dk4j2btngvmbnbler5oa/favicon.ico
+_favicon_uri: ipfs://bafybeibst6tib5wx6tdv5kj6vod3h2nx7d2vnouvjeorymyez56527b3na/favicon.ico
 _name: index
-_source_size: 1170296
-_source_uri: ipfs://bafybeicecbzsvzv5tr6ynnmhznmazjttkbmxc7dk4j2btngvmbnbler5oa/index.html
-_version: 0.4.0-beta-tw-v5.1.23+build-210318412
+_source_size: 1170654
+_source_uri: ipfs://bafybeibst6tib5wx6tdv5kj6vod3h2nx7d2vnouvjeorymyez56527b3na/index.html
+_version: 0.4.0-beta-tw-v5.1.23+build-210319369

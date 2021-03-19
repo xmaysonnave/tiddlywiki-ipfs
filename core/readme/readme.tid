@@ -47,14 +47,14 @@ Resources:
 
 Current:
 
-* [[$:/boot/boot.js]] <<boot-boot-version>> <$ipfslink value=<<boot-boot-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
-* [[$:/library/ipfs-modules.js]] <<library-ipfs-modules-version>> <$ipfslink value=<<library-ipfs-modules-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
+* [[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<boot-boot-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
+* [[$:/library/ipfs-modules.js]] {{$:/library/ipfs-modules.js!!version}} <$ipfslink value=<<library-ipfs-modules-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
 
 Built:
 
-* `$:/boot/boot.js` <<boot-boot-build-version>> <$ipfslink value=<<boot-boot-build-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
-* `$:/library/ipfs-modules.js` <<library-ipfs-modules-build-version>> <$ipfslink value=<<library-ipfs-modules-build-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
-* `$:/plugins/ipfs` <<plugins-ipfs-version>> <$ipfslink value=<<plugins-ipfs-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
+* `$:/boot/boot.js` {{$:/boot/boot.js-build!!_version}} <$ipfslink value={{$:/boot/boot.js-build!!_source_uri}}>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
+* `$:/library/ipfs-modules.js` {{$:/library/ipfs-modules.js-build!!_version}} <$ipfslink value={{$:/library/ipfs-modules.js-build!!_source_uri}}>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
+* [[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<plugins-ipfs-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink>
 
 Latest:
 

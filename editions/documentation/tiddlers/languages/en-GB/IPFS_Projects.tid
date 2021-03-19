@@ -8,6 +8,7 @@ type: text/vnd.tiddlywiki
   Here is an exhaustive list of involved projects with <b>IPFS with ~TiddlyWiki</b>
 </p>
 <ol>
+  <li>[ext[Async Mutex|https://github.com/DirtyHairy/async-mutex]]</li>
   <li>[ext[Babel|https://github.com/babel]]</li>
   <li>[ext[Beyond Compare|https://www.scootersoftware.com/]]</li>
   <li>[ext[Buffer|https://github.com/feross/buffer]]</li>

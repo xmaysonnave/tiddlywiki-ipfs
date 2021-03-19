@@ -1,6 +1,7 @@
 title: IPFS Documentation Assets
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
+version: %BUILD_DOCUMENTATION_VERSION%
 _export_uri: doc.bluelightav.eth
 
 {{{[tag[$:/ipfs/documentation]]}}}

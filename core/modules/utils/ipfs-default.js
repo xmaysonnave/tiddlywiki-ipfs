@@ -15,6 +15,24 @@ IPFS Default
   /*eslint no-unused-vars:"off"*/
   const ipfsDefaultName = 'ipfs-default'
 
+  exports.getEthLinkResolve = function () {
+    var resolve = null
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/eth-link/resolve')
+    if (tiddler !== undefined && tiddler !== null) {
+      var text = tiddler.fields.text
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
+      if (text !== null) {
+        resolve = text
+      }
+    }
+    if (resolve == null) {
+      resolve = false // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+    } else {
+      resolve = resolve === 'yes'
+    }
+    return resolve
+  }
+
   /*
    * Retrieve ipfs saver export protocol with default value if applicable
    */
@@ -187,7 +205,7 @@ IPFS Default
       }
     }
     if (verbose == null) {
-      verbose = true // default, see Ipfs.tid
+      verbose = true // default, see $:/core/ui/ControlPanel/Saving/Ipfs
     } else {
       verbose = verbose === 'yes'
     }
@@ -208,7 +226,7 @@ IPFS Default
       }
     }
     if (pin == null) {
-      pin = true // default, see Ipfs.tid
+      pin = true // default, see $:/core/ui/ControlPanel/Saving/Ipfs
     } else {
       pin = pin === 'yes'
     }
@@ -229,7 +247,7 @@ IPFS Default
       }
     }
     if (unpin == null) {
-      unpin = false // default, see Ipfs.tid
+      unpin = false // default, see $:/core/ui/ControlPanel/Saving/Ipfs
     } else {
       unpin = unpin === 'yes'
     }
@@ -286,5 +304,23 @@ IPFS Default
    */
   exports.getIpfsDefaultProvider = function () {
     return 'http'
+  }
+
+  exports.getIpnsResolve = function () {
+    var resolve = null
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/resolve')
+    if (tiddler !== undefined && tiddler !== null) {
+      var text = tiddler.fields.text
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
+      if (text !== null) {
+        resolve = text
+      }
+    }
+    if (resolve == null) {
+      resolve = false // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+    } else {
+      resolve = resolve === 'yes'
+    }
+    return resolve
   }
 })()

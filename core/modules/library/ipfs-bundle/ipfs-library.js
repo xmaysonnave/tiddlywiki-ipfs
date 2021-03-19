@@ -504,7 +504,6 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
     }
     const client = this.ipfsClients.get(apiUrl.toString())
     if (client !== undefined) {
-      $tw.ipfs.getLogger().info(`Reuse IPFS provider: "${apiUrl}"`)
       return {
         ipfs: client.ipfs,
         provider: client.provider,
@@ -521,7 +520,6 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
       }
       const client = self.ipfsClients.get(apiUrl.toString())
       if (client !== undefined) {
-        $tw.ipfs.getLogger().info(`Reuse IPFS provider: "${apiUrl}"`)
         return {
           ipfs: client.ipfs,
           provider: client.provider,
