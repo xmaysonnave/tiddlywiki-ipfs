@@ -78,13 +78,14 @@ IpfsWrapper.prototype.getIpfsClient = async function (url) {
   throw new Error('Failed to retrieve an IPFS provider...')
 }
 
-IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base, path, ipnsName) {
+IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base, path, ipnsName, resolveIpns) {
   identifier = identifier !== undefined && identifier !== null && identifier.toString().trim() !== '' ? identifier.toString().trim() : null
   ipnsName = ipnsName !== undefined && ipnsName !== null && ipnsName.trim() !== '' ? ipnsName.trim() : null
   if (identifier == null && ipnsName == null) {
     throw new Error('Undefined IPNS identifiers...')
   }
   path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
+  resolveIpns = resolveIpns !== undefined ? resolveIpns === 'true' : false
   var ipnsKey = null
   if (this.ipfsBundle.getCid(identifier) !== null) {
     ipnsKey = identifier
@@ -92,7 +93,7 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base
   var found = false
   var keys = null
   var normalizedUrl = null
-  if ($tw.utils.getIpnsResolve() || ipnsKey == null) {
+  if (resolveIpns || ipnsKey == null) {
     try {
       // Load IPNS keys
       keys = await this.getIpnsKeys(ipfs)

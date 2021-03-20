@@ -345,9 +345,9 @@ ${ipfsPath}`
     return await this.ipfsWrapper.resolveIpfsContainer(ipfs, url)
   }
 
-  IpfsController.prototype.getIpnsIdentifier = async function (identifier, base, path, ipnsName) {
+  IpfsController.prototype.getIpnsIdentifier = async function (identifier, base, path, ipnsName, resolveIpns) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, base, path, ipnsName)
+    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, base, path, ipnsName, resolveIpns)
   }
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
@@ -462,7 +462,7 @@ ${ipfsPath}`
     }
     var cid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifier(ipnsIdentifier, base, path)
+    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifier(ipnsIdentifier, base, path, null, resolveIpns)
     if (resolveIpns) {
       $tw.ipfs.getLogger().info(
         `Resolving IPNS key:

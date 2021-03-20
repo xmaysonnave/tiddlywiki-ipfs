@@ -17,14 +17,14 @@ const ipfsBundle = new IpfsBundle()
 const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
 
-async function loadFromIpfs (url, stream) {
+async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
   const options = {
     compress: false,
     method: 'GET',
-    timeout: longTimeout,
+    timeout: timeout !== undefined ? timeout : longTimeout,
   }
   const response = await fetch(url, options)
   if (response.ok === false) {

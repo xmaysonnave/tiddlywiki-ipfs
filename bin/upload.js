@@ -20,14 +20,14 @@ const IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2n
 const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
 
-async function loadFromIpfs (url, stream) {
+async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
   const options = {
     compress: false,
     method: 'GET',
-    timeout: longTimeout,
+    timeout: timeout !== undefined ? timeout : longTimeout,
   }
   const response = await fetch(url, options)
   if (response.ok === false) {
@@ -270,21 +270,6 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     current.push(node)
   }
   fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
-  // Build
-  if (name === '$:/plugins/ipfs.js') {
-    fs.writeFileSync(
-      './current/build.json',
-      beautify(
-        {
-          _version: build._version,
-        },
-        null,
-        2,
-        80
-      ),
-      'utf8'
-    )
-  }
   // Tiddler
   var tid = `title: ${node._name}-build`
   if (tags !== null) {

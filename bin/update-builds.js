@@ -55,14 +55,14 @@ module.exports = class UpdateBuilds {
     this.ipfsBundle.init()
   }
 
-  async loadFromIpfs (url, stream) {
+  async loadFromIpfs (url, timeout, stream) {
     if (url instanceof URL === false) {
       url = new URL(url)
     }
     const options = {
       compress: false,
       method: 'GET',
-      timeout: this.longTimeout,
+      timeout: timeout !== undefined ? timeout : this.longTimeout,
     }
     const response = await fetch(url, options)
     if (response.ok === false) {
@@ -261,21 +261,11 @@ ${this.gateway}${value} ***`)
         await this.loadFromIpfs(rawBuildUri)
         console.log(`*** Fetched new raw build node:
  ${rawBuildUri} ***`)
-      } else if (this.previousRawBuildCid !== null) {
-        const rawBuildUri = `${this.gateway}/ipfs/${this.previousRawBuildCid}/`
-        await this.loadFromIpfs(rawBuildUri)
-        console.log(`*** Fetched previous raw build node:
- ${rawBuildUri} ***`)
       }
       if (this.newBuildCid !== null) {
         const buildUri = `${this.gateway}/ipfs/${this.newBuildCid}/`
         await this.loadFromIpfs(buildUri)
         console.log(`*** Fetched new build node:
- ${buildUri} ***`)
-      } else if (this.previousBuildCid !== null) {
-        const buildUri = `${this.gateway}/ipfs/${this.previousBuildCid}/`
-        await this.loadFromIpfs(buildUri)
-        console.log(`*** Fetched previous build node:
  ${buildUri} ***`)
       }
     }
@@ -348,7 +338,10 @@ ${this.gateway}${value} ***`)
         var build = null
         var buildCid = null
         try {
-          build = await this.loadFromIpfs(`${this.gateway}/ipfs/${links[i].Hash}/current/build.json`)
+          if (links[i].Name === 'previous') {
+            continue
+          }
+          build = await this.loadFromIpfs(`${this.gateway}/ipfs/${links[i].Hash}/current/build.json`, this.shortTimeout)
           build = JSON.parse(this.ipfsBundle.Utf8ArrayToStr(build))
           var { cid: buildCid } = this.ipfsBundle.getIpfsIdentifier(build._source_uri)
           if (buildCid === undefined || buildCid == null) {
@@ -459,7 +452,7 @@ ${this.gateway}${value} ***`)
         if (published.Hash !== undefined && published.Hash !== null) {
           console.log(`*** Build is already published: ${published.Name}
  ${this.gateway}/ipfs/${published.Hash} ***`)
-          return null
+          return rawBuildNode.value.Links
         }
       }
     }

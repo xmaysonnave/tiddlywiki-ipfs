@@ -499,9 +499,9 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
   }
   const self = this
   try {
-    if (typeof globalThis.IpfsHttpClient === 'undefined') {
-      await this.ipfsBundle.loadIpfsHttpLibrary()
-    }
+    // if (typeof globalThis.IpfsHttpClient === 'undefined') {
+    //   await this.ipfsBundle.loadIpfsHttpLibrary()
+    // }
     const client = this.ipfsClients.get(apiUrl.toString())
     if (client !== undefined) {
       return {
@@ -528,6 +528,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({
+            loadHttpClientModule: () => require('ipfs-http-client'),
             apiAddress: {
               protocol: protocol,
               host: apiUrl.hostname,
