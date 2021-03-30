@@ -1,22 +1,30 @@
-[
-  {
-    "title": "$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210320354",
-    "tags": "$:/ipfs/documentation",
-    "_name": "$:/ipfs/documentation",
-    "_owner": "$:/ipfs/documentation",
-    "_raw_hash": "49f909c20f0f2dcd7ced727929669c650d9dd7a0e89f72a03aaf75eb336d410b",
-    "_source_size": 78266,
-    "_source_uri": "https://bluelight.link/ipfs/bafybeibiwnidvvsv6eobhjr4cclxk5zsxcdj6qi5jnlz2khoofntufrsp4/$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210320354.json",
-    "_version": "0.4.0-beta-tw-v5.1.23+build-210320354"
-  },
-  {
-    "title": "$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210320354",
-    "tags": "$:/ipfs/documentation",
-    "_name": "$:/ipfs/documentation.zlib",
-    "_owner": "$:/ipfs/documentation",
-    "_raw_hash": "bd8c196ade0132aef464f59a644b625e54011cf91ebea04ae8311c2040463458",
-    "_source_size": 23635,
-    "_source_uri": "https://bluelight.link/ipfs/bafybeiciaajjqxotltpdboqahivnban54ds36cmf3q2s67qymcjcz2bgjy/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210320354.json",
-    "_version": "0.4.0-beta-tw-v5.1.23+build-210320354"
-  }
-]
+{
+  "build": "210330433",
+  "content": [
+    {
+      "title": "$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210330433",
+      "tags": "$:/ipfs/documentation",
+      "name": "$:/ipfs/documentation",
+      "owner": "$:/ipfs/documentation",
+      "rawHash": "767aab5a807e9c65b32b35d90e88221ba7d58709489deab90e18f151c7ded8da",
+      "sourceSize": 78299,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigwv3mlx5fbfup7fgcp6jfg2n32byoici5nilwpapvpxcoaa4kn2u/$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210330433.json",
+      "version": "0.4.0-beta-tw-v5.1.23+build-210330433",
+      "tidSize": 433,
+      "tidUri": "https://bluelight.link/ipfs/bafybeien24txhkdpeo47w3pgeaymlkkyohizzwvhduz2sgqi4sqd6v3ie4/$_ipfs_documentation-build.tid"
+    },
+    {
+      "title": "$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210330433",
+      "tags": "$:/ipfs/documentation",
+      "name": "$:/ipfs/documentation.zlib",
+      "owner": "$:/ipfs/documentation",
+      "rawHash": "db2cdcd5db5abba2cd9a5c5d09ecf23b4802eb33e88f48263281d7586f94b115",
+      "sourceSize": 23639,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigrcuy332wbopdxrd7ekf3kgl3qtjaiw6xmk7smsgolx76dnwfknq/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210330433.json",
+      "version": "0.4.0-beta-tw-v5.1.23+build-210330433",
+      "tidSize": 453,
+      "tidUri": "https://bluelight.link/ipfs/bafybeieucia6rslsblue2it3y2g4uwsh6akufqeas3ywmgv6jhu56mkgcm/$_ipfs_documentation.zlib-build.tid"
+    }
+  ],
+  "build_uri": "https://bluelight.link/ipfs/bafybeicb52otu67wcngr2s4kwubiyp2a5ool5jk52zcp3s4ukni7lbtsjq/210330433/"
+}

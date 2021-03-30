@@ -371,9 +371,9 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 - testc
 - testw
 - tiddlywiki-ipfs
-- update-builds
+- update
+- upload-build
 - upload
-- upload-node
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 

@@ -26,7 +26,7 @@ IPFS plugin version
     const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
     const library = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/library/ipfs-modules.js') : null
     if (buildName !== null && library !== null) {
-      return `${buildName.fields.text}/${library.fields.version}/tiddlywiki-ipfs/library/`
+      return `${buildName.fields.text}/${library.fields.build}/tiddlywiki-ipfs/library/`
     }
     return 'Unavailable...'
   }

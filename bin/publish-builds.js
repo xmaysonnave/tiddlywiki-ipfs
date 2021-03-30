@@ -8,7 +8,7 @@ const IpfsHttpClient = require('ipfs-http-client')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
-const UpdateBuilds = require('./update-builds.js')
+const Update = require('./update.js')
 
 // bluelight.link
 const IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
@@ -145,7 +145,7 @@ module.exports = async function main (dir, pin, load) {
   if (fs.existsSync(path)) {
     const current = fs.readFileSync(path)
     const jsonObject = JSON.parse(current)
-    const sourceUri = jsonObject._source_uri
+    const sourceUri = jsonObject.sourceUri
     var { cid } = ipfsBundle.getIpfsIdentifier(sourceUri)
     console.log(`*** Publish current build:
  ${gateway}/ipfs/${cid} ***`)
@@ -216,9 +216,35 @@ module.exports = async function main (dir, pin, load) {
       }
     }
   }
+  //     // Publish
+  //     if (this.previousRawBuildCid == null || (this.previousRawBuildCid !== null && this.previousRawBuildCid.toString() !== cidV1.toString())) {
+  //       console.log(`*** Publish raw build node:
+  // ${this.gateway}/ipns/${this.rawBuildName}
+  // ${this.gateway}${cidV1} ***`)
+  //       const { name, value } = await this.ipfsBundle.namePublish(api, this.rawBuildName, cidV1, {
+  //         resolve: false,
+  //         key: this.rawBuildName,
+  //         allowOffline: false,
+  //         timeout: this.longTimeout,
+  //       })
+  //       console.log(`*** Published raw build node:
+  // ${this.gateway}/ipns/${name}
+  // ${this.gateway}${value} ***`)
+  //     }
+  //   const { name, value } = await this.ipfsBundle.namePublish(api, this.buildName, this.newBuildCid, {
+  //     resolve: false,
+  //     key: this.buildName,
+  //     allowOffline: false,
+  //     timeout: this.longTimeout,
+  //   })
+  //   console.log(
+  //     `*** Published build node:
+  // ${this.gateway}/ipns/${name}
+  // ${this.gateway}${value} ***`
   // Build node
   var buildCid = await resolveIPNS(api, gateway, buildName)
   if (buildCid !== null) {
+    console.log('***')
     console.log(`*** Publish build node:
  ${gateway}/ipns/${buildName}
  ${gateway}/ipfs/${buildCid} ***`)
@@ -234,8 +260,8 @@ module.exports = async function main (dir, pin, load) {
  ${gateway}/ipns/${name}
  ${gateway}${value} ***`)
     } else {
-      const build = new UpdateBuilds(load)
-      const newBuildCid = await build.publishProductionBuildNode(api, links)
+      const updater = new Update(load)
+      const newBuildCid = await updater.publishProductionBuildNode(api, links)
       await manageUnpin(api, gateway, buildCid, false)
       await managePin(api, gateway, newBuildCid, true)
     }

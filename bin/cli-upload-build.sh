@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** cli-upload-node ***'
+echo '*** cli-upload-build ***'
 echo '***'
 
 # nvm
@@ -10,7 +10,7 @@ echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
 # build
-node ./bin/cli-upload-node.js "$@" || exit 1
+node ./bin/cli-upload-build.js "$@" || exit 1
 
 # done
 exit 0

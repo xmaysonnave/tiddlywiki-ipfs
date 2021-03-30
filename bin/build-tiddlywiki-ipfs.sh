@@ -9,12 +9,11 @@ echo '***'
 # build plugin
 ./bin/tiddlywiki-ipfs/build.sh "$@" || exit 1
 
-# build node
-./bin/cli-upload-node.sh \
-  --dir=. "$@" || exit 1
+# build ipload
+./bin/cli-upload-build.sh "$@" || exit 1
 
-# update builds
-./bin/cli-update-builds.sh "$@" || exit 1
+# update
+./bin/cli-update.sh "$@" || exit 1
 
 # done
 exit 0

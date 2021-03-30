@@ -20,7 +20,7 @@
         "yes",
 			"--rendertiddler",
         "$:/core/save/all",
-        "./editions/tiddlywiki/index.html",
+        "./editions/tiddlywiki/tiddlywiki-%BUILD_TIDDLYWIKI_VERSION%.html",
         "text/plain"
     ],
 		"favicon": [

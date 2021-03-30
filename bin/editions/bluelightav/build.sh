@@ -50,23 +50,18 @@ yarn tiddlywiki-ipfs build \
   --build \
   --verbose || exit 1
 
-# init
-rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers/config > /dev/null 2>&1
-
 # assets
-cp ./editions/bluelightav/tiddlywiki.info ./build/tiddlywiki.info || exit 1
-cp ./production/tiddlywiki-ipfs/documentation/\$_ipfs_documentation-build.tid ./build/tiddlers/config/\$_ipfs_documentation-build.tid || exit 1
-
-# update tiddlywiki.info
-node ./bin/update-info.js "$@" || exit 1
+cp -R ./editions/bluelightav/* ./build || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index \
+  --name=bluelightav \
   --extension=html \
   --dir=editions/bluelightav \
   --env=BLUELIGHTAV "$@" || exit 1
+
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 echo '***'
 echo '*** bluelightav ***'
@@ -78,7 +73,7 @@ yarn tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=index \
+  --name=bluelightav \
   --extension=html \
   --dir=editions/bluelightav \
   --tags=$:/ipfs/editions "$@" || exit 1

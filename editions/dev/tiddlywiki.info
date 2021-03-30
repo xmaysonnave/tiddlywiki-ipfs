@@ -33,7 +33,7 @@
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
-        "./editions/dev/index.html",
+        "./editions/dev/dev-%BUILD_DEV_VERSION%.html",
         "text/plain",
       "--clearkeys"
     ],

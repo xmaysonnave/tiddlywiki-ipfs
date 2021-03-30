@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** cli-update-builds ***'
+echo '*** cli-update ***'
 echo '***'
 
 # nvm
@@ -10,7 +10,7 @@ echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
 # update builds
-node ./bin/cli-update-builds.js "$@" || exit 1
+node ./bin/cli-update.js "$@" || exit 1
 
 # done
 exit 0

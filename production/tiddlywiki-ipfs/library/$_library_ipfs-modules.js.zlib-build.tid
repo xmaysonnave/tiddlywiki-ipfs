@@ -1,7 +1,8 @@
 title: $:/library/ipfs-modules.js.zlib-build
 tags: $:/ipfs/core
-_name: $:/library/ipfs-modules.js.zlib
-_owner: $:/library/ipfs-modules.js
-_source_size: 52551
-_source_uri: ipfs://bafybeieb45g2gwug3lhk5l4bh47f4kpi5mytlvtt64mzqqkb72ymtcgrjy/$_library_ipfs-modules.js.zlib-1.0.0+build-210314370.json
-_version: 1.0.0+build-210314370
+build: 210330433
+name: $:/library/ipfs-modules.js.zlib
+owner: $:/library/ipfs-modules.js
+sourceSize: 52551
+sourceUri: ipfs://bafybeigvwq7fcwtnwe67plwefesbzygvydwhn4vnp3ub4jsail6k2232u4/$_library_ipfs-modules.js.zlib-1.0.0+build-210330433.json
+version: 1.0.0+build-210330433

@@ -33,6 +33,8 @@ Startup initialisation
       }
       log.info('loglevel is set up...')
     }
+    // Browser build
+    $tw.ipfsBrowserBuild = $tw.utils.extractIpfsBrowserBuild()
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('application/x-tiddler-dictionary', 'utf8', '.dict')

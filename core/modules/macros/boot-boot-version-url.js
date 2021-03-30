@@ -26,7 +26,7 @@ IPFS plugin version
     const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
     const boot = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/boot/boot.js') : null
     if (buildName !== null && boot !== null) {
-      return `${buildName.fields.text}/${boot.fields.version}/tiddlywiki-ipfs/boot/`
+      return `${buildName.fields.text}/${boot.fields.build}/tiddlywiki-ipfs/boot/`
     }
     return 'Unavailable...'
   }

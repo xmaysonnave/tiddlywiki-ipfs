@@ -1,7 +1,8 @@
 title: $:/ipfs/documentation.zlib-build
 tags: $:/ipfs/documentation
-_name: $:/ipfs/documentation.zlib
-_owner: $:/ipfs/documentation
-_source_size: 23635
-_source_uri: ipfs://bafybeiciaajjqxotltpdboqahivnban54ds36cmf3q2s67qymcjcz2bgjy/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210320354.json
-_version: 0.4.0-beta-tw-v5.1.23+build-210320354
+build: 210330433
+name: $:/ipfs/documentation.zlib
+owner: $:/ipfs/documentation
+sourceSize: 23639
+sourceUri: ipfs://bafybeigrcuy332wbopdxrd7ekf3kgl3qtjaiw6xmk7smsgolx76dnwfknq/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210330433.json
+version: 0.4.0-beta-tw-v5.1.23+build-210330433

@@ -31,7 +31,7 @@
         "yes",
 			"--rendertiddler",
         "$:/core/save/all",
-        "./editions/bluelightav/index.html",
+        "./editions/bluelightav/bluelightav-%BUILD_BLUELIGHTAV_VERSION%.html",
         "text/plain"
     ]
   }

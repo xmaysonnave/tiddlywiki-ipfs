@@ -33,13 +33,13 @@ function main () {
     }
     if (build !== undefined && build !== null) {
       const boot = JSON.parse(build)
-      if (boot._version === undefined || boot._version == null) {
+      if (boot.version === undefined || boot.version == null) {
         throw new Error('Unknown boot version...')
       }
       if (fs.existsSync('./build/tiddlywiki.info')) {
         replace({
           regex: '%BUILD_BOOT_VERSION%',
-          replacement: boot._version,
+          replacement: boot.version,
           paths: ['./build/tiddlywiki.info'],
           recursive: false,
           silent: true,
@@ -55,13 +55,13 @@ function main () {
     }
     if (build !== undefined && build !== null) {
       const library = JSON.parse(build)
-      if (library._version === undefined || library._version == null) {
+      if (library.version === undefined || library.version == null) {
         throw new Error('Unknown library version...')
       }
       if (fs.existsSync('./build/tiddlywiki.info')) {
         replace({
           regex: '%BUILD_LIBRARY_VERSION%',
-          replacement: library._version,
+          replacement: library.version,
           paths: ['./build/tiddlywiki.info'],
           recursive: false,
           silent: true,
@@ -77,13 +77,13 @@ function main () {
     }
     if (build !== undefined && build !== null) {
       const plugin = JSON.parse(build)
-      if (plugin._version === undefined || plugin._version == null) {
+      if (plugin.version === undefined || plugin.version == null) {
         throw new Error('Unknown plugin version...')
       }
       if (fs.existsSync('./build/tiddlywiki.info')) {
         replace({
           regex: '%BUILD_PLUGIN_VERSION%',
-          replacement: plugin._version,
+          replacement: plugin.version,
           paths: ['./build/tiddlywiki.info'],
           recursive: false,
           silent: true,
@@ -99,13 +99,13 @@ function main () {
     }
     if (build !== undefined && build !== null) {
       const doc = JSON.parse(build)
-      if (doc._version === undefined || doc._version == null) {
+      if (doc.version === undefined || doc.version == null) {
         throw new Error('Unknown documentation version...')
       }
       if (fs.existsSync('./build/tiddlywiki.info')) {
         replace({
           regex: '%BUILD_DOCUMENTATION_VERSION%',
-          replacement: doc._version,
+          replacement: doc.version,
           paths: ['./build/tiddlywiki.info'],
           recursive: false,
           silent: true,
@@ -113,9 +113,140 @@ function main () {
       }
       if (fs.existsSync('./build/tiddlers/assets/IPFS_Documentation_Assets.tid')) {
         replace({
-          regex: '%BUILD_DOCUMENTATION_VERSION%',
-          replacement: doc._version,
+          regex: '%BUILD_DOCUMENTATION_BUILD%',
+          replacement: doc.build,
           paths: ['./build/tiddlers/assets/IPFS_Documentation_Assets.tid'],
+          recursive: false,
+          silent: true,
+        })
+        replace({
+          regex: '%BUILD_DOCUMENTATION_VERSION%',
+          replacement: doc.version,
+          paths: ['./build/tiddlers/assets/IPFS_Documentation_Assets.tid'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
+    // bluelightav
+    var build = null
+    var path = './build/output/editions/bluelightav/bluelightav-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const buildObject = JSON.parse(build)
+      if (buildObject.version === undefined || buildObject.version == null) {
+        throw new Error('Unknown bluelightav version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_BLUELIGHTAV_VERSION%',
+          replacement: buildObject.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
+        replace({
+          regex: '%BUILD_BLUELIGHTAV_VERSION%',
+          replacement: `bluelightav-${buildObject.version}`,
+          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
+    // dev
+    var build = null
+    var path = './build/output/editions/dev/dev-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const buildObject = JSON.parse(build)
+      if (buildObject.version === undefined || buildObject.version == null) {
+        throw new Error('Unknown dev version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_DEV_VERSION%',
+          replacement: buildObject.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
+        replace({
+          regex: '%BUILD_DEV_VERSION%',
+          replacement: `dev-${buildObject.version}`,
+          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
+    // empty
+    var build = null
+    var path = './build/output/editions/empty/empty-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const buildObject = JSON.parse(build)
+      if (buildObject.version === undefined || buildObject.version == null) {
+        throw new Error('Unknown empty version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_EMPTY_VERSION%',
+          replacement: buildObject.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
+        replace({
+          regex: '%BUILD_EMPTY_VERSION%',
+          replacement: `empty-${buildObject.version}`,
+          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
+    // tiddlywiki
+    var build = null
+    var path = './build/output/editions/tiddlywiki/tiddlywiki-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const buildObject = JSON.parse(build)
+      if (buildObject.version === undefined || buildObject.version == null) {
+        throw new Error('Unknown tiddlywiki version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_TIDDLYWIKI_VERSION%',
+          replacement: buildObject.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
+        replace({
+          regex: '%BUILD_TIDDLYWIKI_VERSION%',
+          replacement: `tiddlywiki-${buildObject.version}`,
+          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
           recursive: false,
           silent: true,
         })

@@ -39,22 +39,18 @@ yarn tiddlywiki-ipfs build \
   --build \
   --verbose "$@" || exit 1
 
-# init
-rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers > /dev/null 2>&1
-
 # assets
-cp ./editions/empty/tiddlywiki.info ./build/tiddlywiki.info || exit 1
-
-# update tiddlywiki.info
-node ./bin/update-info.js "$@" || exit 1
+cp -R ./editions/empty/* ./build || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index \
+  --name=empty \
   --extension=html \
   --dir=editions/empty \
   --env=EMPTY "$@" || exit 1
+
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 echo '***'
 echo '*** empty ***'
@@ -66,7 +62,7 @@ yarn tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=index \
+  --name=empty \
   --extension=html \
   --dir=editions/empty \
   --tags=$:/ipfs/editions "$@" || exit 1

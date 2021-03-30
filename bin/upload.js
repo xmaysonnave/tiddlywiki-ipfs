@@ -72,60 +72,18 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   tags = tags !== undefined && tags !== null && tags.trim() !== '' ? tags.trim() : null
   load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
   // Build
-  const buildPath = `./build/output/${dir}/${normalizedName}-build.json`
+  var buildPath = `./build/output/${dir}/${normalizedName}-build.json`
   if (fs.existsSync(buildPath) === false) {
     throw new Error(`Unknown build: ${buildPath}...`)
   }
   const build = JSON.parse(fs.readFileSync(buildPath, 'utf8'))
-  if (build._version === undefined || build._version == null) {
+  if (build.build === undefined || build.build == null) {
+    throw new Error('Unknown build...')
+  }
+  if (build.version === undefined || build.version == null) {
     throw new Error('Unknown version...')
   }
   const rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : IPNS_RAW_BUILD_NAME
-  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
-  var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}` : null
-  if (publicGateway == null) {
-    publicGateway = gateway
-  }
-  var current = null
-  var member = null
-  var memberPosition = null
-  const currentPath = `./current/${dir}/current.json`
-  if (fs.existsSync(currentPath)) {
-    current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
-  } else {
-    const uri = `${gateway}/ipns/${rawBuildName}/latest-build/current/${dir}/current.json`
-    try {
-      const ua = await loadFromIpfs(uri)
-      current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
-      console.log(`*** Fetched:
- ${uri} ***`)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-  // Member lookup
-  if (current !== null) {
-    for (var j = 0; j < current.length; j++) {
-      if (current[j]._name === name) {
-        member = current[j]
-        memberPosition = j
-        break
-      }
-    }
-    // Check
-    if (member !== null) {
-      if (member._version === build._version) {
-        if (member._raw_hash !== build._raw_hash) {
-          throw new Error('Matching version but not raw hash...')
-        }
-      } else {
-        if (member._raw_hash === build._raw_hash) {
-          throw new Error('Raw hash inconsistency...')
-        }
-      }
-    }
-  }
-  // Ipfs
   const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
   const protocol = apiUrl.protocol.slice(0, -1)
   var port = apiUrl.port
@@ -135,6 +93,63 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
       port = 80
     }
   }
+  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
+  var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}` : null
+  if (publicGateway == null) {
+    publicGateway = gateway
+  }
+  console.log('***')
+  console.log(`*** Upload build: ${dir}
+ api: ${apiUrl}
+ gateway: ${new URL(gateway)}
+ public gateway: ${new URL(publicGateway)} ***`)
+  var current = null
+  var member = null
+  var memberPosition = null
+  const currentPath = `./current/${dir}/current.json`
+  if (fs.existsSync(currentPath)) {
+    current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
+  } else {
+    const uri = `${gateway}/ipns/${rawBuildName}/latest-build/${dir}/current.json`
+    try {
+      const ua = await loadFromIpfs(uri)
+      current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
+      console.log(`*** Fetched:
+ ${uri} ***`)
+    } catch (error) {
+      console.log(`*** Unable to fetch:
+ ${uri}
+ ${error.message} ***`)
+    }
+  }
+  // Member lookup
+  if (current !== null) {
+    for (var j = 0; j < current.content.length; j++) {
+      if (current.content[j].name === name) {
+        member = current.content[j]
+        memberPosition = j
+        break
+      }
+    }
+    if (member !== null) {
+      if (member.version === build.version) {
+        if (member.rawHash !== build.rawHash) {
+          throw new Error('Matching version but not raw hash...')
+        }
+      } else {
+        if (member.rawHash === build.rawHash) {
+          throw new Error('Raw hash inconsistency...')
+        }
+      }
+    }
+    current.build = build.build
+  } else {
+    current = {
+      build: build.build,
+      content: [],
+    }
+  }
+  // Ipfs
   const api = IpfsHttpClient({
     protocol: protocol,
     host: apiUrl.hostname,
@@ -143,7 +158,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   })
   const options = {
     chunker: 'rabin-262144-524288-1048576',
-    cidVersion: 0,
+    cidVersion: 1,
     hashAlg: 'sha2-256',
     pin: false,
     rawLeaves: false,
@@ -165,7 +180,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   }
   // Load content
   var source = null
-  var titleName = `${normalizedName}-${build._version}`
+  var titleName = `${normalizedName}-${build.version}`
   var sourceFileName = `${titleName}.${extension}`
   var sourcePath = `./production/${dir}/${sourceFileName}`
   if (fs.existsSync(sourcePath)) {
@@ -180,7 +195,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     }
   }
   if (source === undefined || source == null) {
-    throw new Error('Unknown content...')
+    throw new Error(`Unknown content: ${sourcePath}`)
   }
   // Upload
   var faviconCid = null
@@ -195,20 +210,27 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
       content: favicon,
     })
   }
-  upload.push({
-    path: `/${sourceFileName}`,
-    content: ipfsBundle.StringToUint8Array(source),
-  })
-  const added = await ipfsBundle.addAll(api, upload, options)
+  if (sourceFileName.endsWith('.html')) {
+    upload.push({
+      path: '/index.html',
+      content: ipfsBundle.StringToUint8Array(source),
+    })
+  } else {
+    upload.push({
+      path: `/${sourceFileName}`,
+      content: ipfsBundle.StringToUint8Array(source),
+    })
+  }
+  var added = await ipfsBundle.addAll(api, upload, options)
   for (const [key, value] of added.entries()) {
     if (value.path === '') {
       parentCid = key
-    } else if (value.path === sourceFileName) {
-      sourceCid = key
-      sourceSize = value.size
     } else if (value.path === faviconFileName) {
       faviconCid = key
       faviconSize = value.size
+    } else {
+      sourceCid = key
+      sourceSize = value.size
     }
   }
   if (parentCid === undefined || parentCid == null) {
@@ -218,17 +240,22 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     throw new Error('Unknown content cid...')
   }
   // Check
-  if (member !== null && member._version === build._version) {
-    var oldParentCid = await ipfsBundle.resolveIpfsContainer(api, member._source_uri)
+  if (member !== null && member.version === build.version) {
+    var oldParentCid = await ipfsBundle.resolveIpfsContainer(api, member.sourceUri)
     if (oldParentCid !== null && oldParentCid.toString() !== parentCid.toString()) {
       throw new Error('Matching version but not parent cid...')
     }
-    var { cid: oldSourceCid } = await ipfsBundle.resolveIpfs(api, member._source_uri)
+    var oldSourceCid = null
+    if (sourceFileName.endsWith('.html')) {
+      var { cid: oldSourceCid } = await ipfsBundle.resolveIpfs(api, `${member.sourceUri}index.html`)
+    } else {
+      var { cid: oldSourceCid } = await ipfsBundle.resolveIpfs(api, member.sourceUri)
+    }
     if (oldSourceCid !== null && oldSourceCid.toString() !== sourceCid.toString()) {
       throw new Error('Matching version but not content cid...')
     }
     if (faviconCid !== null) {
-      var { cid: oldFaviconCid } = await ipfsBundle.resolveIpfs(api, member._favicon_uri)
+      var { cid: oldFaviconCid } = await ipfsBundle.resolveIpfs(api, member.faviconUri)
       if (oldFaviconCid !== null && oldFaviconCid.toString() !== faviconCid.toString()) {
         throw new Error('Matching version but not favicon cid...')
       }
@@ -240,8 +267,13 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     console.log(`*** Added favicon ***
  ipfs://${parentCid}/${faviconFileName}`)
   }
-  console.log(`*** Added content ***
+  if (sourceFileName.endsWith('.html')) {
+    console.log(`*** Added content ***
+ ipfs://${parentCid}/index.html`)
+  } else {
+    console.log(`*** Added content ***
  ipfs://${parentCid}/${sourceFileName}`)
+  }
   // Json
   const node = {}
   node.title = titleName
@@ -249,61 +281,118 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     node.tags = tags
   }
   if (faviconCid !== null) {
-    node._favicon_size = faviconSize
-    node._favicon_uri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
+    node.faviconSize = faviconSize
+    node.faviconUri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
   }
-  node._name = name
+  node.name = name
   if (owner !== null) {
-    node._owner = owner
+    node.owner = owner
   }
-  node._raw_hash = build._raw_hash
-  node._source_size = sourceSize
-  node._source_uri = `${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
-  node._version = build._version
-  // Save current
-  if (current == null) {
-    current = []
-  }
-  if (memberPosition !== null) {
-    current[memberPosition] = node
+  node.rawHash = build.rawHash
+  node.sourceSize = sourceSize
+  if (sourceFileName.endsWith('.html')) {
+    node.sourceUri = `${publicGateway}/ipfs/${parentCid}/`
   } else {
-    current.push(node)
+    node.sourceUri = `${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
   }
-  fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
+  node.version = build.version
+  // Update current
+  if (memberPosition !== null) {
+    current.content[memberPosition] = node
+  } else {
+    current.content.push(node)
+  }
   // Tiddler
-  var tid = `title: ${node._name}-build`
+  var tid = `title: ${node.name}-build`
   if (tags !== null) {
     tid = `${tid}
 tags: ${node.tags}`
   }
+  tid = `${tid}
+build: ${current.build}`
   if (faviconCid !== null) {
     tid = `${tid}
-_favicon_size: ${node._favicon_size}
-_favicon_uri: ipfs://${parentCid}/${faviconFileName}`
+faviconSize: ${node.faviconSize}
+faviconUri: ipfs://${parentCid}/${faviconFileName}`
   }
   tid = `${tid}
-_name: ${node._name}`
+name: ${node.name}`
   if (owner !== null) {
     tid = `${tid}
-_owner: ${node._owner}`
+owner: ${node.owner}`
   }
   tid = `${tid}
-_source_size: ${node._source_size}
-_source_uri: ipfs://${parentCid}/${sourceFileName}
-_version: ${node._version}`
-  // Save Tiddler
+sourceSize: ${node.sourceSize}`
+  if (sourceFileName.endsWith('.html')) {
+    tid = `${tid}
+sourceUri: ipfs://${parentCid}/`
+  } else {
+    tid = `${tid}
+sourceUri: ipfs://${parentCid}/${sourceFileName}`
+  }
+  tid = `${tid}
+version: ${node.version}`
+  // Save and upload tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}-build.tid`, tid, 'utf8')
+  const loaded = fs.readFileSync(`./production/${dir}/${normalizedName}-build.tid`)
+  var added = await api.add(
+    {
+      path: `/${normalizedName}-build.tid`,
+      content: loaded,
+    },
+    {
+      chunker: 'rabin-262144-524288-1048576',
+      cidVersion: 1,
+      hashAlg: 'sha2-256',
+      pin: false,
+      rawLeaves: false,
+      wrapWithDirectory: true,
+      timeout: longTimeout,
+    }
+  )
+  if (added === undefined || added == null) {
+    throw new Error('IPFS returned an unknown result...')
+  }
+  // Check
+  if (member !== null && member.version === build.version) {
+    var oldTiddlerCid = await ipfsBundle.resolveIpfsContainer(api, member.tidUri)
+    if (oldTiddlerCid !== null && oldTiddlerCid.toString() !== added.cid.toString()) {
+      throw new Error('Matching version but not tiddler cid...')
+    }
+  }
+  console.log(`*** Added tiddler ***
+ ipfs://${added.cid}/${normalizedName}-build.tid`)
+  // Update node
+  node.tidSize = added.size
+  node.tidUri = `${publicGateway}/ipfs/${added.cid}/${normalizedName}-build.tid`
+  // Save current
+  fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
   // Load
   if (load) {
-    const sourceUri = `${gateway}/ipfs/${parentCid}/${sourceFileName}`
-    await loadFromIpfs(sourceUri)
+    var uri = `${gateway}/ipfs/${added.cid}/${normalizedName}-build.tid`
+    await loadFromIpfs(uri)
+    console.log(`*** Fetched tiddler ***
+ ${uri}`)
+    var uri = `${gateway}/ipfs/${parentCid}/`
+    await loadFromIpfs(uri)
     console.log(`*** Fetched content ***
- ${sourceUri}`)
+ ${uri}`)
+    if (sourceFileName.endsWith('.html')) {
+      var uri = `${gateway}/ipfs/${parentCid}/index.html`
+      await loadFromIpfs(uri)
+      console.log(`*** Fetched source ***
+ ${uri}`)
+    } else {
+      var uri = `${gateway}/ipfs/${parentCid}/${sourceFileName}`
+      await loadFromIpfs(uri)
+      console.log(`*** Fetched source ***
+ ${uri}`)
+    }
     if (faviconCid !== null) {
-      const faviconUri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
-      await loadFromIpfs(faviconUri)
+      var uri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
+      await loadFromIpfs(uri)
       console.log(`*** Fetched favicon ***
- ${faviconUri}`)
+ ${uri}`)
     }
   }
 }

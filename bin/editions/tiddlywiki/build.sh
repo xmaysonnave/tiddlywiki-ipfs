@@ -13,7 +13,7 @@ rm -f -R ./build/output/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./build/output/editions/tiddlywiki > /dev/null 2>&1
 
 rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers > /dev/null 2>&1
+mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
@@ -23,7 +23,7 @@ mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 
 # assets
-cp ./editions/tiddlywiki/tiddlywiki.info ./build/tiddlywiki.info || exit 1
+cp -R ./editions/tiddlywiki/* ./build || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
@@ -36,15 +36,15 @@ yarn tiddlywiki-ipfs build \
   --build \
   --verbose "$@" || exit 1
 
-# update tiddlywiki.info
-node ./bin/update-info.js "$@" || exit 1
-
 # check hash and set version
 ./bin/cli-semver.sh \
-  --name=index \
+  --name=tiddlywiki \
   --extension=html \
   --dir=editions/tiddlywiki \
   --env=TIDDLYWIKI "$@" || exit 1
+
+# update tiddlywiki.info
+node ./bin/update-info.js "$@" || exit 1
 
 # build
 echo '***'
@@ -57,7 +57,7 @@ yarn tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-upload.sh \
-  --name=index \
+  --name=tiddlywiki \
   --extension=html \
   --dir=editions/tiddlywiki \
   --tags=$:/ipfs/editions "$@" || exit 1

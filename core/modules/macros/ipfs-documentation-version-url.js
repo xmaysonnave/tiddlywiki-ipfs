@@ -26,7 +26,7 @@ IPFS plugin version
     const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
     const documentation = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('IPFS Documentation Assets') : null
     if (buildName !== null && documentation !== null) {
-      return `${buildName.fields.text}/${documentation.fields.version}/tiddlywiki-ipfs/documentation/`
+      return `${buildName.fields.text}/${documentation.fields.build}/tiddlywiki-ipfs/documentation/`
     }
     return 'Unavailable...'
   }

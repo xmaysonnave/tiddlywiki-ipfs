@@ -21,7 +21,7 @@
         "yes",
 			"--rendertiddler",
         "$:/core/save/all",
-        "./editions/empty/index.html",
+        "./editions/empty/empty-%BUILD_EMPTY_VERSION%.html",
         "text/plain"
 		],
 		"empty-ethereum": [

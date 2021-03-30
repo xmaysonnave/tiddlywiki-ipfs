@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 'use strict'
 
-const upload = require('./upload-node.js')
+const Update = require('./update.js')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
 
 async function main () {
   try {
-    const dir = argv.dir ? argv.dir.trim() : null
-    if (dir == null) {
-      throw new Error('Unknown output dir...')
-    }
     const load = argv.load ? argv.load.trim() : null
-    await upload(dir, load)
+    const reset = argv.reset ? argv.reset.trim() === 'true' : false
+    const updater = new Update(load)
+    if (reset) {
+      await updater.resetBuild()
+    } else {
+      await updater.publishBuild()
+    }
   } catch (error) {
     console.error(error)
     process.exit(1)

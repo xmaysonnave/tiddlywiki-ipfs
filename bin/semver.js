@@ -70,10 +70,6 @@ module.exports = async function main (name, extension, dir, env, version) {
   if (rawSemver == null || rawSemver.trim() === '') {
     throw new Error(`Undefined 'env.${env}_SEMVER'...`)
   }
-  const ipfsTiddlyWikiSemver = process.env.IPFS_TIDDLYWIKI_SEMVER ? process.env.IPFS_TIDDLYWIKI_SEMVER.trim() : null
-  if (ipfsTiddlyWikiSemver == null || ipfsTiddlyWikiSemver.trim() === '') {
-    throw new Error("Undefined 'env.IPFS_TIDDLYWIKI_SEMVER'...")
-  }
   // Process Raw
   var raw = null
   const fileName = filenamify(name, { replacement: '_' })
@@ -105,68 +101,60 @@ module.exports = async function main (name, extension, dir, env, version) {
   const rawHash = keccak.digest('hex')
   console.log('***')
   console.log(`*** ${name}, hash: ${rawHash} ***`)
-  // Current
-  var current = null
-  var path = `./current/${dir}/current.json`
-  if (fs.existsSync(path)) {
-    current = JSON.parse(fs.readFileSync(path, 'utf8'))
-  } else {
-    const uri = `${gateway}/ipns/${rawBuildName}/latest-build/current/${dir}/current.json`
-    try {
-      const ua = await loadFromIpfs(uri)
-      current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
-      console.log(`*** Fetched:
- ${uri} ***`)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-  if (current !== null) {
-    for (var j = 0; j < current.length; j++) {
-      if (current[j]._name === name) {
-        current = current[j]
-        break
-      }
-    }
-  }
   // Version
+  var build = null
   var kind = null
   if (version == null) {
-    if (current === undefined || current == null || (current !== undefined && current !== null && current._raw_hash !== rawHash)) {
+    var current = null
+    var content = null
+    var path = `./current/${dir}/current.json`
+    if (fs.existsSync(path)) {
+      current = JSON.parse(fs.readFileSync(path, 'utf8'))
+    } else {
+      const uri = `${gateway}/ipns/${rawBuildName}/latest-build/${dir}/current.json`
+      try {
+        const ua = await loadFromIpfs(uri)
+        current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
+        console.log(`*** Fetched:
+ ${uri} ***`)
+      } catch (error) {
+        console.log(`*** Unable to fetch:
+ ${uri}
+ ${error.message} ***`)
+      }
+    }
+    if (current !== null) {
+      for (var j = 0; j < current.content.length; j++) {
+        if (current.content[j].name === name) {
+          content = current.content[j]
+          break
+        }
+      }
+    }
+    if (content === undefined || content == null || (content !== undefined && content !== null && content.rawHash !== rawHash)) {
       version = generate({ version: rawSemver, versionSeparator: '-' })
+      build = version.replace(`${rawSemver}-`, '')
       kind = 'New'
     } else {
-      version = current._version
+      version = content.version
+      build = current.build
       kind = 'Current'
     }
   } else {
+    build = version.replace(`${rawSemver}-`, '')
     kind = 'Parent'
   }
+  // Check
   if (validate(version) === false) {
     throw new Error(`Invalid version: ${version}`)
   }
-  // build version
-  var build = {}
-  var path = './current/build.json'
-  if (fs.existsSync(path)) {
-    build = JSON.parse(fs.readFileSync(path, 'utf8'))
-  }
-  if (kind === 'New' || build._version === undefined || build._version === null) {
-    build._version = generate({ version: ipfsTiddlyWikiSemver, versionSeparator: '-' })
-    if (validate(build._version) === false) {
-      throw new Error(`Invalid version: ${build._version}`)
-    }
-    fs.writeFileSync('./current/build.json', beautify(build, null, 2, 80), 'utf8')
-    console.log(`*** New build: ${build._version}`)
-  } else {
-    console.log(`*** Current build: ${build._version}`)
-  }
-  console.log(`*** ${kind}: ${version}`)
+  console.log(`*** ${kind} version: ${version} ***`)
   // Save
   var build = {
-    _raw_hash: rawHash,
-    _semver: rawSemver,
-    _version: version,
+    rawHash: rawHash,
+    semver: rawSemver,
+    build: build,
+    version: version,
   }
   fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, beautify(build, null, 2, 80), 'utf8')
   // Done

@@ -1,7 +1,8 @@
 title: $:/plugins/ipfs.js-build
 tags: $:/ipfs/documentation
-_name: $:/plugins/ipfs.js
-_owner: $:/plugins/ipfs
-_source_size: 1843783
-_source_uri: ipfs://bafybeigjqadcnjvuiku22zdhwpb2memge2zmnufq5gr424mlsz2w5wgucm/$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210320353.json
-_version: 0.4.0-beta-tw-v5.1.23+build-210320353
+build: 210330433
+name: $:/plugins/ipfs.js
+owner: $:/plugins/ipfs
+sourceSize: 1118942
+sourceUri: ipfs://bafybeifrewvkkowv6rvi2vyay52mlccieodq6tpfdfktoi5nabugiaoxke/$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210330433.json
+version: 0.4.0-beta-tw-v5.1.23+build-210330433
