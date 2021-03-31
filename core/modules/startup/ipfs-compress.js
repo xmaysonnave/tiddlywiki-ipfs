@@ -13,9 +13,9 @@ Compression handling
   'use strict'
 
   // Export name and synchronous status
-  exports.name = 'compress'
+  exports.name = 'ipfs-compress'
   exports.platforms = ['browser']
-  exports.after = ['startup']
+  exports.after = ['ipfs-startup']
   exports.synchronous = true
 
   exports.startup = function () {

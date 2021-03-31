@@ -43,6 +43,8 @@ yarn tiddlywiki-ipfs build \
   --dir=editions/tiddlywiki \
   --env=TIDDLYWIKI "$@" || exit 1
 
+cp ./build/output/editions/tiddlywiki/ipfs.browser.build.tid ./build/tiddlers/config || exit 1
+
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
 

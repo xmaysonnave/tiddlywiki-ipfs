@@ -12,8 +12,9 @@ Startup initialisation
   /*global $tw:false*/
   'use strict'
 
+  exports.name = 'ipfs-startup'
   exports.platforms = ['browser']
-  exports.before = ['startup']
+  exports.after = ['startup']
   exports.synchronous = true
 
   exports.startup = function () {
@@ -23,6 +24,8 @@ Startup initialisation
       }
       return console
     }
+    // Build
+    $tw.ipfsBrowserBuild = $tw.utils.extractIpfsBrowserBuild()
     // Logger
     if (window.log !== undefined && window.log !== null) {
       const log = window.log.getLogger('ipfs')
@@ -33,8 +36,6 @@ Startup initialisation
       }
       log.info('loglevel is set up...')
     }
-    // Browser build
-    $tw.ipfsBrowserBuild = $tw.utils.extractIpfsBrowserBuild()
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('application/x-tiddler-dictionary', 'utf8', '.dict')

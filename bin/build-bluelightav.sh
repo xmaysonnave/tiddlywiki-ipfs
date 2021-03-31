@@ -12,7 +12,7 @@
 ./bin/cli-upload-build.sh "$@" || exit 1
 
 # update
-# ./bin/cli-update.sh "$@" || exit 1
+./bin/cli-update.sh "$@" || exit 1
 
 # done
 exit 0

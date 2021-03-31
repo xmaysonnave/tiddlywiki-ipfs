@@ -416,6 +416,10 @@ IpfsBundle.prototype.get = async function (client, ipfsPath, timeout) {
   return await this.ipfsLibrary.get(client, ipfsPath, timeout)
 }
 
+IpfsBundle.prototype.isDirectory = function (ua) {
+  return this.ipfsLibrary.isDirectory(ua)
+}
+
 IpfsBundle.prototype.isIpfsDirectory = async function (client, cid, timeout) {
   return await this.ipfsLibrary.isIpfsDirectory(client, cid, timeout)
 }

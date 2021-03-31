@@ -12,12 +12,10 @@ Compression handling
   /*global $tw:false*/
   'use strict'
 
-  const name = 'ipfs-password'
-
   // Export name and synchronous status
   exports.name = 'ipfs-password'
   exports.platforms = ['browser']
-  exports.after = ['startup']
+  exports.after = ['ipfs-startup']
   exports.synchronous = true
 
   exports.startup = function () {

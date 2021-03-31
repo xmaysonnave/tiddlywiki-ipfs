@@ -83,12 +83,7 @@ async function manageUnpin (api, gateway, key, recursive) {
 async function resolveIPNS (api, gateway, ipnsName) {
   var cid = null
   try {
-    const options = {
-      nocache: false,
-      recursive: false,
-      timeout: shortTimeout,
-    }
-    cid = await ipfsBundle.nameResolve(api, ipnsName, options)
+    var { cid } = await ipfsBundle.dagResolve(api, `/ipns/${ipnsName}`, shortTimeout)
   } catch (error) {
     if (error.name !== 'TimeoutError' && error.name !== 'IPFSUnknownResult') {
       throw error

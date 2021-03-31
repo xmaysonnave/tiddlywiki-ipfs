@@ -1,5 +1,5 @@
 title: $:/SplashScreen
-tags: $:/ipfs/editions/empty $:/tags/RawMarkupWikified/TopBody
+tags: $:/ipfs/editions/dev $:/tags/RawMarkupWikified/TopBody
 type: text/vnd.tiddlywiki
 
 \import [[$:/core/ui/PageMacros]] [all[shadows+tiddlers]tag[$:/tags/Macro]!has[draft.of]]
@@ -106,7 +106,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </div>
 
 <div class="tc-splash-text">
-  <b>{{$:/ipfs/browser/build}}</b>
+  <b>{{$:/ipfs/templates/build}}</b>
 </div>
 
 <div class="tc-splash-spinner">

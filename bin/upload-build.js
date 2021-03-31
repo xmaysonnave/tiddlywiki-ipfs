@@ -11,7 +11,6 @@ const beautify = require('json-beautify')
 const CID = require('cids')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
-const fromString = require('uint8arrays').fromString
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
@@ -24,7 +23,6 @@ const toBeLoaded = []
 
 const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
-const dagDirectory = fromString('\u0008\u0001')
 
 async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
@@ -47,12 +45,7 @@ async function loadFromIpfs (url, timeout, stream) {
   return await response.buffer()
 }
 
-function isDirectory (ua) {
-  if (ua.byteLength !== dagDirectory.byteLength) return false
-  return ua.every((val, i) => val === dagDirectory[i])
-}
-
-async function dagPut (api, links) {
+async function dagPut (api, links, timeout) {
   const dagNode = {
     Data: ipfsBundle.StringToUint8Array('\u0008\u0001'),
     Links: [],
@@ -60,6 +53,7 @@ async function dagPut (api, links) {
   if (links !== undefined && links !== null) {
     dagNode.Links = links
   }
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
   const options = {
     format: 'dag-pb',
     hashAlg: 'sha2-256',
@@ -122,7 +116,7 @@ async function processContent (api, publicGateway, parentDir) {
             localResolve: false,
             timeout: shortTimeout,
           })
-          if (isDirectory(dagNode.value.Data)) {
+          if (ipfsBundle.isDirectory(dagNode.value.Data)) {
             links.push({
               Name: current.content[j].title,
               Tsize: stat.CumutativeSize,
@@ -158,7 +152,7 @@ async function processContent (api, publicGateway, parentDir) {
       },
     ])
     var cidV1 = ipfsBundle.cidToCidV1(node.cid)
-    current.build_uri = `${publicGateway}${cidV1}/${current.build}/`
+    current.buildUri = `${publicGateway}${cidV1}/${current.build}/`
     fs.writeFileSync(currentPathname, beautify(current, null, 2, 80), 'utf8')
   }
   return node

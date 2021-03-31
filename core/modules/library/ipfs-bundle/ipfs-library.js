@@ -2,12 +2,13 @@
 
 const CID = require('cids')
 const fromString = require('uint8arrays').fromString
-const dagDirectory = fromString('\u0008\u0001')
 const getIpfs = require('ipfs-provider').getIpfs
 const Mutex = require('async-mutex').Mutex
 const providers = require('ipfs-provider').providers
 
 const { httpClient, windowIpfs } = providers
+
+const dagDirectory = fromString('\u0008\u0001')
 
 /*
  * https://infura.io/docs
@@ -611,6 +612,11 @@ IpfsLibrary.prototype.hasPin = async function (client, key, type, ipfsPath) {
   }
 }
 
+IpfsLibrary.prototype.isDirectory = function (ua) {
+  if (ua.byteLength !== dagDirectory.byteLength) return false
+  return ua.every((val, i) => val === dagDirectory[i])
+}
+
 IpfsLibrary.prototype.isIpfsDirectory = async function (client, cid, timeout) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
@@ -633,8 +639,7 @@ IpfsLibrary.prototype.isIpfsDirectory = async function (client, cid, timeout) {
     } else {
       ua = await this.objectData(client, cid, timeout)
     }
-    if (ua.byteLength !== dagDirectory.byteLength) return false
-    return ua.every((val, i) => val === dagDirectory[i])
+    return this.isDirectory(ua)
   }
   return false
 }

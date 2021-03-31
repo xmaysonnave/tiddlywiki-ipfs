@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macros/ipfs-browser-build.js
+title: $:/core/modules/macros/ipfs-browser-build.js
 type: application/javascript
 module-type: macro
 

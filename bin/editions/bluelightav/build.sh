@@ -60,6 +60,8 @@ cp -R ./editions/bluelightav/* ./build || exit 1
   --dir=editions/bluelightav \
   --env=BLUELIGHTAV "$@" || exit 1
 
+cp ./build/output/editions/bluelightav/ipfs.browser.build.tid ./build/tiddlers/config || exit 1
+
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
 

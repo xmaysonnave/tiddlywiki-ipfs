@@ -100,15 +100,11 @@ IPFS utils
 
   // Browser build
   exports.extractIpfsBrowserBuild = function () {
-    if ($tw.packageInfo) {
-      return $tw.packageInfo.version
-    } else {
-      var metatags = document.getElementsByTagName('meta')
-      for (var t = 0; t < metatags.length; t++) {
-        var m = metatags[t]
-        if (m.name === 'ipfs-browser-build') {
-          return m.content
-        }
+    var metatags = document.getElementsByTagName('meta')
+    for (var t = 0; t < metatags.length; t++) {
+      var m = metatags[t]
+      if (m.name === 'ipfs-browser-build') {
+        return m.content
       }
     }
     return null

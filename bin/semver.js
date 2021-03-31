@@ -100,7 +100,7 @@ module.exports = async function main (name, extension, dir, env, version) {
   keccak.update(raw)
   const rawHash = keccak.digest('hex')
   console.log('***')
-  console.log(`*** ${name}, hash: ${rawHash} ***`)
+  console.log(`*** ${fileName}, hash: ${rawHash} ***`)
   // Version
   var build = null
   var kind = null
@@ -156,7 +156,11 @@ module.exports = async function main (name, extension, dir, env, version) {
     build: build,
     version: version,
   }
+  var tid = `title: $:/ipfs/browser/build
+
+${fileName}-${version}`
   fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, beautify(build, null, 2, 80), 'utf8')
+  fs.writeFileSync(`./build/output/${dir}/ipfs.browser.build.tid`, tid, 'utf8')
   // Done
   return version
 }

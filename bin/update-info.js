@@ -149,15 +149,6 @@ function main () {
           silent: true,
         })
       }
-      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
-        replace({
-          regex: '%BUILD_BLUELIGHTAV_VERSION%',
-          replacement: `bluelightav-${buildObject.version}`,
-          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
-          recursive: false,
-          silent: true,
-        })
-      }
     }
 
     // dev
@@ -176,15 +167,6 @@ function main () {
           regex: '%BUILD_DEV_VERSION%',
           replacement: buildObject.version,
           paths: ['./build/tiddlywiki.info'],
-          recursive: false,
-          silent: true,
-        })
-      }
-      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
-        replace({
-          regex: '%BUILD_DEV_VERSION%',
-          replacement: `dev-${buildObject.version}`,
-          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
           recursive: false,
           silent: true,
         })
@@ -211,15 +193,6 @@ function main () {
           silent: true,
         })
       }
-      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
-        replace({
-          regex: '%BUILD_EMPTY_VERSION%',
-          replacement: `empty-${buildObject.version}`,
-          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
-          recursive: false,
-          silent: true,
-        })
-      }
     }
 
     // tiddlywiki
@@ -238,15 +211,6 @@ function main () {
           regex: '%BUILD_TIDDLYWIKI_VERSION%',
           replacement: buildObject.version,
           paths: ['./build/tiddlywiki.info'],
-          recursive: false,
-          silent: true,
-        })
-      }
-      if (fs.existsSync('./build/tiddlers/templates/tiddlywiki5.html.tid')) {
-        replace({
-          regex: '%BUILD_TIDDLYWIKI_VERSION%',
-          replacement: `tiddlywiki-${buildObject.version}`,
-          paths: ['./build/tiddlers/templates/tiddlywiki5.html.tid'],
           recursive: false,
           silent: true,
         })

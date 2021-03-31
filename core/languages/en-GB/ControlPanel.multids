@@ -38,7 +38,7 @@ Saving/IpfsService/Provider/HTTP/Description: HTTP Client
 
 Basics/Version/Prompt: <b>~TiddlyWiki</b>:
 
-Ipfs/Version/Prompt: <b>IPFS</b>:
+Ipfs/Build/Prompt: <b>IPFS</b>:
 
 Settings/Encryption/Caption: Encryption
 Settings/Encryption/Standford/Description: Use Standford encryption

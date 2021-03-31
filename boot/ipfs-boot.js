@@ -868,7 +868,7 @@ var ipfsBoot = function ($tw) {
     // Initialise crypto object
     $tw.crypto = new $tw.utils.Crypto()
     // Initialise password prompter
-    if ($tw.browser && !$tw.node) {
+    if ($tw.browser && $tw.node === false) {
       $tw.passwordPrompt = new $tw.utils.PasswordPrompt()
     }
     // Initialise compress object
@@ -886,7 +886,7 @@ var ipfsBoot = function ($tw) {
       }
       // Make sure the compress state tiddler is up to date
       var compressed = $tw.wiki.getTiddler('$:/isCompressed')
-      if (!compressed) {
+      if (compressed === false) {
         $tw.compress.updateCompressStateTiddler()
       }
     })
