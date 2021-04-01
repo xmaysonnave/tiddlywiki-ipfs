@@ -70,7 +70,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     throw new Error('Unknown directory...')
   }
   tags = tags !== undefined && tags !== null && tags.trim() !== '' ? tags.trim() : null
-  load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
+  load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
   // Build
   var buildPath = `./build/output/${dir}/${normalizedName}-build.json`
   if (fs.existsSync(buildPath) === false) {
@@ -132,7 +132,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
       }
     }
     if (member !== null) {
-      if (member.version === build.version) {
+      if (current.version === build.version) {
         if (member.rawHash !== build.rawHash) {
           throw new Error('Matching version but not raw hash...')
         }
@@ -143,10 +143,12 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
       }
     }
     current.build = build.build
+    current.version = build.version
   } else {
     current = {
       build: build.build,
       content: [],
+      version: build.version,
     }
   }
   // Ipfs
@@ -295,7 +297,6 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   } else {
     node.sourceUri = `${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
   }
-  node.version = build.version
   // Update current
   if (memberPosition !== null) {
     current.content[memberPosition] = node

@@ -21,7 +21,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 const toBeLoaded = []
 
-const shortTimeout = 4000
+const shortTimeout = 6000
 const longTimeout = 2 * 60 * shortTimeout
 
 async function loadFromIpfs (url, timeout, stream) {
@@ -172,7 +172,7 @@ module.exports = async function main (load) {
     build = JSON.parse(fs.readFileSync(buildPath))
   }
   // Params
-  load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
+  load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
   const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
   const protocol = apiUrl.protocol.slice(0, -1)
   var port = apiUrl.port

@@ -8,20 +8,20 @@ const argv = yargs(hideBin(process.argv)).argv
 
 async function main () {
   try {
-    const name = argv.name ? argv.name.trim() : null
+    const name = argv.name !== undefined && argv.name !== null ? argv.name : null
     if (name == null) {
       throw new Error('Unknown name...')
     }
-    const extension = argv.extension ? argv.extension.trim() : null
+    const extension = argv.extension !== undefined && argv.extension !== null ? argv.extension : null
     if (extension == null) {
       throw new Error('Unknown file extension...')
     }
-    const dir = argv.dir ? argv.dir.trim() : null
+    const dir = argv.dir !== undefined && argv.dir !== null ? argv.dir : null
     if (dir == null) {
       throw new Error('Unknown output dir...')
     }
-    const env = argv.env ? argv.env.trim() : null
-    if (!env) {
+    const env = argv.env !== undefined && argv.env !== null ? argv.env : null
+    if (env == null) {
       throw new Error('Unknown env...')
     }
     await semver(name, extension, dir, env)

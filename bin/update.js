@@ -21,7 +21,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  **/
 
 module.exports = class Update {
-  shortTimeout = 4000
+  shortTimeout = 6000
   longTimeout = 2 * 60 * this.shortTimeout
   dagDirectory = fromString('\u0008\u0001')
   emptyDirectoryCid = new CID('bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354')
@@ -45,7 +45,7 @@ module.exports = class Update {
     }
     this.rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : this.IPNS_RAW_BUILD_NAME
     this.buildName = process.env.IPNS_BUILD_NAME ? `${process.env.IPNS_BUILD_NAME}` : this.IPNS_BUILD_NAME
-    this.load = load !== undefined && load !== null ? load === 'true' : process.env.LOAD ? process.env.LOAD === 'true' : true
+    this.load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
     this.apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
     this.gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
     this.publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}` : null
@@ -79,7 +79,7 @@ module.exports = class Update {
 
   async manageUnpin (api, key, recursive) {
     var key = new CID(key)
-    recursive = recursive ? recursive === 'true' : true
+    recursive = recursive ? recursive === 'true' || recursive === true : true
     var cid = null
     var type = null
     try {
@@ -242,59 +242,6 @@ module.exports = class Update {
     }
   }
 
-  async publishProductionBuildNode (links) {
-    console.log('***')
-    console.log(`*** Publish production build node ***`)
-    console.log('***')
-    this.newBuildCid = null
-    this.previousBuildCid = null
-    const protocol = this.apiUrl.protocol.slice(0, -1)
-    var port = this.apiUrl.port
-    if (port === undefined || port == null || port.trim() === '') {
-      port = 443
-      if (protocol === 'http') {
-        port = 80
-      }
-    }
-    const api = IpfsHttpClient({
-      protocol: protocol,
-      host: this.apiUrl.hostname,
-      port: port,
-      timeout: this.shortTimeout,
-    })
-    try {
-      await this.processProductionBuildNode(api, links)
-    } catch (error) {
-      console.log(error)
-    }
-    // Load
-    if (this.load) {
-      if (this.newRawBuildCid !== null) {
-        const rawBuildUri = `${this.gateway}/ipfs/${this.newRawBuildCid}/`
-        await this.loadFromIpfs(rawBuildUri)
-        console.log(`*** Fetched new raw build node:
- ${rawBuildUri} ***`)
-      } else if (this.previousRawBuildCid !== null) {
-        const rawBuildUri = `${this.gateway}/ipfs/${this.previousRawBuildCid}/`
-        await this.loadFromIpfs(rawBuildUri)
-        console.log(`*** Fetched previous raw build node:
- ${rawBuildUri} ***`)
-      }
-      if (this.newBuildCid !== null) {
-        const buildUri = `${this.gateway}/ipfs/${this.newBuildCid}/`
-        await this.loadFromIpfs(buildUri)
-        console.log(`*** Fetched new build node:
- ${buildUri} ***`)
-      } else if (this.previousBuildCid !== null) {
-        const buildUri = `${this.gateway}/ipfs/${this.previousBuildCid}/`
-        await this.loadFromIpfs(buildUri)
-        console.log(`*** Fetched previous build node:
- ${buildUri} ***`)
-      }
-    }
-    return this.newBuildCid
-  }
-
   async processProductionContent (api, rawBuildNode) {
     const links = new Map()
     // Process directories
@@ -306,12 +253,41 @@ module.exports = class Update {
       })
       if (this.ipfsBundle.isDirectory(childRawBuildNode.value.Data)) {
         const { cid, size } = await this.processProductionContent(api, childRawBuildNode)
+        const cidV1 = this.ipfsBundle.cidToCidV1(cid)
         if (cid !== null) {
           links.set(link.Name, {
             Name: link.Name,
             Tsize: size,
-            Hash: this.ipfsBundle.cidToCidV1(cid),
+            Hash: cidV1,
           })
+          if (link.Name.match('build')) {
+            const previous = links.get('latest-build')
+            if (previous === undefined || link.Name.localCompare(previous.Name) > 0) {
+              links.set('latest-build', {
+                Name: link.Name,
+                Tsize: size,
+                Hash: cidV1,
+              })
+            }
+          } else if (link.Name.match('pre-release')) {
+            const previous = links.get('latest-pre-release')
+            if (previous === undefined || link.Name.localCompare(previous.Name) > 0) {
+              links.set('latest-pre-release', {
+                Name: 'latest-pre-release',
+                Tsize: size,
+                Hash: cidV1,
+              })
+            }
+          } else if (link.Name.match('release')) {
+            const previous = links.get('latest-release')
+            if (previous === undefined || link.Name.localCompare(previous.Name) > 0) {
+              links.set('release', {
+                Name: 'release',
+                Tsize: size,
+                Hash: cidV1,
+              })
+            }
+          }
         }
       }
     }
@@ -427,7 +403,6 @@ module.exports = class Update {
         currentBuildNodeCid = this.ipfsBundle.cidToCidV1(currentBuildNodeCid)
       }
       build.currentBuild = `${this.publicGateway}/ipfs/${node.cid}`
-      fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
       var msg = '*** '
       if (currentBuildNodeCid == null || (currentBuildNodeCid !== null && currentBuildNodeCid.toString() !== node.cid.toString())) {
         if (currentBuildNodeCid == null) {
@@ -439,6 +414,7 @@ module.exports = class Update {
       } else {
         msg = `${msg}Current build node:`
       }
+      fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
       console.log(`${msg}
  ipns://${this.buildName}
  ipfs://${node.cid} ***`)
@@ -630,12 +606,16 @@ module.exports = class Update {
         const rawBuildNodeLinks = rawBuildNode.value.Links
         for (var i = 0; i < rawBuildNodeLinks.length; i++) {
           if (rawBuildNodeLinks[i].Name === 'current') {
-            const cidV1 = this.ipfsBundle.cidToCidV1(rawBuildNodeLinks[i].Hash)
-            currentRawBuildNode = await this.ipfsBundle.dagGet(api, cidV1, {
-              localResolve: false,
-              timeout: this.shortTimeout,
-            })
-            currentRawBuildNodeCid = cidV1
+            try {
+              const cidV1 = this.ipfsBundle.cidToCidV1(rawBuildNodeLinks[i].Hash)
+              currentRawBuildNode = await this.ipfsBundle.dagGet(api, cidV1, {
+                localResolve: false,
+                timeout: this.shortTimeout,
+              })
+              currentRawBuildNodeCid = cidV1
+            } catch (error) {
+              // Ignore
+            }
             break
           }
         }

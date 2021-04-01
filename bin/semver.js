@@ -136,7 +136,7 @@ module.exports = async function main (name, extension, dir, env, version) {
       build = version.replace(`${rawSemver}-`, '')
       kind = 'New'
     } else {
-      version = content.version
+      version = current.version
       build = current.build
       kind = 'Current'
     }

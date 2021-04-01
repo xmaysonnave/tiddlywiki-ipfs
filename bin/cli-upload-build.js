@@ -8,7 +8,7 @@ const argv = yargs(hideBin(process.argv)).argv
 
 async function main () {
   try {
-    const load = argv.load ? argv.load.trim() : null
+    const load = argv.load !== undefined && argv.load !== null ? argv.load === 'true' || argv.load === true : null
     await upload(load)
   } catch (error) {
     console.error(error)

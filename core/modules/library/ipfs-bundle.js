@@ -571,6 +571,15 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
   if (value === undefined || value == null) {
     return {
       cid: null,
+      hostname: null,
+      ipnsIdentifier: null,
+      path: null,
+    }
+  }
+  if (value instanceof CID) {
+    return {
+      cid: value,
+      hostname: null,
       ipnsIdentifier: null,
       path: null,
     }

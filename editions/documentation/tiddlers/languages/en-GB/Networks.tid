@@ -1,11 +1,11 @@
 title: Networks
-modified: 20210310114915385
+modified: 20210401114915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
 <h3>IPFS</h3>
 <p>
-  <b>IPFS</b> identifiers analysis with the following tool:
+  <b>IPFS</b> identifiers:
 </p>
 <ul>
   <li>[ext[CID Inspector|https://cid.ipfs.io]]</li>

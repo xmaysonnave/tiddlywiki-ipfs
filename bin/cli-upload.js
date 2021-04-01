@@ -9,21 +9,21 @@ const argv = yargs(hideBin(process.argv)).argv
 async function main () {
   try {
     // Args
-    const dir = argv.dir ? argv.dir.trim() : null
+    const dir = argv.dir !== undefined && argv.dir !== null ? argv.dir : null
     if (dir == null) {
       throw new Error('Unknown output dir...')
     }
-    const extension = argv.extension ? argv.extension.trim() : null
+    const extension = argv.extension !== undefined && argv.extension !== null ? argv.extension : null
     if (extension == null) {
       throw new Error('Unknown file extension...')
     }
-    const load = argv.load ? argv.load.trim() : null
-    const name = argv.name ? argv.name.trim() : null
+    const load = argv.load !== undefined && argv.load !== null ? argv.load === 'true' || argv.load === true : null
+    const name = argv.name !== undefined && argv.name !== null ? argv.name : null
     if (name == null) {
       throw new Error('Unknown name...')
     }
-    const owner = argv.owner ? argv.owner.trim() : null
-    const tags = argv.tags ? argv.tags.trim() : null
+    const owner = argv.owner !== undefined && argv.owner !== null ? argv.owner : null
+    const tags = argv.tags !== undefined && argv.tags !== null ? argv.tags : null
     // Upload
     await upload(name, owner, extension, dir, tags, load)
   } catch (error) {

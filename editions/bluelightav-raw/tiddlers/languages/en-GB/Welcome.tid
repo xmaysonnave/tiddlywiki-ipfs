@@ -1,5 +1,5 @@
 title: Welcome
-modified: 20201229094915385
+modified: 20210401094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -32,11 +32,18 @@ type: text/vnd.tiddlywiki
   <li>Share over [ext[IPFS|https://ipfs.io/]] ~TiddlyWiki's [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments</li>
 </ul>
 <h3>Project</h3>
+<h4>IPFS</h4>
+<ul>
+  <li>[ext[IPFS|https://github.com/ipfs/ipfs]]</li>
+  <li>[ext[IPFS Distributions|https://dist.ipfs.io/]]</li>
+  <li>[ext[IPFS Shipyard|https://github.com/ipfs-shipyard]]</li>
+</ul>
+<h4>IPFS with ~TiddlyWiki</h4>
 <ul>
   <li><$ipfslink value="bluelightav.eth">IPFS with ~TiddlyWiki</$ipfslink></li>
   <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
 </ul>
-<h3>~TiddlyWiki</h3>
+<h4>~TiddlyWiki</h4>
 <ul>
   <li>[ext[TiddlyWiki|https://tiddlywiki.com]]</li>
   <li>[ext[TiddlyWiki5 GitHub|https://github.com/Jermolene/TiddlyWiki5/]]</li>
