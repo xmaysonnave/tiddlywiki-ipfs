@@ -1,19 +1,19 @@
 {
-  "build": "210402335",
+  "build": "210402459",
   "content": [
     {
-      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210402335",
+      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210402459",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "https://bluelight.link/ipfs/bafybeidfw3viknkllgqqku3ky6s3qsieync3b7xesxjvhqcbe4xciak2sq/favicon.ico",
+      "faviconUri": "https://bluelight.link/ipfs/bafybeigxekd6bmgjk4avhqob4vs4k74e4pug5am4l7vvejubugsubot5ym/favicon.ico",
       "name": "tiddlywiki",
-      "rawHash": "c6b839b32fb5a42b019fbbed0bdb3744e08ad57048fa5960007491ca348ba0b0",
-      "sourceSize": 2810772,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidfw3viknkllgqqku3ky6s3qsieync3b7xesxjvhqcbe4xciak2sq/",
+      "rawHash": "d7f493078338d6d6e32e939a7c1a351d5eb258cca504cc65e10dcc09175b3505",
+      "sourceSize": 2811097,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigxekd6bmgjk4avhqob4vs4k74e4pug5am4l7vvejubugsubot5ym/",
       "tidSize": 415,
-      "tidUri": "https://bluelight.link/ipfs/bafybeifcia2pu54iwbov3vla7tm5uyysjqxwy6etrunzna2asyn3unvl5i/tiddlywiki-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeihittfbuppn6vpisatw6yex2vzrpy56nhcqg3g6uwv2upuzdqcsku/tiddlywiki-build.tid"
     }
   ],
-  "version": "0.4.0-beta-tw-v5.1.23+build-210402335",
-  "buildUri": "https://bluelight.link/ipfs/bafybeie4vlh5jr6hitni57sce6kiryp3z7sn3uw7gyhedieeww7dccyygi/210402335/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210402459",
+  "buildUri": "https://bluelight.link/ipfs/bafybeihn57ztwpth2qrdn5oiz24xarfalbcsish6ki5s6qvjhrov57zkzm/210402459/"
 }

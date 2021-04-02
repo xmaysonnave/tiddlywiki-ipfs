@@ -47,7 +47,7 @@ async function loadFromIpfs (url, timeout, stream) {
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (name, owner, extension, dir, tags, load) {
+module.exports = async function main (name, extension, dir, tags, load) {
   // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
@@ -60,7 +60,6 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     throw new Error('Unknown name...')
   }
   const normalizedName = filenamify(name, { replacement: '_' })
-  owner = owner !== undefined && owner !== null && owner.trim() !== '' ? owner.trim() : null
   extension = extension !== undefined && extension !== null && extension.trim() !== '' ? extension.trim() : null
   if (extension == null) {
     throw new Error('Unknown file extension...')
@@ -289,9 +288,6 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     node.faviconUri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
   }
   node.name = name
-  if (owner !== null) {
-    node.owner = owner
-  }
   node.rawHash = build.rawHash
   node.sourceSize = sourceSize
   if (sourceFileName.endsWith('.html')) {
@@ -319,12 +315,7 @@ faviconSize: ${node.faviconSize}
 faviconUri: ipfs://${parentCid}/${faviconFileName}`
   }
   tid = `${tid}
-name: ${node.name}`
-  if (owner !== null) {
-    tid = `${tid}
-owner: ${node.owner}`
-  }
-  tid = `${tid}
+name: ${node.name}
 sourceSize: ${node.sourceSize}`
   if (sourceFileName.endsWith('.html')) {
     tid = `${tid}

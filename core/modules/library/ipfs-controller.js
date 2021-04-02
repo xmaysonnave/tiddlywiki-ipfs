@@ -345,9 +345,9 @@ ${ipfsPath}`
     return await this.ipfsWrapper.resolveIpfsContainer(ipfs, url)
   }
 
-  IpfsController.prototype.getIpnsIdentifier = async function (identifier, base, path, ipnsName, resolveIpns) {
+  IpfsController.prototype.getIpnsIdentifier = async function (identifier, resolveIpns, base, path, ipnsName) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, base, path, ipnsName, resolveIpns)
+    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, resolveIpns, base, path, ipnsName)
   }
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
@@ -434,9 +434,9 @@ ${ipfsPath}`
     if (ipnsIdentifier !== null) {
       var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
     } else if (cid == null && ipnsIdentifier == null && resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
-      var { cid, protocol, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
+      var { identifier, protocol, normalizedUrl, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
       if (protocol === ipnsKeyword) {
-        var { cid, ipnsKey, ipnsName, resolvedUrl } = await this.resolveIpns(cid, resolveIpns, base, path)
+        var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(identifier, resolveIpns, base, path)
       }
     }
     return {
@@ -462,7 +462,7 @@ ${ipfsPath}`
     }
     var cid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifier(ipnsIdentifier, base, path, null, resolveIpns)
+    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifier(ipnsIdentifier, resolveIpns, base, path)
     if (resolveIpns) {
       $tw.ipfs.getLogger().info(
         `Resolving IPNS key:
@@ -506,7 +506,7 @@ ${resolvedUrl}`
     ensDomain = ensDomain !== undefined && ensDomain !== null && ensDomain.toString().trim() !== '' ? ensDomain.toString().trim() : null
     if (ensDomain == null) {
       return {
-        cid: null,
+        identifier: null,
         protocol: null,
         resolvedUrl: null,
       }
@@ -518,7 +518,7 @@ ${resolvedUrl}`
     const { content, protocol } = await this.ensWrapper.getContentHash(ensDomain, web3)
     if (content == null || protocol == null) {
       return {
-        cid: null,
+        identifier: null,
         protocol: null,
         resolvedUrl: null,
       }
@@ -529,7 +529,7 @@ ${resolvedUrl}`
 ${url}`
     )
     return {
-      cid: content,
+      identifier: content,
       protocol: protocol,
       resolvedUrl: url,
     }

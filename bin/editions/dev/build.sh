@@ -62,8 +62,6 @@ cp -R ./editions/dev/* ./build || exit 1
   --dir=editions/dev \
   --env=DEV "$@" || exit 1
 
-cp ./build/output/editions/dev/ipfs.browser.build.tid ./build/tiddlers/config || exit 1
-
   # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
 

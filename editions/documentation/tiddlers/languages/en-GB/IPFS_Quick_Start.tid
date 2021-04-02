@@ -13,10 +13,10 @@ type: text/vnd.tiddlywiki
 </ul>
 <h4>Latest</h4>
 <ul>
-  <li>`$:/boot/boot.js` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>`IPFS Documentation` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/documentation/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>`$:/library/ipfs-modules.js`  <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>`$:/plugins/ipfs` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/boot/boot.js` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`IPFS Documentation` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/documentation/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/library/ipfs-modules.js`  <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/plugins/ipfs` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Release</h4>
 <ul>

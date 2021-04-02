@@ -70,7 +70,6 @@ yarn tiddlywiki-ipfs build \
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=$:/plugins/ipfs.js \
-  --owner=$:/plugins/ipfs \
   --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
   --tags=$:/ipfs/documentation "$@" || exit 1
@@ -78,7 +77,6 @@ yarn tiddlywiki-ipfs build \
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=$:/plugins/ipfs.js.zlib \
-  --owner=$:/plugins/ipfs \
   --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
   --tags=$:/ipfs/documentation "$@" || exit 1

@@ -85,7 +85,6 @@ yarn tiddlywiki-ipfs build \
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=$:/boot/boot.js \
-  --owner=$:/boot/boot.js \
   --extension=json \
   --dir=tiddlywiki-ipfs/boot \
   --tags=$:/ipfs/core "$@" || exit 1
@@ -93,7 +92,6 @@ yarn tiddlywiki-ipfs build \
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=$:/boot/boot.js.zlib \
-  --owner=$:/boot/boot.js \
   --extension=json \
   --dir=tiddlywiki-ipfs/boot \
   --tags=$:/ipfs/core "$@" || exit 1

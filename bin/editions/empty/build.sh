@@ -49,8 +49,6 @@ cp -R ./editions/empty/* ./build || exit 1
   --dir=editions/empty \
   --env=EMPTY "$@" || exit 1
 
-cp ./build/output/editions/empty/ipfs.browser.build.tid ./build/tiddlers/config || exit 1
-
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
 

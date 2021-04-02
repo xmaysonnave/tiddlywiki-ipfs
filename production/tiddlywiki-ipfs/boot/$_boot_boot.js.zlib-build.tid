@@ -2,7 +2,6 @@ title: $:/boot/boot.js.zlib-build
 tags: $:/ipfs/core
 build: 210402292
 name: $:/boot/boot.js.zlib
-owner: $:/boot/boot.js
 sourceSize: 39551
 sourceUri: ipfs://bafybeigqlxsezkdy4flhi4vtwnybckfidfj7c5mn7abeqohyxf2iyn7sya/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210402292.json
 version: 0.4.0-beta-tw-v5.1.24-pre+build-210402292

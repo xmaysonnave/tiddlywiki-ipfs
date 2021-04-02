@@ -53,6 +53,7 @@ module.exports = async function main (name, extension, dir, env, version) {
   if (name == null) {
     throw new Error('Unknown name...')
   }
+  const normalizedName = filenamify(name, { replacement: '_' })
   extension = extension !== undefined && extension !== null && extension.trim() !== '' ? extension.trim() : null
   if (extension == null) {
     throw new Error('Unknown file extension...')
@@ -72,26 +73,25 @@ module.exports = async function main (name, extension, dir, env, version) {
   }
   // Process Raw
   var raw = null
-  const fileName = filenamify(name, { replacement: '_' })
   // Load
-  var path = `./build/output/${dir}/${fileName}-%BUILD_${env}_VERSION%.${extension}`
+  var path = `./build/output/${dir}/${normalizedName}-%BUILD_${env}_VERSION%.${extension}`
   if (fs.existsSync(path)) {
     raw = fs.readFileSync(path, 'utf8')
   }
   if (raw == null) {
-    path = `./build/output/${dir}/${fileName}.${extension}`
+    path = `./build/output/${dir}/${normalizedName}.${extension}`
     if (fs.existsSync(path)) {
       raw = fs.readFileSync(path, 'utf8')
     }
   }
   if (raw == null) {
-    path = `./build/output/${dir}/${fileName}`
+    path = `./build/output/${dir}/${normalizedName}`
     if (fs.existsSync(path)) {
       raw = fs.readFileSync(path, 'utf8')
     }
   }
   if (raw == null) {
-    throw new Error(`Unknown raw content: ${fileName}`)
+    throw new Error(`Unknown raw content: ${normalizedName}`)
   }
   const rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : IPNS_RAW_BUILD_NAME
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
@@ -100,7 +100,7 @@ module.exports = async function main (name, extension, dir, env, version) {
   keccak.update(raw)
   const rawHash = keccak.digest('hex')
   console.log('***')
-  console.log(`*** ${fileName}, hash: ${rawHash} ***`)
+  console.log(`*** ${normalizedName}, hash: ${rawHash} ***`)
   // Version
   var build = null
   var kind = null
@@ -152,19 +152,22 @@ module.exports = async function main (name, extension, dir, env, version) {
   }
   console.log(`*** ${kind} version: ${version} ***`)
   // Save
-  var build = {
+  var newBuild = {
     rawHash: rawHash,
     semver: rawSemver,
     build: build,
     version: version,
   }
   // Tiddler
-  var tid = `title: $:/ipfs/browser/build
+  var tid = `title: $:/ipfs/edition/build
+build: ${build}
+name: ${normalizedName}
+version: ${version}
 
-${fileName}-${version}`
+${normalizedName}-${version}`
   // Save
-  fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, beautify(build, null, 2, 80), 'utf8')
-  fs.writeFileSync(`./build/output/${dir}/ipfs.browser.build.tid`, tid, 'utf8')
+  fs.writeFileSync(`./build/output/${dir}/${normalizedName}-build.json`, beautify(newBuild, null, 2, 80), 'utf8')
+  fs.writeFileSync(`./build/output/${dir}/ipfs.edition.build.tid`, tid, 'utf8')
   // Done
-  return build
+  return newBuild
 }

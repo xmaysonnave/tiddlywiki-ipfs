@@ -25,7 +25,7 @@ Startup initialisation
       return console
     }
     // Build
-    $tw.ipfsBrowserBuild = $tw.utils.extractIpfsBrowserBuild()
+    $tw.ipfsEditionBuild = $tw.utils.extractIpfsEditionBuild()
     // Logger
     if (window.log !== undefined && window.log !== null) {
       const log = window.log.getLogger('ipfs')

@@ -56,7 +56,6 @@ yarn tiddlywiki-ipfs build \
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=$:/ipfs/documentation \
-  --owner=$:/ipfs/documentation \
   --extension=json \
   --dir=tiddlywiki-ipfs/documentation \
   --tags=$:/ipfs/documentation "$@" || exit 1
@@ -64,7 +63,6 @@ yarn tiddlywiki-ipfs build \
 # upload to ipfs
 ./bin/cli-upload.sh \
   --name=$:/ipfs/documentation.zlib \
-  --owner=$:/ipfs/documentation \
   --extension=json \
   --dir=tiddlywiki-ipfs/documentation \
   --tags=$:/ipfs/documentation "$@" || exit 1

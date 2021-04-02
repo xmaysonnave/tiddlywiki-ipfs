@@ -98,12 +98,12 @@ IPFS utils
     $tw.wiki.addTiddler(new $tw.Tiddler(alertFields))
   }
 
-  // Browser build
-  exports.extractIpfsBrowserBuild = function () {
+  // Edition build
+  exports.extractIpfsEditionBuild = function () {
     var metatags = document.getElementsByTagName('meta')
     for (var t = 0; t < metatags.length; t++) {
       var m = metatags[t]
-      if (m.name === 'ipfs-browser-build') {
+      if (m.name === 'ipfs-edition-build') {
         return m.content
       }
     }

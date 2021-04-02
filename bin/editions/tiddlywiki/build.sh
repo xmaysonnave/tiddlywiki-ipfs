@@ -23,7 +23,7 @@ mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 
 # assets
-cp -R ./editions/tiddlywiki/* ./build || exit 1
+cp -R ./editions/tiddlywiki-raw/* ./build || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
@@ -34,7 +34,10 @@ echo '*** raw tiddlywiki ***'
 echo '***'
 yarn tiddlywiki-ipfs build \
   --build \
-  --verbose "$@" || exit 1
+  --verbose || exit 1
+
+# assets
+cp -R ./editions/tiddlywiki/* ./build || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \
@@ -42,8 +45,6 @@ yarn tiddlywiki-ipfs build \
   --extension=html \
   --dir=editions/tiddlywiki \
   --env=TIDDLYWIKI "$@" || exit 1
-
-cp ./build/output/editions/tiddlywiki/ipfs.browser.build.tid ./build/tiddlers/config || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

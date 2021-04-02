@@ -22,10 +22,9 @@ async function main () {
     if (name == null) {
       throw new Error('Unknown name...')
     }
-    const owner = argv.owner !== undefined && argv.owner !== null ? argv.owner : null
     const tags = argv.tags !== undefined && argv.tags !== null ? argv.tags : null
     // Upload
-    await upload(name, owner, extension, dir, tags, load)
+    await upload(name, extension, dir, tags, load)
   } catch (error) {
     console.error(error)
     process.exit(1)

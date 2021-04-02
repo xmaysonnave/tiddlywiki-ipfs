@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macros/ipfs-documentation-version-url.js
+title: $:/plugins/ipfs/macros/ipfs-edition-version-url.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
@@ -15,7 +15,7 @@ IPFS plugin version
   /*
    * Information about this macro
    */
-  exports.name = 'ipfs-documentation-version-url'
+  exports.name = 'ipfs-edition-version-url'
 
   exports.params = []
 
@@ -24,9 +24,9 @@ IPFS plugin version
    */
   exports.run = function () {
     const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
-    const documentation = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('IPFS Documentation Assets') : null
-    if (buildName !== undefined && documentation !== undefined) {
-      return `${buildName.fields.text}/tiddlywiki-ipfs/documentation/${documentation.fields.build}/`
+    const editionBuild = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/edition/build') : null
+    if (buildName !== undefined && editionBuild !== undefined) {
+      return `${buildName.fields.text}/editions/${editionBuild.fields.name}/${editionBuild.fields.build}/`
     }
     return 'Unavailable...'
   }

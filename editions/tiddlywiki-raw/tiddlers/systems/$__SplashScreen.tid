@@ -110,7 +110,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </div>
 
 <div class="tc-splash-text">
-  <b>{{$:/ipfs/templates/build}}</b>
+  <b>{{$:/ipfs/edition/build}}</b>
 </div>
 
 <!-- Demonstrating how to embed a bitmap graphic -->

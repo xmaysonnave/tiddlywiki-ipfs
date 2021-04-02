@@ -1,9 +1,8 @@
 /*\
-title: $:/core/modules/macros/ipfs-browser-build.js
+title:  $:/plugins/ipfs/macros/ipfs-edition-build.js
 type: application/javascript
 module-type: macro
 
-Macro to return the TiddlyWiki core version number
 
 \*/
 ;(function () {
@@ -15,7 +14,7 @@ Macro to return the TiddlyWiki core version number
 Information about this macro
 */
 
-  exports.name = 'ipfs-browser-build'
+  exports.name = 'ipfs-edition-build'
 
   exports.params = []
 
@@ -23,6 +22,6 @@ Information about this macro
 Run the macro
 */
   exports.run = function () {
-    return $tw.ipfsBrowserBuild
+    return $tw.ipfsEditionBuild
   }
 })()

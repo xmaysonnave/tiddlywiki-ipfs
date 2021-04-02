@@ -105,7 +105,7 @@ ${parsed}`
   throw new Error('Failed to resolve an IPNS key...')
 }
 
-IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, base, path, ipnsName, resolveIpns) {
+IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, resolveIpns, base, path, ipnsName) {
   identifier = identifier !== undefined && identifier !== null && identifier.toString().trim() !== '' ? identifier.toString().trim() : null
   ipnsName = ipnsName !== undefined && ipnsName !== null && ipnsName.trim() !== '' ? ipnsName.trim() : null
   if (identifier == null && ipnsName == null) {

@@ -215,28 +215,14 @@ module.exports = class Update {
       port: port,
       timeout: this.shortTimeout,
     })
-    var buildNode = null
     var rawBuildNode = null
     try {
       rawBuildNode = await this.processRawBuildNode(api)
       if (rawBuildNode !== null) {
-        if (this.load) {
-          const rawBuildUri = `${this.gateway}/ipfs/${rawBuildNode.cid}`
-          await this.loadFromIpfs(rawBuildUri)
-          console.log(`*** Fetched raw build node:
- ${rawBuildUri} ***`)
-        }
-        buildNode = await this.processProductionBuildNode(api)
+        await this.processProductionBuildNode(api)
       }
     } catch (error) {
       console.log(error)
-    }
-    // Load
-    if (this.load && buildNode !== null) {
-      const buildUri = `${this.gateway}/ipfs/${buildNode.cid}`
-      await this.loadFromIpfs(buildUri)
-      console.log(`*** Fetched build node:
- ${buildUri} ***`)
     }
   }
 
@@ -255,12 +241,11 @@ module.exports = class Update {
       })
       if (this.ipfsBundle.isDirectory(childRawBuildNode.value.Data)) {
         const { cid, size, version } = await this.processProductionContent(api, childRawBuildNode)
-        const cidV1 = this.ipfsBundle.cidToCidV1(cid)
         if (cid !== null) {
           links.set(link.Name, {
             Name: link.Name,
             Tsize: size,
-            Hash: cidV1,
+            Hash: cid,
           })
           if (version !== null) {
             if (version.match('build')) {
@@ -269,9 +254,9 @@ module.exports = class Update {
                 links.set('latest-build', {
                   Name: 'latest-build',
                   Tsize: size,
-                  Hash: cidV1,
+                  Hash: cid,
                 })
-                versions.set(cidV1, version)
+                versions.set(cid, version)
               }
             } else if (version.match('pre-release')) {
               const previous = links.get('latest-pre-release')
@@ -279,9 +264,9 @@ module.exports = class Update {
                 links.set('latest-pre-release', {
                   Name: 'latest-pre-release',
                   Tsize: size,
-                  Hash: cidV1,
+                  Hash: cid,
                 })
-                versions.set(cidV1, version)
+                versions.set(cid, version)
               }
             } else if (version.match('release')) {
               const previous = links.get('latest-release')
@@ -289,17 +274,14 @@ module.exports = class Update {
                 links.set('release', {
                   Name: 'release',
                   Tsize: size,
-                  Hash: cidV1,
+                  Hash: cid,
                 })
-                versions.set(cidV1, version)
+                versions.set(cid, version)
               }
             }
           }
         }
       }
-    }
-    // Process latests
-    if (links.size > 0) {
     }
     // Process current
     var current = null
@@ -341,10 +323,16 @@ module.exports = class Update {
       return b.Name.localeCompare(a.Name)
     })
     if (newLinks.length > 0) {
-      const dagNode = await this.dagPut(api, newLinks)
+      const node = await this.dagPut(api, newLinks)
+      if (this.load) {
+        const nodeUri = `${this.gateway}/ipfs/${node.cid}`
+        await this.loadFromIpfs(nodeUri)
+        console.log(`*** Fetched production build node:
+${nodeUri} ***`)
+      }
       return {
-        cid: dagNode.cid,
-        size: dagNode.size,
+        cid: node.cid,
+        size: node.size,
         version: current !== null ? current.version : null,
       }
     }
@@ -429,9 +417,6 @@ module.exports = class Update {
         msg = `${msg}Current build node:`
       }
       fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
-      console.log(`${msg}
- ipns://${this.buildName}
- ipfs://${node.cid} ***`)
     }
     return node
   }
@@ -472,10 +457,9 @@ module.exports = class Update {
         }
         const childNode = await this.processRawContent(api, childRawBuildNode, childRawBuild, contentPathname)
         if (childNode !== null) {
-          const cidV1 = this.ipfsBundle.cidToCidV1(childNode.cid)
           const currentLink = links.get(link.Name)
           if (currentLink !== undefined) {
-            if (this.ipfsBundle.cidToCidV1(currentLink.Hash).toString() !== cidV1.toString()) {
+            if (this.ipfsBundle.cidToCidV1(currentLink.Hash).toString() !== childNode.cid.toString()) {
               previousLinks.set(contentPathname, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
               console.log(`Update: ${link.Name}`)
             }
@@ -485,8 +469,14 @@ module.exports = class Update {
           links.set(link.Name, {
             Name: link.Name,
             Tsize: childNode.size,
-            Hash: cidV1,
+            Hash: childNode.cid,
           })
+          if (this.load) {
+            const rawNodeUri = `${this.gateway}/ipfs/${childNode.cid}`
+            await this.loadFromIpfs(rawNodeUri)
+            console.log(`*** Fetched raw build node:
+ ${rawNodeUri} ***`)
+          }
         }
       }
     }
@@ -656,6 +646,12 @@ module.exports = class Update {
           Tsize: node.size,
           Hash: node.cid,
         })
+        if (this.load) {
+          const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
+          await this.loadFromIpfs(rawNodeUri)
+          console.log(`*** Fetched raw build node:
+ ${rawNodeUri} ***`)
+        }
         node = await this.dagPut(api, links)
         build.currentRawBuild = `${this.publicGateway}/ipfs/${node.cid}`
         fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
@@ -667,9 +663,12 @@ module.exports = class Update {
       } else {
         msg = `${msg}Current raw build node:`
       }
-      console.log(`${msg}
- ipns://${this.rawBuildName}
- ipfs://${node.cid} ***`)
+      if (this.load) {
+        const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
+        await this.loadFromIpfs(rawNodeUri)
+        console.log(`*** Fetched raw build node:
+${rawNodeUri} ***`)
+      }
     }
     return node
   }

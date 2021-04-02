@@ -2,7 +2,6 @@ title: $:/library/ipfs-modules.js.zlib-build
 tags: $:/ipfs/core
 build: 210402334
 name: $:/library/ipfs-modules.js.zlib
-owner: $:/library/ipfs-modules.js
 sourceSize: 52559
 sourceUri: ipfs://bafybeiev5msu4yosks47baitghb6tgi6vvpunyhglhehzpj66rvhoslj4m/$_library_ipfs-modules.js.zlib-1.0.0+build-210402334.json
 version: 1.0.0+build-210402334
