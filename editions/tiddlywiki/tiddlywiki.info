@@ -5,6 +5,9 @@
   "build": {
 		"index": [
       "--import",
+        "./download/tiddlywiki/index.html",
+        "text/html",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
@@ -13,12 +16,6 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
-      "--import",
-        "./download/tiddlywiki/index.html",
-        "text/html",
-      "--import",
-        "./build/tiddlers/systems/$__SplashScreen.tid",
-        "application/x-tiddler",
 			"--compress",
         "yes",
 			"--rendertiddler",

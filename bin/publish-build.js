@@ -15,7 +15,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  **/
 
 module.exports = class PublishBuild {
-  shortTimeout = 6000
+  shortTimeout = 4000
   longTimeout = 2 * 60 * this.shortTimeout
   emptyDirectoryCid = new CID('bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354')
 

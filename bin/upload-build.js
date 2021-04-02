@@ -21,7 +21,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 const toBeLoaded = []
 
-const shortTimeout = 6000
+const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
 
 async function loadFromIpfs (url, timeout, stream) {

@@ -1,5 +1,4 @@
 title: $:/boot/boot.js
 tags: $:/ipfs/boot/modules
 type: application/javascript
-version: %BUILD_BOOT_VERSION%
 ipfs-boot-modules: yes

@@ -1,9 +1,9 @@
 title: tiddlywiki-build
 tags: $:/ipfs/editions
-build: 210401424
+build: 210402335
 faviconSize: 4297
-faviconUri: ipfs://bafybeic3dtmlsmhkdp7qm7hwyqns6b665lbc4calmlxgw7ydoijoshwgjm/favicon.ico
+faviconUri: ipfs://bafybeidfw3viknkllgqqku3ky6s3qsieync3b7xesxjvhqcbe4xciak2sq/favicon.ico
 name: tiddlywiki
-sourceSize: 2810747
-sourceUri: ipfs://bafybeic3dtmlsmhkdp7qm7hwyqns6b665lbc4calmlxgw7ydoijoshwgjm/
-version: undefined
+sourceSize: 2810772
+sourceUri: ipfs://bafybeidfw3viknkllgqqku3ky6s3qsieync3b7xesxjvhqcbe4xciak2sq/
+version: 0.4.0-beta-tw-v5.1.23+build-210402335

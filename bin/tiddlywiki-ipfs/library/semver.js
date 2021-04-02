@@ -11,7 +11,7 @@ async function main () {
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/library'
     const env = 'LIBRARY'
-    const version = await semver(name, extension, dir, env)
+    const { build, version } = await semver(name, extension, dir, env)
     // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
     var files = fs
       .readdirSync('./build/tiddlers', { withFileTypes: true })
@@ -19,6 +19,13 @@ async function main () {
       .map(item => item.name)
     for (var i = 0; i < files.length; i++) {
       if (files[i].endsWith('.meta')) {
+        replace({
+          regex: `%BUILD_${env}_BUILD%`,
+          replacement: build,
+          paths: [`./build/tiddlers/${files[i]}`],
+          recursive: false,
+          silent: true,
+        })
         replace({
           regex: `%BUILD_${env}_VERSION%`,
           replacement: version,

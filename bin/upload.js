@@ -109,15 +109,17 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
   const currentPath = `./current/${dir}/current.json`
   if (fs.existsSync(currentPath)) {
     current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
+    console.log(`*** Loaded current:
+ ${currentPath} ***`)
   } else {
     const uri = `${gateway}/ipns/${rawBuildName}/latest-build/${dir}/current.json`
     try {
       const ua = await loadFromIpfs(uri)
       current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
-      console.log(`*** Fetched:
+      console.log(`*** Fetched current:
  ${uri} ***`)
     } catch (error) {
-      console.log(`*** Unable to fetch:
+      console.log(`*** Unable to fetch current:
  ${uri}
  ${error.message} ***`)
     }
@@ -133,7 +135,7 @@ module.exports = async function main (name, owner, extension, dir, tags, load) {
     }
     if (member !== null) {
       if (current.version === build.version) {
-        if (member.rawHash !== build.rawHash) {
+        if (member.title.endsWith(build.build) && member.rawHash !== build.rawHash) {
           throw new Error('Matching version but not raw hash...')
         }
       } else {
@@ -332,7 +334,7 @@ sourceUri: ipfs://${parentCid}/`
 sourceUri: ipfs://${parentCid}/${sourceFileName}`
   }
   tid = `${tid}
-version: ${node.version}`
+version: ${build.version}`
   // Save and upload tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}-build.tid`, tid, 'utf8')
   const loaded = fs.readFileSync(`./production/${dir}/${normalizedName}-build.tid`)

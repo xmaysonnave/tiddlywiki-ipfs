@@ -10,12 +10,13 @@ async function main () {
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/plugin'
     const env = 'PLUGIN'
-    const version = await semver(name, extension, dir, env)
+    const { build, version } = await semver(name, extension, dir, env)
     const sourceMetadata = './core/plugin.info'
     const targetMetadata = './build/plugins/ipfs/plugin.info'
     // const sourcePackage = './package.json'
     // retrieve current version from plugin.info
     const infoPlugin = JSON.parse(fs.readFileSync(sourceMetadata, 'utf8'))
+    infoPlugin.build = build
     infoPlugin.version = version
     // update
     var data = JSON.stringify(infoPlugin, null, 2)

@@ -1,9 +1,9 @@
 title: IPFS Quick Start
-modified: 20201229094915385
+modified: 20210402094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
-<h2>IPFS Quick Start</h2>
+<h2>IPFS with ~TiddlyWiki Quick Start</h2>
 <h4>Current</h4>
 <ul>
   <li>[[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<boot-boot-version-url>>>[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
@@ -13,10 +13,10 @@ type: text/vnd.tiddlywiki
 </ul>
 <h4>Latest</h4>
 <ul>
-  <li>`$:/boot/boot.js` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/boot/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>`IPFS Documentation` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/documentation/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>`$:/library/ipfs-modules.js`  <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/library/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
-  <li>`$:/plugins/ipfs` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/latest-build/tiddlywiki-ipfs/plugin/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/boot/boot.js` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`IPFS Documentation` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/documentation/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/library/ipfs-modules.js`  <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/plugins/ipfs` <$ipfslink value="ipns://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Release</h4>
 <ul>
@@ -55,7 +55,7 @@ type: text/vnd.tiddlywiki
   [ext[IPFS Go Server|https://github.com/ipfs/go-ipfs]].
 </p>
 <p>
-  This configuration is based on the [ext[v0.8.0-rc1|https://github.com/ipfs/go-ipfs/releases/tag/v0.8.0-rc1]] version.
+  This configuration is based on the [ext[v0.8.0|https://github.com/ipfs/go-ipfs/releases/tag/v0.8.0]] version.
 </p>
 <p>
   More informations about the configuration parameters are available [ext[here|https://github.com/ipfs/go-ipfs/blob/master/docs/config.md]]

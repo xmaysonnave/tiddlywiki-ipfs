@@ -10,7 +10,14 @@ async function main () {
     const extension = 'json'
     const dir = 'tiddlywiki-ipfs/boot'
     const env = 'BOOT'
-    const version = await semver(name, extension, dir, env)
+    const { build, version } = await semver(name, extension, dir, env)
+    replace({
+      regex: `%BUILD_${env}_BUILD%`,
+      replacement: build,
+      paths: ['./build/tiddlers/$_boot_boot.js.meta'],
+      recursive: false,
+      silent: true,
+    })
     replace({
       regex: `%BUILD_${env}_VERSION%`,
       replacement: version,

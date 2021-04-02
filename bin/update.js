@@ -21,7 +21,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  **/
 
 module.exports = class Update {
-  shortTimeout = 6000
+  shortTimeout = 4000
   longTimeout = 2 * 60 * this.shortTimeout
   dagDirectory = fromString('\u0008\u0001')
   emptyDirectoryCid = new CID('bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354')
@@ -220,39 +220,41 @@ module.exports = class Update {
     try {
       rawBuildNode = await this.processRawBuildNode(api)
       if (rawBuildNode !== null) {
+        if (this.load) {
+          const rawBuildUri = `${this.gateway}/ipfs/${rawBuildNode.cid}`
+          await this.loadFromIpfs(rawBuildUri)
+          console.log(`*** Fetched raw build node:
+ ${rawBuildUri} ***`)
+        }
         buildNode = await this.processProductionBuildNode(api)
       }
     } catch (error) {
       console.log(error)
     }
     // Load
-    if (this.load) {
-      if (rawBuildNode !== null) {
-        const rawBuildUri = `${this.gateway}/ipfs/${rawBuildNode.cid}`
-        await this.loadFromIpfs(rawBuildUri)
-        console.log(`*** Fetched raw build node:
- ${rawBuildUri} ***`)
-      }
-      if (buildNode !== null) {
-        const buildUri = `${this.gateway}/ipfs/${buildNode.cid}`
-        await this.loadFromIpfs(buildUri)
-        console.log(`*** Fetched build node:
+    if (this.load && buildNode !== null) {
+      const buildUri = `${this.gateway}/ipfs/${buildNode.cid}`
+      await this.loadFromIpfs(buildUri)
+      console.log(`*** Fetched build node:
  ${buildUri} ***`)
-      }
     }
   }
 
   async processProductionContent (api, rawBuildNode) {
     const links = new Map()
+    const versions = new Map()
     // Process directories
     for (var i = 0; i < rawBuildNode.value.Links.length; i++) {
       const link = rawBuildNode.value.Links[i]
+      if (link.Name === 'latest-build' || link.Name === 'latest-pre-release' || link.Name === 'latest-release') {
+        continue
+      }
       const childRawBuildNode = await this.ipfsBundle.dagGet(api, link.Hash, {
         localResolve: false,
         timeout: this.shortTimeout,
       })
       if (this.ipfsBundle.isDirectory(childRawBuildNode.value.Data)) {
-        const { cid, size } = await this.processProductionContent(api, childRawBuildNode)
+        const { cid, size, version } = await this.processProductionContent(api, childRawBuildNode)
         const cidV1 = this.ipfsBundle.cidToCidV1(cid)
         if (cid !== null) {
           links.set(link.Name, {
@@ -260,36 +262,44 @@ module.exports = class Update {
             Tsize: size,
             Hash: cidV1,
           })
-          if (link.Name.match('build')) {
-            const previous = links.get('latest-build')
-            if (previous === undefined || link.Name.localCompare(previous.Name) > 0) {
-              links.set('latest-build', {
-                Name: link.Name,
-                Tsize: size,
-                Hash: cidV1,
-              })
-            }
-          } else if (link.Name.match('pre-release')) {
-            const previous = links.get('latest-pre-release')
-            if (previous === undefined || link.Name.localCompare(previous.Name) > 0) {
-              links.set('latest-pre-release', {
-                Name: 'latest-pre-release',
-                Tsize: size,
-                Hash: cidV1,
-              })
-            }
-          } else if (link.Name.match('release')) {
-            const previous = links.get('latest-release')
-            if (previous === undefined || link.Name.localCompare(previous.Name) > 0) {
-              links.set('release', {
-                Name: 'release',
-                Tsize: size,
-                Hash: cidV1,
-              })
+          if (version !== null) {
+            if (version.match('build')) {
+              const previous = links.get('latest-build')
+              if (previous === undefined || version.localeCompare(versions.get(previous.Hash)) > 0) {
+                links.set('latest-build', {
+                  Name: 'latest-build',
+                  Tsize: size,
+                  Hash: cidV1,
+                })
+                versions.set(cidV1, version)
+              }
+            } else if (version.match('pre-release')) {
+              const previous = links.get('latest-pre-release')
+              if (previous === undefined || version.localeCompare(versions.get(previous.Hash)) > 0) {
+                links.set('latest-pre-release', {
+                  Name: 'latest-pre-release',
+                  Tsize: size,
+                  Hash: cidV1,
+                })
+                versions.set(cidV1, version)
+              }
+            } else if (version.match('release')) {
+              const previous = links.get('latest-release')
+              if (previous === undefined || version.localeCompare(versions.get(previous.Hash)) > 0) {
+                links.set('release', {
+                  Name: 'release',
+                  Tsize: size,
+                  Hash: cidV1,
+                })
+                versions.set(cidV1, version)
+              }
             }
           }
         }
       }
+    }
+    // Process latests
+    if (links.size > 0) {
     }
     // Process current
     var current = null
@@ -314,6 +324,7 @@ module.exports = class Update {
           return {
             cid: cid,
             size: stat.CumulativeSize,
+            version: current.version,
           }
         } else {
           console.log(`*** Discard build: ${current.build}
@@ -324,20 +335,23 @@ module.exports = class Update {
  ${error.message} ***`)
       }
     }
-    const newLinks = Array.from(links.values())
+    var newLinks = Array.from(links.values())
+    // Reverse sort
     newLinks.sort((a, b) => {
-      return a.Name.localeCompare(b.Name)
+      return b.Name.localeCompare(a.Name)
     })
     if (newLinks.length > 0) {
       const dagNode = await this.dagPut(api, newLinks)
       return {
         cid: dagNode.cid,
         size: dagNode.size,
+        version: current !== null ? current.version : null,
       }
     }
     return {
       cid: null,
       size: null,
+      version: null,
     }
   }
 
@@ -546,8 +560,9 @@ module.exports = class Update {
       })
     }
     const newLinks = Array.from(links.values())
+    // Reverse sort
     newLinks.sort((a, b) => {
-      return a.Name.localeCompare(b.Name)
+      return b.Name.localeCompare(a.Name)
     })
     if (newLinks.length > 0) {
       return await this.dagPut(api, newLinks)

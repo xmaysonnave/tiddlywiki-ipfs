@@ -110,15 +110,17 @@ module.exports = async function main (name, extension, dir, env, version) {
     var path = `./current/${dir}/current.json`
     if (fs.existsSync(path)) {
       current = JSON.parse(fs.readFileSync(path, 'utf8'))
+      console.log(`*** Loaded current:
+ ${path} ***`)
     } else {
       const uri = `${gateway}/ipns/${rawBuildName}/latest-build/${dir}/current.json`
       try {
         const ua = await loadFromIpfs(uri)
         current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
-        console.log(`*** Fetched:
+        console.log(`*** Fetched current:
  ${uri} ***`)
       } catch (error) {
-        console.log(`*** Unable to fetch:
+        console.log(`*** Unable to fetch current:
  ${uri}
  ${error.message} ***`)
       }
@@ -156,11 +158,13 @@ module.exports = async function main (name, extension, dir, env, version) {
     build: build,
     version: version,
   }
+  // Tiddler
   var tid = `title: $:/ipfs/browser/build
 
 ${fileName}-${version}`
+  // Save
   fs.writeFileSync(`./build/output/${dir}/${fileName}-build.json`, beautify(build, null, 2, 80), 'utf8')
   fs.writeFileSync(`./build/output/${dir}/ipfs.browser.build.tid`, tid, 'utf8')
   // Done
-  return version
+  return build
 }
