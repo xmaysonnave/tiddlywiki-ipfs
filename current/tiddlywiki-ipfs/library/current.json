@@ -1,15 +1,15 @@
 {
-  "build": "210402334",
+  "build": "1.0.0+build-210402334",
   "content": [
     {
       "title": "$_library_ipfs-modules.js-1.0.0+build-210402334",
       "tags": "$:/ipfs/core",
       "name": "$:/library/ipfs-modules.js",
       "rawHash": "bcfc0bbf57e9fde75c11cb877fccac1ebe87a4d994c219ed01be4490b98c6521",
-      "sourceSize": 133000,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeihiyh7b7vu6j7vvxjwzfo7dngyol4vivbkey5pb7alxvj3pojbpzi/$_library_ipfs-modules.js-1.0.0+build-210402334.json",
-      "tidSize": 384,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiaamr2wfzambh32fsslhgmxnm6n6pqtjawpsz7uhqi5tognvfv3ja/$_library_ipfs-modules.js-build.tid"
+      "sourceSize": 133012,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeihfjntzxsttqrgu44jcgpzcuh3pbqw73qvqdag32o3zwwqh7vtudm/$_library_ipfs-modules.js-1.0.0+build-210402334.json",
+      "tidSize": 396,
+      "tidUri": "https://bluelight.link/ipfs/bafybeic4yi5vpibth47mjv45lnxma7wx3sww66w4utnncyw5fs7oqo7suu/$_library_ipfs-modules.js-build.tid"
     },
     {
       "title": "$_library_ipfs-modules.js.zlib-1.0.0+build-210402334",
@@ -17,11 +17,11 @@
       "name": "$:/library/ipfs-modules.js.zlib",
       "rawHash": "64bfa395ba2218fb3e7ce88b0a4de6848d9f9b517ce6c469d379339775bedcb9",
       "sourceSize": 52559,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeiev5msu4yosks47baitghb6tgi6vvpunyhglhehzpj66rvhoslj4m/$_library_ipfs-modules.js.zlib-1.0.0+build-210402334.json",
-      "tidSize": 403,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiaqi6xwklis7myhrbrsk7xgo4rnuscdoljipmh4hegmbsfnm6g5vy/$_library_ipfs-modules.js.zlib-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeiggmjxjkk5xfnvsws5f3i3mvcjbkxviwcty6kjojar2kqfha3tmoa/$_library_ipfs-modules.js.zlib-1.0.0+build-210402334.json",
+      "tidSize": 415,
+      "tidUri": "https://bluelight.link/ipfs/bafybeihhmmweqms6h3te4hlik53eh7taj4h2f6ekiv5qawwi3xt5kipxme/$_library_ipfs-modules.js.zlib-build.tid"
     }
   ],
   "version": "1.0.0+build-210402334",
-  "buildUri": "https://bluelight.link/ipfs/bafybeih6h43c6ajo6stobefa45bbzqcqulwqoxfseghig37xt2w52nns4m/210402334/"
+  "buildUri": "https://bluelight.link/ipfs/bafybeigdvalouktq7xqjts5skvqxc2mctikg4wfya6c7rx4l5l6tmehigy/1.0.0+build-210402334/"
 }

@@ -1976,6 +1976,7 @@ var _boot = (function($tw) {
         fileInfo = $tw.boot.files[title];
         if(fileInfo.isEditableFile) {
           relativePath = path.relative($tw.boot.wikiTiddlersPath,fileInfo.filepath);
+          fileInfo.originalpath = relativePath;
           output[title] =
             path.sep === "/" ?
             relativePath :
@@ -2312,10 +2313,22 @@ var _boot = (function($tw) {
     var platforms = taskModule.platforms;
     if(platforms) {
       for(var t=0; t<platforms.length; t++) {
-        if((platforms[t] === "browser" && !$tw.browser) || (platforms[t] === "node" && !$tw.node)) {
-          return false;
+        switch (platforms[t]) {
+          case "browser":
+            if ($tw.browser) {
+              return true;
+            }
+            break;
+          case "node":
+            if ($tw.node) {
+              return true;
+            }
+            break;
+          default:
+            $tw.utils.error("Module " + taskModule.name + ": '" + platforms[t] + "' in export.platforms invalid");
         }
       }
+      return false;
     }
     return true;
   };

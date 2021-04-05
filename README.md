@@ -7,7 +7,6 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
     <img src="https://gateway.ipfs.io/ipfs/bafybeibi5ldguonidlwomjxwjehodpmypgex5qd2fe6f6yuka4dqvbzvpq" alt="Blue Light"/>
   </a>
 </h1>
-
 <p align="center">
   <a rel="noopener noreferrer" target="_blank" href="https://github.com/ContributorCovenant/contributor_covenant">
     <img alt="An ethical open source project" src="https://img.shields.io/badge/open-ethical-%234baaaa"/>
@@ -22,7 +21,6 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
     <img alt="Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"/>
   </a>
 </p>
-
 <p align="center">
   <a rel="noopener noreferrer" target="_blank" href="https://app.fossa.com/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs?ref=badge_shield" alt="FOSSA Status">
     <img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmaysonnave%2Ftiddlywiki-ipfs.svg?type=shield"/>
@@ -34,11 +32,6 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
     <img alt="Snyk" src="https://snyk.io/test/github/xmaysonnave/tiddlywiki-ipfs/badge.svg"/>
   </a>
 </p>
-
-<p align="center">
-  <a rel="noopener noreferrer" target="_blank" href="https://tiddly.bluelightav.eth.link/"><b>Builds available on IPFS</b></a>
-</p>
-
 <p align="center">
   <a rel="noopener noreferrer" target="_blank" href="https://tiddly.bluelightav.eth.link/">
     <img alt="Builds available on IPFS" title="Builds available on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
@@ -370,8 +363,8 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 - testw
 - tiddlywiki-ipfs
 - update
-- upload-build
 - upload
+- upload-tree
 
 Use the `build` script to build `IPFS with TiddlyWiki`.
 

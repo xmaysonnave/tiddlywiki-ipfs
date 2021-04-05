@@ -5,7 +5,7 @@ build: %BUILD_BOOT_BUILD%
 version: %BUILD_BOOT_VERSION%
 _boot_license_uri: https://raw.githubusercontent.com/Jermolene/TiddlyWiki5/master/license
 _boot_project_uri: https://github.com/Jermolene/TiddlyWiki5
-_boot_source_uri: https://github.com/Jermolene/TiddlyWiki5/blob/v5.1.23/boot/boot.js
+_boot_source_uri: https://github.com/Jermolene/TiddlyWiki5/blob/master/boot/boot.js
 
 The main boot kernel for TiddlyWiki. This single file creates a barebones TW environment that is just sufficient to bootstrap the modules containing the main logic of the application.
 

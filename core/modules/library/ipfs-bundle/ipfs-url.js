@@ -154,11 +154,11 @@ IpfsUrl.prototype.getBase = function (base) {
   // Resolve
   base = this.resolveProtocol(base)
   // Parse
-  var { cid, hostname, ipnsIdentifier } = this.ipfsBundle.decodeHostname(base.hostname)
+  var { ipfsCid, hostname, ipnsIdentifier } = this.ipfsBundle.decodeHostname(base.hostname)
   if (hostname === undefined || hostname == null || hostname.trim() === '') {
     return {
       base: base,
-      cid: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
     }
   }
@@ -168,9 +168,9 @@ IpfsUrl.prototype.getBase = function (base) {
     credential = `${base.username}:${base.password}@`
   }
   const path = `${base.pathname}${base.search}${base.hash}`
-  if (cid !== null || ipnsIdentifier !== null) {
-    if (cid !== null) {
-      base = this.getUrl(`${base.protocol}//${credential}${host}/ipfs/${cid}${path}`)
+  if (ipfsCid !== null || ipnsIdentifier !== null) {
+    if (ipfsCid !== null) {
+      base = this.getUrl(`${base.protocol}//${credential}${host}/ipfs/${ipfsCid}${path}`)
     } else {
       base = this.getUrl(`${base.protocol}//${credential}${host}/ipns/${ipnsIdentifier}${path}`)
     }
@@ -179,7 +179,7 @@ IpfsUrl.prototype.getBase = function (base) {
   }
   return {
     base: base,
-    cid: cid,
+    ipfsCid: ipfsCid,
     ipnsIdentifier: ipnsIdentifier,
   }
 }
@@ -218,14 +218,14 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
     url = this.resolveProtocol(url, base)
   } else {
     var credential = ''
-    var { base, cid, ipnsIdentifier } = this.getBase(url)
+    var { base, ipfsCid, ipnsIdentifier } = this.getBase(url)
     if (url.username && url.password) {
       credential = `${url.username}:${url.password}@`
     }
-    if (cid == null && ipnsIdentifier == null) {
+    if (ipfsCid == null && ipnsIdentifier == null) {
       url = this.getUrl(`${base.protocol}//${credential}${base.host}${url.pathname}${url.search}${url.hash}`)
-    } else if (cid !== null) {
-      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${cid}${url.pathname}${url.search}${url.hash}`)
+    } else if (ipfsCid !== null) {
+      url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${ipfsCid}${url.pathname}${url.search}${url.hash}`)
     } else {
       url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipns/${ipnsIdentifier}${url.pathname}${url.search}${url.hash}`)
     }

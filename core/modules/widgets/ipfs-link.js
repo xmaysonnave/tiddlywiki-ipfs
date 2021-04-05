@@ -78,13 +78,13 @@ IPFS link widget
     } else {
       this.renderText(parent, nextSibling)
       $tw.ipfs
-        .resolveUrl(false, false, value)
+        .resolveUrl(value, false, false, false)
         .then(data => {
-          var { normalizedUrl } = data
-          if (normalizedUrl !== null) {
+          var { resolvedUrl } = data
+          if (resolvedUrl !== null) {
             const sibling = self.findNextSiblingDomNode()
             self.removeChildDomNodes()
-            self.renderExternalLink(parent, nextSibling !== null ? nextSibling : sibling, normalizedUrl)
+            self.renderExternalLink(parent, nextSibling !== null ? nextSibling : sibling, resolvedUrl)
           }
         })
         .catch(error => {
@@ -254,7 +254,7 @@ IPFS link widget
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     const value = this.url !== undefined ? this.url : this.value
     $tw.ipfs
-      .resolveUrl(false, true, value)
+      .resolveUrl(value, false, false, true)
       .then(data => {
         const { resolvedUrl } = data
         if (resolvedUrl !== null) {

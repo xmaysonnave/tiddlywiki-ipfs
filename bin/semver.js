@@ -15,7 +15,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 // bluelight.link
-const IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
+const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
 
 const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
@@ -91,9 +91,9 @@ module.exports = async function main (name, extension, dir, env, version) {
     }
   }
   if (raw == null) {
-    throw new Error(`Unknown raw content: ${normalizedName}`)
+    throw new Error(`Unknown build output: ${normalizedName}`)
   }
-  const rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : IPNS_RAW_BUILD_NAME
+  const rawBuildCid = process.env.IPNS_CID_RAW_BUILD ? `${process.env.IPNS_CID_RAW_BUILD}` : IPNS_CID_RAW_BUILD
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
   // Keccak
   const keccak = createKeccakHash('keccak256')
@@ -113,7 +113,7 @@ module.exports = async function main (name, extension, dir, env, version) {
       console.log(`*** Loaded current:
  ${path} ***`)
     } else {
-      const uri = `${gateway}/ipns/${rawBuildName}/latest-build/${dir}/current.json`
+      const uri = `${gateway}/ipns/${rawBuildCid}/latest-build/${dir}/current.json`
       try {
         const ua = await loadFromIpfs(uri)
         current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))

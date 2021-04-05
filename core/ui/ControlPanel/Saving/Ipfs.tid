@@ -121,12 +121,12 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <table>
 <tbody>
 <tr>
-<td width="20%">''<$link to="$:/ipfs/saver/ipns/name"><<lingo IpnsName>></$link>''</td>
-<td width="80%"><$edit-text tiddler="$:/ipfs/saver/ipns/name" class="tc-edit-texteditor" default="" tag="input"/></td>
+<td width="20%">''<$link to="$:/ipfs/saver/ipns/key"><<lingo IpnsKey>></$link>''</td>
+<td width="80%"><$edit-text tiddler="$:/ipfs/saver/ipns/key" class="tc-edit-texteditor" default="" tag="input"/></td>
 </tr>
 <tr>
-<td width="20%">''<$link to="$:/ipfs/saver/ipns/key"><<lingo IpnsKey>></$link>''</td>
-<td width="80%"><$text text={{$:/ipfs/saver/ipns/key}} class="tc-edit-texteditor"/></td>
+<td width="20%">''<$link to="$:/ipfs/saver/ipns/cid"><<lingo IpnsCid>></$link>''</td>
+<td width="80%"><$text text={{$:/ipfs/saver/ipns/cid}} class="tc-edit-texteditor"/></td>
 </tr>
 </tbody>
 </table>

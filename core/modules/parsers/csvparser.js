@@ -43,13 +43,12 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
         var password = options.tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs
-          .resolveUrl(false, true, canonicalUri)
+          .resolveUrl(canonicalUri, false, false, true)
           .then(data => {
-            var { normalizedUrl, resolvedUrl } = data
-            var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
-            if (url !== null) {
+            var { resolvedUrl } = data
+            if (resolvedUrl !== null) {
               $tw.ipfs
-                .loadToUtf8(url, password)
+                .loadToUtf8(resolvedUrl, password)
                 .then(data => {
                   if (data) {
                     self.split(data)

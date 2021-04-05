@@ -160,25 +160,9 @@ IPFS Default
   }
 
   /*
-   * Retrieve ipfs saver ipns name with default value if applicable
-   */
-  exports.getIpfsIpnsName = function () {
-    var ipnsName = null
-    var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/name')
-    if (tiddler !== undefined && tiddler !== null) {
-      var text = tiddler.fields.text
-      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
-      if (text !== null) {
-        ipnsName = text
-      }
-    }
-    return ipnsName
-  }
-
-  /*
    * Retrieve ipfs saver ipns key with default value if applicable
    */
-  exports.getIpfsIpnsKey = function () {
+  exports.getIpnsKey = function () {
     var ipnsKey = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/key')
     if (tiddler !== undefined && tiddler !== null) {
@@ -189,6 +173,22 @@ IPFS Default
       }
     }
     return ipnsKey
+  }
+
+  /*
+   * Retrieve ipfs saver ipns key with default value if applicable
+   */
+  exports.getIpnsCid = function () {
+    var ipnsCid = null
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/cid')
+    if (tiddler !== undefined && tiddler !== null) {
+      var text = tiddler.fields.text
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
+      if (text !== null) {
+        ipnsCid = text
+      }
+    }
+    return ipnsCid
   }
 
   /*

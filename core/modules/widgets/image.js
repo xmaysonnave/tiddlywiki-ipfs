@@ -88,10 +88,9 @@ Render this widget into the DOM
           var password = tiddler.fields._password
           password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
           $tw.ipfs
-            .resolveUrl(false, true, canonicalUri)
+            .resolveUrl(canonicalUri, false, false, true)
             .then(data => {
-              var { normalizedUrl, resolvedUrl } = data
-              var url = resolvedUrl !== null ? resolvedUrl.toString() : normalizedUrl !== null ? normalizedUrl.toString() : null
+              var { resolvedUrl: url } = data
               if (url !== null) {
                 switch (type) {
                   case 'application/pdf':

@@ -219,16 +219,16 @@ IPFS utils
     }
     var account = null
     var added = null
-    var cid = null
     var fields = []
+    var ipfsCid = null
+    var ipnsCid = null
     var ipnsKey = null
-    var ipnsName = null
     var normalizedUrl = null
     var web3 = null
     const ipfsKeyword = 'ipfs'
     var exportUri = target.fields._export_uri
     try {
-      var { cid, ipnsKey, ipnsName, normalizedUrl } = await $tw.ipfs.resolveUrl(true, true, exportUri)
+      var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(exportUri, true, true, true)
       if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
         var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
         const isOwner = await $tw.ipfs.isOwner(normalizedUrl.hostname, web3, account)
@@ -261,13 +261,13 @@ IPFS utils
       fields: fields,
     })
     $tw.wiki.addTiddler(updatedTiddler)
-    if (ipnsKey !== null && ipnsName !== null) {
-      $tw.utils.alert(ipfsUtilsName, `Publishing IPNS name: ${ipnsName}`)
+    if (ipnsCid !== null && ipnsKey !== null) {
+      $tw.utils.alert(ipfsUtilsName, `Publishing IPNS key: ${ipnsKey}`)
       $tw.ipfs
         .pinToIpfs(`/ipfs/${added}`)
         .then(pin => {
           $tw.ipfs
-            .publishIpnsName(added, ipnsKey, ipnsName)
+            .publishIpnsKey(added, ipnsCid, ipnsKey)
             .then(dummy => {
               fields.push({ key: '_export_uri', value: exportUri })
               const updatedTiddler = $tw.utils.updateTiddler({
@@ -276,13 +276,13 @@ IPFS utils
                 fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(ipfsUtilsName, `Successfully Published IPNS name: ${ipnsName}`)
+              $tw.utils.alert(ipfsUtilsName, `Successfully Published IPNS key: ${ipnsKey}`)
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
-                  .unpinFromIpfs(`/ipfs/${cid}`)
+                  .unpinFromIpfs(`/ipfs/${ipfsCid}`)
                   .then(unpin => {
                     if (unpin !== undefined && unpin !== null) {
-                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${cid}`)
+                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${ipfsCid}`)
                     }
                   })
                   .catch(error => {
@@ -319,10 +319,10 @@ IPFS utils
               $tw.utils.alert(ipfsUtilsName, 'Successfully Published to ENS...')
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
-                  .unpinFromIpfs(`/ipfs/${cid}`)
+                  .unpinFromIpfs(`/ipfs/${ipfsCid}`)
                   .then(unpin => {
                     if (unpin !== undefined && unpin !== null) {
-                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${cid}`)
+                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${ipfsCid}`)
                     }
                   })
                   .catch(error => {
@@ -380,7 +380,7 @@ IPFS utils
           if (field === 'tags' || field === '_export_uri') {
             continue
           }
-          var ipnsKey = null
+          var ipnsCid = null
           var fieldValue = current.getFieldString(field)
           if (field === '_canonical_uri' && fieldValue === exportUri) {
             continue
@@ -389,15 +389,15 @@ IPFS utils
             continue
           }
           try {
-            var { ipnsKey } = await $tw.ipfs.resolveUrl(false, false, fieldValue)
+            var { ipnsCid } = await $tw.ipfs.resolveUrl(fieldValue, false, false, false)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(ipfsUtilsName, error.message)
             return null
           }
           // IPNS
-          if (ipnsKey !== null) {
-            fieldValue = `${ipnsKeyword}://${ipnsKey}`
+          if (ipnsCid !== null) {
+            fieldValue = `${ipnsKeyword}://${ipnsCid}`
           }
           // Store field
           fields[field] = fieldValue

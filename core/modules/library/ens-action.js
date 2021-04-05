@@ -74,8 +74,8 @@ ENS Action
   }
 
   EnsAction.prototype.handlePublishToEns = async function (event) {
-    var cid = null
-    var ipnsKey = null
+    var ipfsCid = null
+    var ipnsCid = null
     const wiki = $tw.ipfs.getDocumentUrl()
     var ensDomain = $tw.utils.getIpfsEnsDomain()
     if (ensDomain == null) {
@@ -83,27 +83,27 @@ ENS Action
       return false
     }
     try {
-      var { cid, ipnsKey } = await $tw.ipfs.resolveUrl(false, false, wiki)
+      var { ipfsCid, ipnsCid } = await $tw.ipfs.resolveUrl(wiki, false, false, false)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
-    if (cid == null && ipnsKey == null) {
+    if (ipfsCid == null && ipnsCid == null) {
       $tw.utils.alert(name, 'Undefined IPFS identifier...')
       return false
     }
-    if (cid !== null) {
-      return await this.publishToEns(ensDomain, ipfsKeyword, cid)
+    if (ipfsCid !== null) {
+      return await this.publishToEns(ensDomain, ipfsKeyword, ipfsCid)
     }
-    return await this.publishToEns(ensDomain, ipnsKeyword, ipnsKey)
+    return await this.publishToEns(ensDomain, ipnsKeyword, ipnsCid)
   }
 
   EnsAction.prototype.handlePublishIpnsToEns = async function (event) {
-    var ipnsKey = null
-    var ipnsName = $tw.utils.getIpfsIpnsName()
-    if (ipnsName == null) {
-      $tw.utils.alert(name, 'Undefined IPNS name....')
+    var ipnsCid = null
+    var ipnsKey = $tw.utils.getIpnsKey()
+    if (ipnsKey == null) {
+      $tw.utils.alert(name, 'Undefined IPNS key....')
       return false
     }
     var ensDomain = $tw.utils.getIpfsEnsDomain()
@@ -112,28 +112,27 @@ ENS Action
       return false
     }
     try {
-      var { ipnsKey } = await $tw.ipfs.resolveUrl(true, false, `/${ipnsKeyword}/${ipnsName}`)
+      var { ipnsCid } = await $tw.ipfs.resolveUrl(`/${ipnsKeyword}/${ipnsKey}`, false, false, false)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
-    return await this.publishToEns(ensDomain, ipnsKeyword, ipnsKey)
+    return await this.publishToEns(ensDomain, ipnsKeyword, ipnsCid)
   }
 
   EnsAction.prototype.publishToEns = async function (ensDomain, protocol, identifier) {
     var account = null
-    var ensCid = null
-    var ensIpnsKey = null
+    var ipfsCid = null
     var web3 = null
     try {
       var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-      var { cid: ensCid, ipnsKey: ensIpnsKey } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
-      if (protocol === ipfsKeyword && identifier === ensCid) {
+      var { ipfsCid, ipnsCid } = await $tw.ipfs.resolveUrl(ensDomain, false, false, true, null, web3)
+      if (protocol === ipfsKeyword && identifier === ipfsCid) {
         $tw.utils.alert(name, 'The current resolved ENS domain content is up to date...')
         return false
       }
-      if (protocol === ipnsKeyword && identifier === ensIpnsKey) {
+      if (protocol === ipnsKeyword && identifier === ipnsCid) {
         $tw.utils.alert(name, 'The current resolved ENS domain content is up to date...')
         return false
       }
@@ -151,7 +150,7 @@ ENS Action
       return false
     }
     $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
-    const ipfsPath = `/ipfs/${ensCid}`
+    const ipfsPath = `/ipfs/${ipfsCid}`
     $tw.ipfs
       .requestToUnpin(ipfsPath)
       .then(unpin => {

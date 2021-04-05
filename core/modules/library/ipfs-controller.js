@@ -20,7 +20,6 @@ IPFS Controller
   const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
   const IpfsWrapper = require('$:/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
 
-  const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
 
   const name = 'ipfs-controller'
@@ -188,11 +187,11 @@ IPFS Controller
       }
       if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
         self
-          .resolveUrl(true, true, ipfsPath)
+          .resolveUrl(ipfsPath, true, false, true)
           .then(data => {
-            const { cid } = data
-            if (cid !== null) {
-              resolve(self.addToPin(`/${ipfsKeyword}/${cid}`))
+            const { resolvedUrl } = data
+            if (resolvedUrl !== null) {
+              resolve(self.addToPin(resolvedUrl.pathname))
             } else {
               resolve(false)
             }
@@ -241,11 +240,11 @@ ${ipfsPath}`
       }
       if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
         self
-          .resolveUrl(true, true, ipfsPath)
+          .resolveUrl(ipfsPath, true, false, true)
           .then(data => {
-            const { cid } = data
-            if (cid !== null) {
-              resolve(self.addToUnpin(`/${ipfsKeyword}/${cid}`))
+            const { resolvedUrl } = data
+            if (resolvedUrl !== null) {
+              resolve(self.addToUnpin(resolvedUrl.pathname))
             } else {
               resolve(false)
             }
@@ -325,39 +324,44 @@ ${ipfsPath}`
     return await this.ipfsWrapper.addToIpfs(ipfs, content)
   }
 
-  IpfsController.prototype.generateIpnsKey = async function (ipnsName) {
+  IpfsController.prototype.generateIpnsCid = async function (ipnsKey) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.generateIpnsKey(ipfs, ipnsName)
+    return await this.ipfsWrapper.generateIpnsCid(ipfs, ipnsKey)
   }
 
-  IpfsController.prototype.removeIpnsKey = async function (ipnsName) {
+  IpfsController.prototype.removeIpnsKey = async function (ipnsKey) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsName)
+    return await this.ipfsWrapper.removeIpnsKey(ipfs, ipnsKey)
   }
 
-  IpfsController.prototype.renameIpnsName = async function (oldIpnsName, newIpnsName) {
+  IpfsController.prototype.renameIpnsKey = async function (oldIpnsKey, newIpnsKey) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.renameIpnsName(ipfs, oldIpnsName, newIpnsName)
+    return await this.ipfsWrapper.renameIpnsKey(ipfs, oldIpnsKey, newIpnsKey)
   }
 
-  IpfsController.prototype.resolveIpfsContainer = async function (url) {
+  IpfsController.prototype.resolveIpfs = async function (value, timeout) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.resolveIpfsContainer(ipfs, url)
+    return await this.ipfsWrapper.resolveIpfs(ipfs, value, timeout)
   }
 
-  IpfsController.prototype.getIpnsIdentifier = async function (identifier, resolveIpns, base, path, ipnsName) {
+  IpfsController.prototype.resolveIpfsContainer = async function (value, timeout) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, resolveIpns, base, path, ipnsName)
+    return await this.ipfsWrapper.resolveIpfsContainer(ipfs, value, timeout)
   }
 
-  IpfsController.prototype.resolveIpnsKey = async function (ipnsKey) {
+  IpfsController.prototype.getIpnsIdentifier = async function (identifier, resolveIpnsKey, base, path, ipnsKey) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey)
+    return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, resolveIpnsKey, base, path, ipnsKey)
   }
 
-  IpfsController.prototype.publishIpnsName = async function (cid, ipnsKey, ipnsName) {
+  IpfsController.prototype.resolveIpnsKey = async function (ipnsKey, timeout) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.publishIpnsName(cid, ipfs, ipnsKey, ipnsName)
+    return await this.ipfsWrapper.resolveIpnsKey(ipfs, ipnsKey, timeout)
+  }
+
+  IpfsController.prototype.publishIpnsKey = async function (ipfsCid, ipnsCid, ipnsKey, options) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsWrapper.publishIpnsKey(ipfs, ipfsCid, ipnsCid, ipnsKey, options)
   }
 
   IpfsController.prototype.isJson = function (content) {
@@ -400,18 +404,18 @@ ${ipfsPath}`
     return this.ipfsBundle.getUrl(url, base)
   }
 
-  IpfsController.prototype.resolveUrl = async function (resolveIpns, resolveEns, value, base, web3) {
-    var cid = null
+  IpfsController.prototype.resolveUrl = async function (value, resolveIpns, resolveIpnsKey, resolveEns, base, web3) {
+    var ipfsCid = null
+    var ipnsCid = null
     var ipnsKey = null
-    var ipnsName = null
     var normalizedUrl = null
     var resolvedUrl = null
     value = value !== undefined && value !== null && value.toString().trim() !== '' ? value.toString().trim() : null
     if (value == null) {
       return {
-        cid: null,
+        ipfsCid: null,
+        ipnsCid: null,
         ipnsKey: null,
-        ipnsName: null,
         normalizedUrl: null,
         resolvedUrl: null,
       }
@@ -423,80 +427,70 @@ ${ipfsPath}`
     }
     if (normalizedUrl == null) {
       return {
-        cid: null,
+        ipfsCid: null,
+        ipnsCid: null,
         ipnsKey: null,
-        ipnsName: null,
         normalizedUrl: null,
         resolvedUrl: null,
       }
     }
-    var { cid, ipnsIdentifier, path } = this.getIpfsIdentifier(normalizedUrl)
+    var { ipfsCid, ipnsIdentifier, path } = this.getIpfsIdentifier(normalizedUrl)
     if (ipnsIdentifier !== null) {
-      var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, base, path)
-    } else if (cid == null && ipnsIdentifier == null && resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
+      var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, resolveIpnsKey, base, path)
+    } else if (ipfsCid == null && ipnsIdentifier == null && resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
       var { identifier, protocol, normalizedUrl, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
       if (protocol === ipnsKeyword) {
-        var { cid, ipnsKey, ipnsName, normalizedUrl, resolvedUrl } = await this.resolveIpns(identifier, resolveIpns, base, path)
+        var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(identifier, resolveIpns, resolveIpnsKey, base, path)
       }
     }
     return {
-      cid: cid,
+      ipfsCid: ipfsCid,
+      ipnsCid: ipnsCid,
       ipnsKey: ipnsKey,
-      ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
       resolvedUrl: resolvedUrl !== null ? resolvedUrl : normalizedUrl,
     }
   }
 
-  IpfsController.prototype.resolveIpns = async function (ipnsIdentifier, resolveIpns, base, path) {
-    ipnsIdentifier = ipnsIdentifier !== undefined && ipnsIdentifier !== null && ipnsIdentifier.toString().trim() !== '' ? ipnsIdentifier.toString().trim() : null
+  IpfsController.prototype.resolveIpns = async function (identifier, resolveIpfsCid, resolveIpnsKey, base, path) {
+    identifier = identifier !== undefined && identifier !== null && identifier.toString().trim() !== '' ? identifier.toString().trim() : null
     path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
-    if (ipnsIdentifier == null) {
+    if (identifier == null) {
       return {
-        cid: null,
+        ipfsCid: null,
+        ipnsCid: null,
         ipnsKey: null,
-        ipnsName: null,
         normalizedUrl: null,
         resolvedUrl: null,
       }
     }
-    var cid = null
+    var ipfsCid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsName, normalizedUrl } = await this.getIpnsIdentifier(ipnsIdentifier, resolveIpns, base, path)
-    if (resolveIpns) {
+    var { ipnsKey, ipnsCid, normalizedUrl } = await this.getIpnsIdentifier(identifier, resolveIpnsKey, base, path)
+    if (ipnsCid !== null && resolveIpfsCid) {
       $tw.ipfs.getLogger().info(
-        `Resolving IPNS key:
-${normalizedUrl}`
+        `Resolve IPNS:
+ ${normalizedUrl}`
       )
-      $tw.utils.alert(name, 'Resolving an IPNS key...')
-      try {
-        cid = await this.resolveIpnsKey(ipnsKey)
-        if (cid !== null) {
-          // Path
-          const startPath = `/${ipnsKeyword}/${ipnsKey}`
-          if (path.startsWith(startPath)) {
-            path = path.slice(startPath.length)
-          }
-          path = `${startPath}${path}`
-          resolvedUrl = this.normalizeUrl(path, base)
-          $tw.ipfs.getLogger().info(
-            `Successfully resolved IPNS key:
-${resolvedUrl}`
-          )
-          $tw.utils.alert(name, 'Successfully resolved an IPNS key...')
+      $tw.utils.alert(name, 'Resolve IPNS...')
+      var { cid: ipfsCid, remainderPath } = await this.resolveIpfs(normalizedUrl.pathname)
+      if (ipfsCid !== null) {
+        var credential = ''
+        var { base } = this.ipfsBundle.getBase(normalizedUrl)
+        if (normalizedUrl.username && normalizedUrl.password) {
+          credential = `${normalizedUrl.username}:${normalizedUrl.password}@`
         }
-      } catch (error) {
-        // Unable to resolve the key
-        // It usually happen when the key is not initialized
-        cid = null
-        $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(name, error.message)
+        resolvedUrl = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${ipfsCid}${remainderPath}${normalizedUrl.search}${normalizedUrl.hash}`)
+        $tw.ipfs.getLogger().info(
+          `Successfully resolved IPNS:
+ ${resolvedUrl}`
+        )
       }
     }
     return {
-      cid: cid,
+      ipfsCid: ipfsCid,
+      ipnsCid: ipnsCid,
       ipnsKey: ipnsKey,
-      ipnsName: ipnsName,
       normalizedUrl: normalizedUrl,
       resolvedUrl: resolvedUrl,
     }

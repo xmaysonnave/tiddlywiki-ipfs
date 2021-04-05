@@ -23,7 +23,7 @@ IPFS plugin version
    * Run the macro
    */
   exports.run = function () {
-    const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
+    const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/ipns/cid') : null
     const library = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/library/ipfs-modules.js') : null
     if (buildName !== undefined && library !== undefined) {
       return `${buildName.fields.text}/tiddlywiki-ipfs/library/${library.fields.build}/`

@@ -428,8 +428,8 @@ IpfsBundle.prototype.ls = async function (client, ipfsPath) {
   return await this.ipfsLibrary.ls(client, ipfsPath)
 }
 
-IpfsBundle.prototype.namePublish = async function (client, ipnsName, cid, options) {
-  return await this.ipfsLibrary.namePublish(client, ipnsName, cid, options)
+IpfsBundle.prototype.namePublish = async function (client, ipnsKey, cid, options) {
+  return await this.ipfsLibrary.namePublish(client, ipnsKey, cid, options)
 }
 
 IpfsBundle.prototype.nameResolve = async function (client, value, options) {
@@ -444,12 +444,12 @@ IpfsBundle.prototype.objectStat = async function (client, cid, timeout) {
   return await this.ipfsLibrary.objectStat(client, cid, timeout)
 }
 
-IpfsBundle.prototype.pinAdd = async function (client, cid, options) {
-  return await this.ipfsLibrary.pinAdd(client, cid, options)
+IpfsBundle.prototype.pinAdd = async function (client, ipfsPath, options) {
+  return await this.ipfsLibrary.pinAdd(client, ipfsPath, options)
 }
 
-IpfsBundle.prototype.pinRm = async function (client, cid, options) {
-  return await this.ipfsLibrary.pinRm(client, cid, options)
+IpfsBundle.prototype.pinRm = async function (client, ipfsPath, options) {
+  return await this.ipfsLibrary.pinRm(client, ipfsPath, options)
 }
 
 IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {
@@ -461,7 +461,7 @@ IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {
   }
   if (value instanceof URL === false) {
     try {
-      value = this.getUrl(value)
+      value = this.getUrl(value, this.getIpfsBaseUrl())
     } catch (error) {
       return {
         cid: null,
@@ -470,8 +470,9 @@ IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {
     }
   }
   // Pathname
+  var cid = null
   var ipfsPath = null
-  var { cid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
+  var { ipfsCid: cid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
   if (cid !== null) {
     ipfsPath = `/ipfs/${cid}${path}`
   } else if (ipnsIdentifier !== null) {
@@ -485,7 +486,7 @@ IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {
     }
   }
   // Hostname
-  var { cid, ipnsIdentifier, path } = this.decodeHostname(value.hostname)
+  var { ipfsCid: cid, ipnsIdentifier, path } = this.decodeHostname(value.hostname)
   if (cid !== null) {
     ipfsPath = `/ipfs/${cid}${path}`
   } else if (ipnsIdentifier !== null) {
@@ -510,7 +511,7 @@ IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeo
   }
   if (value instanceof URL === false) {
     try {
-      value = this.getUrl(value)
+      value = this.getUrl(value, this.getIpfsBaseUrl())
     } catch (error) {
       return null
     }
@@ -545,7 +546,7 @@ IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeo
   const base = this.getUrl(`${value.protocol}//${value.host}`)
   // Pathname
   var ipfsPath = null
-  var { cid: innerCid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
+  var { ipfsCid: innerCid, ipnsIdentifier, path } = this.decodePathname(value.pathname)
   if (innerCid !== null) {
     ipfsPath = `/ipfs/${innerCid}${path}`
   } else if (ipnsIdentifier !== null) {
@@ -555,7 +556,7 @@ IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeo
     return await resolveContainer(client, ipfsPath, base, timeout)
   }
   // Hostname
-  var { cid: innerCid, ipnsIdentifier, path } = this.decodeHostname(value.hostname)
+  var { ipfsCid: innerCid, ipnsIdentifier, path } = this.decodeHostname(value.hostname)
   if (innerCid !== null) {
     ipfsPath = `/ipfs/${innerCid}${path}`
   } else if (ipnsIdentifier !== null) {
@@ -570,21 +571,21 @@ IpfsBundle.prototype.resolveIpfsContainer = async function (client, value, timeo
 IpfsBundle.prototype.getIpfsIdentifier = function (value) {
   if (value === undefined || value == null) {
     return {
-      cid: null,
       hostname: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
       path: null,
     }
   }
   if (value instanceof CID) {
     return {
-      cid: value,
       hostname: null,
+      ipfsCid: value,
       ipnsIdentifier: null,
       path: null,
     }
   }
-  var cid = null
+  var ipfsCid = null
   var hostname = null
   var ipnsIdentifier = null
   var path = null
@@ -599,16 +600,16 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
     url = value
   }
   if (url !== null) {
-    var { cid, hostname, ipnsIdentifier, path } = this.decodeUrl(url)
+    var { hostname, ipfsCid, ipnsIdentifier, path } = this.decodeUrl(url)
   } else {
-    var { cid, hostname, ipnsIdentifier, path } = this.decodeHostname(value)
-    if (cid == null && ipnsIdentifier == null) {
-      var { cid, ipnsIdentifier, path } = this.decodePathname(value)
+    var { hostname, ipfsCid, ipnsIdentifier, path } = this.decodeHostname(value)
+    if (ipfsCid == null && ipnsIdentifier == null) {
+      var { ipfsCid, ipnsIdentifier, path } = this.decodePathname(value)
     }
   }
   return {
-    cid: cid,
     hostname: hostname,
+    ipfsCid: ipfsCid,
     ipnsIdentifier: ipnsIdentifier,
     path: path,
   }
@@ -618,14 +619,14 @@ IpfsBundle.prototype.decodeUrl = function (url) {
   url = url !== undefined && url !== null && url.toString().trim() !== '' ? url : null
   if (url instanceof URL === false) {
     return {
-      cid: null,
       hostname: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
       path: null,
     }
   }
-  var cid = null
   var hostname = null
+  var ipfsCid = null
   var ipnsIdentifier = null
   var protocol = null
   var path = `${url.pathname}${url.search}${url.hash}`
@@ -635,7 +636,7 @@ IpfsBundle.prototype.decodeUrl = function (url) {
         ipnsIdentifier = url.hostname
         protocol = 'ipns'
       } else if (url.protocol === 'ipfs:' && this.getCid(url.hostname) !== null) {
-        cid = url.hostname
+        ipfsCid = url.hostname
         protocol = 'ipfs'
       }
     } else if (url.pathname !== undefined && url.pathname !== null && url.pathname.trim() !== '') {
@@ -645,25 +646,25 @@ IpfsBundle.prototype.decodeUrl = function (url) {
       } else {
         pathname = `/${protocol}/${url.pathname}${url.search}${url.hash}`
       }
-      var { cid, ipnsIdentifier, path } = this.decodePathname(pathname)
+      var { ipfsCid, ipnsIdentifier, path } = this.decodePathname(pathname)
     }
     return {
-      cid: cid,
       hostname: null,
+      ipfsCid: ipfsCid,
       ipnsIdentifier: ipnsIdentifier,
       path: path,
     }
   }
-  var { cid, hostname, ipnsIdentifier } = this.decodeHostname(url.hostname)
-  if (cid == null && ipnsIdentifier == null) {
-    var { cid, ipnsIdentifier, path: innerPath } = this.decodePathname(url.pathname)
+  var { hostname, ipfsCid, ipnsIdentifier } = this.decodeHostname(url.hostname)
+  if (ipfsCid == null && ipnsIdentifier == null) {
+    var { ipfsCid, ipnsIdentifier, path: innerPath } = this.decodePathname(url.pathname)
     if (innerPath !== null) {
       path = `${innerPath}${url.search}${url.hash}`
     }
   }
   return {
-    cid: cid,
     hostname: hostname,
+    ipfsCid: ipfsCid,
     ipnsIdentifier: ipnsIdentifier,
     path: path,
   }
@@ -673,7 +674,7 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
   pathname = pathname !== undefined && pathname !== null && pathname.trim() !== '' ? pathname.trim() : null
   if (pathname == null || pathname === '/') {
     return {
-      cid: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
       path: pathname,
     }
@@ -702,22 +703,22 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
   }
   if (protocol == null || identifier == null) {
     return {
-      cid: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
       path: pathname,
     }
   }
-  var cid = null
+  var ipfsCid = null
   var ipnsIdentifier = null
   if (protocol === 'ipns' || protocol === 'ipns:') {
     ipnsIdentifier = identifier
   } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier) !== null) {
-    cid = identifier
+    ipfsCid = identifier
   } else {
     protocol = null
   }
   return {
-    cid: cid,
+    ipfsCid: ipfsCid,
     ipnsIdentifier: ipnsIdentifier,
     path: protocol !== null ? path : pathname,
   }
@@ -727,8 +728,8 @@ IpfsBundle.prototype.decodeHostname = function (hostname) {
   hostname = hostname !== undefined && hostname !== null && hostname.trim() !== '' ? hostname.trim() : null
   if (hostname == null) {
     return {
-      cid: null,
       hostname: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
       path: '/',
     }
@@ -769,20 +770,20 @@ IpfsBundle.prototype.decodeHostname = function (hostname) {
   }
   if (identifier == null || protocol == null) {
     return {
-      cid: null,
       hostname: null,
+      ipfsCid: null,
       ipnsIdentifier: null,
       path: '/',
     }
   }
-  var cid = null
+  var ipfsCid = null
   var ipnsIdentifier = null
   if (protocol === 'ipns' || protocol === 'ipns:') {
     ipnsIdentifier = identifier
   } else if ((protocol === 'ipfs' || protocol === 'ipfs:') && this.getCid(identifier) !== null) {
-    cid = identifier
+    ipfsCid = identifier
   }
-  if (cid == null && ipnsIdentifier == null) {
+  if (ipfsCid == null && ipnsIdentifier == null) {
     if (domain == null) {
       domain = `${identifier}.${protocol}`
     } else {
@@ -790,8 +791,8 @@ IpfsBundle.prototype.decodeHostname = function (hostname) {
     }
   }
   return {
-    cid: cid,
     hostname: domain,
+    ipfsCid: ipfsCid,
     ipnsIdentifier: ipnsIdentifier,
     path: path !== undefined && path !== null ? path : '/',
   }
@@ -799,7 +800,7 @@ IpfsBundle.prototype.decodeHostname = function (hostname) {
 
 IpfsBundle.prototype.getCid = function (cid) {
   try {
-    const newCid = new CID(cid)
+    const newCid = new CID(cid.toString())
     if (CID.isCID(newCid)) {
       return newCid
     }

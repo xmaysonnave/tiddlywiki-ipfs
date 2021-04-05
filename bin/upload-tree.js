@@ -194,7 +194,7 @@ module.exports = async function main (load) {
     publicGateway = gateway
   }
   console.log('***')
-  console.log(`*** Upload build node:
+  console.log(`*** Upload build tree:
  api: ${apiUrl}
  gateway: ${new URL(gateway)}
  public gateway: ${new URL(publicGateway)} ***`)

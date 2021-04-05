@@ -42,16 +42,16 @@ IPFS Saver
     if ($tw.saverHandler.isDirty() === false) {
       return false
     }
-    const publishToIpns = async function (added, ipnsCid, ipnsKey, ipnsName) {
-      $tw.utils.alert(name, `Publishing IPNS name: ${ipnsName}`)
+    const publishToIpns = async function (added, ipnsIpfsCid, ipnsCid, ipnsKey) {
+      $tw.utils.alert(name, `Publishing IPNS key: ${ipnsKey}`)
       try {
-        await $tw.ipfs.publishIpnsName(added, ipnsKey, ipnsName)
-        $tw.utils.alert(name, `Successfully Published IPNS name: ${ipnsName}`)
+        await $tw.ipfs.publishIpnsKey(added, ipnsCid, ipnsKey)
+        $tw.utils.alert(name, `Successfully Published IPNS key: ${ipnsKey}`)
       } catch (error) {
         $tw.ipfs.getLogger().warn(error)
         $tw.utils.alert(name, error.message)
-        if (ipnsCid !== null) {
-          await $tw.ipfs.requestToPin(`/ipfs/${ipnsCid}`)
+        if (ipnsIpfsCid !== null) {
+          await $tw.ipfs.requestToPin(`/ipfs/${ipnsIpfsCid}`)
         }
         return false
       }
@@ -60,12 +60,13 @@ IPFS Saver
     try {
       var account = null
       var ensCid = null
+      var ensIpnsCid = null
       var ensIpnsKey = null
-      var ensIpnsName = null
       var ensDomain = null
+      var ipfsCid = null
       var ipnsCid = null
+      var ipnsIpfsCid = null
       var ipnsKey = null
-      var ipnsName = null
       var options = options || {}
       var resolvedUrl = null
       var web3 = null
@@ -81,49 +82,49 @@ IPFS Saver
       const search = wiki.search
       const hash = wiki.hash
       try {
-        var { cid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, wiki)
+        var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(wiki, false, false, true)
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         callback(error)
         return true
       }
-      if (cid !== null && ipnsKey == null) {
+      if (ipfsCid !== null && ipnsCid == null) {
         const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
         if (resolvedCid !== null) {
           await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
         }
       }
       // IPNS
-      if (ipnsKey !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
+      if (ipnsCid !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
         // Resolve current IPNS
-        if (ipnsKey !== null) {
+        if (ipnsCid !== null) {
           try {
-            var { cid: ipnsCid, ipnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(true, false, wiki)
+            var { ipfsCid: ipnsIpfsCid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(wiki, true, true, false)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           }
         } else {
           // Default IPNS
-          ipnsKey = $tw.utils.getIpfsIpnsKey()
-          ipnsName = $tw.utils.getIpfsIpnsName()
-          if (ipnsKey == null && ipnsName == null) {
-            callback(new Error('Unknown default IPNS identifiers...'))
+          ipnsCid = $tw.utils.getIpnsCid()
+          ipnsKey = $tw.utils.getIpnsKey()
+          if (ipnsCid == null && ipnsKey == null) {
+            callback(new Error('Unknown default IPNS key pair...'))
             return true
           }
-          $tw.ipfs.getLogger().info('Processing default IPNS identifiers...')
-          var identifier = ipnsKey
+          $tw.ipfs.getLogger().info('Processing default IPNS key pair...')
+          var identifier = ipnsCid
           if (identifier == null) {
-            identifier = ipnsName
+            identifier = ipnsKey
           }
           try {
-            var { cid: ipnsCid, ipnsKey, ipnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(true, false, `/${ipnsKeyword}/${identifier}`)
+            var { ipfsCid: ipnsIpfsCid, ipnsCid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(`/${ipnsKeyword}/${identifier}`, true, true, false)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
           }
         }
-        if (ipnsCid !== null) {
+        if (ipnsIpfsCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
           if (resolvedCid !== null) {
             await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
@@ -144,7 +145,7 @@ IPFS Saver
           err.name = 'OwnerError'
           throw err
         }
-        var { cid: ensCid, ipnsKey: ensIpnsKey, ipnsName: ensIpnsName, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, ensDomain, null, web3)
+        var { ipfsCid: ensCid, ipnsCid: ensIpnsCid, ipnsKey: ensIpnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(ensDomain, true, true, true, null, web3)
         if (ensCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
           if (resolvedCid !== null) {
@@ -158,18 +159,18 @@ IPFS Saver
       await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${added}`)
       // Publish to IPNS
       pathname = `/${ipfsKeyword}/${added}/`
-      if (ipnsKey !== null && ipnsName !== null) {
-        if (await publishToIpns(added, ipnsCid, ipnsKey, ipnsName)) {
-          pathname = `/${ipnsKeyword}/${ipnsKey}/`
+      if (ipnsCid !== null && ipnsKey !== null) {
+        if (await publishToIpns(added, ipnsIpfsCid, ipnsCid, ipnsKey)) {
+          pathname = `/${ipnsKeyword}/${ipnsCid}/`
         }
       }
-      if (ensIpnsKey !== null && ensIpnsName !== null) {
-        if (await publishToIpns(added, ensCid, ensIpnsKey, ensIpnsName)) {
-          pathname = `/${ipnsKeyword}/${ensIpnsKey}/`
+      if (ensIpnsCid !== null && ensIpnsKey !== null) {
+        if (await publishToIpns(added, ensCid, ensIpnsCid, ensIpnsKey)) {
+          pathname = `/${ipnsKeyword}/${ensIpnsCid}/`
         }
       }
       // Publish to ENS
-      if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsKey == null) {
+      if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsCid == null) {
         try {
           $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${added}`, web3, account)

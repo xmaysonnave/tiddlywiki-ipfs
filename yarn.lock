@@ -6731,13 +6731,13 @@ ipfs-http-server@^0.3.4:
   optionalDependencies:
     prom-client "^12.0.0"
 
-ipfs-provider@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ipfs-provider/-/ipfs-provider-1.1.0.tgz#4f37debc1325b189ee068e38631906c8e6af3229"
-  integrity sha512-1X8Efz4WW8v5wcXAr9u5G3zZ1qqcETbys2QZn6xi1ls469FktHvuJT3ZqlM6jPhpLxRcuz79LSGVirWMBygQLQ==
+ipfs-provider@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ipfs-provider/-/ipfs-provider-2.0.1.tgz#57491f4a825f3e885530eec7987f44fb3a5033c1"
+  integrity sha512-O57K/7XSPYp0sil2X5yK6+P38WdrRZ1pyAesDiXly/6DfuEkn3ozFcjdcIuFy19HFwVH02mNfY1oSxQRODkIFA==
   dependencies:
-    iso-url "~0.4.7"
-    merge-options "^3.0.1"
+    iso-url "^1.1.5"
+    merge-options "^3.0.4"
 
 ipfs-repo-migrations@^6.0.0:
   version "6.0.0"
@@ -7403,6 +7403,11 @@ iso-url@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/iso-url/-/iso-url-1.0.0.tgz#2dd32e5915eb0ecca3a6ff419eb35a0c60eeabc8"
   integrity sha512-n/MsHgKOoHcFrhsxfbM3aaSdUujoFrrZ3537p3RW80AL7axL36acCseoMwIW4tNOl0n0SnkzNyVh4bREwmHoPQ==
+
+iso-url@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/iso-url/-/iso-url-1.1.5.tgz#875a0f2bf33fa1fc200f8d89e3f49eee57a8f0d9"
+  integrity sha512-+3JqoKdBTGmyv9vOkS6b9iHhvK34UajfTibrH/1HOK8TI7K2VsM0qOCd+aJdWKtSOA8g3PqZfcwDmnR0p3klqQ==
 
 iso-url@~0.4.7:
   version "0.4.7"
@@ -9051,7 +9056,7 @@ merge-options@^2.0.0:
   dependencies:
     is-plain-obj "^2.0.0"
 
-merge-options@^3.0.1, merge-options@^3.0.3, merge-options@^3.0.4:
+merge-options@^3.0.3, merge-options@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/merge-options/-/merge-options-3.0.4.tgz#84709c2aa2a4b24c1981f66c179fe5565cc6dbb7"
   integrity sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==
@@ -11728,10 +11733,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@^1.521.0:
-  version "1.521.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.521.0.tgz#d81e0dba1872e262c6a3e20bed533122204fd32c"
-  integrity sha512-eOjyyWJerI8/2hU/pI8GQDYKFrf+ACl+Bw1U0xDlT733p+YidYXsc5flJykR6uPglb756/2HZQCujfX3ViUTdQ==
+snyk@^1.522.0:
+  version "1.522.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.522.0.tgz#fb33bf370b3ed7a445422f2c124507034ac3a7f8"
+  integrity sha512-KrF1W4HzGNkwafRNm0RZpX3bdnE0JmWhHTtFfPUxY/0LGGmUNqTbbMuQkyTtdT0dyUIdJnetuKuRItWf1R5Ygw==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"

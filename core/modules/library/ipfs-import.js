@@ -83,8 +83,8 @@ IPFS Import
   }
 
   IpfsImport.prototype.getKey = async function (value, base) {
-    var cid = null
-    var ipnsKey = null
+    var ipfsCid = null
+    var ipnsCid = null
     var key = null
     var normalizedUrl = null
     var resolvedUrl = null
@@ -92,20 +92,19 @@ IPFS Import
     if (value == null) {
       return {
         key: null,
-        isIpfs: false,
         resolvedUrl: null,
       }
     }
-    var { cid, ipnsKey, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(false, true, value, base)
+    var { ipfsCid, ipnsCid, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(value, true, false, true, base)
     if (normalizedUrl == null && resolvedUrl == null) {
       throw new Error(`Failed to resolve value: ${value}`)
     }
     if (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link')) {
       key = normalizedUrl.hostname
-    } else if (cid !== null) {
-      key = `ipfs://${cid}`
-    } else if (ipnsKey !== null) {
-      key = `ipns://${ipnsKey}`
+    } else if (ipfsCid !== null) {
+      key = `ipfs://${ipfsCid}`
+    } else if (ipnsCid !== null) {
+      key = `ipns://${ipnsCid}`
     } else {
       key = normalizedUrl.toString()
     }
@@ -120,8 +119,8 @@ IPFS Import
     if (key == null) {
       return false
     }
-    const { cid, ipnsIdentifier } = $tw.ipfs.getIpfsIdentifier(key)
-    if (key.endsWith('.eth') || key.endsWith('.eth.link') || cid !== null || ipnsIdentifier !== null) {
+    const { ipfsCid, ipnsIdentifier } = $tw.ipfs.getIpfsIdentifier(key)
+    if (key.endsWith('.eth') || key.endsWith('.eth.link') || ipfsCid !== null || ipnsIdentifier !== null) {
       return true
     }
     return false

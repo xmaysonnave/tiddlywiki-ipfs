@@ -10,8 +10,8 @@ Saving/IpfsService/GatewayUrl: Gateway
 Saving/IpfsService/Ens: ENS
 Saving/IpfsService/EnsDomain: ENS domain
 Saving/IpfsService/Ipns: IPNS
-Saving/IpfsService/IpnsName: IPNS name
 Saving/IpfsService/IpnsKey: IPNS key
+Saving/IpfsService/IpnsCid: IPNS cid
 Saving/IpfsService/Resolved: Resolved
 Saving/IpfsService/Global: Global
 Saving/IpfsService/Verbose/Description: Verbose

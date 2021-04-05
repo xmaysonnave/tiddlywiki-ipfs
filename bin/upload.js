@@ -15,7 +15,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 // bluelight.link
-const IPNS_RAW_BUILD_NAME = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
+const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
 
 const shortTimeout = 4000
 const longTimeout = 2 * 60 * shortTimeout
@@ -82,7 +82,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (build.version === undefined || build.version == null) {
     throw new Error('Unknown version...')
   }
-  const rawBuildName = process.env.IPNS_RAW_BUILD_NAME ? `${process.env.IPNS_RAW_BUILD_NAME}` : IPNS_RAW_BUILD_NAME
+  const rawBuildCid = process.env.IPNS_CID_RAW_BUILD ? `${process.env.IPNS_CID_RAW_BUILD}` : IPNS_CID_RAW_BUILD
   const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
   const protocol = apiUrl.protocol.slice(0, -1)
   var port = apiUrl.port
@@ -111,7 +111,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     console.log(`*** Loaded current:
  ${currentPath} ***`)
   } else {
-    const uri = `${gateway}/ipns/${rawBuildName}/latest-build/${dir}/current.json`
+    const uri = `${gateway}/ipns/${rawBuildCid}/latest-build/${dir}/current.json`
     try {
       const ua = await loadFromIpfs(uri)
       current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))

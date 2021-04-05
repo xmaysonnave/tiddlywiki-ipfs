@@ -23,7 +23,7 @@ IPFS plugin version
    * Run the macro
    */
   exports.run = function () {
-    const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/name') : null
+    const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/ipns/cid') : null
     const editionBuild = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/edition/build') : null
     if (buildName !== undefined && editionBuild !== undefined) {
       return `${buildName.fields.text}/editions/${editionBuild.fields.name}/${editionBuild.fields.build}/`

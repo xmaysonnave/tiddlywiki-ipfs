@@ -1,7 +1,7 @@
 title: $:/boot/boot.js-build
 tags: $:/ipfs/core
-build: 210402292
+build: 210405275
 name: $:/boot/boot.js
-sourceSize: 126326
-sourceUri: ipfs://bafybeiac7dvcsj5d4micayn37xmr5ljgeboz2fmsvfzj5o2cfsbaupxepq/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210402292.json
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210402292
+sourceSize: 126681
+sourceUri: ipfs://bafybeic6lyfoxor3t3jtvzacub5ichnlxaun5vsocz6oq323um525z4eji/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210405275.json
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210405275

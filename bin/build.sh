@@ -16,10 +16,10 @@ echo '***'
 ./bin/editions/build.sh "$@" || exit 1
 
 # build upload
-./bin/cli-upload-build.sh "$@" || exit 1
+./bin/cli-upload-tree.sh "$@" || exit 1
 
 # update
-./bin/cli-update.sh "$@" || exit 1
+# ./bin/cli-update.sh "$@" || exit 1
 
 # done
 exit 0
