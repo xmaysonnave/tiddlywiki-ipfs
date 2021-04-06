@@ -14,7 +14,7 @@ Features:
   * Ethereum
   * [ext[SHA-3|https://en.wikipedia.org/wiki/SHA-3]]
 * Import and Export
-* Publish and Manage IPNS Names and Keys
+* Publish and Manage IPNS keys and IPNS cids
 * Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets
 * Publish to [ext[ENS|https://ens.domains]]
 * Share over [ext[IPFS|https://ipfs.io/]] `TiddlyWiki`'s [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments

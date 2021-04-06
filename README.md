@@ -48,7 +48,7 @@ This plugin provides the following features:
   - Ethereum
   - [SHA-3](https://en.wikipedia.org/wiki/SHA-3)
 - Import and Export
-- Publish and Manage IPNS Names and Keys
+- Publish and Manage IPNS Keys and IPNS cids
 - [Metamask](https://metamask.io) Ethereum wallets support
 - Publish to [ENS](https://ens.domains)
 - Share over [IPFS](https://ipfs.io/) `TiddlyWiki`'s [Tiddlers](https://tiddlywiki.com/#Tiddlers) and attachments

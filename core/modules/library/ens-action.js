@@ -160,7 +160,7 @@ ENS Action
         $tw.ipfs
           .setContentHash(ensDomain, `/${protocol}/${identifier}`, web3, account)
           .then(data => {
-            $tw.utils.alert(name, 'Successfully published to ENS...')
+            $tw.utils.alert(name, 'Published to ENS...')
           })
           .catch(error => {
             if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {

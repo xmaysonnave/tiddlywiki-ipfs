@@ -17,7 +17,7 @@ const ipfsBundle = new IpfsBundle()
 // bluelight.link
 const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
 
-const shortTimeout = 4000
+const shortTimeout = 6000
 const longTimeout = 2 * 60 * shortTimeout
 
 async function loadFromIpfs (url, timeout, stream) {

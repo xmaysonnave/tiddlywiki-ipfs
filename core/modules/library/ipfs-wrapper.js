@@ -150,7 +150,7 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, reso
     ipnsCid = this.ipfsBundle.cidToLibp2pKeyCidV1(cidv1b32, 'base36', false)
     normalizedUrl = this.ipfsUrl.normalizeUrl(path, base)
     this.getLogger().info(
-      `Successfully Fetched IPNS identifiers: '${ipnsKey}':
+      `Fetched IPNS key: '${ipnsKey}':
 'dag-pb' "cidv0" (base58btc): ${cidAnalyser}${cidv0}
 to 'libp2p-key' "cidv1" (base32): ${cidAnalyser}${cidv1b32}
 to 'libp2p-key' "cidv1" (base36): ${cidAnalyser}${ipnsCid}
@@ -176,7 +176,7 @@ IpfsWrapper.prototype.generateIpnsCid = async function (ipfs, ipnsKey) {
     ipnsCid = this.ipfsBundle.cidToLibp2pKeyCidV1(ipnsCid, 'base36', true).toString()
     const url = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsCid}`)
     this.getLogger().info(
-      `Successfully generated IPNS cid with IPNS key '${ipnsKey}'
+      `Generated IPNS cid with IPNS key '${ipnsKey}'
 ${url}`
     )
     return ipnsCid
@@ -189,7 +189,7 @@ ${url}`
 IpfsWrapper.prototype.removeIpnsKey = async function (ipfs, ipnsKey) {
   try {
     const ipnsCid = await this.ipfsLibrary.rmKey(ipfs, ipnsKey)
-    const msg = `Successfully removed IPNS name: ${ipnsKey}`
+    const msg = `Removed IPNS key: ${ipnsKey}`
     this.getLogger().info(msg)
     $tw.utils.alert(name, msg)
     return ipnsCid
@@ -203,7 +203,7 @@ IpfsWrapper.prototype.renameIpnsKey = async function (ipfs, oldIpnsKey, newIpnsK
   try {
     var { ipnsCid, was, now } = await this.ipfsLibrary.keyRename(ipfs, oldIpnsKey, newIpnsKey)
     ipnsCid = this.ipfsBundle.cidToLibp2pKeyCidV1(ipnsCid, 'base36', true).toString()
-    const msg = `Successfully renamed IPNS name: ${was} with ${now}`
+    const msg = `Renamed IPNS key: ${was} with ${now}`
     this.getLogger().info(msg)
     $tw.utils.alert(name, msg)
     return {
@@ -213,7 +213,7 @@ IpfsWrapper.prototype.renameIpnsKey = async function (ipfs, oldIpnsKey, newIpnsK
   } catch (error) {
     this.getLogger().error(error)
   }
-  throw new Error('Failed to rename an IPNS name...')
+  throw new Error('Failed to rename an IPNS key...')
 }
 
 IpfsWrapper.prototype.getIpnsKeys = async function (ipfs) {
@@ -256,7 +256,7 @@ IpfsWrapper.prototype.resolveIpfs = async function (ipfs, value, timeout) {
     var { cid, remainderPath } = await this.ipfsBundle.resolveIpfs(ipfs, value, timeout)
     if (cid !== null) {
       const url = this.ipfsUrl.normalizeUrl(`/ipfs/${cid}${remainderPath}`)
-      this.getLogger().info(`Successfully resolved IPFS path:
+      this.getLogger().info(`Resolved IPFS path:
   ${url}`)
     }
   } catch (error) {
@@ -278,7 +278,7 @@ IpfsWrapper.prototype.resolveIpfsContainer = async function (ipfs, value, timeou
     cid = await this.ipfsBundle.resolveIpfsContainer(ipfs, value, timeout)
     if (cid !== null) {
       const url = this.ipfsUrl.normalizeUrl(`/ipfs/${cid}`)
-      this.getLogger().info(`Successfully resolved IPFS container:
+      this.getLogger().info(`Resolved IPFS container:
   ${url}`)
     }
   } catch (error) {
@@ -302,7 +302,7 @@ IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey, options) {
     if (ipfsCid !== null) {
       const parsed = this.ipfsUrl.normalizeUrl(resolved)
       this.getLogger().info(
-        `Successfully resolved IPNS:
+        `Resolved IPNS:
 ${url}
 ${parsed}`
       )
@@ -354,7 +354,7 @@ IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, ipfsP
       }
     }
     const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}`)
-    this.getLogger().info(`Successfully added: ${parentSize} bytes,
+    this.getLogger().info(`Added: ${parentSize} bytes,
 ${url}`)
     return {
       cid: contentCid !== null ? contentCid : parentCid,
@@ -375,7 +375,7 @@ IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
     const { cid, path, size } = await this.ipfsLibrary.add(ipfs, content)
     const pathname = `/${ipfsKeyword}/${cid}`
     const url = this.ipfsUrl.normalizeUrl(pathname)
-    this.getLogger().info(`Successfully added: ${size} bytes,
+    this.getLogger().info(`Added: ${size} bytes,
 ${url}`)
     return {
       cid: cid,
@@ -408,7 +408,7 @@ IpfsWrapper.prototype.publishIpnsKey = async function (ipfs, ipfsCid, ipnsCid, i
     const ipnsUrl = this.ipfsUrl.normalizeUrl(`/${ipnsKeyword}/${ipnsCid}`)
     const ipfsUrl = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${ipfsCid}`)
     this.getLogger().info(
-      `Successfully published IPNS key: ${ipnsKey}
+      `Published IPNS key: ${ipnsKey}
 ${ipnsUrl}
 ${ipfsUrl}`
     )
@@ -416,7 +416,7 @@ ${ipfsUrl}`
   } catch (error) {
     this.getLogger().error(error)
   }
-  throw new Error('Failed to publish an IPNS name...')
+  throw new Error('Failed to publish an IPNS key...')
 }
 
 IpfsWrapper.prototype.pinToIpfs = async function (ipfs, ipfsPath, recursive) {
@@ -430,7 +430,7 @@ IpfsWrapper.prototype.pinToIpfs = async function (ipfs, ipfsPath, recursive) {
     })
     const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(
-      `Successfully pinned:
+      `Pinned:
 ${url}`
     )
     return pinned
@@ -451,7 +451,7 @@ IpfsWrapper.prototype.unpinFromIpfs = async function (ipfs, ipfsPath, recursive)
     })
     const url = this.ipfsUrl.normalizeUrl(ipfsPath)
     this.getLogger().info(
-      `Successfully unpinned:
+      `Unpinned:
 ${url}`
     )
     return unpinned

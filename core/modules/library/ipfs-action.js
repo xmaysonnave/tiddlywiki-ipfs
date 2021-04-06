@@ -395,11 +395,10 @@ IPFS Action
       $tw.utils.alert(name, 'Default IPNS cid matches current IPNS cid....')
       return false
     }
-    $tw.utils.alert(name, 'Publishing IPNS key: ' + ipnsKey)
     $tw.ipfs
       .publishIpnsKey(wikiCid, ipnsCid, ipnsKey)
       .then(data => {
-        $tw.utils.alert(name, 'Successfully Published IPNS key: ' + ipnsKey)
+        $tw.utils.alert(name, 'Published IPNS key: ' + ipnsKey)
         $tw.ipfs.requestToUnpin(`/ipfs/${cid}`)
       })
       .catch(error => {

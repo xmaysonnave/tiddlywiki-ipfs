@@ -468,10 +468,6 @@ ${ipfsPath}`
     var resolvedUrl = null
     var { ipnsKey, ipnsCid, normalizedUrl } = await this.getIpnsIdentifier(identifier, resolveIpnsKey, base, path)
     if (ipnsCid !== null && resolveIpfsCid) {
-      $tw.ipfs.getLogger().info(
-        `Resolve IPNS:
- ${normalizedUrl}`
-      )
       var { cid: ipfsCid, remainderPath } = await this.resolveIpfs(normalizedUrl.pathname)
       if (ipfsCid !== null) {
         var credential = ''
@@ -481,7 +477,7 @@ ${ipfsPath}`
         }
         resolvedUrl = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${ipfsCid}${remainderPath}${normalizedUrl.search}${normalizedUrl.hash}`)
         $tw.ipfs.getLogger().info(
-          `Successfully resolved IPNS:
+          `Resolved IPNS:
  ${resolvedUrl}`
         )
       }
@@ -518,7 +514,7 @@ ${ipfsPath}`
     }
     const url = this.normalizeUrl(`/${protocol}/${content}${path}`, base)
     $tw.ipfs.getLogger().info(
-      `Successfully fetched ENS domain content: "${ensDomain}"
+      `Fetched ENS domain content: "${ensDomain}"
 ${url}`
     )
     return {
@@ -569,7 +565,7 @@ ${url}`
     await this.ensWrapper.setContentHash(ensDomain, identifier, web3, account)
     const url = this.normalizeUrl(identifier)
     $tw.ipfs.getLogger().info(
-      `Successfully set ENS domain content:
+      `Set ENS domain content:
  ${url}
  to: "${ensDomain}"`
     )

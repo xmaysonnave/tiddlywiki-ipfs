@@ -43,10 +43,9 @@ IPFS Saver
       return false
     }
     const publishToIpns = async function (added, ipnsIpfsCid, ipnsCid, ipnsKey) {
-      $tw.utils.alert(name, `Publishing IPNS key: ${ipnsKey}`)
       try {
         await $tw.ipfs.publishIpnsKey(added, ipnsCid, ipnsKey)
-        $tw.utils.alert(name, `Successfully Published IPNS key: ${ipnsKey}`)
+        $tw.utils.alert(name, `Published IPNS key: ${ipnsKey}`)
       } catch (error) {
         $tw.ipfs.getLogger().warn(error)
         $tw.utils.alert(name, error.message)
@@ -172,9 +171,8 @@ IPFS Saver
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsCid == null) {
         try {
-          $tw.utils.alert(name, `Publishing to ENS: ${ensDomain}`)
           await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${added}`, web3, account)
-          $tw.utils.alert(name, `Successfully published to ENS: ${ensDomain}`)
+          $tw.utils.alert(name, `Published to ENS: ${ensDomain}`)
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)

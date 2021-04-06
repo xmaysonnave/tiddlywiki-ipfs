@@ -188,10 +188,10 @@ IPFS Tiddler
                 $tw.ipfs.removeFromPinUnpin(resolvedUrl.pathname)
                 if (field !== undefined && field !== null) {
                   $tw.ipfs.getLogger().info(
-                    `Successfully pinned: "${field}"
+                    `Pinned: "${field}"
  ${resolvedUrl.pathname}`
                   )
-                  $tw.utils.alert(name, `Successfully pinned: '${field}'`)
+                  $tw.utils.alert(name, `Pinned: '${field}'`)
                 }
               }
             })
@@ -254,10 +254,10 @@ IPFS Tiddler
                 $tw.ipfs.removeFromPinUnpin(resolvedUrl.pathname)
                 if (field !== undefined && field !== null) {
                   $tw.ipfs.getLogger().info(
-                    `Successfully unpinned: "${field}
+                    `Unpinned: "${field}
  ${resolvedUrl.pathname}`
                   )
-                  $tw.utils.alert(name, `Successfully Unpinned: '${field}'`)
+                  $tw.utils.alert(name, `Unpinned: '${field}'`)
                 }
               }
             })

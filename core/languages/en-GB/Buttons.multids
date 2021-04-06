@@ -11,10 +11,10 @@ Ipfs/Export/Content/Caption: export content to IPFS
 Ipfs/Export/Content/Hint: Export this tiddler content to IPFS
 
 Ipns/Fetch/Caption: fetch from IPNS
-Ipns/Fetch/Hint: Fetch IPNS key
+Ipns/Fetch/Hint: Fetch IPNS cid
 
 Ipns/Generate/Caption: generate IPNS
-Ipns/Generate/Hint: Generate IPNS key
+Ipns/Generate/Hint: Generate IPNS cid
 
 Ipfs/Refresh/Caption: refresh
 Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
@@ -58,13 +58,13 @@ Ipns/Publish/Caption: publish to IPNS
 Ipns/Publish/Hint: Publish this wiki to IPNS
 
 Ipns/Remove/Caption: remove
-Ipns/Remove/Hint: Remove IPNS name and IPNS key
+Ipns/Remove/Hint: Remove IPNS key and IPNS cid
 
 Ipns/Rename/Caption: rename
-Ipns/Rename/Hint: Rename IPNS name
+Ipns/Rename/Hint: Rename IPNS key
 
 Ipns/Resolve/And/Open/Caption: resolve and open
-Ipns/Resolve/And/Open/Hint: Open resolved IPNS key
+Ipns/Resolve/And/Open/Hint: Open resolved IPFS cid
 
 Ipns/Publish/To/Ens/Caption: publish to ENS
 Ipns/Publish/To/Ens/Hint: publish IPNS key to ENS

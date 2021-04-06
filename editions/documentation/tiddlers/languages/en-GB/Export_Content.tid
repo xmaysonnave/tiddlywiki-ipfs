@@ -17,7 +17,7 @@ type: text/vnd.tiddlywiki
   While exporting to IPFS the plugin will:
 </p>
 <ul>
-  <li>Resolve an IPNS name and IPNS key if applicable</li>
+  <li>Resolve an IPNS key and its IPNS cid if applicable</li>
   <li>Resolve an ENS domain if applicable</li>
   <li>Extract the Tiddlers Link if applicable</li>
   <li>Transclude the content if applicable</li>
@@ -29,7 +29,7 @@ type: text/vnd.tiddlywiki
   <li>Publish to IPNS the new IPFS identifier if applicable</li>
   <li>Publish to ENS the new IPFS identifier if applicable</li>
   <li>Unpin the previous IPFS identifier if applicable</li>
-  <li>Update the Tiddler <b>_export_uri</b> field with the previous IPNS name or key if applicable</li>
+  <li>Update the Tiddler <b>_export_uri</b> field with the previous IPNS cid or IPNS key if applicable</li>
   <li>Update the Tiddler <b>_export_uri</b> field with the previous ENS domain if applicable</li>
   <li>Update the Tiddler tags</li>
 </ul>

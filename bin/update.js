@@ -21,7 +21,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  **/
 
 module.exports = class Update {
-  shortTimeout = 4000
+  shortTimeout = 6000
   longTimeout = 2 * 60 * this.shortTimeout
   dagDirectory = fromString('\u0008\u0001')
   emptyDirectoryCid = new CID('bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354')
@@ -190,7 +190,7 @@ module.exports = class Update {
             Hash: cid,
           })
           if (version !== null) {
-            if (version.match('build')) {
+            if (version.match('build') || version.match('release')) {
               const previous = links.get('latest-build')
               if (previous === undefined || version.localeCompare(versions.get(previous.Hash)) > 0) {
                 links.set('latest-build', {
@@ -200,7 +200,8 @@ module.exports = class Update {
                 })
                 versions.set(cid, version)
               }
-            } else if (version.match('pre-release')) {
+            }
+            if (version.match('pre-release')) {
               const previous = links.get('latest-pre-release')
               if (previous === undefined || version.localeCompare(versions.get(previous.Hash)) > 0) {
                 links.set('latest-pre-release', {

@@ -276,7 +276,7 @@ IPFS utils
                 fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(ipfsUtilsName, `Successfully Published IPNS key: ${ipnsKey}`)
+              $tw.utils.alert(ipfsUtilsName, `Published IPNS key: ${ipnsKey}`)
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
                   .unpinFromIpfs(`/ipfs/${ipfsCid}`)
@@ -316,7 +316,7 @@ IPFS utils
                 fields: fields,
               })
               $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(ipfsUtilsName, 'Successfully Published to ENS...')
+              $tw.utils.alert(ipfsUtilsName, 'Published to ENS...')
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
                   .unpinFromIpfs(`/ipfs/${ipfsCid}`)
