@@ -1,7 +1,9 @@
 title: $:/library/ipfs-modules.js-build
 tags: $:/ipfs/core
-build: 1.0.0+build-210402334
+build: 210406365
 name: $:/library/ipfs-modules.js
-sourceSize: 133012
-sourceUri: ipfs://bafybeihfjntzxsttqrgu44jcgpzcuh3pbqw73qvqdag32o3zwwqh7vtudm/$_library_ipfs-modules.js-1.0.0+build-210402334.json
-version: 1.0.0+build-210402334
+sourceSize: 133006
+sourceUri: ipfs://bafybeidxxcmb7ttsujcnikzsbw6ed55wzue3e6wbizyz4m34o3b7kibb6e/$_library_ipfs-modules.js-1.0.0+pre-release-210406365.json
+version: 1.0.0+pre-release-210406365
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

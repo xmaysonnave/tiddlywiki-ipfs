@@ -20,8 +20,7 @@ const { expect } = chai
 const base = new URL('https://ipfs.infura.io/')
 const resolvedTiddly = '/ipfs/bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
 const ipfsIdentifier = {
-  protocol: 'ipfs',
-  cid: 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy',
+  ipfsCid: 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy',
 }
 const keys = [
   {
@@ -84,8 +83,8 @@ describe('IPNS key and IPNS name', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { key, name } = await ipfsWrapper.getIpnsIdentifier(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0', true, null, null, 'tiddly')
-    expect(key === 'tiddly' && name === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
+    const { ipnsCid, ipnsKey } = await ipfsWrapper.getIpnsIdentifier(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0', true, null, null, 'tiddly')
+    expect(ipnsKey === 'tiddly' && ipnsCid === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
 })
 describe('IPNS name', () => {
@@ -105,8 +104,8 @@ describe('IPNS name', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { key, name } = await ipfsWrapper.getIpnsIdentifier(null, null, true, null, null, 'tiddly')
-    expect(key === 'tiddly' && name === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
+    const { ipnsCid, ipnsKey } = await ipfsWrapper.getIpnsIdentifier(null, null, true, null, null, 'tiddly')
+    expect(ipnsKey === 'tiddly' && ipnsCid === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
 })
 describe('IPNS identifier', () => {
@@ -126,16 +125,16 @@ describe('IPNS identifier', () => {
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { key, name } = await ipfsWrapper.getIpnsIdentifier(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0')
-    expect(key === null && name === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
+    const { ipnsCid, ipnsKey } = await ipfsWrapper.getIpnsIdentifier(null, 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0')
+    expect(ipnsKey === null && ipnsCid === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
   it('Fetch IPNS key and IPNS name from an IPNS name', async () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsWrapper = new IpfsWrapper(ipfsBundle)
     ipfsWrapper.ipfsLibrary.keyList = sinon.fake.returns(keys)
-    const { key, name } = await ipfsWrapper.getIpnsIdentifier(null, 'tiddly')
-    expect(key === 'tiddly' && name === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
+    const { ipnsCid, ipnsKey } = await ipfsWrapper.getIpnsIdentifier(null, 'tiddly')
+    expect(ipnsKey === 'tiddly' && ipnsCid === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
 })
 describe('Resolve IPNS', () => {

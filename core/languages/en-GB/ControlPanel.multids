@@ -16,7 +16,7 @@ Saving/IpfsService/Resolved: Resolved
 Saving/IpfsService/Global: Global
 Saving/IpfsService/Verbose/Description: Verbose
 Saving/IpfsService/IPNS/Resolve/Description: Resolve IPNS
-Saving/IpfsService/ethLink/Resolve/Description: Resolve .eth.link
+Saving/IpfsService/ETH/Resolve/Description: Resolve ETH
 Saving/IpfsService/Pin/Description: Pin Current
 Saving/IpfsService/Unpin/Description: Unpin Previous
 Saving/IpfsService/Wait/Description: Wait

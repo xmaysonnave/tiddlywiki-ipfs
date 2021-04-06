@@ -24,12 +24,22 @@ async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
-  const options = {
-    compress: false,
-    method: 'GET',
+  var options = {
+    method: 'options',
     timeout: timeout !== undefined ? timeout : longTimeout,
   }
-  const response = await fetch(url, options)
+  var response = await fetch(url, options)
+  if (response.ok === false) {
+    throw new Error(`unexpected response ${response.statusText}`)
+  }
+  var options = {
+    compress: false,
+    method: 'get',
+    size: 0,
+    timeout: timeout !== undefined ? timeout : longTimeout,
+  }
+  url = response.headers.get('Location') !== undefined ? new URL(response.headers.get('Location')) : url
+  var response = await fetch(url, options)
   if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)
   }
@@ -113,12 +123,12 @@ module.exports = async function main (name, extension, dir, env, version) {
       console.log(`*** Loaded current:
  ${path} ***`)
     } else {
-      const uri = `${gateway}/ipns/${rawBuildCid}/latest-build/${dir}/current.json`
+      const uri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/current.json`
       try {
+        console.log(`*** Fetch current:
+ ${uri} ***`)
         const ua = await loadFromIpfs(uri)
         current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
-        console.log(`*** Fetched current:
- ${uri} ***`)
       } catch (error) {
         console.log(`*** Unable to fetch current:
  ${uri}

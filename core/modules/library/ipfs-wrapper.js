@@ -218,8 +218,8 @@ IpfsWrapper.prototype.renameIpnsKey = async function (ipfs, oldIpnsKey, newIpnsK
 
 IpfsWrapper.prototype.getIpnsKeys = async function (ipfs) {
   try {
+    this.getLogger().info('Fetch IPNS keys...')
     const keyList = await this.ipfsLibrary.keyList(ipfs)
-    this.getLogger().info('Successfully fetched IPNS keys...')
     return keyList
   } catch (error) {
     this.getLogger().error(error)
@@ -232,12 +232,12 @@ IpfsWrapper.prototype.fetchFromIpfs = async function (ipfs, cid) {
   if (cid == null) {
     throw new Error('Undefined IPNS identifier...')
   }
-  const pathname = `/${ipfsKeyword}/${cid}`
   try {
-    const fetched = await this.ipfsLibrary.cat(ipfs, pathname)
+    const pathname = `/${ipfsKeyword}/${cid}`
     const url = this.ipfsUrl.normalizeUrl(pathname)
-    this.getLogger().info(`Successfully fetched:
+    this.getLogger().info(`Fetch:
 ${url}`)
+    const fetched = await this.ipfsLibrary.cat(ipfs, pathname)
     return fetched
   } catch (error) {
     this.getLogger().error(error)

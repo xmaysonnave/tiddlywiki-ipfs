@@ -24,12 +24,22 @@ async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
-  const options = {
-    compress: false,
-    method: 'GET',
+  var options = {
+    method: 'options',
     timeout: timeout !== undefined ? timeout : longTimeout,
   }
-  const response = await fetch(url, options)
+  var response = await fetch(url, options)
+  if (response.ok === false) {
+    throw new Error(`unexpected response ${response.statusText}`)
+  }
+  var options = {
+    compress: false,
+    method: 'get',
+    size: 0,
+    timeout: timeout !== undefined ? timeout : longTimeout,
+  }
+  url = response.headers.get('Location') !== undefined ? new URL(response.headers.get('Location')) : url
+  var response = await fetch(url, options)
   if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)
   }
@@ -107,16 +117,16 @@ module.exports = async function main (name, extension, dir, tags, load) {
   var memberPosition = null
   const currentPath = `./current/${dir}/current.json`
   if (fs.existsSync(currentPath)) {
-    current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
-    console.log(`*** Loaded current:
+    console.log(`*** Load current:
  ${currentPath} ***`)
+    current = JSON.parse(fs.readFileSync(currentPath, 'utf8'))
   } else {
-    const uri = `${gateway}/ipns/${rawBuildCid}/latest-build/${dir}/current.json`
+    const uri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/current.json`
     try {
+      console.log(`*** Fetch current:
+ ${uri} ***`)
       const ua = await loadFromIpfs(uri)
       current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
-      console.log(`*** Fetched current:
- ${uri} ***`)
     } catch (error) {
       console.log(`*** Unable to fetch current:
  ${uri}
@@ -325,7 +335,9 @@ sourceUri: ipfs://${parentCid}/`
 sourceUri: ipfs://${parentCid}/${sourceFileName}`
   }
   tid = `${tid}
-version: ${build.version}`
+version: ${build.version}
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>`
   // Save and upload tiddler
   fs.writeFileSync(`./production/${dir}/${normalizedName}-build.tid`, tid, 'utf8')
   const loaded = fs.readFileSync(`./production/${dir}/${normalizedName}-build.tid`)
@@ -364,29 +376,29 @@ version: ${build.version}`
   // Load
   if (load) {
     var uri = `${gateway}/ipfs/${added.cid}/${normalizedName}-build.tid`
-    await loadFromIpfs(uri)
-    console.log(`*** Fetched tiddler ***
+    console.log(`*** Fetch tiddler ***
  ${uri}`)
+    await loadFromIpfs(uri)
     var uri = `${gateway}/ipfs/${parentCid}/`
-    await loadFromIpfs(uri)
-    console.log(`*** Fetched content ***
+    console.log(`*** Fetch parent ***
  ${uri}`)
+    await loadFromIpfs(uri)
     if (sourceFileName.endsWith('.html')) {
       var uri = `${gateway}/ipfs/${parentCid}/index.html`
-      await loadFromIpfs(uri)
-      console.log(`*** Fetched source ***
+      console.log(`*** Fetch content ***
  ${uri}`)
+      await loadFromIpfs(uri)
     } else {
       var uri = `${gateway}/ipfs/${parentCid}/${sourceFileName}`
-      await loadFromIpfs(uri)
-      console.log(`*** Fetched source ***
+      console.log(`*** Fetch content ***
  ${uri}`)
+      await loadFromIpfs(uri)
     }
     if (faviconCid !== null) {
       var uri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
-      await loadFromIpfs(uri)
-      console.log(`*** Fetched favicon ***
+      console.log(`*** Fetch favicon ***
  ${uri}`)
+      await loadFromIpfs(uri)
     }
   }
 }

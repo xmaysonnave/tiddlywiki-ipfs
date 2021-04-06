@@ -254,7 +254,7 @@ IPFS link widget
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
     const value = this.url !== undefined ? this.url : this.value
     $tw.ipfs
-      .resolveUrl(value, false, false, true)
+      .resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
       .then(data => {
         const { resolvedUrl } = data
         if (resolvedUrl !== null) {

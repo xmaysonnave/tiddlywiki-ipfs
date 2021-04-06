@@ -472,7 +472,6 @@ ${ipfsPath}`
         `Resolve IPNS:
  ${normalizedUrl}`
       )
-      $tw.utils.alert(name, 'Resolve IPNS...')
       var { cid: ipfsCid, remainderPath } = await this.resolveIpfs(normalizedUrl.pathname)
       if (ipfsCid !== null) {
         var credential = ''

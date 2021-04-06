@@ -28,12 +28,22 @@ async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
-  const options = {
-    compress: false,
-    method: 'GET',
+  var options = {
+    method: 'options',
     timeout: timeout !== undefined ? timeout : longTimeout,
   }
-  const response = await fetch(url, options)
+  var response = await fetch(url, options)
+  if (response.ok === false) {
+    throw new Error(`unexpected response ${response.statusText}`)
+  }
+  var options = {
+    compress: false,
+    method: 'get',
+    size: 0,
+    timeout: timeout !== undefined ? timeout : longTimeout,
+  }
+  url = response.headers.get('Location') !== undefined ? new URL(response.headers.get('Location')) : url
+  var response = await fetch(url, options)
   if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)
   }
@@ -208,14 +218,14 @@ module.exports = async function main (load) {
   // Load
   if (load) {
     var uri = `${gateway}${node.cid}`
-    await loadFromIpfs(uri)
-    console.log(`*** Fetched ***
+    console.log(`*** Fetch ***
  ${uri} ***`)
+    await loadFromIpfs(uri)
     for (var i = 0; i < toBeLoaded.length; i++) {
       var uri = `${gateway}${toBeLoaded[i]}`
-      await loadFromIpfs(uri)
-      console.log(`*** Fetched ***
+      console.log(`*** Fetch ***
  ${uri} ***`)
+      await loadFromIpfs(uri)
     }
   }
 }

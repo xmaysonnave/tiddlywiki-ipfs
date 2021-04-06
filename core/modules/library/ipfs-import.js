@@ -252,7 +252,7 @@ IPFS Import
       content = await $tw.ipfs.loadToUtf8(resolvedKey, password)
       // HTML
       if (this.isHTML(content)) {
-        content = $tw.wiki.deserializeTiddlers('.html', content, creationFields)
+        content = $tw.wiki.deserializeTiddlers('text/html', content, creationFields)
         if ($tw.utils.isArray(content) && content.length === 1 && content[0].text && $tw.ipfs.isJson(content[0].text)) {
           tiddlers = Object.values(JSON.parse(content[0].text))
         } else {
@@ -260,9 +260,9 @@ IPFS Import
         }
       } else {
         if ($tw.ipfs.isJson(content)) {
-          tiddlers = $tw.wiki.deserializeTiddlers('.json', content, creationFields)
+          tiddlers = $tw.wiki.deserializeTiddlers('application/json', content, creationFields)
         } else {
-          tiddlers = $tw.wiki.deserializeTiddlers('.tid', content, creationFields)
+          tiddlers = $tw.wiki.deserializeTiddlers('application/x-tiddler', content, creationFields)
         }
       }
       // Loaded

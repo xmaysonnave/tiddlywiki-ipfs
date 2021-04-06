@@ -71,28 +71,30 @@ describe('CID', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau')
-    expect(cid === 'bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau' && ipnsIdentifier == null).to.be.true
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier(ipfsUrl.getUrl('https://bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau.ipfs.ipfs.bluelightav.eth'))
-    expect(cid === 'bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau' && ipnsIdentifier == null).to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau')
+    expect(ipfsCid === 'bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau' && ipnsIdentifier == null).to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier(ipfsUrl.getUrl('https://bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau.ipfs.ipfs.bluelightav.eth'))
+    expect(ipfsCid === 'bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau' && ipnsIdentifier == null).to.be.true
   })
   it('Decode IPNS key', async () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('/ipns/QmVDNdJNsTN2wxHCu75hvAAx659dTUUHDAKV53TJ8q6LzT')
-    expect(cid == null && ipnsIdentifier === 'QmVDNdJNsTN2wxHCu75hvAAx659dTUUHDAKV53TJ8q6LzT').to.be.true
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier(ipfsUrl.getUrl('https://k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0.ipns.ipfs.bluelightav.eth'))
-    expect(cid == null && ipnsIdentifier === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('/ipns/QmVDNdJNsTN2wxHCu75hvAAx659dTUUHDAKV53TJ8q6LzT')
+    expect(ipfsCid == null && ipnsIdentifier === 'QmVDNdJNsTN2wxHCu75hvAAx659dTUUHDAKV53TJ8q6LzT').to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier(
+      ipfsUrl.getUrl('https://k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0.ipns.ipfs.bluelightav.eth')
+    )
+    expect(ipfsCid == null && ipnsIdentifier === 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0').to.be.true
   })
   it('Decode IPNS name', async () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     const ipfsUrl = ipfsBundle.ipfsUrl
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('/ipns/bluelightav.eth')
-    expect(cid == null && ipnsIdentifier === 'bluelightav.eth').to.be.true
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier(ipfsUrl.getUrl('https://tiddly.ipns.ipfs.bluelightav.eth'))
-    expect(cid == null && ipnsIdentifier === 'tiddly').to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('/ipns/bluelightav.eth')
+    expect(ipfsCid == null && ipnsIdentifier === 'bluelightav.eth').to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier(ipfsUrl.getUrl('https://tiddly.ipns.ipfs.bluelightav.eth'))
+    expect(ipfsCid == null && ipnsIdentifier === 'tiddly').to.be.true
   })
   it('rsa2048Base58V0 CID', async () => {
     const ipfsBundle = new IpfsBundle()
@@ -146,13 +148,13 @@ describe('CID', () => {
   it('IPFS Protocol', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
-    expect(cid === 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' && ipnsIdentifier == null).to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
+    expect(ipfsCid === 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' && ipnsIdentifier == null).to.be.true
   })
   it('IPNS Protocol', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    var { cid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('ipns://bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy')
-    expect(cid == null && ipnsIdentifier === 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy').to.be.true
+    var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('ipns://bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy')
+    expect(ipfsCid == null && ipnsIdentifier === 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy').to.be.true
   })
 })

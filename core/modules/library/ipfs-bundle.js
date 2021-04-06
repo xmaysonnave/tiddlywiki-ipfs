@@ -592,7 +592,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
   var url = null
   if (value instanceof URL === false) {
     try {
-      url = this.getUrl(value)
+      url = this.getUrl(value, this.getIpfsBaseUrl())
     } catch (error) {
       url = null
     }
