@@ -42,7 +42,8 @@ async function loadFromIpfs (url, timeout, stream) {
     size: 0,
     timeout: timeout !== undefined ? timeout : longTimeout,
   }
-  url = response.headers.get('Location') !== undefined ? new URL(response.headers.get('Location')) : url
+  const location = response.headers.get('Location')
+  url = location !== undefined && location !== null ? new URL(location) : url
   var response = await fetch(url, options)
   if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)

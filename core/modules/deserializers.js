@@ -1,5 +1,6 @@
 /*\
 title: $:/plugins/ipfs/ipfs-deserializer.js
+tags: $:/ipfs/core
 type: application/javascript
 module-type: tiddlerdeserializer
 
@@ -63,6 +64,10 @@ Functions to deserialise tiddlers from a block of text
       }
     }
     return undefined
+  }
+
+  exports['application/x-tiddler-html-div'] = function (text, fields) {
+    return [parseTiddlerDiv(text, fields)]
   }
 
   exports['application/json'] = function (text, fields) {

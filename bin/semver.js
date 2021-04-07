@@ -38,7 +38,8 @@ async function loadFromIpfs (url, timeout, stream) {
     size: 0,
     timeout: timeout !== undefined ? timeout : longTimeout,
   }
-  url = response.headers.get('Location') !== undefined ? new URL(response.headers.get('Location')) : url
+  const location = response.headers.get('Location')
+  url = location !== undefined && location !== null ? new URL(location) : url
   var response = await fetch(url, options)
   if (response.ok === false) {
     throw new Error(`unexpected response ${response.statusText}`)
@@ -119,10 +120,12 @@ module.exports = async function main (name, extension, dir, env, version) {
     var content = null
     var path = `./current/${dir}/current.json`
     if (fs.existsSync(path)) {
-      current = JSON.parse(fs.readFileSync(path, 'utf8'))
-      console.log(`*** Loaded current:
+      console.log(`*** Load current:
  ${path} ***`)
+      current = JSON.parse(fs.readFileSync(path, 'utf8'))
     } else {
+      console.log(`*** Unable to load current:
+ ${path} ***`)
       const uri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/current.json`
       try {
         console.log(`*** Fetch current:
@@ -131,7 +134,6 @@ module.exports = async function main (name, extension, dir, env, version) {
         current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
       } catch (error) {
         console.log(`*** Unable to fetch current:
- ${uri}
  ${error.message} ***`)
       }
     }

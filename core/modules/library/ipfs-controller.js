@@ -476,11 +476,24 @@ ${ipfsPath}`
           credential = `${normalizedUrl.username}:${normalizedUrl.password}@`
         }
         resolvedUrl = this.getUrl(`${base.protocol}//${credential}${base.host}/ipfs/${ipfsCid}${remainderPath}${normalizedUrl.search}${normalizedUrl.hash}`)
-        $tw.ipfs.getLogger().info(
-          `Resolved IPNS:
+        if (normalizedUrl.toString() !== resolvedUrl.toString()) {
+          $tw.ipfs.getLogger().info(
+            `Resolved IPNS:
+ ${normalizedUrl}
  ${resolvedUrl}`
-        )
+          )
+        } else {
+          $tw.ipfs.getLogger().info(
+            `Resolved IPNS:
+ ${resolvedUrl}`
+          )
+        }
       }
+    } else if (normalizedUrl !== null) {
+      $tw.ipfs.getLogger().info(
+        `Resolved IPNS:
+ ${normalizedUrl}`
+      )
     }
     return {
       ipfsCid: ipfsCid,

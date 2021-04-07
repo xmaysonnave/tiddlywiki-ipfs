@@ -74,7 +74,8 @@ module.exports = class Update {
       size: 0,
       timeout: timeout !== undefined ? timeout : this.longTimeout,
     }
-    url = response.headers.get('Location') !== undefined ? new URL(response.headers.get('Location')) : url
+    const location = response.headers.get('Location')
+    url = location !== undefined && location !== null ? new URL(location) : url
     var response = await fetch(url, options)
     if (response.ok === false) {
       throw new Error(`unexpected response ${response.statusText}`)
@@ -136,8 +137,8 @@ module.exports = class Update {
     return await this.ipfsBundle.dagPut(api, dagNode, options)
   }
 
-  async publishBuild () {
-    console.log(`*** Process Raw and Production:
+  async production () {
+    console.log(`*** Update Production:
  api: ${this.apiUrl}
  gateway: ${new URL(this.gateway)}
  public gateway: ${new URL(this.publicGateway)}
@@ -348,7 +349,7 @@ ${nodeUri} ***`)
         currentBuildNodeCid = this.ipfsBundle.cidToCidV1(currentBuildNodeCid)
       }
       build.currentBuild = `${this.publicGateway}/ipfs/${node.cid}`
-      var msg = '*** Fetch'
+      var msg = '*** Fetched'
       if (currentBuildNodeCid == null || (currentBuildNodeCid !== null && currentBuildNodeCid.toString() !== node.cid.toString())) {
         if (currentBuildNodeCid == null) {
           msg = `${msg} new`
@@ -361,10 +362,8 @@ ${nodeUri} ***`)
       }
       fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
       if (this.load) {
-        const nodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`${msg} Production:
- ${nodeUri} ***`)
-        await this.loadFromIpfs(nodeUri)
+ ${this.gateway}/ipfs/${node.cid} ***`)
       }
     }
     return node
@@ -596,7 +595,7 @@ ${nodeUri} ***`)
         })
         if (this.load) {
           const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
-          console.log(`*** Fetch Raw:
+          console.log(`*** Fetch Raw node:
  ${rawNodeUri} ***`)
           await this.loadFromIpfs(rawNodeUri)
         }

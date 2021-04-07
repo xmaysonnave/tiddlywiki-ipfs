@@ -10,7 +10,7 @@ async function main () {
   try {
     const load = argv.load !== undefined && argv.load !== null ? argv.load === 'true' || argv.load === true : null
     const updater = new Update(load)
-    await updater.publishBuild(load)
+    await updater.production(load)
   } catch (error) {
     console.error(error)
     process.exit(1)

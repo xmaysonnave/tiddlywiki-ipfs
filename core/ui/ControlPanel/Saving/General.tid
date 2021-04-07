@@ -1,5 +1,5 @@
 title: $:/core/ui/ControlPanel/Saving/General
-tags: $:/ipfs/core $:/tags/ControlPanel/Saving
+tags: $:/tags/ControlPanel/Saving $:/ipfs/core
 caption: {{$:/language/ControlPanel/Saving/General/Caption}}
 list-before:
 

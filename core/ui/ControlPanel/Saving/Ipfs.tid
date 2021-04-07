@@ -1,5 +1,5 @@
 title: $:/core/ui/ControlPanel/Saving/Ipfs
-tags: $:/ipfs/core $:/tags/ControlPanel/Saving
+tags: $:/tags/ControlPanel/Saving $:/ipfs/core
 caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 
 \define lingo-base() $:/language/ControlPanel/Saving/IpfsService/

@@ -47,6 +47,14 @@ module.exports = class PublishBuild {
     if (this.publicGateway == null) {
       this.publicGateway = this.gateway
     }
+    this.protocol = this.apiUrl.protocol.slice(0, -1)
+    this.port = this.apiUrl.port
+    if (this.port === undefined || this.port == null || this.port.trim() === '') {
+      this.port = 443
+      if (this.protocol === 'http') {
+        this.port = 80
+      }
+    }
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
   }
@@ -120,25 +128,17 @@ module.exports = class PublishBuild {
     return cid
   }
 
-  async resetBuild () {
+  async resetProduction () {
     console.log(`*** Reset Raw and Production:
  api: ${this.apiUrl}
  gateway: ${new URL(this.gateway)}
  public gateway: ${new URL(this.publicGateway)}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
-    const protocol = this.apiUrl.protocol.slice(0, -1)
-    var port = this.apiUrl.port
-    if (port === undefined || port == null || port.trim() === '') {
-      port = 443
-      if (protocol === 'http') {
-        port = 80
-      }
-    }
     const api = IpfsHttpClient({
-      protocol: protocol,
+      protocol: this.protocol,
       host: this.apiUrl.hostname,
-      port: port,
+      port: this.port,
       timeout: this.shortTimeout,
     })
     const previousRawBuildCid = await this.resolveIPNS(api, this.rawBuildCid)
@@ -173,25 +173,17 @@ module.exports = class PublishBuild {
     }
   }
 
-  async publish () {
-    console.log(`*** Publish Raw and Production:
+  async publishBuild (api) {
+    console.log(`*** Publish current build:
  api: ${this.apiUrl}
  gateway: ${new URL(this.gateway)}
  public gateway: ${new URL(this.publicGateway)}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
-    const protocol = this.apiUrl.protocol.slice(0, -1)
-    var port = this.apiUrl.port
-    if (port === undefined || port == null || port.trim() === '') {
-      port = 443
-      if (protocol === 'http') {
-        port = 80
-      }
-    }
-    const api = IpfsHttpClient({
-      protocol: protocol,
+    api = api !== undefined && api !== null ? api : IpfsHttpClient({
+      protocol: this.protocol,
       host: this.apiUrl.hostname,
-      port: port,
+      port: this.port,
       timeout: this.longTimeout,
     })
     // current build
@@ -210,6 +202,28 @@ module.exports = class PublishBuild {
  ipfs://${sourceUriCid} ***`)
       await this.manageUnpin(api, sourceUriCid, true)
     }
+    return build
+  }
+
+  async publishProduction () {
+    console.log(`*** Publish Production:
+ api: ${this.apiUrl}
+ gateway: ${new URL(this.gateway)}
+ public gateway: ${new URL(this.publicGateway)}
+ production: ${this.gateway}/ipns/${this.buildCid}
+ raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
+    const api = IpfsHttpClient({
+      protocol: this.protocol,
+      host: this.apiUrl.hostname,
+      port: this.port,
+      timeout: this.longTimeout,
+    })
+    // current build
+    const buildPath = `./current/build.json`
+    if (fs.existsSync(buildPath) === false) {
+      throw new Error(`Unknown ${buildPath}`)
+    }
+    const build = await this.publishBuild(api)
     // current raw and production build node
     if (build.currentRawBuild === undefined || build.currentRawBuild == null) {
       throw new Error('Unknown current Raw')

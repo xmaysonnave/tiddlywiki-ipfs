@@ -3,7 +3,7 @@ tags: $:/ipfs/core
 
 <$reveal type="nomatch" state="$:/isCompressed" text="yes">
 <$reveal type="nomatch" state="$:/isEncrypted" text="yes">
-`<div id="storeArea" type="text/plain" style="display:none;">`
+`<div id="storeArea" style="display:none;">`
 <$list filter=<<saveTiddlerFilter>> template="$:/core/templates/html-div-tiddler"/>
 <$list filter={{{ [<skinnySaveTiddlerFilter>] }}} template="$:/core/templates/html-div-skinny-tiddler"/>
 `</div>`

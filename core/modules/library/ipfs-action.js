@@ -139,6 +139,7 @@ IPFS Action
     }
     try {
       var { ipnsCid, ipnsKey } = await $tw.ipfs.renameIpnsKey(this.ipnsKey, ipnsKey)
+      $tw.utils.alert(name, `Renamed IPNS key: '${ipnsKey}'...`)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -213,7 +214,7 @@ IPFS Action
         $tw.ipfs
           .removeIpnsKey(ipnsKey)
           .then(data => {
-            $tw.utils.alert(name, `Succesfully removed IPNS key: '${ipnsKey}'...`)
+            $tw.utils.alert(name, `Removed IPNS key: '${ipnsKey}'...`)
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
@@ -275,27 +276,29 @@ IPFS Action
   IpfsAction.prototype.handleResolveIpnsKeyAndOpen = async function (event) {
     var ipnsCid = null
     var resolvedUrl = null
-    var ipnsKey = $tw.utils.getIpnskey()
+    var ipnsKey = $tw.utils.getIpnsKey()
     if (ipnsKey == null) {
       $tw.utils.alert(name, 'Undefined IPNS key....')
       return false
     }
     try {
-      var { ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(`${ipnsKeyword}://${ipnsKey}`, true, false, false)
+      var { ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(`${ipnsKeyword}://${ipnsKey}`, $tw.utils.getIpnsResolve(), false, false)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/ipns/cid')
-    if (tiddler !== undefined && this.ipnsCid !== ipnsCid) {
+    if (tiddler !== undefined && ipnsCid !== null && this.ipnsCid !== ipnsCid) {
       tiddler = $tw.utils.updateTiddler({
         tiddler: tiddler,
         fields: [{ key: 'text', value: ipnsCid }],
       })
       $tw.wiki.addTiddler(tiddler)
     }
-    this.ipnsCid = ipnsCid
+    if (ipnsCid !== null) {
+      this.ipnsCid = ipnsCid
+    }
     if (resolvedUrl !== null) {
       window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
     }

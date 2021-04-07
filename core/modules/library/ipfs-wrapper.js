@@ -189,9 +189,7 @@ ${url}`
 IpfsWrapper.prototype.removeIpnsKey = async function (ipfs, ipnsKey) {
   try {
     const ipnsCid = await this.ipfsLibrary.rmKey(ipfs, ipnsKey)
-    const msg = `Removed IPNS key: ${ipnsKey}`
-    this.getLogger().info(msg)
-    $tw.utils.alert(name, msg)
+    this.getLogger().info(`Removed IPNS key: ${ipnsKey}`)
     return ipnsCid
   } catch (error) {
     this.getLogger().error(error)
@@ -203,9 +201,7 @@ IpfsWrapper.prototype.renameIpnsKey = async function (ipfs, oldIpnsKey, newIpnsK
   try {
     var { ipnsCid, was, now } = await this.ipfsLibrary.keyRename(ipfs, oldIpnsKey, newIpnsKey)
     ipnsCid = this.ipfsBundle.cidToLibp2pKeyCidV1(ipnsCid, 'base36', true).toString()
-    const msg = `Renamed IPNS key: ${was} with ${now}`
-    this.getLogger().info(msg)
-    $tw.utils.alert(name, msg)
+    this.getLogger().info(`Renamed IPNS key: ${was} with ${now}`)
     return {
       ipnsCid: ipnsCid,
       ipnsKey: now,

@@ -160,7 +160,7 @@ The saver handler tracks changes to the store and handles saving the entire wiki
     var self = this
     var method = options.method || 'save'
     // Ignore autosave if disabled
-    if (method === 'autosave' && this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes') {
+    if (method === 'autosave' && ($tw.config.disableAutoSave || this.wiki.getTiddlerText(this.titleAutoSave, 'yes') !== 'yes')) {
       return false
     }
     if ($tw.browser && typeof $tw.crypto.hasEncryptionPublicKey === 'function' && $tw.crypto.hasEncryptionPublicKey() && typeof globalThis.sigUtil === 'undefined') {

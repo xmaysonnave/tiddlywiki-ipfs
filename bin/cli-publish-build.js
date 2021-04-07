@@ -12,11 +12,14 @@ async function main () {
     const load = argv.load !== undefined && argv.load !== null ? argv.load === 'true' || argv.load === true : null
     const pin = argv.pin !== undefined && argv.pin !== null ? argv.pin === 'true' || argv.pin === true : null
     const reset = argv.reset !== undefined && argv.reset !== null ? argv.reset === 'true' || argv.reset === true : false
+    const build = argv.build !== undefined && argv.build !== null ? argv.build === 'true' || argv.build === true : false
     const publisher = new PublishBuild(dir, pin, load)
     if (reset) {
-      await publisher.resetBuild()
+      await publisher.resetProduction()
+    } else if (build) {
+      await publisher.publishBuild()
     } else {
-      await publisher.publish()
+      await publisher.publishProduction()
     }
   } catch (error) {
     console.error(error)

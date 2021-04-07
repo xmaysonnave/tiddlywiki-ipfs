@@ -51,8 +51,8 @@ Ens/Manager/Open/Hint: Open ENS Domain Manager
 Ens/Publish/Caption: publish to ENS
 Ens/Publish/Hint: Publish this wiki to ENS
 
-Ens/Resolve/And/Open/Caption: open ENS Domain content
-Ens/Resolve/And/Open/Hint: Open resolved ENS Domain content
+Ens/Resolve/And/Open/Caption: open ENS Domain
+Ens/Resolve/And/Open/Hint: Open ENS Domain
 
 Ipns/Publish/Caption: publish to IPNS
 Ipns/Publish/Hint: Publish this wiki to IPNS
@@ -63,8 +63,8 @@ Ipns/Remove/Hint: Remove IPNS key and IPNS cid
 Ipns/Rename/Caption: rename
 Ipns/Rename/Hint: Rename IPNS key
 
-Ipns/Resolve/And/Open/Caption: resolve and open
-Ipns/Resolve/And/Open/Hint: Open resolved IPFS cid
+Ipns/Resolve/And/Open/Caption: Open IPNS
+Ipns/Resolve/And/Open/Hint: Open IPNS
 
 Ipns/Publish/To/Ens/Caption: publish to ENS
 Ipns/Publish/To/Ens/Hint: publish IPNS key to ENS

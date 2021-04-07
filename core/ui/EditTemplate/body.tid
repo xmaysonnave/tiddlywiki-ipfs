@@ -1,5 +1,5 @@
 title: $:/core/ui/EditTemplate/body
-tags: $:/ipfs/core $:/tags/EditTemplate
+tags: $:/tags/EditTemplate $:/ipfs/core
 
 \define lingo-base() $:/language/EditTemplate/Body/
 \define config-visibility-title()
