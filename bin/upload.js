@@ -10,6 +10,7 @@ const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
+const timeoutSignal = require('timeout-signal')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
@@ -18,31 +19,32 @@ const ipfsBundle = new IpfsBundle()
 const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
 
 const shortTimeout = 6000
-const longTimeout = 2 * 60 * shortTimeout
+const longTimeout = 4 * 60 * shortTimeout
 
 async function loadFromIpfs (url, timeout, stream) {
   if (url instanceof URL === false) {
     url = new URL(url)
   }
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
   var options = {
     method: 'options',
-    timeout: timeout !== undefined ? timeout : longTimeout,
+    signal: timeoutSignal(timeout),
   }
   var response = await fetch(url, options)
   if (response.ok === false) {
-    throw new Error(`unexpected response ${response.statusText}`)
+    throw new Error(`Unexpected response ${response.statusText}`)
   }
   var options = {
     compress: false,
     method: 'get',
     size: 0,
-    timeout: timeout !== undefined ? timeout : longTimeout,
+    signal: timeoutSignal(timeout),
   }
   const location = response.headers.get('Location')
   url = location !== undefined && location !== null ? new URL(location) : url
   var response = await fetch(url, options)
   if (response.ok === false) {
-    throw new Error(`unexpected response ${response.statusText}`)
+    throw new Error(`Unexpected response ${response.statusText}`)
   }
   if (stream !== undefined && stream !== null) {
     const streamPipeline = promisify(pipeline)

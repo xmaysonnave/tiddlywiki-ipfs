@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/ipfs/tiddler/unpin
-tags: $:/ipfs/core $:/tags/ViewToolbar
+tags: $:/tags/ViewToolbar $:/ipfs/core
 caption: {{$:/core/images/chevron-down}} {{$:/language/Buttons/Ipfs/Tiddler/Unpin/Caption}}
 description: {{$:/language/Buttons/Ipfs/Tiddler/Unpin/Hint}}
 

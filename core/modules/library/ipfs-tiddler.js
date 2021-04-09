@@ -306,7 +306,7 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    if (tiddler !== undefined && title !== '$:/plugins/tiddlywiki/menubar/items/pagecontrols') {
+    if (tiddler === undefined || title === '$:/plugins/tiddlywiki/menubar/items/pagecontrols') {
       return false
     }
     var canonicalUri = tiddler.fields._canonical_uri

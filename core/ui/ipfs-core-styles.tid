@@ -1,5 +1,5 @@
 title: $:/plugins/ipfs/styles
-tags: $:/ipfs/core $:/tags/Stylesheet
+tags: $:/tags/Stylesheet $:/ipfs/core
 type: text/css
 
 .tc-ipfs-action {
@@ -9,10 +9,10 @@ type: text/css
   height: 18px;
 }
 
-.tc-icon-ipfs-wrapper {
+.tc-icon-wrapper > svg {
   display: inline-block;
-  width: 1em;
-  height: 1em;
+	width: 1em;
+	height: 1em;
 }
 
 a.tc-ipfs-link-external {

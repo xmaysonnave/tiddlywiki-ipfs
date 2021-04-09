@@ -1,0 +1,13 @@
+title: $:/core/ui/Buttons/tiddler/refresh
+tags: $:/tags/ViewToolbar $:/ipfs/core
+caption: {{$:/core/images/refresh-button}} {{$:/language/Buttons/Tiddler/Refresh/Caption}}
+description: {{$:/language/Buttons/Tiddler/Refresh/Hint}}
+
+<$button message="tm-refresh-tiddler" param=<<currentTiddler>> tooltip={{$:/language/Buttons/Tiddler/Refresh/Hint}} aria-label={{$:/language/Buttons/Tiddler/Refresh/Caption}} class=<<tv-config-toolbar-class>>>
+<$list filter="[<tv-config-toolbar-icons>match[yes]]">
+{{$:/core/images/refresh-button}}
+</$list>
+<$list filter="[<tv-config-toolbar-text>match[yes]]">
+<span class="tc-btn-text"><$text text={{$:/language/Buttons/Tiddler/Refresh/Caption}}/></span>
+</$list>
+</$button>

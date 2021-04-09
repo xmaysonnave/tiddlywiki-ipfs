@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/ipfs/export/attachment
-tags: $:/ipfs/core $:/tags/ViewToolbar
+tags: $:/tags/ViewToolbar $:/ipfs/core
 caption: {{$:/language/Buttons/Ipfs/Export/Attachment/Caption}}
 description: {{$:/language/Buttons/Ipfs/Export/Attachment/Hint}}
 

@@ -1,36 +1,6 @@
 title: $:/language/Buttons/
 tags: $:/ipfs/core
 
-Ipfs/Export/Caption: export to IPFS
-Ipfs/Export/Hint: Export this tiddler to IPFS
-
-Ipfs/Export/Attachment/Caption: export attachment to IPFS
-Ipfs/Export/Attachment/Hint: Export attachment to IPFS
-
-Ipfs/Export/Content/Caption: export content to IPFS
-Ipfs/Export/Content/Hint: Export this tiddler content to IPFS
-
-Ipns/Fetch/Caption: fetch from IPNS
-Ipns/Fetch/Hint: Fetch IPNS cid
-
-Ipns/Generate/Caption: generate IPNS
-Ipns/Generate/Hint: Generate IPNS cid
-
-Ipfs/Refresh/Caption: refresh
-Ipfs/Refresh/Hint: Perform a full refresh of the tiddler
-
-Ipfs/Pin/Caption: pin to IPFS
-Ipfs/Pin/Hint: Pin this wiki to IPFS
-
-Ipfs/Tiddler/Pin/Caption: pin to IPFS
-Ipfs/Tiddler/Pin/Hint: Pin tiddler resources to IPFS
-
-Ipfs/Tiddler/Unpin/Caption: unpin from IPFS
-Ipfs/Tiddler/Unpin/Hint: Unpin tiddler resources from IPFS
-
-Ipfs/Unpin/Caption: unpin from IPFS
-Ipfs/Unpin/Hint: Unpin this wiki from IPFS
-
 Console/Mobile/Caption: mobile console
 Console/Mobile/Hint: Load/Show/Hide Mobile Console
 Console/Mobile/Hide: Hide Mobile Console
@@ -54,8 +24,38 @@ Ens/Publish/Hint: Publish this wiki to ENS
 Ens/Resolve/And/Open/Caption: open ENS Domain
 Ens/Resolve/And/Open/Hint: Open ENS Domain
 
+Ipfs/Export/Caption: export to IPFS
+Ipfs/Export/Hint: Export this tiddler to IPFS
+
+Ipfs/Export/Attachment/Caption: export attachment to IPFS
+Ipfs/Export/Attachment/Hint: Export attachment to IPFS
+
+Ipfs/Export/Content/Caption: export content to IPFS
+Ipfs/Export/Content/Hint: Export this tiddler content to IPFS
+
+Ipfs/Pin/Caption: pin to IPFS
+Ipfs/Pin/Hint: Pin this wiki to IPFS
+
+Ipfs/Tiddler/Pin/Caption: pin to IPFS
+Ipfs/Tiddler/Pin/Hint: Pin tiddler resources to IPFS
+
+Ipfs/Tiddler/Unpin/Caption: unpin from IPFS
+Ipfs/Tiddler/Unpin/Hint: Unpin tiddler resources from IPFS
+
+Ipfs/Unpin/Caption: unpin from IPFS
+Ipfs/Unpin/Hint: Unpin this wiki from IPFS
+
+Ipns/Fetch/Caption: fetch from IPNS
+Ipns/Fetch/Hint: Fetch IPNS cid
+
+Ipns/Generate/Caption: generate IPNS
+Ipns/Generate/Hint: Generate IPNS cid
+
 Ipns/Publish/Caption: publish to IPNS
 Ipns/Publish/Hint: Publish this wiki to IPNS
+
+Ipns/Publish/To/Ens/Caption: publish to ENS
+Ipns/Publish/To/Ens/Hint: publish IPNS key to ENS
 
 Ipns/Remove/Caption: remove
 Ipns/Remove/Hint: Remove IPNS key and IPNS cid
@@ -66,5 +66,5 @@ Ipns/Rename/Hint: Rename IPNS key
 Ipns/Resolve/And/Open/Caption: Open IPNS
 Ipns/Resolve/And/Open/Hint: Open IPNS
 
-Ipns/Publish/To/Ens/Caption: publish to ENS
-Ipns/Publish/To/Ens/Hint: publish IPNS key to ENS
+Tiddler/Refresh/Caption: refresh
+Tiddler/Refresh/Hint: Perform a full refresh of the tiddler

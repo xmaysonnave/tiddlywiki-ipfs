@@ -1,9 +1,9 @@
 title: $:/plugins/ipfs.js-build
 tags: $:/ipfs/documentation
-build: 210409319
+build: 210409428
 name: $:/plugins/ipfs.js
-sourceSize: 1172879
-sourceUri: ipfs://bafybeihky3hlehw2ekjponpdc2qgjpr62v32lcwktg5z7cpsvwzu63kahe/$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210409319.json
-version: 0.4.0-beta-tw-v5.1.23+build-210409319
+sourceSize: 1172265
+sourceUri: ipfs://bafybeidqpzpbzgnxnasyw7pbcf5fzklmsx5tbgbjllzrrwchps6oun5pji/$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210409428.json
+version: 0.4.0-beta-tw-v5.1.23+build-210409428
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

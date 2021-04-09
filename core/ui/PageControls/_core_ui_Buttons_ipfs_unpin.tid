@@ -1,5 +1,5 @@
 title: $:/core/ui/Buttons/ipfs/unpin
-tags: $:/ipfs/core $:/tags/PageControls
+tags: $:/tags/PageControls $:/ipfs/core
 caption: {{$:/core/images/chevron-down}} {{$:/language/Buttons/Ipfs/Unpin/Caption}}
 description: {{$:/language/Buttons/Ipfs/Unpin/Hint}}
 
