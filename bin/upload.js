@@ -156,11 +156,13 @@ module.exports = async function main (name, extension, dir, tags, load) {
       }
     }
     current.build = build.build
+    current.rawSemver = build.rawSemver
     current.version = build.version
   } else {
     current = {
       build: build.build,
       content: [],
+      rawSemver: build.rawSemver,
       version: build.version,
     }
   }

@@ -103,7 +103,7 @@ IPFS Action
       $tw.ipfs.getLogger().info(`Uploading attachment: ${content.length} bytes`)
       var { cid: added, path } = await $tw.ipfs.addAttachmentToIpfs(content, `/${filename}`)
       if (added !== null) {
-        await $tw.ipfs.requestToPin(`/ipfs/${added}`)
+        $tw.ipfs.addToPin(`/ipfs/${added}`)
       }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
@@ -194,14 +194,14 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleRemoveIpnsKey = async function (event) {
-    var ipnsCid = null
+    var resolvedUrl = null
     var ipnsKey = $tw.utils.getIpnsKey()
     if (ipnsKey == null) {
       $tw.utils.alert(name, 'Undefined IPNS key....')
       return false
     }
     try {
-      var { ipnsCid, remainderPath } = await $tw.ipfs.getIpnsIdentifier(ipnsKey)
+      var { resolvedUrl } = await $tw.ipfs.resolveUrl(`/ipns/${ipnsKey}`, $tw.utils.getIpnsResolve(), false, true)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -209,7 +209,7 @@ IPFS Action
     }
     // Async
     $tw.ipfs
-      .requestToUnpin(`/ipns/${ipnsCid}${remainderPath}`)
+      .addToUnpin(resolvedUrl !== null ? resolvedUrl.pathname : null)
       .then(unpin => {
         $tw.ipfs
           .removeIpnsKey(ipnsKey)
@@ -372,8 +372,8 @@ IPFS Action
   }
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
-    var cid = null
     var ipnsCid = null
+    var resolvedurl = null
     var wikiCid = null
     var wikiIpnsCid = null
     const wiki = $tw.ipfs.getDocumentUrl()
@@ -384,7 +384,7 @@ IPFS Action
     }
     try {
       var { ipfsCid: wikiCid, ipnsCid: wikiIpnsCid } = await $tw.ipfs.resolveUrl(wiki, true, false, true)
-      var { ipfsCid: cid, ipnsCid } = await $tw.ipfs.resolveUrl(`${ipnsKeyword}://${ipnsKey}`, true, false, false)
+      var { ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(`${ipnsKeyword}://${ipnsKey}`, $tw.utils.getIpnsResolve(), false, false)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
@@ -402,7 +402,7 @@ IPFS Action
       .publishIpnsKey(wikiCid, ipnsCid, ipnsKey)
       .then(data => {
         $tw.utils.alert(name, 'Published IPNS key: ' + ipnsKey)
-        $tw.ipfs.requestToUnpin(`/ipfs/${cid}`)
+        $tw.ipfs.addToUnpin(resolvedurl !== null ? resolvedUrl.pathname : null)
       })
       .catch(error => {
         $tw.ipfs.getLogger().error(error)

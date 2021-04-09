@@ -177,7 +177,7 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.ipfsPin = function (value, field) {
     $tw.ipfs
-      .resolveUrl(value, true, false, true)
+      .resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
       .then(data => {
         const { resolvedUrl } = data
         if (resolvedUrl !== null) {
@@ -241,7 +241,7 @@ IPFS Tiddler
   IpfsTiddler.prototype.ipfsUnpin = function (value, field) {
     field = field !== undefined && field !== null && field.trim() !== '' ? field.trim() : null
     $tw.ipfs
-      .resolveUrl(value, true, false, true)
+      .resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
       .then(data => {
         const { resolvedUrl } = data
         if (resolvedUrl !== null) {
@@ -284,22 +284,17 @@ IPFS Tiddler
         field = '_export_uri'
       }
       // Value
-      var url = null
+      var resolvedUrl = null
       const value = tiddler.getFieldString(field)
       if (value !== undefined && value !== null && value.trim() !== '') {
-        // URL or not
         try {
-          url = $tw.ipfs.normalizeUrl(value)
+          var { resolvedUrl } = await $tw.ipfs.resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
         } catch (error) {
-          // Ignore
+          $tw.ipfs.getLogger().error(error)
+          $tw.utils.alert(name, error.message)
+          return tiddler
         }
-        // Process
-        if (url !== null) {
-          const { ipfsCid } = $tw.ipfs.getIpfsIdentifier(url)
-          if (ipfsCid !== null) {
-            await $tw.ipfs.requestToUnpin(`/ipfs/${ipfsCid}`)
-          }
-        }
+        $tw.ipfs.addToUnpin(resolvedUrl !== null ? resolvedUrl.pathname : null)
       }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
@@ -400,12 +395,10 @@ IPFS Tiddler
           continue
         }
         // Process
-        var oldIpfsCid = null
-        var oldIpnsCid = null
         var oldResolvedUrl = null
         var oldValue = oldTiddler.getFieldString(field)
         try {
-          var { ipfsCid: oldIpfsCid, ipnsCid: oldIpnsCid, resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
+          var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, $tw.utils.getIpnsResolve(), false, true)
         } catch (error) {
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
@@ -435,9 +428,7 @@ IPFS Tiddler
             return tiddler
           }
         }
-        if (oldIpfsCid !== null || oldIpnsCid !== null) {
-          await $tw.ipfs.requestToUnpin(oldResolvedUrl.pathname)
-        }
+        $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
       }
     }
     // Process new and updated fields
@@ -451,9 +442,12 @@ IPFS Tiddler
     var canonicalUri = null
     var exportUri = null
     var importUri = null
-    var canonicalCid = null
-    var exportCid = null
-    var importCid = null
+    var canonicalIpfsCid = null
+    var canonicalIpnsCid = null
+    var exportIpfsCid = null
+    var exportIpnsCid = null
+    var importIpfsCid = null
+    var importIpnsCid = null
     var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
     const { type, info } = $tw.utils.getContentType(tiddler)
     // Process
@@ -466,6 +460,7 @@ IPFS Tiddler
       var ipfsCid = null
       var ipnsCid = null
       var resolvedUrl = null
+      var oldResolvedUrl = null
       var value = tiddler.getFieldString(field)
       try {
         var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(value, false, false, true)
@@ -478,15 +473,18 @@ IPFS Tiddler
       resolvedUrl = resolvedUrl !== undefined && resolvedUrl !== null && resolvedUrl.toString().trim() !== '' ? resolvedUrl.toString().trim() : null
       if (field === '_canonical_uri') {
         canonicalUri = resolvedUrl
-        canonicalCid = ipfsCid
+        canonicalIpfsCid = ipfsCid
+        canonicalIpnsCid = ipnsCid
       }
       if (field === '_import_uri') {
         importUri = resolvedUrl
-        importCid = ipfsCid
+        importIpfsCid = ipfsCid
+        importIpnsCid = ipnsCid
       }
       if (field === '_export_uri') {
         exportUri = resolvedUrl
-        exportCid = ipfsCid
+        exportIpfsCid = ipfsCid
+        exportIpnsCid = ipnsCid
       }
       // Previous values if any
       var oldValue = null
@@ -497,22 +495,15 @@ IPFS Tiddler
       if (value === oldValue) {
         continue
       }
-      var oldIpfsCid = null
-      var oldIpnsCid = null
-      var oldResolvedUrl = null
       try {
-        var { ipfsCid: oldIpfsCid, ipnsCid: oldIpnsCid, resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
+        var { oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
       } catch (error) {
         // We cannot resolve the previous value
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(name, error.message)
       }
-      if (ipfsCid !== null || ipnsCid !== null) {
-        await $tw.ipfs.requestToPin(resolvedUrl.pathname)
-      }
-      if (oldIpfsCid !== null || oldIpnsCid !== null) {
-        await $tw.ipfs.requestToUnpin(oldResolvedUrl.pathname)
-      }
+      $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+      $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
     }
     // Tag management
     var addTags = []
@@ -520,7 +511,7 @@ IPFS Tiddler
     if (canonicalUri == null && exportUri == null && importUri == null) {
       removeTags.push('$:/isExported', '$:/isImported', '$:/isIpfs')
     }
-    if (canonicalCid == null && exportCid == null && importCid == null) {
+    if (canonicalIpfsCid == null && canonicalIpnsCid == null && exportIpfsCid == null && exportIpnsCid == null && importIpfsCid == null && importIpnsCid == null) {
       if (removeTags.indexOf('$:/isIpfs') === -1) {
         removeTags.push('$:/isIpfs')
       }

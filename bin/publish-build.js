@@ -180,12 +180,15 @@ module.exports = class PublishBuild {
  public gateway: ${new URL(this.publicGateway)}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
-    api = api !== undefined && api !== null ? api : IpfsHttpClient({
-      protocol: this.protocol,
-      host: this.apiUrl.hostname,
-      port: this.port,
-      timeout: this.longTimeout,
-    })
+    api =
+      api !== undefined && api !== null
+        ? api
+        : IpfsHttpClient({
+            protocol: this.protocol,
+            host: this.apiUrl.hostname,
+            port: this.port,
+            timeout: this.longTimeout,
+          })
     // current build
     const buildPath = `./current/build.json`
     if (fs.existsSync(buildPath) === false) {
@@ -251,17 +254,14 @@ module.exports = class PublishBuild {
     if (this.pin) {
       if (previousRawBuildCid !== null && previousRawBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin previous Raw:
- ipns://${this.rawBuildCid}
  ipfs://${previousRawBuildCid} ***`)
         await this.manageUnpin(api, previousRawBuildCid, false)
       }
       if (remoteRawBuildCid !== null && remoteRawBuildCid.toString() !== currentRawBuildCid.toString()) {
         console.log(`*** Pin current Raw:
- ipns://${this.rawBuildCid}
  ipfs://${currentRawBuildCid} ***`)
         await this.managePin(api, currentRawBuildCid, true)
         console.log(`*** Publish current Raw:
- ipns://${this.rawBuildCid}
  ipfs://${currentRawBuildCid} ***`)
         await this.ipfsBundle.namePublish(api, this.rawBuildKey, currentRawBuildCid, {
           resolve: false,
@@ -273,19 +273,16 @@ module.exports = class PublishBuild {
     } else {
       if (currentRawBuildCid !== null && currentRawBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin current Raw:
- ipns://${this.rawBuildCid}
  ipfs://${currentRawBuildCid} ***`)
         await this.manageUnpin(api, currentRawBuildCid, false)
       }
       if (previousRawBuildCid !== null && previousRawBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Pin previous Raw:
- ipns://${this.rawBuildCid}
  ipfs://${previousRawBuildCid} ***`)
         await this.managePin(api, previousRawBuildCid, true)
       }
       if (remoteRawBuildCid !== null && remoteRawBuildCid.toString() !== previousRawBuildCid.toString()) {
         console.log(`*** Publish previous Raw:
- ipns://${this.rawBuildCid}
  ipfs://${previousRawBuildCid} ***`)
         await this.ipfsBundle.namePublish(api, this.rawBuildKey, previousRawBuildCid, {
           resolve: false,
@@ -305,17 +302,14 @@ module.exports = class PublishBuild {
     if (this.pin) {
       if (previousBuildCid !== null && previousBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin previous Production:
- ipns://${this.buildCid}
  ipfs://${previousBuildCid} ***`)
         await this.manageUnpin(api, previousBuildCid, false)
       }
       if (remoteBuildCid !== null && remoteBuildCid.toString() !== currentBuildCid.toString()) {
         console.log(`*** Pin current Production:
- ipns://${this.buildCid}
  ipfs://${currentBuildCid} ***`)
         await this.managePin(api, currentBuildCid, true)
         console.log(`*** Publish current Production:
- ipns://${this.buildCid}
  ipfs://${currentBuildCid} ***`)
         await this.ipfsBundle.namePublish(api, this.buildKey, currentBuildCid, {
           resolve: false,
@@ -327,19 +321,16 @@ module.exports = class PublishBuild {
     } else {
       if (currentBuildCid !== null && currentBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin current Production:
- ipns://${this.buildCid}
  ipfs://${currentBuildCid} ***`)
         await this.manageUnpin(api, currentBuildCid, false)
       }
       if (previousBuildCid !== null && previousBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Pin previous Production:
- ipns://${this.buildCid}
  ipfs://${previousBuildCid} ***`)
         await this.managePin(api, previousBuildCid, true)
       }
       if (remoteBuildCid !== null && remoteBuildCid.toString() !== previousBuildCid.toString()) {
         console.log(`*** Publish previous Production:
- ipns://${this.buildCid}
  ipfs://${previousBuildCid} ***`)
         await this.ipfsBundle.namePublish(api, this.buildKey, previousBuildCid, {
           resolve: false,

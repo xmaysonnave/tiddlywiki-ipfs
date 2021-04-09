@@ -230,8 +230,8 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
       url = this.getUrl(`${base.protocol}//${credential}${base.host}/ipns/${ipnsIdentifier}${url.pathname}${url.search}${url.hash}`)
     }
   }
-  if (url.hostname.endsWith('.eth.link')) {
-    const hostname = url.hostname.substring(0, url.hostname.indexOf('.link'))
+  if (url.hostname.endsWith('.eth')) {
+    const hostname = `${url.hostname}.link`
     const host = url.port ? `${hostname}:${url.port}` : hostname
     var credential = ''
     if (url.username && url.password) {

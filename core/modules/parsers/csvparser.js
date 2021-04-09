@@ -43,7 +43,7 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
         var password = options.tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs
-          .resolveUrl(canonicalUri, false, false, true)
+          .resolveUrl(canonicalUri, false, false, false)
           .then(data => {
             var { resolvedUrl } = data
             if (resolvedUrl !== null) {

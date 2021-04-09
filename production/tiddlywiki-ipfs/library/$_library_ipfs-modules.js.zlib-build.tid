@@ -1,9 +1,9 @@
 title: $:/library/ipfs-modules.js.zlib-build
 tags: $:/ipfs/core
-build: 210407469
+build: 210408420
 name: $:/library/ipfs-modules.js.zlib
 sourceSize: 52571
-sourceUri: ipfs://bafybeibyub4c72z2npysemikvtbouwrckwyflo7ukesq4733pn3o2dutrm/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210407469.json
-version: 1.0.0+pre-release-210407469
+sourceUri: ipfs://bafybeie5kp4fhf53v4lsnvf6uxxcqeiatulu4fkj2bnlgatn4w56gzod4e/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210408420.json
+version: 1.0.0+pre-release-210408420
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -19,7 +19,6 @@ const { promisify } = require('util')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
-const toBeLoaded = []
 
 const shortTimeout = 6000
 const longTimeout = 2 * 60 * shortTimeout
@@ -74,7 +73,7 @@ async function dagPut (api, links, timeout) {
   return await ipfsBundle.dagPut(api, dagNode, options)
 }
 
-async function processContent (api, publicGateway, parentDir) {
+async function processContent (api, gateway, publicGateway, load, parentDir) {
   parentDir = parentDir !== undefined && parentDir !== null ? parentDir : ''
   const currentDirPathname = path.resolve(`./current/${parentDir}`)
   if (fs.existsSync(currentDirPathname) === false) {
@@ -92,7 +91,7 @@ async function processContent (api, publicGateway, parentDir) {
     const contentPathname = parentDir !== undefined && parentDir !== null && parentDir.trim() !== '' ? `${parentDir}/${content[i]}` : `${content[i]}`
     const pathname = path.resolve(`./current/${contentPathname}`)
     if (fs.statSync(pathname).isDirectory()) {
-      const childNode = await processContent(api, publicGateway, contentPathname)
+      const childNode = await processContent(api, gateway, publicGateway, load, contentPathname)
       if (childNode !== undefined && childNode !== null) {
         const cidV1 = ipfsBundle.cidToCidV1(childNode.cid)
         links.push({
@@ -100,7 +99,6 @@ async function processContent (api, publicGateway, parentDir) {
           Tsize: childNode.size,
           Hash: cidV1,
         })
-        toBeLoaded.push(cidV1)
       }
     } else if (path.basename(pathname) === 'current.json') {
       current = JSON.parse(fs.readFileSync(pathname, 'utf8'))
@@ -154,6 +152,12 @@ async function processContent (api, publicGateway, parentDir) {
   }
   var node = await dagPut(api, links)
   var cidV1 = ipfsBundle.cidToCidV1(node.cid)
+  if (load) {
+    var uri = `${gateway}${cidV1}`
+    console.log(`*** Fetch ***
+ ${uri} ***`)
+    await loadFromIpfs(uri)
+  }
   if (current !== null) {
     node = await dagPut(api, [
       {
@@ -165,6 +169,12 @@ async function processContent (api, publicGateway, parentDir) {
     var cidV1 = ipfsBundle.cidToCidV1(node.cid)
     current.buildUri = `${publicGateway}${cidV1}/${current.build}/`
     fs.writeFileSync(currentPathname, beautify(current, null, 2, 80), 'utf8')
+    if (load) {
+      var uri = `${gateway}${cidV1}`
+      console.log(`*** Fetch ***
+ ${uri} ***`)
+      await loadFromIpfs(uri)
+    }
   }
   return node
 }
@@ -209,24 +219,11 @@ module.exports = async function main (load) {
  api: ${apiUrl}
  gateway: ${new URL(gateway)}
  public gateway: ${new URL(publicGateway)} ***`)
-  const node = await processContent(api, publicGateway)
+  const node = await processContent(api, gateway, publicGateway, load)
   build.sourceSize = node.size
   build.sourceUri = `${publicGateway}${node.cid}/`
   fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
-  // Log
   console.log(`*** Added build node:
- ipfs://${node.cid}/`)
-  // Load
-  if (load) {
-    var uri = `${gateway}${node.cid}`
-    console.log(`*** Fetch ***
- ${uri} ***`)
-    await loadFromIpfs(uri)
-    for (var i = 0; i < toBeLoaded.length; i++) {
-      var uri = `${gateway}${toBeLoaded[i]}`
-      console.log(`*** Fetch ***
- ${uri} ***`)
-      await loadFromIpfs(uri)
-    }
-  }
+ ipfs://${node.cid}/
+ ${gateway}${node.cid}`)
 }

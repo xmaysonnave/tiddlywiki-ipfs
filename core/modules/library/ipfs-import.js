@@ -101,6 +101,9 @@ IPFS Import
     }
     if (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link')) {
       key = normalizedUrl.hostname
+      if (normalizedUrl.hostname.endsWith('.eth.link')) {
+        key = normalizedUrl.hostname.substring(0, normalizedUrl.hostname.indexOf('.link'))
+      }
     } else if (ipfsCid !== null) {
       key = `ipfs://${ipfsCid}`
     } else if (ipnsCid !== null) {
@@ -120,7 +123,7 @@ IPFS Import
       return false
     }
     const { ipfsCid, ipnsIdentifier } = $tw.ipfs.getIpfsIdentifier(key)
-    if (key.endsWith('.eth') || key.endsWith('.eth.link') || ipfsCid !== null || ipnsIdentifier !== null) {
+    if (key.endsWith('.eth') || ipfsCid !== null || ipnsIdentifier !== null) {
       return true
     }
     return false

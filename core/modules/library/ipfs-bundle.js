@@ -222,7 +222,7 @@ IpfsBundle.prototype.getWeb3Provider = async function (provider) {
   return await this.ethereumLibrary.getWeb3Provider(provider)
 }
 
-IpfsBundle.prototype.isOwner = async function (domain, web3, account) {
+IpfsBundle.prototype.isEnsOwner = async function (domain, web3, account) {
   return await this.ensLibrary.isOwner(domain, web3, account)
 }
 

@@ -1,4 +1,4 @@
-title: $:/core/ui/ControlPanel/Saving/Ipfs
+title: $:/core/ui/ControlPanel/Saving/IpfsSaver
 tags: $:/tags/ControlPanel/Saving $:/ipfs/core
 caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 

@@ -229,9 +229,13 @@ IPFS utils
     var exportUri = target.fields._export_uri
     try {
       var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(exportUri, true, true, true)
-      if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
+      if (normalizedUrl !== null && (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link'))) {
+        var ensDomain = normalizedUrl.hostname
+        if (normalizedUrl.hostname.endsWith('.eth.link')) {
+          ensDomain = normalizedUrl.hostname.substring(0, normalizedUrl.hostname.indexOf('.link'))
+        }
         var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-        const isOwner = await $tw.ipfs.isOwner(normalizedUrl.hostname, web3, account)
+        const isOwner = await $tw.ipfs.isEnsOwner(ensDomain, web3, account)
         if (isOwner === false) {
           const err = new Error('Unauthorized Account...')
           err.name = 'OwnerError'
@@ -294,7 +298,7 @@ IPFS utils
             .catch(error => {
               $tw.ipfs.getLogger().error(error)
               $tw.utils.alert(ipfsUtilsName, error.message)
-              $tw.ipfs.requestToUnpin(`/ipfs/${added}`)
+              $tw.ipfs.addToUnpin(`/ipfs/${added}`)
             })
         })
         .catch(error => {
@@ -336,7 +340,7 @@ IPFS utils
                 $tw.ipfs.getLogger().error(error)
               }
               $tw.utils.alert(ipfsUtilsName, error.message)
-              $tw.ipfs.requestToUnpin(`/ipfs/${added}`)
+              $tw.ipfs.addToUnpin(`/ipfs/${added}`)
             })
         })
         .catch(error => {
@@ -366,6 +370,7 @@ IPFS utils
     var json
     var data = []
     var spaces = spaces !== undefined && spaces !== null ? spaces : $tw.config.preferences.jsonSpaces
+    const ipfsKeyword = 'ipfs'
     const ipnsKeyword = 'ipns'
     // Process Tiddlers
     if (tiddlers) {
@@ -389,14 +394,15 @@ IPFS utils
             continue
           }
           try {
-            var { ipnsCid } = await $tw.ipfs.resolveUrl(fieldValue, false, false, false)
+            var { ipfsCid, ipnsCid } = await $tw.ipfs.resolveUrl(fieldValue, $tw.utils.getIpnsResolve(), false, true)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(ipfsUtilsName, error.message)
             return null
           }
-          // IPNS
-          if (ipnsCid !== null) {
+          if (ipfsCid !== null) {
+            fieldValue = `${ipfsKeyword}://${ipfsCid}`
+          } else if (ipnsCid !== null) {
             fieldValue = `${ipnsKeyword}://${ipnsCid}`
           }
           // Store field

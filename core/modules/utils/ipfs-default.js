@@ -26,7 +26,7 @@ IPFS Default
       }
     }
     if (resolve == null) {
-      resolve = false // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+      resolve = false // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
     } else {
       resolve = resolve === 'yes'
     }
@@ -205,7 +205,7 @@ IPFS Default
       }
     }
     if (verbose == null) {
-      verbose = true // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+      verbose = true // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
     } else {
       verbose = verbose === 'yes'
     }
@@ -226,7 +226,7 @@ IPFS Default
       }
     }
     if (pin == null) {
-      pin = true // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+      pin = true // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
     } else {
       pin = pin === 'yes'
     }
@@ -247,7 +247,7 @@ IPFS Default
       }
     }
     if (unpin == null) {
-      unpin = false // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+      unpin = false // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
     } else {
       unpin = unpin === 'yes'
     }
@@ -317,7 +317,7 @@ IPFS Default
       }
     }
     if (resolve == null) {
-      resolve = false // default, see $:/core/ui/ControlPanel/Saving/Ipfs
+      resolve = false // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
     } else {
       resolve = resolve === 'yes'
     }

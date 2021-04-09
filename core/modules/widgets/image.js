@@ -85,7 +85,7 @@ Render this widget into the DOM
           var password = tiddler.fields._password
           password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
           $tw.ipfs
-            .resolveUrl(canonicalUri, false, false, true)
+            .resolveUrl(canonicalUri, false, false, false)
             .then(data => {
               var { resolvedUrl: url } = data
               if (url !== null) {

@@ -62,7 +62,7 @@ if [ ! -e ./tw5-relink ]
 then
   git clone https://github.com/flibbles/tw5-relink || exit 1
   cd tw5-relink
-  git checkout tags/v1.10.3 || exit 1
+  git checkout tags/v2.0.0 || exit 1
   cd ..
 fi
 

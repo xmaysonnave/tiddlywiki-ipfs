@@ -27,7 +27,7 @@ The plain text parser processes blocks of source text into a degenerate parse tr
         var password = options.tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs
-          .resolveUrl(canonicalUri, false, false, true)
+          .resolveUrl(canonicalUri, false, false, false)
           .then(data => {
             var { resolvedUrl } = data
             if (resolvedUrl !== null) {

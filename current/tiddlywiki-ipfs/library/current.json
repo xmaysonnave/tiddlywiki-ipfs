@@ -1,27 +1,28 @@
 {
-  "build": "210407469",
+  "build": "210408420",
   "content": [
     {
-      "title": "$_library_ipfs-modules.js-1.0.0+pre-release-210407469",
+      "title": "$_library_ipfs-modules.js-1.0.0+pre-release-210408420",
       "tags": "$:/ipfs/core",
       "name": "$:/library/ipfs-modules.js",
       "rawHash": "bcfc0bbf57e9fde75c11cb877fccac1ebe87a4d994c219ed01be4490b98c6521",
       "sourceSize": 133006,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidiixpy4p4somnpmfqs7bqqfmhop2xzcaqf624v6ni32aukz6gyze/$_library_ipfs-modules.js-1.0.0+pre-release-210407469.json",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigutm6kktl3oawbrgjdgulfuquqgss7d6uvtoy3iwssxjzzlkh6ku/$_library_ipfs-modules.js-1.0.0+pre-release-210408420.json",
       "tidSize": 467,
-      "tidUri": "https://bluelight.link/ipfs/bafybeifpbw6mx3grk73uw2nq56xd2ifpwwwcuilwi46x434ohcdhsafdzi/$_library_ipfs-modules.js-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeiblq27ua6ttzewymgdcydon5e7q7qoow4vtbpxge7256as6mnjo44/$_library_ipfs-modules.js-build.tid"
     },
     {
-      "title": "$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210407469",
+      "title": "$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210408420",
       "tags": "$:/ipfs/core",
       "name": "$:/library/ipfs-modules.js.zlib",
       "rawHash": "64bfa395ba2218fb3e7ce88b0a4de6848d9f9b517ce6c469d379339775bedcb9",
       "sourceSize": 52571,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeibyub4c72z2npysemikvtbouwrckwyflo7ukesq4733pn3o2dutrm/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210407469.json",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeie5kp4fhf53v4lsnvf6uxxcqeiatulu4fkj2bnlgatn4w56gzod4e/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210408420.json",
       "tidSize": 486,
-      "tidUri": "https://bluelight.link/ipfs/bafybeicn4lkwomwiww7kvbah4ncd34lrf6jw4mqwja6erqguugmfpmogee/$_library_ipfs-modules.js.zlib-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeienzqrz676ayxxi6io4xw7yx53wvjyj6zab5rxquhz7s724336wgq/$_library_ipfs-modules.js.zlib-build.tid"
     }
   ],
-  "version": "1.0.0+pre-release-210407469",
-  "buildUri": "https://bluelight.link/ipfs/bafybeibhzn7mg26iln4smn2eb3opzitbrqzkngdrp2bfci42yxnnlw2uw4/210407469/"
+  "rawSemver": "1.0.0+pre-release",
+  "version": "1.0.0+pre-release-210408420",
+  "buildUri": "https://bluelight.link/ipfs/bafybeifnow6pxfaalmc4tu7h3m6zctolebp6gvypegfnwneuilhpbnl6jm/210408420/"
 }

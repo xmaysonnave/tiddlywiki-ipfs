@@ -50,7 +50,7 @@ IPFS Saver
         $tw.ipfs.getLogger().warn(error)
         $tw.utils.alert(name, error.message)
         if (ipnsIpfsCid !== null) {
-          await $tw.ipfs.requestToPin(`/ipfs/${ipnsIpfsCid}`)
+          $tw.ipfs.addToPin(`/ipfs/${ipnsIpfsCid}`)
         }
         return false
       }
@@ -90,7 +90,7 @@ IPFS Saver
       if (ipfsCid !== null && ipnsCid == null) {
         const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
         if (resolvedCid !== null) {
-          await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
+          $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
         }
       }
       // IPNS
@@ -126,7 +126,7 @@ IPFS Saver
         if (ipnsIpfsCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
           if (resolvedCid !== null) {
-            await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
+            $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
           }
         }
       }
@@ -138,24 +138,31 @@ IPFS Saver
           return true
         }
         var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-        const isOwner = await $tw.ipfs.isOwner(ensDomain, web3, account)
+        const isOwner = await $tw.ipfs.isEnsOwner(ensDomain, web3, account)
         if (isOwner === false) {
           const err = new Error('Unauthorized Account...')
           err.name = 'OwnerError'
           throw err
         }
-        var { ipfsCid: ensCid, ipnsCid: ensIpnsCid, ipnsKey: ensIpnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(ensDomain, true, true, true, null, web3)
-        if (ensCid !== null) {
-          const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+        var { ipfsCid: ensCid, ipnsCid: ensIpnsCid, ipnsKey: ensIpnsKey, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(
+          ensDomain,
+          $tw.utils.getIpnsResolve(),
+          true,
+          true,
+          null,
+          web3
+        )
+        if (ensCid !== null || ensIpnsCid !== null) {
+          const resolvedCid = await $tw.ipfs.resolveIpfsContainer(ensResolvedUrl)
           if (resolvedCid !== null) {
-            await $tw.ipfs.requestToUnpin(`/ipfs/${resolvedCid}`)
+            $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
           }
         }
       }
       // Upload
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
       const { cid: added } = await $tw.ipfs.addToIpfs($tw.ipfs.StringToUint8Array(text))
-      await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${added}`)
+      $tw.ipfs.addToPin(`/${ipfsKeyword}/${added}`)
       // Publish to IPNS
       pathname = `/${ipfsKeyword}/${added}/`
       if (ipnsCid !== null && ipnsKey !== null) {
@@ -176,9 +183,7 @@ IPFS Saver
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(name, error.message)
-          if (ensCid !== null) {
-            await $tw.ipfs.requestToPin(`/${ipfsKeyword}/${ensCid}`)
-          }
+          $tw.ipfs.addToPin(ensResolvedUrl !== null ? ensResolvedUrl.pathname : null)
         }
       }
       // Unpin

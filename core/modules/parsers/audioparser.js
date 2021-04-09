@@ -31,7 +31,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
         var password = options.tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs
-          .resolveUrl(canonicalUri, false, false, true)
+          .resolveUrl(canonicalUri, false, false, false)
           .then(data => {
             var { resolvedUrl } = data
             if (resolvedUrl !== null) {

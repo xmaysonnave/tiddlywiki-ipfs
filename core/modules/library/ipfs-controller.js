@@ -175,36 +175,6 @@ IPFS Controller
     return content
   }
 
-  IpfsController.prototype.requestToPin = function (ipfsPath) {
-    const self = this
-    return new Promise((resolve, reject) => {
-      if ($tw.utils.getIpfsPin() === false) {
-        resolve(false)
-      }
-      ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? ipfsPath.toString().trim() : null
-      if (ipfsPath == null) {
-        resolve(false)
-      }
-      if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
-        self
-          .resolveUrl(ipfsPath, true, false, true)
-          .then(data => {
-            const { resolvedUrl } = data
-            if (resolvedUrl !== null) {
-              resolve(self.addToPin(resolvedUrl.pathname))
-            } else {
-              resolve(false)
-            }
-          })
-          .catch(error => {
-            reject(error)
-          })
-      } else {
-        resolve(self.addToPin(ipfsPath))
-      }
-    })
-  }
-
   IpfsController.prototype.addToPin = function (ipfsPath) {
     if (ipfsPath !== undefined && ipfsPath !== null) {
       var index = this.unpin.indexOf(ipfsPath)
@@ -226,36 +196,6 @@ ${ipfsPath}`
       }
     }
     return false
-  }
-
-  IpfsController.prototype.requestToUnpin = function (ipfsPath) {
-    const self = this
-    return new Promise((resolve, reject) => {
-      if ($tw.utils.getIpfsUnpin() === false) {
-        resolve(false)
-      }
-      ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? ipfsPath.toString().trim() : null
-      if (ipfsPath == null) {
-        resolve(false)
-      }
-      if (ipfsPath.indexOf(`/${ipnsKeyword}/`) !== -1) {
-        self
-          .resolveUrl(ipfsPath, true, false, true)
-          .then(data => {
-            const { resolvedUrl } = data
-            if (resolvedUrl !== null) {
-              resolve(self.addToUnpin(resolvedUrl.pathname))
-            } else {
-              resolve(false)
-            }
-          })
-          .catch(error => {
-            reject(error)
-          })
-      } else {
-        resolve(self.addToUnpin(ipfsPath))
-      }
-    })
   }
 
   IpfsController.prototype.addToUnpin = function (ipfsPath) {
@@ -437,7 +377,7 @@ ${ipfsPath}`
     var { ipfsCid, ipnsIdentifier, path } = this.getIpfsIdentifier(normalizedUrl)
     if (ipnsIdentifier !== null) {
       var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, resolveIpnsKey, base, path)
-    } else if (ipfsCid == null && ipnsIdentifier == null && resolveEns && normalizedUrl.hostname.endsWith('.eth')) {
+    } else if (resolveEns && ipfsCid == null && ipnsIdentifier == null && (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link'))) {
       var { identifier, protocol, normalizedUrl, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
       if (protocol === ipnsKeyword) {
         var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(identifier, resolveIpns, resolveIpnsKey, base, path)
@@ -466,7 +406,7 @@ ${ipfsPath}`
     }
     var ipfsCid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsCid, normalizedUrl } = await this.getIpnsIdentifier(identifier, resolveIpnsKey, base, path)
+    var { ipnsKey, ipnsCid, normalizedUrl, resolvedUrl } = await this.getIpnsIdentifier(identifier, resolveIpnsKey, base, path)
     if (ipnsCid !== null && resolveIpfsCid) {
       var { cid: ipfsCid, remainderPath } = await this.resolveIpfs(normalizedUrl.pathname)
       if (ipfsCid !== null) {
@@ -489,10 +429,10 @@ ${ipfsPath}`
           )
         }
       }
-    } else if (normalizedUrl !== null) {
+    } else if (resolvedUrl !== null) {
       $tw.ipfs.getLogger().info(
         `Resolved IPNS:
- ${normalizedUrl}`
+ ${resolvedUrl}`
       )
     }
     return {
@@ -512,6 +452,9 @@ ${ipfsPath}`
         protocol: null,
         resolvedUrl: null,
       }
+    }
+    if (ensDomain.endsWith('.eth.link')) {
+      ensDomain = ensDomain.substring(0, ensDomain.indexOf('.link'))
     }
     path = path !== undefined && path !== null && path.trim() !== '' ? path.trim() : ''
     if (web3 === undefined || web3 == null) {
@@ -605,8 +548,8 @@ ${url}`
     return this.ipfsBundle.cidToLibp2pKeyCidV1(cid, multibaseName, log)
   }
 
-  IpfsController.prototype.isOwner = async function (domain, web3, account) {
-    return await this.ipfsBundle.isOwner(domain, web3, account)
+  IpfsController.prototype.isEnsOwner = async function (domain, web3, account) {
+    return await this.ipfsBundle.isEnsOwner(domain, web3, account)
   }
 
   IpfsController.prototype.personalRecover = async function (message, signature) {

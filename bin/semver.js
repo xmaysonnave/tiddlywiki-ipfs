@@ -85,20 +85,20 @@ module.exports = async function main (name, extension, dir, env, version) {
   // Process Raw
   var raw = null
   // Load
-  var path = `./build/output/${dir}/${normalizedName}-%BUILD_${env}_VERSION%.${extension}`
-  if (fs.existsSync(path)) {
-    raw = fs.readFileSync(path, 'utf8')
+  var buildPath = `./build/output/${dir}/${normalizedName}-%BUILD_${env}_VERSION%.${extension}`
+  if (fs.existsSync(buildPath)) {
+    raw = fs.readFileSync(buildPath, 'utf8')
   }
   if (raw == null) {
-    path = `./build/output/${dir}/${normalizedName}.${extension}`
-    if (fs.existsSync(path)) {
-      raw = fs.readFileSync(path, 'utf8')
+    buildPath = `./build/output/${dir}/${normalizedName}.${extension}`
+    if (fs.existsSync(buildPath)) {
+      raw = fs.readFileSync(buildPath, 'utf8')
     }
   }
   if (raw == null) {
-    path = `./build/output/${dir}/${normalizedName}`
-    if (fs.existsSync(path)) {
-      raw = fs.readFileSync(path, 'utf8')
+    buildPath = `./build/output/${dir}/${normalizedName}`
+    if (fs.existsSync(buildPath)) {
+      raw = fs.readFileSync(buildPath, 'utf8')
     }
   }
   if (raw == null) {
@@ -145,7 +145,7 @@ module.exports = async function main (name, extension, dir, env, version) {
         }
       }
     }
-    if (content === undefined || content == null || (content !== undefined && content !== null && content.rawHash !== rawHash)) {
+    if (content === undefined || content == null || (content !== undefined && content !== null && (content.rawHash !== rawHash || current.rawSemver !== rawSemver))) {
       version = generate({ version: rawSemver, versionSeparator: '-' })
       build = version.replace(`${rawSemver}-`, '')
       kind = 'New'
@@ -166,7 +166,7 @@ module.exports = async function main (name, extension, dir, env, version) {
   // Save
   var newBuild = {
     rawHash: rawHash,
-    semver: rawSemver,
+    rawSemver: rawSemver,
     build: build,
     version: version,
   }
