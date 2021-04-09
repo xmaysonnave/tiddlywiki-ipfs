@@ -140,8 +140,8 @@ module.exports = class Update {
   async production () {
     console.log(`*** Update Production:
  api: ${this.apiUrl}
- gateway: ${new URL(this.gateway)}
- public gateway: ${new URL(this.publicGateway)}
+ public production: ${this.publicGateway}/ipns/${this.buildCid}
+ public raw: ${this.publicGateway}/ipns/${this.rawBuildCid}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
     const protocol = this.apiUrl.protocol.slice(0, -1)

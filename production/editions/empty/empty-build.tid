@@ -1,11 +1,11 @@
 title: empty-build
 tags: $:/ipfs/editions
-build: 210409306
+build: 210409319
 faviconSize: 4297
-faviconUri: ipfs://bafybeifftxvs5jocue75fw254mtcmoglzqdy4swkiwymlzde4ymotggahy/favicon.ico
+faviconUri: ipfs://bafybeiejx6prs6ty6tpai2efg7uqw725g6lax7tvulx5pzjpazqyfhc2hu/favicon.ico
 name: empty
-sourceSize: 1189520
-sourceUri: ipfs://bafybeifftxvs5jocue75fw254mtcmoglzqdy4swkiwymlzde4ymotggahy/
-version: 0.4.0-beta-tw-v5.1.23+build-210409306
+sourceSize: 1189628
+sourceUri: ipfs://bafybeiejx6prs6ty6tpai2efg7uqw725g6lax7tvulx5pzjpazqyfhc2hu/
+version: 0.4.0-beta-tw-v5.1.23+build-210409319
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

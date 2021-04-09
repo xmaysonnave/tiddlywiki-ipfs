@@ -131,8 +131,8 @@ module.exports = class PublishBuild {
   async resetProduction () {
     console.log(`*** Reset Raw and Production:
  api: ${this.apiUrl}
- gateway: ${new URL(this.gateway)}
- public gateway: ${new URL(this.publicGateway)}
+ public production: ${this.publicGateway}/ipns/${this.buildCid}
+ public raw: ${this.publicGateway}/ipns/${this.rawBuildCid}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
     const api = IpfsHttpClient({
@@ -176,8 +176,8 @@ module.exports = class PublishBuild {
   async publishBuild (api) {
     console.log(`*** Publish current build:
  api: ${this.apiUrl}
- gateway: ${new URL(this.gateway)}
- public gateway: ${new URL(this.publicGateway)}
+ public production: ${this.publicGateway}/ipns/${this.buildCid}
+ public raw: ${this.publicGateway}/ipns/${this.rawBuildCid}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
     api =
@@ -211,8 +211,8 @@ module.exports = class PublishBuild {
   async publishProduction () {
     console.log(`*** Publish Production:
  api: ${this.apiUrl}
- gateway: ${new URL(this.gateway)}
- public gateway: ${new URL(this.publicGateway)}
+ public production: ${this.publicGateway}/ipns/${this.buildCid}
+ public raw: ${this.publicGateway}/ipns/${this.rawBuildCid}
  production: ${this.gateway}/ipns/${this.buildCid}
  raw: ${this.gateway}/ipns/${this.rawBuildCid} ***`)
     const api = IpfsHttpClient({

@@ -225,5 +225,6 @@ module.exports = async function main (load) {
   fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
   console.log(`*** Added build node:
  ipfs://${node.cid}/
+ ${publicGateway}${node.cid}
  ${gateway}${node.cid}`)
 }
