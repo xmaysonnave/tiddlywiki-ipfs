@@ -153,7 +153,7 @@ IPFS Tiddler
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
     // Tiddler
-    if (tiddler !== undefined) {
+    if (tiddler !== undefined && title !== '$:/plugins/tiddlywiki/menubar/items/pagecontrols') {
       if (event.param) {
         // Tiddler
         for (var field in tiddler.fields) {
@@ -210,7 +210,7 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleIpfsUnpin = async function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    if (tiddler !== undefined) {
+    if (tiddler !== undefined && title !== '$:/plugins/tiddlywiki/menubar/items/pagecontrols') {
       const { type, info } = $tw.utils.getContentType(tiddler)
       if (event.param) {
         // Tiddler
@@ -306,7 +306,7 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
-    if (tiddler === undefined) {
+    if (tiddler !== undefined && title !== '$:/plugins/tiddlywiki/menubar/items/pagecontrols') {
       return false
     }
     var canonicalUri = tiddler.fields._canonical_uri
