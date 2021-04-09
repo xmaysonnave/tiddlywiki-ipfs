@@ -406,7 +406,7 @@ ${ipfsPath}`
     }
     var ipfsCid = null
     var resolvedUrl = null
-    var { ipnsKey, ipnsCid, normalizedUrl, resolvedUrl } = await this.getIpnsIdentifier(identifier, resolveIpnsKey, base, path)
+    var { ipnsKey, ipnsCid, normalizedUrl } = await this.getIpnsIdentifier(identifier, resolveIpnsKey, base, path)
     if (ipnsCid !== null && resolveIpfsCid) {
       var { cid: ipfsCid, remainderPath } = await this.resolveIpfs(normalizedUrl.pathname)
       if (ipfsCid !== null) {
@@ -429,18 +429,13 @@ ${ipfsPath}`
           )
         }
       }
-    } else if (resolvedUrl !== null) {
-      $tw.ipfs.getLogger().info(
-        `Resolved IPNS:
- ${resolvedUrl}`
-      )
     }
     return {
       ipfsCid: ipfsCid,
       ipnsCid: ipnsCid,
       ipnsKey: ipnsKey,
       normalizedUrl: normalizedUrl,
-      resolvedUrl: resolvedUrl,
+      resolvedUrl: resolvedUrl !== undefined && resolvedUrl !== null ? resolvedUrl : normalizedUrl,
     }
   }
 

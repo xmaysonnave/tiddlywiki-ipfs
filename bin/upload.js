@@ -104,7 +104,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     }
   }
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
-  var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}` : null
+  var publicGateway = process.env.IPFS_PUBLIC_GATEWAY ? `${process.env.IPFS_PUBLIC_GATEWAY}` : null
   if (publicGateway == null) {
     publicGateway = gateway
   }

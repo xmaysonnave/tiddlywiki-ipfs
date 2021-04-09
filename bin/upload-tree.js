@@ -210,7 +210,7 @@ module.exports = async function main (load) {
     timeout: longTimeout,
   })
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://dweb.link/ipfs/'
-  var publicGateway = process.env.PUBLIC_GATEWAY ? `${process.env.PUBLIC_GATEWAY}/ipfs/` : null
+  var publicGateway = process.env.IPFS_PUBLIC_GATEWAY ? `${process.env.IPFS_PUBLIC_GATEWAY}/ipfs/` : null
   if (publicGateway == null) {
     publicGateway = gateway
   }

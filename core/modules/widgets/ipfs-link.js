@@ -71,7 +71,7 @@ IPFS link widget
     // Execute our logic
     this.execute()
     // Tiddler link
-    var value = this.url !== undefined ? this.url : this.value
+    var value = this.url !== undefined && this.url !== null ? this.url : this.value
     var tiddler = $tw.wiki.getTiddler(value)
     if (tiddler) {
       this.renderTiddlerLink(parent, nextSibling)
@@ -143,7 +143,7 @@ IPFS link widget
     if ($tw.config.htmlUnsafeElements.indexOf(tag) !== -1) {
       tag = 'a'
     }
-    var value = this.url !== undefined ? this.url : this.value
+    var value = this.url !== undefined && this.value !== null ? this.url : this.value
     var isMissing = !this.wiki.tiddlerExists(value)
     var isShadow = this.wiki.isShadowTiddler(value)
     // Create our element
@@ -252,7 +252,7 @@ IPFS link widget
   }
 
   IpfsLinkWidget.prototype.handleExternalClickEvent = function (event) {
-    const value = this.url !== undefined ? this.url : this.value
+    const value = this.url !== undefined && this.url !== null ? this.url : this.value
     $tw.ipfs
       .resolveUrl(value, $tw.utils.getIpnsResolve(), false, $tw.utils.getEthLinkResolve())
       .then(data => {
@@ -273,7 +273,7 @@ IPFS link widget
   IpfsLinkWidget.prototype.handleTiddlerClickEvent = function (event) {
     // Send the click on its way as a navigate event
     const bounds = this.domNodes[0].getBoundingClientRect()
-    const value = this.url !== undefined ? this.url : this.value
+    const value = this.url !== undefined && this.url !== null ? this.url : this.value
     this.dispatchEvent({
       type: 'tm-navigate',
       navigateTo: value,
