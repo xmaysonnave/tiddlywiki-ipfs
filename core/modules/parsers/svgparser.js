@@ -12,6 +12,7 @@ The image parser parses an image into an embeddable HTML element
   /*global $tw:false*/
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-svgparser'
 
   var SvgParser = function (type, text, options) {
@@ -46,14 +47,14 @@ The image parser parses an image into an embeddable HTML element
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
+                  //$tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
           })
-      } else {
+      } else if (text !== undefined && text !== null) {
         element.attributes.src = {
           type: 'string',
           value: value + encodeURIComponent(text),

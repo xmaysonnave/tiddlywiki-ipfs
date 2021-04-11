@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210409428",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210411393",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -24,12 +24,13 @@
   "scripts": {
     "build": "./bin/build.sh",
     "build-bluelightav": "./bin/build-bluelightav.sh",
+    "buuld-uploader": "./bin/cli-build-uploader.sh",
     "build-tiddlywiki-ipfs": "./bin/build-tiddlywiki-ipfs.sh",
     "download": "./bin/download.sh",
     "precommit": "lint-staged",
     "prepare": "yarn snyk-protect",
     "prettier-standard": "prettier-standard --format --lint",
-    "publish-build": "./bin/cli-publish-build.sh",
+    "publisher": "./bin/cli-publisher.sh",
     "semver": "./bin/cli-semver.sh",
     "snyk-monitor": "snyk monitor --all-projects",
     "snyk-protect": "snyk protect",
@@ -37,9 +38,8 @@
     "testc": "./bin/test.sh --coverage",
     "testw": "./bin/test.sh --watch",
     "tiddlywiki-ipfs": "./bin/cli-tiddlywiki-ipfs.sh",
-    "update": "./bin/cli-update.sh",
-    "upload": "./bin/cli-upload.sh",
-    "upload-tree": "./bin/cli-upload-tree.sh"
+    "updater": "./bin/cli-updater.sh",
+    "uploader": "./bin/cli-uploader.sh"
   },
   "lint-staged": { "*": [ "prettier-standard --lint" ] },
   "repository": {

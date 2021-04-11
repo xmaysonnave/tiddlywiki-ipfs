@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** cli-update ***'
+echo '*** cli-build-uploader ***'
 echo '***'
 
 # nvm
@@ -9,8 +9,8 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
-# update builds
-node ./bin/cli-update.js "$@" || exit 1
+# build
+node ./bin/cli-build-uploader.js "$@" || exit 1
 
 # done
 exit 0

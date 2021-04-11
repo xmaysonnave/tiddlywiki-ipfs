@@ -30,6 +30,7 @@ The width and height attributes are interpreted as a number of pixels, and do no
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
+  /*eslint no-unused-vars: "off"*/
   var name = 'ipfs-image'
 
   var ImageWidget = function (parseTreeNode, options) {
@@ -101,7 +102,7 @@ Render this widget into the DOM
                       })
                       .catch(error => {
                         $tw.ipfs.getLogger().error(error)
-                        $tw.utils.alert(name, error.message)
+                        //$tw.utils.alert(name, error.message)
                       })
                     break
                   case 'image/svg+xml':
@@ -114,7 +115,7 @@ Render this widget into the DOM
                       })
                       .catch(error => {
                         $tw.ipfs.getLogger().error(error)
-                        $tw.utils.alert(name, error.message)
+                        //$tw.utils.alert(name, error.message)
                       })
                     break
                   default:
@@ -127,7 +128,7 @@ Render this widget into the DOM
                       })
                       .catch(error => {
                         $tw.ipfs.getLogger().error(error)
-                        $tw.utils.alert(name, error.message)
+                        //$tw.utils.alert(name, error.message)
                       })
                     break
                 }

@@ -14,7 +14,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = class PublishBuild {
+module.exports = class Publisher {
   shortTimeout = 6000
   longTimeout = 2 * 60 * this.shortTimeout
   emptyDirectoryCid = new CID('bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354')
@@ -60,9 +60,8 @@ module.exports = class PublishBuild {
   }
 
   async managePin (api, key, recursive) {
-    var cid = null
     var key = new CID(key)
-    recursive = recursive ? recursive === 'true' || recursive === true : true
+    var cid = null
     try {
       for await (var { cid } of api.pin.ls({ paths: [key], timeout: this.shortTimeout })) {
         if (cid !== undefined && cid !== null) {
@@ -87,7 +86,6 @@ module.exports = class PublishBuild {
 
   async manageUnpin (api, key, recursive) {
     var key = new CID(key)
-    recursive = recursive ? recursive === 'true' || recursive === true : true
     var cid = null
     try {
       for await (var { cid } of api.pin.ls({ paths: [key], timeout: this.shortTimeout })) {
@@ -226,7 +224,7 @@ module.exports = class PublishBuild {
     if (fs.existsSync(buildPath) === false) {
       throw new Error(`Unknown ${buildPath}`)
     }
-    const build = await this.publishBuild(api)
+    const build = JSON.parse(fs.readFileSync(buildPath))
     // current raw and production build node
     if (build.currentRawBuild === undefined || build.currentRawBuild == null) {
       throw new Error('Unknown current Raw')

@@ -7,6 +7,9 @@ const providers = require('ipfs-provider').providers
 
 const { httpClient, windowIpfs } = providers
 
+const shortTimeout = 4000
+const longTimeout = 4 * 60 * shortTimeout
+
 const dagDirectory = fromString('\u0008\u0001')
 
 /*
@@ -539,7 +542,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
               protocol: protocol,
               host: apiUrl.hostname,
               port: port,
-              timeout: 4 * 60 * 1000,
+              timeout: $tw.utils.getLongTimeout(),
             },
           }),
         ],

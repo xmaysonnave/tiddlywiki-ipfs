@@ -1,0 +1,3 @@
+title: $:/ipfs/http/short/timeout
+tags: $:/ipfs/core
+timeout: 4000

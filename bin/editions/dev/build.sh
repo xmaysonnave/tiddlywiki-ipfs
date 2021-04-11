@@ -74,7 +74,7 @@ yarn tiddlywiki-ipfs build \
   --verbose "$@" || exit 1
 
 # upload to ipfs
-./bin/cli-upload.sh \
+./bin/cli-uploader.sh \
   --name=dev \
   --extension=html \
   --dir=editions/dev \

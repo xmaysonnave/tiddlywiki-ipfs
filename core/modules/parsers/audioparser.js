@@ -12,6 +12,7 @@ The audio parser parses an audio tiddler into an embeddable HTML element
   /*global $tw:false*/
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   var name = 'ipfs-audioparser'
 
   var AudioParser = function (type, text, options) {
@@ -49,14 +50,14 @@ The audio parser parses an audio tiddler into an embeddable HTML element
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
+                  //$tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
           })
-      } else if (text) {
+      } else if (text !== undefined && text !== null) {
         element.attributes.src = { type: 'string', value: `${value}${text}` }
       }
     }

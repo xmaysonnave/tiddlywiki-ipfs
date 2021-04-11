@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const upload = require('./upload.js')
+const upload = require('./uploader.js')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv

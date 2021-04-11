@@ -354,7 +354,7 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 - precommit
 - prepare
 - prettier-standard
-- publish-build
+- publisher
 - semver
 - snyk-monitor
 - snyk-protect
@@ -362,8 +362,8 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 - testc
 - testw
 - tiddlywiki-ipfs
-- update
-- upload
+- updater
+- uploader
 - upload-tree
 
 Use the `build` script to build `IPFS with TiddlyWiki`.

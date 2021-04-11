@@ -12,11 +12,14 @@ The plain text parser processes blocks of source text into a degenerate parse tr
   /*global $tw: false */
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
+  const name = 'ipfs-textparser'
+
   var TextParser = function (type, text, options) {
     var element = {
       type: 'codeblock',
       attributes: {
-        code: { type: 'string', value: text },
+        code: { type: 'string', value: text !== undefined && text !== null ? text : '' },
         language: { type: 'string', value: type },
       },
     }
@@ -42,7 +45,7 @@ The plain text parser processes blocks of source text into a degenerate parse tr
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
+                  //$tw.utils.alert(name, error.message)
                 })
             }
           })

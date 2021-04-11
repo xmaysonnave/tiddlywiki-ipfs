@@ -146,15 +146,23 @@ IpfsLoader.prototype.isJson = function (content) {
 
 IpfsLoader.prototype.fetchUint8Array = async function (url) {
   var options = null
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), $tw.utils.getLongTimeout())
   try {
-    options = await fetch(url, {
+    const params = {
       method: 'options',
-    })
+      signal: timeout.signal,
+    }
+    options = await fetch(url, params)
   } catch (error) {
     // Ignore
   }
   try {
-    const response = await fetch(options && options.ok && options.url ? options.url : url)
+    const params = {
+      method: 'get',
+      signal: timeout.signal,
+    }
+    const response = await fetch(options && options.ok && options.url ? options.url : url, params)
     if (response.ok) {
       const ab = await response.arrayBuffer()
       const ua = new Uint8Array(ab)
@@ -166,7 +174,11 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
     }
     throw new Error(`[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
   } catch (error) {
-    this.getLogger().error(error)
+    if (error.name === 'AbortError') {
+      this.getLogger().error(`Timeout exceeded: ${$tw.utils.getLongTimeout()} ms...`)
+    } else {
+      this.getLogger().error(error)
+    }
   }
   throw new Error(`${$tw.language.getString('NetworkError/Fetch')}`)
 }

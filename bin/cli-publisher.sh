@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** cli-upload-tree ***'
+echo '*** cli-publisher ***'
 echo '***'
 
 # nvm
@@ -9,8 +9,8 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
-# build
-node ./bin/cli-upload-tree.js "$@" || exit 1
+# publish
+node ./bin/cli-publisher.js "$@" || exit 1
 
 # done
 exit 0

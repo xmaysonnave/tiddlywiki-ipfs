@@ -76,14 +76,14 @@ The binary parser parses a binary tiddler into a warning message and download li
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
+                  //$tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
           })
-      } else if (text) {
+      } else if (text !== undefined && text !== null) {
         link.attributes.href = {
           type: 'string',
           value: `${value}${text}`,

@@ -33,6 +33,32 @@ IPFS Default
     return resolve
   }
 
+  exports.getShortTimeout = function () {
+    var timeout = null
+    var defaultTimeout = 4000
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/http/short/timeout')
+    if (tiddler !== undefined && tiddler !== null) {
+      timeout = tiddler.fields.timeout
+      timeout = timeout !== undefined && timeout !== null ? parseInt(timeout) : defaultTimeout
+    } else {
+      timeout = defaultTimeout
+    }
+    return timeout
+  }
+
+  exports.getLongTimeout = function () {
+    var timeout = null
+    var defaultTimeout = 4 * 60 * $tw.utils.getShortTimeout()
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/http/long/timeout')
+    if (tiddler !== undefined && tiddler !== null) {
+      timeout = tiddler.fields.timeout
+      timeout = timeout !== undefined && timeout !== null ? parseInt(timeout) : defaultTimeout
+    } else {
+      timeout = defaultTimeout
+    }
+    return timeout
+  }
+
   /*
    * Retrieve ipfs saver export protocol with default value if applicable
    */

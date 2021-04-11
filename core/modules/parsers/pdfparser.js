@@ -12,6 +12,7 @@ The PDF parser embeds a PDF viewer
   /*global $tw:false*/
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-pdfparser'
 
   var PdfParser = function (type, text, options) {
@@ -46,14 +47,14 @@ The PDF parser embeds a PDF viewer
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
+                  //$tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
           })
-      } else if (text) {
+      } else if (text !== undefined && text !== null) {
         element.attributes.src = { type: 'string', value: `${value}${text}` }
       }
     }

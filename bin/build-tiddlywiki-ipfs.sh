@@ -10,7 +10,7 @@ echo '***'
 ./bin/tiddlywiki-ipfs/build.sh "$@" || exit 1
 
 # build ipload
-./bin/cli-upload-tree.sh "$@" || exit 1
+./bin/cli-build-uploader.sh "$@" || exit 1
 
 # update
 # ./bin/cli-update.sh "$@" || exit 1

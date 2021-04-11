@@ -21,7 +21,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = class Update {
+module.exports = class Updater {
   shortTimeout = 6000
   longTimeout = 4 * 60 * this.shortTimeout
   dagDirectory = fromString('\u0008\u0001')

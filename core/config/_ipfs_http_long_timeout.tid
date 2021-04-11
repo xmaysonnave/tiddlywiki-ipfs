@@ -1,0 +1,3 @@
+title: $:/ipfs/http/long/timeout
+tags: $:/ipfs/core
+timeout: 960000

@@ -84,14 +84,14 @@ yarn tiddlywiki-ipfs build \
   --verbose "$@" || exit 1
 
 # upload to ipfs
-./bin/cli-upload.sh \
+./bin/cli-uploader.sh \
   --name=$:/library/ipfs-modules.js \
   --extension=json \
   --dir=tiddlywiki-ipfs/library \
   --tags=$:/ipfs/core "$@" || exit 1
 
 # upload to ipfs
-./bin/cli-upload.sh \
+./bin/cli-uploader.sh \
   --name=$:/library/ipfs-modules.js.zlib \
   --extension=json \
   --dir=tiddlywiki-ipfs/library \

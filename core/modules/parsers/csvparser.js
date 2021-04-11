@@ -12,6 +12,9 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
   /*global $tw: false */
   'use strict'
 
+  /*eslint no-unused-vars: "off"*/
+  const name = 'ipfs-cvsparser'
+
   var CsvParser = function (type, text, options) {
     var self = this
     // Table framework
@@ -58,14 +61,14 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
+                  //$tw.utils.alert(name, error.message)
                 })
             }
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
           })
-      } else if (text) {
+      } else if (text !== undefined && text !== null) {
         this.split(text)
       }
     }

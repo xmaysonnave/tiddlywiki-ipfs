@@ -14,6 +14,7 @@ IPFS Tiddler
 
   const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
 
+  /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-tiddler'
 
   /*
@@ -315,11 +316,9 @@ IPFS Tiddler
     importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
     // Reload
     if (canonicalUri !== null && importUri == null) {
-      const updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: tiddler,
-        fields: [{ key: 'text', value: '' }],
-      })
-      $tw.wiki.addTiddler(updatedTiddler)
+      $tw.wiki.clearCache(title)
+      const changedTiddler = $tw.utils.getChangedTiddler(title)
+      $tw.rootWidget.refresh(changedTiddler)
       return true
     }
     // Import
@@ -424,7 +423,7 @@ IPFS Tiddler
             )
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
-            $tw.utils.alert(name, error.message)
+            //$tw.utils.alert(name, error.message)
             return tiddler
           }
         }
