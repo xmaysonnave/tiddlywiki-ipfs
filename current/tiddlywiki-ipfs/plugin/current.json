@@ -1,28 +1,28 @@
 {
-  "build": "210412471",
+  "build": "210412493",
   "content": [
     {
-      "title": "$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210412471",
+      "title": "$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210412493",
       "tags": "$:/ipfs/documentation",
       "name": "$:/plugins/ipfs.js",
-      "rawHash": "a59922fabfe02dd044da16482fb5ef6e42343766c3b149333e86b13aedc3723e",
-      "sourceSize": 1176766,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeiblnbovjgvodbouqypc43pw7nhklzdoopsw7wa6vp3nk5lj22maly/$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210412471.json",
+      "rawHash": "6653380523f878599ea74b599255e1218e85bbd2a562db56a98857ff709686d0",
+      "sourceSize": 1176799,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeig75z6v6gwwwkuegcsyrruvvwhrr67rtyqoerlwkdclm4b6m4msia/$_plugins_ipfs.js-0.4.0-beta-tw-v5.1.23+build-210412493.json",
       "tidSize": 465,
-      "tidUri": "https://bluelight.link/ipfs/bafybeicce5ukcgnkvbstrjcfzpipxke4vfbgxi6qjgfltyh5d3fw5ov42i/$_plugins_ipfs.js-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeiayrx56fe7yevxtmuwhhuwypomb4wga27bo37a2wwsd53rnlpfgay/$_plugins_ipfs.js-build.tid"
     },
     {
-      "title": "$_plugins_ipfs.js.zlib-0.4.0-beta-tw-v5.1.23+build-210412471",
+      "title": "$_plugins_ipfs.js.zlib-0.4.0-beta-tw-v5.1.23+build-210412493",
       "tags": "$:/ipfs/documentation",
       "name": "$:/plugins/ipfs.js.zlib",
-      "rawHash": "0e1ded658afe8e21823beaf804bef17af39e309fad42b2a3b33c741149bdbad4",
-      "sourceSize": 350803,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeicgxhioj7e4lv5jx7cdapu2rrodjt3sphtdyqfc6g4ce3f7ped6ze/$_plugins_ipfs.js.zlib-0.4.0-beta-tw-v5.1.23+build-210412471.json",
+      "rawHash": "26f96354cef30e9bfcffcf6e96cc7b32aacd09e5af7db663f3bf447f40aec290",
+      "sourceSize": 350823,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeig3jqo3o3a5hiezgmfmtrurgp6kx4ohkun57adq6klzmcu5o6hw6q/$_plugins_ipfs.js.zlib-0.4.0-beta-tw-v5.1.23+build-210412493.json",
       "tidSize": 484,
-      "tidUri": "https://bluelight.link/ipfs/bafybeicgq47k246nk3sfkm55hkvfuur2l2wamm7x7sveazdee66fmkweg4/$_plugins_ipfs.js.zlib-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeihqzkem3mn4uynnh72k7zvqbuews2qy6ak4rlkfr2up45hi7cwwn4/$_plugins_ipfs.js.zlib-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210412471",
-  "buildUri": "https://bluelight.link/ipfs/bafybeiajqrgyizfyizcjpszibksmaffyyj2iq7v2wszqnn4jkvgauyxaqy/210412471/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210412493",
+  "buildUri": "https://bluelight.link/ipfs/bafybeihdfjrvioksw4ahrruhu7se6qa7it52q2pk2v2pi4fuusrtisq3wy/210412493/"
 }

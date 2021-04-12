@@ -316,9 +316,11 @@ IPFS Tiddler
     importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
     // Reload
     if (canonicalUri !== null && importUri == null) {
-      $tw.wiki.clearCache(title)
-      const changedTiddler = $tw.utils.getChangedTiddler(title)
-      $tw.rootWidget.refresh(changedTiddler)
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
+        fields: [{ key: 'text', value: '' }],
+      })
+      $tw.wiki.addTiddler(updatedTiddler)
       return true
     }
     // Import

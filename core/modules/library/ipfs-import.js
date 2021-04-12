@@ -284,7 +284,7 @@ IPFS Import
             $tw.ipfs.getLogger().info(
               `${msg} "${field}"
  ${resolvedKey}
- from "${parentField}", "${parentTitle}"
+from "${parentField}", "${parentTitle}"
  ${parentUrl}`
             )
             $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a>, from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
@@ -296,7 +296,7 @@ IPFS Import
             $tw.ipfs.getLogger().info(
               `${msg} "${title}"
  ${resolvedKey}
- from "${parentField}", "${parentTitle}"
+from "${parentField}", "${parentTitle}"
  ${parentUrl}`
             )
             $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${title}</a>, from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
@@ -353,7 +353,7 @@ IPFS Import
         $tw.ipfs.getLogger().info(
           `${msg} "${field}"
  ${resolvedKey}
- from "${parentField}", "${parentTitle}"
+from "${parentField}", "${parentTitle}"
  ${parentUrl}`
         )
         $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a> from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
@@ -365,7 +365,7 @@ IPFS Import
       $tw.ipfs.getLogger().info(
         `${msg} "${field}"
  ${resolvedKey}
- from "${parentField}", "${parentTitle}"
+from "${parentField}", "${parentTitle}"
  ${parentUrl}`
       )
       $tw.ipfs.getLogger().error(error)
@@ -501,7 +501,7 @@ IPFS Import
       $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${resolvedKey}
- and ${parentResolvedKey}`
+and ${parentResolvedKey}`
       )
       $tw.utils.alert(name, alertConditionFailed`${msg} "${field}" from ${resolvedKey}">${title}</a> and ${parentResolvedKey}">${title}</a>`)
       return false
@@ -514,7 +514,7 @@ IPFS Import
       $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${resolvedKey}
- and ${parentResolvedKey}`
+and ${parentResolvedKey}`
       )
       $tw.utils.alert(name, alertConditionFailed`${msg} "${field}" from ${resolvedKey}">${title}</a> and ${parentResolvedKey}">${title}</a>`)
       return false
@@ -550,7 +550,7 @@ IPFS Import
       $tw.ipfs.getLogger().info(
         `${msg} "${field}" from "${title}"
  ${importResolvedKey}
- and ${parentResolvedKey}`
+and ${parentResolvedKey}`
       )
       $tw.utils.alert(name, alertConditionFailed`${msg} "${field}" from ${importResolvedKey}">${title}</a> and ${parentResolvedKey}">${title}</a>`)
       return
