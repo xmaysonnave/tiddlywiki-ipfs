@@ -56,6 +56,7 @@ $value={{{ [<newFieldValueTiddler>get[text]] }}}/>
 \end
 \whitespace trim
 
+\define fields-editor()
 <div class="tc-edit-fields">
 <table class={{{ [all[current]fields[]] :filter[lookup[$:/config/EditTemplateFields/Visibility/]!match[hide]] +[count[]!match[0]] +[then[tc-edit-fields]] ~[[tc-edit-fields tc-edit-fields-small]] }}}>
 <tbody>
@@ -139,3 +140,19 @@ $value={{{ [<newFieldValueTiddler>get[text]] }}}/>
 </$vars>
 </div>
 </$fieldmangler>
+\end
+
+<$vars modeState=<<qualify "$:/state/edition/fields/">>>
+
+<$reveal type="nomatch" state=<<modeState>> text="expanded" default="expanded">
+<$button set=<<modeState>> setTo="expanded" class="tc-btn-invisible">{{$:/core/images/chevron-right}} {{$:/language/ControlPanel/Editor/Fields/Caption}}</$button>
+</$reveal>
+<$reveal type="match" state=<<modeState>> text="expanded" default="expanded">
+<$button set=<<modeState>> setTo="restored" class="tc-btn-invisible">{{$:/core/images/chevron-down}} {{$:/language/ControlPanel/Editor/Fields/Caption}}</$button>
+</$reveal>
+
+<$reveal type="match" state=<<modeState>> text="expanded" default="expanded">
+<<fields-editor>>
+</$reveal>
+
+</$vars>

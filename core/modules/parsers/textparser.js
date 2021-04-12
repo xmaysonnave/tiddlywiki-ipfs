@@ -45,7 +45,7 @@ The plain text parser processes blocks of source text into a degenerate parse tr
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  //$tw.utils.alert(name, error.message)
+                  $tw.utils.alert(name, error.message)
                 })
             }
           })

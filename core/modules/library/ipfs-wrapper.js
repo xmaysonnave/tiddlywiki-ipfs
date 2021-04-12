@@ -97,6 +97,7 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, reso
       keys = await this.getIpnsKeys(ipfs)
     } catch (error) {
       this.getLogger().error(error)
+      $tw.utils.alert(name, 'Unable to resolve IPNS keys...')
     }
   }
   // Do our best
@@ -257,6 +258,7 @@ IpfsWrapper.prototype.resolveIpfs = async function (ipfs, value, timeout) {
     }
   } catch (error) {
     this.getLogger().error(error)
+    $tw.utils.alert(name, 'Unable to resolve IPFS path...')
   }
   return {
     cid: cid,

@@ -40,7 +40,7 @@ The HTML parser displays text as raw HTML
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  //$tw.utils.alert(name, error.message)
+                  $tw.utils.alert(name, error.message)
                 })
             }
           })

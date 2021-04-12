@@ -423,7 +423,7 @@ IPFS Tiddler
             )
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
-            //$tw.utils.alert(name, error.message)
+            $tw.utils.alert(name, error.message)
             return tiddler
           }
         }
@@ -495,7 +495,7 @@ IPFS Tiddler
         continue
       }
       try {
-        var { oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
+        var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
       } catch (error) {
         // We cannot resolve the previous value
         $tw.ipfs.getLogger().error(error)

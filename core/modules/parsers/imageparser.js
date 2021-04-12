@@ -47,7 +47,7 @@ The image parser parses an image into an embeddable HTML element
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  //$tw.utils.alert(name, error.message)
+                  $tw.utils.alert(name, error.message)
                 })
             }
           })

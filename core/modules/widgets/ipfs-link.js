@@ -117,13 +117,8 @@ IPFS link widget
       },
     ])
     // Assign classes
-    var classes = []
-    if (this.classes) {
-      classes.push(this.classes)
-    }
-    if (classes.length > 0) {
-      domNode.setAttribute('class', classes.join(' '))
-    }
+    var classes = ['tc-tiddlylink-external']
+    domNode.setAttribute('class', classes.join(' '))
     if (this['aria-label']) {
       domNode.setAttribute('aria-label', this['aria-label'])
     }
@@ -321,7 +316,7 @@ IPFS link widget
     }
     this.tooltip = this.getAttribute('tooltip')
     this['aria-label'] = this.getAttribute('aria-label')
-    this.linkClasses = this.getAttribute('class') || 'tc-ipfs-link-external'
+    this.linkClasses = this.getAttribute('class')
     this.overrideClasses = this.getAttribute('overrideClass')
     this.tabIndex = this.getAttribute('tabindex')
     this.draggable = this.getAttribute('draggable', 'yes')

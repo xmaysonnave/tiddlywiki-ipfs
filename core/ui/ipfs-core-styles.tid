@@ -15,23 +15,6 @@ type: text/css
 	height: 1em;
 }
 
-a.tc-ipfs-link-external {
-	text-decoration: underline;
-	color: <<colour external-link-foreground>>;
-	background-color: <<colour external-link-background>>;
-}
-
-a.tc-ipfs-link-external:visited {
-	color: <<colour external-link-foreground-visited>>;
-	background-color: <<colour external-link-background-visited>>;
-}
-
-a.tc-ipfs-link-external:hover {
-	color: <<colour external-link-foreground-hover>>;
-	background-color: <<colour external-link-background-hover>>;
-  cursor: pointer;
-}
-
 .ethAddress {
   padding: 20px 0px 0px 40px;
   height: 80px;

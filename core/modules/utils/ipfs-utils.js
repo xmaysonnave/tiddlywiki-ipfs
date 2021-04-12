@@ -229,7 +229,7 @@ IPFS utils
     var exportUri = target.fields._export_uri
     try {
       var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(exportUri, true, true, true)
-      if (normalizedUrl !== null && (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link'))) {
+      if (ipnsCid == null && normalizedUrl !== null && (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link'))) {
         var ensDomain = normalizedUrl.hostname
         if (normalizedUrl.hostname.endsWith('.eth.link')) {
           ensDomain = normalizedUrl.hostname.substring(0, normalizedUrl.hostname.indexOf('.link'))
@@ -257,70 +257,62 @@ IPFS utils
       $tw.utils.alert(ipfsUtilsName, error.message)
       return false
     }
-    // Prepare New value
-    fields.push({ key: '_export_uri', value: `${ipfsKeyword}://${added}` })
-    var updatedTiddler = $tw.utils.updateTiddler({
-      tiddler: target,
-      addTags: ['$:/isExported', '$:/isIpfs'],
-      fields: fields,
-    })
-    $tw.wiki.addTiddler(updatedTiddler)
-    if (ipnsCid !== null && ipnsKey !== null) {
-      $tw.utils.alert(ipfsUtilsName, `Publishing IPNS key: ${ipnsKey}`)
-      $tw.ipfs
-        .pinToIpfs(`/ipfs/${added}`)
-        .then(pin => {
-          $tw.ipfs
-            .publishIpnsKey(added, ipnsCid, ipnsKey)
-            .then(dummy => {
-              fields.push({ key: '_export_uri', value: exportUri })
-              const updatedTiddler = $tw.utils.updateTiddler({
-                tiddler: target,
-                addTags: ['$:/isExported', '$:/isIpfs'],
-                fields: fields,
+    if (ipnsCid !== null) {
+      fields.push({ key: '_export_ipfs_uri', value: `${ipfsKeyword}://${added}` })
+      var updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: target,
+        addTags: ['$:/isExported', '$:/isIpfs'],
+        fields: fields,
+      })
+      $tw.wiki.addTiddler(updatedTiddler)
+      if (ipnsKey !== null) {
+        $tw.utils.alert(ipfsUtilsName, `Publishing IPNS key: ${ipnsKey}`)
+        $tw.ipfs
+          .pinToIpfs(`/ipfs/${added}`)
+          .then(pin => {
+            $tw.ipfs
+              .publishIpnsKey(added, ipnsCid, ipnsKey)
+              .then(dummy => {
+                $tw.utils.alert(ipfsUtilsName, `Published IPNS key: ${ipnsKey}`)
+                if ($tw.utils.getIpfsUnpin()) {
+                  $tw.ipfs
+                    .unpinFromIpfs(`/ipfs/${ipfsCid}`)
+                    .then(unpin => {
+                      if (unpin !== undefined && unpin !== null) {
+                        $tw.ipfs.removeFromPinUnpin(`/ipfs/${ipfsCid}`)
+                      }
+                    })
+                    .catch(error => {
+                      $tw.ipfs.getLogger().error(error)
+                      $tw.utils.alert(ipfsUtilsName, error.message)
+                    })
+                }
               })
-              $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(ipfsUtilsName, `Published IPNS key: ${ipnsKey}`)
-              if ($tw.utils.getIpfsUnpin()) {
-                $tw.ipfs
-                  .unpinFromIpfs(`/ipfs/${ipfsCid}`)
-                  .then(unpin => {
-                    if (unpin !== undefined && unpin !== null) {
-                      $tw.ipfs.removeFromPinUnpin(`/ipfs/${ipfsCid}`)
-                    }
-                  })
-                  .catch(error => {
-                    $tw.ipfs.getLogger().error(error)
-                    $tw.utils.alert(ipfsUtilsName, error.message)
-                  })
-              }
-            })
-            .catch(error => {
-              $tw.ipfs.getLogger().error(error)
-              $tw.utils.alert(ipfsUtilsName, error.message)
-              $tw.ipfs.addToUnpin(`/ipfs/${added}`)
-            })
-        })
-        .catch(error => {
-          $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(ipfsUtilsName, error.message)
-        })
-    } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth')) {
-      $tw.utils.alert(ipfsUtilsName, `Publishing to ENS: ${normalizedUrl.hostname}`)
+              .catch(error => {
+                $tw.ipfs.getLogger().error(error)
+                $tw.utils.alert(ipfsUtilsName, error.message)
+                $tw.ipfs.addToUnpin(`/ipfs/${added}`)
+              })
+          })
+          .catch(error => {
+            $tw.ipfs.getLogger().error(error)
+            $tw.utils.alert(ipfsUtilsName, error.message)
+          })
+      }
+    } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth.link')) {
+      fields.push({ key: '_export_ipfs_uri', value: `${ipfsKeyword}://${added}` })
+      var updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: target,
+        addTags: ['$:/isExported', '$:/isIpfs'],
+        fields: fields,
+      })
+      $tw.wiki.addTiddler(updatedTiddler)
       $tw.ipfs
         .pinToIpfs(`/ipfs/${added}`)
         .then(pin => {
           $tw.ipfs
             .setContentHash(normalizedUrl.hostname, `/${ipfsKeyword}/${added}`, web3, account)
             .then(dummy => {
-              fields.push({ key: '_export_uri', value: exportUri })
-              const updatedTiddler = $tw.utils.updateTiddler({
-                tiddler: target,
-                addTags: ['$:/isExported', '$:/isIpfs'],
-                fields: fields,
-              })
-              $tw.wiki.addTiddler(updatedTiddler)
-              $tw.utils.alert(ipfsUtilsName, 'Published to ENS...')
               if ($tw.utils.getIpfsUnpin()) {
                 $tw.ipfs
                   .unpinFromIpfs(`/ipfs/${ipfsCid}`)
@@ -347,6 +339,14 @@ IPFS utils
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(ipfsUtilsName, error.message)
         })
+    } else {
+      fields.push({ key: '_export_uri', value: `${ipfsKeyword}://${added}` })
+      var updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: target,
+        addTags: ['$:/isExported', '$:/isIpfs'],
+        fields: fields,
+      })
+      $tw.wiki.addTiddler(updatedTiddler)
     }
     return true
   }

@@ -47,7 +47,7 @@ The PDF parser embeds a PDF viewer
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  //$tw.utils.alert(name, error.message)
+                  $tw.utils.alert(name, error.message)
                 })
             }
           })

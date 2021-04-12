@@ -1,6 +1,17 @@
 title: $:/language/ControlPanel/
 tags: $:/ipfs/core
 
+Appearance/Hint: Ways to customise the appearance of your <b>~TiddlyWiki</b>.
+
+Basics/Version/Prompt: <b>~TiddlyWiki</b>:
+
+Editor/Body/Caption: Editor
+Editor/Fields/Caption: Fields
+
+Info/Hint: Information about this <b>~TiddlyWiki</b>
+Ipfs/Build/Prompt: <b>IPFS</b>:
+
+Saving/Hint: Settings used for saving the entire <b>~TiddlyWiki</b> as a single file via a saver module.
 Saving/IpfsService/Caption: IPFS Saver
 Saving/IpfsService/Description: These settings are only used when saving to IPFS.
 Saving/IpfsService/Verbose: Saver Verbose
@@ -36,21 +47,15 @@ Saving/IpfsService/Provider/Default/Description: Default
 Saving/IpfsService/Provider/Window/Description: IPFS Companion
 Saving/IpfsService/Provider/HTTP/Description: HTTP Client
 
-Basics/Version/Prompt: <b>~TiddlyWiki</b>:
-
-Ipfs/Build/Prompt: <b>IPFS</b>:
+Settings/Compression/Caption: Compression
+Settings/Compression/Description: Use Content Compression
 
 Settings/Encryption/Caption: Encryption
 Settings/Encryption/Standford/Description: Use Standford encryption
 Settings/Encryption/Ethereum/Description: Use Ethereum public key
 Settings/Encryption/Signature/Description: Sign Ethereum encrypted content
 
-Settings/Compression/Caption: Compression
-Settings/Compression/Description: Use Content Compression
-
 Settings/PreferredSaver/Caption: Preferred Saver
 
-Appearance/Hint: Ways to customise the appearance of your <b>~TiddlyWiki</b>.
-Info/Hint: Information about this <b>~TiddlyWiki</b>
-Saving/Hint: Settings used for saving the entire <b>~TiddlyWiki</b> as a single file via a saver module.
+
 Settings/Hint: These settings let you customise the behaviour of <b>~TiddlyWiki</b>.

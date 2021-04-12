@@ -234,7 +234,10 @@ module.exports = class Updater {
     const rawBuildNodeLinks = rawBuildNode.value.Links
     for (var i = 0; i < rawBuildNodeLinks.length; i++) {
       if (rawBuildNodeLinks[i].Name === 'current.json') {
-        current = await this.loadFromIpfs(`${this.gateway}/ipfs/${rawBuildNodeLinks[i].Hash}`, this.shortTimeout)
+        const nodeUri = `${this.publicGateway}/ipfs/${rawBuildNodeLinks[i].Hash}`
+        console.log(`*** Fetch current:
+${nodeUri} ***`)
+        current = await this.loadFromIpfs(nodeUri, this.shortTimeout)
         current = JSON.parse(this.ipfsBundle.Utf8ArrayToStr(current))
         break
       }

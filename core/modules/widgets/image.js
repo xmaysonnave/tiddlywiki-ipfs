@@ -102,7 +102,7 @@ Render this widget into the DOM
                       })
                       .catch(error => {
                         $tw.ipfs.getLogger().error(error)
-                        //$tw.utils.alert(name, error.message)
+                        $tw.utils.alert(name, error.message)
                       })
                     break
                   case 'image/svg+xml':
@@ -115,7 +115,7 @@ Render this widget into the DOM
                       })
                       .catch(error => {
                         $tw.ipfs.getLogger().error(error)
-                        //$tw.utils.alert(name, error.message)
+                        $tw.utils.alert(name, error.message)
                       })
                     break
                   default:
@@ -128,7 +128,7 @@ Render this widget into the DOM
                       })
                       .catch(error => {
                         $tw.ipfs.getLogger().error(error)
-                        //$tw.utils.alert(name, error.message)
+                        $tw.utils.alert(name, error.message)
                       })
                     break
                 }

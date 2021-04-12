@@ -61,7 +61,7 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
                 })
                 .catch(error => {
                   $tw.ipfs.getLogger().error(error)
-                  //$tw.utils.alert(name, error.message)
+                  $tw.utils.alert(name, error.message)
                 })
             }
           })

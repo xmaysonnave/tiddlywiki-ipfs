@@ -2,9 +2,12 @@ title: $:/core/ui/EditTemplate/body
 tags: $:/tags/EditTemplate $:/ipfs/core
 
 \define lingo-base() $:/language/EditTemplate/Body/
+
 \define config-visibility-title()
 $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 \end
+
+\define body-editor()
 <$list filter="[all[current]has[_canonical_uri]]">
 
 <div class="tc-message-box">
@@ -46,3 +49,21 @@ $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 </$reveal>
 
 </$list>
+
+\end
+
+
+<$vars modeState=<<qualify "$:/state/edition/body/">>>
+
+<$reveal type="nomatch" state=<<modeState>> text="expanded" default="expanded">
+<$button set=<<modeState>> setTo="expanded" class="tc-btn-invisible">{{$:/core/images/chevron-right}} {{$:/language/ControlPanel/Editor/Body/Caption}}</$button>
+</$reveal>
+<$reveal type="match" state=<<modeState>> text="expanded" default="expanded">
+<$button set=<<modeState>> setTo="restored" class="tc-btn-invisible">{{$:/core/images/chevron-down}} {{$:/language/ControlPanel/Editor/Body/Caption}}</$button>
+</$reveal>
+
+<$reveal type="match" state=<<modeState>> text="expanded" default="expanded">
+<<body-editor>>
+</$reveal>
+
+</$vars>
