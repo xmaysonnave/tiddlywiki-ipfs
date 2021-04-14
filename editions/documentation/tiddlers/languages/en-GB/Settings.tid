@@ -9,7 +9,7 @@ type: text/vnd.tiddlywiki
 </ul>
 <h2>Settings</h2>
 <p>
-  The [[IPFS Saver Settings|$:/core/ui/ControlPanel/Saving/IpfsSaver]] lets you control the plugin behaviour.
+  The [[IPFS Saver Settings|$:/core/ui/ControlPanel/Ipfs/Saver]] lets you control the plugin behaviour.
 </p>
 [img class="tc-image-documentation" [/ipfs/image/settings]]
 <<locator-view baseTitle:"Settings">>

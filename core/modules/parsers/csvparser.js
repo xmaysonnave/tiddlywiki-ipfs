@@ -42,7 +42,7 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
       var canonicalUri = options.tiddler.fields._canonical_uri
       canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.toString().trim() !== '' ? canonicalUri.toString().trim() : null
-      if (canonicalUri !== null) {
+      if ((text || '') === '' && canonicalUri !== null) {
         var password = options.tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         $tw.ipfs

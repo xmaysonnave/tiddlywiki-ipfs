@@ -609,7 +609,14 @@ Render this widget into the DOM
       content = await $tw.ipfs.processContent(target, content, 'utf8')
     }
     if (content !== null) {
-      if (await $tw.utils.exportToIpfs(target, content)) {
+      var filename = '/'
+      if ($tw.utils.getWrappedDirectory()) {
+        filename = `${filename}${$tw.ipfs.filenamify(exportTiddler.fields.title)}`
+        if (filename.endsWith('.json') === false) {
+          filename = `${filename}.json`
+        }
+      }
+      if (await $tw.utils.exportToIpfs(target, content, ['$:/isExported', '$:/isIpfs'], [], [], '_export_uri', filename)) {
         // Replace the $:/Export tiddler with an export report
         this.wiki.addTiddler(
           new $tw.Tiddler({

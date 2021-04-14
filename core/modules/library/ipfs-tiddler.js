@@ -58,6 +58,19 @@ IPFS Tiddler
     'type',
   ]
 
+  /*eslint no-unused-vars: "off"*/
+  const ipfsReservedFields = [
+    '_canonical_uri',
+    '_canonical_ipfs_uri',
+    '_canonical_ipns_uri',
+    '_export_uri',
+    '_export_ipfs_uri',
+    '_export_ipns_uri',
+    '_import_uri',
+    '_import_ipfs_uri',
+    '_import_ipns_uri',
+  ]
+
   var IpfsTiddler = function () {
     this.once = false
   }
@@ -383,6 +396,12 @@ IPFS Tiddler
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler)
+    // Title update
+    if ($tw.utils.getWrappedDirectory() && tiddler.fields.title !== oldTiddler.fields.title) {
+      // Process
+      if (tiddler.fields._canonical_uri) {
+      }
+    }
     // Process deleted fields
     if (oldTiddler) {
       for (var field in oldTiddler.fields) {
@@ -395,18 +414,21 @@ IPFS Tiddler
         if (discard && tiddler.getFieldString(field)) {
           continue
         }
-        // Process
+        // Old value
+        var oldIpfsCid = null
+        var oldIpnsCid = null
         var oldResolvedUrl = null
         var oldValue = oldTiddler.getFieldString(field)
         try {
-          var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, $tw.utils.getIpnsResolve(), false, true)
+          var { ipfsCid: oldIpfsCid, ipnsCid: oldIpnsCid, resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, $tw.utils.getIpnsResolve(), false, true)
         } catch (error) {
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
           return tiddler
         }
+        // Deleted
         oldResolvedUrl = oldResolvedUrl !== undefined && oldResolvedUrl !== null && oldResolvedUrl.toString().trim() !== '' ? oldResolvedUrl.toString().trim() : null
-        if (oldResolvedUrl !== null && field === '_canonical_uri') {
+        if ((oldIpfsCid !== null || oldIpnsCid !== null) && field === '_canonical_uri') {
           var data = tiddler.fields.text
           try {
             if (info.encoding === 'base64') {
@@ -432,14 +454,44 @@ IPFS Tiddler
         $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
       }
     }
-    // Process new and updated fields
-    updatedTiddler = await this.updateIpfsTags(tiddler, oldTiddler, updatedTiddler)
+    // Process exports
+    var oldCanonicalUri = oldTiddler.fields._canonical_uri
+    oldCanonicalUri = oldCanonicalUri !== undefined && oldCanonicalUri !== null && oldCanonicalUri.trim() !== '' ? oldCanonicalUri.trim() : null
+    var oldExportUri = oldTiddler.fields._export_uri
+    oldExportUri = oldExportUri !== undefined && oldExportUri !== null && oldExportUri.trim() !== '' ? oldExportUri.trim() : null
+    var canonicalUri = tiddler.fields._canonical_uri
+    canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
+    var exportUri = tiddler.fields._export_uri
+    exportUri = exportUri !== undefined && exportUri !== null && exportUri.trim() !== '' ? exportUri.trim() : null
+    // Process new canonical_uri
+    if (oldCanonicalUri == null && canonicalUri !== null && tiddler.fields.text !== '') {
+      const { info } = $tw.utils.getContentType(tiddler)
+      const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
+      var filename = '/'
+      if ($tw.utils.getWrappedDirectory()) {
+        filename = `${filename}${$tw.ipfs.filenamify(tiddler.fields.title)}`
+        if (filename.endsWith(info.extension) === false) {
+          filename = `${filename}${info.extension}`
+        }
+      }
+      await $tw.utils.exportToIpfs(tiddler, content, [], [], [], '_canonical_uri', filename)
+    }
+    // Process new export_uri
+    // TODO: to be deleted when update is implemented
+    if (oldExportUri == null && exportUri !== null) {
+      const { content } = await $tw.utils.exportTiddler(tiddler, true)
+      if (content !== undefined && content !== null) {
+        await $tw.utils.exportToIpfs(tiddler, content, [], [], [], '_export_uri')
+      }
+    }
+    // Process tags and fields
+    updatedTiddler = await this.processUpdatedTiddler(tiddler, oldTiddler, updatedTiddler)
     // Update
     $tw.wiki.addTiddler(updatedTiddler)
     return updatedTiddler
   }
 
-  IpfsTiddler.prototype.updateIpfsTags = async function (tiddler, oldTiddler, updatedTiddler) {
+  IpfsTiddler.prototype.processUpdatedTiddler = async function (tiddler, oldTiddler, updatedTiddler) {
     var canonicalUri = null
     var exportUri = null
     var importUri = null

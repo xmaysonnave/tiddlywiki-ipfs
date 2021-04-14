@@ -12,40 +12,41 @@ Info/Hint: Information about this <b>~TiddlyWiki</b>
 Ipfs/Build/Prompt: <b>IPFS</b>:
 
 Saving/Hint: Settings used for saving the entire <b>~TiddlyWiki</b> as a single file via a saver module.
-Saving/IpfsService/Caption: IPFS Saver
-Saving/IpfsService/Description: These settings are only used when saving to IPFS.
-Saving/IpfsService/Verbose: Saver Verbose
-Saving/IpfsService/Url: IPFS Server URL
-Saving/IpfsService/ApiUrl: API
-Saving/IpfsService/GatewayUrl: Gateway
-Saving/IpfsService/Ens: ENS
-Saving/IpfsService/EnsDomain: ENS domain
-Saving/IpfsService/Ipns: IPNS
-Saving/IpfsService/IpnsKey: IPNS key
-Saving/IpfsService/IpnsCid: IPNS cid
-Saving/IpfsService/Resolved: Resolved
-Saving/IpfsService/Global: Global
-Saving/IpfsService/Verbose/Description: Verbose
-Saving/IpfsService/IPNS/Resolve/Description: Resolve IPNS
-Saving/IpfsService/ETH/Resolve/Description: Resolve ETH
-Saving/IpfsService/Pin/Description: Pin Current
-Saving/IpfsService/Unpin/Description: Unpin Previous
-Saving/IpfsService/Wait/Description: Wait
-Saving/IpfsService/Policy: Relative URL Policy
-Saving/IpfsService/Policy/Origin/Description: Origin
-Saving/IpfsService/Policy/Gateway/Description: Gateway
-Saving/IpfsService/Protocol: Protocol
-Saving/IpfsService/Protocol/Ens/Description: ENS
-Saving/IpfsService/Protocol/Ipfs/Description: IPFS
-Saving/IpfsService/Protocol/Ipns/Description: IPNS
-Saving/IpfsService/Export: Export
-Saving/IpfsService/Export/Static/Description: Static
-Saving/IpfsService/Export/Json/Description: JSON
-Saving/IpfsService/Export/Tid/Description: TID
-Saving/IpfsService/Provider: IPFS Provider
-Saving/IpfsService/Provider/Default/Description: Default
-Saving/IpfsService/Provider/Window/Description: IPFS Companion
-Saving/IpfsService/Provider/HTTP/Description: HTTP Client
+Ipfs/Saver/Caption: IPFS Saver
+Ipfs/Saver/Description: These settings are only used when saving to IPFS.
+Ipfs/Saver/Verbose: Saver Verbose
+Ipfs/Saver/Url: IPFS Server URL
+Ipfs/Saver/ApiUrl: API
+Ipfs/Saver/GatewayUrl: Gateway
+Ipfs/Saver/Ens: ENS
+Ipfs/Saver/EnsDomain: ENS domain
+Ipfs/Saver/Ipns: IPNS
+Ipfs/Saver/IpnsKey: IPNS key
+Ipfs/Saver/IpnsCid: IPNS cid
+Ipfs/Saver/Resolved: Resolved
+Ipfs/Saver/Global: Global
+Ipfs/Saver/Verbose/Description: Verbose
+Ipfs/Saver/IPNS/Resolve/Description: Resolve IPNS
+Ipfs/Saver/ETH/Resolve/Description: Resolve ETH
+Ipfs/Saver/Directory/Wrapped/Description: Wrapped Directory
+Ipfs/Saver/Pin/Description: Pin Current
+Ipfs/Saver/Unpin/Description: Unpin Previous
+Ipfs/Saver/Wait/Description: Wait
+Ipfs/Saver/Policy: Relative URL Policy
+Ipfs/Saver/Policy/Origin/Description: Origin
+Ipfs/Saver/Policy/Gateway/Description: Gateway
+Ipfs/Saver/Protocol: Protocol
+Ipfs/Saver/Protocol/Ens/Description: ENS
+Ipfs/Saver/Protocol/Ipfs/Description: IPFS
+Ipfs/Saver/Protocol/Ipns/Description: IPNS
+Ipfs/Saver/Export: Export
+Ipfs/Saver/Export/Static/Description: Static
+Ipfs/Saver/Export/Json/Description: JSON
+Ipfs/Saver/Export/Tid/Description: TID
+Ipfs/Saver/Provider: IPFS Provider
+Ipfs/Saver/Provider/Default/Description: Default
+Ipfs/Saver/Provider/Window/Description: IPFS Companion
+Ipfs/Saver/Provider/HTTP/Description: HTTP Client
 
 Settings/Compression/Caption: Compression
 Settings/Compression/Description: Use Content Compression

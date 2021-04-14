@@ -65,15 +65,27 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleExportToIpfs = async function (event, child) {
-    var target = $tw.wiki.getTiddler(event.tiddlerTitle)
-    if (target === undefined) {
+    var tiddler = $tw.wiki.getTiddler(event.tiddlerTitle)
+    if (tiddler === undefined) {
       return false
     }
-    const content = await this.exportTiddler(target, child)
+    const { content, extension } = await $tw.utils.exportTiddler(tiddler, child)
     if (content === undefined || content == null) {
       return false
     }
-    return await $tw.utils.exportToIpfs(target, content)
+    var filename = '/'
+    if ($tw.utils.getWrappedDirectory()) {
+      filename = `${filename}${$tw.ipfs.filenamify(event.tiddlerTitle)}`
+      if (filename.endsWith(extension) === false) {
+        filename = `${filename}${extension}`
+      }
+    }
+    await $tw.utils.exportToIpfs(tiddler, content, ['$:/isExported', '$:/isIpfs'], [], [], '_export_uri', filename)
+    if (child) {
+      $tw.ipfs.getLogger().info(`Exported transcluded content: ${content.length} bytes`)
+    } else {
+      $tw.ipfs.getLogger().info(`Exported content: ${content.length} bytes`)
+    }
   }
 
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
@@ -82,47 +94,34 @@ IPFS Action
     if (tiddler === undefined) {
       return false
     }
-    var added = null
+    const { info } = $tw.utils.getContentType(tiddler)
     // Do not process if _canonical_uri is set and the text field is empty
     const canonicalUri = tiddler.fields._canonical_uri
     if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '') {
       $tw.utils.alert(name, 'Attachment is already exported...')
       return false
     }
-    if (tiddler.fields.text === undefined || tiddler.fields.text == null || tiddler.fields.text.trim() === '') {
+    if (tiddler.fields.text === undefined || tiddler.fields.text == null || tiddler.fields.text === '') {
       $tw.utils.alert(name, 'Empty attachment...')
       return false
     }
     try {
-      const { info } = $tw.utils.getContentType(tiddler)
       const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
-      var filename = $tw.ipfs.filenamify(title)
-      if (filename.endsWith(info.extension) === false) {
-        filename = `${filename}${info.extension}`
+      var filename = '/'
+      if ($tw.utils.getWrappedDirectory()) {
+        filename = `${filename}${$tw.ipfs.filenamify(title)}`
+        if (filename.endsWith(info.extension) === false) {
+          filename = `${filename}${info.extension}`
+        }
       }
-      $tw.ipfs.getLogger().info(`Uploading attachment: ${content.length} bytes`)
-      var { cid: added, path } = await $tw.ipfs.addAttachmentToIpfs(content, `/${filename}`)
-      if (added !== null) {
-        $tw.ipfs.addToPin(`/ipfs/${added}`)
-      }
+      const fields = [{ key: 'text', value: '' }]
+      await $tw.utils.exportToIpfs(tiddler, content, ['$:/isAttachment', '$:/isIpfs'], ['$:/isEmbedded'], fields, '_canonical_uri', filename)
+      $tw.ipfs.getLogger().info(`Uploaded attachment: ${content.length} bytes`)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
-    const addTags = ['$:/isAttachment', '$:/isIpfs']
-    const removeTags = ['$:/isEmbedded']
-    // Update
-    tiddler = $tw.utils.updateTiddler({
-      tiddler: tiddler,
-      addTags: addTags,
-      removeTags: removeTags,
-      fields: [
-        { key: 'text', value: '' },
-        { key: '_canonical_uri', value: `${path}` },
-      ],
-    })
-    $tw.wiki.addTiddler(tiddler)
     return true
   }
 
@@ -409,109 +408,6 @@ IPFS Action
         $tw.utils.alert(name, error.message)
       })
     return true
-  }
-
-  IpfsAction.prototype.exportTiddler = async function (target, child) {
-    // Check
-    if (target === undefined || target == null) {
-      const error = new Error('Unknown Tiddler...')
-      $tw.ipfs.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
-      return null
-    }
-    const title = target.fields.title
-    // Filter
-    var exportFilter = `[[${target.fields.title}]]`
-    // Child filters
-    if (child) {
-      // Links
-      const linked = $tw.wiki.getTiddlerLinks(title)
-      $tw.ipfs.getLogger().info(`Found ${linked.length} Tiddler link(s)...`)
-      // Transcluded
-      const transcluded = this.transcludeContent(title)
-      $tw.ipfs.getLogger().info(`Found ${transcluded.length} transcluded Tiddler reference(s)...`)
-      const filtered = linked.concat(transcluded)
-      // Process filtered content
-      for (var i = 0; i < filtered.length; i++) {
-        if (exportFilter.includes(`[[${filtered[i]}]]`) === false) {
-          exportFilter = `${exportFilter} [[${filtered[i]}]]`
-        }
-      }
-    }
-    var content
-    var contentType = 'text/plain'
-    if (child || $tw.utils.getIpfsExport() === 'json') {
-      content = await $tw.utils.exportTiddlersAsJson($tw.wiki.filterTiddlers(exportFilter), target.fields._export_uri)
-      if (content !== null) {
-        const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
-        if (navigator) {
-          navigator.dispatchEvent({
-            target: target.fields.title,
-            type: 'tm-ipfs-export-tiddlers',
-            param: content,
-          })
-          return null
-        }
-      }
-    } else if ($tw.utils.getIpfsExport() === 'static') {
-      const options = {
-        downloadType: contentType,
-        method: 'download',
-        template: '$:/core/templates/exporters/StaticRiver',
-        variables: {
-          exportFilter: exportFilter,
-        },
-      }
-      content = $tw.wiki.renderTiddler(contentType, '$:/core/templates/exporters/StaticRiver', options)
-    } else {
-      const options = {
-        downloadType: contentType,
-        method: 'download',
-        template: '$:/core/templates/exporters/TidFile',
-        variables: {
-          exportFilter: exportFilter,
-        },
-      }
-      content = $tw.wiki.renderTiddler(contentType, '$:/core/templates/exporters/TidFile', options)
-    }
-    if (content) {
-      return await $tw.ipfs.processContent(target, content, 'utf8')
-    }
-    return null
-  }
-
-  IpfsAction.prototype.transcludeContent = function (title) {
-    var tiddlers = []
-    // Build a transclude widget
-    var transclude = $tw.wiki.makeTranscludeWidget(title)
-    // Build a fake document element
-    const container = $tw.fakeDocument.createElement('div')
-    // Transclude
-    transclude.render(container, null)
-    // Process children
-    this.locateTiddlers(transclude, tiddlers)
-    // Return
-    return tiddlers
-  }
-
-  IpfsAction.prototype.locateTiddlers = function (transclude, tiddlers) {
-    // Children lookup
-    for (var i = 0; i < transclude.children.length; i++) {
-      // Current child
-      const child = transclude.children[i]
-      if (child.variables !== undefined && child.variables !== null) {
-        // Locate Tiddler
-        const currentTiddler = 'currentTiddler'
-        const current = child.variables[currentTiddler]
-        if (current !== undefined && current !== null && current.value !== undefined && current.value !== null) {
-          if (tiddlers.indexOf(current.value) === -1) {
-            tiddlers.push(current.value)
-          }
-        }
-      }
-      // Process children
-      this.locateTiddlers(child, tiddlers)
-    }
   }
 
   exports.IpfsAction = IpfsAction

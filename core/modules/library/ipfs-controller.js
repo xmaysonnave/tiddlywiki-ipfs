@@ -254,14 +254,9 @@ ${ipfsPath}`
     return await this.ipfsWrapper.unpinFromIpfs(ipfs, ipfsPath, recursive)
   }
 
-  IpfsController.prototype.addAttachmentToIpfs = async function (content, ipfsPath) {
+  IpfsController.prototype.addContentToIpfs = async function (content, ipfsPath) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.addAttachmentToIpfs(ipfs, content, ipfsPath)
-  }
-
-  IpfsController.prototype.addToIpfs = async function (content) {
-    const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.addToIpfs(ipfs, content)
+    return await this.ipfsWrapper.addContentToIpfs(ipfs, content, ipfsPath)
   }
 
   IpfsController.prototype.generateIpnsCid = async function (ipnsKey) {
@@ -292,6 +287,11 @@ ${ipfsPath}`
   IpfsController.prototype.getIpnsIdentifier = async function (identifier, resolveIpnsKey, base, path, ipnsKey) {
     const { ipfs } = await this.getIpfsClient()
     return await this.ipfsWrapper.getIpnsIdentifier(ipfs, identifier, resolveIpnsKey, base, path, ipnsKey)
+  }
+
+  IpfsController.prototype.fetchDagNode = async function (cid, timeout) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsWrapper.fetchDagNode(ipfs, cid, timeout)
   }
 
   IpfsController.prototype.resolveIpnsKey = async function (ipnsKey, timeout) {

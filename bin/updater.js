@@ -22,7 +22,7 @@ const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
  **/
 
 module.exports = class Updater {
-  shortTimeout = 6000
+  shortTimeout = 8000
   longTimeout = 4 * 60 * this.shortTimeout
   dagDirectory = fromString('\u0008\u0001')
   emptyDirectoryCid = new CID('bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354')

@@ -26,7 +26,7 @@ IPFS Default
       }
     }
     if (resolve == null) {
-      resolve = false // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
+      resolve = false // default, see $:/core/ui/ControlPanel/Ipfs/Saver
     } else {
       resolve = resolve === 'yes'
     }
@@ -231,7 +231,7 @@ IPFS Default
       }
     }
     if (verbose == null) {
-      verbose = true // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
+      verbose = true // default, see $:/core/ui/ControlPanel/Ipfs/Saver
     } else {
       verbose = verbose === 'yes'
     }
@@ -252,7 +252,7 @@ IPFS Default
       }
     }
     if (pin == null) {
-      pin = true // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
+      pin = true // default, see $:/core/ui/ControlPanel/Ipfs/Saver
     } else {
       pin = pin === 'yes'
     }
@@ -273,7 +273,7 @@ IPFS Default
       }
     }
     if (unpin == null) {
-      unpin = false // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
+      unpin = false // default, see $:/core/ui/ControlPanel/Ipfs/Saver
     } else {
       unpin = unpin === 'yes'
     }
@@ -343,10 +343,28 @@ IPFS Default
       }
     }
     if (resolve == null) {
-      resolve = false // default, see $:/core/ui/ControlPanel/Saving/IpfsSaver
+      resolve = false // default, see $:/core/ui/ControlPanel/Ipfs/Saver
     } else {
       resolve = resolve === 'yes'
     }
     return resolve
+  }
+
+  exports.getWrappedDirectory = function () {
+    var wrapped = null
+    var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/directory/wrapped')
+    if (tiddler !== undefined && tiddler !== null) {
+      var text = tiddler.fields.text
+      text = text !== undefined && text !== null && text.trim() !== '' ? text.trim() : null
+      if (text !== null) {
+        wrapped = text
+      }
+    }
+    if (wrapped == null) {
+      wrapped = true // default, see $:/core/ui/ControlPanel/Ipfs/Saver
+    } else {
+      wrapped = wrapped === 'yes'
+    }
+    return wrapped
   }
 })()

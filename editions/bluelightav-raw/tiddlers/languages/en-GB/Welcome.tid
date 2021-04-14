@@ -106,5 +106,5 @@ type: text/vnd.tiddlywiki
 <h3>Settings</h3>
 <ul>
   <li>[[Saving General|$:/core/ui/ControlPanel/Saving/General]]</li>
-  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Saving/IpfsSaver]]</li>
+  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Ipfs/Saver]]</li>
 </ul>

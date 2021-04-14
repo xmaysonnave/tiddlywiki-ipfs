@@ -285,10 +285,39 @@ IpfsWrapper.prototype.resolveIpfsContainer = async function (ipfs, value, timeou
   return cid
 }
 
-IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey, options) {
+IpfsWrapper.prototype.fetchDagNode = async function (ipfs, cid, timeout) {
+  cid = cid !== undefined && cid !== null && cid.toString().trim() !== '' ? cid.toString().trim() : null
+  if (cid == null) {
+    throw new Error('Undefined IPFS cid...')
+  }
+  const options = {
+    localResolve: false,
+  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : null
+  if (timeout !== null) {
+    options.timeout = timeout
+  }
+  var node = null
+  try {
+    node = this.ipfsBundle.dagGet(ipfs, cid, options)
+  } catch (error) {
+    this.getLogger().error(error)
+  }
+  return node
+}
+
+IpfsWrapper.prototype.resolveIpnsKey = async function (ipfs, ipnsKey, timeout) {
   ipnsKey = ipnsKey !== undefined && ipnsKey !== null && ipnsKey.toString().trim() !== '' ? ipnsKey.toString().trim() : null
   if (ipnsKey == null) {
     throw new Error('Undefined IPNS key...')
+  }
+  const options = {
+    nocache: false,
+    recursive: true,
+  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : null
+  if (timeout !== null) {
+    options.timeout = timeout
   }
   // The IPNS address you want to resolve.
   // eg: const addr = '/ipns/ipfs.io'
@@ -312,7 +341,7 @@ ${parsed}`
   throw new Error('Failed to resolve an IPNS key...')
 }
 
-IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, ipfsPath) {
+IpfsWrapper.prototype.addContentToIpfs = async function (ipfs, content, ipfsPath) {
   try {
     if (content === undefined || content == null) {
       throw new Error('Undefined content...')
@@ -337,48 +366,24 @@ IpfsWrapper.prototype.addAttachmentToIpfs = async function (ipfs, content, ipfsP
     var cid = null
     var parentCid = null
     var parentSize = null
-    var contentCid = null
     var contentPath = ''
-    var contentSize = null
     const added = await this.ipfsLibrary.addAll(ipfs, upload, options)
     for (var [cid, details] of added.entries()) {
       if (added.size === 1 || details.path === '') {
         parentCid = cid
         parentSize = details.size
       } else {
-        contentCid = cid
         contentPath = `/${details.path}`
-        contentSize = details.size
       }
     }
-    const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}`)
+    const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}${contentPath}`)
     this.getLogger().info(`Added: ${parentSize} bytes,
 ${url}`)
     return {
-      cid: contentCid !== null ? contentCid : parentCid,
-      path: `ipfs://${parentCid}${contentPath}`,
-      size: contentCid !== null ? contentSize : parentSize,
-    }
-  } catch (error) {
-    this.getLogger().error(error)
-  }
-  throw new Error('Failed to add content to IPFS...')
-}
-
-IpfsWrapper.prototype.addToIpfs = async function (ipfs, content) {
-  try {
-    if (content === undefined || content == null) {
-      throw new Error('Undefined content...')
-    }
-    const { cid, path, size } = await this.ipfsLibrary.add(ipfs, content)
-    const pathname = `/${ipfsKeyword}/${cid}`
-    const url = this.ipfsUrl.normalizeUrl(pathname)
-    this.getLogger().info(`Added: ${size} bytes,
-${url}`)
-    return {
-      cid: cid,
-      path: path,
-      size: size,
+      cid: parentCid,
+      path: `/ipfs/${parentCid}${contentPath}`,
+      size: parentSize,
+      uri: `ipfs://${parentCid}${contentPath}`,
     }
   } catch (error) {
     this.getLogger().error(error)

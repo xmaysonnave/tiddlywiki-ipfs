@@ -1,8 +1,8 @@
-title: $:/core/ui/ControlPanel/Saving/IpfsSaver
+title: $:/core/ui/ControlPanel/Ipfs/Saver
 tags: $:/tags/ControlPanel/Saving $:/ipfs/core
-caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
+caption: {{$:/language/ControlPanel/Ipfs/Saver/Caption}}
 
-\define lingo-base() $:/language/ControlPanel/Saving/IpfsService/
+\define lingo-base() $:/language/ControlPanel/Ipfs/Saver/
 \define service-name() Ipfs
 
 <<lingo Description>>
@@ -30,6 +30,10 @@ caption: {{$:/language/ControlPanel/Saving/IpfsService/Caption}}
 <tr>
 <td width="90%">''<$link to="$:/ipfs/saver/eth-link/resolve"><<lingo ETH/Resolve/Description>></$link>''</td>
 <td width="10%"><$checkbox tiddler="$:/ipfs/saver/eth-link/resolve" field="text" checked="yes" unchecked="no" default="no"/></td>
+</tr>
+<tr>
+<td width="90%">''<$link to="$:/ipfs/saver/directory/wrapped"><<lingo Directory/Wrapped/Description>></$link>''</td>
+<td width="10%"><$checkbox tiddler="$:/ipfs/saver/directory/wrapped" field="text" checked="yes" unchecked="no" default="yes"/></td>
 </tr>
 </tbody>
 </table>
