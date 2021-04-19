@@ -17,60 +17,6 @@ IPFS Tiddler
   /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-tiddler'
 
-  /*
-   * https://tiddlywiki.com/#TiddlerFields
-   * $:/core/modules/server/routes/get-tiddler.js
-   * TODO: expose it as Tiddler ??
-   */
-  const reservedFields = [
-    'bag',
-    'caption',
-    'class',
-    'color',
-    'description',
-    'created',
-    'creator',
-    'fields',
-    'footer',
-    'hide-body',
-    'icon',
-    '_is_skinny',
-    'library',
-    'list',
-    'list-after',
-    'list-before',
-    'modified',
-    'modifier',
-    'name',
-    'plugin-priority',
-    'plugin-type',
-    'permissions',
-    'recipe',
-    'revision',
-    // "source",
-    'subtitle',
-    'tags',
-    'text',
-    // "url",
-    'throttle.refresh',
-    'toc-link',
-    'title',
-    'type',
-  ]
-
-  /*eslint no-unused-vars: "off"*/
-  const ipfsReservedFields = [
-    '_canonical_uri',
-    '_canonical_ipfs_uri',
-    '_canonical_ipns_uri',
-    '_export_uri',
-    '_export_ipfs_uri',
-    '_export_ipns_uri',
-    '_import_uri',
-    '_import_ipfs_uri',
-    '_import_ipns_uri',
-  ]
-
   var IpfsTiddler = function () {
     this.once = false
   }
@@ -171,7 +117,7 @@ IPFS Tiddler
       if (event.param) {
         // Tiddler
         for (var field in tiddler.fields) {
-          if (reservedFields.indexOf(field) !== -1) {
+          if ($tw.utils.isTiddlyWikiReservedWord(field)) {
             continue
           }
           var value = tiddler.getFieldString(field)
@@ -229,7 +175,7 @@ IPFS Tiddler
       if (event.param) {
         // Tiddler
         for (var field in tiddler.fields) {
-          if (reservedFields.indexOf(field) !== -1) {
+          if ($tw.utils.isTiddlyWikiReservedWord(field)) {
             continue
           }
           var value = tiddler.getFieldString(field)
@@ -391,22 +337,22 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {
     const oldTiddler = $tw.wiki.getTiddler(tiddler.fields.title)
-    const { info } = $tw.utils.getContentType(tiddler)
+    const { type, info } = $tw.utils.getContentType(tiddler)
     var password = tiddler.fields._password
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     // Prepare
     var updatedTiddler = new $tw.Tiddler(tiddler)
-    // Title update
-    if ($tw.utils.getWrappedDirectory() && tiddler.fields.title !== oldTiddler.fields.title) {
-      // Process
-      if (tiddler.fields._canonical_uri) {
+    if (oldTiddler !== undefined && oldTiddler !== null) {
+      // Title update
+      if ($tw.utils.getWrappedDirectory() && tiddler.fields.title !== oldTiddler.fields.title) {
+        // Process
+        if (tiddler.fields._canonical_uri) {
+        }
       }
-    }
-    // Process deleted fields
-    if (oldTiddler) {
+      // Process deleted fields
       for (var field in oldTiddler.fields) {
         // Not a reserved keyword
-        if (reservedFields.indexOf(field) !== -1) {
+        if ($tw.utils.isTiddlyWikiReservedWord(field)) {
           continue
         }
         // Updated
@@ -455,196 +401,63 @@ IPFS Tiddler
       }
     }
     // Process exports
-    var oldCanonicalUri = oldTiddler.fields._canonical_uri
+    var oldCanonicalUri = oldTiddler !== undefined && oldTiddler !== null ? oldTiddler.fields._canonical_uri : null
     oldCanonicalUri = oldCanonicalUri !== undefined && oldCanonicalUri !== null && oldCanonicalUri.trim() !== '' ? oldCanonicalUri.trim() : null
-    var oldExportUri = oldTiddler.fields._export_uri
-    oldExportUri = oldExportUri !== undefined && oldExportUri !== null && oldExportUri.trim() !== '' ? oldExportUri.trim() : null
     var canonicalUri = tiddler.fields._canonical_uri
     canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
-    var exportUri = tiddler.fields._export_uri
-    exportUri = exportUri !== undefined && exportUri !== null && exportUri.trim() !== '' ? exportUri.trim() : null
+    const { ipnsCid, normalizedUrl } = await $tw.ipfs.resolveUrl(canonicalUri, false, false, true)
     // Process new canonical_uri
-    if (oldCanonicalUri == null && canonicalUri !== null && tiddler.fields.text !== '') {
+    if (ipnsCid !== null && oldCanonicalUri == null && canonicalUri !== null && tiddler.fields.text !== '') {
       const { info } = $tw.utils.getContentType(tiddler)
-      const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
+      const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding, type)
       var filename = '/'
+      var incomingName = null
       if ($tw.utils.getWrappedDirectory()) {
-        filename = `${filename}${$tw.ipfs.filenamify(tiddler.fields.title)}`
+        try {
+          var path = null
+          const pathname = normalizedUrl.pathname.slice(`/ipns/${ipnsCid}`.length)
+          if (pathname !== undefined && pathname !== null && pathname.trim() !== '') {
+            path = pathname.substring(0, pathname.lastIndexOf('/'))
+            if (path !== undefined && path !== null && path.trim() !== '') {
+              const incoming = pathname.split('/').pop()
+              if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
+                incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+                filename = `${path}/${incomingName}`
+              }
+            }
+          }
+          if (filename === '/') {
+            const url = $tw.ipfs.getUrl(tiddler.fields.title, $tw.ipfs.getIpfsBaseUrl())
+            if (path === undefined || path == null || path.trim() === '') {
+              path = url.pathname.substring(0, url.pathname.lastIndexOf('/'))
+            }
+            if (path !== undefined && path !== null && path.trim() !== '') {
+              const incoming = url.pathname.split('/').pop()
+              if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
+                incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+                filename = `${path}/${incomingName}`
+              }
+            }
+          }
+        } catch (error) {
+          // Ignore
+        }
+        if (filename === '/') {
+          incomingName = $tw.ipfs.filenamify(tiddler.fields.title)
+          filename = `${filename}${incomingName}`
+        }
         if (filename.endsWith(info.extension) === false) {
+          incomingName = `${incomingName}${info.extension}`
           filename = `${filename}${info.extension}`
         }
       }
-      await $tw.utils.exportToIpfs(tiddler, content, [], [], [], '_canonical_uri', filename)
+      // Beware, async...
+      const fields = [{ key: 'text', value: '' }]
+      $tw.utils.exportToIpfs(tiddler, content, fields, '_canonical_uri', filename, incomingName)
+    } else {
+      updatedTiddler = await $tw.utils.processUpdatedTiddler(tiddler, oldTiddler, updatedTiddler)
     }
-    // Process new export_uri
-    // TODO: to be deleted when update is implemented
-    if (oldExportUri == null && exportUri !== null) {
-      const { content } = await $tw.utils.exportTiddler(tiddler, true)
-      if (content !== undefined && content !== null) {
-        await $tw.utils.exportToIpfs(tiddler, content, [], [], [], '_export_uri')
-      }
-    }
-    // Process tags and fields
-    updatedTiddler = await this.processUpdatedTiddler(tiddler, oldTiddler, updatedTiddler)
-    // Update
     $tw.wiki.addTiddler(updatedTiddler)
-    return updatedTiddler
-  }
-
-  IpfsTiddler.prototype.processUpdatedTiddler = async function (tiddler, oldTiddler, updatedTiddler) {
-    var canonicalUri = null
-    var exportUri = null
-    var importUri = null
-    var canonicalIpfsCid = null
-    var canonicalIpnsCid = null
-    var exportIpfsCid = null
-    var exportIpnsCid = null
-    var importIpfsCid = null
-    var importIpnsCid = null
-    var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
-    const { type, info } = $tw.utils.getContentType(tiddler)
-    // Process
-    for (var field in tiddler.fields) {
-      // Not a reserved keyword
-      if (reservedFields.indexOf(field) !== -1) {
-        continue
-      }
-      // Process
-      var ipfsCid = null
-      var ipnsCid = null
-      var resolvedUrl = null
-      var oldResolvedUrl = null
-      var value = tiddler.getFieldString(field)
-      try {
-        var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(value, false, false, true)
-      } catch (error) {
-        $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(name, error.message)
-        return tiddler
-      }
-      // Store
-      resolvedUrl = resolvedUrl !== undefined && resolvedUrl !== null && resolvedUrl.toString().trim() !== '' ? resolvedUrl.toString().trim() : null
-      if (field === '_canonical_uri') {
-        canonicalUri = resolvedUrl
-        canonicalIpfsCid = ipfsCid
-        canonicalIpnsCid = ipnsCid
-      }
-      if (field === '_import_uri') {
-        importUri = resolvedUrl
-        importIpfsCid = ipfsCid
-        importIpnsCid = ipnsCid
-      }
-      if (field === '_export_uri') {
-        exportUri = resolvedUrl
-        exportIpfsCid = ipfsCid
-        exportIpnsCid = ipnsCid
-      }
-      // Previous values if any
-      var oldValue = null
-      if (oldTiddler !== undefined && oldTiddler !== null) {
-        oldValue = oldTiddler.getFieldString(field)
-      }
-      // Process new or updated
-      if (value === oldValue) {
-        continue
-      }
-      try {
-        var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
-      } catch (error) {
-        // We cannot resolve the previous value
-        $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(name, error.message)
-      }
-      $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
-      $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
-    }
-    // Tag management
-    var addTags = []
-    var removeTags = []
-    if (canonicalUri == null && exportUri == null && importUri == null) {
-      removeTags.push('$:/isExported', '$:/isImported', '$:/isIpfs')
-    }
-    if (canonicalIpfsCid == null && canonicalIpnsCid == null && exportIpfsCid == null && exportIpnsCid == null && importIpfsCid == null && importIpnsCid == null) {
-      if (removeTags.indexOf('$:/isIpfs') === -1) {
-        removeTags.push('$:/isIpfs')
-      }
-    } else {
-      addTags.push('$:/isIpfs')
-    }
-    if (canonicalUri !== null) {
-      // Attachment
-      if (info.encoding === 'base64' || type === 'image/svg+xml') {
-        if (addTags.indexOf('$:/isAttachment') === -1) {
-          addTags.push('$:/isAttachment')
-        }
-        if (removeTags.indexOf('$:/isEmbedded') === -1) {
-          removeTags.push('$:/isEmbedded')
-        }
-        if (importUri !== null) {
-          if (addTags.indexOf('$:/isImported') === -1) {
-            addTags.push('$:/isImported')
-          }
-        } else {
-          if (removeTags.indexOf('$:/isImported') === -1) {
-            removeTags.push('$:/isImported')
-          }
-        }
-        // Others
-      } else {
-        if (removeTags.indexOf('$:/isAttachment') === -1) {
-          removeTags.push('$:/isAttachment')
-        }
-        if (removeTags.indexOf('$:/isEmbedded') === -1) {
-          removeTags.push('$:/isEmbedded')
-        }
-        if (addTags.indexOf('$:/isImported') === -1) {
-          addTags.push('$:/isImported')
-        }
-      }
-    } else {
-      // Attachment
-      if (info.encoding === 'base64' || type === 'image/svg+xml') {
-        if (addTags.indexOf('$:/isAttachment') === -1) {
-          addTags.push('$:/isAttachment')
-        }
-        if (addTags.indexOf('$:/isEmbedded') === -1) {
-          addTags.push('$:/isEmbedded')
-        }
-        // Others
-      } else {
-        if (removeTags.indexOf('$:/isAttachment') === -1) {
-          removeTags.push('$:/isAttachment')
-        }
-        if (removeTags.indexOf('$:/isEmbedded') === -1) {
-          removeTags.push('$:/isEmbedded')
-        }
-      }
-      if (importUri !== null) {
-        if (addTags.indexOf('$:/isImported') === -1) {
-          addTags.push('$:/isImported')
-        }
-      } else {
-        if (removeTags.indexOf('$:/isImported') === -1) {
-          removeTags.push('$:/isImported')
-        }
-      }
-    }
-    if (exportUri !== null) {
-      if (addTags.indexOf('$:/isExported') === -1) {
-        addTags.push('$:/isExported')
-      }
-    } else {
-      if (removeTags.indexOf('$:/isExported') === -1) {
-        removeTags.push('$:/isExported')
-      }
-    }
-    if (addTags.length > 0 || removeTags.length > 0) {
-      updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: updatedTiddler,
-        addTags: addTags,
-        removeTags: removeTags,
-      })
-    }
     return updatedTiddler
   }
 

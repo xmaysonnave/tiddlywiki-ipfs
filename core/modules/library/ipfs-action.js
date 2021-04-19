@@ -69,23 +69,67 @@ IPFS Action
     if (tiddler === undefined) {
       return false
     }
+    // Do not process if _export_uri is set
+    const exportUri =
+      tiddler.fields._export_uri !== undefined && tiddler.fields._export_uri !== null && tiddler.fields._export_uri.trim() !== '' ? tiddler.fields._export_uri.trim() : null
     const { content, extension } = await $tw.utils.exportTiddler(tiddler, child)
     if (content === undefined || content == null) {
+      $tw.utils.alert(name, 'Empty export...')
       return false
     }
     var filename = '/'
+    var incomingName = ''
     if ($tw.utils.getWrappedDirectory()) {
-      filename = `${filename}${$tw.ipfs.filenamify(event.tiddlerTitle)}`
+      try {
+        var path = null
+        if (exportUri !== null) {
+          const { ipnsCid, normalizedUrl } = await $tw.ipfs.resolveUrl(exportUri, false, false, true)
+          if (ipnsCid !== null) {
+            const pathname = normalizedUrl.pathname.slice(`/ipns/${ipnsCid}`.length)
+            if (pathname !== undefined && pathname !== null && pathname.trim() !== '') {
+              path = pathname.substring(0, pathname.lastIndexOf('/'))
+              if (path !== undefined && path !== null && path.trim() !== '') {
+                const incoming = pathname.split('/').pop()
+                if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
+                  incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+                  filename = `${path}/${incomingName}`
+                }
+              }
+            }
+          }
+        }
+        if (filename === '/') {
+          const url = $tw.ipfs.getUrl(event.tiddlerTitle, $tw.ipfs.getIpfsBaseUrl())
+          if (path === undefined || path == null || path.trim() === '') {
+            path = url.pathname.substring(0, url.pathname.lastIndexOf('/'))
+          }
+          if (path !== undefined && path !== null && path.trim() !== '') {
+            const incoming = url.pathname.split('/').pop()
+            if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
+              incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+              filename = `${path}/${incomingName}`
+            }
+          }
+        }
+      } catch (error) {
+        // Ignore
+      }
+      if (filename === '/') {
+        incomingName = $tw.ipfs.filenamify(event.tiddlerTitle)
+        filename = `${filename}${incomingName}`
+      }
       if (filename.endsWith(extension) === false) {
+        incomingName = `${incomingName}${extension}`
         filename = `${filename}${extension}`
       }
     }
-    await $tw.utils.exportToIpfs(tiddler, content, ['$:/isExported', '$:/isIpfs'], [], [], '_export_uri', filename)
     if (child) {
-      $tw.ipfs.getLogger().info(`Exported transcluded content: ${content.length} bytes`)
+      $tw.ipfs.getLogger().info(`Export transcluded content: ${content.length} bytes`)
     } else {
-      $tw.ipfs.getLogger().info(`Exported content: ${content.length} bytes`)
+      $tw.ipfs.getLogger().info(`Export content: ${content.length} bytes`)
     }
+    // Beware async...
+    $tw.utils.exportToIpfs(tiddler, content, [], '_export_uri', filename, incomingName)
   }
 
   IpfsAction.prototype.handleExportAttachmentToIpfs = async function (event) {
@@ -94,7 +138,6 @@ IPFS Action
     if (tiddler === undefined) {
       return false
     }
-    const { info } = $tw.utils.getContentType(tiddler)
     // Do not process if _canonical_uri is set and the text field is empty
     const canonicalUri = tiddler.fields._canonical_uri
     if (canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '') {
@@ -105,18 +148,38 @@ IPFS Action
       $tw.utils.alert(name, 'Empty attachment...')
       return false
     }
+    const { type, info } = $tw.utils.getContentType(tiddler)
     try {
-      const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding)
+      const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding, type)
       var filename = '/'
+      var incomingName = ''
       if ($tw.utils.getWrappedDirectory()) {
-        filename = `${filename}${$tw.ipfs.filenamify(title)}`
+        try {
+          const url = $tw.ipfs.getUrl(title, $tw.ipfs.getIpfsBaseUrl())
+          const path = url.pathname.substring(0, url.pathname.lastIndexOf('/'))
+          if (path !== undefined && path !== null && path.trim() !== '') {
+            const incoming = url.pathname.split('/').pop()
+            if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
+              incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+              filename = `${path}/${incomingName}`
+            }
+          }
+        } catch (error) {
+          // Ignore
+        }
+        if (filename === '/') {
+          incomingName = $tw.ipfs.filenamify(tiddler.fields.title)
+          filename = `${filename}${incomingName}`
+        }
         if (filename.endsWith(info.extension) === false) {
+          incomingName = `${incomingName}${info.extension}`
           filename = `${filename}${info.extension}`
         }
       }
       const fields = [{ key: 'text', value: '' }]
-      await $tw.utils.exportToIpfs(tiddler, content, ['$:/isAttachment', '$:/isIpfs'], ['$:/isEmbedded'], fields, '_canonical_uri', filename)
-      $tw.ipfs.getLogger().info(`Uploaded attachment: ${content.length} bytes`)
+      $tw.ipfs.getLogger().info(`Upload attachment: ${content.length} bytes`)
+      // Beware async...
+      $tw.utils.exportToIpfs(tiddler, content, fields, '_canonical_uri', filename, incomingName)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)

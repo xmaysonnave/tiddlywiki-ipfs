@@ -91,7 +91,6 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, reso
   }
   var found = false
   var keys = null
-  var normalizedUrl = null
   if (resolveIpnsKey || ipnsCid == null) {
     try {
       keys = await this.getIpnsKeys(ipfs)
@@ -139,6 +138,7 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, reso
     }
   }
   // Path
+  var normalizedUrl = null
   const startPath = `/${ipnsKeyword}/${ipnsCid}`
   if (path.startsWith(startPath)) {
     path = path.slice(startPath.length)
@@ -366,24 +366,21 @@ IpfsWrapper.prototype.addContentToIpfs = async function (ipfs, content, ipfsPath
     var cid = null
     var parentCid = null
     var parentSize = null
-    var contentPath = ''
     const added = await this.ipfsLibrary.addAll(ipfs, upload, options)
     for (var [cid, details] of added.entries()) {
       if (added.size === 1 || details.path === '') {
         parentCid = cid
         parentSize = details.size
-      } else {
-        contentPath = `/${details.path}`
       }
     }
-    const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}${contentPath}`)
+    const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}${ipfsPath}`)
     this.getLogger().info(`Added: ${parentSize} bytes,
 ${url}`)
     return {
       cid: parentCid,
-      path: `/ipfs/${parentCid}${contentPath}`,
+      path: `/ipfs/${parentCid}${ipfsPath}`,
       size: parentSize,
-      uri: `ipfs://${parentCid}${contentPath}`,
+      uri: `ipfs://${parentCid}${ipfsPath}`,
     }
   } catch (error) {
     this.getLogger().error(error)

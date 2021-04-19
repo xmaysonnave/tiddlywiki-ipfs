@@ -1,11 +1,11 @@
 title: bluelightav-build
 tags: $:/ipfs/editions
-build: 210414435
+build: 210419319
 faviconSize: 4297
-faviconUri: ipfs://bafybeihz5c4kmuibmr4e4vuinftrk3jesntrrjk5uacj53whnvjmemxh4e/favicon.ico
+faviconUri: ipfs://bafybeib6k462ue3burgcn2m4pw55x6pemjlomnc5dok5t7ym3spsvx7xku/favicon.ico
 name: bluelightav
-sourceSize: 1390901
-sourceUri: ipfs://bafybeihz5c4kmuibmr4e4vuinftrk3jesntrrjk5uacj53whnvjmemxh4e/
-version: 0.4.0-beta-tw-v5.1.23+build-210414435
+sourceSize: 1393749
+sourceUri: ipfs://bafybeib6k462ue3burgcn2m4pw55x6pemjlomnc5dok5t7ym3spsvx7xku/
+version: 0.4.0-beta-tw-v5.1.23+build-210419319
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

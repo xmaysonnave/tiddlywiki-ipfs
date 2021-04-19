@@ -93,7 +93,7 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array)
   }
 
-  IpfsController.prototype.processContent = async function (tiddler, content, encoding) {
+  IpfsController.prototype.processContent = async function (tiddler, content, encoding, type) {
     if (content === undefined || content == null) {
       throw new Error('Unknown content...')
     }
@@ -101,8 +101,15 @@ IPFS Controller
     if (encoding == null) {
       throw new Error('Unknown encoding...')
     }
+    type = type !== undefined && type !== null && type.trim() !== '' ? type.trim() : null
+    if (type == null) {
+      throw new Error('Unknown type...')
+    }
     var compress = $tw.wiki.getTiddler('$:/isCompressed')
     compress = compress !== undefined ? compress.fields.text === 'yes' : false
+    if (encoding === 'base64' || type === 'image/svg+xml') {
+      compress = false
+    }
     compress = tiddler !== undefined && tiddler.fields._compress !== undefined && tiddler.fields._compress.trim() !== '' ? tiddler.fields._compress.trim() === 'yes' : compress
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
     encrypted = encrypted !== undefined ? encrypted.fields.text === 'yes' : false
@@ -310,6 +317,10 @@ ${ipfsPath}`
 
   IpfsController.prototype.filenamify = function (name, options) {
     return this.ipfsBundle.filenamify(name, options)
+  }
+
+  IpfsController.prototype.getBase = function (base) {
+    return this.ipfsBundle.getBase(base)
   }
 
   IpfsController.prototype.getIpfsBaseUrl = function () {

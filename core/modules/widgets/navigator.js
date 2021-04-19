@@ -604,28 +604,65 @@ Render this widget into the DOM
         exportReport.push('# [[' + tiddlerFields.title + ']]')
       }
     })
-    var content = await $tw.utils.exportTiddlersAsJson(tiddlers, target.fields._export_uri)
+    const exportUri =
+      target.fields._export_uri !== undefined && target.fields._export_uri !== null && target.fields._export_uri.trim() !== '' ? target.fields._export_uri.trim() : null
+    var content = await $tw.utils.exportTiddlersAsJson(tiddlers, exportUri)
     if (content !== null) {
-      content = await $tw.ipfs.processContent(target, content, 'utf8')
+      content = await $tw.ipfs.processContent(target, content, 'utf8', 'application/json')
     }
     if (content !== null) {
       var filename = '/'
+      var incomingName = ''
       if ($tw.utils.getWrappedDirectory()) {
-        filename = `${filename}${$tw.ipfs.filenamify(exportTiddler.fields.title)}`
+        try {
+          var path = null
+          if (exportUri !== null) {
+            const { ipnsCid, normalizedUrl } = await $tw.ipfs.resolveUrl(exportUri, false, false, true)
+            if (ipnsCid !== null) {
+              const pathname = normalizedUrl.pathname.slice(`/ipns/${ipnsCid}`.length)
+              if (pathname !== undefined && pathname !== null && pathname.trim() !== '') {
+                path = pathname.substring(0, pathname.lastIndexOf('/'))
+                if (path !== undefined && path !== null && path.trim() !== '') {
+                  incomingName = pathname.split('/').pop()
+                  if (incomingName !== undefined && incomingName !== null && incomingName.trim() !== '') {
+                    filename = `${path}/${$tw.ipfs.filenamify(incomingName)}`
+                  }
+                }
+              }
+            }
+          }
+          if (filename === '/') {
+            const url = $tw.ipfs.getUrl(target.fields.title, $tw.ipfs.getIpfsBaseUrl())
+            if (path === undefined || path == null || path.trim() === '') {
+              path = url.pathname.substring(0, url.pathname.lastIndexOf('/'))
+            }
+            if (path !== undefined && path !== null && path.trim() !== '') {
+              incomingName = url.pathname.split('/').pop()
+              if (incomingName !== undefined && incomingName !== null && incomingName.trim() !== '') {
+                filename = `${path}/${$tw.ipfs.filenamify(incomingName)}`
+              }
+            }
+          }
+        } catch (error) {
+          // Ignore
+        }
+        if (filename === '/') {
+          filename = `${filename}${$tw.ipfs.filenamify(target.fields.title)}`
+        }
         if (filename.endsWith('.json') === false) {
           filename = `${filename}.json`
         }
       }
-      if (await $tw.utils.exportToIpfs(target, content, ['$:/isExported', '$:/isIpfs'], [], [], '_export_uri', filename)) {
-        // Replace the $:/Export tiddler with an export report
-        this.wiki.addTiddler(
-          new $tw.Tiddler({
-            title: exportTiddler.fields.title,
-            text: exportReport.join('\n'),
-            status: 'complete',
-          })
-        )
-      }
+      // Beware async...
+      $tw.utils.exportToIpfs(target, content, [], '_export_uri', filename, incomingName)
+      // Replace the $:/Export tiddler with an export report
+      this.wiki.addTiddler(
+        new $tw.Tiddler({
+          title: exportTiddler.fields.title,
+          text: exportReport.join('\n'),
+          status: 'complete',
+        })
+      )
       // Navigate to the $:/Export tiddler
       this.addToHistory([event.param])
     }

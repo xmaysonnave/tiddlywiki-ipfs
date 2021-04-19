@@ -14,6 +14,70 @@ IPFS utils
 
   /*eslint no-unused-vars:"off"*/
   const ipfsUtilsName = 'ipfs-utils'
+  const ipfsKeyword = 'ipfs'
+  const ipnsKeyword = 'ipns'
+
+  /*
+   * https://tiddlywiki.com/#TiddlerFields
+   * $:/core/modules/server/routes/get-tiddler.js
+   * TODO: expose it as Tiddler ??
+   */
+  const reservedFields = [
+    'bag',
+    'caption',
+    'class',
+    'color',
+    'description',
+    'created',
+    'creator',
+    'fields',
+    'footer',
+    'hide-body',
+    'icon',
+    '_is_skinny',
+    'library',
+    'list',
+    'list-after',
+    'list-before',
+    'modified',
+    'modifier',
+    'name',
+    'plugin-priority',
+    'plugin-type',
+    'permissions',
+    'recipe',
+    'revision',
+    // "source",
+    'subtitle',
+    'tags',
+    'text',
+    // "url",
+    'throttle.refresh',
+    'toc-link',
+    'title',
+    'type',
+  ]
+
+  exports.isTiddlyWikiReservedWord = function (value) {
+    return reservedFields.indexOf(value) !== -1
+  }
+
+  /*eslint no-unused-vars: "off"*/
+  const ipfsReservedFields = [
+    '_canonical_uri',
+    '_canonical_ipfs_uri',
+    '_canonical_ipns_uri',
+    '_export_uri',
+    '_export_ipfs_uri',
+    '_export_ipns_uri',
+    '_import_uri',
+    '_import_ipfs_uri',
+    '_import_ipns_uri',
+  ]
+
+  exports.isIpfsReservedWord = function (value) {
+    return ipfsReservedFields.indexOf(value) !== -1
+  }
 
   /**
    * $:/core/modules/utils/logger.js
@@ -213,13 +277,181 @@ IPFS utils
     return null
   }
 
-  exports.exportToIpfs = async function (target, content, addTags, removeTags, fields, field, ipfsPath) {
+  exports.processUpdatedTiddler = async function (tiddler, oldTiddler, updatedTiddler) {
+    var canonicalUri = null
+    var exportUri = null
+    var importUri = null
+    var canonicalIpfsCid = null
+    var canonicalIpnsCid = null
+    var exportIpfsCid = null
+    var exportIpnsCid = null
+    var importIpfsCid = null
+    var importIpnsCid = null
+    var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
+    const { type, info } = $tw.utils.getContentType(tiddler)
+    // Process
+    for (var field in tiddler.fields) {
+      // Not a reserved keyword
+      if ($tw.utils.isTiddlyWikiReservedWord(field)) {
+        continue
+      }
+      // Process
+      var ipfsCid = null
+      var ipnsCid = null
+      var resolvedUrl = null
+      var oldResolvedUrl = null
+      var value = tiddler.getFieldString(field)
+      try {
+        var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(value, false, false, true)
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
+        $tw.utils.alert(ipfsUtilsName, error.message)
+        return tiddler
+      }
+      // Store
+      resolvedUrl = resolvedUrl !== undefined && resolvedUrl !== null && resolvedUrl.toString().trim() !== '' ? resolvedUrl.toString().trim() : null
+      if (field === '_canonical_uri') {
+        canonicalUri = resolvedUrl
+        canonicalIpfsCid = ipfsCid
+        canonicalIpnsCid = ipnsCid
+      }
+      if (field === '_import_uri') {
+        importUri = resolvedUrl
+        importIpfsCid = ipfsCid
+        importIpnsCid = ipnsCid
+      }
+      if (field === '_export_uri') {
+        exportUri = resolvedUrl
+        exportIpfsCid = ipfsCid
+        exportIpnsCid = ipnsCid
+      }
+      // Previous values if any
+      var oldValue = null
+      if (oldTiddler !== undefined && oldTiddler !== null) {
+        oldValue = oldTiddler.getFieldString(field)
+      }
+      // Process new or updated
+      if (value === oldValue) {
+        continue
+      }
+      try {
+        var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
+      } catch (error) {
+        // We cannot resolve the previous value
+        $tw.ipfs.getLogger().error(error)
+        $tw.utils.alert(ipfsUtilsName, error.message)
+      }
+      $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+      $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
+    }
+    // Tag management
+    var addTags = []
+    var removeTags = []
+    if (canonicalUri == null && exportUri == null && importUri == null) {
+      removeTags.push('$:/isExported', '$:/isImported', '$:/isIpfs')
+    }
+    if (canonicalIpfsCid == null && canonicalIpnsCid == null && exportIpfsCid == null && exportIpnsCid == null && importIpfsCid == null && importIpnsCid == null) {
+      if (removeTags.indexOf('$:/isIpfs') === -1) {
+        removeTags.push('$:/isIpfs')
+      }
+    } else {
+      addTags.push('$:/isIpfs')
+    }
+    if (canonicalUri !== null) {
+      // Attachment
+      if (info.encoding === 'base64' || type === 'image/svg+xml') {
+        if (addTags.indexOf('$:/isAttachment') === -1) {
+          addTags.push('$:/isAttachment')
+        }
+        if (removeTags.indexOf('$:/isEmbedded') === -1) {
+          removeTags.push('$:/isEmbedded')
+        }
+        if (importUri !== null) {
+          if (addTags.indexOf('$:/isImported') === -1) {
+            addTags.push('$:/isImported')
+          }
+        } else {
+          if (removeTags.indexOf('$:/isImported') === -1) {
+            removeTags.push('$:/isImported')
+          }
+        }
+        // Others
+      } else {
+        if (removeTags.indexOf('$:/isAttachment') === -1) {
+          removeTags.push('$:/isAttachment')
+        }
+        if (removeTags.indexOf('$:/isEmbedded') === -1) {
+          removeTags.push('$:/isEmbedded')
+        }
+        if (addTags.indexOf('$:/isImported') === -1) {
+          addTags.push('$:/isImported')
+        }
+      }
+    } else {
+      // Attachment
+      if (info.encoding === 'base64' || type === 'image/svg+xml') {
+        if (addTags.indexOf('$:/isAttachment') === -1) {
+          addTags.push('$:/isAttachment')
+        }
+        if (addTags.indexOf('$:/isEmbedded') === -1) {
+          addTags.push('$:/isEmbedded')
+        }
+        // Others
+      } else {
+        if (removeTags.indexOf('$:/isAttachment') === -1) {
+          removeTags.push('$:/isAttachment')
+        }
+        if (removeTags.indexOf('$:/isEmbedded') === -1) {
+          removeTags.push('$:/isEmbedded')
+        }
+      }
+      if (importUri !== null) {
+        if (addTags.indexOf('$:/isImported') === -1) {
+          addTags.push('$:/isImported')
+        }
+      } else {
+        if (removeTags.indexOf('$:/isImported') === -1) {
+          removeTags.push('$:/isImported')
+        }
+      }
+    }
+    if (exportUri !== null) {
+      if (addTags.indexOf('$:/isExported') === -1) {
+        addTags.push('$:/isExported')
+      }
+    } else {
+      if (removeTags.indexOf('$:/isExported') === -1) {
+        removeTags.push('$:/isExported')
+      }
+    }
+    if (addTags.length > 0 || removeTags.length > 0) {
+      updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: updatedTiddler,
+        addTags: addTags,
+        removeTags: removeTags,
+      })
+    }
+    return updatedTiddler
+  }
+
+  exports.exportToIpfs = async function (tiddler, content, fields, field, ipfsPath, incomingName) {
     // Check
+    if (tiddler === undefined || tiddler == null) {
+      return false
+    }
     if (content === undefined || content == null) {
       return false
     }
     fields = fields !== undefined && fields !== null ? fields : []
     ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '' ? ipfsPath.trim() : '/'
+    incomingName = incomingName !== undefined && incomingName !== null && incomingName.trim() !== '' ? incomingName.trim() : ''
+    if (tiddler.fields[field] !== undefined && tiddler.fields[field].endsWith('/')) {
+      incomingName = `${tiddler.fields[field]}${incomingName}`
+    } else if (tiddler.fields[field] !== undefined) {
+      incomingName = `${tiddler.fields[field]}/${incomingName}`
+    } else {
+      incomingName = `/${incomingName}`
+    }
     var account = null
     var addedCid = null
     var addedPath = ''
@@ -229,9 +461,8 @@ IPFS utils
     var ipnsKey = null
     var normalizedUrl = null
     var web3 = null
-    const ipfsKeyword = 'ipfs'
     try {
-      var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(target.fields[field], true, true, true)
+      var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl } = await $tw.ipfs.resolveUrl(tiddler.fields[field], true, true, true)
       if (ipnsCid == null && normalizedUrl !== null && (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link'))) {
         var ensDomain = normalizedUrl.hostname
         if (normalizedUrl.hostname.endsWith('.eth.link')) {
@@ -262,14 +493,6 @@ IPFS utils
       return false
     }
     if (ipnsCid !== null) {
-      fields.push({ key: `${field}_ipfs`, value: addedUri })
-      var updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: target,
-        addTags: addTags !== undefined && addTags !== null ? addTags : [],
-        removeTags: removeTags !== undefined && removeTags !== null ? removeTags : [],
-        fields: fields,
-      })
-      $tw.wiki.addTiddler(updatedTiddler)
       if (ipnsKey !== null) {
         $tw.utils.alert(ipfsUtilsName, `Publishing IPNS key: ${ipnsKey}`)
         $tw.ipfs
@@ -281,10 +504,10 @@ IPFS utils
                 $tw.utils.alert(ipfsUtilsName, `Published IPNS key: ${ipnsKey}`)
                 if ($tw.utils.getIpfsUnpin()) {
                   $tw.ipfs
-                    .unpinFromIpfs(`/ipfs/${ipfsCid}`)
+                    .unpinFromIpfs(`/${ipfsKeyword}/${ipfsCid}`)
                     .then(unpin => {
                       if (unpin !== undefined && unpin !== null) {
-                        $tw.ipfs.removeFromPinUnpin(`/ipfs/${ipfsCid}`)
+                        $tw.ipfs.removeFromPinUnpin(`/${ipfsKeyword}/${ipfsCid}`)
                       }
                     })
                     .catch(error => {
@@ -292,27 +515,48 @@ IPFS utils
                       $tw.utils.alert(ipfsUtilsName, error.message)
                     })
                 }
+                // Update tiddler
+                fields.push({ key: field, value: incomingName })
+                const updatedTiddler = $tw.utils.updateTiddler({
+                  tiddler: tiddler,
+                  fields: fields,
+                })
+                $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+                  $tw.wiki.addTiddler(updatedTiddler)
+                })
               })
               .catch(error => {
                 $tw.ipfs.getLogger().error(error)
                 $tw.utils.alert(ipfsUtilsName, error.message)
                 $tw.ipfs.addToUnpin(addedPath)
+                // Update tiddler
+                fields.push({ key: field, value: incomingName })
+                fields.push({ key: `${field}_ipfs`, value: addedUri })
+                const updatedTiddler = $tw.utils.updateTiddler({
+                  tiddler: tiddler,
+                  fields: fields,
+                })
+                $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+                  $tw.wiki.addTiddler(updatedTiddler)
+                })
               })
           })
           .catch(error => {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(ipfsUtilsName, error.message)
+            // Update tiddler
+            fields.push({ key: field, value: incomingName })
+            fields.push({ key: `${field}_ipfs`, value: addedUri })
+            const updatedTiddler = $tw.utils.updateTiddler({
+              tiddler: tiddler,
+              fields: fields,
+            })
+            $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+              $tw.wiki.addTiddler(updatedTiddler)
+            })
           })
       }
     } else if (normalizedUrl !== null && normalizedUrl.hostname.endsWith('.eth.link')) {
-      fields.push({ key: `${field}_ipfs`, value: addedUri })
-      var updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: target,
-        addTags: addTags !== undefined && addTags !== null ? addTags : [],
-        removeTags: removeTags !== undefined && removeTags !== null ? removeTags : [],
-        fields: fields,
-      })
-      $tw.wiki.addTiddler(updatedTiddler)
       $tw.ipfs
         .pinToIpfs(addedPath)
         .then(pin => {
@@ -332,6 +576,15 @@ IPFS utils
                     $tw.utils.alert(ipfsUtilsName, error.message)
                   })
               }
+              // Update tiddler
+              fields.push({ key: field, value: incomingName })
+              const updatedTiddler = $tw.utils.updateTiddler({
+                tiddler: tiddler,
+                fields: fields,
+              })
+              $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+                $tw.wiki.addTiddler(updatedTiddler)
+              })
             })
             .catch(error => {
               if (error.name !== 'OwnerError' && error.name !== 'RejectedUserRequest' && error.name !== 'UnauthorizedUserAccount') {
@@ -339,21 +592,45 @@ IPFS utils
               }
               $tw.utils.alert(ipfsUtilsName, error.message)
               $tw.ipfs.addToUnpin(addedPath)
+              // Update tiddler
+              fields.push({ key: field, value: incomingName })
+              fields.push({ key: `${field}_ipfs`, value: addedUri })
+              const updatedTiddler = $tw.utils.updateTiddler({
+                tiddler: tiddler,
+                fields: fields,
+              })
+              $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+                $tw.wiki.addTiddler(updatedTiddler)
+              })
             })
         })
         .catch(error => {
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(ipfsUtilsName, error.message)
+          // Update tiddler
+          fields.push({ key: field, value: incomingName })
+          fields.push({ key: `${field}_ipfs`, value: addedUri })
+          var updatedTiddler = $tw.utils.updateTiddler({
+            tiddler: tiddler,
+            fields: fields,
+          })
+          $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+            $tw.wiki.addTiddler(updatedTiddler)
+          })
         })
     } else {
-      fields.push({ key: field, value: addedUri })
-      var updatedTiddler = $tw.utils.updateTiddler({
-        tiddler: target,
-        addTags: addTags !== undefined && addTags !== null ? addTags : [],
-        removeTags: removeTags !== undefined && removeTags !== null ? removeTags : [],
+      if (field === '_canonical_uri' && tiddler.fields._canonical_uri !== undefined && tiddler.fields._canonical_uri !== null && tiddler.fields._canonical_uri.trim() !== '') {
+        fields.push({ key: field, value: incomingName })
+      } else {
+        fields.push({ key: field, value: addedUri })
+      }
+      const updatedTiddler = $tw.utils.updateTiddler({
+        tiddler: tiddler,
         fields: fields,
       })
-      $tw.wiki.addTiddler(updatedTiddler)
+      $tw.utils.processUpdatedTiddler(updatedTiddler).then(updatedTiddler => {
+        $tw.wiki.addTiddler(updatedTiddler)
+      })
     }
     return true
   }
@@ -377,8 +654,6 @@ IPFS utils
     var json
     var data = []
     var spaces = spaces !== undefined && spaces !== null ? spaces : $tw.config.preferences.jsonSpaces
-    const ipfsKeyword = 'ipfs'
-    const ipnsKeyword = 'ipns'
     // Process Tiddlers
     if (tiddlers) {
       for (var t = 0; t < tiddlers.length; t++) {
@@ -438,9 +713,9 @@ IPFS utils
     return json
   }
 
-  exports.exportTiddler = async function (target, child) {
+  exports.exportTiddler = async function (tiddler, child) {
     // Check
-    if (target === undefined || target == null) {
+    if (tiddler === undefined || tiddler == null) {
       const error = new Error('Unknown Tiddler...')
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(ipfsUtilsName, error.message)
@@ -449,9 +724,9 @@ IPFS utils
         extension: null,
       }
     }
-    const title = target.fields.title
+    const title = tiddler.fields.title
     // Filter
-    var exportFilter = `[[${target.fields.title}]]`
+    var exportFilter = `[[${tiddler.fields.title}]]`
     // Child filters
     if (child) {
       // Links
@@ -470,13 +745,14 @@ IPFS utils
     }
     var content = null
     var extension = null
+    var type = null
     if (child || $tw.utils.getIpfsExport() === 'json') {
-      content = await $tw.utils.exportTiddlersAsJson($tw.wiki.filterTiddlers(exportFilter), target.fields._export_uri)
+      content = await $tw.utils.exportTiddlersAsJson($tw.wiki.filterTiddlers(exportFilter), tiddler.fields._export_uri)
       if (content !== null) {
         const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
         if (navigator) {
           navigator.dispatchEvent({
-            target: target.fields.title,
+            target: tiddler.fields.title,
             type: 'tm-ipfs-export-tiddlers',
             param: content,
           })
@@ -488,6 +764,7 @@ IPFS utils
       }
     } else if ($tw.utils.getIpfsExport() === 'static') {
       extension = '.html'
+      type = 'text/html'
       const options = {
         downloadType: 'text/plain',
         method: 'download',
@@ -511,7 +788,7 @@ IPFS utils
     }
     if (content !== undefined && content !== null) {
       return {
-        content: await $tw.ipfs.processContent(target, content, 'utf8'),
+        content: await $tw.ipfs.processContent(tiddler, content, 'utf8', type != null ? type : 'text/plain'),
         extension: extension,
       }
     }

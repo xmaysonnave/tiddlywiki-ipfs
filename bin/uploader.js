@@ -247,7 +247,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     } else if (value.path === faviconFileName) {
       faviconCid = key
       faviconSize = value.size
-    } else {
+    } else if (value.path === sourceFileName || value.path === 'index.html') {
       sourceCid = key
       sourceSize = value.size
     }
