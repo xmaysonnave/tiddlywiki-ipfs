@@ -1,0 +1,9 @@
+title: $:/ipfs/documentation.zlib-build
+tags: $:/ipfs/documentation
+build: 210419489
+name: $:/ipfs/documentation.zlib
+sourceSize: 23631
+sourceUri: ipfs://bafybeifhxse7cidg7wuerz2blw7ruh2g7vyfld4j72mgxqn2in7vvxrm5u/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210419489.json
+version: 0.4.0-beta-tw-v5.1.23+build-210419489
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

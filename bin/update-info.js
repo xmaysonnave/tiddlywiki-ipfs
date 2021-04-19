@@ -27,7 +27,7 @@ function main () {
 
     // boot
     var build = null
-    var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js-build.json'
+    var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js.json-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }
@@ -49,7 +49,7 @@ function main () {
 
     // library
     var build = null
-    var path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-modules.js-build.json'
+    var path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }
@@ -71,7 +71,7 @@ function main () {
 
     // plugin
     var build = null
-    var path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-build.json'
+    var path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.json-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }

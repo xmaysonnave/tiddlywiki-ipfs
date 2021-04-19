@@ -1,0 +1,9 @@
+title: $:/plugins/ipfs.json-build
+tags: $:/ipfs/documentation
+build: 210419488
+name: $:/plugins/ipfs.json
+sourceSize: 1111965
+sourceUri: ipfs://bafybeidexnbpnebkpc5eawbivpn35xanf7g6uzddhxrupfxjrlmizlhlm4/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210419488.json
+version: 0.4.0-beta-tw-v5.1.23+build-210419488
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

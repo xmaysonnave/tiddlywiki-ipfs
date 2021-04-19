@@ -8,7 +8,7 @@
         "no",
       "--render",
         "[tag[$:/ipfs/library/modules]]",
-        "[filenamify[]addprefix[./tiddlywiki-ipfs/library/]addsuffix[-%BUILD_LIBRARY_VERSION%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/library/]addsuffix[.json-%BUILD_LIBRARY_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ],

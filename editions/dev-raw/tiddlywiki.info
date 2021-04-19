@@ -16,13 +16,13 @@
   "build": {
 		"dev": [
       "--import",
-        "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js-%BUILD_LIBRARY_VERSION%.json",
+        "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
-        "./production/tiddlywiki-ipfs/boot/$_boot_boot.js-%BUILD_BOOT_VERSION%.json",
+        "./production/tiddlywiki-ipfs/boot/$_boot_boot.js.json-%BUILD_BOOT_VERSION%.json",
         "application/json",
       "--import",
-        "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.js-%BUILD_PLUGIN_VERSION%.json",
+        "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.json-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation-%BUILD_DOCUMENTATION_VERSION%.json",

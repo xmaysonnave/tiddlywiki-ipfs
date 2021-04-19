@@ -8,10 +8,9 @@ const semver = require('../../semver.js')
 async function main () {
   try {
     const name = '$:/ipfs/documentation'
-    const extension = 'json'
     const dir = 'tiddlywiki-ipfs/documentation'
     const env = 'DOCUMENTATION'
-    const { build, version } = await semver(name, extension, dir, env)
+    const { build, version } = await semver(name, 'json', dir, env)
     // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
     var files = fs
       .readdirSync('./build/tiddlers', { withFileTypes: true })
@@ -35,7 +34,7 @@ async function main () {
         })
       }
     }
-    await semver(`${name}.zlib`, extension, dir, env, version)
+    await semver(`${name}.zlib`, 'json', dir, env, version)
     console.log('***')
   } catch (error) {
     console.error(error)

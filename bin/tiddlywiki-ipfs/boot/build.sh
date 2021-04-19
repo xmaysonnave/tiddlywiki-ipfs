@@ -48,11 +48,9 @@ rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
-cp ./build/output/tiddlywiki-ipfs/boot/\$_boot_boot.js ./build/tiddlers/\$_boot_boot.js || exit 1
-
+cp ./build/output/tiddlywiki-ipfs/boot/\$_boot_boot.js ./build/tiddlers || exit 1
 # meta
-cp ./core/boot/\$_boot_boot.js.meta ./build/tiddlers/\$_boot_boot.js.meta || exit 1
-
+cp ./core/boot/\$_boot_boot.js.meta ./build/tiddlers || exit 1
 # boot
 cp ./editions/boot/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
@@ -84,8 +82,15 @@ yarn tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
-  --name=$:/boot/boot.js \
+  --name=$:/boot/boot.js.json \
   --extension=json \
+  --dir=tiddlywiki-ipfs/boot \
+  --tags=$:/ipfs/core "$@" || exit 1
+
+# upload to ipfs
+./bin/cli-uploader.sh \
+  --name=$:/boot/boot.js \
+  --extension=js \
   --dir=tiddlywiki-ipfs/boot \
   --tags=$:/ipfs/core "$@" || exit 1
 

@@ -1,9 +1,0 @@
-title: $:/ipfs/documentation-build
-tags: $:/ipfs/documentation
-build: 210419386
-name: $:/ipfs/documentation
-sourceSize: 78241
-sourceUri: ipfs://bafybeiaaujarr7dpeod32zr6bmefkmzpmxqqcxdidnbulbe5l3ercr26ay/$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210419386.json
-version: 0.4.0-beta-tw-v5.1.23+build-210419386
-
-<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

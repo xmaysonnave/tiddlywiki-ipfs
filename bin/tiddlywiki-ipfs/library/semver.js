@@ -2,16 +2,18 @@
 'use strict'
 
 const fs = require('fs')
+const filenamify = require('filenamify')
 const replace = require('replace')
 const semver = require('../../semver.js')
 
 async function main () {
   try {
-    const name = '$:/library/ipfs-modules.js'
-    const extension = 'json'
+    const name = '$:/library/ipfs-modules'
     const dir = 'tiddlywiki-ipfs/library'
     const env = 'LIBRARY'
-    const { build, version } = await semver(name, extension, dir, env)
+    const normalizedName = filenamify(name, { replacement: '_' })
+    const { build, version } = await semver(`${name}.js.json`, 'json', dir, env)
+    await fs.copyFileSync(`./build/output/${dir}/${normalizedName}.js`, `./production/${dir}/${normalizedName}.js-${version}.js`)
     // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
     var files = fs
       .readdirSync('./build/tiddlers', { withFileTypes: true })
@@ -35,7 +37,8 @@ async function main () {
         })
       }
     }
-    await semver(`${name}.zlib`, extension, dir, env, version)
+    await semver(`${name}.js`, 'js', dir, env, version)
+    await semver(`${name}.js.zlib`, 'json', dir, env, version)
     console.log('***')
   } catch (error) {
     console.error(error)

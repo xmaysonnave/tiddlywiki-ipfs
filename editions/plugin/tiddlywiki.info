@@ -8,7 +8,7 @@
         "no",
       "--render",
         "[tag[$:/ipfs/core]]",
-        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.js-%BUILD_PLUGIN_VERSION%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.json-%BUILD_PLUGIN_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ],
@@ -17,7 +17,7 @@
         "yes",
       "--render",
         "[tag[$:/ipfs/core]]",
-        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.js.zlib-%BUILD_PLUGIN_VERSION%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/plugin/]addsuffix[.zlib-%BUILD_PLUGIN_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

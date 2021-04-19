@@ -1,0 +1,9 @@
+title: $:/boot/boot.js-build
+tags: $:/ipfs/core
+build: 210419457
+name: $:/boot/boot.js
+sourceSize: 121709
+sourceUri: ipfs://bafybeicx7enf25upvbibhnghjesd7g3ui6cplg3z6mztzspc2mkahazo5m/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210419457.js
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210419457
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

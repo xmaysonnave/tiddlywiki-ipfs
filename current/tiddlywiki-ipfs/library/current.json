@@ -1,28 +1,38 @@
 {
-  "build": "210412312",
+  "build": "210419457",
   "content": [
     {
-      "title": "$_library_ipfs-modules.js-1.0.0+pre-release-210412312",
+      "title": "$_library_ipfs-modules.js.json-1.0.0+pre-release-210419457",
       "tags": "$:/ipfs/core",
-      "name": "$:/library/ipfs-modules.js",
+      "name": "$:/library/ipfs-modules.js.json",
       "rawHash": "bcfc0bbf57e9fde75c11cb877fccac1ebe87a4d994c219ed01be4490b98c6521",
       "sourceSize": 133006,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeid3cynvwre5oyws5sbiuvj73cjyfirpkexqeo2k26i2kxs2cosy4u/$_library_ipfs-modules.js-1.0.0+pre-release-210412312.json",
-      "tidSize": 467,
-      "tidUri": "https://bluelight.link/ipfs/bafybeifkrklaygbjltktiixsdkkymxgpb3r4mn2jk3e6eakpbddluzdcpu/$_library_ipfs-modules.js-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeic3tx5e5fmweyhrxp7yzylthdab7clqzuvjg6tl5rd5jdf5fmpvyu/$_library_ipfs-modules.js.json-1.0.0+pre-release-210419457.json",
+      "tidSize": 492,
+      "tidUri": "https://bluelight.link/ipfs/bafybeihbwa6ga5idfkp3p7dbmxdrstyc6yl5igrwrleupy7ofadeia6skm/$_library_ipfs-modules.js.json.json-build.tid"
     },
     {
-      "title": "$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210412312",
+      "title": "$_library_ipfs-modules.js-1.0.0+pre-release-210419457",
+      "tags": "$:/ipfs/core",
+      "name": "$:/library/ipfs-modules.js",
+      "rawHash": "637e215e39a777016e02c998c9783f38c33b25ea3c5484d24893d951e59977ce",
+      "sourceSize": 129974,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeicqd35o3lhwrryxuwee5caum7ocfimwag4sb4rqg3b7lzjnfas3n4/$_library_ipfs-modules.js-1.0.0+pre-release-210419457.js",
+      "tidSize": 468,
+      "tidUri": "https://bluelight.link/ipfs/bafybeifxe32phavkl44wsnkgku6kinibjejdouj6r6ym7zddjwj7ry6jqy/$_library_ipfs-modules.js.js-build.tid"
+    },
+    {
+      "title": "$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210419457",
       "tags": "$:/ipfs/core",
       "name": "$:/library/ipfs-modules.js.zlib",
       "rawHash": "64bfa395ba2218fb3e7ce88b0a4de6848d9f9b517ce6c469d379339775bedcb9",
       "sourceSize": 52571,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidymfgye5ovm32dodcihodh5tjcwvrork7zbxjmblndxlq6jxkdzm/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210412312.json",
-      "tidSize": 486,
-      "tidUri": "https://bluelight.link/ipfs/bafybeibbyn6q4yybe22qyxykpj5iquo6vnyegq3o7g2uvzsncmefgmlf2y/$_library_ipfs-modules.js.zlib-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigeo6k3vurz2imac3lotnzwdgerxkxg4azf3awqoehwsfltygy7zu/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210419457.json",
+      "tidSize": 491,
+      "tidUri": "https://bluelight.link/ipfs/bafybeidfwrnf3mei7nmgr3mcjtlfjds5hf4mw5nno427qfaxvol4cu3nhi/$_library_ipfs-modules.js.zlib.json-build.tid"
     }
   ],
   "rawSemver": "1.0.0+pre-release",
-  "version": "1.0.0+pre-release-210412312",
-  "buildUri": "https://bluelight.link/ipfs/bafybeic6biywq2hdism42yclnhqjflapze2vkmowochacxlcmludqxqqlm/210412312/"
+  "version": "1.0.0+pre-release-210419457",
+  "buildUri": "https://bluelight.link/ipfs/bafybeibkgerwv5isoikqlnule6mxxqjwi5j35zhybaggwdpqjd4ovlxcnm/210419457/"
 }

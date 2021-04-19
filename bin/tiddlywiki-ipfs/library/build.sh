@@ -51,9 +51,9 @@ rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
-cp ./build/output/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js ./build/tiddlers/\$_library_ipfs-modules.js || exit 1
-cp ./core/library/\$_library_ipfs-modules.js.meta ./build/tiddlers/\$_library_ipfs-modules.js.meta || exit 1
-
+cp ./build/output/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js ./build/tiddlers || exit 1
+# meta
+cp ./core/library/\$_library_ipfs-modules.js.meta ./build/tiddlers || exit 1
 # library
 cp ./editions/library/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
@@ -85,8 +85,15 @@ yarn tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
-  --name=$:/library/ipfs-modules.js \
+  --name=$:/library/ipfs-modules.js.json \
   --extension=json \
+  --dir=tiddlywiki-ipfs/library \
+  --tags=$:/ipfs/core "$@" || exit 1
+
+# upload to ipfs
+./bin/cli-uploader.sh \
+  --name=$:/library/ipfs-modules.js \
+  --extension=js \
   --dir=tiddlywiki-ipfs/library \
   --tags=$:/ipfs/core "$@" || exit 1
 

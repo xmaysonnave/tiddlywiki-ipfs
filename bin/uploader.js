@@ -344,11 +344,11 @@ version: ${build.version}
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>`
   // Save and upload tiddler
-  fs.writeFileSync(`./production/${dir}/${normalizedName}-build.tid`, tid, 'utf8')
-  const loaded = fs.readFileSync(`./production/${dir}/${normalizedName}-build.tid`)
+  fs.writeFileSync(`./production/${dir}/${normalizedName}.${extension}-build.tid`, tid, 'utf8')
+  const loaded = fs.readFileSync(`./production/${dir}/${normalizedName}.${extension}-build.tid`)
   var added = await api.add(
     {
-      path: `/${normalizedName}-build.tid`,
+      path: `/${normalizedName}.${extension}-build.tid`,
       content: loaded,
     },
     {
@@ -372,15 +372,15 @@ version: ${build.version}
     }
   }
   console.log(`*** Added tiddler ***
- ipfs://${added.cid}/${normalizedName}-build.tid`)
+ ipfs://${added.cid}/${normalizedName}.${extension}-build.tid`)
   // Update node
   node.tidSize = added.size
-  node.tidUri = `${publicGateway}/ipfs/${added.cid}/${normalizedName}-build.tid`
+  node.tidUri = `${publicGateway}/ipfs/${added.cid}/${normalizedName}.${extension}-build.tid`
   // Save current
   fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
   // Load
   if (load) {
-    var uri = `${gateway}/ipfs/${added.cid}/${normalizedName}-build.tid`
+    var uri = `${gateway}/ipfs/${added.cid}/${normalizedName}.${extension}-build.tid`
     console.log(`*** Fetch tiddler ***
  ${uri}`)
     await loadFromIpfs(uri)

@@ -1,0 +1,11 @@
+title: empty-build
+tags: $:/ipfs/editions
+build: 210419494
+faviconSize: 4297
+faviconUri: ipfs://bafybeier242azprt6x3cbtt2jz3fxafiqqtiizerrs5okooc5tmeujd2ci/favicon.ico
+name: empty
+sourceSize: 1052530
+sourceUri: ipfs://bafybeier242azprt6x3cbtt2jz3fxafiqqtiizerrs5okooc5tmeujd2ci/
+version: 0.4.0-beta-tw-v5.1.23+build-210419494
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>
