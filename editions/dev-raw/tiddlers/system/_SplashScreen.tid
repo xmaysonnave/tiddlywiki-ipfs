@@ -1,4 +1,6 @@
 title: $:/SplashScreen
+created: 20180927082601825
+modified: 20210419083036494
 tags: $:/ipfs/editions/dev $:/tags/RawMarkupWikified/TopBody
 type: text/vnd.tiddlywiki
 
@@ -98,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </style>
 
 <div class="tc-splash-text">
-  <img src="data:image/jpeg;base64,{{$:/ipfs/image/bluelight||$:/core/templates/plain-text-tiddler}}" width="100"/>
+  <img src="https://bafybeidagqgowbz2bjbcy54ok4g6tecnnvfrqjz7zlb74czbnalbm7ongm.ipfs.dweb.link/ipfs/core/images/bluelight.png" loading="eager"/>
 </div>
 
 <div class="tc-splash-text">

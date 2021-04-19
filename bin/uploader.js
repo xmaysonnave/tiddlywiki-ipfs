@@ -4,7 +4,6 @@
 const beautify = require('json-beautify')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
-const filenamify = require('filenamify')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
@@ -72,7 +71,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (name == null) {
     throw new Error('Unknown name...')
   }
-  const normalizedName = filenamify(name, { replacement: '_' })
+  const normalizedName = ipfsBundle.filenamify(name)
   extension = extension !== undefined && extension !== null && extension.trim() !== '' ? extension.trim() : null
   if (extension == null) {
     throw new Error('Unknown file extension...')

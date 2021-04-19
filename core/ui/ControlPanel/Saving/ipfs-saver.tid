@@ -99,7 +99,7 @@ caption: {{$:/language/ControlPanel/Ipfs/Saver/Caption}}
 <td style="width:10%">
 <$button message="tm-ens-manager-open" tooltip={{$:/language/Buttons/Ens/Manager/Open/Hint}} aria-label={{$:/language/Buttons/Ens/Manager/Open/Caption}} class="tc-btn-invisible tc-ipfs-action">
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/ipfs/image/ens}}
+{{$:/ipfs/core/images/ens}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text"><$text text={{$:/language/Buttons/Ens/Manager/Open/Caption}}/></span>
@@ -191,7 +191,7 @@ caption: {{$:/language/ControlPanel/Ipfs/Saver/Caption}}
 <td style="width:10%">
 <$button message="tm-ipns-publish-to-ens" tooltip={{$:/language/Buttons/Ipns/Publish/To/Ens/Hint}} aria-label={{$:/language/Buttons/Ipns/Publish/To/Ens/Caption}} class="tc-btn-invisible tc-ipfs-action">
 <$list filter="[<tv-config-toolbar-icons>match[yes]]">
-{{$:/ipfs/image/ens}}
+{{$:/ipfs/core/images/ens}}
 </$list>
 <$list filter="[<tv-config-toolbar-text>match[yes]]">
 <span class="tc-btn-text"><$text text={{$:/language/Buttons/Ipns/Publish/To/Ens/Caption}}/></span>

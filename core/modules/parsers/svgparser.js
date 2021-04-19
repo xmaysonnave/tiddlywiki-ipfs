@@ -16,7 +16,7 @@ The image parser parses an image into an embeddable HTML element
   const name = 'ipfs-svgparser'
 
   var SvgParser = function (type, text, options) {
-    var value = 'data:image/svg+xml,'
+    var value = 'data:image/svg+xml;utf8,'
     var element = {
       type: 'element',
       tag: 'img',
@@ -39,7 +39,7 @@ The image parser parses an image into an embeddable HTML element
                   if (data) {
                     element.attributes.src = {
                       type: 'string',
-                      value: value + encodeURIComponent(data),
+                      value: `${value}${encodeURIComponent(data)}`,
                     }
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
@@ -57,7 +57,7 @@ The image parser parses an image into an embeddable HTML element
       } else if (text !== undefined && text !== null) {
         element.attributes.src = {
           type: 'string',
-          value: value + encodeURIComponent(text),
+          value: `${value}${encodeURIComponent(text)}`,
         }
       }
     }

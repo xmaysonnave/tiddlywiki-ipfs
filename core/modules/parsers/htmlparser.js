@@ -33,7 +33,7 @@ The HTML parser displays text as raw HTML
                 .loadToUtf8(resolvedUrl, password)
                 .then(data => {
                   if (data) {
-                    src = value + encodeURIComponent(data)
+                    src = `${value}${encodeURIComponent(data)}`
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
                   }
@@ -48,7 +48,7 @@ The HTML parser displays text as raw HTML
             $tw.ipfs.getLogger().error(error)
           })
       } else if (text !== undefined && text !== null) {
-        src = value + encodeURIComponent(text)
+        src = `${value}${encodeURIComponent(text)}`
       }
     }
     this.tree = [

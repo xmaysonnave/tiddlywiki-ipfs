@@ -1,9 +1,9 @@
 title: $:/plugins/ipfs.js.zlib-build
 tags: $:/ipfs/documentation
-build: 210419319
+build: 210419386
 name: $:/plugins/ipfs.js.zlib
-sourceSize: 354551
-sourceUri: ipfs://bafybeifj6rc4d2rvfws6th2mq2wm6q7b25kc2vkbbxea3r6h5q6s5qn6ta/$_plugins_ipfs.js.zlib-0.4.0-beta-tw-v5.1.23+build-210419319.json
-version: 0.4.0-beta-tw-v5.1.23+build-210419319
+sourceSize: 283671
+sourceUri: ipfs://bafybeidbmqmpvbhbcnewfbhqxso3x2zg7pjmadrmkjeixsx4p4p3a4tuem/$_plugins_ipfs.js.zlib-0.4.0-beta-tw-v5.1.23+build-210419386.json
+version: 0.4.0-beta-tw-v5.1.23+build-210419386
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -287,20 +287,26 @@ IPFS utils
     var exportIpnsCid = null
     var importIpfsCid = null
     var importIpnsCid = null
+    var isIpfs = false
     var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
     const { type, info } = $tw.utils.getContentType(tiddler)
-    // Process
+    // Process fields
     for (var field in tiddler.fields) {
-      // Not a reserved keyword
-      if ($tw.utils.isTiddlyWikiReservedWord(field)) {
+      var value = tiddler.getFieldString(field)
+      // Previous values if any
+      var oldValue = null
+      var oldResolvedUrl = null
+      if (oldTiddler !== undefined && oldTiddler !== null) {
+        oldValue = oldTiddler.getFieldString(field)
+      }
+      // Process new or updated
+      if (value === oldValue) {
         continue
       }
-      // Process
+      // Resolve value
       var ipfsCid = null
       var ipnsCid = null
       var resolvedUrl = null
-      var oldResolvedUrl = null
-      var value = tiddler.getFieldString(field)
       try {
         var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(value, false, false, true)
       } catch (error) {
@@ -308,7 +314,11 @@ IPFS utils
         $tw.utils.alert(ipfsUtilsName, error.message)
         return tiddler
       }
-      // Store
+      // isIpfs
+      if (ipfsCid !== null || ipnsCid !== null) {
+        isIpfs = true
+      }
+      // Store special fields
       resolvedUrl = resolvedUrl !== undefined && resolvedUrl !== null && resolvedUrl.toString().trim() !== '' ? resolvedUrl.toString().trim() : null
       if (field === '_canonical_uri') {
         canonicalUri = resolvedUrl
@@ -325,15 +335,7 @@ IPFS utils
         exportIpfsCid = ipfsCid
         exportIpnsCid = ipnsCid
       }
-      // Previous values if any
-      var oldValue = null
-      if (oldTiddler !== undefined && oldTiddler !== null) {
-        oldValue = oldTiddler.getFieldString(field)
-      }
-      // Process new or updated
-      if (value === oldValue) {
-        continue
-      }
+      // Resolve old value
       try {
         var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
       } catch (error) {
@@ -350,12 +352,12 @@ IPFS utils
     if (canonicalUri == null && exportUri == null && importUri == null) {
       removeTags.push('$:/isExported', '$:/isImported', '$:/isIpfs')
     }
-    if (canonicalIpfsCid == null && canonicalIpnsCid == null && exportIpfsCid == null && exportIpnsCid == null && importIpfsCid == null && importIpnsCid == null) {
+    if (isIpfs) {
+      addTags.push('$:/isIpfs')
+    } else {
       if (removeTags.indexOf('$:/isIpfs') === -1) {
         removeTags.push('$:/isIpfs')
       }
-    } else {
-      addTags.push('$:/isIpfs')
     }
     if (canonicalUri !== null) {
       // Attachment

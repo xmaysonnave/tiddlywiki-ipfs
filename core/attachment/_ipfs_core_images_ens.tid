@@ -1,0 +1,7 @@
+title: $:/ipfs/core/images/ens
+tags: $:/tags/Image $:/ipfs/core $:/isAttachment $:/isIpfs
+type: image/svg+xml
+_canonical_uri: ipfs://bafybeibitqm3koacssxhxq4eminhbcs5gibaesqbswk2vbtcx5qmleatee/$:/ipfs/core/images/ens.svg
+_license_uri: https://raw.githubusercontent.com/ensdomains/ens-app/dev/LICENSE
+_project_uri: https://github.com/ensdomains/ens-app/
+_source_uri: https://github.com/ensdomains/ens-app/blob/dev/public/safari-pinned-tab.svg

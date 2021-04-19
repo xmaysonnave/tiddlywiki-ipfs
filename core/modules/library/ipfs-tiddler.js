@@ -235,24 +235,14 @@ IPFS Tiddler
 
   IpfsTiddler.prototype.handleDeleteTiddler = async function (tiddler) {
     try {
-      const { type, info } = $tw.utils.getContentType(tiddler)
-      // Process
-      var field = null
-      if (info.encoding === 'base64' || type === 'image/svg+xml') {
-        field = '_canonical_uri'
-      } else {
-        field = '_export_uri'
-      }
-      // Value
-      var resolvedUrl = null
-      const value = tiddler.getFieldString(field)
-      if (value !== undefined && value !== null && value.trim() !== '') {
-        try {
-          var { resolvedUrl } = await $tw.ipfs.resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
-        } catch (error) {
-          $tw.ipfs.getLogger().error(error)
-          $tw.utils.alert(name, error.message)
-          return tiddler
+      for (var field in tiddler.fields) {
+        var ipfsCid = null
+        var ipnsCid = null
+        var resolvedUrl = null
+        const value = tiddler.getFieldString(field)
+        var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(value, false, false, true)
+        if (ipfsCid == null && ipnsCid == null) {
+          continue
         }
         $tw.ipfs.addToUnpin(resolvedUrl !== null ? resolvedUrl.pathname : null)
       }
