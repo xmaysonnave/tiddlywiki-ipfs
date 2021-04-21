@@ -135,7 +135,7 @@ More informations about IPFS:
 
 Remarks:
 
-**_EthDNS and EthLink_** [![EthDNS and EthLink](/core/attachment/_ipfs_icons_dns.png)](https://eth.link) are able to resolve [bluelightav.eth.link](https://bluelightav.eth.link) to IPFS.
+**_EthDNS and EthLink_** [![EthDNS and EthLink](/core/attachment/_ipfs_core_icons_dns.png)](https://eth.link) are able to resolve [bluelightav.eth.link](https://bluelightav.eth.link) to IPFS.
 
 #### Run a local IPFS node with IPFS Desktop
 
