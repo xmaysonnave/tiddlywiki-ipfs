@@ -1,20 +1,20 @@
 {
-  "build": "210421398",
+  "build": "210421427",
   "content": [
     {
-      "title": "empty-0.4.0-beta-tw-v5.1.23+build-210421398",
+      "title": "empty-0.4.0-beta-tw-v5.1.23+build-210421427",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "https://bluelight.link/ipfs/bafybeidgfhmy5rr53xuhfjxqg5ktnughvth6hfxrk7ukjp4h4ctkl3yzgi/favicon.ico",
+      "faviconUri": "https://bluelight.link/ipfs/bafybeiditvzhdoe7l77odrwlqkvntcmkzqkhieplvz6uzxanpfgl33mmuq/favicon.ico",
       "name": "empty",
-      "rawHash": "d00094e74c8b2a0cac420630a6b8c521a90914851b85012bf8055703feef5db4",
-      "sourceSize": 1054426,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidgfhmy5rr53xuhfjxqg5ktnughvth6hfxrk7ukjp4h4ctkl3yzgi/",
+      "rawHash": "bf92f358a0addbddc95c470a7d0f6f87ee12ed02bc14e7da50eb28deb433fe74",
+      "sourceSize": 1054470,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeiditvzhdoe7l77odrwlqkvntcmkzqkhieplvz6uzxanpfgl33mmuq/",
       "tidSize": 476,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiayowx7anplmqpy3knp5f7nvyyyxwdtij74nmp6jd46n5yx2coh24/empty.html-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeihcehiqncqdjzashtqe67ie4x4lcrekknhlsscgnfakl6id3mdzri/empty.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210421398",
-  "buildUri": "https://bluelight.link/ipfs/bafybeidvzh4t7p4jrglkinla5ku6jqa3uxlbzteh74ppqex76xjcnsagvi/210421398/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210421427",
+  "buildUri": "https://bluelight.link/ipfs/bafybeibohhu5mrsgpxqa6ywqrgsetpkgxumqoqztfy7ti5lyng6brwgmcy/210421427/"
 }

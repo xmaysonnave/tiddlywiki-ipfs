@@ -495,7 +495,7 @@ from "${parentField}", "${parentTitle}"
       return false
     }
     var canonicalUri = tiddler._canonical_uri
-    canonicalUri = (canonicalUri !== undefined && canonicalUri !== null) || canonicalUri.trim() !== '' ? canonicalUri.trim() : null
+    canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
     if (canonicalUri !== null) {
       const msg = 'Inconsistency:'
       const field = '_canonical_uri'
