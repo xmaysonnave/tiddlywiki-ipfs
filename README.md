@@ -86,9 +86,9 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/TiddlyWiki):
 
 ### Release
 
-- **\$:/ipfs/documentation** [![Resolve with ENS](/core/attachment/_ipfs_core_icons_ens.png)](https://bluelightav.eth/#IPFS%20Documentation 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_icons_dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation 'Resolve with DNS Link')
-- **\$:/plugins/ipfs** [![Resolve with ENS](/core/attachment/_ipfs_core_icons_ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_icons_dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs 'Resolve with DNS Link')
-- **bluelightav.eth** [![Resolve with ENS](/core/attachment/_ipfs_core_icons_ens.png)](https://bluelightav.eth 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_icons_dns.png)](https://bluelightav.eth.link 'Resolve with DNS Link')
+- **\$:/ipfs/documentation** [![Resolve with ENS](/core/attachment/_ipfs_core_icons_ens.png)](https://bluelightav.eth/#IPFS%20Documentation 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_core_icons_dns.png)](https://bluelightav.eth.link/#IPFS%20Documentation 'Resolve with DNS Link')
+- **\$:/plugins/ipfs** [![Resolve with ENS](/core/attachment/_ipfs_core_icons_ens.png)](https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_core_icons_dns.png)](https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs 'Resolve with DNS Link')
+- **bluelightav.eth** [![Resolve with ENS](/core/attachment/_ipfs_core_icons_ens.png)](https://bluelightav.eth 'Resolve with ENS') [![Resolve with DNS Link](/core/attachment/_ipfs_core_icons_dns.png)](https://bluelightav.eth.link 'Resolve with DNS Link')
 
 ### Recommended Plugins
 
