@@ -33,7 +33,7 @@ This [TiddlyWiki](https://tiddlywiki.com/) plugin aims to help users, editors an
   </a>
 </p>
 <p align="center">
-  <a rel="noopener noreferrer" target="_blank" href="https://tiddly.bluelightav.eth.link/">
+  <a rel="noopener noreferrer" target="_blank" href="https://k51qzi5uqu5dmj8zym08576inkibqy8apl49xg888d1x0q5vhk1lt2uj6sp2wl.ipns.dweb.link/">
     <img alt="Builds available on IPFS" title="Builds available on IPFS" src="https://img.shields.io/badge/Hosted%20on-IPFS-65c2cb?&logo=ipfs"/>
   </a>
 </p>
