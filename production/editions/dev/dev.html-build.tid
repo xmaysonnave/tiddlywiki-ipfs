@@ -1,11 +1,11 @@
 title: dev-build
 tags: $:/ipfs/editions
-build: 210421427
+build: 210421435
 faviconSize: 4297
-faviconUri: ipfs://bafybeibknjfwf6x34jvaueeqglmejwkddg27r24ubhmv4jihgu7nehanse/favicon.ico
+faviconUri: ipfs://bafybeig5hbumgh63ms7k55vllz26enuw5gg74kzf3sbqrrm4hjyjrtxtqe/favicon.ico
 name: dev
-sourceSize: 1575601
-sourceUri: ipfs://bafybeibknjfwf6x34jvaueeqglmejwkddg27r24ubhmv4jihgu7nehanse/
-version: 0.4.0-beta-tw-v5.1.23+build-210421427
+sourceSize: 1575537
+sourceUri: ipfs://bafybeig5hbumgh63ms7k55vllz26enuw5gg74kzf3sbqrrm4hjyjrtxtqe/
+version: 0.4.0-beta-tw-v5.1.23+build-210421435
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>
