@@ -10,6 +10,8 @@ async function main () {
   try {
     const build = argv.build !== undefined && argv.build !== null ? argv.build === 'true' || argv.build === true : false
     const dir = argv.dir !== undefined && argv.dir !== null ? argv.dir : null
+    const check = argv.check !== undefined && argv.check !== null ? argv.check === 'true' || argv.check === true : null
+    const purge = argv.purge !== undefined && argv.purge !== null ? argv.purge === 'true' || argv.purge === true : null
     const load = argv.load !== undefined && argv.load !== null ? argv.load === 'true' || argv.load === true : null
     const pin = argv.pin !== undefined && argv.pin !== null ? argv.pin === 'true' || argv.pin === true : null
     const production = argv.production !== undefined && argv.production !== null ? argv.production === 'true' || argv.production === true : false
@@ -19,6 +21,10 @@ async function main () {
       await publisher.resetProduction()
     } else if (build) {
       await publisher.publishBuild()
+    } else if (check) {
+      await publisher.check(false)
+    } else if (purge) {
+      await publisher.check(true)
     } else if (production) {
       await publisher.publishProduction()
     }

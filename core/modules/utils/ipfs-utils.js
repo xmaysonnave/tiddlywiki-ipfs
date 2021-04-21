@@ -65,14 +65,15 @@ IPFS utils
   /*eslint no-unused-vars: "off"*/
   const ipfsReservedFields = [
     '_canonical_uri',
-    '_canonical_ipfs_uri',
-    '_canonical_ipns_uri',
+    '_canonical_uri_ipfs',
+    '_compress',
+    '_encryption_public_key',
     '_export_uri',
-    '_export_ipfs_uri',
-    '_export_ipns_uri',
+    '_export_uri_ipfs',
     '_import_uri',
-    '_import_ipfs_uri',
-    '_import_ipns_uri',
+    '_import_uri_ipfs',
+    '_password',
+    '_sign',
   ]
 
   exports.isIpfsReservedWord = function (value) {
@@ -281,12 +282,6 @@ IPFS utils
     var canonicalUri = null
     var exportUri = null
     var importUri = null
-    var canonicalIpfsCid = null
-    var canonicalIpnsCid = null
-    var exportIpfsCid = null
-    var exportIpnsCid = null
-    var importIpfsCid = null
-    var importIpnsCid = null
     var isIpfs = false
     var updatedTiddler = updatedTiddler === undefined || updatedTiddler == null ? new $tw.Tiddler(tiddler) : updatedTiddler
     const { type, info } = $tw.utils.getContentType(tiddler)
@@ -322,18 +317,12 @@ IPFS utils
       resolvedUrl = resolvedUrl !== undefined && resolvedUrl !== null && resolvedUrl.toString().trim() !== '' ? resolvedUrl.toString().trim() : null
       if (field === '_canonical_uri') {
         canonicalUri = resolvedUrl
-        canonicalIpfsCid = ipfsCid
-        canonicalIpnsCid = ipnsCid
       }
       if (field === '_import_uri') {
         importUri = resolvedUrl
-        importIpfsCid = ipfsCid
-        importIpnsCid = ipnsCid
       }
       if (field === '_export_uri') {
         exportUri = resolvedUrl
-        exportIpfsCid = ipfsCid
-        exportIpnsCid = ipnsCid
       }
       // Resolve old value
       try {

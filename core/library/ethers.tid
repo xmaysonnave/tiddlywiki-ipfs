@@ -2,5 +2,5 @@ title: $:/ipfs/library/ethers
 tags: $:/ipfs/core
 _license_uri: https://raw.githubusercontent.com/ethers-io/ethers.js/master/LICENSE.md
 _project_uri: https://github.com/ethers-io/ethers.js/
-_source_uri: https://cdn.jsdelivr.net/npm/ethers@5.1.2/dist/ethers.umd.min.js
-_source_sri: sha384-ppQTLWQh5RUQDwMfUTpDUR8yAIhaaRNwirvDEPAAGeLiBCNikzpiMqOMVSfjNr/k
+_source_uri: https://cdn.jsdelivr.net/npm/ethers@5.1.3/dist/ethers.umd.min.js
+_source_sri: sha384-lkN2JAOJCHGNoRyuCK65QgmX3A4OJGthPCZeW+W3NFKtntNHEkAR2efGWyjSM9sb

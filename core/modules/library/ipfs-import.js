@@ -13,6 +13,7 @@ IPFS Import
   'use strict'
 
   const name = 'ipfs-import'
+  const IPFS_IMPORT_TITLE = '$:/IpfsImport'
 
   const tiddlyWikiType = 'text/vnd.tiddlywiki'
 
@@ -26,7 +27,7 @@ IPFS Import
     var from = strings[4]
     var endH2 = strings[5]
     var endL2 = strings[6]
-    if (parentUrl.hostname === $tw.ipfs.getIpfsBaseUrl().hostname && parentUrl.pathname === $tw.ipfs.getIpfsBaseUrl().pathname) {
+    if (parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname && parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname) {
       return `${msg}${space}${remote}${key}${endH1}${field}${endL1}${parentField}${from}${local}${parentUrl}${endH2}${parentTitle}${endL2}`
     } else {
       return `${msg}${space}${remote}${key}${endH1}${field}${endL1}${parentField}${from}${remote}${parentUrl}${endH2}${parentTitle}${endL2}`
@@ -38,7 +39,7 @@ IPFS Import
     var from = strings[2]
     var endH = strings[3]
     var endL = strings[4]
-    if (url.hostname === $tw.ipfs.getIpfsBaseUrl().hostname && url.pathname === $tw.ipfs.getIpfsBaseUrl().pathname) {
+    if (url.hostname === $tw.ipfs.getDocumentUrl().hostname && url.pathname === $tw.ipfs.getDocumentUrl().pathname) {
       return `${msg}${failed}${field}${from}${local}${url}${endH}${title}${endL}`
     } else {
       return `${msg}${failed}${field}${from}${remote}${url}${endH}${title}${endL}`
@@ -52,7 +53,7 @@ IPFS Import
     var endL1 = strings[4]
     var endH2 = strings[5]
     var endL2 = strings[6]
-    if (parentUrl.hostname === $tw.ipfs.getIpfsBaseUrl().hostname && parentUrl.pathname === $tw.ipfs.getIpfsBaseUrl().pathname) {
+    if (parentUrl.hostname === $tw.ipfs.getDocumentUrl().hostname && parentUrl.pathname === $tw.ipfs.getDocumentUrl().pathname) {
       return `${msg}${space}${condition}${from}${remote}${key}${endH1}${title}${endL1}${local}${parentUrl}${endH2}${title}${endL2}`
     } else {
       return `${msg}${space}${condition}${from}${remote}${key}${endH1}${title}${endL1}${remote}${parentUrl}${endH2}${title}${endL2}`
@@ -143,13 +144,13 @@ IPFS Import
     this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
-      const host = $tw.ipfs.getUrl(`#${tiddler.fields.title}`, $tw.ipfs.getIpfsBaseUrl())
+      const host = $tw.ipfs.getUrl(`#${encodeURI(IPFS_IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
       if (canonicalUri !== null || importUri !== null) {
         if (importUri !== null) {
-          await this.load(host, tiddler.fields.title, '_import_uri', importUri, password, true)
+          await this.load(host, IPFS_IMPORT_TITLE, '_import_uri', importUri, password, true)
         }
         if (canonicalUri !== null) {
-          await this.load(host, tiddler.fields.title, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
+          await this.load(host, IPFS_IMPORT_TITLE, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
         }
         // Process
         this.processImported()

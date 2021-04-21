@@ -25,36 +25,42 @@ const shortTimeout = 6000
 const longTimeout = 4 * 60 * shortTimeout
 
 async function loadFromIpfs (url, timeout, stream) {
-  if (url instanceof URL === false) {
-    url = new URL(url)
+  try {
+    if (url instanceof URL === false) {
+      url = new URL(url)
+    }
+    timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
+    var options = {
+      method: 'options',
+      signal: timeoutSignal(timeout),
+    }
+    var response = await fetch(url, options)
+    if (response.ok === false) {
+      throw new Error(`Unexpected response ${response.statusText}`)
+    }
+    var options = {
+      compress: false,
+      method: 'get',
+      size: 0,
+      signal: timeoutSignal(timeout),
+    }
+    const location = response.headers.get('Location')
+    url = location !== undefined && location !== null ? new URL(location) : url
+    var response = await fetch(url, options)
+    if (response.ok === false) {
+      throw new Error(`Unexpected response ${response.statusText}`)
+    }
+    if (stream !== undefined && stream !== null) {
+      const streamPipeline = promisify(pipeline)
+      await streamPipeline(response.body, stream)
+      return
+    }
+    return await response.buffer()
+  } catch (error) {
+    console.log(`*** Fetch error:
+${error.message}
+${url} ***`)
   }
-  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
-  var options = {
-    method: 'options',
-    signal: timeoutSignal(timeout),
-  }
-  var response = await fetch(url, options)
-  if (response.ok === false) {
-    throw new Error(`Unexpected response ${response.statusText}`)
-  }
-  var options = {
-    compress: false,
-    method: 'get',
-    size: 0,
-    signal: timeoutSignal(timeout),
-  }
-  const location = response.headers.get('Location')
-  url = location !== undefined && location !== null ? new URL(location) : url
-  var response = await fetch(url, options)
-  if (response.ok === false) {
-    throw new Error(`Unexpected response ${response.statusText}`)
-  }
-  if (stream !== undefined && stream !== null) {
-    const streamPipeline = promisify(pipeline)
-    await streamPipeline(response.body, stream)
-    return
-  }
-  return await response.buffer()
 }
 
 async function dagPut (api, links, timeout) {

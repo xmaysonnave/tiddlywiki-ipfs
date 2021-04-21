@@ -170,9 +170,11 @@ Browser data transfer utilities, used with the clipboard and drag and drop
             console.log("Importing data type '" + dataType.type + "', data: '" + data + "'")
           }
           var tiddlerFields = await dataType.toTiddlerFieldsArray(data, fallbackTitle)
-          if (tiddlerFields && !tiddlerFields.merged) {
+          if (tiddlerFields && tiddlerFields.merged === undefined) {
             const merged = new Map()
-            merged.set(fallbackTitle, tiddlerFields)
+            for (var i = 0; i < tiddlerFields.length; i++) {
+              merged.set(tiddlerFields[i].title, tiddlerFields[i])
+            }
             tiddlerFields = { merged: merged, deleted: new Map() }
           }
           callback(tiddlerFields)
@@ -188,7 +190,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       IECompatible: false,
       toTiddlerFieldsArray: async function (data, fallbackTitle) {
         const imported = await $tw.utils.handleImportURL(fallbackTitle, data)
-        if (imported) {
+        if (imported !== undefined && imported !== null) {
           return imported
         }
         return parseJSONTiddlers(data, fallbackTitle)
@@ -204,7 +206,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
           return parseJSONTiddlers(match[1], fallbackTitle)
         }
         var imported = await $tw.utils.handleImportURL(fallbackTitle, data)
-        if (imported) {
+        if (imported !== undefined && imported !== null) {
           return imported
         }
         // Fallback

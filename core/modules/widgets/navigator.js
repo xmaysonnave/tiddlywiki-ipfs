@@ -12,11 +12,11 @@ Navigator widget
   /*global $tw: false */
   'use strict'
 
-  var IMPORT_TITLE = '$:/Import'
-  var IPFS_IMPORT_TITLE = '$:/IpfsImport'
-  var IPFS_EXPORT_TITLE = '$:/IpfsExport'
+  const IMPORT_TITLE = '$:/Import'
+  const IPFS_IMPORT_TITLE = '$:/IpfsImport'
+  const IPFS_EXPORT_TITLE = '$:/IpfsExport'
 
-  var Widget = require('$:/core/modules/widgets/widget.js').widget
+  const Widget = require('$:/core/modules/widgets/widget.js').widget
 
   var NavigatorWidget = function (parseTreeNode, options) {
     this.initialise(parseTreeNode, options)
@@ -683,7 +683,7 @@ Render this widget into the DOM
     // Get the current $:/IpfsImport tiddler
     var importTitle = event.importTitle ? event.importTitle : IPFS_IMPORT_TITLE
     var importTiddler = this.wiki.getTiddler(importTitle)
-    var importData = this.wiki.getTiddlerData(importTitle, {})
+    var importData = {}
     var newFields = {
       title: importTitle,
       type: 'application/json',
@@ -692,7 +692,7 @@ Render this widget into the DOM
     }
     var incomingTiddlers = []
     // Process each new or updated tiddler
-    importData.tiddlers = importData.tiddlers || {}
+    importData.tiddlers = {}
     $tw.utils.each(tiddlers, function (tiddlerFields) {
       tiddlerFields.title = $tw.utils.trim(tiddlerFields.title)
       var title = tiddlerFields.title
