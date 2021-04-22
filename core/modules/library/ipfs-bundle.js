@@ -640,7 +640,7 @@ IpfsBundle.prototype.decodeUrl = function (url) {
         protocol = 'ipfs'
       }
     } else if (url.pathname !== undefined && url.pathname !== null && url.pathname.trim() !== '') {
-      var pathname
+      var pathname = null
       if (url.pathname.startsWith('//')) {
         pathname = `/${protocol}/${url.pathname.slice(2)}${url.search}${url.hash}`
       } else {
@@ -671,7 +671,7 @@ IpfsBundle.prototype.decodeUrl = function (url) {
 }
 
 IpfsBundle.prototype.decodePathname = function (pathname) {
-  pathname = pathname !== undefined && pathname !== null && pathname.trim() !== '' ? pathname.trim() : null
+  pathname = pathname !== undefined && pathname !== null && pathname.trim() !== '' ? decodeURI(pathname.trim()) : null
   if (pathname == null || pathname === '/') {
     return {
       ipfsCid: null,

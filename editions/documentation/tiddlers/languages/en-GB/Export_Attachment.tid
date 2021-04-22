@@ -16,7 +16,7 @@ type: text/vnd.tiddlywiki
 </p>
 <p>
   Use the [[https://ipfs.infura.io:5001 API URL|IPFS Server Settings]] and the
-  [[https://ipfs.infura.io Gateway URL|IPFS Server Settings]] and experiment with [[Embedded - The Little Prince]].
+  [[https://ipfs.infura.io Gateway URL|IPFS Server Settings]] and experiment with [[/ipfs/documentation/documents/IPFS - The Little Prince]].
 </p>
 [img class="tc-image-documentation" [/ipfs/image/console]]
 <p>

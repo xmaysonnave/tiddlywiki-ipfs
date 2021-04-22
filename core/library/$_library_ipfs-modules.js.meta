@@ -16,13 +16,3 @@ _loglevel_source_uri: https://cdn.jsdelivr.net/npm/loglevel@1.7.1/dist/loglevel.
 _pako_license_uri: https://raw.githubusercontent.com/nodeca/pako/master/LICENSE
 _pako_project_uri: https://github.com/nodeca/pako
 _pako_source_uri: https://cdn.jsdelivr.net/npm/pako@2.0.3/dist/pako.min.js
-_canonical_uri: ipfs://bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354
-_canonical_uri_ipfs: ipfs://bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354
-_compress: true
-_encryption_public_key: dummy
-_export_uri: ipfs://bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354
-_export_uri_ipfs: ipfs://bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354
-_import_uri: ipfs://bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354
-_import_uri_ipfs: ipfs://bafybeiczsscdsbs7ffqz55asqdf3smv6klcw3gofszvwlyarci47bgf354
-_password: dummy
-_sign: true

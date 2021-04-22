@@ -21,7 +21,7 @@ type: text/vnd.tiddlywiki
 </p>
 <h3>Experiment</h3>
 <p>
-  Edit [[IPFS - The Little Prince]] and remove the <b>_canonical_uri</b> field, save your Tiddler.
+  Edit [[/ipfs/documentation/documents/IPFS - The Little Prince]] and remove the <b>_canonical_uri</b> field, save your Tiddler.
   The external resource will be embedded in your wiki.
 </p>
 [img class="tc-image-documentation" [/ipfs/image/embedded]]

@@ -91,7 +91,7 @@ IPFS Action
               if (path !== undefined && path !== null && path.trim() !== '') {
                 const incoming = pathname.split('/').pop()
                 if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
-                  incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+                  incomingName = decodeURI(incoming)
                   filename = `${path}/${incomingName}`
                 }
               }
@@ -106,7 +106,7 @@ IPFS Action
           if (path !== undefined && path !== null && path.trim() !== '') {
             const incoming = url.pathname.split('/').pop()
             if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
-              incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+              incomingName = decodeURI(incoming)
               filename = `${path}/${incomingName}`
             }
           }
@@ -160,7 +160,7 @@ IPFS Action
           if (path !== undefined && path !== null && path.trim() !== '') {
             const incoming = url.pathname.split('/').pop()
             if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
-              incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+              incomingName = decodeURI(incoming)
               filename = `${path}/${incomingName}`
             }
           }
@@ -177,7 +177,6 @@ IPFS Action
         }
       }
       const fields = [{ key: 'text', value: '' }]
-      $tw.ipfs.getLogger().info(`Upload attachment: ${content.length} bytes`)
       // Beware async...
       $tw.utils.exportToIpfs(tiddler, content, fields, '_canonical_uri', filename, incomingName)
     } catch (error) {

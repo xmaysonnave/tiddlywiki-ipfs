@@ -139,17 +139,17 @@ IPFS Tiddler
     $tw.ipfs
       .resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
       .then(data => {
-        const { resolvedUrl } = data
-        if (resolvedUrl !== null) {
+        const { ipfsCid, ipnsCid, resolvedUrl } = data
+        if (ipfsCid != null || ipnsCid !== null) {
           $tw.ipfs
-            .pinToIpfs(resolvedUrl.pathname)
+            .pinToIpfs(decodeURI(resolvedUrl.pathname))
             .then(pin => {
               if (pin !== undefined && pin !== null) {
                 $tw.ipfs.removeFromPinUnpin(resolvedUrl.pathname)
                 if (field !== undefined && field !== null) {
                   $tw.ipfs.getLogger().info(
                     `Pinned: "${field}"
- ${resolvedUrl.pathname}`
+ ${decodeURI(resolvedUrl.pathname)}`
                   )
                   $tw.utils.alert(name, `Pinned: '${field}'`)
                 }
@@ -203,19 +203,17 @@ IPFS Tiddler
     $tw.ipfs
       .resolveUrl(value, $tw.utils.getIpnsResolve(), false, true)
       .then(data => {
-        const { resolvedUrl } = data
-        if (resolvedUrl !== null) {
-          if (field !== null) {
-          }
+        const { ipfsCid, ipnsCid, resolvedUrl } = data
+        if (ipfsCid != null || ipnsCid !== null) {
           $tw.ipfs
-            .unpinFromIpfs(resolvedUrl.pathname)
+            .unpinFromIpfs(decodeURI(resolvedUrl.pathname))
             .then(unpin => {
               if (unpin !== undefined && unpin !== null) {
                 $tw.ipfs.removeFromPinUnpin(resolvedUrl.pathname)
                 if (field !== undefined && field !== null) {
                   $tw.ipfs.getLogger().info(
                     `Unpinned: "${field}
- ${resolvedUrl.pathname}`
+ ${decodeURI(resolvedUrl.pathname)}`
                   )
                   $tw.utils.alert(name, `Unpinned: '${field}'`)
                 }
@@ -364,7 +362,7 @@ IPFS Tiddler
         }
         // Deleted
         oldResolvedUrl = oldResolvedUrl !== undefined && oldResolvedUrl !== null && oldResolvedUrl.toString().trim() !== '' ? oldResolvedUrl.toString().trim() : null
-        if ((oldIpfsCid !== null || oldIpnsCid !== null) && field === '_canonical_uri') {
+        if (oldResolvedUrl !== null && field === '_canonical_uri') {
           var data = tiddler.fields.text
           try {
             if (info.encoding === 'base64') {
@@ -411,7 +409,7 @@ IPFS Tiddler
             if (path !== undefined && path !== null && path.trim() !== '') {
               const incoming = pathname.split('/').pop()
               if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
-                incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+                incomingName = decodeURI(incoming)
                 filename = `${path}/${incomingName}`
               }
             }
@@ -424,7 +422,7 @@ IPFS Tiddler
             if (path !== undefined && path !== null && path.trim() !== '') {
               const incoming = url.pathname.split('/').pop()
               if (incoming !== undefined && incoming !== null && incoming.trim() !== '') {
-                incomingName = $tw.ipfs.filenamify(decodeURI(incoming))
+                incomingName = decodeURI(incoming)
                 filename = `${path}/${incomingName}`
               }
             }

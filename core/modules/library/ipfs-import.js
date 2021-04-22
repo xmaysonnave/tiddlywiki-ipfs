@@ -161,7 +161,10 @@ IPFS Import
         var deleted = new Map()
         var titles = $tw.wiki.getTiddlers({ includeSystem: true })
         for (var i = 0; i < titles.length; i++) {
-          const title = titles[i]
+          const title = titles[i] !== undefined && titles[i] !== null && titles[i].trim() !== '' ? titles[i].trim() : null
+          if (title == null) {
+            continue
+          }
           const current = $tw.wiki.getTiddler(title)
           canonicalUri = current.fields._canonical_uri
           canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
@@ -618,7 +621,7 @@ and ${parentResolvedKey}`
         if (importUri !== null) {
           processed = this.importTiddler(title, importUri)
         }
-        if (!processed && canonicalUri !== null && tiddlyWikiType === type) {
+        if (processed === false && canonicalUri !== null && tiddlyWikiType === type) {
           this.importTiddler(title, canonicalUri)
         }
         if (this.mergeTiddler(title, url)) {
@@ -686,6 +689,10 @@ and ${parentResolvedKey}`
   }
 
   IpfsImport.prototype.mergeTiddler = function (title, uri) {
+    title = title !== undefined && title !== null && title.trim() !== '' ? title.trim() : null
+    if (title == null) {
+      return false
+    }
     const key = this.resolved.get(uri)
     if (key === undefined) {
       return false

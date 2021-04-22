@@ -287,17 +287,7 @@ IPFS utils
     const { type, info } = $tw.utils.getContentType(tiddler)
     // Process fields
     for (var field in tiddler.fields) {
-      var value = tiddler.getFieldString(field)
-      // Previous values if any
-      var oldValue = null
-      var oldResolvedUrl = null
-      if (oldTiddler !== undefined && oldTiddler !== null) {
-        oldValue = oldTiddler.getFieldString(field)
-      }
-      // Process new or updated
-      if (value === oldValue) {
-        continue
-      }
+      const value = tiddler.getFieldString(field)
       // Resolve value
       var ipfsCid = null
       var ipnsCid = null
@@ -307,7 +297,7 @@ IPFS utils
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
         $tw.utils.alert(ipfsUtilsName, error.message)
-        return tiddler
+        continue
       }
       // isIpfs
       if (ipfsCid !== null || ipnsCid !== null) {
@@ -324,16 +314,21 @@ IPFS utils
       if (field === '_export_uri') {
         exportUri = resolvedUrl
       }
-      // Resolve old value
-      try {
-        var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, false, false, true)
-      } catch (error) {
-        // We cannot resolve the previous value
-        $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(ipfsUtilsName, error.message)
+      if (oldTiddler !== undefined && oldTiddler !== null) {
+        if (value === oldTiddler.getFieldString(field)) {
+          continue
+        }
+        var oldResolvedUrl = null
+        try {
+          var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldTiddler.getFieldString(field), false, false, true)
+        } catch (error) {
+          // We cannot resolve the previous value
+          $tw.ipfs.getLogger().error(error)
+          $tw.utils.alert(ipfsUtilsName, error.message)
+        }
+        $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+        $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
       }
-      $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
-      $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
     }
     // Tag management
     var addTags = []
@@ -474,7 +469,7 @@ IPFS utils
       $tw.utils.alert(ipfsUtilsName, error.message)
       return false
     }
-    $tw.ipfs.getLogger().info(`Uploading Tiddler: ${content.length}
+    $tw.ipfs.getLogger().info(`Uploading: ${content.length}
  path: ${ipfsPath}`)
     try {
       var { cid: addedCid, path: addedPath, uri: addedUri } = await $tw.ipfs.addContentToIpfs(content, ipfsPath)

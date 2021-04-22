@@ -183,7 +183,8 @@ IPFS Controller
   }
 
   IpfsController.prototype.addToPin = function (ipfsPath) {
-    if (ipfsPath !== undefined && ipfsPath !== null) {
+    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? decodeURI(ipfsPath.toString().trim()) : null
+    if (ipfsPath !== null) {
       var index = this.unpin.indexOf(ipfsPath)
       if (index !== -1) {
         this.unpin.splice(index, 1)
@@ -206,7 +207,8 @@ ${ipfsPath}`
   }
 
   IpfsController.prototype.addToUnpin = function (ipfsPath) {
-    if (ipfsPath !== undefined && ipfsPath !== null) {
+    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? decodeURI(ipfsPath.toString().trim()) : null
+    if (ipfsPath !== null) {
       // Discard
       var index = this.pin.indexOf(ipfsPath)
       if (index !== -1) {
@@ -231,7 +233,8 @@ ${ipfsPath}`
   }
 
   IpfsController.prototype.removeFromPinUnpin = function (ipfsPath) {
-    if (ipfsPath !== undefined && ipfsPath !== null) {
+    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? decodeURI(ipfsPath.toString().trim()) : null
+    if (ipfsPath !== null) {
       var index = this.pin.indexOf(ipfsPath)
       if (index !== -1) {
         this.pin.splice(index, 1)

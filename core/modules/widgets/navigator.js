@@ -625,7 +625,7 @@ Render this widget into the DOM
                 if (path !== undefined && path !== null && path.trim() !== '') {
                   incomingName = pathname.split('/').pop()
                   if (incomingName !== undefined && incomingName !== null && incomingName.trim() !== '') {
-                    filename = `${path}/${$tw.ipfs.filenamify(incomingName)}`
+                    filename = `${path}/${decodeURI(incomingName)}`
                   }
                 }
               }
@@ -639,7 +639,7 @@ Render this widget into the DOM
             if (path !== undefined && path !== null && path.trim() !== '') {
               incomingName = url.pathname.split('/').pop()
               if (incomingName !== undefined && incomingName !== null && incomingName.trim() !== '') {
-                filename = `${path}/${$tw.ipfs.filenamify(incomingName)}`
+                filename = `${path}/${decodeURI(incomingName)}`
               }
             }
           }
@@ -663,7 +663,7 @@ Render this widget into the DOM
           status: 'complete',
         })
       )
-      // Navigate to the $:/Export tiddler
+      // Add a new record to the top of the history stack
       this.addToHistory([event.param])
     }
   }
@@ -894,7 +894,7 @@ Render this widget into the DOM
         status: 'complete',
       })
     )
-    // Navigate to the $:/IpfsImport tiddler
+    // Add a new record to the top of the history stack
     this.addToHistory([event.param])
     // Trigger an autosave
     $tw.rootWidget.dispatchEvent({ type: 'tm-auto-save-wiki' })
