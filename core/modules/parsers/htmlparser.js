@@ -52,7 +52,15 @@ The HTML parser displays text as raw HTML
       },
     ]
     if ($tw.wiki.getTiddlerText('$:/config/HtmlParser/DisableSandbox', 'no') !== 'yes') {
-      this.tree[0].attributes.sandbox = { type: 'string', value: $tw.wiki.getTiddlerText('$:/config/HtmlParser/SandboxTokens', '') }
+      var tokens = $tw.wiki.getTiddlerText('$:/config/HtmlParser/SandboxTokens', '')
+      if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
+        var tiddlerTokens = options.tiddler.getFieldString('_sandbox_tokens')
+        tiddlerTokens = tiddlerTokens !== undefined && tiddlerTokens !== null && tiddlerTokens.trim() !== '' ? tiddlerTokens.trim() : null
+        if (tiddlerTokens !== null) {
+          tokens = tiddlerTokens
+        }
+      }
+      this.tree[0].attributes.sandbox = { type: 'string', value: tokens }
     }
   }
 

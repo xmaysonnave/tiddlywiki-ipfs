@@ -73,6 +73,7 @@ IPFS utils
     '_import_uri',
     '_import_uri_ipfs',
     '_password',
+    '_sandbox_tokens',
     '_sign',
   ]
 

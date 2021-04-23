@@ -1,4 +1,3 @@
 title: $:/config/HtmlParser/SandboxTokens
 tags: $:/ipfs/core
-
-allow-scripts allow-same-origin
+_sandbox_source_uri: https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe

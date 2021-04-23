@@ -210,7 +210,15 @@ Browser data transfer utilities, used with the clipboard and drag and drop
           return imported
         }
         // Fallback
-        return [{ title: fallbackTitle, text: data }] // As URL string
+        return [
+          {
+            title: fallbackTitle,
+            type: 'text/html',
+            _canonical_uri: data,
+            _sandbox_tokens: '',
+            _sandbox_source_uri: 'https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe',
+          },
+        ]
       },
     },
     {
@@ -230,7 +238,15 @@ Browser data transfer utilities, used with the clipboard and drag and drop
           return imported
         }
         // Fallback
-        return [{ title: fallbackTitle, text: data }] // As URL string
+        return [
+          {
+            title: fallbackTitle,
+            type: 'text/html',
+            _canonical_uri: data,
+            _sandbox_tokens: '',
+            _sandbox_source_uri: 'https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe',
+          },
+        ]
       },
     },
     {
