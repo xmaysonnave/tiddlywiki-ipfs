@@ -51,15 +51,18 @@ Render this widget into the DOM
     this.execute()
     // Create element
     // Determine what type of image it is
-    var tag = 'img'
-    var src = ''
     var tiddler = this.wiki.getTiddler(this.imageSource)
+    // Create default element
+    var domNode = this.document.createElement('img')
     if (!tiddler) {
       // The source isn't the title of a tiddler, so we'll assume it's a URL
-      src = this.getVariable('tv-get-export-image-link', {
-        params: [{ name: 'src', value: this.imageSource }],
-        defaultValue: this.imageSource,
-      })
+      domNode.setAttribute(
+        'src',
+        this.getVariable('tv-get-export-image-link', {
+          params: [{ name: 'src', value: this.imageSource }],
+          defaultValue: this.imageSource,
+        })
+      )
     } else {
       // Check if it is an image tiddler
       if (this.wiki.isImageTiddler(this.imageSource)) {
@@ -72,14 +75,14 @@ Render this widget into the DOM
           // Render the appropriate element for the image type
           switch (type) {
             case 'application/pdf':
-              tag = 'embed'
-              src = `data:application/pdf;base64,${text}`
+              domNode = this.document.createElement('embed')
+              domNode.setAttribute('src', `data:application/pdf;base64,${text}`)
               break
             case 'image/svg+xml':
-              src = `data:image/svg+xml,${encodeURIComponent(text)}`
+              domNode.setAttribute('src', `data:image/svg+xml,${encodeURIComponent(text)}`)
               break
             default:
-              src = `data:${type};base64,${text}`
+              domNode.setAttribute('src', `data:${type};base64,${text}`)
               break
           }
         } else if (canonicalUri) {
@@ -97,10 +100,13 @@ Render this widget into the DOM
                       .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          src = `data:application/pdf;base64,${data}`
+                          domNode.setAttribute('src', `data:application/pdf;base64,${data}`)
+                        } else {
+                          domNode.setAttribute('src', '')
                         }
                       })
                       .catch(error => {
+                        domNode.setAttribute('src', '')
                         $tw.ipfs.getLogger().error(error)
                         $tw.utils.alert(name, error.message)
                       })
@@ -110,10 +116,13 @@ Render this widget into the DOM
                       .loadToUtf8(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          src = `data:image/svg+xml,${encodeURIComponent(data)}`
+                          domNode.setAttribute('src', `data:image/svg+xml,${encodeURIComponent(data)}`)
+                        } else {
+                          domNode.setAttribute('src', '')
                         }
                       })
                       .catch(error => {
+                        domNode.setAttribute('src', '')
                         $tw.ipfs.getLogger().error(error)
                         $tw.utils.alert(name, error.message)
                       })
@@ -123,10 +132,13 @@ Render this widget into the DOM
                       .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          src = `data:${type};base64,${data}`
+                          domNode.setAttribute('src', `data:${type};base64,${data}`)
+                        } else {
+                          domNode.setAttribute('src', '')
                         }
                       })
                       .catch(error => {
+                        domNode.setAttribute('src', '')
                         $tw.ipfs.getLogger().error(error)
                         $tw.utils.alert(name, error.message)
                       })
@@ -135,17 +147,17 @@ Render this widget into the DOM
               }
             })
             .catch(error => {
+              domNode.setAttribute('src', '')
               $tw.ipfs.getLogger().error(error)
             })
         } else {
           // Just trigger loading of the tiddler
           this.wiki.getTiddlerText(this.imageSource)
+          domNode.setAttribute('src', '')
         }
       }
     }
     // Assign the attributes
-    var domNode = this.document.createElement(tag)
-    domNode.setAttribute('src', src)
     if (this.imageClass) {
       domNode.setAttribute('class', this.imageClass)
     }
