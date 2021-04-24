@@ -574,7 +574,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
       hostname: null,
       ipfsCid: null,
       ipnsIdentifier: null,
-      ipfsPath: null,
+      ipfsPath: '',
     }
   }
   if (value instanceof CID) {
@@ -582,7 +582,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
       hostname: null,
       ipfsCid: value,
       ipnsIdentifier: null,
-      ipfsPath: null,
+      ipfsPath: '',
     }
   }
   var ipfsCid = null
@@ -622,7 +622,7 @@ IpfsBundle.prototype.decodeUrl = function (url) {
       hostname: null,
       ipfsCid: null,
       ipnsIdentifier: null,
-      path: null,
+      path: '',
     }
   }
   var hostname = null
