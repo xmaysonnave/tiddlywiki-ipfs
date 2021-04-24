@@ -325,7 +325,6 @@ ${url} ***`)
     if (current !== null) {
       try {
         var { ipfsCid: cid, ipnsIdentifier, ipfsPath } = this.ipfsBundle.getIpfsIdentifier(current.buildUri)
-        var ipfsPath = null
         var ipfsUri = null
         if (ipnsIdentifier !== null) {
           ipfsPath = `/ipns/${ipnsIdentifier}${ipfsPath}`
