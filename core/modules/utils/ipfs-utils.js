@@ -654,7 +654,9 @@ IPFS utils
           if (field === 'tags' || field === '_export_uri') {
             continue
           }
-          var ipnsCid = null
+          var ipfsCid = null
+          var ipnsIdentifier = null
+          var ipfsPath = null
           var fieldValue = current.getFieldString(field)
           if (field === '_canonical_uri' && fieldValue === exportUri) {
             continue
@@ -663,16 +665,16 @@ IPFS utils
             continue
           }
           try {
-            var { ipfsCid, ipnsCid } = await $tw.ipfs.resolveUrl(fieldValue, $tw.utils.getIpnsResolve(), false, true)
+            var { ipfsCid, ipnsIdentifier, ipfsPath } = $tw.ipfs.getIpfsIdentifier(fieldValue)
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(ipfsUtilsName, error.message)
             return null
           }
-          if (ipfsCid !== null) {
-            fieldValue = `${ipfsKeyword}://${ipfsCid}`
-          } else if (ipnsCid !== null) {
-            fieldValue = `${ipnsKeyword}://${ipnsCid}`
+          if (ipnsIdentifier !== null) {
+            fieldValue = `ipns://${ipnsIdentifier}${ipfsPath}`
+          } else if (ipfsCid !== null) {
+            fieldValue = `ipfs://${ipfsCid}${ipfsPath}`
           }
           // Store field
           fields[field] = fieldValue

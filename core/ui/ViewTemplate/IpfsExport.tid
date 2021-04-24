@@ -1,4 +1,4 @@
-title: $:/core/ui/ViewTemplate/ipfsexport
+title: $:/core/ui/ViewTemplate/ipfs/export
 tags: $:/tags/ViewTemplate $:/ipfs/core
 
 \define lingo-base() $:/language/Export/
@@ -21,7 +21,7 @@ tags: $:/tags/ViewTemplate $:/ipfs/core
 
 <<buttons>>
 
-{{||$:/core/ui/IpfsExportListing}}
+{{||$:/core/ui/ipfs/export/listing}}
 
 <<buttons>>
 

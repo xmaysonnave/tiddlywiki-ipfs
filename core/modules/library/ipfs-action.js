@@ -74,7 +74,6 @@ IPFS Action
       tiddler.fields._export_uri !== undefined && tiddler.fields._export_uri !== null && tiddler.fields._export_uri.trim() !== '' ? tiddler.fields._export_uri.trim() : null
     const { content, extension } = await $tw.utils.exportTiddler(tiddler, child)
     if (content === undefined || content == null) {
-      $tw.utils.alert(name, 'Empty export...')
       return false
     }
     var filename = '/'

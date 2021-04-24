@@ -80,12 +80,12 @@ IPFS Saver
       var pathname = wiki.pathname
       const search = wiki.search
       const hash = wiki.hash
+      // Resolve origin
       try {
-        var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(wiki, false, false, true)
+        var { ipfsCid, ipnsCid, resolvedUrl } = await $tw.ipfs.resolveUrl(wiki, false, false, false)
       } catch (error) {
-        $tw.ipfs.getLogger().error(error)
+        $tw.ipfs.getLogger().warn(error)
         callback(error)
-        return true
       }
       if (ipfsCid !== null && ipnsCid == null) {
         const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
@@ -96,32 +96,27 @@ IPFS Saver
       // IPNS
       if (ipnsCid !== null || $tw.utils.getIpfsProtocol() === ipnsKeyword) {
         // Resolve current IPNS
-        if (ipnsCid !== null) {
-          try {
+        try {
+          if (ipnsCid !== null) {
             var { ipfsCid: ipnsIpfsCid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(wiki, true, true, false)
-          } catch (error) {
-            $tw.ipfs.getLogger().error(error)
-            $tw.utils.alert(name, error.message)
-          }
-        } else {
-          // Default IPNS
-          ipnsCid = $tw.utils.getIpnsCid()
-          ipnsKey = $tw.utils.getIpnsKey()
-          if (ipnsCid == null && ipnsKey == null) {
-            callback(new Error('Unknown default IPNS key pair...'))
-            return true
-          }
-          $tw.ipfs.getLogger().info('Processing default IPNS key pair...')
-          var identifier = ipnsCid
-          if (identifier == null) {
-            identifier = ipnsKey
-          }
-          try {
+          } else {
+            // Default IPNS
+            ipnsCid = $tw.utils.getIpnsCid()
+            ipnsKey = $tw.utils.getIpnsKey()
+            if (ipnsCid == null && ipnsKey == null) {
+              callback(new Error('Unknown default IPNS key pair...'))
+              return true
+            }
+            $tw.ipfs.getLogger().info('Processing default IPNS key pair...')
+            var identifier = ipnsCid
+            if (identifier == null) {
+              identifier = ipnsKey
+            }
             var { ipfsCid: ipnsIpfsCid, ipnsCid, ipnsKey, resolvedUrl } = await $tw.ipfs.resolveUrl(`/${ipnsKeyword}/${identifier}`, true, true, false)
-          } catch (error) {
-            $tw.ipfs.getLogger().error(error)
-            $tw.utils.alert(name, error.message)
           }
+        } catch (error) {
+          $tw.ipfs.getLogger().warn(error)
+          $tw.utils.alert(name, error.message)
         }
         if (ipnsIpfsCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
@@ -137,21 +132,26 @@ IPFS Saver
           callback(new Error('Undefined ENS domain...'))
           return true
         }
-        var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
-        const isOwner = await $tw.ipfs.isEnsOwner(ensDomain, web3, account)
-        if (isOwner === false) {
-          const err = new Error('Unauthorized Account...')
-          err.name = 'OwnerError'
-          throw err
+        try {
+          var { account, web3 } = await $tw.ipfs.getEnabledWeb3Provider()
+          const isOwner = await $tw.ipfs.isEnsOwner(ensDomain, web3, account)
+          if (isOwner === false) {
+            const err = new Error('Unauthorized Account...')
+            err.name = 'OwnerError'
+            throw err
+          }
+          var { ipfsCid: ensCid, ipnsCid: ensIpnsCid, ipnsKey: ensIpnsKey, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(
+            ensDomain,
+            $tw.utils.getIpnsResolve(),
+            true,
+            true,
+            null,
+            web3
+          )
+        } catch (error) {
+          $tw.ipfs.getLogger().warn(error)
+          $tw.utils.alert(name, error.message)
         }
-        var { ipfsCid: ensCid, ipnsCid: ensIpnsCid, ipnsKey: ensIpnsKey, resolvedUrl: ensResolvedUrl } = await $tw.ipfs.resolveUrl(
-          ensDomain,
-          $tw.utils.getIpnsResolve(),
-          true,
-          true,
-          null,
-          web3
-        )
         if (ensCid !== null || ensIpnsCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(ensResolvedUrl)
           if (resolvedCid !== null) {

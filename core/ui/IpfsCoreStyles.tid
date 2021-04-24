@@ -9,12 +9,6 @@ type: text/css
   height: 18px;
 }
 
-.tc-icon-wrapper > svg {
-  display: inline-block;
-	width: 1em;
-	height: 1em;
-}
-
 .ethAddress {
   padding: 20px 0px 0px 40px;
   height: 80px;

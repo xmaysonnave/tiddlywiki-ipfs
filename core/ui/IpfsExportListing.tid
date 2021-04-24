@@ -1,4 +1,4 @@
-title: $:/core/ui/IpfsExportListing
+title: $:/core/ui/ipfs/export/listing
 tags: $:/ipfs/core
 
 \define lingo-base() $:/language/Export/

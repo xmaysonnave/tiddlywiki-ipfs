@@ -294,6 +294,36 @@ Render this widget into the DOM
     return false
   }
 
+  // Delete a tiddler
+  NavigatorWidget.prototype.handleIpfsDeleteTiddler = function (event) {
+    // Get the tiddler we're deleting
+    var title = event.param || event.tiddlerTitle
+    var tiddler = this.wiki.getTiddler(title)
+    var storyList = this.getStoryList()
+    var originalTitle = tiddler ? tiddler.fields['draft.of'] : ''
+    var originalTiddler = originalTitle ? this.wiki.getTiddler(originalTitle) : undefined
+    if (!tiddler) {
+      return false
+    }
+    // Delete the original tiddler
+    if (originalTitle) {
+      if (originalTiddler) {
+        $tw.hooks.invokeHook('th-deleting-tiddler', originalTiddler)
+      }
+      this.wiki.deleteTiddler(originalTitle)
+      this.removeTitleFromStory(storyList, originalTitle)
+    }
+    // Invoke the hook function and delete this tiddler
+    $tw.hooks.invokeHook('th-deleting-tiddler', tiddler)
+    this.wiki.deleteTiddler(title)
+    // Remove the closed tiddler from the story
+    this.removeTitleFromStory(storyList, title)
+    this.saveStoryList(storyList)
+    // Trigger an autosave
+    $tw.rootWidget.dispatchEvent({ type: 'tm-auto-save-wiki' })
+    return false
+  }
+
   /**
    * Create/reuse the draft tiddler for a given title
    */
@@ -693,13 +723,29 @@ Render this widget into the DOM
     var incomingTiddlers = []
     // Process each new or updated tiddler
     importData.tiddlers = {}
+    var ignoredFields = ['created', 'modified']
     $tw.utils.each(tiddlers, function (tiddlerFields) {
       tiddlerFields.title = $tw.utils.trim(tiddlerFields.title)
       var title = tiddlerFields.title
       if (title) {
         incomingTiddlers.push(title)
         importData.tiddlers[title] = tiddlerFields
-        newFields['import-' + title] = 'yes'
+        var tiddler = $tw.wiki.getTiddler(title)
+        if (tiddler === undefined || tiddler == null) {
+          newFields['import-' + title] = 'yes'
+          newFields['importSelection-' + title] = 'checked'
+        } else {
+          var importedTiddler = new $tw.Tiddler(tiddlerFields)
+          if (tiddler.isEqual(importedTiddler, ignoredFields)) {
+            newFields['import-' + title] = 'no'
+            newFields['delete-' + title] = 'yes'
+            newFields['deleteSelection-' + title] = 'unchecked'
+          } else {
+            newFields['import-' + title] = 'yes'
+            newFields['importSelection-' + title] = 'checked'
+            newFields['delete-' + title] = 'no'
+          }
+        }
       }
     })
     // Give the active upgrader modules a chance to process the incoming tiddlers
@@ -711,6 +757,7 @@ Render this widget into the DOM
     $tw.utils.each(importData.tiddlers, function (tiddler, title) {
       if ($tw.utils.count(tiddler) === 0) {
         newFields['importSelection-' + title] = 'unchecked'
+        newFields['delete-' + title] = 'yes'
       }
     })
     // Process each deleted tiddler
@@ -721,6 +768,7 @@ Render this widget into the DOM
       if (title) {
         incomingTiddlers.push(title)
         importData.tiddlers[title] = tiddlerFields
+        newFields['importSelection-' + title] = 'unchecked'
         newFields['delete-' + title] = 'yes'
       }
     })
@@ -878,7 +926,7 @@ Render this widget into the DOM
       if (title && importTiddler && importTiddler.fields['delete-' + title] === 'yes' && importTiddler.fields['deleteSelection-' + title] !== 'unchecked') {
         var tiddler = self.wiki.getTiddler(title)
         if (tiddler) {
-          self.handleDeleteTiddlerEvent({ param: tiddlerFields.title })
+          self.handleIpfsDeleteTiddler({ param: tiddlerFields.title })
           tiddler = self.wiki.getTiddler(title)
           if (tiddler === undefined) {
             importReport.push('# [[' + tiddlerFields.title + ']]')

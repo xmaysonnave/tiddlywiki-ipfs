@@ -574,7 +574,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
       hostname: null,
       ipfsCid: null,
       ipnsIdentifier: null,
-      path: null,
+      ipfsPath: null,
     }
   }
   if (value instanceof CID) {
@@ -582,7 +582,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
       hostname: null,
       ipfsCid: value,
       ipnsIdentifier: null,
-      path: null,
+      ipfsPath: null,
     }
   }
   var ipfsCid = null
@@ -592,7 +592,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
   var url = null
   if (value instanceof URL === false) {
     try {
-      url = this.getUrl(value, this.getIpfsBaseUrl())
+      url = this.getUrl(encodeURI(value), this.getIpfsBaseUrl())
     } catch (error) {
       url = null
     }
@@ -611,7 +611,7 @@ IpfsBundle.prototype.getIpfsIdentifier = function (value) {
     hostname: hostname,
     ipfsCid: ipfsCid,
     ipnsIdentifier: ipnsIdentifier,
-    path: path,
+    ipfsPath: path !== undefined && path !== null ? path : '',
   }
 }
 

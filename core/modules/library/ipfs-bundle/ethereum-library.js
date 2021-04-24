@@ -73,7 +73,7 @@ EthereumLibrary.prototype.init = async function () {
       self.providerMessage(message)
     })
   } catch (error) {
-    if (error.name !== 'InstallMetamask') {
+    if (error.name !== 'MissingBrowserExtension') {
       this.getLogger().error(error)
       $tw.utils.alert(this.name, error.message)
     }
@@ -250,8 +250,8 @@ EthereumLibrary.prototype.detectEthereumProvider = async function () {
     this.getLogger().error(error)
   }
   if (provider === undefined || provider == null) {
-    const err = new Error('Please install ~MetaMask...')
-    err.name = 'InstallMetamask'
+    const err = new Error('Please install MetaMask...')
+    err.name = 'MissingBrowserExtension'
     throw err
   }
   return provider

@@ -1,4 +1,4 @@
-title: $:/core/ui/IpfsImportListing
+title: $:/core/ui/ipfs/import/listing
 tags: $:/ipfs/core
 
 \define lingo-base() $:/language/Import/
@@ -52,7 +52,7 @@ tags: $:/ipfs/core
 </$checkbox>
 </th>
 <th>
-<$checkbox tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<delete-all-actions>>>
+<$checkbox tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="unchecked" actions=<<delete-all-actions>>>
 <<lingo Listing/DeleteAll/Caption>>
 </$checkbox>
 </th>

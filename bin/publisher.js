@@ -324,15 +324,15 @@ ${url} ***`)
     }
     if (current !== null) {
       try {
-        var { ipfsCid: cid, ipnsIdentifier, path } = this.ipfsBundle.getIpfsIdentifier(current.buildUri)
+        var { ipfsCid: cid, ipnsIdentifier, ipfsPath } = this.ipfsBundle.getIpfsIdentifier(current.buildUri)
         var ipfsPath = null
         var ipfsUri = null
         if (ipnsIdentifier !== null) {
-          ipfsPath = `/ipns/${ipnsIdentifier}${path}`
-          ipfsUri = `ipns://${ipnsIdentifier}${path}`
+          ipfsPath = `/ipns/${ipnsIdentifier}${ipfsPath}`
+          ipfsUri = `ipns://${ipnsIdentifier}${ipfsPath}`
         } else {
-          ipfsPath = `/ipfs/${cid}${path}`
-          ipfsUri = `ipfs://${cid}${path}`
+          ipfsPath = `/ipfs/${cid}${ipfsPath}`
+          ipfsUri = `ipfs://${cid}${ipfsPath}`
         }
         var { cid } = await this.ipfsBundle.dagResolve(api, ipfsPath, this.shortTimeout)
         if (cid !== undefined && cid !== null) {

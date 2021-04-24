@@ -156,6 +156,7 @@ IPFS Import
         this.processImported()
         // Import
         var rootUri = importUri !== null ? importUri : canonicalUri
+        var { key: rootUriKey } = await this.getKey(rootUri)
         this.importTiddlers(rootUri)
         // Deleted
         var deleted = new Map()
@@ -173,7 +174,7 @@ IPFS Import
             if (key === undefined) {
               var { key } = await this.getKey(canonicalUri, rootUri)
             }
-            if (key === rootUri && this.merged.get(title) === undefined && deleted.get(title) === undefined) {
+            if (key === rootUriKey && this.merged.get(title) === undefined && deleted.get(title) === undefined) {
               deleted.set(title, JSON.parse($tw.wiki.getTiddlerAsJson(title)))
             }
           }
@@ -184,7 +185,7 @@ IPFS Import
             if (key === undefined) {
               var { key } = await this.getKey(importUri, rootUri)
             }
-            if (key === rootUri && this.merged.get(title) === undefined && deleted.get(title) === undefined) {
+            if (key === rootUriKey && this.merged.get(title) === undefined && deleted.get(title) === undefined) {
               deleted.set(title, JSON.parse($tw.wiki.getTiddlerAsJson(title)))
             }
           }

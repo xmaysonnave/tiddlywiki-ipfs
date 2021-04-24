@@ -349,40 +349,49 @@ IPFS Tiddler
           continue
         }
         // Old value
-        var oldIpfsCid = null
-        var oldIpnsCid = null
         var oldResolvedUrl = null
         var oldValue = oldTiddler.getFieldString(field)
         try {
-          var { ipfsCid: oldIpfsCid, ipnsCid: oldIpnsCid, resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, $tw.utils.getIpnsResolve(), false, true)
+          var { resolvedUrl: oldResolvedUrl } = await $tw.ipfs.resolveUrl(oldValue, $tw.utils.getIpnsResolve(), false, true)
         } catch (error) {
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(name, error.message)
-          return tiddler
+          $tw.wiki.addTiddler(updatedTiddler)
+          return updatedTiddler
         }
         // Deleted
         oldResolvedUrl = oldResolvedUrl !== undefined && oldResolvedUrl !== null && oldResolvedUrl.toString().trim() !== '' ? oldResolvedUrl.toString().trim() : null
         if (oldResolvedUrl !== null && field === '_canonical_uri') {
+          var addTags = []
+          var msg = 'Embed'
           var data = tiddler.fields.text
           try {
             if (info.encoding === 'base64') {
+              addTags = ['$:/isAttachment', '$:/isEmbedded']
+              msg = `${msg} attachment:`
               data = await $tw.ipfs.loadToBase64(oldResolvedUrl, password)
-            } else {
+            } else if (type === 'image/svg+xml') {
+              addTags = ['$:/isAttachment', '$:/isEmbedded']
+              msg = `${msg} attachment:`
               data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
+            } else {
+              msg = `${msg} Tiddler:`
+              data = oldTiddler.fields.text
             }
             updatedTiddler = $tw.utils.updateTiddler({
               tiddler: updatedTiddler,
-              addTags: ['$:/isAttachment', '$:/isEmbedded'],
+              addTags: addTags,
               fields: [{ key: 'text', value: data }],
             })
             $tw.ipfs.getLogger().info(
-              `Embed attachment: ${data.length}
+              `${msg} ${data.length}
  ${oldResolvedUrl}`
             )
           } catch (error) {
             $tw.ipfs.getLogger().error(error)
             $tw.utils.alert(name, error.message)
-            return tiddler
+            $tw.wiki.addTiddler(updatedTiddler)
+            return updatedTiddler
           }
         }
         $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)

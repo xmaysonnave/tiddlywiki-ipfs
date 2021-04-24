@@ -388,13 +388,13 @@ ${ipfsPath}`
         resolvedUrl: null,
       }
     }
-    var { ipfsCid, ipnsIdentifier, path } = this.getIpfsIdentifier(normalizedUrl)
+    var { ipfsCid, ipnsIdentifier, ipfsPath } = this.getIpfsIdentifier(normalizedUrl)
     if (ipnsIdentifier !== null) {
-      var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, resolveIpnsKey, base, path)
+      var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(ipnsIdentifier, resolveIpns, resolveIpnsKey, base, ipfsPath)
     } else if (resolveEns && ipfsCid == null && ipnsIdentifier == null && (normalizedUrl.hostname.endsWith('.eth') || normalizedUrl.hostname.endsWith('.eth.link'))) {
-      var { identifier, protocol, normalizedUrl, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, path, web3)
+      var { identifier, protocol, normalizedUrl, resolvedUrl } = await this.resolveEns(normalizedUrl.hostname, base, ipfsPath, web3)
       if (protocol === ipnsKeyword) {
-        var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(identifier, resolveIpns, resolveIpnsKey, base, path)
+        var { ipfsCid, ipnsCid, ipnsKey, normalizedUrl, resolvedUrl } = await this.resolveIpns(identifier, resolveIpns, resolveIpnsKey, base, ipfsPath)
       }
     }
     return {
