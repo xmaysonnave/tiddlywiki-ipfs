@@ -1,0 +1,20 @@
+{
+  "build": "210430319",
+  "content": [
+    {
+      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210430319",
+      "tags": "$:/ipfs/editions",
+      "faviconSize": 4297,
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeiarscetlsamisvodyax2nmxpama5phkomzpar6gl4x3zxjadnvdrq/favicon.ico",
+      "name": "tiddlywiki",
+      "rawHash": "6e262d4642b411e6abc13aa08ae8502ad41ca5bdb2cecf07b026f68e056f063e",
+      "sourceSize": 3000000,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiarscetlsamisvodyax2nmxpama5phkomzpar6gl4x3zxjadnvdrq/",
+      "tidSize": 588,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeibllgj5pvytnt3mrx5o43yes4hwtet53yonesdz73zatuelwa5a3u/tiddlywiki.html-build.tid"
+    }
+  ],
+  "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210430319",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeihfk5o6krw6ue5sah73m6obrmmhyuwcjkc322clcazzxhsmkvelri/210430319/"
+}

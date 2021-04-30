@@ -1,0 +1,12 @@
+title: tiddlywiki-build
+tags: $:/ipfs/editions
+build: 210430319
+faviconSize: 4297
+faviconUri: ipfs://bafybeiarscetlsamisvodyax2nmxpama5phkomzpar6gl4x3zxjadnvdrq/favicon.ico
+name: tiddlywiki
+sourceSize: 3000000
+sourceUri: ipfs://bafybeiarscetlsamisvodyax2nmxpama5phkomzpar6gl4x3zxjadnvdrq/
+altSourceUri: https://dweb.link/ipfs/bafybeiarscetlsamisvodyax2nmxpama5phkomzpar6gl4x3zxjadnvdrq
+version: 0.4.0-beta-tw-v5.1.23+build-210430319
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

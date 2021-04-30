@@ -1,0 +1,12 @@
+title: empty-build
+tags: $:/ipfs/editions
+build: 210430319
+faviconSize: 4297
+faviconUri: ipfs://bafybeiacatn2qzpjouktgqoupvb3ihh5zkm67fuk5hvfc4uvm4qfujixqm/favicon.ico
+name: empty
+sourceSize: 814467
+sourceUri: ipfs://bafybeiacatn2qzpjouktgqoupvb3ihh5zkm67fuk5hvfc4uvm4qfujixqm/
+altSourceUri: https://dweb.link/ipfs/bafybeiacatn2qzpjouktgqoupvb3ihh5zkm67fuk5hvfc4uvm4qfujixqm
+version: 0.4.0-beta-tw-v5.1.23+build-210430319
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>
