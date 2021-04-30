@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/ipfs-password.js
+title: $:/plugins/ipfs/startup/ipfs-password.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: startup
@@ -40,10 +40,10 @@ Compression handling
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/config/encryption')) {
         const encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-        if (encrypted.fields.text === 'yes') {
+        if (encrypted !== undefined && encrypted.fields.text === 'yes') {
           const hasPassword = $tw.crypto.hasPassword()
           const encryption = $tw.wiki.getTiddler('$:/config/encryption')
-          if (!hasPassword && encryption.fields.text === 'standford') {
+          if (!hasPassword && encryption !== undefined && encryption.fields.text === 'standford') {
             setPassword()
           } else if (hasPassword) {
             $tw.rootWidget.dispatchEvent({ type: 'tm-clear-password' })
@@ -53,7 +53,7 @@ Compression handling
     })
     $tw.rootWidget.addEventListener('tm-set-password', async function (event) {
       const encryption = $tw.wiki.getTiddler('$:/config/encryption')
-      if (encryption.fields.text === 'standford') {
+      if (encryption !== undefined && encryption.fields.text === 'standford') {
         if ($tw.crypto.hasPassword() === false) {
           setPassword()
         }
@@ -65,7 +65,7 @@ Compression handling
           if (error.name !== 'RejectedUserRequest') {
             $tw.ipfs.getLogger().error(error)
           }
-          $tw.utils.alert(name, error.message)
+          $tw.utils.alert('ipfs-password', error.message)
           $tw.crypto.setEncryptionKey()
         }
       }

@@ -543,7 +543,6 @@ var ipfsBoot = function ($tw) {
   }
 
   /////////////////////////// Module mechanism
-
   /**
    * Execute the module named 'moduleName'. The name can optionally be relative to the module named 'moduleRoot'
    */
@@ -719,13 +718,13 @@ var ipfsBoot = function ($tw) {
           }
         }
         var content = compressedStoreArea.innerHTML
-        if (content.match(/{"compressed":/)) {
+        if (content.match(/^{"compressed":/)) {
           var json = JSON.parse(content)
-          if (json.compressed.match(/{"iv":/)) {
+          if (json.compressed.match(/^{"iv":/)) {
             $tw.boot.passwordPrompt(json.compressed, function (decrypted) {
               inflate(decrypted)
             })
-          } else if (json.compressed.match(/{"version":/)) {
+          } else if (json.compressed.match(/^{"version":/)) {
             $tw.boot.metamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted, recovered) {
               if (decrypted !== null) {
                 inflate(decrypted)
@@ -758,11 +757,11 @@ var ipfsBoot = function ($tw) {
       var encryptedStoreArea = document.getElementById('encryptedStoreArea')
       if (encryptedStoreArea) {
         var content = encryptedStoreArea.innerHTML
-        if (content.match(/{"iv":/)) {
+        if (content.match(/^{"iv":/)) {
           $tw.boot.passwordPrompt(content, function (decrypted) {
             $tw.boot.preloadTiddler(decrypted, callback)
           })
-        } else if (content.match(/{"encrypted":/)) {
+        } else if (content.match(/^{"encrypted":/)) {
           const json = JSON.parse(content)
           $tw.boot.metamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted, recovered) {
             if (decrypted !== null) {
@@ -817,7 +816,7 @@ var ipfsBoot = function ($tw) {
       if (fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
         // Read the plugin information
         if (!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
-          console.log('Warning: missing plugin.info file in ' + filepath)
+          $tw.boot.getLogger().error('Warning: missing plugin.info file in ' + filepath)
           return null
         }
         var pluginInfo = JSON.parse(fs.readFileSync(infoPath, 'utf8'))
@@ -877,16 +876,15 @@ var ipfsBoot = function ($tw) {
     $tw.boot.inflateTiddlers(function () {
       // Startup
       $tw.boot.startup({ callback: callback })
-      // Make sure the crypto state tiddler is up to date
+      // Make sure the state tiddlers are up to date
       var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-      if (encrypted && encrypted.fields._encryption_public_key) {
+      if (encrypted !== undefined && encrypted.fields._encryption_public_key) {
         $tw.crypto.setEncryptionKey(encrypted.fields._encryption_public_key)
       } else {
         $tw.crypto.updateCryptoStateTiddler()
       }
-      // Make sure the compress state tiddler is up to date
       var compressed = $tw.wiki.getTiddler('$:/isCompressed')
-      if (compressed === false) {
+      if (compressed === undefined) {
         $tw.compress.updateCompressStateTiddler()
       }
     })

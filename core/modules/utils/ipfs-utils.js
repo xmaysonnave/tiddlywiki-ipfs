@@ -820,4 +820,47 @@ IPFS utils
       $tw.utils.locateTiddlers(child, tiddlers)
     }
   }
+
+  exports.onModuleState = function (title) {
+    if ($tw.wiki) {
+      const fields = {}
+      const tiddler = $tw.wiki.getTiddler(title)
+      if (tiddler) {
+        const tags = tiddler.fields.tags ? tiddler.fields.tags.slice() : []
+        if (tags.indexOf('$:/isIpfs') === -1) {
+          $tw.utils.pushTop(tags, '$:/isIpfs')
+          fields.tags = tags
+        }
+        if (tiddler.fields._canonical_uri === undefined) {
+          if ($tw.node) {
+            const filenamify = globalThis.filenamify || require('filenamify')
+            fields._canonical_uri = `./${filenamify(title, { replacement: '_' })}`
+          } else {
+            fields._canonical_uri = `./${$tw.ipfs.filenamify(title)}`
+          }
+        }
+        const updatedTiddler = new $tw.Tiddler(tiddler, fields)
+        if (tiddler.isEqual(updatedTiddler, ['created', 'modified']) === false) {
+          $tw.wiki.addTiddler(updatedTiddler)
+        }
+      }
+    }
+  }
+
+  exports.setOnModuleState = function () {
+    if ($tw.wiki) {
+      var tiddler = $tw.wiki.getTiddler('$:/isIpfsModules')
+      if (!tiddler || tiddler.fields.text !== 'yes') {
+        tiddler = new $tw.Tiddler({
+          title: '$:/isIpfsModules',
+          text: 'yes',
+        })
+        $tw.wiki.addTiddler(tiddler)
+      }
+      if (tiddler.fields.text === 'yes') {
+        $tw.utils.onModuleState('$:/boot/boot.js')
+        $tw.utils.onModuleState('$:/library/ipfs-modules.js')
+      }
+    }
+  }
 })()

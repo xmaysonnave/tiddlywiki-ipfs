@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/startup/compress.js
+title: $:/plugins/ipfs/startup/ipfs-states.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: startup
@@ -13,17 +13,23 @@ Compression handling
   'use strict'
 
   // Export name and synchronous status
-  exports.name = 'ipfs-compress'
+  exports.name = 'ipfs-states'
   exports.platforms = ['browser']
   exports.after = ['ipfs-startup']
   exports.synchronous = true
 
   exports.startup = function () {
-    // Ensure that $:/isCompressed is maintained properly
+    // Ensure that $:/isCompressed and $:/isIpfsModules are maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/isCompressed')) {
         const tiddler = $tw.wiki.getTiddler('$:/isCompressed')
-        $tw.compress.setCompressState(tiddler.fields.text === 'yes')
+        $tw.compress.setCompressState(tiddler !== undefined && tiddler.fields.text === 'yes')
+      }
+      if ($tw.utils.hop(changes, '$:/isIpfsModules')) {
+        const tiddler = $tw.wiki.getTiddler('$:/isIpfsModules')
+        if (tiddler !== undefined && tiddler.fields.text === 'yes') {
+          $tw.utils.setOnModuleState()
+        }
       }
     })
   }

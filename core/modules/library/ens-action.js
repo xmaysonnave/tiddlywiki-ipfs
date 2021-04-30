@@ -60,7 +60,7 @@ ENS Action
       return false
     }
     try {
-      var { resolvedUrl } = $tw.ipfs.resolveUrl(ensDomain, $tw.utils.getIpnsResolve(), false, $tw.utils.getEthLinkResolve())
+      var { resolvedUrl } = await $tw.ipfs.resolveUrl(ensDomain, $tw.utils.getIpnsResolve(), false, $tw.utils.getEthLinkResolve())
       if (resolvedUrl !== null) {
         window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer')
       }

@@ -17,6 +17,8 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.json-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
+			"--ipfsmodules",
+        "yes",
 			"--compress",
         "yes",
 			"--rendertiddler",

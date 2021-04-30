@@ -191,14 +191,14 @@ describe('Normalize URL', () => {
   it('Relative. File system...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    ipfsBundle.getDocumentUrl = sinon.fake.returns(new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json'))
+    ipfsBundle.ipfsUrl.getDocumentUrl = sinon.fake.returns(new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json'))
     const parsed = ipfsBundle.normalizeUrl('../../import/cleanup/root.json', new URL('file:///work/tiddly/tiddlywiki-ipfs/test/import/load/root.json'))
     expect(parsed.toString() === 'file:///work/tiddly/tiddlywiki-ipfs/test/import/cleanup/root.json').to.be.true
   })
   it('Relative...', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    ipfsBundle.getDocumentUrl = sinon.fake.returns(new URL('https://ipfs.bluelightav.org/import/analyze/root.json'))
+    ipfsBundle.ipfsUrl.getDocumentUrl = sinon.fake.returns(new URL('https://ipfs.bluelightav.org/import/analyze/root.json'))
     const parsed = ipfsBundle.normalizeUrl('./level_4_1.json', new URL('https://ipfs.bluelightav.org/import/analyze/root.json'))
     expect(parsed.toString() === 'https://ipfs.bluelightav.org/import/analyze/level_4_1.json').to.be.true
   })

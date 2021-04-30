@@ -4,25 +4,21 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
 
-IPFS plugin version
-
 \*/
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/
   'use strict'
 
-  /*
-   * Information about this macro
-   */
   exports.name = 'plugins-ipfs-version'
 
   exports.params = []
 
-  /*
-   * Run the macro
-   */
   exports.run = function () {
-    return $tw.wiki.getTiddler('$:/plugins/ipfs').fields.version
+    var tiddler = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/plugins/ipfs') : null
+    if (tiddler !== undefined && tiddler !== null && tiddler.fields.version !== undefined) {
+      return $tw.wiki.getTiddler('$:/plugins/ipfs').fields.version
+    }
+    return ''
   }
 })()

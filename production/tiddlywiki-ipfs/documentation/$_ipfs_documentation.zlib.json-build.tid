@@ -1,9 +1,10 @@
 title: $:/ipfs/documentation.zlib-build
 tags: $:/ipfs/documentation
-build: 210424421
+build: 210430311
 name: $:/ipfs/documentation.zlib
-sourceSize: 23647
-sourceUri: ipfs://bafybeidxfgv2lz4t72dpf34ikcwdauudnqksdnunb2jziob4el66i3dwk4/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210424421.json
-version: 0.4.0-beta-tw-v5.1.23+build-210424421
+sourceSize: 23663
+sourceUri: ipfs://bafybeier7obkhz3tdf42piw4jtbi3odu6kw74bzham7k5g5ur7ntdvwwt4/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210430311.json
+altSourceUri: https://dweb.link/ipfs/bafybeier7obkhz3tdf42piw4jtbi3odu6kw74bzham7k5g5ur7ntdvwwt4/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210430311.json
+version: 0.4.0-beta-tw-v5.1.23+build-210430311
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

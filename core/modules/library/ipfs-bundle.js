@@ -683,7 +683,7 @@ IpfsBundle.prototype.decodePathname = function (pathname) {
   var protocol = null
   var path = ''
   // Parse
-  const members = pathname.trim().split('/')
+  const members = pathname.split('/')
   for (var i = 0; i < members.length; i++) {
     if (members[i].trim() === '') {
       continue
@@ -739,7 +739,7 @@ IpfsBundle.prototype.decodeHostname = function (hostname) {
   var protocol = null
   var path = '/'
   // Parse
-  const members = hostname.trim().split('.')
+  const members = hostname.split('.')
   for (var i = 0; i < members.length; i++) {
     if (members[i].trim() === '') {
       continue

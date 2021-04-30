@@ -12,11 +12,11 @@ Navigator widget
   /*global $tw: false */
   'use strict'
 
-  const IMPORT_TITLE = '$:/Import'
-  const IPFS_IMPORT_TITLE = '$:/IpfsImport'
-  const IPFS_EXPORT_TITLE = '$:/IpfsExport'
+  var IMPORT_TITLE = '$:/Import'
+  var IPFS_IMPORT_TITLE = '$:/IpfsImport'
+  var IPFS_EXPORT_TITLE = '$:/IpfsExport'
 
-  const Widget = require('$:/core/modules/widgets/widget.js').widget
+  var Widget = require('$:/core/modules/widgets/widget.js').widget
 
   var NavigatorWidget = function (parseTreeNode, options) {
     this.initialise(parseTreeNode, options)

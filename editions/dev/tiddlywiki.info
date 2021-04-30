@@ -30,6 +30,8 @@
       "--import",
         "./build/output/editions/dev/ipfs.edition.build.tid",
         "application/x-tiddler",
+			"--ipfsmodules",
+        "yes",
 			"--compress",
         "yes",
       "--encryptionpublickey",

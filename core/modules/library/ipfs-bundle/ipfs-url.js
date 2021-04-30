@@ -210,6 +210,10 @@ IpfsUrl.prototype.normalizeUrl = function (value, base) {
       if (text) {
         return null
       }
+    } else if (value.startsWith('./') || value.startsWith('../')) {
+      const origin = this.normalizeUrl(this.getDocumentUrl())
+      const parent = origin.pathname.substring(0, origin.pathname.lastIndexOf('/'))
+      value = `${parent}/${encodeURI(value)}`
     }
   }
   if (url == null) {

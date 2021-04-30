@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/ipfs-startup.js
+title: $:/plugins/ipfs/startup/ipfs-startup.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: startup
@@ -25,7 +25,7 @@ Startup initialisation
       return console
     }
     // Build
-    $tw.ipfsEditionBuild = $tw.utils.extractIpfsEditionBuild()
+    $tw.ipfs.editionBuild = $tw.utils.extractIpfsEditionBuild()
     // Logger
     if (window.log !== undefined && window.log !== null) {
       const log = window.log.getLogger('ipfs')

@@ -19,6 +19,8 @@
       "--import",
         "./build/tiddlers/systems/$__SplashScreen.tid",
         "application/x-tiddler",
+			"--ipfsmodules",
+        "yes",
 			"--compress",
         "yes",
 			"--rendertiddler",

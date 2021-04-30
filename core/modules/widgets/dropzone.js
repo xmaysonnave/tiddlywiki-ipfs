@@ -11,6 +11,8 @@ Dropzone widget
   /*global $tw: false */
   'use strict'
 
+  var IPFS_IMPORT_TITLE = '$:/IpfsImport'
+
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
   var DropZoneWidget = function (parseTreeNode, options) {
@@ -107,24 +109,53 @@ Dropzone widget
     $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
   }
 
+  DropZoneWidget.prototype.filterByContentTypes = function (tiddlerFieldsArray) {
+    var filteredTypes
+    var filtered = []
+    var types = []
+    $tw.utils.each(tiddlerFieldsArray, function (tiddlerFields) {
+      types.push(tiddlerFields.type)
+    })
+    filteredTypes = this.wiki.filterTiddlers(this.contentTypesFilter, this, this.wiki.makeTiddlerIterator(types))
+    $tw.utils.each(tiddlerFieldsArray, function (tiddlerFields) {
+      if (filteredTypes.indexOf(tiddlerFields.type) !== -1) {
+        filtered.push(tiddlerFields)
+      }
+    })
+    return filtered
+  }
+
+  DropZoneWidget.prototype.readFileCallback = function (tiddlerFieldsArray) {
+    if (this.contentTypesFilter) {
+      tiddlerFieldsArray = this.filterByContentTypes(tiddlerFieldsArray)
+    }
+    if (tiddlerFieldsArray.merged) {
+      this.dispatchEvent({
+        type: 'tm-ipfs-import-tiddlers',
+        param: tiddlerFieldsArray,
+        autoOpenOnImport: this.autoOpenOnImport,
+        importTitle: this.importTitle,
+      })
+      if (this.actions) {
+        this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
+      }
+    } else if (tiddlerFieldsArray.length) {
+      this.dispatchEvent({
+        type: 'tm-import-tiddlers',
+        param: tiddlerFieldsArray,
+        autoOpenOnImport: this.autoOpenOnImport,
+        importTitle: this.importTitle,
+      })
+      if (this.actions) {
+        this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
+      }
+    }
+  }
+
   DropZoneWidget.prototype.handleDropEvent = function (event) {
     var self = this
     var readFileCallback = function (tiddlerFieldsArray) {
-      if (tiddlerFieldsArray.merged) {
-        self.dispatchEvent({
-          type: 'tm-ipfs-import-tiddlers',
-          param: tiddlerFieldsArray,
-          autoOpenOnImport: self.autoOpenOnImport,
-          importTitle: self.importTitle,
-        })
-      } else {
-        self.dispatchEvent({
-          type: 'tm-import-tiddlers',
-          param: tiddlerFieldsArray,
-          autoOpenOnImport: self.autoOpenOnImport,
-          importTitle: self.importTitle,
-        })
-      }
+      self.readFileCallback(tiddlerFieldsArray)
     }
     this.leaveDrag(event)
     // Check for being over a TEXTAREA or INPUT
@@ -135,21 +166,37 @@ Dropzone widget
     if ($tw.dragInProgress) {
       return false
     }
-    var self = this
     var dataTransfer = event.dataTransfer
     // Remove highlighting
     $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
     // Import any files in the drop
     var hasFiles = dataTransfer.files && dataTransfer.files.length > 0
     if (hasFiles) {
-      this.wiki.readFiles(dataTransfer.files, {
-        callback: readFileCallback,
-        deserializer: this.dropzoneDeserializer,
-      })
+      hasFiles =
+        this.wiki.readFiles(dataTransfer.files, {
+          callback: readFileCallback,
+          deserializer: this.dropzoneDeserializer,
+        }) > 0
     }
     // Try to import the various data types we understand
     if (hasFiles === false) {
-      $tw.utils.importDataTransfer(dataTransfer, this.wiki.generateNewTitle('Untitled'), readFileCallback)
+      var fallbackTitle = self.wiki.generateNewTitle('Untitled')
+      //Use the deserializer specified if any
+      if (this.dropzoneDeserializer) {
+        for (var t = 0; t < dataTransfer.items.length; t++) {
+          var item = dataTransfer.items[t]
+          if (item.kind === 'string') {
+            item.getAsString(function (str) {
+              var tiddlerFields = self.wiki.deserializeTiddlers(null, str, { title: fallbackTitle }, { deserializer: self.dropzoneDeserializer })
+              if (tiddlerFields && tiddlerFields.length) {
+                readFileCallback(tiddlerFields)
+              }
+            })
+          }
+        }
+      } else {
+        $tw.utils.importDataTransfer(dataTransfer, fallbackTitle, readFileCallback)
+      }
     }
     // Tell the browser that we handled the drop
     event.preventDefault()
@@ -159,21 +206,7 @@ Dropzone widget
   DropZoneWidget.prototype.handlePasteEvent = function (event) {
     var self = this
     var readFileCallback = function (tiddlerFieldsArray) {
-      if (tiddlerFieldsArray.merged) {
-        self.dispatchEvent({
-          type: 'tm-ipfs-import-tiddlers',
-          param: tiddlerFieldsArray,
-          autoOpenOnImport: self.autoOpenOnImport,
-          importTitle: self.importTitle,
-        })
-      } else {
-        self.dispatchEvent({
-          type: 'tm-import-tiddlers',
-          param: tiddlerFieldsArray,
-          autoOpenOnImport: self.autoOpenOnImport,
-          importTitle: self.importTitle,
-        })
-      }
+      self.readFileCallback(tiddlerFieldsArray)
     }
     // Let the browser handle it if we're in a textarea or input box
     if (['TEXTAREA', 'INPUT'].indexOf(event.target.tagName) === -1 && !event.target.isContentEditable) {
@@ -190,22 +223,26 @@ Dropzone widget
           })
         } else if (item.kind === 'string') {
           // Create tiddlers from string items
+          var tiddlerFields
           var type = item.type
           item.getAsString(function (str) {
-            var tiddlerFields = {
-              title: self.wiki.generateNewTitle('Untitled'),
-              text: str,
-              type: type,
+            // Use the deserializer specified if any
+            if (self.dropzoneDeserializer) {
+              tiddlerFields = self.wiki.deserializeTiddlers(null, str, { title: self.wiki.generateNewTitle('Untitled') }, { deserializer: self.dropzoneDeserializer })
+              if (tiddlerFields && tiddlerFields.length) {
+                readFileCallback(tiddlerFields)
+              }
+            } else {
+              tiddlerFields = {
+                title: self.wiki.generateNewTitle('Untitled'),
+                text: str,
+                type: type,
+              }
+              if ($tw.log.IMPORT) {
+                console.log("Importing string '" + str + "', type: '" + type + "'")
+              }
+              readFileCallback([tiddlerFields])
             }
-            if ($tw.log.IMPORT) {
-              console.log("Importing string '" + str + "', type: '" + type + "'")
-            }
-            self.dispatchEvent({
-              type: 'tm-import-tiddlers',
-              param: JSON.stringify([tiddlerFields]),
-              autoOpenOnImport: self.autoOpenOnImport,
-              importTitle: self.importTitle,
-            })
           })
         }
       }
@@ -223,7 +260,9 @@ Dropzone widget
     this.dropzoneDeserializer = this.getAttribute('deserializer')
     this.dropzoneEnable = (this.getAttribute('enable') || 'yes') === 'yes'
     this.autoOpenOnImport = this.getAttribute('autoOpenOnImport')
-    this.importTitle = this.getAttribute('importTitle')
+    this.importTitle = this.getAttribute('importTitle', IPFS_IMPORT_TITLE)
+    this.actions = this.getAttribute('actions')
+    this.contentTypesFilter = this.getAttribute('contentTypesFilter')
     // Make child widgets
     this.makeChildWidgets()
   }
@@ -233,7 +272,7 @@ Dropzone widget
    */
   DropZoneWidget.prototype.refresh = function (changedTiddlers) {
     var changedAttributes = this.computeAttributes()
-    if (changedAttributes.enable || changedAttributes.autoOpenOnImport || changedAttributes.importTitle || changedAttributes.deserializer || changedAttributes.class) {
+    if ($tw.utils.count(changedAttributes) > 0) {
       this.refreshSelf()
       return true
     }

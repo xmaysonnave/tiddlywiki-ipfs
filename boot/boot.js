@@ -207,8 +207,8 @@ var _boot = (function($tw) {
    * Use our custom error handler if we're in the browser
    */
   if($tw.boot.tasks.trapErrors) {
-    window.onerror = function(errorMsg,url,lineNumber) {
-      $tw.utils.error(errorMsg);
+    window.onerror = function(errorMsg,url,line,col,errorObj) {
+      $tw.utils.error(`${errorMsg}\n${url}, ${line}:${col}`);
       return false;
     };
   }
@@ -2412,9 +2412,7 @@ var _boot = (function($tw) {
       // Startup
       $tw.boot.startup({callback: callback});
       // Make sure the crypto state tiddler is up to date
-      if($tw.crypto) {
-        $tw.crypto.updateCryptoStateTiddler();
-      }
+      $tw.crypto.updateCryptoStateTiddler();
     });
   };
 

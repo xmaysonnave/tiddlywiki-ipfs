@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/ipfs-filters.js
+title: $:/plugins/ipfs/filenamify.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: filteroperator

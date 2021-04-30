@@ -28,7 +28,9 @@ mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 cp -R ./core/* ./build/plugins/ipfs || exit 1
 rm ./build/plugins/ipfs/modules/library/ipfs-bundle.js > /dev/null 2>&1
 rm -R ./build/plugins/ipfs/modules/library/ipfs-bundle > /dev/null 2>&1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./build/plugins/ipfs/config || exit 1
 cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.json.json-build.tid ./build/plugins/ipfs/config || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js.js-build.tid ./build/plugins/ipfs/config || exit 1
 cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js.json.json-build.tid ./build/plugins/ipfs/config || exit 1
 cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 

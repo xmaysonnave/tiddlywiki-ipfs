@@ -162,7 +162,9 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
       method: 'get',
       signal: timeout.signal,
     }
-    const response = await fetch(options && options.ok && options.url ? options.url : url, params)
+    const response = await fetch(options && options.ok && options.url ? options.url : url, params, {
+      mode: 'anonymous',
+    })
     if (response.ok) {
       const ab = await response.arrayBuffer()
       const ua = new Uint8Array(ab)
@@ -273,16 +275,16 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
     return ''
   }
   var content = this.ipfsBundle.Utf8ArrayToStr(ua)
-  if (content.match(/{"compressed":/)) {
+  if (content.match(/^{"compressed":/)) {
     const json = JSON.parse(content)
-    if (json.compressed.match(/{"iv":/)) {
+    if (json.compressed.match(/^{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
         content = await this.decryptFromPasswordPrompt(json.compressed)
       } else {
         content = $tw.crypto.decrypt(json.compressed, password)
       }
       content = this.ipfsBundle.inflate(content)
-    } else if (json.compressed.match(/{"version":/)) {
+    } else if (json.compressed.match(/^{"version":/)) {
       if (json.signature) {
         const signature = await this.ipfsBundle.decrypt(json.signature)
         await this.checkMessage(json.compressed, json.keccak256, signature)
@@ -292,7 +294,7 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
     } else {
       content = this.ipfsBundle.inflate(json.compressed)
     }
-  } else if (content.match(/{"encrypted":/)) {
+  } else if (content.match(/^{"encrypted":/)) {
     const json = JSON.parse(content)
     if (json.signature) {
       const signature = await this.ipfsBundle.decrypt(json.signature)
@@ -300,7 +302,7 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
     }
     content = await this.ipfsBundle.decrypt(json.encrypted)
     content = btoa(content)
-  } else if (content.match(/{"iv":/)) {
+  } else if (content.match(/^{"iv":/)) {
     if (password == null && $tw.crypto.hasPassword() === false) {
       content = await this.decryptFromPasswordPrompt(content)
     } else {
@@ -327,20 +329,20 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
     return ''
   }
   var content = this.ipfsBundle.Utf8ArrayToStr(ua)
-  if (content.match(/{"compressed":/)) {
+  if (content.match(/^{"compressed":/)) {
     const compressedStoreArea = $tw.utils.extractCompressedStoreArea(content)
     if (compressedStoreArea) {
       content = compressedStoreArea
     }
     const json = JSON.parse(content)
-    if (json.compressed.match(/{"iv":/)) {
+    if (json.compressed.match(/^{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
         content = await this.decryptFromPasswordPrompt(json.compressed)
       } else {
         content = $tw.crypto.decrypt(json.compressed, password)
       }
       content = this.ipfsBundle.inflate(content)
-    } else if (json.compressed.match(/{"version":/)) {
+    } else if (json.compressed.match(/^{"version":/)) {
       if (json.signature) {
         const signature = await this.ipfsBundle.decrypt(json.signature)
         await this.checkMessage(json.compressed, json.keccak256, signature)
@@ -350,7 +352,7 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
     } else {
       content = this.ipfsBundle.inflate(json.compressed)
     }
-  } else if (content.match(/{"encrypted":/)) {
+  } else if (content.match(/^{"encrypted":/)) {
     const encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(content)
     if (encryptedStoreArea) {
       content = encryptedStoreArea
@@ -361,7 +363,7 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
       await this.checkMessage(json.encrypted, json.keccak256, signature)
     }
     content = await this.ipfsBundle.decrypt(json.encrypted)
-  } else if (content.match(/{"iv":/)) {
+  } else if (content.match(/^{"iv":/)) {
     const encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(content)
     if (encryptedStoreArea) {
       content = encryptedStoreArea

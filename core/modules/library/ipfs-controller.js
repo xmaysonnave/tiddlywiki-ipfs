@@ -374,6 +374,7 @@ ${ipfsPath}`
         resolvedUrl: null,
       }
     }
+    base = base !== undefined && base !== null && base.toString().trim() !== '' ? base.toString().trim() : null
     try {
       normalizedUrl = this.normalizeUrl(value, base)
     } catch (error) {

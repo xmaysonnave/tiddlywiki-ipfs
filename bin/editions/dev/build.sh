@@ -28,7 +28,9 @@ mkdir -p ./current/editions/dev > /dev/null 2>&1
 # assets
 cp -R ./editions/bluelightav-raw/* ./build || exit 1
 cp -R ./editions/dev-raw/* ./build || exit 1
-cp ./production/tiddlywiki-ipfs/documentation/\$_ipfs_documentation.json-build.tid ./build/tiddlers/config/dev-\$_ipfs_documentation.json-build.tid || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js.js-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/documentation/\$_ipfs_documentation.json-build.tid ./build/tiddlers/config || exit 1
 
 # tw5-locator
 rm -f -R ./build/plugins/locator > /dev/null 2>&1

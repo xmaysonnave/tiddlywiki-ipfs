@@ -1,20 +1,20 @@
 {
-  "build": "210424421",
+  "build": "210430311",
   "content": [
     {
-      "title": "bluelightav-0.4.0-beta-tw-v5.1.23+build-210424421",
+      "title": "bluelightav-0.4.0-beta-tw-v5.1.23+build-210430311",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "https://bluelight.link/ipfs/bafybeihldiyrpay4kcocqvkocavhlddvy6ejeh3rljs4ve5qvvsebezlo4/favicon.ico",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeie5fy2sbxll4sb2vtayiakrpa5wwnt4xfahxpcb2sxywux6po2izm/favicon.ico",
       "name": "bluelightav",
-      "rawHash": "eea7f205e2de9fe892cda45fb8280f79ed361e9ca631a0549fca008f69c5baff",
-      "sourceSize": 1260419,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeihldiyrpay4kcocqvkocavhlddvy6ejeh3rljs4ve5qvvsebezlo4/",
-      "tidSize": 494,
-      "tidUri": "https://bluelight.link/ipfs/bafybeidzbg2cyk2hamn6vdgzmn4ofyhllorc2xxwiijlcvtkxbzkq757fq/bluelightav.html-build.tid"
+      "rawHash": "c52140dda5e9b78040f7efeb332b043c4fde8def812a0dfdaabb33d831c248e3",
+      "sourceSize": 1013818,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeie5fy2sbxll4sb2vtayiakrpa5wwnt4xfahxpcb2sxywux6po2izm/",
+      "tidSize": 591,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeidvrnhmpavtxjo34iyxh2jgibhx5zj44cdbytpxw324xtrqucujiq/bluelightav.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210424421",
-  "buildUri": "https://bluelight.link/ipfs/bafybeieslc7mbmmh6ezeysfzkuherqlzicw23kz36pbo4raqzhgyai7wry/210424421/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210430311",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeifttrrb7ofvywrgdyvcx6j43l77lcz7claueqqutrctkajsoz4izq/210430311/"
 }

@@ -20,6 +20,8 @@
       "--import",
         "./build/output/editions/empty/ipfs.edition.build.tid",
         "application/x-tiddler",
+			"--ipfsmodules",
+        "yes",
 			"--compress",
         "yes",
 			"--rendertiddler",

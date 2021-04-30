@@ -33,6 +33,9 @@ const baseHttpNonDefaultPort = new URL('https://ipfs.bluelightav.org:4443')
 const absolute = new URL('https://bluelightav.eth')
 const ipfs = new URL('ipfs://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy')
 const relative = '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau'
+const rootDocument = '/document.pdf'
+const relativeDocument = './document.pdf'
+const subdomain = new URL('https://bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau.ipfs.bluelight.link')
 
 before(() => {
   globalThis.log = log
@@ -131,6 +134,27 @@ describe('WHATWG-URL', () => {
         parsed.href === absolute.href &&
         parsed.toString() === absolute.toString()
     ).to.be.true
+  })
+  it('Base URL', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const { base } = ipfsBundle.getBase(subdomain)
+    expect(base.protocol === 'https:' && base.host === 'bluelight.link' && base.pathname === '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau/').to.be.true
+  })
+  it('Root relative Base', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const { base } = ipfsBundle.getBase(subdomain)
+    const parsed = ipfsBundle.getUrl(rootDocument, base)
+    expect(parsed.protocol === 'https:' && parsed.host === 'bluelight.link' && parsed.pathname === '/document.pdf').to.be.true
+  })
+  it('Relative Base', () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    const { base } = ipfsBundle.getBase(subdomain)
+    const parsed = ipfsBundle.getUrl(relativeDocument, base)
+    expect(parsed.protocol === 'https:' && parsed.host === 'bluelight.link' && parsed.pathname === '/ipfs/bafybeibu35gxr445jnsqc23s2nrumlnbkeije744qlwkysobp7w5ujdzau/document.pdf')
+      .to.be.true
   })
   it('Relative URL', () => {
     const base = new URL(baseHttp)

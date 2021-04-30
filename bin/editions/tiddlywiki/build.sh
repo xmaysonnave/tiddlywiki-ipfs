@@ -38,6 +38,8 @@ yarn tiddlywiki-ipfs build \
 
 # assets
 cp -R ./editions/tiddlywiki/* ./build || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js.js-build.tid ./build/tiddlers/config || exit 1
 
 # check hash and set version
 ./bin/cli-semver.sh \

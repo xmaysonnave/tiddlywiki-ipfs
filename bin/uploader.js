@@ -237,6 +237,47 @@ module.exports = async function main (name, extension, dir, tags, load) {
       path: '/index.html',
       content: ipfsBundle.StringToUint8Array(source),
     })
+    // Dependencies
+    var bootUri = null
+    var libraryUri = null
+    const bootPath = `./current/tiddlywiki-ipfs/boot/current.json`
+    if (fs.existsSync(bootPath) === false) {
+      throw new Error(`Unknown production boot: ${bootPath}...`)
+    }
+    const boot = JSON.parse(fs.readFileSync(bootPath, 'utf8'))
+    for (var i = 0; i < boot.content.length; i++) {
+      if (boot.content[i].name === '$:/boot/boot.js') {
+        bootUri = boot.content[i].sourceUri
+        break
+      }
+    }
+    if (bootUri == null) {
+      throw new Error(`Unknown ipfs-boot dependency...`)
+    }
+    var ua = await loadFromIpfs(bootUri)
+    upload.push({
+      path: '/$_boot_boot.js',
+      content: ua,
+    })
+    const libraryPath = `./current/tiddlywiki-ipfs/library/current.json`
+    if (fs.existsSync(libraryPath) === false) {
+      throw new Error(`Unknown production boot: ${libraryPath}...`)
+    }
+    const library = JSON.parse(fs.readFileSync(libraryPath, 'utf8'))
+    for (var i = 0; i < library.content.length; i++) {
+      if (library.content[i].name === '$:/library/ipfs-modules.js') {
+        libraryUri = library.content[i].sourceUri
+        break
+      }
+    }
+    if (libraryUri == null) {
+      throw new Error(`Unknown ipfs-library dependency...`)
+    }
+    var ua = await loadFromIpfs(libraryUri)
+    upload.push({
+      path: '/$_library_ipfs-modules.js',
+      content: ua,
+    })
   } else {
     upload.push({
       path: `/${sourceFileName}`,
@@ -338,10 +379,12 @@ name: ${node.name}
 sourceSize: ${node.sourceSize}`
   if (sourceFileName.endsWith('.html')) {
     tid = `${tid}
-sourceUri: ipfs://${parentCid}/`
+sourceUri: ipfs://${parentCid}/
+altSourceUri: https://dweb.link/ipfs/${parentCid}`
   } else {
     tid = `${tid}
-sourceUri: ipfs://${parentCid}/${sourceFileName}`
+sourceUri: ipfs://${parentCid}/${sourceFileName}
+altSourceUri: https://dweb.link/ipfs/${parentCid}/${sourceFileName}`
   }
   tid = `${tid}
 version: ${build.version}

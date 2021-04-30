@@ -11,17 +11,10 @@ Macro to output a single tiddler to JSON
   /*global $tw: false */
   'use strict'
 
-  /*
-Information about this macro
-*/
-
   exports.name = 'jsontiddler'
 
   exports.params = [{ name: 'title' }]
 
-  /*
-Run the macro
-*/
   exports.run = function (title) {
     title = title || this.getVariable('currentTiddler')
     var tiddler = !!title && this.wiki.getTiddler(title)

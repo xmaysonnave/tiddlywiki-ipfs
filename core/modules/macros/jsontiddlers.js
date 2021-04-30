@@ -11,17 +11,10 @@ Macro to output tiddlers matching a filter to JSON
   /*global $tw: false */
   'use strict'
 
-  /*
-Information about this macro
-*/
-
   exports.name = 'jsontiddlers'
 
   exports.params = [{ name: 'filter' }, { name: 'spaces' }]
 
-  /*
-Run the macro
-*/
   exports.run = function (filter, spaces) {
     var content = this.wiki.getTiddlersAsJson(filter, $tw.utils.parseInt(spaces))
     var compress = $tw.wiki.getTiddler('$:/isCompressed')

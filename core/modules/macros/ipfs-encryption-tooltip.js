@@ -4,24 +4,16 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
 
-IPFS plugin version
-
 \*/
 ;(function () {
   /*jslint node:true,browser:true*/
   /*global $tw:false*/
   'use strict'
 
-  /*
-   * Information about this macro
-   */
   exports.name = 'ipfs-encryption-tooltip'
 
   exports.params = []
 
-  /*
-   * Run the macro
-   */
   exports.run = function () {
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
     if (encrypted !== undefined && encrypted !== null && encrypted.fields.text === 'yes') {

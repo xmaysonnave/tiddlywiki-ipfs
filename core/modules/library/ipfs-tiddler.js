@@ -368,15 +368,18 @@ IPFS Tiddler
           try {
             if (info.encoding === 'base64') {
               addTags = ['$:/isAttachment', '$:/isEmbedded']
-              msg = `${msg} attachment:`
+              msg = `${msg} attachment '${type}':`
               data = await $tw.ipfs.loadToBase64(oldResolvedUrl, password)
             } else if (type === 'image/svg+xml') {
               addTags = ['$:/isAttachment', '$:/isEmbedded']
-              msg = `${msg} attachment:`
+              msg = `${msg} attachment '${type}':`
               data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
-            } else {
-              msg = `${msg} Tiddler:`
+            } else if (oldTiddler.fields.text !== '') {
+              msg = `${msg} '${type}':`
               data = oldTiddler.fields.text
+            } else {
+              msg = `${msg} '${type}':`
+              data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
             }
             updatedTiddler = $tw.utils.updateTiddler({
               tiddler: updatedTiddler,
@@ -404,7 +407,7 @@ IPFS Tiddler
     canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
     const { ipnsCid, normalizedUrl } = await $tw.ipfs.resolveUrl(canonicalUri, false, false, true)
     // Process new canonical_uri
-    if (ipnsCid !== null && oldCanonicalUri == null && canonicalUri !== null && tiddler.fields.text !== '') {
+    if (oldCanonicalUri == null && ipnsCid !== null && canonicalUri !== null && tiddler.fields.text !== '') {
       const { info } = $tw.utils.getContentType(tiddler)
       const content = await $tw.ipfs.processContent(tiddler, tiddler.fields.text, info.encoding, type)
       var filename = '/'

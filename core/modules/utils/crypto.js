@@ -29,7 +29,7 @@ Utility functions related to crypto.
 
   exports.decrypt = function (encrypted, callback) {
     if (encrypted) {
-      if (encrypted.match(/{"iv":/)) {
+      if (encrypted.match(/^{"iv":/)) {
         $tw.utils.decryptStoreAreaInteractive(encrypted, function (decrypted) {
           const tiddlers = $tw.utils.loadTiddlers(decrypted)
           if (tiddlers) {
@@ -37,7 +37,7 @@ Utility functions related to crypto.
           }
         })
         return true
-      } else if (encrypted.match(/{"encrypted":/)) {
+      } else if (encrypted.match(/^{"encrypted":/)) {
         const json = JSON.parse(encrypted)
         if (json) {
           $tw.utils.decryptFromMetamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted) {

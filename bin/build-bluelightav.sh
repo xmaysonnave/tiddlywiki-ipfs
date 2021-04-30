@@ -9,7 +9,7 @@
 ./bin/editions/bluelightav/build.sh "$@" || exit 1
 
 # build upload
-./bin/cli-buuld-uploader.sh "$@" || exit 1
+./bin/cli-build-uploader.sh "$@" || exit 1
 
 # update
 # ./bin/cli-update.sh "$@" || exit 1
