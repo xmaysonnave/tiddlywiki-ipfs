@@ -16,6 +16,9 @@
   "build": {
 		"dev": [
       "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",

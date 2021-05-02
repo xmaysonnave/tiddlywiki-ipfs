@@ -16,6 +16,9 @@
   "build": {
 		"index": [
       "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
@@ -40,6 +43,9 @@
         "text/plain"
     ],
 		"index-standford": [
+      "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -67,6 +73,9 @@
     ],
     "index-plain": [
       "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
@@ -89,6 +98,9 @@
         "text/plain"
     ],
 		"index-plain-and-ethereum": [
+      "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -115,6 +127,9 @@
       "--clearkeys"
     ],
 		"index-plain-and-standford": [
+      "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",

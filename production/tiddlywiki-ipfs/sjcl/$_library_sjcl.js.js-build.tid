@@ -1,0 +1,10 @@
+title: $:/library/sjcl.js-build
+tags: $:/core/library/sjcl
+build: 210502371
+name: $:/library/sjcl.js
+sourceSize: 25607
+sourceUri: ipfs://bafybeiecjfswov6lobfnbyobcnpeuzdybrsgvmogpturpaoraurkqn523y/$_library_sjcl.js-1.0.8+release-210502371.js
+altSourceUri: https://dweb.link/ipfs/bafybeiecjfswov6lobfnbyobcnpeuzdybrsgvmogpturpaoraurkqn523y/$_library_sjcl.js-1.0.8+release-210502371.js
+version: 1.0.8+release-210502371
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -1,4 +1,4 @@
 title: $:/boot/boot.js
-tags: $:/ipfs/boot/modules
+tags: $:/boot/modules
 type: application/javascript
 ipfs-boot-modules: yes

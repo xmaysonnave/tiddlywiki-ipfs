@@ -185,7 +185,12 @@ The saver handler tracks changes to the store and handles saving the entire wiki
         }
       }
     }
-    // Process preferred if any
+    var ipfsSaverOnly = false
+    var errorIpfsSaverOnly = new Error('Unable to save TiddlyWiki with embedded modules...')
+    var tiddler = $tw.wiki.getTiddler('$:/isModule')
+    if (tiddler && tiddler.fields.text === 'yes') {
+      ipfsSaverOnly = true
+    }
     var ignorePreferred = null
     var preferredSaver = $tw.wiki.getTiddler('$:/config/PreferredSaver')
     if (preferredSaver !== undefined && preferredSaver !== null) {
@@ -194,6 +199,11 @@ The saver handler tracks changes to the store and handles saving the entire wiki
       if (title !== null) {
         var saver = this.getSaver(title)
         if (saver !== null && saver.module !== undefined) {
+          if (ipfsSaverOnly && saver.title !== '$:/plugins/ipfs/ipfs-saver.js') {
+            $tw.ipfs.getLogger().error(errorIpfsSaverOnly)
+            callback(errorIpfsSaverOnly)
+            return true
+          }
           if (await this.save(saver.module, method, variables, text, callback)) {
             return true
           }
@@ -204,11 +214,14 @@ The saver handler tracks changes to the store and handles saving the entire wiki
 
     // Call the highest priority saver that supports this method
     for (var t = this.savers.length - 1; t >= 0; t--) {
-      // Ignore failed preferred if any
       if (this.savers[t].title === ignorePreferred) {
         continue
       }
-      // Process
+      if (ipfsSaverOnly && this.savers[t].title !== '$:/plugins/ipfs/ipfs-saver.js') {
+        $tw.ipfs.getLogger().error(errorIpfsSaverOnly)
+        callback(errorIpfsSaverOnly)
+        return true
+      }
       if (await this.save(this.savers[t].module, method, variables, text, callback)) {
         return true
       }
@@ -217,7 +230,6 @@ The saver handler tracks changes to the store and handles saving the entire wiki
   }
 
   SaverHandler.prototype.getSaver = function (title) {
-    // Locate saver
     var saver = null
     for (var i = 0; i < this.savers.length; i++) {
       var current = this.savers[i]

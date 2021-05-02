@@ -48,6 +48,13 @@ then
   wget https://cdn.jsdelivr.net/npm/pako@2.0.3/dist/pako.min.js -O ./pako/pako.min.js || exit 1
 fi
 
+# sjcl
+if [ ! -e ./sjcl ]
+then
+  mkdir sjcl > /dev/null 2>&1
+  wget https://cdn.jsdelivr.net/npm/sjcl@1.0.8/sjcl.min.js -O ./sjcl/sjcl.min.js || exit 1
+fi
+
 # tw5-locator
 if [ ! -e ./tw5-locator ]
 then

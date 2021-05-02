@@ -26,7 +26,7 @@ module-type: command
     if (this.params.length > 0) {
       ipfsmodules = this.params[0] === 'yes'
     }
-    $tw.utils.setOnModuleState(ipfsmodules)
+    $tw.modulesState.setModulesState(ipfsmodules)
     return null
   }
 

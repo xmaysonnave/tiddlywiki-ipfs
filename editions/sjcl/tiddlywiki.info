@@ -1,0 +1,16 @@
+{
+	"description": "Build sjcl library",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "plain": [
+			"--compress",
+        "no",
+      "--render",
+        "[tag[$:/core/library/sjcl]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/sjcl/]addsuffix[.json-%BUILD_SJCL_VERSION%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ]
+	}
+}

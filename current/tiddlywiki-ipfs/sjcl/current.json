@@ -1,0 +1,28 @@
+{
+  "build": "210502371",
+  "content": [
+    {
+      "title": "$_library_sjcl.js.json-1.0.8+release-210502371",
+      "tags": "$:/core/library/sjcl",
+      "name": "$:/library/sjcl.js.json",
+      "rawHash": "4360177f84467453b6de1379f26d4924811959e0dde808dd746d506964866a78",
+      "sourceSize": 26363,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeicxalg6usx44knep3se6cikvb54olubeshke3uavd3rknseae4w7q/$_library_sjcl.js.json-1.0.8+release-210502371.json",
+      "tidSize": 608,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeihmwplfazn5weuv5tlhcdbpon4qjvvgyxhpm5crepuy3u53khazr4/$_library_sjcl.js.json.json-build.tid"
+    },
+    {
+      "title": "$_library_sjcl.js-1.0.8+release-210502371",
+      "tags": "$:/core/library/sjcl",
+      "name": "$:/library/sjcl.js",
+      "rawHash": "f176e8365ad115519f28d1a00471de050e4cb5a2d960952742191738ca29dc32",
+      "sourceSize": 25607,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiecjfswov6lobfnbyobcnpeuzdybrsgvmogpturpaoraurkqn523y/$_library_sjcl.js-1.0.8+release-210502371.js",
+      "tidSize": 577,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeig2le5kg75qeono7cyxouuqcg4f6i5l3gs3lwvitltsjsrif3aitu/$_library_sjcl.js.js-build.tid"
+    }
+  ],
+  "rawSemver": "1.0.8+release",
+  "version": "1.0.8+release-210502371",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeihozgi5ke3q2ulapvckofypfh5qhbrocrd6h3zzfojqurfoas7xxy/210502371/"
+}

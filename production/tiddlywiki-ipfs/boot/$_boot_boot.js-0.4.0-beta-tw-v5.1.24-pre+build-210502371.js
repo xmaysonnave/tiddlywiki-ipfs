@@ -2506,6 +2506,143 @@ var ipfsBoot = function ($tw) {
     return title
   }
 
+  $tw.utils.ModulesState = function () {
+    var currentState = null
+    this.setModulesState = function (state) {
+      currentState = state ? 'yes' : 'no'
+      this.updateModulesStateTiddler()
+    }
+    this.onModuleState = function (title) {
+      if ($tw.wiki) {
+        var fields = {}
+        var tiddler = $tw.wiki.getTiddler(title)
+        if (tiddler) {
+          var tags = tiddler.fields.tags ? tiddler.fields.tags.slice() : []
+          if (tags.indexOf('$:/isIpfs') === -1) {
+            $tw.utils.pushTop(tags, '$:/isIpfs')
+            fields.tags = tags
+          }
+          if (tiddler.fields._canonical_uri === undefined) {
+            if ($tw.node) {
+              var filenamify = globalThis.filenamify || require('filenamify')
+              fields._canonical_uri = `./${filenamify(title, { replacement: '_' })}`
+            } else {
+              fields._canonical_uri = `./${$tw.ipfs.filenamify(title)}`
+            }
+          }
+          var updatedTiddler = new $tw.Tiddler(tiddler, fields)
+          if (tiddler.isEqual(updatedTiddler, ['created', 'modified']) === false) {
+            $tw.wiki.addTiddler(updatedTiddler)
+          }
+        }
+      }
+    }
+    this.offModuleState = function (title) {
+      if ($tw.wiki) {
+        const tiddler = $tw.wiki.getTiddler(title)
+        if (tiddler && tiddler.fields._canonical_uri) {
+          var creationFields = $tw.wiki.getCreationFields()
+          var data = tiddler.fields.text
+          var modificationFields = $tw.wiki.getModificationFields()
+          var password = tiddler.fields._password
+          password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+          var removeFields = { _canonical_uri: undefined }
+          var tags = tiddler.fields.tags ? tiddler.fields.tags.slice() : []
+          var index = tags.indexOf('$:/isIpfs')
+          if (index !== -1) {
+            tags.splice(index, 1)
+          }
+          if (tags.length > 0) {
+            if (tiddler.fields.tags) {
+              modificationFields.tags = tags
+            } else {
+              creationFields.tags = tags
+            }
+          }
+          if (data === undefined || data.trim() === '') {
+            $tw.ipfs
+              .resolveUrl(tiddler.fields._canonical_uri, false, false, false)
+              .then(data => {
+                const { resolvedUrl } = data
+                $tw.ipfs
+                  .loadToUtf8(resolvedUrl, password)
+                  .then(data => {
+                    modificationFields.text = data
+                    $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
+                    $tw.ipfs.getLogger().info(
+                      `Embed module: ${data.length}
+ ${resolvedUrl}`
+                    )
+                  })
+                  .catch(error => {
+                    $tw.ipfs.getLogger().error(error)
+                    $tw.utils.alert(name, error.message)
+                  })
+              })
+              .catch(error => {
+                $tw.ipfs.getLogger().error(error)
+                $tw.utils.alert(name, error.message)
+              })
+          } else {
+            $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
+          }
+        }
+      }
+    }
+    this.updateModulesStateTiddler = function () {
+      var self = this
+      var tiddler = null
+      if ($tw.wiki) {
+        var state = currentState === 'yes' ? 'yes' : 'no'
+        tiddler = $tw.wiki.getTiddler('$:/isModule')
+        if (!tiddler || tiddler.fields.text !== state) {
+          tiddler = new $tw.Tiddler({
+            title: '$:/isModule',
+            text: state,
+          })
+          $tw.wiki.addTiddler(tiddler)
+        }
+        if (tiddler) {
+          var uri = this.getAltSourceUri('$:/boot/bootprefix.js')
+          if (uri !== undefined && uri !== null && uri.trim() !== '') {
+            if (tiddler.fields.text === 'yes') {
+              this.onModuleState('$:/boot/bootprefix.js')
+            } else {
+              this.offModuleState('$:/boot/bootprefix.js')
+            }
+          }
+          var uri = this.getAltSourceUri('$:/boot/boot.js')
+          if (uri !== undefined && uri !== null && uri.trim() !== '') {
+            if (tiddler.fields.text === 'yes') {
+              this.onModuleState('$:/boot/boot.js')
+            } else {
+              this.offModuleState('$:/boot/boot.js')
+            }
+          }
+          $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, innerTiddler) {
+            if ($tw.wiki.isSystemTiddler(title) && innerTiddler.fields.library === 'yes') {
+              var uri = self.getAltSourceUri(title)
+              if (uri !== undefined && uri !== null && uri.trim() !== '') {
+                if (tiddler.fields.text === 'yes') {
+                  self.onModuleState(title)
+                } else {
+                  self.offModuleState(title)
+                }
+              }
+            }
+          })
+        }
+      }
+    }
+    this.getAltSourceUri = function (title) {
+      var tiddler = $tw.wiki.getTiddler(`${title}-build`)
+      if (tiddler !== undefined && tiddler.fields.altSourceUri !== undefined) {
+        return tiddler.fields.altSourceUri
+      }
+      return ''
+    }
+  }
+
   /**
    * Crypto helper object for encrypted content.
    * It maintains the password text in a closure, and provides methods to change
@@ -3300,6 +3437,8 @@ var ipfsBoot = function ($tw) {
     }
     // Initialise compress object
     $tw.compress = new $tw.utils.Compress()
+    // Initialize module state object
+    $tw.modulesState = new $tw.utils.ModulesState()
     // Preload any compressed tiddlers
     $tw.boot.inflateTiddlers(function () {
       // Startup
@@ -3311,9 +3450,17 @@ var ipfsBoot = function ($tw) {
       } else {
         $tw.crypto.updateCryptoStateTiddler()
       }
-      var compressed = $tw.wiki.getTiddler('$:/isCompressed')
-      if (compressed === undefined) {
+      var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
+      if (tiddler) {
+        $tw.compress.setCompressState(tiddler.fields.text === 'yes')
+      } else {
         $tw.compress.updateCompressStateTiddler()
+      }
+      var tiddler = $tw.wiki.getTiddler('$:/isModule')
+      if (tiddler) {
+        $tw.modulesState.setModulesState(tiddler.fields.text === 'yes')
+      } else {
+        $tw.modulesState.updateModulesStateTiddler()
       }
     })
   }

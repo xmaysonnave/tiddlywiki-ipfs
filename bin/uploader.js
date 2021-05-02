@@ -240,9 +240,10 @@ module.exports = async function main (name, extension, dir, tags, load) {
     // Dependencies
     var bootUri = null
     var libraryUri = null
+    var sjclUri = null
     const bootPath = `./current/tiddlywiki-ipfs/boot/current.json`
     if (fs.existsSync(bootPath) === false) {
-      throw new Error(`Unknown production boot: ${bootPath}...`)
+      throw new Error(`Unknown ${bootPath}...`)
     }
     const boot = JSON.parse(fs.readFileSync(bootPath, 'utf8'))
     for (var i = 0; i < boot.content.length; i++) {
@@ -252,7 +253,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
       }
     }
     if (bootUri == null) {
-      throw new Error(`Unknown ipfs-boot dependency...`)
+      throw new Error(`Unknown '$:/boot/boot.js'...`)
     }
     var ua = await loadFromIpfs(bootUri)
     upload.push({
@@ -261,7 +262,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     })
     const libraryPath = `./current/tiddlywiki-ipfs/library/current.json`
     if (fs.existsSync(libraryPath) === false) {
-      throw new Error(`Unknown production boot: ${libraryPath}...`)
+      throw new Error(`Unknown ${libraryPath}...`)
     }
     const library = JSON.parse(fs.readFileSync(libraryPath, 'utf8'))
     for (var i = 0; i < library.content.length; i++) {
@@ -271,11 +272,30 @@ module.exports = async function main (name, extension, dir, tags, load) {
       }
     }
     if (libraryUri == null) {
-      throw new Error(`Unknown ipfs-library dependency...`)
+      throw new Error(`Unknown '$:/library/ipfs-modules.js'...`)
     }
     var ua = await loadFromIpfs(libraryUri)
     upload.push({
       path: '/$_library_ipfs-modules.js',
+      content: ua,
+    })
+    const sjclPath = `./current/tiddlywiki-ipfs/sjcl/current.json`
+    if (fs.existsSync(sjclPath) === false) {
+      throw new Error(`Unknown ${sjclPath}...`)
+    }
+    const sjcl = JSON.parse(fs.readFileSync(sjclPath, 'utf8'))
+    for (var i = 0; i < sjcl.content.length; i++) {
+      if (sjcl.content[i].name === '$:/library/sjcl.js') {
+        sjclUri = sjcl.content[i].sourceUri
+        break
+      }
+    }
+    if (sjclUri == null) {
+      throw new Error(`Unknown '$:/library/sjcl.js'...`)
+    }
+    var ua = await loadFromIpfs(sjclUri)
+    upload.push({
+      path: '/$_library_sjcl.js',
       content: ua,
     })
   } else {

@@ -69,6 +69,28 @@ function main () {
       }
     }
 
+    // sjcl
+    var build = null
+    var path = './build/output/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const sjcl = JSON.parse(build)
+      if (sjcl.version === undefined || sjcl.version == null) {
+        throw new Error('Unknown sjcl version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_SJCL_VERSION%',
+          replacement: sjcl.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
     // plugin
     var build = null
     var path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.json-build.json'

@@ -1,10 +1,10 @@
 title: $:/boot/boot.js.zlib-build
 tags: $:/ipfs/core
-build: 210430279
+build: 210502371
 name: $:/boot/boot.js.zlib
-sourceSize: 39667
-sourceUri: ipfs://bafybeic6xtt7wsk5gxxuw473dkjaiso77wijgb2i4oyteiocgxwnwhn33m/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210430279.json
-altSourceUri: https://dweb.link/ipfs/bafybeic6xtt7wsk5gxxuw473dkjaiso77wijgb2i4oyteiocgxwnwhn33m/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210430279.json
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210430279
+sourceSize: 40971
+sourceUri: ipfs://bafybeig5uouzyfx6dwu5au4fpit3dxwdhuf3lfptoiccjwrrmuaeb35t5m/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210502371.json
+altSourceUri: https://dweb.link/ipfs/bafybeig5uouzyfx6dwu5au4fpit3dxwdhuf3lfptoiccjwrrmuaeb35t5m/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210502371.json
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210502371
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

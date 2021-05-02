@@ -1,5 +1,5 @@
 title: $:/boot/boot.js
-tags: $:/ipfs/boot/modules
+tags: $:/boot/modules
 type: application/javascript
 build: %BUILD_BOOT_BUILD%
 version: %BUILD_BOOT_VERSION%

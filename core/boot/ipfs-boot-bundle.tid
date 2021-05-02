@@ -1,5 +1,5 @@
 title: $:/ipfs/boot/bundle
-tags: $:/ipfs/boot/modules
+tags: $:/boot/modules
 
 \rules only filteredtranscludeinline transcludeinline codeinline
 

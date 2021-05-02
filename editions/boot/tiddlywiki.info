@@ -7,7 +7,7 @@
 			"--compress",
         "no",
       "--render",
-        "[tag[$:/ipfs/boot/modules]]",
+        "[tag[$:/boot/modules]]",
         "[filenamify[]addprefix[./tiddlywiki-ipfs/boot/]addsuffix[.json-%BUILD_BOOT_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
@@ -16,7 +16,7 @@
 			"--compress",
         "yes",
       "--render",
-        "[tag[$:/ipfs/boot/modules]]",
+        "[tag[$:/boot/modules]]",
         "[filenamify[]addprefix[./tiddlywiki-ipfs/boot/]addsuffix[.zlib-%BUILD_BOOT_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"

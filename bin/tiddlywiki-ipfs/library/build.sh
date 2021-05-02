@@ -97,12 +97,5 @@ yarn tiddlywiki-ipfs build \
   --dir=tiddlywiki-ipfs/library \
   --tags=$:/ipfs/core "$@" || exit 1
 
-# upload to ipfs
-./bin/cli-uploader.sh \
-  --name=$:/library/ipfs-modules.js.zlib \
-  --extension=json \
-  --dir=tiddlywiki-ipfs/library \
-  --tags=$:/ipfs/core "$@" || exit 1
-
 # done
 exit 0

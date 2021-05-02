@@ -16,6 +16,9 @@
   "build": {
 		"dev": [
       "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
@@ -44,6 +47,9 @@
     ],
 		"dev-compressed": [
       "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
@@ -66,6 +72,9 @@
         "text/plain"
     ],
 		"dev-standford": [
+      "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -93,6 +102,9 @@
     ],
     "dev-plain": [
       "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
+      "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
@@ -115,6 +127,9 @@
         "text/plain"
     ],
     "dev-plain-and-ethereum": [
+      "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -141,6 +156,9 @@
       "--clearkeys"
     ],
     "dev-plain-and-standford": [
+      "--import",
+        "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
+        "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",

@@ -1,38 +1,28 @@
 {
-  "build": "210430279",
+  "build": "210502371",
   "content": [
     {
-      "title": "$_library_ipfs-modules.js.json-1.0.0+pre-release-210430279",
+      "title": "$_library_ipfs-modules.js.json-1.0.0+pre-release-210502371",
       "tags": "$:/ipfs/core",
       "name": "$:/library/ipfs-modules.js.json",
       "rawHash": "bcfc0bbf57e9fde75c11cb877fccac1ebe87a4d994c219ed01be4490b98c6521",
       "sourceSize": 133006,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeigfse5iwziohjclvlhe3w2acqarsgln66d6ne2tuodjvbfjsvsdh4/$_library_ipfs-modules.js.json-1.0.0+pre-release-210430279.json",
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiax3sj35hzybadvbdfehx5sviq6kxvn4mwaargs7zfpxuegmyf7ki/$_library_ipfs-modules.js.json-1.0.0+pre-release-210502371.json",
       "tidSize": 653,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeie35z2k6p5xikkicmn2wqynppdylsebi5ruo5p2dg3ce6lqcm4s2i/$_library_ipfs-modules.js.json.json-build.tid"
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeigu7fsjxw5phzqif4evr6ccwotitfxk3y5biae767ox52fuw4dnci/$_library_ipfs-modules.js.json.json-build.tid"
     },
     {
-      "title": "$_library_ipfs-modules.js-1.0.0+pre-release-210430279",
+      "title": "$_library_ipfs-modules.js-1.0.0+pre-release-210502371",
       "tags": "$:/ipfs/core",
       "name": "$:/library/ipfs-modules.js",
       "rawHash": "637e215e39a777016e02c998c9783f38c33b25ea3c5484d24893d951e59977ce",
       "sourceSize": 129974,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiftqjlmw2t3uho5frz47t5cfulkb7lwmu6wkxgmisph3q37m7odjq/$_library_ipfs-modules.js-1.0.0+pre-release-210430279.js",
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeicn7vta35ukxbtlnfpphrmnq2appdfhs6nwirg7uhouvxn3z6tcuq/$_library_ipfs-modules.js-1.0.0+pre-release-210502371.js",
       "tidSize": 622,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeia22wvdriolk7d6lcvldhjqk5pb6mv6dkjqy5646v7vnyracvnphy/$_library_ipfs-modules.js.js-build.tid"
-    },
-    {
-      "title": "$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210430279",
-      "tags": "$:/ipfs/core",
-      "name": "$:/library/ipfs-modules.js.zlib",
-      "rawHash": "64bfa395ba2218fb3e7ce88b0a4de6848d9f9b517ce6c469d379339775bedcb9",
-      "sourceSize": 52571,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeib74dmsdvt7mogfla47pozzcatyzb2f5ir2ji2g7b36gyxhqcta5a/$_library_ipfs-modules.js.zlib-1.0.0+pre-release-210430279.json",
-      "tidSize": 652,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeidsz3mwznelze2e6mfnh6uu4vbj57zkt7wqbvfludu6zdmdzs2i5y/$_library_ipfs-modules.js.zlib.json-build.tid"
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeigqerqertznqallrsb6aqxk64xhizfpofkv64in2mt4iosslcu7y4/$_library_ipfs-modules.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+pre-release",
-  "version": "1.0.0+pre-release-210430279",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeigoeqqyp3aoyxcifajdvmbriiqp6o6lzs3xciciphelzkubeemlmy/210430279/"
+  "version": "1.0.0+pre-release-210502371",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiap2wgec4pcol3mkobt6swx5xt7wykphhsktnqdhjsjtkumqrnohu/210502371/"
 }

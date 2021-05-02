@@ -4,8 +4,6 @@ type: application/javascript
 tags: $:/ipfs/core
 module-type: saver
 
-IPFS Saver
-
 \*/
 ;(function () {
   /*jslint node:true,browser:true*/
@@ -18,7 +16,7 @@ IPFS Saver
   const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
 
-  const name = 'ipfs-saver'
+  const ipfsSaverName = 'ipfs-saver'
 
   /*
    * Select the appropriate saver module and set it up
@@ -45,10 +43,10 @@ IPFS Saver
     const publishToIpns = async function (added, ipnsIpfsCid, ipnsCid, ipnsKey) {
       try {
         await $tw.ipfs.publishIpnsKey(added, ipnsCid, ipnsKey)
-        $tw.utils.alert(name, `Published IPNS key: ${ipnsKey}`)
+        $tw.utils.alert(ipfsSaverName, `Published IPNS key: ${ipnsKey}`)
       } catch (error) {
         $tw.ipfs.getLogger().warn(error)
-        $tw.utils.alert(name, error.message)
+        $tw.utils.alert(ipfsSaverName, error.message)
         if (ipnsIpfsCid !== null) {
           $tw.ipfs.addToPin(`/ipfs/${ipnsIpfsCid}`)
         }
@@ -116,7 +114,7 @@ IPFS Saver
           }
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
-          $tw.utils.alert(name, error.message)
+          $tw.utils.alert(ipfsSaverName, error.message)
         }
         if (ipnsIpfsCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
@@ -150,7 +148,7 @@ IPFS Saver
           )
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
-          $tw.utils.alert(name, error.message)
+          $tw.utils.alert(ipfsSaverName, error.message)
         }
         if (ensCid !== null || ensIpnsCid !== null) {
           const resolvedCid = await $tw.ipfs.resolveIpfsContainer(ensResolvedUrl)
@@ -179,10 +177,10 @@ IPFS Saver
       if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsCid == null) {
         try {
           await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${added}`, web3, account)
-          $tw.utils.alert(name, `Published to ENS: ${ensDomain}`)
+          $tw.utils.alert(ipfsSaverName, `Published to ENS: ${ensDomain}`)
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
-          $tw.utils.alert(name, error.message)
+          $tw.utils.alert(ipfsSaverName, error.message)
           $tw.ipfs.addToPin(ensResolvedUrl !== null ? ensResolvedUrl.pathname : null)
         }
       }
@@ -194,7 +192,7 @@ IPFS Saver
             await $tw.ipfs.unpinFromIpfs(unpin)
           } catch (error) {
             $tw.ipfs.getLogger().warn(error)
-            $tw.utils.alert(name, error.message)
+            $tw.utils.alert(ipfsSaverName, error.message)
           }
         }
       }
@@ -207,7 +205,7 @@ IPFS Saver
             await $tw.ipfs.pinToIpfs(pin)
           } catch (error) {
             $tw.ipfs.getLogger().warn(error)
-            $tw.utils.alert(name, error.message)
+            $tw.utils.alert(ipfsSaverName, error.message)
           }
         }
       }

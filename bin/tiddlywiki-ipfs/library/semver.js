@@ -38,7 +38,6 @@ async function main () {
       }
     }
     await semver(`${name}.js`, 'js', dir, env, version)
-    await semver(`${name}.js.zlib`, 'json', dir, env, version)
     console.log('***')
   } catch (error) {
     console.error(error)

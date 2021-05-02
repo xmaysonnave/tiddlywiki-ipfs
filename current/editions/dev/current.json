@@ -1,20 +1,20 @@
 {
-  "build": "210430318",
+  "build": "210502371",
   "content": [
     {
-      "title": "dev-0.4.0-beta-tw-v5.1.23+build-210430318",
+      "title": "dev-0.4.0-beta-tw-v5.1.23+build-210502371",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeic7rhnqcg5kmd2kocrutii26m663kxetlwlpnfrzvn4gslmnhhzoi/favicon.ico",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua/favicon.ico",
       "name": "dev",
-      "rawHash": "cd94adfc30bb98af231bf474dd49adeea956ea25f128d402f9bd13a99c965dba",
-      "sourceSize": 1338250,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeic7rhnqcg5kmd2kocrutii26m663kxetlwlpnfrzvn4gslmnhhzoi/",
+      "rawHash": "e199842ea3cfa6ad4da6316d57cbf4d7b112ca5125cf938a3280933735edc7c0",
+      "sourceSize": 1313928,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua/",
       "tidSize": 567,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeibqmg3hf7lfwp7m2e7vtn3bl4dqxubln7nttnunhtto5goyqvx7vq/dev.html-build.tid"
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeienlpjjnaqrnynf3bxlfltleos4xm7zrsivdp6zv5i6c2ninakbp4/dev.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210430318",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeidoxarb4nfxcnsq46fhpuivbbzpmli2k5bcyhouc3fmawyopjzawe/210430318/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210502371",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeih3hnwh2nsm7nhiwy2dyu4o6bqmnrka2va2lneft33hcamudpwoue/210502371/"
 }
