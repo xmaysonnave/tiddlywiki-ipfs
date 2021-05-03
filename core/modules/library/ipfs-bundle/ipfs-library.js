@@ -1,3 +1,10 @@
+/*\
+title: $:/plugins/ipfs/ipfs-library.js
+type: application/javascript
+tags: $:/ipfs/core
+module-type: library
+
+\*/
 'use strict'
 
 const fromString = require('uint8arrays').fromString

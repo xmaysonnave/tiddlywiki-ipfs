@@ -1,26 +1,26 @@
 {
-  "build": "210503391",
+  "build": "210503464",
   "content": [
     {
-      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210503391",
+      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210503464",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/favicon.ico",
-      "bootSize": 127874,
-      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_boot_boot.js",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeib6pur62rum446ha6tssnkkzhukzi7rsgpesgkzkg664n53dyea5u/favicon.ico",
+      "bootSize": 127894,
+      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeib6pur62rum446ha6tssnkkzhukzi7rsgpesgkzkg664n53dyea5u/$_boot_boot.js",
       "librarySize": 129974,
-      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_library_ipfs.js",
+      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeib6pur62rum446ha6tssnkkzhukzi7rsgpesgkzkg664n53dyea5u/$_library_ipfs.js",
       "sjclSize": 25607,
-      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_library_sjcl.js",
+      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeib6pur62rum446ha6tssnkkzhukzi7rsgpesgkzkg664n53dyea5u/$_library_sjcl.js",
       "name": "tiddlywiki",
-      "rawHash": "ca8e805e1c1319946516368eaa49a04a9b67e5298e272b4a6944b260d88d61cd",
-      "sourceSize": 2978734,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/",
+      "rawHash": "5dc299664d339b8ea60e551c4055dbe1e61d2366258bb847f1e99eaa2cda11b4",
+      "sourceSize": 2978874,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeib6pur62rum446ha6tssnkkzhukzi7rsgpesgkzkg664n53dyea5u/",
       "tidSize": 949,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeihafz6tk42zyn47izwsihhos6l6fwuuvudal55zptzlnthksjvyfq/tiddlywiki.html-build.tid"
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeicxj7uauxdhzerebuz5l6at6n5ecszu56muyhuvstd43sgg7bc4gq/tiddlywiki.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeicxyo4u2urhyvohhnsnoowhc4vsx2vskk7ea3zrmbr7trq2tam3ii/210503391/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503464",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiaczi4pa4ecaqdsjvfokvprfnuwbql4bhfaj32baun6zrik6hhc7a/210503464/"
 }

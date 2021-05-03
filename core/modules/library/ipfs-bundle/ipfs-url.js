@@ -1,3 +1,10 @@
+/*\
+title: $:/plugins/ipfs/ipfs-url.js
+type: application/javascript
+tags: $:/ipfs/core
+module-type: library
+
+\*/
 'use strict'
 
 const filenamify = require('filenamify')

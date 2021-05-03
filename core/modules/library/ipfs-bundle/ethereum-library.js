@@ -1,3 +1,10 @@
+/*\
+title: $:/plugins/ipfs/ethereum-library.js
+type: application/javascript
+tags: $:/ipfs/core
+module-type: library
+
+\*/
 'use strict'
 
 // https://github.com/ensdomains/resolvers

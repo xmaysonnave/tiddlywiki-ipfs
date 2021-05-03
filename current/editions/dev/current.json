@@ -1,26 +1,26 @@
 {
-  "build": "210503391",
+  "build": "210503464",
   "content": [
     {
-      "title": "dev-0.4.0-beta-tw-v5.1.23+build-210503391",
+      "title": "dev-0.4.0-beta-tw-v5.1.23+build-210503464",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/favicon.ico",
-      "bootSize": 127874,
-      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_boot_boot.js",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeifu7hprcoev7dyv367qxnhi6q36xv5to7vkztofgf7zwdysefh4oq/favicon.ico",
+      "bootSize": 127894,
+      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeifu7hprcoev7dyv367qxnhi6q36xv5to7vkztofgf7zwdysefh4oq/$_boot_boot.js",
       "librarySize": 129974,
-      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_library_ipfs.js",
+      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeifu7hprcoev7dyv367qxnhi6q36xv5to7vkztofgf7zwdysefh4oq/$_library_ipfs.js",
       "sjclSize": 25607,
-      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_library_sjcl.js",
+      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeifu7hprcoev7dyv367qxnhi6q36xv5to7vkztofgf7zwdysefh4oq/$_library_sjcl.js",
       "name": "dev",
-      "rawHash": "5ee82fbdb1ac4e5d7bfbe7302330613bb8c476c4d26ad3bb8e4694650fdf7f88",
-      "sourceSize": 1314584,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/",
+      "rawHash": "314e94539b5c589830c7c3557ca1b636a1b2b69935edac596060fd41270828f4",
+      "sourceSize": 1314908,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeifu7hprcoev7dyv367qxnhi6q36xv5to7vkztofgf7zwdysefh4oq/",
       "tidSize": 928,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeiblcdcqorc4grk2utcwmw7o2tfcczhtapxr26fdsti3prhtrbxawy/dev.html-build.tid"
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeidvjhy7pegi2yah3k34ozkmevxnsjhdlenfuujzpbbskww6w6rdty/dev.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeidlxclfryesuczf2v7o3bbzc5xm2jfhkdqtqwczk6mliwgwymzahm/210503391/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503464",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiftl73zb7j2v7yzorcrhak47dbmsyra6vp6lahgg3b6lwiiwb74b4/210503464/"
 }

@@ -1,3 +1,10 @@
+/*\
+title: $:/plugins/ipfs/ens-library.js
+type: application/javascript
+tags: $:/ipfs/core
+module-type: library
+
+\*/
 'use strict'
 
 const basex = require('@multiformats/base-x')

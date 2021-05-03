@@ -1,11 +1,11 @@
 title: $:/boot/boot.js-build
 tags: $:/ipfs/core
 type: text/vnd.tiddlywiki
-build: 210503385
+build: 210503463
 name: $:/boot/boot.js
-sourceSize: 127874
-sourceUri: ipfs://bafybeici7zmxpait2ha6shzamjgmc53oxxd3ykez737ayq5gpq4bxvysri/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210503385.js
-altSourceUri: https://dweb.link/ipfs/bafybeici7zmxpait2ha6shzamjgmc53oxxd3ykez737ayq5gpq4bxvysri/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210503385.js
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210503385
+sourceSize: 127894
+sourceUri: ipfs://bafybeihlld24sm7ak2omzk7bcclcizctergvov6hw46j4mbanicq7vx6lm/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210503463.js
+altSourceUri: https://dweb.link/ipfs/bafybeihlld24sm7ak2omzk7bcclcizctergvov6hw46j4mbanicq7vx6lm/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210503463.js
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210503463
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

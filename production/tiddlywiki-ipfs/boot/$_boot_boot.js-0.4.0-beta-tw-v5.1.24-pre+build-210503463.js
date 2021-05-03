@@ -2574,12 +2574,12 @@ ${resolvedUrl}`
       if ($tw.wiki) {
         const tiddler = $tw.wiki.getTiddler(title)
         if (tiddler && tiddler.fields._canonical_uri) {
+          var removeFields = { _canonical_uri: undefined }
+          var modificationFields = $tw.wiki.getModificationFields()
           var creationFields = $tw.wiki.getCreationFields()
           var data = tiddler.fields.text
-          var modificationFields = $tw.wiki.getModificationFields()
           var password = tiddler.fields._password
           password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-          var removeFields = { _canonical_uri: undefined }
           var tags = tiddler.fields.tags ? tiddler.fields.tags.slice() : []
           var index = tags.indexOf('$:/isIpfs')
           if (index !== -1) {
@@ -2647,7 +2647,7 @@ ${resolvedUrl}`
     }
     this.getAltSourceUri = function (title) {
       var tiddler = $tw.wiki.getTiddler(`${title}-build`)
-      if (tiddler !== undefined && tiddler.fields.altSourceUri !== undefined) {
+      if (tiddler !== undefined && tiddler !== null && tiddler.fields.altSourceUri !== undefined) {
         return tiddler.fields.altSourceUri
       }
       return ''

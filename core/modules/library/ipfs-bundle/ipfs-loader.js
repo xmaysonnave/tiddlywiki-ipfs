@@ -1,3 +1,10 @@
+/*\
+title: $:/plugins/ipfs/ipfs-loader.js
+type: application/javascript
+tags: $:/ipfs/core
+module-type: library
+
+\*/
 'use strict'
 
 const Mutex = require('async-mutex').Mutex
