@@ -8,7 +8,7 @@
         "./production/tiddlywiki-ipfs/sjcl/$_library_sjcl.js.json-%BUILD_SJCL_VERSION%.json",
         "application/json",
       "--import",
-        "./production/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-%BUILD_LIBRARY_VERSION%.json",
+        "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
       "--import",
         "./production/tiddlywiki-ipfs/boot/$_boot_boot.js.json-%BUILD_BOOT_VERSION%.json",

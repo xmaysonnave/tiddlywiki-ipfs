@@ -1,12 +1,19 @@
 title: dev-build
 tags: $:/ipfs/editions
-build: 210502371
+type: text/vnd.tiddlywiki
+build: 210503391
 faviconSize: 4297
-faviconUri: ipfs://bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua/favicon.ico
+faviconUri: ipfs://bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/favicon.ico
+bootSize: 127874
+bootUri: ipfs://bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_boot_boot.js
+librarySize: 129974
+libraryUri: ipfs://bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_library_ipfs.js
+sjclSize: 25607
+sjclUri: ipfs://bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_library_sjcl.js
 name: dev
-sourceSize: 1313928
-sourceUri: ipfs://bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua/
-altSourceUri: https://dweb.link/ipfs/bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua
-version: 0.4.0-beta-tw-v5.1.23+build-210502371
+sourceSize: 1314584
+sourceUri: ipfs://bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/
+altSourceUri: https://dweb.link/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy
+version: 0.4.0-beta-tw-v5.1.23+build-210503391
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

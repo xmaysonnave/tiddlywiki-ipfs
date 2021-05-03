@@ -2537,6 +2537,39 @@ var ipfsBoot = function ($tw) {
         }
       }
     }
+    this.load = function (tiddler, creationFields, removeFields, modificationFields, password, fallback) {
+      $tw.ipfs
+        .resolveUrl(tiddler.fields._canonical_uri ? tiddler.fields._canonical_uri : tiddler.fields.sourceUri, false, false, false)
+        .then(data => {
+          const { resolvedUrl } = data
+          $tw.ipfs
+            .loadToUtf8(resolvedUrl, password)
+            .then(data => {
+              modificationFields.text = data
+              $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
+              $tw.ipfs.getLogger().info(
+                `Embed module: ${data.length}
+${resolvedUrl}`
+              )
+            })
+            .catch(error => {
+              $tw.ipfs.getLogger().error(error)
+              if (!fallback) {
+                $tw.utils.alert(name, error.message)
+              } else {
+                this.load(fallback, creationFields, removeFields, modificationFields, password)
+              }
+            })
+        })
+        .catch(error => {
+          $tw.ipfs.getLogger().error(error)
+          if (!fallback) {
+            $tw.utils.alert(name, error.message)
+          } else {
+            this.load(fallback, creationFields, removeFields, modificationFields, password)
+          }
+        })
+    }
     this.offModuleState = function (title) {
       if ($tw.wiki) {
         const tiddler = $tw.wiki.getTiddler(title)
@@ -2560,29 +2593,7 @@ var ipfsBoot = function ($tw) {
             }
           }
           if (data === undefined || data.trim() === '') {
-            $tw.ipfs
-              .resolveUrl(tiddler.fields._canonical_uri, false, false, false)
-              .then(data => {
-                const { resolvedUrl } = data
-                $tw.ipfs
-                  .loadToUtf8(resolvedUrl, password)
-                  .then(data => {
-                    modificationFields.text = data
-                    $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
-                    $tw.ipfs.getLogger().info(
-                      `Embed module: ${data.length}
- ${resolvedUrl}`
-                    )
-                  })
-                  .catch(error => {
-                    $tw.ipfs.getLogger().error(error)
-                    $tw.utils.alert(name, error.message)
-                  })
-              })
-              .catch(error => {
-                $tw.ipfs.getLogger().error(error)
-                $tw.utils.alert(name, error.message)
-              })
+            this.load(tiddler, creationFields, removeFields, modificationFields, password, $tw.wiki.getTiddler(`${tiddler.fields.title}-build`))
           } else {
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
           }

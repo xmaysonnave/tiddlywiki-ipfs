@@ -30,7 +30,7 @@ cp ./download/loglevel/loglevel.min.js ./build/tiddlers/loglevel.min.js || exit 
 cp ./download/pako/pako.min.js ./build/tiddlers/pako.min.js || exit 1
 
 # meta
-cp ./core/library/ipfs-library-bundle.js.tid ./build/tiddlers/ipfs-library-bundle.js.tid || exit 1
+cp ./core/library/library-ipfs-bundle.js.tid ./build/tiddlers/library-ipfs-bundle.js.tid || exit 1
 cp ./core/library/detect-provider.min.js.meta ./build/tiddlers/detect-provider.min.js.meta || exit 1
 cp ./core/library/keccak.umd.min.js.meta ./build/tiddlers/keccak.umd.min.js.meta || exit 1
 cp ./core/library/loglevel.min.js.meta ./build/tiddlers/loglevel.min.js.meta || exit 1
@@ -51,9 +51,9 @@ rm -f -R ./build/tiddlers > /dev/null 2>&1
 mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
-cp ./build/output/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js ./build/tiddlers || exit 1
+cp ./build/output/tiddlywiki-ipfs/library/\$_library_ipfs.js ./build/tiddlers || exit 1
 # meta
-cp ./core/library/\$_library_ipfs-modules.js.meta ./build/tiddlers || exit 1
+cp ./core/library/\$_library_ipfs.js.meta ./build/tiddlers || exit 1
 # library
 cp ./editions/library/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
@@ -85,14 +85,14 @@ yarn tiddlywiki-ipfs build \
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
-  --name=$:/library/ipfs-modules.js.json \
+  --name=$:/library/ipfs.js.json \
   --extension=json \
   --dir=tiddlywiki-ipfs/library \
   --tags=$:/ipfs/core "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
-  --name=$:/library/ipfs-modules.js \
+  --name=$:/library/ipfs.js \
   --extension=js \
   --dir=tiddlywiki-ipfs/library \
   --tags=$:/ipfs/core "$@" || exit 1

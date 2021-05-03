@@ -222,6 +222,15 @@ module.exports = async function main (name, extension, dir, tags, load) {
   // Upload
   var faviconCid = null
   var faviconSize = null
+  var bootCid = null
+  const bootFileName = `${ipfsBundle.filenamify('$:/boot/boot.js')}`
+  var bootSize = null
+  var libraryCid = null
+  const libraryFileName = `${ipfsBundle.filenamify('$:/library/ipfs.js')}`
+  var librarySize = null
+  var sjclCid = null
+  const sjclFileName = `${ipfsBundle.filenamify('$:/library/sjcl.js')}`
+  var sjclSize = null
   var parentCid = null
   var sourceCid = null
   var sourceSize = null
@@ -241,6 +250,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     var bootUri = null
     var libraryUri = null
     var sjclUri = null
+    // Process boot
     const bootPath = `./current/tiddlywiki-ipfs/boot/current.json`
     if (fs.existsSync(bootPath) === false) {
       throw new Error(`Unknown ${bootPath}...`)
@@ -257,28 +267,30 @@ module.exports = async function main (name, extension, dir, tags, load) {
     }
     var ua = await loadFromIpfs(bootUri)
     upload.push({
-      path: '/$_boot_boot.js',
+      path: `/${bootFileName}`,
       content: ua,
     })
+    // Process library ipfs
     const libraryPath = `./current/tiddlywiki-ipfs/library/current.json`
     if (fs.existsSync(libraryPath) === false) {
       throw new Error(`Unknown ${libraryPath}...`)
     }
     const library = JSON.parse(fs.readFileSync(libraryPath, 'utf8'))
     for (var i = 0; i < library.content.length; i++) {
-      if (library.content[i].name === '$:/library/ipfs-modules.js') {
+      if (library.content[i].name === '$:/library/ipfs.js') {
         libraryUri = library.content[i].sourceUri
         break
       }
     }
     if (libraryUri == null) {
-      throw new Error(`Unknown '$:/library/ipfs-modules.js'...`)
+      throw new Error(`Unknown '$:/library/ipfs.js'...`)
     }
     var ua = await loadFromIpfs(libraryUri)
     upload.push({
-      path: '/$_library_ipfs-modules.js',
+      path: `/${libraryFileName}`,
       content: ua,
     })
+    // Process library sjcl
     const sjclPath = `./current/tiddlywiki-ipfs/sjcl/current.json`
     if (fs.existsSync(sjclPath) === false) {
       throw new Error(`Unknown ${sjclPath}...`)
@@ -295,7 +307,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     }
     var ua = await loadFromIpfs(sjclUri)
     upload.push({
-      path: '/$_library_sjcl.js',
+      path: `/${sjclFileName}`,
       content: ua,
     })
   } else {
@@ -311,6 +323,15 @@ module.exports = async function main (name, extension, dir, tags, load) {
     } else if (value.path === faviconFileName) {
       faviconCid = key
       faviconSize = value.size
+    } else if (value.path === bootFileName) {
+      bootCid = key
+      bootSize = value.size
+    } else if (value.path === libraryFileName) {
+      libraryCid = key
+      librarySize = value.size
+    } else if (value.path === sjclFileName) {
+      sjclCid = key
+      sjclSize = value.size
     } else if (value.path === sourceFileName || value.path === 'index.html') {
       sourceCid = key
       sourceSize = value.size
@@ -343,12 +364,42 @@ module.exports = async function main (name, extension, dir, tags, load) {
         throw new Error('Matching version but not favicon cid...')
       }
     }
+    if (bootCid !== null) {
+      var { cid: oldBootCid } = await ipfsBundle.resolveIpfs(api, member.bootUri)
+      if (oldBootCid !== null && oldBootCid.toString() !== bootCid.toString()) {
+        throw new Error('Matching version but not boot cid...')
+      }
+    }
+    if (libraryCid !== null) {
+      var { cid: oldLibraryCid } = await ipfsBundle.resolveIpfs(api, member.libraryUri)
+      if (oldLibraryCid !== null && oldLibraryCid.toString() !== libraryCid.toString()) {
+        throw new Error('Matching version but not library ipfs cid...')
+      }
+    }
+    if (sjclCid !== null) {
+      var { cid: oldSjclCid } = await ipfsBundle.resolveIpfs(api, member.sjclUri)
+      if (oldSjclCid !== null && oldSjclCid.toString() !== sjclCid.toString()) {
+        throw new Error('Matching version but not library sjcl cid...')
+      }
+    }
   }
   // Log
   console.log('***')
   if (faviconCid) {
     console.log(`*** Added favicon ***
  ipfs://${parentCid}/${faviconFileName}`)
+  }
+  if (bootCid) {
+    console.log(`*** Added '$:/boot/boot.js' ***
+ ipfs://${parentCid}/${bootFileName}`)
+  }
+  if (libraryCid) {
+    console.log(`*** Added '$:/library/ipfs.js' ***
+ ipfs://${parentCid}/${libraryFileName}`)
+  }
+  if (sjclCid) {
+    console.log(`*** Added '$:/library/sjcl.js' ***
+ ipfs://${parentCid}/${sjclFileName}`)
   }
   if (sourceFileName.endsWith('.html')) {
     console.log(`*** Added content ***
@@ -366,6 +417,18 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (faviconCid !== null) {
     node.faviconSize = faviconSize
     node.faviconUri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
+  }
+  if (bootCid !== null) {
+    node.bootSize = bootSize
+    node.bootUri = `${publicGateway}/ipfs/${parentCid}/${bootFileName}`
+  }
+  if (libraryCid !== null) {
+    node.librarySize = librarySize
+    node.libraryUri = `${publicGateway}/ipfs/${parentCid}/${libraryFileName}`
+  }
+  if (sjclCid !== null) {
+    node.sjclSize = sjclSize
+    node.sjclUri = `${publicGateway}/ipfs/${parentCid}/${sjclFileName}`
   }
   node.name = name
   node.rawHash = build.rawHash
@@ -385,7 +448,8 @@ module.exports = async function main (name, extension, dir, tags, load) {
   var tid = `title: ${node.name}-build`
   if (tags !== null) {
     tid = `${tid}
-tags: ${node.tags}`
+tags: ${node.tags}
+type: text/vnd.tiddlywiki`
   }
   tid = `${tid}
 build: ${current.build}`
@@ -393,6 +457,21 @@ build: ${current.build}`
     tid = `${tid}
 faviconSize: ${node.faviconSize}
 faviconUri: ipfs://${parentCid}/${faviconFileName}`
+  }
+  if (bootCid !== null) {
+    tid = `${tid}
+bootSize: ${node.bootSize}
+bootUri: ipfs://${parentCid}/${bootFileName}`
+  }
+  if (libraryCid !== null) {
+    tid = `${tid}
+librarySize: ${node.librarySize}
+libraryUri: ipfs://${parentCid}/${libraryFileName}`
+  }
+  if (sjclCid !== null) {
+    tid = `${tid}
+sjclSize: ${node.sjclSize}
+sjclUri: ipfs://${parentCid}/${sjclFileName}`
   }
   tid = `${tid}
 name: ${node.name}
@@ -469,6 +548,24 @@ version: ${build.version}
     if (faviconCid !== null) {
       var uri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
       console.log(`*** Fetch favicon ***
+ ${uri}`)
+      await loadFromIpfs(uri)
+    }
+    if (bootCid !== null) {
+      var uri = `${gateway}/ipfs/${parentCid}/${bootFileName}`
+      console.log(`*** Fetch '$:/boot/boot.js' ***
+ ${uri}`)
+      await loadFromIpfs(uri)
+    }
+    if (libraryCid !== null) {
+      var uri = `${gateway}/ipfs/${parentCid}/${libraryFileName}`
+      console.log(`*** Fetch '$:/library/ipfs.js' ***
+ ${uri}`)
+      await loadFromIpfs(uri)
+    }
+    if (sjclCid !== null) {
+      var uri = `${gateway}/ipfs/${parentCid}/${sjclFileName}`
+      console.log(`*** Fetch '$:/library/sjcl.js' ***
  ${uri}`)
       await loadFromIpfs(uri)
     }

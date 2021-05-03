@@ -7,7 +7,7 @@
 			"--compress",
         "no",
       "--render",
-        "[tag[$:/ipfs/library/modules]]",
+        "[tag[$:/library/ipfs]]",
         "[filenamify[]addprefix[./tiddlywiki-ipfs/library/]addsuffix[.json-%BUILD_LIBRARY_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"

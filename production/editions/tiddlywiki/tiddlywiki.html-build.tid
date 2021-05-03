@@ -1,12 +1,19 @@
 title: tiddlywiki-build
 tags: $:/ipfs/editions
-build: 210502372
+type: text/vnd.tiddlywiki
+build: 210503391
 faviconSize: 4297
-faviconUri: ipfs://bafybeiawti6ydu57ew66qodinqjebjpcn5iyje5camf3xishtxacqxtk3a/favicon.ico
+faviconUri: ipfs://bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/favicon.ico
+bootSize: 127874
+bootUri: ipfs://bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_boot_boot.js
+librarySize: 129974
+libraryUri: ipfs://bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_library_ipfs.js
+sjclSize: 25607
+sjclUri: ipfs://bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_library_sjcl.js
 name: tiddlywiki
-sourceSize: 2977602
-sourceUri: ipfs://bafybeiawti6ydu57ew66qodinqjebjpcn5iyje5camf3xishtxacqxtk3a/
-altSourceUri: https://dweb.link/ipfs/bafybeiawti6ydu57ew66qodinqjebjpcn5iyje5camf3xishtxacqxtk3a
-version: 0.4.0-beta-tw-v5.1.23+build-210502372
+sourceSize: 2978734
+sourceUri: ipfs://bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/
+altSourceUri: https://dweb.link/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq
+version: 0.4.0-beta-tw-v5.1.23+build-210503391
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

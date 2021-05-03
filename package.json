@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210502371",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -93,14 +93,14 @@
     "replace": "^1.2.1",
     "sinon": "^10.0.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.574.0",
+    "snyk": "^1.575.0",
     "terser": "^5.7.0",
     "tiddlywiki": "^5.1.23",
     "timeout-signal": "^1.1.0",
     "typescript": "^4.2.4",
     "webrtc": "^1.14.1",
     "wrtc": "^0.4.7",
-    "yargs": "^16.2.0"
+    "yargs": "^17.0.0"
   },
   "engines": { "node": ">=15.5.0", "yarn": ">=1.22.5" },
   "os": [ "!darwin", "linux", "!win32" ],

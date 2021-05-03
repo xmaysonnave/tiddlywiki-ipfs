@@ -14,7 +14,7 @@ tags: $:/ipfs/core
 `<script type="text/javascript">
 // <![CDATA[
   function fallback() {
-    document.write('<script`<$fields exclude='text _canonical_uri' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` data-tiddler-_canonical_uri="`<$text text=<<sourceuri field:"sourceUri" >>/>`" crossorigin="anonymous" type="text/javascript" src="`<$text text=<<sourceuri field:"altSourceUri" >>/>`"><' + '/script>');
+    document.write('<script`<$fields exclude='text _canonical_uri' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` data-tiddler-_canonical_uri="`<$text text=<<normalizeurl field:"sourceUri" suffix:"build" >>/>`" crossorigin="anonymous" type="text/javascript" src="`<$text text=<<normalizeurl field:"altSourceUri" suffix:"build">>/>`"><' + '/script>');
   }
 // ]]>
 </script>

@@ -1,20 +1,26 @@
 {
-  "build": "210502372",
+  "build": "210503391",
   "content": [
     {
-      "title": "empty-0.4.0-beta-tw-v5.1.23+build-210502372",
+      "title": "empty-0.4.0-beta-tw-v5.1.23+build-210503391",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeihrgp3dnvb3w27773jhegbufe6gnwqu2sorrwlzgradhyqvzwsdh4/favicon.ico",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeibi2tvhmz2em5jczgthsuie7f6766gv3v5whlexzrmetguqgblgre/favicon.ico",
+      "bootSize": 127874,
+      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeibi2tvhmz2em5jczgthsuie7f6766gv3v5whlexzrmetguqgblgre/$_boot_boot.js",
+      "librarySize": 129974,
+      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeibi2tvhmz2em5jczgthsuie7f6766gv3v5whlexzrmetguqgblgre/$_library_ipfs.js",
+      "sjclSize": 25607,
+      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeibi2tvhmz2em5jczgthsuie7f6766gv3v5whlexzrmetguqgblgre/$_library_sjcl.js",
       "name": "empty",
-      "rawHash": "71a4e0d2a8c2015d2f16bdf56087b28d8bb3240494d4c9d69dc8f85489e181aa",
-      "sourceSize": 790221,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeihrgp3dnvb3w27773jhegbufe6gnwqu2sorrwlzgradhyqvzwsdh4/",
-      "tidSize": 572,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeifqqx723puadgnlirq2rp2ptogoi47z537wlnfnnqs7a2tpzkhwky/empty.html-build.tid"
+      "rawHash": "ed1502c9431616892dc564c77dfa3462adf90b450505da8b80744017a81cbabf",
+      "sourceSize": 790559,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeibi2tvhmz2em5jczgthsuie7f6766gv3v5whlexzrmetguqgblgre/",
+      "tidSize": 933,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeid7t7z5r33urpoayxu2j2glfj5cfyleiiuqiwnitwvn7b2jhwanwi/empty.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210502372",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeihx6tuyyq6yi7gcgd6yf6fqna7stjjthu5cu7nky3shyx2wi4usgu/210502372/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiefb6u43kerdw6cluiiwz6thc7fu2djfjx3twjiwaqzdm2zqsdvoi/210503391/"
 }

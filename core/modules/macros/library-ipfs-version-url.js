@@ -1,5 +1,5 @@
 /*\
-title: $:/plugins/ipfs/macros/library-ipfs-modules-version-url.js
+title: $:/plugins/ipfs/macros/library-ipfs-version-url.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: macro
@@ -10,13 +10,13 @@ module-type: macro
   /*global $tw:false*/
   'use strict'
 
-  exports.name = 'library-ipfs-modules-version-url'
+  exports.name = 'library-ipfs-version-url'
 
   exports.params = []
 
   exports.run = function () {
     const buildName = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/ipns/cid') : null
-    const library = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/library/ipfs-modules.js') : null
+    const library = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/library/ipfs.js') : null
     if (buildName !== undefined && buildName !== null && library !== undefined && library !== null) {
       return `${buildName.fields.text}/tiddlywiki-ipfs/library/${library.fields.build}/`
     }

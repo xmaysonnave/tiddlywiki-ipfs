@@ -8,14 +8,14 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>[[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<boot-boot-version-url>>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
   <li>[[IPFS Documentation|IPFS Documentation Assets]] {{IPFS Documentation Assets!!version}} <$ipfslink value=<<ipfs-documentation-version-url>>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-  <li>[[$:/library/ipfs-modules.js]] {{$:/library/ipfs-modules.js!!version}} <$ipfslink value=<<library-ipfs-modules-version-url>>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/library/ipfs.js]] {{$:/library/ipfs.js!!version}} <$ipfslink value=<<library-ipfs-modules-version-url>>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
   <li>[[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<plugins-ipfs-version-url>>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Latest</h4>
 <ul>
   <li>`$:/boot/boot.js` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
   <li>`IPFS Documentation` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/documentation/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-  <li>`$:/library/ipfs-modules.js`  <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+  <li>`$:/library/ipfs.js`  <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
   <li>`$:/plugins/ipfs` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Release</h4>

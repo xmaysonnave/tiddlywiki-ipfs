@@ -1,20 +1,26 @@
 {
-  "build": "210502372",
+  "build": "210503391",
   "content": [
     {
-      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210502372",
+      "title": "tiddlywiki-0.4.0-beta-tw-v5.1.23+build-210503391",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeiawti6ydu57ew66qodinqjebjpcn5iyje5camf3xishtxacqxtk3a/favicon.ico",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/favicon.ico",
+      "bootSize": 127874,
+      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_boot_boot.js",
+      "librarySize": 129974,
+      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_library_ipfs.js",
+      "sjclSize": 25607,
+      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/$_library_sjcl.js",
       "name": "tiddlywiki",
-      "rawHash": "e4d87b4303cb8e5b0f10c08af23a845c93b60503b9419fd84a42417544a5a0b3",
-      "sourceSize": 2977602,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiawti6ydu57ew66qodinqjebjpcn5iyje5camf3xishtxacqxtk3a/",
-      "tidSize": 588,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeihicpkyofoll3pvse33jocrgqycktjn3w7x546xkvwdr5zoztgg24/tiddlywiki.html-build.tid"
+      "rawHash": "ca8e805e1c1319946516368eaa49a04a9b67e5298e272b4a6944b260d88d61cd",
+      "sourceSize": 2978734,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeidbuojqiw6u4sg62rtcd7tthjavi552u6pbr23sdn6byoqqjtl4uq/",
+      "tidSize": 949,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeihafz6tk42zyn47izwsihhos6l6fwuuvudal55zptzlnthksjvyfq/tiddlywiki.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210502372",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeibovzfyuvkisngij4vugyizvryvjp3fdr4b5esztu5iz4i7iwkppu/210502372/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeicxyo4u2urhyvohhnsnoowhc4vsx2vskk7ea3zrmbr7trq2tam3ii/210503391/"
 }

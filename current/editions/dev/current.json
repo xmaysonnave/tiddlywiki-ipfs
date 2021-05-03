@@ -1,20 +1,26 @@
 {
-  "build": "210502371",
+  "build": "210503391",
   "content": [
     {
-      "title": "dev-0.4.0-beta-tw-v5.1.23+build-210502371",
+      "title": "dev-0.4.0-beta-tw-v5.1.23+build-210503391",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua/favicon.ico",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/favicon.ico",
+      "bootSize": 127874,
+      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_boot_boot.js",
+      "librarySize": 129974,
+      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_library_ipfs.js",
+      "sjclSize": 25607,
+      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/$_library_sjcl.js",
       "name": "dev",
-      "rawHash": "e199842ea3cfa6ad4da6316d57cbf4d7b112ca5125cf938a3280933735edc7c0",
-      "sourceSize": 1313928,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiculfugpx4pkw3bbqqztn4l4rcvtcqgramtczcgb3nwa2ofvlz7ua/",
-      "tidSize": 567,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeienlpjjnaqrnynf3bxlfltleos4xm7zrsivdp6zv5i6c2ninakbp4/dev.html-build.tid"
+      "rawHash": "5ee82fbdb1ac4e5d7bfbe7302330613bb8c476c4d26ad3bb8e4694650fdf7f88",
+      "sourceSize": 1314584,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeieyvwmcxtcpbc3dv7isj3skgkap5vjkxjcw62r5gxhpup3rhq7qvy/",
+      "tidSize": 928,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeiblcdcqorc4grk2utcwmw7o2tfcczhtapxr26fdsti3prhtrbxawy/dev.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210502371",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeih3hnwh2nsm7nhiwy2dyu4o6bqmnrka2va2lneft33hcamudpwoue/210502371/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeidlxclfryesuczf2v7o3bbzc5xm2jfhkdqtqwczk6mliwgwymzahm/210503391/"
 }

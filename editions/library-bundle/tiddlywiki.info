@@ -1,12 +1,12 @@
 {
-	"description": "Build library bundle",
+	"description": "Build library ipfs bundle",
 	"plugins": [],
 	"themes":[],
 	"build": {
     "plain": [
 			"--rendertiddler",
-        "$:/ipfs/library/bundle",
-        "tiddlywiki-ipfs/library/$_library_ipfs-modules.js",
+        "$:/library/ipfs/bundle",
+        "tiddlywiki-ipfs/library/$_library_ipfs.js",
         "text/plain"
     ]
 	}

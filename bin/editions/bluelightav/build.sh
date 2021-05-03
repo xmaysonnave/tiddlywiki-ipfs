@@ -39,8 +39,7 @@ cp -R ./download/tw5-relink/plugins/relink ./build/plugins || exit 1
 cp -R ./editions/bluelightav-raw/* ./build || exit 1
 cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./build/tiddlers/config || exit 1
 cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./build/tiddlers/config || exit 1
-cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs-modules.js.js-build.tid ./build/tiddlers/config || exit 1
-cp ./production/tiddlywiki-ipfs/documentation/\$_ipfs_documentation.json-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./build/tiddlers/config || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

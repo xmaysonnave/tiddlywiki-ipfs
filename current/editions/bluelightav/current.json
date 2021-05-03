@@ -1,20 +1,26 @@
 {
-  "build": "210502371",
+  "build": "210503391",
   "content": [
     {
-      "title": "bluelightav-0.4.0-beta-tw-v5.1.23+build-210502371",
+      "title": "bluelightav-0.4.0-beta-tw-v5.1.23+build-210503391",
       "tags": "$:/ipfs/editions",
       "faviconSize": 4297,
-      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeih3z2abhlynerkol6qhlukcgybdu6lix5vn2xyf6fk2753jekfoju/favicon.ico",
+      "faviconUri": "http://127.0.0.1:8080/ipfs/bafybeiaecr6xt7ov57rcqenusz7moobgal7askb44jzwpnyr5faahuys7i/favicon.ico",
+      "bootSize": 127874,
+      "bootUri": "http://127.0.0.1:8080/ipfs/bafybeiaecr6xt7ov57rcqenusz7moobgal7askb44jzwpnyr5faahuys7i/$_boot_boot.js",
+      "librarySize": 129974,
+      "libraryUri": "http://127.0.0.1:8080/ipfs/bafybeiaecr6xt7ov57rcqenusz7moobgal7askb44jzwpnyr5faahuys7i/$_library_ipfs.js",
+      "sjclSize": 25607,
+      "sjclUri": "http://127.0.0.1:8080/ipfs/bafybeiaecr6xt7ov57rcqenusz7moobgal7askb44jzwpnyr5faahuys7i/$_library_sjcl.js",
       "name": "bluelightav",
-      "rawHash": "56f769de2257287692cd25448688348ff13be40e6dea71367e9a214fffcfcd16",
-      "sourceSize": 989762,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeih3z2abhlynerkol6qhlukcgybdu6lix5vn2xyf6fk2753jekfoju/",
-      "tidSize": 590,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeidgpyij6fkdkwy3kxbeqebt5ium74zo5m7dfgd6zam3tex3nfoy24/bluelightav.html-build.tid"
+      "rawHash": "54c48967b083a4e94ac2df6b594e53bacd7137f5feca15bba3bca840fac559be",
+      "sourceSize": 990234,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiaecr6xt7ov57rcqenusz7moobgal7askb44jzwpnyr5faahuys7i/",
+      "tidSize": 951,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeiek4p5ulw3er73atnu73nyfq7rnnydjffnin6ccjv76unkjjkjy4u/bluelightav.html-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210502371",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeib4pa43ry322x463tibos5hincjleo3xig64aw2yowigzvkbuoica/210502371/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210503391",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeie6mp3odp4eckrqd6rpyzcucpctuyibswhdijcqfenf7bn2gnkeby/210503391/"
 }

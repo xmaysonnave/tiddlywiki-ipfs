@@ -1,10 +1,11 @@
 title: $:/plugins/ipfs.json-build
 tags: $:/ipfs/documentation
-build: 210502371
+type: text/vnd.tiddlywiki
+build: 210503391
 name: $:/plugins/ipfs.json
-sourceSize: 1145992
-sourceUri: ipfs://bafybeifrzym6jd66uzl2pkwzmgtracgnvz4end36rvggqhvur3yozkxane/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210502371.json
-altSourceUri: https://dweb.link/ipfs/bafybeifrzym6jd66uzl2pkwzmgtracgnvz4end36rvggqhvur3yozkxane/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210502371.json
-version: 0.4.0-beta-tw-v5.1.23+build-210502371
+sourceSize: 1148630
+sourceUri: ipfs://bafybeiagkvxngvqecfyzn2lm7bavrunyorm7d5bzgvctaw4hiolgtyfmqu/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210503391.json
+altSourceUri: https://dweb.link/ipfs/bafybeiagkvxngvqecfyzn2lm7bavrunyorm7d5bzgvctaw4hiolgtyfmqu/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210503391.json
+version: 0.4.0-beta-tw-v5.1.23+build-210503391
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

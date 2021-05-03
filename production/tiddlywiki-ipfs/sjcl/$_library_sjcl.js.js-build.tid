@@ -1,5 +1,6 @@
 title: $:/library/sjcl.js-build
 tags: $:/core/library/sjcl
+type: text/vnd.tiddlywiki
 build: 210502371
 name: $:/library/sjcl.js
 sourceSize: 25607

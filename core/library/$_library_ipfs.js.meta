@@ -1,5 +1,5 @@
-title: $:/library/ipfs-modules.js
-tags: $:/ipfs/library/modules
+title: $:/library/ipfs.js
+tags: $:/library/ipfs
 type: application/javascript
 build: %BUILD_LIBRARY_BUILD%
 version: %BUILD_LIBRARY_VERSION%

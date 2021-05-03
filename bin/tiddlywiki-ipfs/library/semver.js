@@ -8,7 +8,7 @@ const semver = require('../../semver.js')
 
 async function main () {
   try {
-    const name = '$:/library/ipfs-modules'
+    const name = '$:/library/ipfs'
     const dir = 'tiddlywiki-ipfs/library'
     const env = 'LIBRARY'
     const normalizedName = filenamify(name, { replacement: '_' })

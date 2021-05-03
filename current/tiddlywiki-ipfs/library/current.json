@@ -1,5 +1,5 @@
 {
-  "build": "210502371",
+  "build": "210503324",
   "content": [
     {
       "title": "$_library_ipfs-modules.js.json-1.0.0+pre-release-210502371",
@@ -20,9 +20,29 @@
       "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeicn7vta35ukxbtlnfpphrmnq2appdfhs6nwirg7uhouvxn3z6tcuq/$_library_ipfs-modules.js-1.0.0+pre-release-210502371.js",
       "tidSize": 622,
       "tidUri": "http://127.0.0.1:8080/ipfs/bafybeigqerqertznqallrsb6aqxk64xhizfpofkv64in2mt4iosslcu7y4/$_library_ipfs-modules.js.js-build.tid"
+    },
+    {
+      "title": "$_library_ipfs.js.json-1.0.0+pre-release-210503324",
+      "tags": "$:/ipfs/core",
+      "name": "$:/library/ipfs.js.json",
+      "rawHash": "3f03902b1799d8f2b4d6cbfa8509dd92374f317fcd45a2a267ea3ef3758c5d6b",
+      "sourceSize": 132990,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeifgvlmi3ufqnfpp6vtjxuw4ujdnpgeq76gty5fa7eby6uokcwwqzi/$_library_ipfs.js.json-1.0.0+pre-release-210503324.json",
+      "tidSize": 639,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeiab7jlmnwfiocrmtgixgm6nkye7lhoumi2m3ffh7gylluiittakvy/$_library_ipfs.js.json.json-build.tid"
+    },
+    {
+      "title": "$_library_ipfs.js-1.0.0+pre-release-210503324",
+      "tags": "$:/ipfs/core",
+      "name": "$:/library/ipfs.js",
+      "rawHash": "637e215e39a777016e02c998c9783f38c33b25ea3c5484d24893d951e59977ce",
+      "sourceSize": 129974,
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiftylenfbsjtbewqne3qxd6hp2pz4oa6ter6gxmn4xj3xrdgnffkm/$_library_ipfs.js-1.0.0+pre-release-210503324.js",
+      "tidSize": 608,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeib3tautaitjurvtm3rggvqixyo2z575u6zz5dj3n4lsu5ocgzrfja/$_library_ipfs.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+pre-release",
-  "version": "1.0.0+pre-release-210502371",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiap2wgec4pcol3mkobt6swx5xt7wykphhsktnqdhjsjtkumqrnohu/210502371/"
+  "version": "1.0.0+pre-release-210503324",
+  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeia7q53c3pseiaddf4fpvw5xxbzfjgjgik2vebwcin5o7cbcafma34/210503324/"
 }

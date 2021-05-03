@@ -49,7 +49,7 @@ function main () {
 
     // library
     var build = null
-    var path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs-modules.js.json-build.json'
+    var path = './build/output/tiddlywiki-ipfs/library/$_library_ipfs.js.json-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }
