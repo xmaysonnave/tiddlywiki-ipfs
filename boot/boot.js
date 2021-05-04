@@ -1,3 +1,10 @@
+/*\
+title: $:/boot/boot.js
+$:/ipfs/core $:/core $:/boot/bundle
+type: application/javascript
+
+\*/
+
 var _boot = (function($tw) {
 
   /*jslint node: true, browser: true */

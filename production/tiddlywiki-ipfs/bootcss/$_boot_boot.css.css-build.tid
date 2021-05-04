@@ -1,0 +1,11 @@
+title: $:/boot/boot.css-build
+tags: $:/ipfs/core $:/core $:/boot/css
+type: text/vnd.tiddlywiki
+build: 210504393
+name: $:/boot/boot.css
+sourceSize: 1145
+sourceUri: ipfs://bafybeicphdynmbltqxgoam74kh2s6vsqjbho5flhrbdc7x6v4kocvkuvla/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre+build-210504393.css
+altSourceUri: https://dweb.link/ipfs/bafybeicphdynmbltqxgoam74kh2s6vsqjbho5flhrbdc7x6v4kocvkuvla/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre+build-210504393.css
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210504393
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

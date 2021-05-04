@@ -1,3 +1,10 @@
+/*\
+title: $:/boot/ipfs-boot.js
+$:/ipfs/core $:/core $:/boot/bundle
+type: application/javascript
+
+\*/
+
 var ipfsBoot = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
@@ -186,6 +193,14 @@ ${resolvedUrl}`
           $tw.wiki.addTiddler(tiddler)
         }
         if (tiddler) {
+          var uri = this.getAltSourceUri('$:/boot/boot.css')
+          if (uri !== undefined && uri !== null && uri.trim() !== '') {
+            if (tiddler.fields.text === 'yes') {
+              this.onModuleState('$:/boot/boot.css')
+            } else {
+              this.offModuleState('$:/boot/boot.css')
+            }
+          }
           var uri = this.getAltSourceUri('$:/boot/bootprefix.js')
           if (uri !== undefined && uri !== null && uri.trim() !== '') {
             if (tiddler.fields.text === 'yes') {

@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210503463",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210504398",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/plugin-transform-runtime": "^7.13.15",
-    "@babel/preset-env": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
     "@babel/runtime-corejs3": "^7.14.0",
     "@metamask/detect-provider": "^1.2.0",
     "abort-controller": "^3.0.0",
@@ -71,7 +71,7 @@
     "browserify": "^17.0.0",
     "build-number-generator": "^1.0.0",
     "chai": "^4.3.4",
-    "core-js": "^3.11.1",
+    "core-js": "^3.11.2",
     "dotenv": "^8.2.0",
     "electron-webrtc": "^0.3.0",
     "eruda": "^2.4.1",
@@ -93,14 +93,14 @@
     "replace": "^1.2.1",
     "sinon": "^10.0.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.575.0",
+    "snyk": "^1.576.0",
     "terser": "^5.7.0",
     "tiddlywiki": "^5.1.23",
     "timeout-signal": "^1.1.0",
     "typescript": "^4.2.4",
     "webrtc": "^1.14.1",
     "wrtc": "^0.4.7",
-    "yargs": "^17.0.0"
+    "yargs": "^17.0.1"
   },
   "engines": { "node": ">=15.5.0", "yarn": ">=1.22.5" },
   "os": [ "!darwin", "linux", "!win32" ],

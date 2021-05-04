@@ -62,14 +62,14 @@ yarn tiddlywiki-ipfs build \
   --name=$:/library/sjcl.js.json \
   --extension=json \
   --dir=tiddlywiki-ipfs/sjcl \
-  --tags=$:/core/library/sjcl "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/library/sjcl" "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
   --name=$:/library/sjcl.js \
   --extension=js \
   --dir=tiddlywiki-ipfs/sjcl \
-  --tags=$:/core/library/sjcl "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/library/sjcl" "$@" || exit 1
 
 # done
 exit 0

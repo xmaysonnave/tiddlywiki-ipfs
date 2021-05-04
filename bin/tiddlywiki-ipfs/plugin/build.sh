@@ -23,17 +23,30 @@ mkdir -p ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 
 mkdir -p ./current/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 
-# assets
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
+
+# dependency
+rm -R ./core/dependency > /dev/null 2>&1
+mkdir -p ./core/dependency > /dev/null 2>&1
+
+cp ./production/tiddlywiki-ipfs/bootcss/\$_boot_boot.css.css-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/bootcss/\$_boot_boot.css.json.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/bootprefix/\$_boot_bootprefix.js.js-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/bootprefix/\$_boot_bootprefix.js.json.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.json.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.json.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./core/dependency || exit 1
+
+# assets
 cp -R ./core/* ./build/plugins/ipfs || exit 1
+
+# cleanup browserified bundle env
 rm ./build/plugins/ipfs/modules/library/ipfs-bundle.js > /dev/null 2>&1
 rm -R ./build/plugins/ipfs/modules/library/ipfs-bundle > /dev/null 2>&1
-cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./build/plugins/ipfs/config || exit 1
-cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.json.json-build.tid ./build/plugins/ipfs/config || exit 1
-cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./build/plugins/ipfs/config || exit 1
-cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.json.json-build.tid ./build/plugins/ipfs/config || exit 1
-cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./build/plugins/ipfs/config || exit 1
-cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./build/plugins/ipfs/config || exit 1
+
 cp ./editions/plugin/tiddlywiki.info ./build/tiddlywiki.info || exit 1
 
 # bundle
@@ -76,14 +89,14 @@ yarn tiddlywiki-ipfs build \
   --name=$:/plugins/ipfs.json \
   --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
-  --tags=$:/ipfs/documentation "$@" || exit 1
+  --tags="$:/ipfs/core $:/ipfs/documentation" "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
   --name=$:/plugins/ipfs.zlib \
   --extension=json \
   --dir=tiddlywiki-ipfs/plugin \
-  --tags=$:/ipfs/documentation "$@" || exit 1
+  --tags="$:/ipfs/core $:/ipfs/documentation" "$@" || exit 1
 
 # done
 exit 0

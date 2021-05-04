@@ -88,14 +88,14 @@ yarn tiddlywiki-ipfs build \
   --name=$:/library/ipfs.js.json \
   --extension=json \
   --dir=tiddlywiki-ipfs/library \
-  --tags=$:/ipfs/core "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/library/ipfs" "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
   --name=$:/library/ipfs.js \
   --extension=js \
   --dir=tiddlywiki-ipfs/library \
-  --tags=$:/ipfs/core "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/library/ipfs" "$@" || exit 1
 
 # done
 exit 0

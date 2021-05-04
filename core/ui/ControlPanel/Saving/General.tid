@@ -11,6 +11,14 @@ list-before:
 
 {{$:/language/ControlPanel/Saving/General/Hint}}
 
+!! <$link to="$:/config/AutoSave"><<lingo AutoSave/Caption>></$link>
+
+<<lingo AutoSave/Hint>>
+
+<$radio tiddler="$:/config/AutoSave" value="yes"> <<lingo AutoSave/Enabled/Description>> </$radio>
+
+<$radio tiddler="$:/config/AutoSave" value="no"> <<lingo AutoSave/Disabled/Description>> </$radio>$link to="$:/isCompressed"><<lingo Compression/Caption>></$link>
+
 !! <$link to="$:/isCompressed"><<lingo Compression/Caption>></$link>
 
 <$checkbox tiddler="$:/isCompressed" field="text" checked="yes" unchecked="no" default="no"> <<lingo Compression/Description>> </$checkbox>

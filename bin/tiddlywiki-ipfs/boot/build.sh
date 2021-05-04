@@ -85,21 +85,21 @@ yarn tiddlywiki-ipfs build \
   --name=$:/boot/boot.js.json \
   --extension=json \
   --dir=tiddlywiki-ipfs/boot \
-  --tags=$:/ipfs/core "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/boot/bundle" "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
   --name=$:/boot/boot.js \
   --extension=js \
   --dir=tiddlywiki-ipfs/boot \
-  --tags=$:/ipfs/core "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/boot/bundle" "$@" || exit 1
 
 # upload to ipfs
 ./bin/cli-uploader.sh \
   --name=$:/boot/boot.js.zlib \
   --extension=json \
   --dir=tiddlywiki-ipfs/boot \
-  --tags=$:/ipfs/core "$@" || exit 1
+  --tags="$:/ipfs/core $:/core $:/boot/bundle" "$@" || exit 1
 
 # done
 exit 0

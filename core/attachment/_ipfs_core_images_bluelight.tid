@@ -1,4 +1,5 @@
-title: $:/ipfs/core/images/bluelight
-_canonical_uri: ipfs://bafybeiaxrv756lv3345d6uknohsvub2z264qaee6ucxgtpnf3o3kzyxbdq/$:/ipfs/core/images/bluelight.png
+title: $_ipfs_core_images_bluelight
+_canonical_uri: ipfs://bafybeihf7g4g6hwl455uhuzsxqdc7ljmrfiiomdaqbluzqkxtji56mkj6u/$_ipfs_core_images_bluelight.png
+_block_canonical_uri: ipfs://bafybeidtwbe4qj5ijpnb64f3xtbkfm7q7q2kzjejd2uj4jpo755m6lot6a
 tags: $:/tags/Image $:/ipfs/core $:/isAttachment $:/isIpfs
 type: image/png

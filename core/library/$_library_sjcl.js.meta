@@ -1,5 +1,5 @@
 title: $:/library/sjcl.js
-tags: $:/core/library/sjcl
+tags: $:/ipfs/core $:/core $:/library/sjcl
 type: application/javascript
 version: v1.0.8
 library: yes

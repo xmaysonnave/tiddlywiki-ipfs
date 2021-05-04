@@ -25,6 +25,50 @@ function main () {
       })
     }
 
+    // bootcss
+    var build = null
+    var path = './build/output/tiddlywiki-ipfs/bootcss/$_boot_boot.css.json-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const bootcss = JSON.parse(build)
+      if (bootcss.version === undefined || bootcss.version == null) {
+        throw new Error('Unknown bootcss version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_BOOT_CSS_VERSION%',
+          replacement: bootcss.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
+    // bootprefix
+    var build = null
+    var path = './build/output/tiddlywiki-ipfs/bootprefix/$_boot_bootprefix.js.json-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const bootprefix = JSON.parse(build)
+      if (bootprefix.version === undefined || bootprefix.version == null) {
+        throw new Error('Unknown bootprefix version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_BOOT_PREFIX_VERSION%',
+          replacement: bootprefix.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
     // boot
     var build = null
     var path = './build/output/tiddlywiki-ipfs/boot/$_boot_boot.js.json-build.json'

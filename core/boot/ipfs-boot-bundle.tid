@@ -1,7 +1,7 @@
 title: $:/ipfs/boot/bundle
-tags: $:/boot/modules
+tags: $:/ipfs/core $:/core $:/boot/bundle
 
 \rules only filteredtranscludeinline transcludeinline codeinline
 
 // boot modules
-{{{ [is[system]type[application/javascript]ipfs-boot-modules[yes]] ||$:/core/templates/plain-text-tiddler}}}
+{{{ [is[system]type[application/javascript]boot-bundle[yes]] ||$:/core/templates/plain-text-tiddler}}}

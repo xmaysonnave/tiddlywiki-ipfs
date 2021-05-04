@@ -1,0 +1,23 @@
+title: $:/core/templates/css-tiddler
+tags: $:/ipfs/core
+
+\define altSourceUriState() $(currentTiddler)$-build!!altSourceUri
+
+<$reveal type="match" state="!!_canonical_uri" text="">
+`<style`<$fields template=' data-tiddler-$name$="$encoded_value$"'></$fields>` type="text/css">`<$view field="text" format="text" />`</style>`
+</$reveal>
+<$reveal type="nomatch" state="!!_canonical_uri" text="">
+<$reveal type="match" state=<<altSourceUriState>> text="">
+`<link`<$fields exclude='text' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` rel="stylesheet" href="`<$text text={{!!_canonical_uri}}/>`"></link>`
+</$reveal>
+<$reveal type="nomatch" state=<<altSourceUriState>> text="">
+`<script type="text/javascript">
+// <![CDATA[
+  function fallback() {
+    document.write('<link`<$fields exclude='text _canonical_uri' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` data-tiddler-_canonical_uri="`<$text text=<<normalizeurl field:"sourceUri" suffix:"build" >>/>`" crossorigin="anonymous" rel="stylesheet" href="`<$text text=<<normalizeurl field:"altSourceUri" suffix:"build">>/>`"><' + '/link>');
+  }
+// ]]>
+</script>
+<link`<$fields exclude='text' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` rel="stylesheet" href="`<$text text={{!!_canonical_uri}}/>`" onerror="fallback()" ></link>`
+</$reveal>
+</$reveal>

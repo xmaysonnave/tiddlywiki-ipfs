@@ -1,38 +1,38 @@
 {
-  "build": "210503463",
+  "build": "210504394",
   "content": [
     {
-      "title": "$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210503463",
-      "tags": "$:/ipfs/core",
+      "title": "$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210504394",
+      "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js.json",
-      "rawHash": "d88f0daa71e001b92cd266d4967b1808c95ad929f9ead8faf265e08659cc6918",
-      "sourceSize": 133016,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeibymf4weva73rceqkmuag5y5jys4lae7kpvbknyugftpna7cbhbie/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210503463.json",
-      "tidSize": 666,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeie3cqnrpuvh3ahux4t2lruuavo5pyewyb4y5ilpo7c4xurn526o6y/$_boot_boot.js.json.json-build.tid"
+      "rawHash": "ba4385b47ab798537f91835d1f11e074bb0364fb29e7d7ecdb312ad1012ae8d5",
+      "sourceSize": 133645,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeibhqwiuynqbrvtawbp2ialbfg3mpjduf4u7vutndr5ixn5fzp5aum/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210504394.json",
+      "tidSize": 689,
+      "tidUri": "https://bluelight.link/ipfs/bafybeihhqrrldgfvdru5ugu42qlzsehvwlwnk4cpghffxjhbvsas52vjd4/$_boot_boot.js.json.json-build.tid"
     },
     {
-      "title": "$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210503463",
-      "tags": "$:/ipfs/core",
+      "title": "$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210504394",
+      "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js",
-      "rawHash": "d247bc35bc8f866c88a8a0af273e98058d147b7b610dac34ac096b9484a73b70",
-      "sourceSize": 127894,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeihlld24sm7ak2omzk7bcclcizctergvov6hw46j4mbanicq7vx6lm/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210503463.js",
-      "tidSize": 635,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeicxafw2eoomvo42xi4ecbe353fjyq2y26fviaiskhw5bipwfbvhqi/$_boot_boot.js.js-build.tid"
+      "rawHash": "77c7dce42b62c9838bbc2eb88ccebdd08dd3c4d64d5ae70d4087aaf12e375d66",
+      "sourceSize": 128431,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigf73iaoonxxowkq5awa3jda5ghwhxfegtn2qb7rupxkio44zuwre/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre+build-210504394.js",
+      "tidSize": 658,
+      "tidUri": "https://bluelight.link/ipfs/bafybeidzxexrd7lqearag3yya7vig4jcnuwjk5wiiiq6d4iqmqy7ci5elu/$_boot_boot.js.js-build.tid"
     },
     {
-      "title": "$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210503463",
-      "tags": "$:/ipfs/core",
+      "title": "$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210504394",
+      "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js.zlib",
-      "rawHash": "e6946713be36ba8ac6344f70c0633f27c777e91715b1261815644c6174e0a63c",
-      "sourceSize": 41095,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeicmlo7dku4uxcnin53mfvwoxck33csi7daxoet5xwgk34apt3msei/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210503463.json",
-      "tidSize": 665,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeif4ja56zurvw7ni2urx5jfnwlcx3rnfuboyggbufa6udvuksn5yei/$_boot_boot.js.zlib.json-build.tid"
+      "rawHash": "6f7c011a1e9dbf94e2a5f8d046ccbe818b723e53c8c1c3947cc47aa1a3f2cd1c",
+      "sourceSize": 41275,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeiatqmgygvzbdyankfxmin62bvevh56nk4o6luyelcthg6kexybgjq/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210504394.json",
+      "tidSize": 688,
+      "tidUri": "https://bluelight.link/ipfs/bafybeigo6jpuqipac22xzguoyrxjcfbzfstzxpri7mly35ihr7lynyxv7y/$_boot_boot.js.zlib.json-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24-pre+build",
-  "version": "0.4.0-beta-tw-v5.1.24-pre+build-210503463",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeibkznqc25idq7qqoxnksj34unq4b75ymewfwoaihrtoaihhg377ta/210503463/"
+  "version": "0.4.0-beta-tw-v5.1.24-pre+build-210504394",
+  "buildUri": "https://bluelight.link/ipfs/bafybeiheh5bnkxpcian3lin75zjfoucsfzp62iyd362l4jvmewrwndt6ia/210504394/"
 }

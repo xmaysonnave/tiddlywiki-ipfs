@@ -1,0 +1,8 @@
+title: $:/boot/bootprefix.js
+tags: $:/ipfs/core $:/core $:/boot/bootprefix
+type: application/javascript
+build: %BUILD_BOOT_PREFIX_BUILD%
+version: %BUILD_BOOT_PREFIX_VERSION%
+_license_uri: https://raw.githubusercontent.com/Jermolene/TiddlyWiki5/master/license
+_project_uri: https://github.com/Jermolene/TiddlyWiki5
+_source_uri: https://github.com/Jermolene/TiddlyWiki5/blob/master/boot/bootprefix.js

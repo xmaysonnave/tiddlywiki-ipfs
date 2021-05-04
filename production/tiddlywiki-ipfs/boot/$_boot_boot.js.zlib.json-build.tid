@@ -1,11 +1,11 @@
 title: $:/boot/boot.js.zlib-build
-tags: $:/ipfs/core
+tags: $:/ipfs/core $:/core $:/boot/bundle
 type: text/vnd.tiddlywiki
-build: 210503463
+build: 210504394
 name: $:/boot/boot.js.zlib
-sourceSize: 41095
-sourceUri: ipfs://bafybeicmlo7dku4uxcnin53mfvwoxck33csi7daxoet5xwgk34apt3msei/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210503463.json
-altSourceUri: https://dweb.link/ipfs/bafybeicmlo7dku4uxcnin53mfvwoxck33csi7daxoet5xwgk34apt3msei/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210503463.json
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210503463
+sourceSize: 41275
+sourceUri: ipfs://bafybeiatqmgygvzbdyankfxmin62bvevh56nk4o6luyelcthg6kexybgjq/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210504394.json
+altSourceUri: https://dweb.link/ipfs/bafybeiatqmgygvzbdyankfxmin62bvevh56nk4o6luyelcthg6kexybgjq/$_boot_boot.js.zlib-0.4.0-beta-tw-v5.1.24-pre+build-210504394.json
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210504394
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

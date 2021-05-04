@@ -1,0 +1,16 @@
+{
+	"description": "Build boot css",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "plain": [
+			"--compress",
+        "no",
+      "--render",
+        "[tag[$:/boot/css]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/bootcss/]addsuffix[.json-%BUILD_BOOT_CSS_VERSION%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ]
+	}
+}

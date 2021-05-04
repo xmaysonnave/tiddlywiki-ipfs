@@ -222,6 +222,14 @@ module.exports = async function main (name, extension, dir, tags, load) {
   // Upload
   var faviconCid = null
   var faviconSize = null
+  var bluelightLogoCid = null
+  var bluelightLogoSize = null
+  var bootCssCid = null
+  const bootCssFileName = `${ipfsBundle.filenamify('$:/boot/boot.css')}`
+  var bootCssSize = null
+  var bootPrefixCid = null
+  const bootPrefixFileName = `${ipfsBundle.filenamify('$:/boot/bootprefix.js')}`
+  var bootPrefixSize = null
   var bootCid = null
   const bootFileName = `${ipfsBundle.filenamify('$:/boot/boot.js')}`
   var bootSize = null
@@ -247,9 +255,58 @@ module.exports = async function main (name, extension, dir, tags, load) {
       content: ipfsBundle.StringToUint8Array(source),
     })
     // Dependencies
+    var bluelightLogoUri = 'https://bafybeidtwbe4qj5ijpnb64f3xtbkfm7q7q2kzjejd2uj4jpo755m6lot6a.ipfs.dweb.link/'
+    var bootCssUri = null
+    var bootPrefixUri = null
     var bootUri = null
     var libraryUri = null
     var sjclUri = null
+    // bluelight
+    var ua = await loadFromIpfs(bluelightLogoUri)
+    upload.push({
+      path: '/$_ipfs_core_images_bluelight.png',
+      content: ua,
+    })
+    // Process bootcss
+    const bootCssPath = `./current/tiddlywiki-ipfs/bootcss/current.json`
+    if (fs.existsSync(bootCssPath) === false) {
+      throw new Error(`Unknown ${bootCssPath}...`)
+    }
+    const bootCss = JSON.parse(fs.readFileSync(bootCssPath, 'utf8'))
+    for (var i = 0; i < bootCss.content.length; i++) {
+      if (bootCss.content[i].name === '$:/boot/boot.css') {
+        bootCssUri = bootCss.content[i].sourceUri
+        break
+      }
+    }
+    if (bootCssUri == null) {
+      throw new Error(`Unknown '$:/boot/boot.css'...`)
+    }
+    var ua = await loadFromIpfs(bootCssUri)
+    upload.push({
+      path: `/${bootCssFileName}`,
+      content: ua,
+    })
+    // Process bootprefix
+    const bootPrefixPath = `./current/tiddlywiki-ipfs/bootprefix/current.json`
+    if (fs.existsSync(bootPrefixPath) === false) {
+      throw new Error(`Unknown ${bootPrefixPath}...`)
+    }
+    const bootPrefix = JSON.parse(fs.readFileSync(bootPrefixPath, 'utf8'))
+    for (var i = 0; i < bootPrefix.content.length; i++) {
+      if (bootPrefix.content[i].name === '$:/boot/bootprefix.js') {
+        bootPrefixUri = bootPrefix.content[i].sourceUri
+        break
+      }
+    }
+    if (bootPrefixUri == null) {
+      throw new Error(`Unknown '$:/boot/bootprefix.js'...`)
+    }
+    var ua = await loadFromIpfs(bootPrefixUri)
+    upload.push({
+      path: `/${bootPrefixFileName}`,
+      content: ua,
+    })
     // Process boot
     const bootPath = `./current/tiddlywiki-ipfs/boot/current.json`
     if (fs.existsSync(bootPath) === false) {
@@ -323,6 +380,15 @@ module.exports = async function main (name, extension, dir, tags, load) {
     } else if (value.path === faviconFileName) {
       faviconCid = key
       faviconSize = value.size
+    } else if (value.path === '$_ipfs_core_images_bluelight.png') {
+      bluelightLogoCid = key
+      bluelightLogoSize = value.size
+    } else if (value.path === bootCssFileName) {
+      bootCssCid = key
+      bootCssSize = value.size
+    } else if (value.path === bootPrefixFileName) {
+      bootPrefixCid = key
+      bootPrefixSize = value.size
     } else if (value.path === bootFileName) {
       bootCid = key
       bootSize = value.size
@@ -364,6 +430,18 @@ module.exports = async function main (name, extension, dir, tags, load) {
         throw new Error('Matching version but not favicon cid...')
       }
     }
+    if (bootCssCid !== null) {
+      var { cid: oldBootCssCid } = await ipfsBundle.resolveIpfs(api, member.bootCssUri)
+      if (oldBootCssCid !== null && oldBootCssCid.toString() !== bootCssCid.toString()) {
+        throw new Error('Matching version but not bootcss cid...')
+      }
+    }
+    if (bootPrefixCid !== null) {
+      var { cid: oldBootPrefixCid } = await ipfsBundle.resolveIpfs(api, member.bootPrefixUri)
+      if (oldBootPrefixCid !== null && oldBootPrefixCid.toString() !== bootPrefixCid.toString()) {
+        throw new Error('Matching version but not bootprefix cid...')
+      }
+    }
     if (bootCid !== null) {
       var { cid: oldBootCid } = await ipfsBundle.resolveIpfs(api, member.bootUri)
       if (oldBootCid !== null && oldBootCid.toString() !== bootCid.toString()) {
@@ -386,8 +464,20 @@ module.exports = async function main (name, extension, dir, tags, load) {
   // Log
   console.log('***')
   if (faviconCid) {
-    console.log(`*** Added favicon ***
+    console.log(`*** Added 'favicon' ***
  ipfs://${parentCid}/${faviconFileName}`)
+  }
+  if (bluelightLogoCid) {
+    console.log(`*** Added '$_ipfs_core_images_bluelight.png' ***
+ ipfs://${parentCid}/$_ipfs_core_images_bluelight.png`)
+  }
+  if (bootCssCid) {
+    console.log(`*** Added '$:/boot/boot.css' ***
+ ipfs://${parentCid}/${bootCssFileName}`)
+  }
+  if (bootPrefixCid) {
+    console.log(`*** Added '$:/boot/bootprefix.js' ***
+ ipfs://${parentCid}/${bootPrefixFileName}`)
   }
   if (bootCid) {
     console.log(`*** Added '$:/boot/boot.js' ***
@@ -417,6 +507,18 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (faviconCid !== null) {
     node.faviconSize = faviconSize
     node.faviconUri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
+  }
+  if (bluelightLogoCid !== null) {
+    node.bluelightLogoSize = bluelightLogoSize
+    node.bluelightLogoUri = `${publicGateway}/ipfs/${parentCid}/$_ipfs_core_images_bluelight.png`
+  }
+  if (bootCssCid !== null) {
+    node.bootCssSize = bootCssSize
+    node.bootCssUri = `${publicGateway}/ipfs/${parentCid}/${bootCssFileName}`
+  }
+  if (bootPrefixCid !== null) {
+    node.bootPrefixSize = bootPrefixSize
+    node.bootPrefixUri = `${publicGateway}/ipfs/${parentCid}/${bootPrefixFileName}`
   }
   if (bootCid !== null) {
     node.bootSize = bootSize
@@ -457,6 +559,21 @@ build: ${current.build}`
     tid = `${tid}
 faviconSize: ${node.faviconSize}
 faviconUri: ipfs://${parentCid}/${faviconFileName}`
+  }
+  if (bluelightLogoCid !== null) {
+    tid = `${tid}
+bluelightLogoSize: ${node.bluelightLogoSize}
+bluelightLogoUri: ipfs://${parentCid}/$_ipfs_core_images_bluelight.png`
+  }
+  if (bootCssCid !== null) {
+    tid = `${tid}
+bootCssSize: ${node.bootCssSize}
+bootCssUri: ipfs://${parentCid}/${bootCssFileName}`
+  }
+  if (bootPrefixCid !== null) {
+    tid = `${tid}
+bootPrefixSize: ${node.bootPrefixSize}
+bootPrefixUri: ipfs://${parentCid}/${bootPrefixFileName}`
   }
   if (bootCid !== null) {
     tid = `${tid}
@@ -547,7 +664,25 @@ version: ${build.version}
     }
     if (faviconCid !== null) {
       var uri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
-      console.log(`*** Fetch favicon ***
+      console.log(`*** Fetch 'favicon' ***
+ ${uri}`)
+      await loadFromIpfs(uri)
+    }
+    if (bluelightLogoCid !== null) {
+      var uri = `${gateway}/ipfs/${parentCid}/$_ipfs_core_images_bluelight.png`
+      console.log(`*** Fetch '$_ipfs_core_images_bluelight.png' ***
+${uri}`)
+      await loadFromIpfs(uri)
+    }
+    if (bootCssCid !== null) {
+      var uri = `${gateway}/ipfs/${parentCid}/${bootCssFileName}`
+      console.log(`*** Fetch '$:/boot/boot.css' ***
+ ${uri}`)
+      await loadFromIpfs(uri)
+    }
+    if (bootPrefixCid !== null) {
+      var uri = `${gateway}/ipfs/${parentCid}/${bootPrefixFileName}`
+      console.log(`*** Fetch '$:/boot/bootprefix.js' ***
  ${uri}`)
       await loadFromIpfs(uri)
     }

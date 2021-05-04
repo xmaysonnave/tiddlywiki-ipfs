@@ -1,0 +1,16 @@
+{
+	"description": "Build bootprefix",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "plain": [
+			"--compress",
+        "no",
+      "--render",
+        "[tag[$:/boot/bootprefix]]",
+        "[filenamify[]addprefix[./tiddlywiki-ipfs/bootprefix/]addsuffix[.json-%BUILD_BOOT_PREFIX_VERSION%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ]
+	}
+}

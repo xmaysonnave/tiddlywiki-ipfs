@@ -27,9 +27,6 @@ mkdir -p ./current/editions/empty > /dev/null 2>&1
 
 # assets
 cp -R ./editions/empty-raw/* ./build || exit 1
-cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./build/tiddlers/config || exit 1
-cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./build/tiddlers/config || exit 1
-cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./build/tiddlers/config || exit 1
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

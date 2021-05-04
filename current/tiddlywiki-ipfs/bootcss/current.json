@@ -1,0 +1,28 @@
+{
+  "build": "210504393",
+  "content": [
+    {
+      "title": "$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210504393",
+      "tags": "$:/ipfs/core $:/core $:/boot/css",
+      "name": "$:/boot/boot.css.json",
+      "rawHash": "207df4aea291a945c05e10ad3d00bd8a9dcee3d9cfa9bd9cadde36bd2871e0af",
+      "sourceSize": 1680,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeiee3xq46izm7ccq6smzvmmzq4fkvd2itfa4uaomfd7sstiv7iyh2y/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210504393.json",
+      "tidSize": 689,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiel52r3rnde7jb5u7o5jwgziwkloe7bwdpzclc2it4oukjtol7ivu/$_boot_boot.css.json.json-build.tid"
+    },
+    {
+      "title": "$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre+build-210504393",
+      "tags": "$:/ipfs/core $:/core $:/boot/css",
+      "name": "$:/boot/boot.css",
+      "rawHash": "71a9f586837b11ec97d60f189f6f214a6c10dbefb5bf100a55a453b0c511a0ce",
+      "sourceSize": 1145,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeicphdynmbltqxgoam74kh2s6vsqjbho5flhrbdc7x6v4kocvkuvla/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre+build-210504393.css",
+      "tidSize": 661,
+      "tidUri": "https://bluelight.link/ipfs/bafybeibgss6xets7rxzjzzs6sgiar2igt24cl7qubku7w4bvjrkgy4mkme/$_boot_boot.css.css-build.tid"
+    }
+  ],
+  "rawSemver": "0.4.0-beta-tw-v5.1.24-pre+build",
+  "version": "0.4.0-beta-tw-v5.1.24-pre+build-210504393",
+  "buildUri": "https://bluelight.link/ipfs/bafybeib44jeqbwnx5u3s2pmbam35nrrlsrqujyslo2qbt24lrbnf3anc6a/210504393/"
+}
