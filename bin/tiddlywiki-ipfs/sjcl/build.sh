@@ -18,9 +18,6 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/tiddlywiki-ipfs/sjcl > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/sjcl > /dev/null 2>&1
-
 mkdir -p ./current/tiddlywiki-ipfs/sjcl > /dev/null 2>&1
 
 # asset
@@ -29,7 +26,6 @@ cp ./download/sjcl/sjcl.min.js ./build/tiddlers/\$_library_sjcl.js || exit 1
 cp ./core/library/\$_library_sjcl.js.meta ./build/tiddlers || exit 1
 # sjcl
 cp ./editions/sjcl/tiddlywiki.info ./build/tiddlywiki.info || exit 1
-
 
 # build raw
 echo '***'
@@ -43,7 +39,12 @@ yarn tiddlywiki-ipfs build \
 echo '***'
 echo '*** semver sjcl ***'
 echo '***'
-node ./bin/tiddlywiki-ipfs/sjcl/semver.js "$@" || exit 1
+node ./bin/tiddlywiki-ipfs/sjcl/semver.js "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged '$:/library/sjcl.js' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

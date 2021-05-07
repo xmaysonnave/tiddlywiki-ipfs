@@ -208,6 +208,14 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (fs.existsSync(sourcePath)) {
     source = fs.readFileSync(sourcePath, 'utf8')
   }
+  titleName = path.basename(path.dirname(sourcePath))
+  if (source === undefined || source == null) {
+    sourceFileName = normalizedName
+    sourcePath = `./build/output/${dir}/${sourceFileName}`
+    if (fs.existsSync(sourcePath)) {
+      source = fs.readFileSync(sourcePath, 'utf8')
+    }
+  }
   if (source === undefined || source == null) {
     titleName = path.basename(path.dirname(sourcePath))
     sourceFileName = `${normalizedName}.${extension}`
@@ -222,150 +230,20 @@ module.exports = async function main (name, extension, dir, tags, load) {
   // Upload
   var faviconCid = null
   var faviconSize = null
-  var bluelightLogoCid = null
-  var bluelightLogoSize = null
-  var bootCssCid = null
-  const bootCssFileName = `${ipfsBundle.filenamify('$:/boot/boot.css')}`
-  var bootCssSize = null
-  var bootPrefixCid = null
-  const bootPrefixFileName = `${ipfsBundle.filenamify('$:/boot/bootprefix.js')}`
-  var bootPrefixSize = null
-  var bootCid = null
-  const bootFileName = `${ipfsBundle.filenamify('$:/boot/boot.js')}`
-  var bootSize = null
-  var libraryCid = null
-  const libraryFileName = `${ipfsBundle.filenamify('$:/library/ipfs.js')}`
-  var librarySize = null
-  var sjclCid = null
-  const sjclFileName = `${ipfsBundle.filenamify('$:/library/sjcl.js')}`
-  var sjclSize = null
   var parentCid = null
   var sourceCid = null
   var sourceSize = null
   const upload = []
-  if (favicon !== undefined && favicon !== null) {
-    upload.push({
-      path: `/${faviconFileName}`,
-      content: favicon,
-    })
-  }
   if (sourceFileName.endsWith('.html')) {
+    if (favicon !== undefined && favicon !== null) {
+      upload.push({
+        path: `/${faviconFileName}`,
+        content: favicon,
+      })
+    }
     upload.push({
       path: '/index.html',
       content: ipfsBundle.StringToUint8Array(source),
-    })
-    // Dependencies
-    var bluelightLogoUri = 'https://bafybeidtwbe4qj5ijpnb64f3xtbkfm7q7q2kzjejd2uj4jpo755m6lot6a.ipfs.dweb.link/'
-    var bootCssUri = null
-    var bootPrefixUri = null
-    var bootUri = null
-    var libraryUri = null
-    var sjclUri = null
-    // bluelight
-    var ua = await loadFromIpfs(bluelightLogoUri)
-    upload.push({
-      path: '/$_ipfs_core_images_bluelight.png',
-      content: ua,
-    })
-    // Process bootcss
-    const bootCssPath = `./current/tiddlywiki-ipfs/bootcss/current.json`
-    if (fs.existsSync(bootCssPath) === false) {
-      throw new Error(`Unknown ${bootCssPath}...`)
-    }
-    const bootCss = JSON.parse(fs.readFileSync(bootCssPath, 'utf8'))
-    for (var i = 0; i < bootCss.content.length; i++) {
-      if (bootCss.content[i].name === '$:/boot/boot.css') {
-        bootCssUri = bootCss.content[i].sourceUri
-        break
-      }
-    }
-    if (bootCssUri == null) {
-      throw new Error(`Unknown '$:/boot/boot.css'...`)
-    }
-    var ua = await loadFromIpfs(bootCssUri)
-    upload.push({
-      path: `/${bootCssFileName}`,
-      content: ua,
-    })
-    // Process bootprefix
-    const bootPrefixPath = `./current/tiddlywiki-ipfs/bootprefix/current.json`
-    if (fs.existsSync(bootPrefixPath) === false) {
-      throw new Error(`Unknown ${bootPrefixPath}...`)
-    }
-    const bootPrefix = JSON.parse(fs.readFileSync(bootPrefixPath, 'utf8'))
-    for (var i = 0; i < bootPrefix.content.length; i++) {
-      if (bootPrefix.content[i].name === '$:/boot/bootprefix.js') {
-        bootPrefixUri = bootPrefix.content[i].sourceUri
-        break
-      }
-    }
-    if (bootPrefixUri == null) {
-      throw new Error(`Unknown '$:/boot/bootprefix.js'...`)
-    }
-    var ua = await loadFromIpfs(bootPrefixUri)
-    upload.push({
-      path: `/${bootPrefixFileName}`,
-      content: ua,
-    })
-    // Process boot
-    const bootPath = `./current/tiddlywiki-ipfs/boot/current.json`
-    if (fs.existsSync(bootPath) === false) {
-      throw new Error(`Unknown ${bootPath}...`)
-    }
-    const boot = JSON.parse(fs.readFileSync(bootPath, 'utf8'))
-    for (var i = 0; i < boot.content.length; i++) {
-      if (boot.content[i].name === '$:/boot/boot.js') {
-        bootUri = boot.content[i].sourceUri
-        break
-      }
-    }
-    if (bootUri == null) {
-      throw new Error(`Unknown '$:/boot/boot.js'...`)
-    }
-    var ua = await loadFromIpfs(bootUri)
-    upload.push({
-      path: `/${bootFileName}`,
-      content: ua,
-    })
-    // Process library ipfs
-    const libraryPath = `./current/tiddlywiki-ipfs/library/current.json`
-    if (fs.existsSync(libraryPath) === false) {
-      throw new Error(`Unknown ${libraryPath}...`)
-    }
-    const library = JSON.parse(fs.readFileSync(libraryPath, 'utf8'))
-    for (var i = 0; i < library.content.length; i++) {
-      if (library.content[i].name === '$:/library/ipfs.js') {
-        libraryUri = library.content[i].sourceUri
-        break
-      }
-    }
-    if (libraryUri == null) {
-      throw new Error(`Unknown '$:/library/ipfs.js'...`)
-    }
-    var ua = await loadFromIpfs(libraryUri)
-    upload.push({
-      path: `/${libraryFileName}`,
-      content: ua,
-    })
-    // Process library sjcl
-    const sjclPath = `./current/tiddlywiki-ipfs/sjcl/current.json`
-    if (fs.existsSync(sjclPath) === false) {
-      throw new Error(`Unknown ${sjclPath}...`)
-    }
-    const sjcl = JSON.parse(fs.readFileSync(sjclPath, 'utf8'))
-    for (var i = 0; i < sjcl.content.length; i++) {
-      if (sjcl.content[i].name === '$:/library/sjcl.js') {
-        sjclUri = sjcl.content[i].sourceUri
-        break
-      }
-    }
-    if (sjclUri == null) {
-      throw new Error(`Unknown '$:/library/sjcl.js'...`)
-    }
-    var ua = await loadFromIpfs(sjclUri)
-    upload.push({
-      path: `/${sjclFileName}`,
-      content: ua,
     })
   } else {
     upload.push({
@@ -380,24 +258,6 @@ module.exports = async function main (name, extension, dir, tags, load) {
     } else if (value.path === faviconFileName) {
       faviconCid = key
       faviconSize = value.size
-    } else if (value.path === '$_ipfs_core_images_bluelight.png') {
-      bluelightLogoCid = key
-      bluelightLogoSize = value.size
-    } else if (value.path === bootCssFileName) {
-      bootCssCid = key
-      bootCssSize = value.size
-    } else if (value.path === bootPrefixFileName) {
-      bootPrefixCid = key
-      bootPrefixSize = value.size
-    } else if (value.path === bootFileName) {
-      bootCid = key
-      bootSize = value.size
-    } else if (value.path === libraryFileName) {
-      libraryCid = key
-      librarySize = value.size
-    } else if (value.path === sjclFileName) {
-      sjclCid = key
-      sjclSize = value.size
     } else if (value.path === sourceFileName || value.path === 'index.html') {
       sourceCid = key
       sourceSize = value.size
@@ -430,66 +290,12 @@ module.exports = async function main (name, extension, dir, tags, load) {
         throw new Error('Matching version but not favicon cid...')
       }
     }
-    if (bootCssCid !== null) {
-      var { cid: oldBootCssCid } = await ipfsBundle.resolveIpfs(api, member.bootCssUri)
-      if (oldBootCssCid !== null && oldBootCssCid.toString() !== bootCssCid.toString()) {
-        throw new Error('Matching version but not bootcss cid...')
-      }
-    }
-    if (bootPrefixCid !== null) {
-      var { cid: oldBootPrefixCid } = await ipfsBundle.resolveIpfs(api, member.bootPrefixUri)
-      if (oldBootPrefixCid !== null && oldBootPrefixCid.toString() !== bootPrefixCid.toString()) {
-        throw new Error('Matching version but not bootprefix cid...')
-      }
-    }
-    if (bootCid !== null) {
-      var { cid: oldBootCid } = await ipfsBundle.resolveIpfs(api, member.bootUri)
-      if (oldBootCid !== null && oldBootCid.toString() !== bootCid.toString()) {
-        throw new Error('Matching version but not boot cid...')
-      }
-    }
-    if (libraryCid !== null) {
-      var { cid: oldLibraryCid } = await ipfsBundle.resolveIpfs(api, member.libraryUri)
-      if (oldLibraryCid !== null && oldLibraryCid.toString() !== libraryCid.toString()) {
-        throw new Error('Matching version but not library ipfs cid...')
-      }
-    }
-    if (sjclCid !== null) {
-      var { cid: oldSjclCid } = await ipfsBundle.resolveIpfs(api, member.sjclUri)
-      if (oldSjclCid !== null && oldSjclCid.toString() !== sjclCid.toString()) {
-        throw new Error('Matching version but not library sjcl cid...')
-      }
-    }
   }
   // Log
   console.log('***')
   if (faviconCid) {
     console.log(`*** Added 'favicon' ***
  ipfs://${parentCid}/${faviconFileName}`)
-  }
-  if (bluelightLogoCid) {
-    console.log(`*** Added '$_ipfs_core_images_bluelight.png' ***
- ipfs://${parentCid}/$_ipfs_core_images_bluelight.png`)
-  }
-  if (bootCssCid) {
-    console.log(`*** Added '$:/boot/boot.css' ***
- ipfs://${parentCid}/${bootCssFileName}`)
-  }
-  if (bootPrefixCid) {
-    console.log(`*** Added '$:/boot/bootprefix.js' ***
- ipfs://${parentCid}/${bootPrefixFileName}`)
-  }
-  if (bootCid) {
-    console.log(`*** Added '$:/boot/boot.js' ***
- ipfs://${parentCid}/${bootFileName}`)
-  }
-  if (libraryCid) {
-    console.log(`*** Added '$:/library/ipfs.js' ***
- ipfs://${parentCid}/${libraryFileName}`)
-  }
-  if (sjclCid) {
-    console.log(`*** Added '$:/library/sjcl.js' ***
- ipfs://${parentCid}/${sjclFileName}`)
   }
   if (sourceFileName.endsWith('.html')) {
     console.log(`*** Added content ***
@@ -507,30 +313,6 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (faviconCid !== null) {
     node.faviconSize = faviconSize
     node.faviconUri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
-  }
-  if (bluelightLogoCid !== null) {
-    node.bluelightLogoSize = bluelightLogoSize
-    node.bluelightLogoUri = `${publicGateway}/ipfs/${parentCid}/$_ipfs_core_images_bluelight.png`
-  }
-  if (bootCssCid !== null) {
-    node.bootCssSize = bootCssSize
-    node.bootCssUri = `${publicGateway}/ipfs/${parentCid}/${bootCssFileName}`
-  }
-  if (bootPrefixCid !== null) {
-    node.bootPrefixSize = bootPrefixSize
-    node.bootPrefixUri = `${publicGateway}/ipfs/${parentCid}/${bootPrefixFileName}`
-  }
-  if (bootCid !== null) {
-    node.bootSize = bootSize
-    node.bootUri = `${publicGateway}/ipfs/${parentCid}/${bootFileName}`
-  }
-  if (libraryCid !== null) {
-    node.librarySize = librarySize
-    node.libraryUri = `${publicGateway}/ipfs/${parentCid}/${libraryFileName}`
-  }
-  if (sjclCid !== null) {
-    node.sjclSize = sjclSize
-    node.sjclUri = `${publicGateway}/ipfs/${parentCid}/${sjclFileName}`
   }
   node.name = name
   node.rawHash = build.rawHash
@@ -560,47 +342,17 @@ build: ${current.build}`
 faviconSize: ${node.faviconSize}
 faviconUri: ipfs://${parentCid}/${faviconFileName}`
   }
-  if (bluelightLogoCid !== null) {
-    tid = `${tid}
-bluelightLogoSize: ${node.bluelightLogoSize}
-bluelightLogoUri: ipfs://${parentCid}/$_ipfs_core_images_bluelight.png`
-  }
-  if (bootCssCid !== null) {
-    tid = `${tid}
-bootCssSize: ${node.bootCssSize}
-bootCssUri: ipfs://${parentCid}/${bootCssFileName}`
-  }
-  if (bootPrefixCid !== null) {
-    tid = `${tid}
-bootPrefixSize: ${node.bootPrefixSize}
-bootPrefixUri: ipfs://${parentCid}/${bootPrefixFileName}`
-  }
-  if (bootCid !== null) {
-    tid = `${tid}
-bootSize: ${node.bootSize}
-bootUri: ipfs://${parentCid}/${bootFileName}`
-  }
-  if (libraryCid !== null) {
-    tid = `${tid}
-librarySize: ${node.librarySize}
-libraryUri: ipfs://${parentCid}/${libraryFileName}`
-  }
-  if (sjclCid !== null) {
-    tid = `${tid}
-sjclSize: ${node.sjclSize}
-sjclUri: ipfs://${parentCid}/${sjclFileName}`
-  }
   tid = `${tid}
 name: ${node.name}
 sourceSize: ${node.sourceSize}`
   if (sourceFileName.endsWith('.html')) {
     tid = `${tid}
 sourceUri: ipfs://${parentCid}/
-altSourceUri: https://dweb.link/ipfs/${parentCid}`
+altSourceUri: ${publicGateway}/ipfs/${parentCid}`
   } else {
     tid = `${tid}
 sourceUri: ipfs://${parentCid}/${sourceFileName}
-altSourceUri: https://dweb.link/ipfs/${parentCid}/${sourceFileName}`
+altSourceUri: ${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
   }
   tid = `${tid}
 version: ${build.version}
@@ -665,42 +417,6 @@ version: ${build.version}
     if (faviconCid !== null) {
       var uri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
       console.log(`*** Fetch 'favicon' ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (bluelightLogoCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/$_ipfs_core_images_bluelight.png`
-      console.log(`*** Fetch '$_ipfs_core_images_bluelight.png' ***
-${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (bootCssCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/${bootCssFileName}`
-      console.log(`*** Fetch '$:/boot/boot.css' ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (bootPrefixCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/${bootPrefixFileName}`
-      console.log(`*** Fetch '$:/boot/bootprefix.js' ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (bootCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/${bootFileName}`
-      console.log(`*** Fetch '$:/boot/boot.js' ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (libraryCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/${libraryFileName}`
-      console.log(`*** Fetch '$:/library/ipfs.js' ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (sjclCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/${sjclFileName}`
-      console.log(`*** Fetch '$:/library/sjcl.js' ***
  ${uri}`)
       await loadFromIpfs(uri)
     }

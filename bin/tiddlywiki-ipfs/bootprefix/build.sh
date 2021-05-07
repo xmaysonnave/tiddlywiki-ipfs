@@ -18,9 +18,6 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/tiddlywiki-ipfs/bootprefix > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/bootprefix > /dev/null 2>&1
-
 mkdir -p ./current/tiddlywiki-ipfs/bootprefix > /dev/null 2>&1
 
 # bootprefix
@@ -45,7 +42,12 @@ yarn tiddlywiki-ipfs build \
 echo '***'
 echo '*** semver bootprefix ***'
 echo '***'
-node ./bin/tiddlywiki-ipfs/bootprefix/semver.js "$@" || exit 1
+node ./bin/tiddlywiki-ipfs/bootprefix/semver.js "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged '$:/boot/bootprefix.js' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
+const constants = require('./constants.js')
+const fs = require('fs')
 const semver = require('./semver.js')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -24,12 +26,24 @@ async function main () {
     if (env == null) {
       throw new Error('Unknown env...')
     }
-    await semver(name, extension, dir, env)
-    console.log('***')
+    const { kind } = await semver(name, extension, dir, env)
+    const exists = fs.existsSync(`./production/${dir}`)
+    if (exists && kind === constants.UNCHANGED) {
+      console.log('***')
+      process.exit(2)
+    }
+    if (exists) {
+      await fs.rmdirSync(`./production/${dir}`, {
+        recursive: true,
+      })
+    }
+    await fs.mkdirSync(`./production/${dir}`, true)
   } catch (error) {
     console.error(error)
+    console.log('***')
     process.exit(1)
   }
+  console.log('***')
   process.exit(0)
 }
 

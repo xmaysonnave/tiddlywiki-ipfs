@@ -1135,6 +1135,7 @@ var _boot = (function($tw) {
 
     // Read plugin info for all plugins, or just an array of titles. Returns the number of plugins updated or deleted
     this.readPluginInfo = function(titles) {
+      var self = this
       var results = {
         modifiedPlugins: [],
         deletedPlugins: []
@@ -1143,12 +1144,12 @@ var _boot = (function($tw) {
         var tiddler = tiddlers[title];
         if(tiddler) {
           if(tiddler.fields.type === "application/json" && tiddler.hasField("plugin-type") && tiddler.fields.text) {
-            pluginInfo[tiddler.fields.title] = JSON.parse(tiddler.fields.text);
+            self.setPluginInfo(tiddler.fields.title, JSON.parse(tiddler.fields.text));
             results.modifiedPlugins.push(tiddler.fields.title);
           }
         } else {
           if(pluginInfo[title]) {
-            delete pluginInfo[title];
+            self.setPluginInfo(title);
             results.deletedPlugins.push(title);
           }
         }
@@ -1159,6 +1160,18 @@ var _boot = (function($tw) {
     // Get plugin info for a plugin
     this.getPluginInfo = function(title) {
       return pluginInfo[title];
+    };
+
+    // Set plugin info for a plugin
+    this.setPluginInfo = function(title, text) {
+      var tiddler = this.getTiddler(title)
+      if (tiddler !== undefined) {
+        if (text === undefined || text == null) {
+          delete pluginInfo[title];
+        } else {
+          pluginInfo[title] = text;
+        }
+      }
     };
 
     // Register the plugin tiddlers of a particular type, or null/undefined for any type, optionally restricting registration to an array of tiddler titles. Return the array of titles affected
@@ -2418,8 +2431,10 @@ var _boot = (function($tw) {
     $tw.boot.decryptEncryptedTiddlers(function() {
       // Startup
       $tw.boot.startup({callback: callback});
-      // Make sure the crypto state tiddler is up to date
-      $tw.crypto.updateCryptoStateTiddler();
+      if($tw.crypto) {
+        // Make sure the crypto state tiddler is up to date
+        $tw.crypto.updateCryptoStateTiddler();
+      }
     });
   };
 

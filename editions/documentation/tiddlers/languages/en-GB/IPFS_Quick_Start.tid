@@ -6,10 +6,10 @@ type: text/vnd.tiddlywiki
 <h2>IPFS with ~TiddlyWiki Quick Start</h2>
 <h4>Current</h4>
 <ul>
-  <li>[[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<versionurl title:"$:/boot/boot.js" ipath:"tiddlywiki-ipfs/boot">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-  <li>[[IPFS Documentation|IPFS Documentation Assets]] {{IPFS Documentation Assets!!version}} <$ipfslink value=<<versionurl title:"IPFS Documentation Assets" ipath:"tiddlywiki-ipfs/documentation">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-  <li>[[$:/library/ipfs.js]] {{$:/library/ipfs.js!!version}} <$ipfslink value=<<versionurl title:"$:/library/ipfs.js" ipath:"tiddlywiki-ipfs/library">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-  <li>[[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<versionurl title:"$:/plugins/ipfs" ipath:"tiddlywiki-ipfs/plugin">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<version-url title:"$:/boot/boot.js" ipath:"tiddlywiki-ipfs/boot">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+  <li>[[IPFS Documentation|IPFS Documentation Assets]] {{IPFS Documentation Assets!!version}} <$ipfslink value=<<version-url title:"IPFS Documentation Assets" ipath:"tiddlywiki-ipfs/documentation">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/library/ipfs.js]] {{$:/library/ipfs.js!!version}} <$ipfslink value=<<version-url title:"$:/library/ipfs.js" ipath:"tiddlywiki-ipfs/library">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+  <li>[[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<version-url title:"$:/plugins/ipfs" ipath:"tiddlywiki-ipfs/plugin">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
 </ul>
 <h4>Latest</h4>
 <ul>

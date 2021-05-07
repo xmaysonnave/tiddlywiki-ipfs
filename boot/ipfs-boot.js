@@ -9,7 +9,7 @@ var ipfsBoot = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
-  const name = 'ipfs-boot'
+  const name = '$_boot_ipfs-boot'
 
   /////////////////////////// Standard node.js libraries
 
@@ -39,6 +39,84 @@ var ipfsBoot = function ($tw) {
       return ipfs
     }
     return console
+  }
+
+  /**
+   * utf.js - UTF-8 <=> UTF-16 convertion
+   * / http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+   *
+   * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+   * Version: 1.0
+   * LastModified: Dec 25 1999
+   * This library is free.  You can redistribute it and/or modify it.
+   */
+  $tw.boot.Utf8ArrayToStr = function (array) {
+    var c, char2, char3
+    var out = ''
+    var len = array.length
+    var i = 0
+    while (i < len) {
+      c = array[i++]
+      switch (c >> 4) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+          // 0xxxxxxx
+          out += String.fromCharCode(c)
+          break
+        case 12:
+        case 13:
+          // 110x xxxx   10xx xxxx
+          char2 = array[i++]
+          out += String.fromCharCode(((c & 0x1f) << 6) | (char2 & 0x3f))
+          break
+        case 14:
+          // 1110 xxxx  10xx xxxx  10xx xxxx
+          char2 = array[i++]
+          char3 = array[i++]
+          out += String.fromCharCode(((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0))
+          break
+      }
+    }
+    return out
+  }
+
+  $tw.boot.fetch = async function (url, timeout) {
+    try {
+      if (url instanceof URL === false) {
+        url = new URL(url)
+      }
+      timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
+      var fetch = $tw.node ? global.fetch || require('node-fetch') : window.fetch
+      var options = {
+        method: 'options',
+      }
+      var response = await fetch(url, options)
+      if (response.ok === false) {
+        throw new Error(`Unexpected response ${response.statusText}`)
+      }
+      var options = {
+        compress: false,
+        method: 'get',
+      }
+      const location = response.headers.get('Location')
+      url = location !== undefined && location !== null ? new URL(location) : url
+      var response = await fetch(url, options)
+      if (response.ok === false) {
+        throw new Error(`Unexpected response ${response.statusText}`)
+      }
+      return await response.buffer()
+    } catch (error) {
+      console.log(`*** Fetch error:
+  ${error.message}
+  ${url} ***`)
+    }
+    return null
   }
 
   /**
@@ -91,7 +169,7 @@ var ipfsBoot = function ($tw) {
       currentState = state ? 'yes' : 'no'
       this.updateModulesStateTiddler()
     }
-    this.onModuleState = function (title) {
+    this.onModuleState = function (title, sourceUri, altSourceUri) {
       if ($tw.wiki) {
         var fields = {}
         var tiddler = $tw.wiki.getTiddler(title)
@@ -102,12 +180,10 @@ var ipfsBoot = function ($tw) {
             fields.tags = tags
           }
           if (tiddler.fields._canonical_uri === undefined) {
-            if ($tw.node) {
-              var filenamify = globalThis.filenamify || require('filenamify')
-              fields._canonical_uri = `./${filenamify(title, { replacement: '_' })}`
-            } else {
-              fields._canonical_uri = `./${$tw.ipfs.filenamify(title)}`
-            }
+            fields._canonical_uri = sourceUri
+          }
+          if (tiddler.fields._alt_canonical_uri === undefined) {
+            fields._alt_canonical_uri = altSourceUri
           }
           var updatedTiddler = new $tw.Tiddler(tiddler, fields)
           if (tiddler.isEqual(updatedTiddler, ['created', 'modified']) === false) {
@@ -128,7 +204,7 @@ var ipfsBoot = function ($tw) {
               $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
               $tw.ipfs.getLogger().info(
                 `Embed module: ${data.length}
-${resolvedUrl}`
+ ${resolvedUrl}`
               )
             })
             .catch(error => {
@@ -193,36 +269,36 @@ ${resolvedUrl}`
           $tw.wiki.addTiddler(tiddler)
         }
         if (tiddler) {
-          var uri = this.getAltSourceUri('$:/boot/boot.css')
-          if (uri !== undefined && uri !== null && uri.trim() !== '') {
+          var { sourceUri, altSourceUri } = this.getBuildUris('$:/boot/boot.css')
+          if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
             if (tiddler.fields.text === 'yes') {
-              this.onModuleState('$:/boot/boot.css')
+              this.onModuleState('$:/boot/boot.css', sourceUri, altSourceUri)
             } else {
               this.offModuleState('$:/boot/boot.css')
             }
           }
-          var uri = this.getAltSourceUri('$:/boot/bootprefix.js')
-          if (uri !== undefined && uri !== null && uri.trim() !== '') {
+          var { sourceUri, altSourceUri } = this.getBuildUris('$:/boot/bootprefix.js')
+          if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
             if (tiddler.fields.text === 'yes') {
-              this.onModuleState('$:/boot/bootprefix.js')
+              this.onModuleState('$:/boot/bootprefix.js', sourceUri, altSourceUri)
             } else {
               this.offModuleState('$:/boot/bootprefix.js')
             }
           }
-          var uri = this.getAltSourceUri('$:/boot/boot.js')
-          if (uri !== undefined && uri !== null && uri.trim() !== '') {
+          var { sourceUri, altSourceUri } = this.getBuildUris('$:/boot/boot.js')
+          if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
             if (tiddler.fields.text === 'yes') {
-              this.onModuleState('$:/boot/boot.js')
+              this.onModuleState('$:/boot/boot.js', sourceUri, altSourceUri)
             } else {
               this.offModuleState('$:/boot/boot.js')
             }
           }
           $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, innerTiddler) {
-            if ($tw.wiki.isSystemTiddler(title) && innerTiddler.fields.library === 'yes') {
-              var uri = self.getAltSourceUri(title)
-              if (uri !== undefined && uri !== null && uri.trim() !== '') {
+            if (($tw.wiki.isSystemTiddler(title) && innerTiddler.fields.library === 'yes') || (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type'))) {
+              var { sourceUri, altSourceUri } = self.getBuildUris(title)
+              if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
                 if (tiddler.fields.text === 'yes') {
-                  self.onModuleState(title)
+                  self.onModuleState(title, sourceUri, altSourceUri)
                 } else {
                   self.offModuleState(title)
                 }
@@ -232,12 +308,18 @@ ${resolvedUrl}`
         }
       }
     }
-    this.getAltSourceUri = function (title) {
+    this.getBuildUris = function (title) {
       var tiddler = $tw.wiki.getTiddler(`${title}-build`)
       if (tiddler !== undefined && tiddler !== null && tiddler.fields.altSourceUri !== undefined) {
-        return tiddler.fields.altSourceUri
+        return {
+          sourceUri: tiddler.fields.sourceUri,
+          altSourceUri: tiddler.fields.altSourceUri,
+        }
       }
-      return ''
+      return {
+        sourceUri: null,
+        altSourceUri: null,
+      }
     }
   }
 
@@ -1024,42 +1106,102 @@ ${resolvedUrl}`
     }
   }
 
+  $tw.boot.execStartup = async function (options) {
+    var readPluginInfo = async function (titles) {
+      var results = {
+        modifiedPlugins: [],
+        deletedPlugins: [],
+      }
+      var titles = titles || $tw.wiki.allTitles()
+      for (var i = 0; i < titles.length; i++) {
+        var tiddler = $tw.wiki.getTiddler(titles[i])
+        if (tiddler !== undefined) {
+          if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
+            if (tiddler.fields._canonical_uri === undefined) {
+              if (tiddler.fields.text !== undefined) {
+                $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(tiddler.fields.text))
+                results.modifiedPlugins.push(tiddler.fields.title)
+              }
+            } else {
+              var ua = await $tw.boot.fetch(tiddler.fields._canonical_uri)
+              var content = this.ipfsBundle.Utf8ArrayToStr(ua)
+              $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content))
+              results.modifiedPlugins.push(tiddler.fields.title)
+            }
+          }
+        } else if ($tw.wiki.getPluginInfo(titles[i]) !== undefined) {
+          $tw.wiki.setPluginInfo(titles[i])
+          results.deletedPlugins.push(titles[i])
+        }
+      }
+      return results
+    }
+    if ($tw.wiki.setPluginInfo === undefined) {
+      $tw.wiki.readPluginInfo()
+    } else {
+      await readPluginInfo()
+    }
+    $tw.wiki.registerPluginTiddlers('plugin', $tw.safeMode ? ['$:/core'] : undefined)
+    $tw.wiki.unpackPluginTiddlers()
+    // Process "safe mode"
+    if ($tw.safeMode) {
+      $tw.wiki.processSafeMode()
+    }
+    // Register typed modules from the tiddlers we've just loaded
+    $tw.wiki.defineTiddlerModules()
+    // And any modules within plugins
+    $tw.wiki.defineShadowModules()
+    // Gather up any startup modules
+    $tw.boot.remainingStartupModules = [] // Array of startup modules
+    $tw.modules.forEachModuleOfType('startup', function (title, module) {
+      if (module.startup) {
+        $tw.boot.remainingStartupModules.push(module)
+      }
+    })
+    // Keep track of the startup tasks that have been executed
+    $tw.boot.executedStartupModules = Object.create(null)
+    $tw.boot.disabledStartupModules = $tw.boot.disabledStartupModules || []
+    // Repeatedly execute the next eligible task
+    $tw.boot.executeNextStartupTask(options.callback)
+  }
+
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
 
   $tw.boot.boot = function (callback) {
-    // Initialise crypto object
     $tw.crypto = new $tw.utils.Crypto()
-    // Initialise password prompter
     if ($tw.browser && $tw.node === false) {
       $tw.passwordPrompt = new $tw.utils.PasswordPrompt()
     }
-    // Initialise compress object
     $tw.compress = new $tw.utils.Compress()
-    // Initialize module state object
     $tw.modulesState = new $tw.utils.ModulesState()
-    // Preload any compressed tiddlers
     $tw.boot.inflateTiddlers(function () {
       // Startup
-      $tw.boot.startup({ callback: callback })
-      // Make sure the state tiddlers are up to date
-      var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
-      if (encrypted !== undefined && encrypted.fields._encryption_public_key) {
-        $tw.crypto.setEncryptionKey(encrypted.fields._encryption_public_key)
-      } else {
-        $tw.crypto.updateCryptoStateTiddler()
-      }
-      var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
-      if (tiddler) {
-        $tw.compress.setCompressState(tiddler.fields.text === 'yes')
-      } else {
-        $tw.compress.updateCompressStateTiddler()
-      }
-      var tiddler = $tw.wiki.getTiddler('$:/isModule')
-      if (tiddler) {
-        $tw.modulesState.setModulesState(tiddler.fields.text === 'yes')
-      } else {
-        $tw.modulesState.updateModulesStateTiddler()
-      }
+      $tw.boot.startup({
+        callback: function () {
+          // Make sure the state tiddlers are up to date
+          var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
+          if (encrypted !== undefined && encrypted.fields._encryption_public_key) {
+            $tw.crypto.setEncryptionKey(encrypted.fields._encryption_public_key)
+          } else {
+            $tw.crypto.updateCryptoStateTiddler()
+          }
+          var tiddler = $tw.wiki.getTiddler('$:/isCompressed')
+          if (tiddler) {
+            $tw.compress.setCompressState(tiddler.fields.text === 'yes')
+          } else {
+            $tw.compress.updateCompressStateTiddler()
+          }
+          var tiddler = $tw.wiki.getTiddler('$:/isModule')
+          if (tiddler) {
+            $tw.modulesState.setModulesState(tiddler.fields.text === 'yes')
+          } else {
+            $tw.modulesState.updateModulesStateTiddler()
+          }
+          if (typeof callback === 'function') {
+            callback()
+          }
+        },
+      })
     })
   }
 

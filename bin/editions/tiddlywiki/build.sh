@@ -17,9 +17,6 @@ mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/editions/tiddlywiki > /dev/null 2>&1
-mkdir -p ./production/editions/tiddlywiki > /dev/null 2>&1
-
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 
 # assets
@@ -44,7 +41,12 @@ cp -R ./editions/tiddlywiki/* ./build || exit 1
   --name=tiddlywiki \
   --extension=html \
   --dir=editions/tiddlywiki \
-  --env=TIDDLYWIKI "$@" || exit 1
+  --env=TIDDLYWIKI "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged 'tiddlywiki' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

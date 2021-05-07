@@ -2,6 +2,7 @@
 'use strict'
 
 const beautify = require('json-beautify')
+const constants = require('./constants.js')
 const createKeccakHash = require('keccak')
 const dotenv = require('dotenv')
 const fetch = require('node-fetch')
@@ -153,15 +154,15 @@ module.exports = async function main (name, extension, dir, env, version) {
     if (content === undefined || content == null || (content !== undefined && content !== null && (content.rawHash !== rawHash || current.rawSemver !== rawSemver))) {
       version = generate({ version: rawSemver, versionSeparator: '-' })
       build = version.replace(`${rawSemver}-`, '')
-      kind = 'New'
+      kind = constants.NEW
     } else {
       version = current.version
       build = current.build
-      kind = 'Current'
+      kind = constants.UNCHANGED
     }
   } else {
     build = version.replace(`${rawSemver}-`, '')
-    kind = 'Parent'
+    kind = constants.PARENT
   }
   // Check
   if (validate(version) === false) {
@@ -170,21 +171,22 @@ module.exports = async function main (name, extension, dir, env, version) {
   console.log(`*** ${kind} version: ${version} ***`)
   // Save
   var newBuild = {
+    build: build,
+    kind: kind,
     rawHash: rawHash,
     rawSemver: rawSemver,
-    build: build,
     version: version,
   }
-  // Tiddler
-  var tid = `title: $:/ipfs/edition/build
+  if (dir.includes('editions')) {
+    var tid = `title: $:/ipfs/edition/build
 build: ${build}
 name: ${normalizedName}
 version: ${version}
 
 ${normalizedName}-${version}`
-  // Save
+    fs.writeFileSync(`./build/output/${dir}/ipfs.edition.build.tid`, tid, 'utf8')
+  }
   fs.writeFileSync(`./build/output/${dir}/${normalizedName}-build.json`, beautify(newBuild, null, 2, 80), 'utf8')
-  fs.writeFileSync(`./build/output/${dir}/ipfs.edition.build.tid`, tid, 'utf8')
   // Done
   return newBuild
 }

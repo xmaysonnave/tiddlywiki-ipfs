@@ -11,15 +11,6 @@
         "[filenamify[]addprefix[./tiddlywiki-ipfs/boot/]addsuffix[.json-%BUILD_BOOT_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
-    ],
-    "compressed": [
-			"--compress",
-        "yes",
-      "--render",
-        "[tag[$:/boot/bundle]]",
-        "[filenamify[]addprefix[./tiddlywiki-ipfs/boot/]addsuffix[.zlib-%BUILD_BOOT_VERSION%.json]]",
-        "text/plain",
-        "$:/core/templates/json-tiddler"
     ]
 	}
 }

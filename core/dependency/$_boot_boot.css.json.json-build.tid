@@ -1,11 +1,11 @@
 title: $:/boot/boot.css.json-build
 tags: $:/ipfs/core $:/core $:/boot/css
 type: text/vnd.tiddlywiki
-build: 210504393
+build: 210506419
 name: $:/boot/boot.css.json
 sourceSize: 1680
-sourceUri: ipfs://bafybeiee3xq46izm7ccq6smzvmmzq4fkvd2itfa4uaomfd7sstiv7iyh2y/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210504393.json
-altSourceUri: https://dweb.link/ipfs/bafybeiee3xq46izm7ccq6smzvmmzq4fkvd2itfa4uaomfd7sstiv7iyh2y/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210504393.json
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210504393
+sourceUri: ipfs://bafybeigph4b34b5qby5n2wgwsniffygdhegvbey35euwgy7nwcraxih6oi/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210506419.json
+altSourceUri: http://127.0.0.1:8080/ipfs/bafybeigph4b34b5qby5n2wgwsniffygdhegvbey35euwgy7nwcraxih6oi/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210506419.json
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210506419
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

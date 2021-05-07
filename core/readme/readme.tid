@@ -47,9 +47,9 @@ Resources:
 
 Current dependencies:
 
-* [[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<versionurl title:"$:/boot/boot.js" ipath:"tiddlywiki-ipfs/boot">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
-* [[$:/library/ipfs.js]] {{$:/library/ipfs.js!!version}} <$ipfslink value=<<versionurl title:"$:/library/ipfs.js" ipath:"tiddlywiki-ipfs/library">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
-* [[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<versionurl title:"$:/plugins/ipfs" ipath:"tiddlywiki-ipfs/plugin">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+* [[$:/boot/boot.js]] {{$:/boot/boot.js!!version}} <$ipfslink value=<<version-url title:"$:/boot/boot.js" ipath:"tiddlywiki-ipfs/boot">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+* [[$:/library/ipfs.js]] {{$:/library/ipfs.js!!version}} <$ipfslink value=<<version-url title:"$:/library/ipfs.js" ipath:"tiddlywiki-ipfs/library">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+* [[$:/plugins/ipfs]] {{$:/plugins/ipfs!!version}} <$ipfslink value=<<version-url title:"$:/plugins/ipfs" ipath:"tiddlywiki-ipfs/plugin">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
 
 Built dependencies:
 

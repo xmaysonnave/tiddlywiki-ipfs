@@ -18,9 +18,6 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/tiddlywiki-ipfs/boot > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/boot > /dev/null 2>&1
-
 mkdir -p ./current/tiddlywiki-ipfs/boot > /dev/null 2>&1
 
 # boot
@@ -66,7 +63,12 @@ yarn tiddlywiki-ipfs build \
 echo '***'
 echo '*** semver boot ***'
 echo '***'
-node ./bin/tiddlywiki-ipfs/boot/semver.js "$@" || exit 1
+node ./bin/tiddlywiki-ipfs/boot/semver.js "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged '$:/boot/boot.js' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1
@@ -91,13 +93,6 @@ yarn tiddlywiki-ipfs build \
 ./bin/cli-uploader.sh \
   --name=$:/boot/boot.js \
   --extension=js \
-  --dir=tiddlywiki-ipfs/boot \
-  --tags="$:/ipfs/core $:/core $:/boot/bundle" "$@" || exit 1
-
-# upload to ipfs
-./bin/cli-uploader.sh \
-  --name=$:/boot/boot.js.zlib \
-  --extension=json \
   --dir=tiddlywiki-ipfs/boot \
   --tags="$:/ipfs/core $:/core $:/boot/bundle" "$@" || exit 1
 

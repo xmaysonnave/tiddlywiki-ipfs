@@ -12,8 +12,8 @@ $tw = require('./boot/ipfs-boot.js').TiddlyWiki($tw)
 
 // Load plugin
 const current = path.dirname(module.filename)
-const ipfsCore = path.resolve(current, './core')
-$tw.boot.extraPlugins = [`+${ipfsCore}`]
+const ipfsPath = path.resolve(current, './core')
+$tw.boot.extraPlugins = [`+${ipfsPath}`]
 
 // Pass the command line arguments to the boot kernel
 $tw.boot.argv = Array.prototype.slice.call(process.argv, 2)

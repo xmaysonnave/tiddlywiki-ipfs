@@ -1,4 +1,4 @@
-title: $:/ipfs/saver/gateway/http/localhost
+title: $:/ipfs/saver/gateway/http/localhost/8080
 tags: $:/ipfs/core $:/ipfs/saver/gateway
 
 http://localhost:8080

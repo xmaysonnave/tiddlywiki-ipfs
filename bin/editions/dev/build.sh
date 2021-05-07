@@ -20,9 +20,6 @@ mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/editions/dev > /dev/null 2>&1
-mkdir -p ./production/editions/dev > /dev/null 2>&1
-
 mkdir -p ./current/editions/dev > /dev/null 2>&1
 
 # assets
@@ -59,7 +56,12 @@ cp -R ./editions/dev/* ./build || exit 1
   --name=dev \
   --extension=html \
   --dir=editions/dev \
-  --env=DEV "$@" || exit 1
+  --env=DEV "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged 'dev' ***"
+  exit 0
+fi
 
   # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

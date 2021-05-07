@@ -20,9 +20,6 @@ mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/editions/bluelightav > /dev/null 2>&1
-mkdir -p ./production/editions/bluelightav > /dev/null 2>&1
-
 mkdir -p ./current/editions/bluelightav > /dev/null 2>&1
 
 # tw5-locator
@@ -57,7 +54,12 @@ cp -R ./editions/bluelightav/* ./build || exit 1
   --name=bluelightav \
   --extension=html \
   --dir=editions/bluelightav \
-  --env=BLUELIGHTAV "$@" || exit 1
+  --env=BLUELIGHTAV "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged 'bluelightav' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

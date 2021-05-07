@@ -1,11 +1,11 @@
 title: $:/ipfs/documentation.zlib-build
 tags: $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210504399
+build: 210507369
 name: $:/ipfs/documentation.zlib
-sourceSize: 23971
-sourceUri: ipfs://bafybeifwtm756q6ubc3wbd7bvigboe6btfed5h4vbvp2qtbf45grxdsoky/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210504399.json
-altSourceUri: https://dweb.link/ipfs/bafybeifwtm756q6ubc3wbd7bvigboe6btfed5h4vbvp2qtbf45grxdsoky/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210504399.json
-version: 0.4.0-beta-tw-v5.1.23+build-210504399
+sourceSize: 23979
+sourceUri: ipfs://bafybeicq2nmvd2zikns6ekibjkvgsypei3f2votcqph6jgegyzvxlulnl4/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210507369.json
+altSourceUri: http://127.0.0.1:8080/ipfs/bafybeicq2nmvd2zikns6ekibjkvgsypei3f2votcqph6jgegyzvxlulnl4/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210507369.json
+version: 0.4.0-beta-tw-v5.1.23+build-210507369
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

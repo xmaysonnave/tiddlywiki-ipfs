@@ -18,9 +18,6 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/plugin > /dev/null 2>&1
-
 mkdir -p ./current/tiddlywiki-ipfs/plugin > /dev/null 2>&1
 
 mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
@@ -70,7 +67,12 @@ yarn tiddlywiki-ipfs build \
 echo '***'
 echo '*** semver plugin ***'
 echo '***'
-node ./bin/tiddlywiki-ipfs/plugin/semver.js "$@" || exit 1
+node ./bin/tiddlywiki-ipfs/plugin/semver.js "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged '$:/plugins/ipfs' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

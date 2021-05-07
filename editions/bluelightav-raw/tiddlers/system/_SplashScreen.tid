@@ -100,14 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </style>
 
 <div class="tc-splash-text">
-<script type="text/javascript">
-// <![CDATA[
-  function fallback() {
-    document.write('<img crossorigin="anonymous" type="text/javascript" src="https://bafybeihf7g4g6hwl455uhuzsxqdc7ljmrfiiomdaqbluzqkxtji56mkj6u.ipfs.dweb.link/$_ipfs_core_images_bluelight.png"><' + '/img>');
-  }
-// ]]>
-</script>
-<img src="./$_ipfs_core_images_bluelight.png" loading="eager"/>
+  <img crossorigin="anonymous" src="<<public-gateway>>/ipfs/bafybeihf7g4g6hwl455uhuzsxqdc7ljmrfiiomdaqbluzqkxtji56mkj6u/$_ipfs_core_images_bluelight.png" loading="eager"/>
 </div>
 
 <div class="tc-splash-text">

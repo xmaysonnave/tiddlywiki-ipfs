@@ -1,11 +1,11 @@
 title: $:/boot/bootprefix.js.json-build
 tags: $:/ipfs/core $:/core $:/boot/bootprefix
 type: text/vnd.tiddlywiki
-build: 210504394
+build: 210506420
 name: $:/boot/bootprefix.js.json
 sourceSize: 4105
-sourceUri: ipfs://bafybeig2f4jtuf5c7jxla5oftirmisokf4zwdqrvdppkarqx7gxfmgapcm/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210504394.json
-altSourceUri: https://dweb.link/ipfs/bafybeig2f4jtuf5c7jxla5oftirmisokf4zwdqrvdppkarqx7gxfmgapcm/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210504394.json
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210504394
+sourceUri: ipfs://bafybeibczfbwhqbpwglumuvekb3tbxo6mzcipz7o5vz6knmbxxji76uaum/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210506420.json
+altSourceUri: http://127.0.0.1:8080/ipfs/bafybeibczfbwhqbpwglumuvekb3tbxo6mzcipz7o5vz6knmbxxji76uaum/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre+build-210506420.json
+version: 0.4.0-beta-tw-v5.1.24-pre+build-210506420
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

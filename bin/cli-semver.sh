@@ -9,8 +9,10 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
-# build
-node ./bin/cli-semver.js "$@" || exit 1
-
-# done
+# semver
+node ./bin/cli-semver.js "$@"
+if [ $? -gt 1 ];
+then
+  exit 2
+fi
 exit 0

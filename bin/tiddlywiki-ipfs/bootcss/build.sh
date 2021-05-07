@@ -18,9 +18,6 @@ mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
-rm -f -R ./production/tiddlywiki-ipfs/bootcss > /dev/null 2>&1
-mkdir -p ./production/tiddlywiki-ipfs/bootcss > /dev/null 2>&1
-
 mkdir -p ./current/tiddlywiki-ipfs/bootcss > /dev/null 2>&1
 
 # bootcss
@@ -45,7 +42,12 @@ yarn tiddlywiki-ipfs build \
 echo '***'
 echo '*** semver bootcss ***'
 echo '***'
-node ./bin/tiddlywiki-ipfs/bootcss/semver.js "$@" || exit 1
+node ./bin/tiddlywiki-ipfs/bootcss/semver.js "$@"
+if [ $? -gt 1 ];
+then
+  echo "*** Unchanged '$:/boot/boot.css' ***"
+  exit 0
+fi
 
 # update tiddlywiki.info
 node ./bin/update-info.js "$@" || exit 1

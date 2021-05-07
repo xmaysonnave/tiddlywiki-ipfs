@@ -10,7 +10,7 @@ module-type: macro
   /*global $tw:false*/
   'use strict'
 
-  exports.name = 'versionurl'
+  exports.name = 'version-url'
 
   exports.params = [{ name: 'title' }, { name: 'ipath' }]
 
