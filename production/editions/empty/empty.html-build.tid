@@ -1,13 +1,13 @@
 title: empty-build
 tags: $:/ipfs/editions
 type: text/vnd.tiddlywiki
-build: 210509378
+build: 210509444
 faviconSize: 4297
-faviconUri: ipfs://bafybeicvnoyoru4thoo2cqamhvly26chzsxzyfu7nnz53txtsuu7y3wmye/favicon.ico
+faviconUri: ipfs://bafybeiekp6wbynaydg7inltvq3cov7aue2xqlujdfvc7jycm5cjs5u5sym/favicon.ico
 name: empty
-sourceSize: 36097
-sourceUri: ipfs://bafybeicvnoyoru4thoo2cqamhvly26chzsxzyfu7nnz53txtsuu7y3wmye/
-altSourceUri: https://bluelight.link/ipfs/bafybeicvnoyoru4thoo2cqamhvly26chzsxzyfu7nnz53txtsuu7y3wmye
-version: 0.4.0-beta-tw-v5.1.23+build-210509378
+sourceSize: 36035
+sourceUri: ipfs://bafybeiekp6wbynaydg7inltvq3cov7aue2xqlujdfvc7jycm5cjs5u5sym/
+altSourceUri: https://dweb.link/ipfs/bafybeiekp6wbynaydg7inltvq3cov7aue2xqlujdfvc7jycm5cjs5u5sym
+version: 0.4.0-beta-tw-v5.1.23+build-210509444
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

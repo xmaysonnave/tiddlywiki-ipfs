@@ -1,4 +1,4 @@
 title: $:/ipfs/build/public/gateway
 tags: $:/ipfs/core
 
-{{ $:/ipfs/saver/gateway/http/127.0.0.1/8080 }}
+{{ $:/ipfs/saver/gateway/https/dweb.link }}

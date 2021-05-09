@@ -17,13 +17,13 @@ list-before:
 
 <$radio tiddler="$:/config/AutoSave" value="yes"> <<lingo AutoSave/Enabled/Description>> </$radio>
 
-<$radio tiddler="$:/config/AutoSave" value="no"> <<lingo AutoSave/Disabled/Description>> </$radio>$link to="$:/isCompressed"><<lingo Compression/Caption>></$link>
+<$radio tiddler="$:/config/AutoSave" value="no"> <<lingo AutoSave/Disabled/Description>> </$radio>
 
-!! <$link to="$:/isCompressed"><<lingo Compression/Caption>></$link>
+!! <$link to="$:/isCompressed"> <<lingo Compression/Caption>> </$link>
 
 <$checkbox tiddler="$:/isCompressed" field="text" checked="yes" unchecked="no" default="no"> <<lingo Compression/Description>> </$checkbox>
 
-!! <$link to="$:/config/encryption"><<lingo Encryption/Caption>></$link>
+!! <$link to="$:/config/encryption"> <<lingo Encryption/Caption>> </$link>
 
 <$radio tiddler="$:/config/encryption" value="standford"> <<lingo Encryption/Standford/Description>> </$radio>
 
@@ -31,7 +31,7 @@ list-before:
 
 <$checkbox tiddler="$:/isSigned" field="text" checked="yes" unchecked="no" default="no"> <<lingo Encryption/Signature/Description>> </$checkbox>
 
-!! <$link to="$:/config/PreferredSaver"><<lingo PreferredSaver/Caption>></$link>
+!! <$link to="$:/config/PreferredSaver"> <<lingo PreferredSaver/Caption>> </$link>
 
 <$select tiddler="$:/config/PreferredSaver">
 <$list filter="[savers[]sort[]]">

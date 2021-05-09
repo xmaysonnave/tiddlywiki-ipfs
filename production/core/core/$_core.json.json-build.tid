@@ -1,11 +1,11 @@
 title: $:/core.json-build
 tags: $:/core $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210509353
+build: 210509442
 name: $:/core.json
 sourceSize: 2064875
-sourceUri: ipfs://bafybeiaelvsfywccqf5ggcvyn3r2a4yez6wxity2aalkgkklmgspv4f7lu/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210509353.json
-altSourceUri: https://bluelight.link/ipfs/bafybeiaelvsfywccqf5ggcvyn3r2a4yez6wxity2aalkgkklmgspv4f7lu/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210509353.json
-version: 0.4.0-beta-tw-v5.1.23+release+build-210509353
+sourceUri: ipfs://bafybeickhfppdoxglgpnotiffdogdowykvv7snnp7v7pq3lcopcp6jozkm/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210509442.json
+altSourceUri: https://dweb.link/ipfs/bafybeickhfppdoxglgpnotiffdogdowykvv7snnp7v7pq3lcopcp6jozkm/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210509442.json
+version: 0.4.0-beta-tw-v5.1.23+release+build-210509442
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -361,7 +361,7 @@ ${nodeUri} ***`)
   }
 
   async processRawContent (api, rawBuildNode, rawBuild, parentPath) {
-    parentPath = parentPath !== undefined && parentPath !== null ? parentPath : ''
+    parentPath = parentPath !== undefined && parentPath !== null ? parentPath : null
     const links = new Map()
     const previousLinks = new Map()
     if (rawBuildNode !== undefined && rawBuildNode !== null) {
@@ -379,6 +379,7 @@ ${nodeUri} ***`)
     if (rawBuild !== undefined && rawBuild !== null) {
       for (var i = 0; i < rawBuild.value.Links.length; i++) {
         const link = rawBuild.value.Links[i]
+        const contentPath = parentPath !== null && parentPath.trim() !== '' ? `${parentPath}/${link.Name}` : `${link.Name}`
         const childRawBuild = await this.ipfsBundle.dagGet(api, link.Hash, {
           localResolve: false,
           timeout: this.shortTimeout,
@@ -393,12 +394,12 @@ ${nodeUri} ***`)
               timeout: this.shortTimeout,
             })
           }
-          const childNode = await this.processRawContent(api, childRawBuildNode, childRawBuild, `${parentPath}/${link.Name}`)
+          const childNode = await this.processRawContent(api, childRawBuildNode, childRawBuild, contentPath)
           if (childNode !== null) {
             const currentLink = links.get(link.Name)
             if (currentLink !== undefined) {
               if (this.ipfsBundle.cidToCidV1(currentLink.Hash).toString() !== childNode.cid.toString()) {
-                previousLinks.set(`${parentPath}/${link.Name}`, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
+                previousLinks.set(contentPath, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
                 console.log(`Update: ${link.Name}`)
               }
             } else {

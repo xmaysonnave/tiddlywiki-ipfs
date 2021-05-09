@@ -1,11 +1,11 @@
 title: $:/library/sjcl.js.json-build
 tags: $:/ipfs/core $:/core $:/library/sjcl
 type: text/vnd.tiddlywiki
-build: 210509354
+build: 210509443
 name: $:/library/sjcl.js.json
 sourceSize: 26379
-sourceUri: ipfs://bafybeiacbajid4hlzsihw56gqgsbg7hmynicyxjj6g6k6ndqquxo6pmyy4/$_library_sjcl.js.json-1.0.8+release-210509354.json
-altSourceUri: https://bluelight.link/ipfs/bafybeiacbajid4hlzsihw56gqgsbg7hmynicyxjj6g6k6ndqquxo6pmyy4/$_library_sjcl.js.json-1.0.8+release-210509354.json
-version: 1.0.8+release-210509354
+sourceUri: ipfs://bafybeigjz6flk7d6gyfngyuij47dh4cbh6mhdp3vy62tygaojcxtanbyqm/$_library_sjcl.js.json-1.0.8+release-210509443.json
+altSourceUri: https://dweb.link/ipfs/bafybeigjz6flk7d6gyfngyuij47dh4cbh6mhdp3vy62tygaojcxtanbyqm/$_library_sjcl.js.json-1.0.8+release-210509443.json
+version: 1.0.8+release-210509443
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

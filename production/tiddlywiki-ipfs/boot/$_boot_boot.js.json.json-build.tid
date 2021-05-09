@@ -1,11 +1,11 @@
 title: $:/boot/boot.js.json-build
 tags: $:/ipfs/core $:/core $:/boot/bundle
 type: text/vnd.tiddlywiki
-build: 210509354
+build: 210509443
 name: $:/boot/boot.js.json
-sourceSize: 147563
-sourceUri: ipfs://bafybeifp27xn3r5u2vjvwtnzy7welp5qbu7rhlhgdhrnc3txf7svd7736y/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210509354.json
-altSourceUri: https://bluelight.link/ipfs/bafybeifp27xn3r5u2vjvwtnzy7welp5qbu7rhlhgdhrnc3txf7svd7736y/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210509354.json
-version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210509354
+sourceSize: 147320
+sourceUri: ipfs://bafybeie6axbbjk6ksv23nxadzc4yeeav26aohdm3oidzj2xvpbkw6iknh4/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210509443.json
+altSourceUri: https://dweb.link/ipfs/bafybeie6axbbjk6ksv23nxadzc4yeeav26aohdm3oidzj2xvpbkw6iknh4/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210509443.json
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210509443
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

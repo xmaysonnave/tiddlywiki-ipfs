@@ -1,5 +1,5 @@
 {
-  "build": "210509354",
+  "build": "210509443",
   "content": [
     {
       "title": "library",
@@ -7,9 +7,9 @@
       "name": "$:/library/ipfs.js.json",
       "rawHash": "b05c73b3ab1c10cf29d9fd220493c8de9b5d2f0be31c673eef709f2d0cabcda2",
       "sourceSize": 133007,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeiabu3b3lgpewzs6amivntra23zfvttudtjbp67ujsiitrdzt2wdjq/$_library_ipfs.js.json-1.0.0+release-210509354.json",
-      "tidSize": 656,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiauowr2lhsbgjk3oxcpwysu334aty7rviyvavfniwl6lcroibtxna/$_library_ipfs.js.json.json-build.tid"
+      "sourceUri": "https://dweb.link/ipfs/bafybeibmamoop2rdefbw63y4osmyhnenda6bpg62ecuviihljuwp66zdye/$_library_ipfs.js.json-1.0.0+release-210509443.json",
+      "tidSize": 651,
+      "tidUri": "https://dweb.link/ipfs/bafybeigrfgv4msouzjejqyi5srq73uxf3abffktzipvol35dlfwwj2vqfq/$_library_ipfs.js.json.json-build.tid"
     },
     {
       "title": "library",
@@ -17,12 +17,12 @@
       "name": "$:/library/ipfs.js",
       "rawHash": "637e215e39a777016e02c998c9783f38c33b25ea3c5484d24893d951e59977ce",
       "sourceSize": 129974,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidgw4zyodo7z2oycireao6hz3enlpwhieb74ioye5tyvx7lol6bna/$_library_ipfs.js-1.0.0+release-210509354.js",
-      "tidSize": 625,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiegh734gbovm4fbwzi4ppidqx2klgmkqzps2gryeeryqlajrqke7y/$_library_ipfs.js.js-build.tid"
+      "sourceUri": "https://dweb.link/ipfs/bafybeif62m32t6orapcvx7w6o637f6kbo7y5wqdbt32jj44lse3uopthse/$_library_ipfs.js-1.0.0+release-210509443.js",
+      "tidSize": 620,
+      "tidUri": "https://dweb.link/ipfs/bafybeiayeqa5bvs4pagqoek7tbjomyyjgqfoxav5paaz6juupkzzc6f6ea/$_library_ipfs.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+release",
-  "version": "1.0.0+release-210509354",
-  "buildUri": "https://bluelight.link/ipfs/bafybeibfhzwg2rir3teqk7z77gwjf6gr6ztez6ll7eezab4oq6flm5oo5a/210509354/"
+  "version": "1.0.0+release-210509443",
+  "buildUri": "https://dweb.link/ipfs/bafybeianbdkygjbnlgmy5mos7ti64yi355br4xral5y7gbo544vpvxslpe/210509443/"
 }

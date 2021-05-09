@@ -2577,8 +2577,7 @@ var ipfsBoot = function ($tw) {
     var options = null
     timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
     const optionsController = new AbortController()
-    const optionsTimeoutController = setTimeout(() => optionsController.abort(), timeout)
-    const optionsId = globalThis.setTimeout(() => optionsController.abort(), optionsTimeoutController)
+    const optionsId = setTimeout(() => optionsController.abort(), timeout)
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
     var fetchHeaders = {
       'Accept-Encoding': 'identity;q=0", *;q=0',
@@ -2603,8 +2602,7 @@ var ipfsBoot = function ($tw) {
     globalThis.clearTimeout(optionsId)
     try {
       const responseController = new AbortController()
-      const responseTimeoutController = setTimeout(() => responseController.abort(), timeout)
-      const responseId = globalThis.setTimeout(() => responseController.abort(), responseTimeoutController)
+      const responseId = setTimeout(() => responseController.abort(), timeout)
       // https://fetch.spec.whatwg.org/#cors-safelisted-method
       // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
       var params = {

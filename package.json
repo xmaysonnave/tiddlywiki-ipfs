@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210509377",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210509443",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -58,7 +58,8 @@
     "cids": "1.1.6",
     "filenamify": "^4.3.0",
     "ipfs-provider": "^2.0.1",
-    "uint8arrays": "^2.1.5"
+    "uint8arrays": "^2.1.5",
+    "xmlhttprequest-ssl": "1.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
