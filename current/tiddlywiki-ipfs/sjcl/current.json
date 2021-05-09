@@ -1,5 +1,5 @@
 {
-  "build": "210506420",
+  "build": "210509354",
   "content": [
     {
       "title": "sjcl",
@@ -7,9 +7,9 @@
       "name": "$:/library/sjcl.js.json",
       "rawHash": "b6a6b23219ecf06e703d195441d8a1f95de50475e6d0260e0cafee6497af67c3",
       "sourceSize": 26379,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeih4uzez3ydr4c3ebxntd732ifzeqdngezgifahvw3yr6vq6yp5qkm/$_library_sjcl.js.json-1.0.8+release-210506420.json",
-      "tidSize": 654,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeig73uqnxi7uotkcw6s34tmnv675ajk2woufdhbb6ndegojg6s3yqu/$_library_sjcl.js.json.json-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeiacbajid4hlzsihw56gqgsbg7hmynicyxjj6g6k6ndqquxo6pmyy4/$_library_sjcl.js.json-1.0.8+release-210509354.json",
+      "tidSize": 655,
+      "tidUri": "https://bluelight.link/ipfs/bafybeifl6littwp5vfi5cq3pgh3rvyb7pw3d7u5td5f7lii6mxrfer63ai/$_library_sjcl.js.json.json-build.tid"
     },
     {
       "title": "sjcl",
@@ -17,12 +17,12 @@
       "name": "$:/library/sjcl.js",
       "rawHash": "f176e8365ad115519f28d1a00471de050e4cb5a2d960952742191738ca29dc32",
       "sourceSize": 25607,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeibbwppbmfwks5g3agtoustsq3ywqyacrdwzphuwyyl4ovgl73vygu/$_library_sjcl.js-1.0.8+release-210506420.js",
-      "tidSize": 623,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeifb52u4gqezyj3y3r3rzc63axdrm6nh2gmw7yqwqf6zixvigf7qau/$_library_sjcl.js.js-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeielehtpwb3ov4yptgrjxtab3iakqu56qrnph5pt3shxm7mylch64a/$_library_sjcl.js-1.0.8+release-210509354.js",
+      "tidSize": 624,
+      "tidUri": "https://bluelight.link/ipfs/bafybeicehmiusyyunnehip2qhzqvlnn3zpo4ixc3ebugycp5rggetut344/$_library_sjcl.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.8+release",
-  "version": "1.0.8+release-210506420",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiaqtq7irelkcit2xfwc7jwacytagbe3m44unmf6sr244gimys7m44/210506420/"
+  "version": "1.0.8+release-210509354",
+  "buildUri": "https://bluelight.link/ipfs/bafybeifeiviopkbv4aelzu42m3o2g4ve3c4zdsdruncbqhnpf7geu4reja/210509354/"
 }

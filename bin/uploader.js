@@ -3,13 +3,10 @@
 
 const beautify = require('json-beautify')
 const dotenv = require('dotenv')
-const fetch = require('node-fetch')
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
-const { pipeline } = require('stream')
-const { promisify } = require('util')
-const timeoutSignal = require('timeout-signal')
+const { loadFromIpfs } = require('./utils.js')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
@@ -19,46 +16,6 @@ const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nn
 
 const shortTimeout = 6000
 const longTimeout = 4 * 60 * shortTimeout
-
-async function loadFromIpfs (url, timeout, stream) {
-  try {
-    if (url instanceof URL === false) {
-      url = new URL(url)
-    }
-    timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
-    var options = {
-      method: 'options',
-      signal: timeoutSignal(timeout),
-    }
-    var response = await fetch(url, options)
-    if (response.ok === false) {
-      throw new Error(`Unexpected response ${response.statusText}`)
-    }
-    var options = {
-      compress: false,
-      method: 'get',
-      size: 0,
-      signal: timeoutSignal(timeout),
-    }
-    const location = response.headers.get('Location')
-    url = location !== undefined && location !== null ? new URL(location) : url
-    var response = await fetch(url, options)
-    if (response.ok === false) {
-      throw new Error(`Unexpected response ${response.statusText}`)
-    }
-    if (stream !== undefined && stream !== null) {
-      const streamPipeline = promisify(pipeline)
-      await streamPipeline(response.body, stream)
-      return
-    }
-    return await response.buffer()
-  } catch (error) {
-    console.log(`*** Fetch error:
-${error.message}
-${url} ***`)
-  }
-  return null
-}
 
 /*
  * https://infura.io/docs

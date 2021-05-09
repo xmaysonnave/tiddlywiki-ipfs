@@ -1163,13 +1163,13 @@ var _boot = (function($tw) {
     };
 
     // Set plugin info for a plugin
-    this.setPluginInfo = function(title, text) {
+    this.setPluginInfo = function(title, object) {
       var tiddler = this.getTiddler(title)
       if (tiddler !== undefined) {
-        if (text === undefined || text == null) {
+        if (object === undefined || object == null) {
           delete pluginInfo[title];
         } else {
-          pluginInfo[title] = text;
+          pluginInfo[title] = object;
         }
       }
     };

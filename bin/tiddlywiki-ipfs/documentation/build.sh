@@ -24,6 +24,8 @@ mkdir -p ./current/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 cp -R ./editions/documentation/* ./build || exit 1
 
 cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.json.json-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.zlib.json-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.zlib.ipfs.json-build.tid ./build/tiddlers/config || exit 1
 
 # build raw
 echo '***'

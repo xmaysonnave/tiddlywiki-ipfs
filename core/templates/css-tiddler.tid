@@ -5,10 +5,5 @@ tags: $:/ipfs/core
 `<style`<$fields template=' data-tiddler-$name$="$encoded_value$"'></$fields>` type="text/css">`<$view field="text" format="text"/>`</style>`
 </$reveal>
 <$reveal type="nomatch" state="!!_canonical_uri" text="">
-<$reveal type="match" state="!!_alt_canonical_uri" text="">
 `<link`<$fields exclude='text' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` crossorigin="anonymous" rel="stylesheet" href="`<$text text={{!!_canonical_uri}}/>`"></link>`
-</$reveal>
-<$reveal type="nomatch" state="!!_alt_canonical_uri" text="">
-`<link`<$fields exclude='text' template=' data-tiddler-$name$="$encoded_value$"'></$fields>` crossorigin="anonymous" rel="stylesheet" href="`<$text text={{!!_alt_canonical_uri}}/>`"></link>`
-</$reveal>
 </$reveal>

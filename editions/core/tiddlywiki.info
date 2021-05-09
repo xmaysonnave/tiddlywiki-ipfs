@@ -1,0 +1,25 @@
+{
+	"description": "Export TiddlyWiki core",
+	"plugins": [],
+	"themes":[],
+	"build": {
+    "plain": [
+			"--compress",
+        "no",
+      "--render",
+        "$:/core",
+        "[filenamify[]addprefix[./core/core/]addsuffix[.json-%BUILD_TIDDLYWIKI_CORE_VERSION%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ],
+    "compressed": [
+			"--compress",
+        "yes",
+      "--render",
+        "$:/core",
+        "[filenamify[]addprefix[./core/core/]addsuffix[.zlib-%BUILD_TIDDLYWIKI_CORE_VERSION%.json]]",
+        "text/plain",
+        "$:/core/templates/json-tiddler"
+    ]
+	}
+}

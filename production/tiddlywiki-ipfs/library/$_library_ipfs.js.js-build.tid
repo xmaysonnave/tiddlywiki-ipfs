@@ -1,11 +1,11 @@
 title: $:/library/ipfs.js-build
 tags: $:/ipfs/core $:/core $:/library/ipfs
 type: text/vnd.tiddlywiki
-build: 210506420
+build: 210509354
 name: $:/library/ipfs.js
 sourceSize: 129974
-sourceUri: ipfs://bafybeidyhspa7otarovhuzn5pvuep5o3gb7lyfniulxbqilqladaiucmla/$_library_ipfs.js-1.0.0+pre-release-210506420.js
-altSourceUri: http://127.0.0.1:8080/ipfs/bafybeidyhspa7otarovhuzn5pvuep5o3gb7lyfniulxbqilqladaiucmla/$_library_ipfs.js-1.0.0+pre-release-210506420.js
-version: 1.0.0+pre-release-210506420
+sourceUri: ipfs://bafybeidgw4zyodo7z2oycireao6hz3enlpwhieb74ioye5tyvx7lol6bna/$_library_ipfs.js-1.0.0+release-210509354.js
+altSourceUri: https://bluelight.link/ipfs/bafybeidgw4zyodo7z2oycireao6hz3enlpwhieb74ioye5tyvx7lol6bna/$_library_ipfs.js-1.0.0+release-210509354.js
+version: 1.0.0+release-210509354
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

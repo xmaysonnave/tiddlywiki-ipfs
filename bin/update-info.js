@@ -135,6 +135,28 @@ function main () {
       }
     }
 
+    // core
+    var build = null
+    var path = './build/output/core/core/$_core.json-build.json'
+    if (fs.existsSync(path)) {
+      build = fs.readFileSync(path, 'utf8')
+    }
+    if (build !== undefined && build !== null) {
+      const core = JSON.parse(build)
+      if (core.version === undefined || core.version == null) {
+        throw new Error('Unknown tiddlywiki core version...')
+      }
+      if (fs.existsSync('./build/tiddlywiki.info')) {
+        replace({
+          regex: '%BUILD_TIDDLYWIKI_CORE_VERSION%',
+          replacement: core.version,
+          paths: ['./build/tiddlywiki.info'],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
+
     // plugin
     var build = null
     var path = './build/output/tiddlywiki-ipfs/plugin/$_plugins_ipfs.json-build.json'

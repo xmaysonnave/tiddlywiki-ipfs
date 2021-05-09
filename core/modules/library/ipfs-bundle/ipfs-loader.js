@@ -153,26 +153,56 @@ IpfsLoader.prototype.isJson = function (content) {
 
 IpfsLoader.prototype.fetchUint8Array = async function (url) {
   var options = null
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), $tw.utils.getLongTimeout())
-  try {
-    const params = {
-      method: 'options',
-      signal: timeout.signal,
-    }
-    options = await fetch(url, params)
-  } catch (error) {
-    // Ignore
+  const optionsController = new AbortController()
+  const optionsId = globalThis.setTimeout(() => optionsController.abort(), $tw.utils.getLongTimeout())
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+  var fetchHeaders = {
+    'Accept-Encoding': 'identity;q=0", *;q=0',
   }
   try {
     const params = {
-      method: 'get',
-      signal: timeout.signal,
+      method: 'options',
+      signal: optionsController.signal,
     }
-    const response = await fetch(options && options.ok && options.url ? options.url : url, params, {
-      mode: 'anonymous',
-    })
-    if (response.ok) {
+    options = await fetch(url, params)
+    if (options === undefined || options == null || options.ok === false) {
+      throw new Error(`Unexpected response ${options.statusText}`)
+    }
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      $tw.boot.getLogger().error(`*** Timeout exceeded: ${$tw.utils.getLongTimeout()} ms ***`)
+    } else {
+      $tw.boot.getLogger().error(`*** Options error: ${error.message} ***`)
+    }
+  }
+  globalThis.clearTimeout(optionsId)
+  try {
+    const responseController = new AbortController()
+    const responseId = globalThis.setTimeout(() => responseController.abort(), $tw.utils.getLongTimeout())
+    // https://fetch.spec.whatwg.org/#cors-safelisted-method
+    // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
+    const params = {
+      headers: fetchHeaders,
+      method: 'get',
+      mode: 'cors',
+      signal: responseController.signal,
+    }
+    var newUrl = null
+    if (options && options.ok && options.url) {
+      newUrl = new URL(options.url)
+    }
+    if (options && options.ok && newUrl == null && options.headers.get('Location') !== undefined) {
+      newUrl = new URL(options.headers.get('Location'))
+    }
+    if (newUrl == null) {
+      newUrl = url
+    }
+    const response = await fetch(newUrl, params)
+    globalThis.clearTimeout(responseId)
+    if (response === undefined || response == null || response.ok === false) {
+      throw new Error(`Unexpected response ${response.statusText}`)
+    }
+    if ($tw.browser && !$tw.node) {
       const ab = await response.arrayBuffer()
       const ua = new Uint8Array(ab)
       this.getLogger().info(
@@ -181,12 +211,12 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
       )
       return ua
     }
-    throw new Error(`[${response.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
+    return await response.buffer()
   } catch (error) {
     if (error.name === 'AbortError') {
-      this.getLogger().error(`Timeout exceeded: ${$tw.utils.getLongTimeout()} ms...`)
+      this.getLogger().error(`*** Timeout exceeded: ${$tw.utils.getLongTimeout()} ms ***`)
     } else {
-      this.getLogger().error(error)
+      this.getLogger().error(`*** [${error.message}] ${$tw.language.getString('NetworkError/Fetch')} ***`)
     }
   }
   throw new Error(`${$tw.language.getString('NetworkError/Fetch')}`)
@@ -278,7 +308,7 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
   }
   password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
   const ua = await this.fetchUint8Array(url)
-  if (ua.length === 0) {
+  if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
     return ''
   }
   var content = this.ipfsBundle.Utf8ArrayToStr(ua)
@@ -286,7 +316,7 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
     const json = JSON.parse(content)
     if (json.compressed.match(/^{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
-        content = await this.decryptFromPasswordPrompt(json.compressed)
+        content = await $tw.boot.decryptFromPasswordPrompt(json.compressed)
       } else {
         content = $tw.crypto.decrypt(json.compressed, password)
       }
@@ -311,7 +341,7 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
     content = btoa(content)
   } else if (content.match(/^{"iv":/)) {
     if (password == null && $tw.crypto.hasPassword() === false) {
-      content = await this.decryptFromPasswordPrompt(content)
+      content = await $tw.boot.decryptFromPasswordPrompt(content)
     } else {
       content = $tw.crypto.decrypt(content, password)
     }
@@ -332,7 +362,7 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
   }
   password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
   const ua = await this.fetchUint8Array(url)
-  if (ua.length === 0) {
+  if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
     return ''
   }
   var content = this.ipfsBundle.Utf8ArrayToStr(ua)
@@ -344,7 +374,7 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
     const json = JSON.parse(content)
     if (json.compressed.match(/^{"iv":/)) {
       if (password == null && $tw.crypto.hasPassword() === false) {
-        content = await this.decryptFromPasswordPrompt(json.compressed)
+        content = await $tw.boot.decryptFromPasswordPrompt(json.compressed)
       } else {
         content = $tw.crypto.decrypt(json.compressed, password)
       }
@@ -376,37 +406,12 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
       content = encryptedStoreArea
     }
     if (password == null && $tw.crypto.hasPassword() === false) {
-      content = await this.decryptFromPasswordPrompt(content)
+      content = await $tw.boot.decryptFromPasswordPrompt(content)
     } else {
       content = $tw.crypto.decrypt(content, password)
     }
   }
   return content
-}
-
-IpfsLoader.prototype.decryptFromPasswordPrompt = function (encrypted) {
-  return new Promise((resolve, reject) => {
-    $tw.passwordPrompt.createPrompt({
-      serviceName: 'Enter a password to decrypt the imported content!!',
-      noUserName: true,
-      canCancel: true,
-      submitText: 'Decrypt',
-      callback: function (data) {
-        if (!data) {
-          return false
-        }
-        // Decrypt
-        try {
-          const content = $tw.crypto.decrypt(encrypted, data.password)
-          resolve(content)
-          return true
-        } catch (error) {
-          reject(error)
-        }
-        return false
-      },
-    })
-  })
 }
 
 exports.IpfsLoader = IpfsLoader

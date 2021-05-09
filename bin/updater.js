@@ -4,14 +4,11 @@
 const beautify = require('json-beautify')
 const CID = require('cids')
 const dotenv = require('dotenv')
-const fetch = require('node-fetch')
-const timeoutSignal = require('timeout-signal')
 const fromString = require('uint8arrays').fromString
 const fs = require('fs')
 const IpfsHttpClient = require('ipfs-http-client')
 const path = require('path')
-const { pipeline } = require('stream')
-const { promisify } = require('util')
+const { loadFromIpfs } = require('./utils.js')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
@@ -55,46 +52,6 @@ module.exports = class Updater {
     }
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
-  }
-
-  async loadFromIpfs (url, timeout, stream) {
-    try {
-      if (url instanceof URL === false) {
-        url = new URL(url)
-      }
-      timeout = timeout !== undefined && timeout !== null ? timeout : this.longTimeout
-      var options = {
-        method: 'options',
-        signal: timeoutSignal(timeout),
-      }
-      var response = await fetch(url, options)
-      if (response.ok === false) {
-        throw new Error(`Unexpected response ${response.statusText}`)
-      }
-      var options = {
-        compress: false,
-        method: 'get',
-        size: 0,
-        signal: timeoutSignal(timeout),
-      }
-      const location = response.headers.get('Location')
-      url = location !== undefined && location !== null ? new URL(location) : url
-      var response = await fetch(url, options)
-      if (response.ok === false) {
-        throw new Error(`Unexpected response ${response.statusText}`)
-      }
-      if (stream !== undefined && stream !== null) {
-        const streamPipeline = promisify(pipeline)
-        await streamPipeline(response.body, stream)
-        return
-      }
-      return await response.buffer()
-    } catch (error) {
-      console.log(`*** Fetch error:
-${error.message}
-${url} ***`)
-    }
-    return null
   }
 
   async manageUnpin (api, key, recursive) {
@@ -184,7 +141,8 @@ ${url} ***`)
     }
   }
 
-  async processProductionContent (api, rawBuildNode) {
+  async processProductionContent (api, rawBuildNode, parentPath) {
+    parentPath = parentPath !== undefined && parentPath !== null && parentPath.trim() !== '' ? parentPath : ''
     const links = new Map()
     const versions = new Map()
     // Process directories
@@ -203,7 +161,7 @@ ${url} ***`)
         continue
       }
       if (this.ipfsBundle.isDirectory(childRawBuildNode.value.Data)) {
-        const { cid, size, version } = await this.processProductionContent(api, childRawBuildNode)
+        const { cid, size, version } = await this.processProductionContent(api, childRawBuildNode, `${parentPath}/${link.Name}`)
         if (cid !== null) {
           links.set(link.Name, {
             Name: link.Name,
@@ -255,7 +213,7 @@ ${url} ***`)
         const nodeUri = `${this.publicGateway}/ipfs/${rawBuildNodeLinks[i].Hash}`
         console.log(`*** Fetch current:
  ${nodeUri} ***`)
-        current = await this.loadFromIpfs(nodeUri, this.shortTimeout)
+        current = await loadFromIpfs(nodeUri, this.shortTimeout)
         if (current !== null) {
           current = JSON.parse(this.ipfsBundle.Utf8ArrayToStr(current))
         }
@@ -282,11 +240,11 @@ ${url} ***`)
             version: current.version,
           }
         } else {
-          console.log(`*** Discard build: ${current.build}
+          console.log(`*** Discard build: ${parentPath}/${current.build}
  ${ipfsUri} ***`)
         }
       } catch (error) {
-        console.log(`*** Discard build: ${current.build}
+        console.log(`*** Discard build: ${parentPath}/${current.build}
  ${error.message} ***`)
       }
     }
@@ -301,7 +259,7 @@ ${url} ***`)
         const nodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`*** Fetch Production node:
 ${nodeUri} ***`)
-        await this.loadFromIpfs(nodeUri)
+        await loadFromIpfs(nodeUri)
       }
       return {
         cid: this.ipfsBundle.cidToCidV1(node.cid),
@@ -396,14 +354,14 @@ ${nodeUri} ***`)
         const nodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`${msg} Production:
  ${nodeUri} ***`)
-        await this.loadFromIpfs(nodeUri)
+        await loadFromIpfs(nodeUri)
       }
     }
     return node
   }
 
-  async processRawContent (api, rawBuildNode, rawBuild, parentDir) {
-    parentDir = parentDir !== undefined && parentDir !== null ? parentDir : ''
+  async processRawContent (api, rawBuildNode, rawBuild, parentPath) {
+    parentPath = parentPath !== undefined && parentPath !== null ? parentPath : ''
     const links = new Map()
     const previousLinks = new Map()
     if (rawBuildNode !== undefined && rawBuildNode !== null) {
@@ -421,7 +379,6 @@ ${nodeUri} ***`)
     if (rawBuild !== undefined && rawBuild !== null) {
       for (var i = 0; i < rawBuild.value.Links.length; i++) {
         const link = rawBuild.value.Links[i]
-        const contentPathname = parentDir !== undefined && parentDir !== null && parentDir.trim() !== '' ? `${parentDir}/${link.Name}` : `${link.Name}`
         const childRawBuild = await this.ipfsBundle.dagGet(api, link.Hash, {
           localResolve: false,
           timeout: this.shortTimeout,
@@ -436,12 +393,12 @@ ${nodeUri} ***`)
               timeout: this.shortTimeout,
             })
           }
-          const childNode = await this.processRawContent(api, childRawBuildNode, childRawBuild, contentPathname)
+          const childNode = await this.processRawContent(api, childRawBuildNode, childRawBuild, `${parentPath}/${link.Name}`)
           if (childNode !== null) {
             const currentLink = links.get(link.Name)
             if (currentLink !== undefined) {
               if (this.ipfsBundle.cidToCidV1(currentLink.Hash).toString() !== childNode.cid.toString()) {
-                previousLinks.set(contentPathname, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
+                previousLinks.set(`${parentPath}/${link.Name}`, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
                 console.log(`Update: ${link.Name}`)
               }
             } else {
@@ -456,7 +413,7 @@ ${nodeUri} ***`)
               const rawNodeUri = `${this.gateway}/ipfs/${childNode.cid}`
               console.log(`*** Fetch Raw node:
  ${rawNodeUri} ***`)
-              await this.loadFromIpfs(rawNodeUri)
+              await loadFromIpfs(rawNodeUri)
             }
           }
         }
@@ -464,8 +421,8 @@ ${nodeUri} ***`)
     }
     // Process current
     var current = null
-    const currentRelativePathname = `${parentDir}/current.json`
-    const pathname = path.resolve(`./current/${currentRelativePathname}`)
+    const currentPath = `${parentPath}/current.json`
+    const pathname = path.resolve(`./current/${currentPath}`)
     if (fs.existsSync(pathname)) {
       const currentContent = fs.readFileSync(pathname, 'utf8')
       if (currentContent === undefined || currentContent == null) {
@@ -493,11 +450,11 @@ ${nodeUri} ***`)
       const currentLink = links.get(current.build)
       if (currentLink !== undefined) {
         if (this.ipfsBundle.cidToCidV1(currentLink.Hash).toString() !== added.cid.toString()) {
-          previousLinks.set(currentRelativePathname, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
-          console.log(`Update: ${currentRelativePathname}`)
+          previousLinks.set(currentPath, `${this.publicGateway}/ipfs/${currentLink.Hash}`)
+          console.log(`Update: ${currentPath}`)
         }
       } else {
-        console.log(`New: ${currentRelativePathname}`)
+        console.log(`New: ${currentPath}`)
       }
       links.set(current.build, {
         Name: current.build,
@@ -632,7 +589,7 @@ ${nodeUri} ***`)
           const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
           console.log(`*** Fetch Raw node:
  ${rawNodeUri} ***`)
-          await this.loadFromIpfs(rawNodeUri)
+          await loadFromIpfs(rawNodeUri)
         }
         node = await this.dagPut(api, links)
         build.currentRawBuild = `${this.publicGateway}/ipfs/${node.cid}`
@@ -649,7 +606,7 @@ ${nodeUri} ***`)
         const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`${msg} Raw:
  ${rawNodeUri} ***`)
-        await this.loadFromIpfs(rawNodeUri)
+        await loadFromIpfs(rawNodeUri)
       }
     }
     return node

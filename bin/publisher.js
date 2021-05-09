@@ -6,11 +6,8 @@ const CID = require('cids')
 const dotenv = require('dotenv')
 const fromString = require('uint8arrays').fromString
 const fs = require('fs')
-const fetch = require('node-fetch')
-const timeoutSignal = require('timeout-signal')
 const IpfsHttpClient = require('ipfs-http-client')
-const { pipeline } = require('stream')
-const { promisify } = require('util')
+const { loadFromIpfs } = require('./utils.js')
 
 const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
 
@@ -64,46 +61,6 @@ module.exports = class Publisher {
     }
     this.ipfsBundle = new IpfsBundle()
     this.ipfsBundle.init()
-  }
-
-  async loadFromIpfs (url, timeout, stream) {
-    try {
-      if (url instanceof URL === false) {
-        url = new URL(url)
-      }
-      timeout = timeout !== undefined && timeout !== null ? timeout : this.longTimeout
-      var options = {
-        method: 'options',
-        signal: timeoutSignal(timeout),
-      }
-      var response = await fetch(url, options)
-      if (response.ok === false) {
-        throw new Error(`Unexpected response ${response.statusText}`)
-      }
-      var options = {
-        compress: false,
-        method: 'get',
-        size: 0,
-        signal: timeoutSignal(timeout),
-      }
-      const location = response.headers.get('Location')
-      url = location !== undefined && location !== null ? new URL(location) : url
-      var response = await fetch(url, options)
-      if (response.ok === false) {
-        throw new Error(`Unexpected response ${response.statusText}`)
-      }
-      if (stream !== undefined && stream !== null) {
-        const streamPipeline = promisify(pipeline)
-        await streamPipeline(response.body, stream)
-        return
-      }
-      return await response.buffer()
-    } catch (error) {
-      console.log(`*** Fetch error:
-${error.message}
-${url} ***`)
-    }
-    return null
   }
 
   async dagPut (api, links, timeout) {
@@ -315,7 +272,7 @@ ${url} ***`)
         const nodeUri = `${this.publicGateway}/ipfs/${rawBuildNodeLinks[i].Hash}`
         console.log(`*** Fetch current:
  ${nodeUri} ***`)
-        current = await this.loadFromIpfs(nodeUri, this.shortTimeout)
+        current = await loadFromIpfs(nodeUri, this.shortTimeout)
         if (current !== null) {
           current = JSON.parse(this.ipfsBundle.Utf8ArrayToStr(current))
           currentRawNode = rawBuildNodeLinks[i]
@@ -362,7 +319,7 @@ ${url} ***`)
           const nodeUri = `${this.gateway}/ipfs/${node.cid}`
           console.log(`*** Fetch Raw node:
 ${nodeUri} ***`)
-          await this.loadFromIpfs(nodeUri)
+          await loadFromIpfs(nodeUri)
         }
         return {
           cid: this.ipfsBundle.cidToCidV1(node.cid),
@@ -459,7 +416,7 @@ ${nodeUri} ***`)
           const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
           console.log(`*** Fetch Raw node:
  ${rawNodeUri} ***`)
-          await this.loadFromIpfs(rawNodeUri)
+          await loadFromIpfs(rawNodeUri)
         }
         node = await this.dagPut(api, links)
         build.currentRawBuild = `${this.publicGateway}/ipfs/${node.cid}`
@@ -476,7 +433,7 @@ ${nodeUri} ***`)
         const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`${msg} Raw:
  ${rawNodeUri} ***`)
-        await this.loadFromIpfs(rawNodeUri)
+        await loadFromIpfs(rawNodeUri)
       }
       if (previousRawBuildCid !== null && previousRawBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin previous Raw:
@@ -537,31 +494,23 @@ ${nodeUri} ***`)
       var { ipfsCid: previousBuildCid } = this.ipfsBundle.getIpfsIdentifier(build.previousBuild)
     }
     // Remote raw build node
-    var remoteRawBuildCid = null
-    try {
-      var { cid: remoteRawBuildCid } = await this.ipfsBundle.dagResolve(api, `/ipns/${this.rawBuildCid}`, this.shortTimeout)
-    } catch (error) {
-      console.log('Unknown remote Raw...')
-    }
     if (this.pin) {
       if (previousRawBuildCid !== null && previousRawBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin previous Raw:
  ipfs://${previousRawBuildCid} ***`)
         await this.manageUnpin(api, previousRawBuildCid, false)
       }
-      if (remoteRawBuildCid !== null && remoteRawBuildCid.toString() !== currentRawBuildCid.toString()) {
-        console.log(`*** Pin current Raw:
+      console.log(`*** Pin current Raw:
  ipfs://${currentRawBuildCid} ***`)
-        await this.managePin(api, currentRawBuildCid, true)
-        console.log(`*** Publish current Raw:
+      await this.managePin(api, currentRawBuildCid, true)
+      console.log(`*** Publish current Raw:
  ipfs://${currentRawBuildCid} ***`)
-        await this.ipfsBundle.namePublish(api, this.rawBuildKey, currentRawBuildCid, {
-          resolve: false,
-          key: this.rawBuildKey,
-          allowOffline: false,
-          timeout: this.longTimeout,
-        })
-      }
+      await this.ipfsBundle.namePublish(api, this.rawBuildKey, currentRawBuildCid, {
+        resolve: false,
+        key: this.rawBuildKey,
+        allowOffline: false,
+        timeout: this.longTimeout,
+      })
     } else {
       if (currentRawBuildCid !== null && currentRawBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin current Raw:
@@ -573,7 +522,7 @@ ${nodeUri} ***`)
  ipfs://${previousRawBuildCid} ***`)
         await this.managePin(api, previousRawBuildCid, true)
       }
-      if (remoteRawBuildCid !== null && remoteRawBuildCid.toString() !== previousRawBuildCid.toString()) {
+      if (previousRawBuildCid !== null) {
         console.log(`*** Publish previous Raw:
  ipfs://${previousRawBuildCid} ***`)
         await this.ipfsBundle.namePublish(api, this.rawBuildKey, previousRawBuildCid, {
@@ -585,31 +534,23 @@ ${nodeUri} ***`)
       }
     }
     // Remote build node
-    var remoteBuildCid = null
-    try {
-      var { cid: remoteBuildCid } = await this.ipfsBundle.dagResolve(api, `/ipns/${this.buildCid}`, this.shortTimeout)
-    } catch (error) {
-      console.log('Unknown remote Production...')
-    }
     if (this.pin) {
       if (previousBuildCid !== null && previousBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin previous Production:
  ipfs://${previousBuildCid} ***`)
         await this.manageUnpin(api, previousBuildCid, false)
       }
-      if (remoteBuildCid !== null && remoteBuildCid.toString() !== currentBuildCid.toString()) {
-        console.log(`*** Pin current Production:
+      console.log(`*** Pin current Production:
  ipfs://${currentBuildCid} ***`)
-        await this.managePin(api, currentBuildCid, true)
-        console.log(`*** Publish current Production:
+      await this.managePin(api, currentBuildCid, true)
+      console.log(`*** Publish current Production:
  ipfs://${currentBuildCid} ***`)
-        await this.ipfsBundle.namePublish(api, this.buildKey, currentBuildCid, {
-          resolve: false,
-          key: this.buildKey,
-          allowOffline: false,
-          timeout: this.longTimeout,
-        })
-      }
+      await this.ipfsBundle.namePublish(api, this.buildKey, currentBuildCid, {
+        resolve: false,
+        key: this.buildKey,
+        allowOffline: false,
+        timeout: this.longTimeout,
+      })
     } else {
       if (currentBuildCid !== null && currentBuildCid.toString() !== this.emptyDirectoryCid.toString()) {
         console.log(`*** Unpin current Production:
@@ -621,7 +562,7 @@ ${nodeUri} ***`)
  ipfs://${previousBuildCid} ***`)
         await this.managePin(api, previousBuildCid, true)
       }
-      if (remoteBuildCid !== null && remoteBuildCid.toString() !== previousBuildCid.toString()) {
+      if (previousBuildCid !== null) {
         console.log(`*** Publish previous Production:
  ipfs://${previousBuildCid} ***`)
         await this.ipfsBundle.namePublish(api, this.buildKey, previousBuildCid, {

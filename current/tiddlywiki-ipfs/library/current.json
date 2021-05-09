@@ -1,15 +1,15 @@
 {
-  "build": "210506420",
+  "build": "210509354",
   "content": [
     {
       "title": "library",
       "tags": "$:/ipfs/core $:/core $:/library/ipfs",
       "name": "$:/library/ipfs.js.json",
       "rawHash": "b05c73b3ab1c10cf29d9fd220493c8de9b5d2f0be31c673eef709f2d0cabcda2",
-      "sourceSize": 133011,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeicy6ugx6dmggjgzuec3nqkb5mrychatsyfhgh7wkzvz367q7q6jzi/$_library_ipfs.js.json-1.0.0+pre-release-210506420.json",
-      "tidSize": 667,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeias2dgt5ydvxjd5vkvzpnwvz62sl4efqzr3hddfn67nxi4kckkd4a/$_library_ipfs.js.json.json-build.tid"
+      "sourceSize": 133007,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeiabu3b3lgpewzs6amivntra23zfvttudtjbp67ujsiitrdzt2wdjq/$_library_ipfs.js.json-1.0.0+release-210509354.json",
+      "tidSize": 656,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiauowr2lhsbgjk3oxcpwysu334aty7rviyvavfniwl6lcroibtxna/$_library_ipfs.js.json.json-build.tid"
     },
     {
       "title": "library",
@@ -17,12 +17,12 @@
       "name": "$:/library/ipfs.js",
       "rawHash": "637e215e39a777016e02c998c9783f38c33b25ea3c5484d24893d951e59977ce",
       "sourceSize": 129974,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeidyhspa7otarovhuzn5pvuep5o3gb7lyfniulxbqilqladaiucmla/$_library_ipfs.js-1.0.0+pre-release-210506420.js",
-      "tidSize": 636,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeibjk47yidwpklxdmjdyrektmcsdt3d2fjzkmnw2hphb3wbdbrg57y/$_library_ipfs.js.js-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeidgw4zyodo7z2oycireao6hz3enlpwhieb74ioye5tyvx7lol6bna/$_library_ipfs.js-1.0.0+release-210509354.js",
+      "tidSize": 625,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiegh734gbovm4fbwzi4ppidqx2klgmkqzps2gryeeryqlajrqke7y/$_library_ipfs.js.js-build.tid"
     }
   ],
-  "rawSemver": "1.0.0+pre-release",
-  "version": "1.0.0+pre-release-210506420",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeiahx5n2vihvd6qqgqqgvzv5732ramyhmof5mshejxkoshxx4w7dxy/210506420/"
+  "rawSemver": "1.0.0+release",
+  "version": "1.0.0+release-210509354",
+  "buildUri": "https://bluelight.link/ipfs/bafybeibfhzwg2rir3teqk7z77gwjf6gr6ztez6ll7eezab4oq6flm5oo5a/210509354/"
 }

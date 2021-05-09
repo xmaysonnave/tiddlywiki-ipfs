@@ -1,0 +1,13 @@
+title: empty-build
+tags: $:/ipfs/editions
+type: text/vnd.tiddlywiki
+build: 210509378
+faviconSize: 4297
+faviconUri: ipfs://bafybeicvnoyoru4thoo2cqamhvly26chzsxzyfu7nnz53txtsuu7y3wmye/favicon.ico
+name: empty
+sourceSize: 36097
+sourceUri: ipfs://bafybeicvnoyoru4thoo2cqamhvly26chzsxzyfu7nnz53txtsuu7y3wmye/
+altSourceUri: https://bluelight.link/ipfs/bafybeicvnoyoru4thoo2cqamhvly26chzsxzyfu7nnz53txtsuu7y3wmye
+version: 0.4.0-beta-tw-v5.1.23+build-210509378
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

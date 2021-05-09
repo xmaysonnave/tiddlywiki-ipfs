@@ -6,6 +6,9 @@ echo '***'
 # init
 ./bin/init.sh "$@" || exit 1
 
+# build core
+./bin/core/build.sh "$@" || exit 1
+
 # build plugin
 ./bin/tiddlywiki-ipfs/build.sh "$@" || exit 1
 

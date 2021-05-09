@@ -1,0 +1,11 @@
+title: $:/core.zlib-build
+tags: $:/core $:/ipfs/documentation
+type: text/vnd.tiddlywiki
+build: 210509353
+name: $:/core.zlib
+sourceSize: 452679
+sourceUri: ipfs://bafybeiczeeoexqm7jxhs27t6qycr75dqqadk32ch7v4jh4vayukxadd46a/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210509353.json
+altSourceUri: https://bluelight.link/ipfs/bafybeiczeeoexqm7jxhs27t6qycr75dqqadk32ch7v4jh4vayukxadd46a/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210509353.json
+version: 0.4.0-beta-tw-v5.1.23+release+build-210509353
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -29,6 +29,23 @@
   white-space: pre-line;
 }
 
+.tc-info-form h1 {
+  text-align: center;
+}
+
+.tc-info-prompt {
+  text-align: center;
+  color: #87cefa;
+}
+
+.tc-info-message {
+  overflow: auto;
+  max-height: 40em;
+  padding-right: 1em;
+  margin: 1em 0;
+  white-space: pre-line;
+}
+
 .tc-password-wrapper {
   font-family: sans-serif;
   z-index: 20000;

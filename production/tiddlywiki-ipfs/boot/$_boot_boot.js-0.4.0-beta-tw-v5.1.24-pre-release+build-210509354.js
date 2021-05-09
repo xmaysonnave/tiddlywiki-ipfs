@@ -1164,13 +1164,13 @@ var _boot = (function($tw) {
     };
 
     // Set plugin info for a plugin
-    this.setPluginInfo = function(title, text) {
+    this.setPluginInfo = function(title, object) {
       var tiddler = this.getTiddler(title)
       if (tiddler !== undefined) {
-        if (text === undefined || text == null) {
+        if (object === undefined || object == null) {
           delete pluginInfo[title];
         } else {
-          pluginInfo[title] = text;
+          pluginInfo[title] = object;
         }
       }
     };
@@ -2473,7 +2473,7 @@ var ipfsBoot = function ($tw) {
   }
 
   $tw.boot.getLogger = function () {
-    var log = $tw.node ? global.log || require('loglevel') : window.log
+    var log = $tw.node ? globalThis.log || require('loglevel') : globalThis.log
     if (log !== undefined && log !== null) {
       const loggers = log.getLoggers()
       var eruda = loggers.eruda
@@ -2492,8 +2492,42 @@ var ipfsBoot = function ($tw) {
   }
 
   /**
+   * Display an info
+   */
+  $tw.utils.info = function (title, prompt, text) {
+    var errHeading = title !== undefined && title !== null && title.trim() !== '' ? title : ''
+    var promptMsg = prompt !== undefined && prompt !== null && prompt.trim() !== '' ? prompt : ''
+    if ($tw.browser && !$tw.node) {
+      // Display an error message to the user
+      var dm = $tw.utils.domMaker
+      var heading = dm('h1', { text: errHeading })
+      var prompt = dm('div', { text: promptMsg, class: 'tc-info-prompt' })
+      var message = dm('div', { text: text, class: 'tc-info-message' })
+      var button = dm('div', {
+        children: [dm('button', { text: $tw.language === undefined ? 'close' : $tw.language.getString('Buttons/Close/Caption') })],
+        class: 'tc-info-prompt',
+      })
+      var form = dm('form', { children: [heading, prompt, message, button], class: 'tc-info-form' })
+      document.body.insertBefore(form, document.body.firstChild)
+      form.addEventListener(
+        'submit',
+        function (event) {
+          document.body.removeChild(form)
+          event.preventDefault()
+          return false
+        },
+        true
+      )
+    } else {
+      // Print an orange message to the console if not in the browser
+      console.error('\x1b[1;33m' + text + '\x1b[0m')
+    }
+    return null
+  }
+
+  /**
    * utf.js - UTF-8 <=> UTF-16 convertion
-   * / http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+   * http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
    *
    * Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
    * Version: 1.0
@@ -2537,36 +2571,128 @@ var ipfsBoot = function ($tw) {
   }
 
   $tw.boot.fetch = async function (url, timeout) {
+    if (url instanceof URL === false) {
+      url = new URL(url)
+    }
+    var options = null
+    timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
+    const optionsController = new AbortController()
+    const optionsTimeoutController = setTimeout(() => optionsController.abort(), timeout)
+    const optionsId = globalThis.setTimeout(() => optionsController.abort(), optionsTimeoutController)
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+    var fetchHeaders = {
+      'Accept-Encoding': 'identity;q=0", *;q=0',
+    }
+    var fetch = $tw.node ? globalThis.fetch || require('node-fetch') : globalThis.fetch
     try {
-      if (url instanceof URL === false) {
-        url = new URL(url)
-      }
-      timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
-      var fetch = $tw.node ? global.fetch || require('node-fetch') : window.fetch
-      var options = {
+      var params = {
         method: 'options',
+        signal: optionsController.signal,
       }
-      var response = await fetch(url, options)
-      if (response.ok === false) {
-        throw new Error(`Unexpected response ${response.statusText}`)
+      options = await fetch(url, params)
+      if (options === undefined || options == null || options.ok === false) {
+        throw new Error(`Unexpected response ${options.statusText}`)
       }
-      var options = {
-        compress: false,
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        $tw.boot.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
+      } else {
+        $tw.boot.getLogger().error(`*** Options error: ${error.message} ***`)
+      }
+    }
+    globalThis.clearTimeout(optionsId)
+    try {
+      const responseController = new AbortController()
+      const responseTimeoutController = setTimeout(() => responseController.abort(), timeout)
+      const responseId = globalThis.setTimeout(() => responseController.abort(), responseTimeoutController)
+      // https://fetch.spec.whatwg.org/#cors-safelisted-method
+      // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
+      var params = {
+        headers: fetchHeaders,
         method: 'get',
+        mode: 'cors',
+        signal: responseController.signal,
       }
-      const location = response.headers.get('Location')
-      url = location !== undefined && location !== null ? new URL(location) : url
-      var response = await fetch(url, options)
-      if (response.ok === false) {
+      var newUrl = null
+      if (options && options.ok && options.url) {
+        newUrl = new URL(options.url)
+      }
+      if (options && options.ok && newUrl == null && options.headers.get('Location') !== undefined) {
+        newUrl = new URL(options.headers.get('Location'))
+      }
+      if (newUrl == null) {
+        newUrl = url
+      }
+      var response = await fetch(newUrl, params)
+      globalThis.clearTimeout(responseId)
+      if (response === undefined || response == null || response.ok === false) {
         throw new Error(`Unexpected response ${response.statusText}`)
+      }
+      if ($tw.browser && !$tw.node) {
+        const ab = await response.arrayBuffer()
+        const ua = new Uint8Array(ab)
+        $tw.boot.getLogger().info(
+          `[${response.status}] Loaded:
+ ${response.url}`
+        )
+        return ua
       }
       return await response.buffer()
     } catch (error) {
-      console.log(`*** Fetch error:
-  ${error.message}
-  ${url} ***`)
+      if (error.name === 'AbortError') {
+        $tw.boot.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
+      } else {
+        $tw.boot.getLogger().error(`*** Fetch error: ${error.message} ***`)
+      }
     }
     return null
+  }
+
+  $tw.boot.loadToUtf8 = async function (url, password) {
+    url = url !== undefined && url !== null && url.toString().trim() !== '' ? url.toString().trim() : null
+    if (url == null) {
+      return null
+    }
+    password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+    const ua = await $tw.boot.fetch(url)
+    if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
+      return null
+    }
+    var content = $tw.boot.Utf8ArrayToStr(ua)
+    if (content.match(/^{"compressed":/)) {
+      const json = JSON.parse(content)
+      if (json.compressed.match(/^{"iv":/)) {
+        if (password == null && $tw.crypto.hasPassword() === false) {
+          content = await $tw.boot.decryptFromPasswordPrompt(json.compressed)
+        } else {
+          content = $tw.crypto.decrypt(json.compressed, password)
+        }
+        content = $tw.compress.inflate(content)
+      } else if (json.compressed.match(/^{"version":/)) {
+        if (json.signature) {
+          const signature = await $tw.crypto.decrypt(json.signature)
+          await this.checkMessage(json.compressed, json.keccak256, signature)
+        }
+        content = await $tw.crypto.decrypt(json.compressed)
+        content = $tw.compress.inflate(content)
+      } else {
+        content = $tw.compress.inflate(json.compressed)
+      }
+    } else if (content.match(/^{"encrypted":/)) {
+      const json = JSON.parse(content)
+      if (json.signature) {
+        const signature = await $tw.crypto.decrypt(json.signature)
+        await this.checkMessage(json.encrypted, json.keccak256, signature)
+      }
+      content = await $tw.crypto.decrypt(json.encrypted)
+    } else if (content.match(/^{"iv":/)) {
+      if (password == null && $tw.crypto.hasPassword() === false) {
+        content = await $tw.boot.decryptFromPasswordPrompt(content)
+      } else {
+        content = $tw.crypto.decrypt(content, password)
+      }
+    }
+    return content
   }
 
   /**
@@ -2615,11 +2741,14 @@ var ipfsBoot = function ($tw) {
 
   $tw.utils.ModulesState = function () {
     var currentState = null
+    var isSystemTiddler = function (title) {
+      return title && title.indexOf('$:/') === 0
+    }
     this.setModulesState = function (state) {
       currentState = state ? 'yes' : 'no'
       this.updateModulesStateTiddler()
     }
-    this.onModuleState = function (title, sourceUri, altSourceUri) {
+    this.onModuleState = function (title, uri) {
       if ($tw.wiki) {
         var fields = {}
         var tiddler = $tw.wiki.getTiddler(title)
@@ -2630,10 +2759,10 @@ var ipfsBoot = function ($tw) {
             fields.tags = tags
           }
           if (tiddler.fields._canonical_uri === undefined) {
-            fields._canonical_uri = sourceUri
+            fields._canonical_uri = uri
           }
-          if (tiddler.fields._alt_canonical_uri === undefined) {
-            fields._alt_canonical_uri = altSourceUri
+          if (tiddler.fields.text !== undefined && tiddler.fields.text !== null && tiddler.fields.text !== '') {
+            fields.text = ''
           }
           var updatedTiddler = new $tw.Tiddler(tiddler, fields)
           if (tiddler.isEqual(updatedTiddler, ['created', 'modified']) === false) {
@@ -2643,33 +2772,27 @@ var ipfsBoot = function ($tw) {
       }
     }
     this.load = function (tiddler, creationFields, removeFields, modificationFields, password, fallback) {
-      $tw.ipfs
-        .resolveUrl(tiddler.fields._canonical_uri ? tiddler.fields._canonical_uri : tiddler.fields.sourceUri, false, false, false)
+      var uri = tiddler.fields._canonical_uri ? tiddler.fields._canonical_uri : tiddler.fields.altSourceUri
+      $tw.boot
+        .loadToUtf8(uri, password)
         .then(data => {
-          const { resolvedUrl } = data
-          $tw.ipfs
-            .loadToUtf8(resolvedUrl, password)
-            .then(data => {
-              modificationFields.text = data
-              $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
-              $tw.ipfs.getLogger().info(
-                `Embed module: ${data.length}
- ${resolvedUrl}`
-              )
-            })
-            .catch(error => {
-              $tw.ipfs.getLogger().error(error)
-              if (!fallback) {
-                $tw.utils.alert(name, error.message)
-              } else {
-                this.load(fallback, creationFields, removeFields, modificationFields, password)
-              }
-            })
+          if (data !== null) {
+            modificationFields.text = data
+            $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
+            $tw.boot.getLogger().info(
+              `Embed module: ${data.length}
+ ${uri}`
+            )
+          }
         })
         .catch(error => {
-          $tw.ipfs.getLogger().error(error)
           if (!fallback) {
-            $tw.utils.alert(name, error.message)
+            if ($tw.utils.alert !== undefined) {
+              $tw.boot.getLogger().error(error)
+              $tw.utils.alert(name, error.message)
+            } else {
+              $tw.utils.error(error.message)
+            }
           } else {
             this.load(fallback, creationFields, removeFields, modificationFields, password)
           }
@@ -2698,7 +2821,13 @@ var ipfsBoot = function ($tw) {
             }
           }
           if (data === undefined || data.trim() === '') {
-            this.load(tiddler, creationFields, removeFields, modificationFields, password, $tw.wiki.getTiddler(`${tiddler.fields.title}-build`))
+            var build = null
+            if (isSystemTiddler(tiddler.fields.title) && tiddler.fields.library === 'yes') {
+              build = `${tiddler.fields.title}-build`
+            } else if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
+              build = `${tiddler.fields.title}.zlib-build`
+            }
+            this.load(tiddler, creationFields, removeFields, modificationFields, password, $tw.wiki.getTiddler(build))
           } else {
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
           }
@@ -2706,60 +2835,70 @@ var ipfsBoot = function ($tw) {
       }
     }
     this.updateModulesStateTiddler = function () {
-      var self = this
-      var tiddler = null
+      var isModule = null
       if ($tw.wiki) {
         var state = currentState === 'yes' ? 'yes' : 'no'
-        tiddler = $tw.wiki.getTiddler('$:/isModule')
-        if (!tiddler || tiddler.fields.text !== state) {
-          tiddler = new $tw.Tiddler({
+        isModule = $tw.wiki.getTiddler('$:/isModule')
+        if (!isModule || isModule.fields.text !== state) {
+          isModule = new $tw.Tiddler({
             title: '$:/isModule',
             text: state,
           })
-          $tw.wiki.addTiddler(tiddler)
+          $tw.wiki.addTiddler(isModule)
         }
-        if (tiddler) {
-          var { sourceUri, altSourceUri } = this.getBuildUris('$:/boot/boot.css')
-          if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
-            if (tiddler.fields.text === 'yes') {
-              this.onModuleState('$:/boot/boot.css', sourceUri, altSourceUri)
+        if (isModule) {
+          var { altSourceUri } = this.getBuildUris('$:/boot/boot.css-build')
+          if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+            if (state === 'yes') {
+              this.onModuleState('$:/boot/boot.css', altSourceUri)
             } else {
               this.offModuleState('$:/boot/boot.css')
             }
           }
-          var { sourceUri, altSourceUri } = this.getBuildUris('$:/boot/bootprefix.js')
-          if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
-            if (tiddler.fields.text === 'yes') {
-              this.onModuleState('$:/boot/bootprefix.js', sourceUri, altSourceUri)
+          var { altSourceUri } = this.getBuildUris('$:/boot/bootprefix.js-build')
+          if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+            if (state === 'yes') {
+              this.onModuleState('$:/boot/bootprefix.js', altSourceUri)
             } else {
               this.offModuleState('$:/boot/bootprefix.js')
             }
           }
-          var { sourceUri, altSourceUri } = this.getBuildUris('$:/boot/boot.js')
-          if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
-            if (tiddler.fields.text === 'yes') {
-              this.onModuleState('$:/boot/boot.js', sourceUri, altSourceUri)
+          var { altSourceUri } = this.getBuildUris('$:/boot/boot.js-build')
+          if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+            if (state === 'yes') {
+              this.onModuleState('$:/boot/boot.js', altSourceUri)
             } else {
               this.offModuleState('$:/boot/boot.js')
             }
           }
-          $tw.wiki.forEachTiddler({ includeSystem: true }, function (title, innerTiddler) {
-            if (($tw.wiki.isSystemTiddler(title) && innerTiddler.fields.library === 'yes') || (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type'))) {
-              var { sourceUri, altSourceUri } = self.getBuildUris(title)
-              if (sourceUri !== undefined && sourceUri !== null && sourceUri.trim() !== '') {
-                if (tiddler.fields.text === 'yes') {
-                  self.onModuleState(title, sourceUri, altSourceUri)
-                } else {
-                  self.offModuleState(title)
+          var titles = titles || $tw.wiki.allTitles()
+          for (var i = 0; i < titles.length; i++) {
+            var innerTiddler = $tw.wiki.getTiddler(titles[i])
+            if (innerTiddler !== undefined) {
+              var build = null
+              var innerTitle = innerTiddler.fields.title
+              if (isSystemTiddler(innerTitle) && innerTiddler.fields.library === 'yes') {
+                build = `${innerTitle}-build`
+              } else if (innerTiddler.fields.type === 'application/json' && innerTiddler.hasField('plugin-type')) {
+                build = `${innerTitle}.zlib-build`
+              }
+              if (build !== null) {
+                var { altSourceUri } = this.getBuildUris(build)
+                if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+                  if (state === 'yes') {
+                    this.onModuleState(innerTitle, altSourceUri)
+                  } else {
+                    this.offModuleState(innerTitle)
+                  }
                 }
               }
             }
-          })
+          }
         }
       }
     }
     this.getBuildUris = function (title) {
-      var tiddler = $tw.wiki.getTiddler(`${title}-build`)
+      var tiddler = $tw.wiki.getTiddler(title)
       if (tiddler !== undefined && tiddler !== null && tiddler.fields.altSourceUri !== undefined) {
         return {
           sourceUri: tiddler.fields.sourceUri,
@@ -2785,7 +2924,7 @@ var ipfsBoot = function ($tw) {
     var callSjcl = function (method, text, password) {
       password = password || currentPassword
       var output = null
-      var sjcl = $tw.node ? global.sjcl || require('sjcl') : window.sjcl
+      var sjcl = $tw.node ? globalThis.sjcl || require('sjcl') : globalThis.sjcl
       try {
         if (password) {
           var tStart = new Date()
@@ -2803,7 +2942,7 @@ var ipfsBoot = function ($tw) {
     }
     var callSigUtil = function (method, text, key) {
       var output = null
-      var sigUtil = $tw.node ? global.sigUtil || require('eth-sig-util') : window.sigUtil
+      var sigUtil = $tw.node ? globalThis.sigUtil || require('eth-sig-util') : globalThis.sigUtil
       try {
         if (method === 'encrypt') {
           key = key || currentPublicKey
@@ -2935,7 +3074,7 @@ var ipfsBoot = function ($tw) {
     }
     this.keccak256 = function (text) {
       if (text) {
-        var createKeccakHash = $tw.node ? global.createKeccakHash || require('keccak') : window.createKeccakHash
+        var createKeccakHash = $tw.node ? globalThis.createKeccakHash || require('keccak') : globalThis.createKeccakHash
         var hash = createKeccakHash('keccak256')
         hash.update(text)
         return hash.digest('hex')
@@ -2948,7 +3087,7 @@ var ipfsBoot = function ($tw) {
    * Compress helper object for compressed content.
    */
   $tw.utils.Compress = function () {
-    var pako = $tw.node ? global.pako || require('pako') : window.pako
+    var pako = $tw.node ? globalThis.pako || require('pako') : globalThis.pako
     var currentState = null
     this.setCompressState = function (state) {
       currentState = state ? 'yes' : 'no'
@@ -3364,6 +3503,35 @@ var ipfsBoot = function ($tw) {
   /////////////////////////// Browser definitions
 
   if ($tw.browser && !$tw.node) {
+    $tw.boot.decryptFromPasswordPrompt = function (encrypted) {
+      return new Promise((resolve, reject) => {
+        var prompt = 'Enter a password to decrypt this content...'
+        if ($tw.utils.hop($tw.boot, 'encryptionPrompts')) {
+          prompt = $tw.boot.encryptionPrompts.decrypt
+        }
+        $tw.passwordPrompt.createPrompt({
+          serviceName: prompt,
+          noUserName: true,
+          canCancel: false,
+          submitText: 'Decrypt',
+          callback: function (data) {
+            if (!data) {
+              return false
+            }
+            // Decrypt
+            try {
+              const content = $tw.crypto.decrypt(encrypted, data.password)
+              resolve(content)
+              return true
+            } catch (error) {
+              reject(error)
+            }
+            return false
+          },
+        })
+      })
+    }
+
     $tw.boot.passwordPrompt = function (text, callback) {
       var prompt = 'Enter a password to decrypt this TiddlyWiki'
       // Prompt for the password
@@ -3373,6 +3541,7 @@ var ipfsBoot = function ($tw) {
       $tw.passwordPrompt.createPrompt({
         serviceName: prompt,
         noUserName: true,
+        canCancel: false,
         submitText: 'Decrypt',
         callback: function (data) {
           // Attempt to decrypt the tiddlers
@@ -3405,14 +3574,14 @@ var ipfsBoot = function ($tw) {
     }
 
     $tw.boot.inflateTiddlers = function (callback) {
-      var compressedStoreArea = document.getElementById('compressedStoreArea')
-      if (compressedStoreArea) {
+      var area = document.getElementById('compressedStoreArea')
+      var content = area !== undefined && area.innerHTML !== undefined ? area.innerHTML : null
+      if (content !== undefined && content !== null) {
         var inflate = function (b64) {
           if (b64 !== undefined && b64 !== null) {
             $tw.boot.preloadTiddler($tw.compress.inflate(b64), callback)
           }
         }
-        var content = compressedStoreArea.innerHTML
         if (content.match(/^{"compressed":/)) {
           var json = JSON.parse(content)
           if (json.compressed.match(/^{"iv":/)) {
@@ -3424,8 +3593,9 @@ var ipfsBoot = function ($tw) {
               if (decrypted !== null) {
                 inflate(decrypted)
                 if (recovered) {
-                  $tw.utils.alert(
-                    name,
+                  $tw.utils.info(
+                    'Decryption',
+                    'Sucessfully recovered encrypted signature',
                     `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
                   )
                 }
@@ -3449,9 +3619,9 @@ var ipfsBoot = function ($tw) {
      * callback: function to be called the decryption is complete
      */
     $tw.boot.decryptEncryptedTiddlers = function (callback) {
-      var encryptedStoreArea = document.getElementById('encryptedStoreArea')
-      if (encryptedStoreArea) {
-        var content = encryptedStoreArea.innerHTML
+      var area = document.getElementById('encryptedStoreArea')
+      var content = area !== undefined && area.innerHTML !== undefined ? area.innerHTML : null
+      if (content !== undefined && content !== null) {
         if (content.match(/^{"iv":/)) {
           $tw.boot.passwordPrompt(content, function (decrypted) {
             $tw.boot.preloadTiddler(decrypted, callback)
@@ -3462,8 +3632,9 @@ var ipfsBoot = function ($tw) {
             if (decrypted !== null) {
               $tw.boot.preloadTiddler(decrypted, callback)
               if (recovered) {
-                $tw.utils.alert(
-                  name,
+                $tw.utils.info(
+                  'Decryption',
+                  'Sucessfully recovered encrypted signature',
                   `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`
                 )
               }
@@ -3562,6 +3733,10 @@ var ipfsBoot = function ($tw) {
         modifiedPlugins: [],
         deletedPlugins: [],
       }
+      var deletePlugin = function (title, results) {
+        $tw.wiki.setPluginInfo(title)
+        results.deletedPlugins.push(title)
+      }
       var titles = titles || $tw.wiki.allTitles()
       for (var i = 0; i < titles.length; i++) {
         var tiddler = $tw.wiki.getTiddler(titles[i])
@@ -3571,17 +3746,36 @@ var ipfsBoot = function ($tw) {
               if (tiddler.fields.text !== undefined) {
                 $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(tiddler.fields.text))
                 results.modifiedPlugins.push(tiddler.fields.title)
+              } else {
+                deletePlugin(tiddler.fields.title, results)
               }
             } else {
-              var ua = await $tw.boot.fetch(tiddler.fields._canonical_uri)
-              var content = this.ipfsBundle.Utf8ArrayToStr(ua)
-              $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content))
-              results.modifiedPlugins.push(tiddler.fields.title)
+              try {
+                var content = await $tw.boot.loadToUtf8(tiddler.fields._canonical_uri)
+                if (content !== null) {
+                  content = JSON.parse(content)
+                  if (content.text !== undefined && content.text !== null && content.text !== '') {
+                    $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content.text))
+                    results.modifiedPlugins.push(tiddler.fields.title)
+                  } else {
+                    deletePlugin(tiddler.fields.title, results)
+                  }
+                } else {
+                  deletePlugin(tiddler.fields.title, results)
+                }
+              } catch (error) {
+                if ($tw.utils.alert !== undefined) {
+                  $tw.boot.getLogger().error(error)
+                  $tw.utils.alert(name, error.message)
+                } else {
+                  $tw.utils.error(error.message)
+                }
+              }
             }
           }
-        } else if ($tw.wiki.getPluginInfo(titles[i]) !== undefined) {
-          $tw.wiki.setPluginInfo(titles[i])
-          results.deletedPlugins.push(titles[i])
+        } else if ($tw.wiki.getPluginInfo(tiddler.fields.title) !== undefined) {
+          $tw.wiki.setPluginInfo(tiddler.fields.title)
+          results.deletedPlugins.push(tiddler.fields.title)
         }
       }
       return results
@@ -3615,17 +3809,27 @@ var ipfsBoot = function ($tw) {
     $tw.boot.executeNextStartupTask(options.callback)
   }
 
+  /**
+   * Startup TiddlyWiki
+   */
+  $tw.boot.startup = async function (options) {
+    options = options || {}
+    // Get the URL hash and check for safe mode
+    $tw.boot.initStartup(options)
+    $tw.boot.loadStartup(options)
+    await $tw.boot.execStartup(options)
+  }
+
   /////////////////////////// Main boot function to decrypt tiddlers and then startup
 
   $tw.boot.boot = function (callback) {
     $tw.crypto = new $tw.utils.Crypto()
-    if ($tw.browser && $tw.node === false) {
+    if ($tw.browser && !$tw.node) {
       $tw.passwordPrompt = new $tw.utils.PasswordPrompt()
     }
     $tw.compress = new $tw.utils.Compress()
     $tw.modulesState = new $tw.utils.ModulesState()
     $tw.boot.inflateTiddlers(function () {
-      // Startup
       $tw.boot.startup({
         callback: function () {
           // Make sure the state tiddlers are up to date

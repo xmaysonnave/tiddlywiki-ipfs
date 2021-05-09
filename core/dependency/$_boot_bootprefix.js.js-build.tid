@@ -1,11 +1,11 @@
 title: $:/boot/bootprefix.js-build
 tags: $:/ipfs/core $:/core $:/boot/bootprefix
 type: text/vnd.tiddlywiki
-build: 210506420
+build: 210509354
 name: $:/boot/bootprefix.js
 sourceSize: 3498
-sourceUri: ipfs://bafybeieomicztu54yph3e3rvbygnen6uqiknskgdvsfwwymbrz736uxgm4/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre+build-210506420.js
-altSourceUri: http://127.0.0.1:8080/ipfs/bafybeieomicztu54yph3e3rvbygnen6uqiknskgdvsfwwymbrz736uxgm4/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre+build-210506420.js
-version: 0.4.0-beta-tw-v5.1.24-pre+build-210506420
+sourceUri: ipfs://bafybeianejn7kzvfw7wssprdauzliax5bjtfhnvmpe5wgmepgbap62t3qu/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210509354.js
+altSourceUri: https://bluelight.link/ipfs/bafybeianejn7kzvfw7wssprdauzliax5bjtfhnvmpe5wgmepgbap62t3qu/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210509354.js
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210509354
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

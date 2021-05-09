@@ -1,28 +1,28 @@
 {
-  "build": "210506419",
+  "build": "210509354",
   "content": [
     {
       "title": "bootcss",
       "tags": "$:/ipfs/core $:/core $:/boot/css",
       "name": "$:/boot/boot.css.json",
-      "rawHash": "207df4aea291a945c05e10ad3d00bd8a9dcee3d9cfa9bd9cadde36bd2871e0af",
-      "sourceSize": 1680,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeigph4b34b5qby5n2wgwsniffygdhegvbey35euwgy7nwcraxih6oi/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre+build-210506419.json",
-      "tidSize": 693,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeidrytt5j4dz7qyzoo45ekdcqn4t6avxzwj74vrrh32uxaksgbn5fi/$_boot_boot.css.json.json-build.tid"
+      "rawHash": "3fcd218406336740e8c051fee14e4dfa04421bba7f3741fad7dcae24a72f0d24",
+      "sourceSize": 1926,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeidrshpzvqhrq3ibsrbr3icheutbtkv33btxgld576ux7cqk3ufl4u/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210509354.json",
+      "tidSize": 718,
+      "tidUri": "https://bluelight.link/ipfs/bafybeibdnjtgyewr7tdthzx3lemqjkjsdlfqn23orcvqimho46fxdeqena/$_boot_boot.css.json.json-build.tid"
     },
     {
       "title": "bootcss",
       "tags": "$:/ipfs/core $:/core $:/boot/css",
       "name": "$:/boot/boot.css",
-      "rawHash": "71a9f586837b11ec97d60f189f6f214a6c10dbefb5bf100a55a453b0c511a0ce",
-      "sourceSize": 1145,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeidgp3bz5g5yhxkjsdzrpo3cedmsq3hgnrkexv5yz3uovey25xjopa/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre+build-210506419.css",
-      "tidSize": 665,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeib5idml335orakbro5fyr7xe4hobguu7cqgbj3uzqtq2odm452bie/$_boot_boot.css.css-build.tid"
+      "rawHash": "a5df78dac0cd301729591bbc84af33ceb275558eaedefd113256d5a9df935478",
+      "sourceSize": 1374,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeigm5y32ky5cilpsz6twex32uhvvfzajewgunmsarww2lnf4wc3rxy/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210509354.css",
+      "tidSize": 690,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiefregwxc7jkuyrucslpr2e7sgh2sikbnqnhc5bhaks57gfdhcfvy/$_boot_boot.css.css-build.tid"
     }
   ],
-  "rawSemver": "0.4.0-beta-tw-v5.1.24-pre+build",
-  "version": "0.4.0-beta-tw-v5.1.24-pre+build-210506419",
-  "buildUri": "http://127.0.0.1:8080/ipfs/bafybeidedvsd24lgo3zackwrz6v765izgqyhehgt35e6p4zqa5lmi3smsa/210506419/"
+  "rawSemver": "0.4.0-beta-tw-v5.1.24-pre-release+build",
+  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210509354",
+  "buildUri": "https://bluelight.link/ipfs/bafybeibbz3hcvviecol57blwpumrsoxogrps5q4wi6jmutg6ay42l7wn5m/210509354/"
 }
