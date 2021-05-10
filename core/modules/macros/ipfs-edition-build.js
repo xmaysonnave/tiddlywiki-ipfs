@@ -14,7 +14,7 @@ module-type: macro
   exports.params = []
 
   exports.run = function () {
-    if ($tw !== undefined && $tw.ipfs !== undefined && $tw.ipfs.editionBuild !== undefined) {
+    if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null && $tw.ipfs.editionBuild !== undefined && $tw.ipfs.editionBuild !== null) {
       return $tw.ipfs.editionBuild
     }
     return ''

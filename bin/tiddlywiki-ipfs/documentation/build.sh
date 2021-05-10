@@ -14,7 +14,7 @@ rm -f -R ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 mkdir -p ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 
 rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers/config > /dev/null 2>&1
+mkdir -p ./build/tiddlers/dependency > /dev/null 2>&1
 
 rm -f -R ./build/plugins > /dev/null 2>&1
 
@@ -23,9 +23,9 @@ mkdir -p ./current/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 # assets
 cp -R ./editions/documentation/* ./build || exit 1
 
-cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.json.json-build.tid ./build/tiddlers/config || exit 1
-cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.zlib.json-build.tid ./build/tiddlers/config || exit 1
-cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.zlib.ipfs.json-build.tid ./build/tiddlers/config || exit 1
+cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.json.json-build.tid ./build/tiddlers/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.zlib.json-build.tid ./build/tiddlers/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/plugin/\$_plugins_ipfs.zlib.ipfs.json-build.tid ./build/tiddlers/dependency || exit 1
 
 # build raw
 echo '***'

@@ -16,7 +16,7 @@ module-type: macro
 
   exports.run = function (title, ipath) {
     title = title !== undefined && title !== null && title.trim() !== '' ? title.trim() : null
-    if (title !== null) {
+    if (title === null) {
       return ''
     }
     ipath = ipath !== undefined && ipath !== null && ipath.trim() !== '' ? ipath.trim() : ''

@@ -1,11 +1,13 @@
 title: $:/plugins/ipfs.zlib-build
 tags: $:/ipfs/core $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210509443
+build: 210510423
 name: $:/plugins/ipfs.zlib
-sourceSize: 293939
-sourceUri: ipfs://bafybeihklv74354kxlob5hfcepl5c7jcqjavh7smscqegcdjk22rv2jo2u/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210509443.json
-altSourceUri: https://dweb.link/ipfs/bafybeihklv74354kxlob5hfcepl5c7jcqjavh7smscqegcdjk22rv2jo2u/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210509443.json
-version: 0.4.0-beta-tw-v5.1.23+build-210509443
+version: 0.4.0-beta-tw-v5.1.23+build-210510423
+sourceSize: 294291
+sourceExtension: json
+sourceFilename: $_plugins_ipfs.zlib
+sourceUri: ipfs://bafybeicvpjkwpgtybzhfzh54tsveu7cff3x464fmd3p2dbekgeervcvxuu/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210510423.json
+altSourceUri: https://bluelight.link/ipfs/bafybeicvpjkwpgtybzhfzh54tsveu7cff3x464fmd3p2dbekgeervcvxuu/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210510423.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

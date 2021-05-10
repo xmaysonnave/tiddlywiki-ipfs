@@ -15,20 +15,29 @@ async function main () {
     const normalizedName = filenamify(name, { replacement: '_' })
     const { build, version, kind } = await semver(`${name}.js.json`, 'json', dir, env)
     await semver(`${name}.js`, 'js', dir, env, version)
-    replace({
-      regex: `%BUILD_${env}_BUILD%`,
-      replacement: build,
-      paths: ['./build/tiddlers/$_boot_boot.js.meta'],
-      recursive: false,
-      silent: true,
-    })
-    replace({
-      regex: `%BUILD_${env}_VERSION%`,
-      replacement: version,
-      paths: ['./build/tiddlers/$_boot_boot.js.meta'],
-      recursive: false,
-      silent: true,
-    })
+    // https://stackoverflow.com/questions/2727167/how-do-you-get-a-list-of-the-names-of-all-files-present-in-a-directory-in-node-j
+    var files = fs
+      .readdirSync('./build/tiddlers', { withFileTypes: true })
+      .filter(item => !item.isDirectory())
+      .map(item => item.name)
+    for (var i = 0; i < files.length; i++) {
+      if (files[i].endsWith('.meta')) {
+        replace({
+          regex: `%BUILD_${env}_BUILD%`,
+          replacement: build,
+          paths: [`./build/tiddlers/${files[i]}`],
+          recursive: false,
+          silent: true,
+        })
+        replace({
+          regex: `%BUILD_${env}_VERSION%`,
+          replacement: version,
+          paths: [`./build/tiddlers/${files[i]}`],
+          recursive: false,
+          silent: true,
+        })
+      }
+    }
     const exists = fs.existsSync(`./production/${dir}`)
     if (exists && kind === constants.UNCHANGED) {
       console.log('***')

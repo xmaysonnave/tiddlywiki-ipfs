@@ -1,11 +1,13 @@
 title: $:/boot/boot.css-build
 tags: $:/ipfs/core $:/core $:/boot/css
 type: text/vnd.tiddlywiki
-build: 210509443
+build: 210510418
 name: $:/boot/boot.css
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210510418
 sourceSize: 1374
-sourceUri: ipfs://bafybeiaaunsi6bcrkhukgbl3b4u2mwvygjwkgexoxqsvl4s6ndhnv3jxcu/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210509443.css
-altSourceUri: https://dweb.link/ipfs/bafybeiaaunsi6bcrkhukgbl3b4u2mwvygjwkgexoxqsvl4s6ndhnv3jxcu/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210509443.css
-version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210509443
+sourceExtension: css
+sourceFilename: $_boot_boot.css
+sourceUri: ipfs://bafybeie67inzglt7j3lmfolpoew47ft3gpowmssm4mj7acke6tjuejt7jm/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210510418.css
+altSourceUri: https://bluelight.link/ipfs/bafybeie67inzglt7j3lmfolpoew47ft3gpowmssm4mj7acke6tjuejt7jm/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210510418.css
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210509443",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210510423",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "./bin/build.sh",
     "build-bluelightav": "./bin/build-bluelightav.sh",
-    "buuld-uploader": "./bin/cli-build-uploader.sh",
+    "build-uploader": "./bin/cli-build-uploader.sh",
     "build-tiddlywiki-ipfs": "./bin/build-tiddlywiki-ipfs.sh",
     "download": "./bin/download.sh",
     "precommit": "lint-staged",

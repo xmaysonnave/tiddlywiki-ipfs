@@ -65,13 +65,17 @@ IPFS utils
   /*eslint no-unused-vars: "off"*/
   const ipfsReservedFields = [
     '_canonical_uri',
+    '_alt_canonical_uri',
     '_canonical_uri_ipfs',
+    '_alt_canonical_uri_ipfs',
     '_compress',
     '_encryption_public_key',
     '_export_uri',
     '_export_uri_ipfs',
     '_import_uri',
+    '_alt_import_uri',
     '_import_uri_ipfs',
+    '_alt_import_uri_ipfs',
     '_password',
     '_sandbox_tokens',
     '_sign',
@@ -131,15 +135,9 @@ IPFS utils
     var existingAlerts = $tw.wiki.getTiddlersWithTag(ALERT_TAG)
     var alertFields
     var existingCount
-    var self = this
     $tw.utils.each(existingAlerts, function (title) {
       var tiddler = $tw.wiki.getTiddler(title)
-      if (
-        tiddler.fields.text === text &&
-        tiddler.fields.component === self.componentName &&
-        tiddler.fields.modified &&
-        (!alertFields || tiddler.fields.modified < alertFields.modified)
-      ) {
+      if (tiddler.fields.text === text && tiddler.fields.component === callee && tiddler.fields.modified && (!alertFields || tiddler.fields.modified < alertFields.modified)) {
         alertFields = $tw.utils.extend({}, tiddler.fields)
       }
     })

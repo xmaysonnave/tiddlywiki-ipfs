@@ -1,7 +1,8 @@
 title: $:/library/sjcl.js
-tags: $:/ipfs/core $:/core $:/library/sjcl
+tags: [[$:/ipfs/core]] [[$:/core]] [[$:/library/sjcl]]
 type: application/javascript
-version: v1.0.8
+build: %BUILD_SJCL_BUILD%
+version: %BUILD_SJCL_VERSION%
 library: yes
 _license_uri: https://raw.githubusercontent.com/bitwiseshiftleft/sjcl/master/LICENSE.txt
 _project_uri: https://github.com/bitwiseshiftleft/sjcl

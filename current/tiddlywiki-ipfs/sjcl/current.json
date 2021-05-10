@@ -1,28 +1,32 @@
 {
-  "build": "210509443",
+  "build": "210510418",
   "content": [
     {
       "title": "sjcl",
       "tags": "$:/ipfs/core $:/core $:/library/sjcl",
       "name": "$:/library/sjcl.js.json",
-      "rawHash": "b6a6b23219ecf06e703d195441d8a1f95de50475e6d0260e0cafee6497af67c3",
-      "sourceSize": 26379,
-      "sourceUri": "https://dweb.link/ipfs/bafybeigjz6flk7d6gyfngyuij47dh4cbh6mhdp3vy62tygaojcxtanbyqm/$_library_sjcl.js.json-1.0.8+release-210509443.json",
-      "tidSize": 650,
-      "tidUri": "https://dweb.link/ipfs/bafybeid5jp6vrg4gnlrmv5ggix4f6mnkbradiasmnjnx6kj6s3wfdj4hni/$_library_sjcl.js.json.json-build.tid"
+      "rawHash": "1900560f74efcaaf8986c419fecfa15824b2e4e77bef82d4e878d2d8901510e6",
+      "sourceExtension": "json",
+      "sourceFilename": "$_library_sjcl.js.json",
+      "sourceSize": 26422,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeibeu5rnq7uics4pxnhicusdb73uw35mlkju5wiafp66ulx7eh7w6i/$_library_sjcl.js.json-1.0.8+release-210510418.json",
+      "tidSize": 716,
+      "tidUri": "https://bluelight.link/ipfs/bafybeie26v2bq3grnqig72skcznum3dgr6jcouhylr2ohmbpchi72utp3m/$_library_sjcl.js.json.json-build.tid"
     },
     {
       "title": "sjcl",
       "tags": "$:/ipfs/core $:/core $:/library/sjcl",
       "name": "$:/library/sjcl.js",
       "rawHash": "f176e8365ad115519f28d1a00471de050e4cb5a2d960952742191738ca29dc32",
+      "sourceExtension": "js",
+      "sourceFilename": "$_library_sjcl.js",
       "sourceSize": 25607,
-      "sourceUri": "https://dweb.link/ipfs/bafybeic5zxesxcgortgs5en4ujippvclyd72c6tffsxmrz3m3x3q53oapi/$_library_sjcl.js-1.0.8+release-210509443.js",
-      "tidSize": 619,
-      "tidUri": "https://dweb.link/ipfs/bafybeicigzhb5e2u4nkmtcjxkc2rjo525xjfw5urqvqxbqvsyj7rrgcxnu/$_library_sjcl.js.js-build.tid"
+      "sourceUri": "https://bluelight.link/ipfs/bafybeicmt6yie3rf6wgispioe77aaybnk7blievtm7mxyhfhttunhpdyze/$_library_sjcl.js-1.0.8+release-210510418.js",
+      "tidSize": 678,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiab3tjpvmqmlxnbaohlgejhnhlyw5zicbhr6spfzvkfiyfbx4nn4a/$_library_sjcl.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.8+release",
-  "version": "1.0.8+release-210509443",
-  "buildUri": "https://dweb.link/ipfs/bafybeibtusooimswanrctuxyr5vgcbbuepaoglqa4kxfqqtsuf2qbnkkcu/210509443/"
+  "version": "1.0.8+release-210510418",
+  "buildUri": "https://bluelight.link/ipfs/bafybeidxbxjntevuug74hdapfpbwf5qd3isux4t2bpdo7ptk226ermisti/210510418/"
 }

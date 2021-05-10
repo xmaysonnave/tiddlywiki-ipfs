@@ -1123,7 +1123,7 @@ var ipfsBoot = function ($tw) {
 
     $tw.boot.inflateTiddlers = function (callback) {
       var area = document.getElementById('compressedStoreArea')
-      var content = area !== undefined && area.innerHTML !== undefined ? area.innerHTML : null
+      var content = area !== undefined && area !== null && area.innerHTML !== undefined ? area.innerHTML : null
       if (content !== undefined && content !== null) {
         var inflate = function (b64) {
           if (b64 !== undefined && b64 !== null) {
@@ -1168,7 +1168,7 @@ var ipfsBoot = function ($tw) {
      */
     $tw.boot.decryptEncryptedTiddlers = function (callback) {
       var area = document.getElementById('encryptedStoreArea')
-      var content = area !== undefined && area.innerHTML !== undefined ? area.innerHTML : null
+      var content = area !== undefined && area !== null && area.innerHTML !== undefined ? area.innerHTML : null
       if (content !== undefined && content !== null) {
         if (content.match(/^{"iv":/)) {
           $tw.boot.passwordPrompt(content, function (decrypted) {
@@ -1275,63 +1275,64 @@ var ipfsBoot = function ($tw) {
     }
   }
 
-  $tw.boot.execStartup = async function (options) {
-    var readPluginInfo = async function (titles) {
-      var results = {
-        modifiedPlugins: [],
-        deletedPlugins: [],
-      }
-      var deletePlugin = function (title, results) {
-        $tw.wiki.setPluginInfo(title)
-        results.deletedPlugins.push(title)
-      }
-      var titles = titles || $tw.wiki.allTitles()
-      for (var i = 0; i < titles.length; i++) {
-        var tiddler = $tw.wiki.getTiddler(titles[i])
-        if (tiddler !== undefined) {
-          if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
-            if (tiddler.fields._canonical_uri === undefined) {
-              if (tiddler.fields.text !== undefined) {
-                $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(tiddler.fields.text))
-                results.modifiedPlugins.push(tiddler.fields.title)
-              } else {
-                deletePlugin(tiddler.fields.title, results)
-              }
+  $tw.boot.readPluginInfo = async function (titles) {
+    var results = {
+      modifiedPlugins: [],
+      deletedPlugins: [],
+    }
+    var deletePlugin = function (title, results) {
+      $tw.wiki.setPluginInfo(title)
+      results.deletedPlugins.push(title)
+    }
+    var titles = titles || $tw.wiki.allTitles()
+    for (var i = 0; i < titles.length; i++) {
+      var tiddler = $tw.wiki.getTiddler(titles[i])
+      if (tiddler !== undefined) {
+        if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
+          if (tiddler.fields._canonical_uri === undefined) {
+            if (tiddler.fields.text !== undefined) {
+              $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(tiddler.fields.text))
+              results.modifiedPlugins.push(tiddler.fields.title)
             } else {
-              try {
-                var content = await $tw.boot.loadToUtf8(tiddler.fields._canonical_uri)
-                if (content !== null) {
-                  content = JSON.parse(content)
-                  if (content.text !== undefined && content.text !== null && content.text !== '') {
-                    $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content.text))
-                    results.modifiedPlugins.push(tiddler.fields.title)
-                  } else {
-                    deletePlugin(tiddler.fields.title, results)
-                  }
+              deletePlugin(tiddler.fields.title, results)
+            }
+          } else {
+            try {
+              var content = await $tw.boot.loadToUtf8(tiddler.fields._canonical_uri)
+              if (content !== null) {
+                content = JSON.parse(content)
+                if (content.text !== undefined && content.text !== null && content.text !== '') {
+                  $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content.text))
+                  results.modifiedPlugins.push(tiddler.fields.title)
                 } else {
                   deletePlugin(tiddler.fields.title, results)
                 }
-              } catch (error) {
-                if ($tw.utils.alert !== undefined) {
-                  $tw.boot.getLogger().error(error)
-                  $tw.utils.alert(name, error.message)
-                } else {
-                  $tw.utils.error(error.message)
-                }
+              } else {
+                deletePlugin(tiddler.fields.title, results)
+              }
+            } catch (error) {
+              if ($tw.utils.alert !== undefined) {
+                $tw.boot.getLogger().error(error)
+                $tw.utils.alert(name, error.message)
+              } else {
+                $tw.utils.error(error.message)
               }
             }
           }
-        } else if ($tw.wiki.getPluginInfo(tiddler.fields.title) !== undefined) {
-          $tw.wiki.setPluginInfo(tiddler.fields.title)
-          results.deletedPlugins.push(tiddler.fields.title)
         }
+      } else if ($tw.wiki.getPluginInfo(tiddler.fields.title) !== undefined) {
+        $tw.wiki.setPluginInfo(tiddler.fields.title)
+        results.deletedPlugins.push(tiddler.fields.title)
       }
-      return results
     }
+    return results
+  }
+
+  $tw.boot.execStartup = async function (options) {
     if ($tw.wiki.setPluginInfo === undefined) {
       $tw.wiki.readPluginInfo()
     } else {
-      await readPluginInfo()
+      await $tw.boot.readPluginInfo()
     }
     $tw.wiki.registerPluginTiddlers('plugin', $tw.safeMode ? ['$:/core'] : undefined)
     $tw.wiki.unpackPluginTiddlers()

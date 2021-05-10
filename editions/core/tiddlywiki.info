@@ -1,5 +1,5 @@
 {
-	"description": "Export TiddlyWiki core",
+	"description": "Export TiddlyWiki core plugin",
 	"plugins": [],
 	"themes":[],
 	"build": {
@@ -8,7 +8,7 @@
         "no",
       "--render",
         "$:/core",
-        "[filenamify[]addprefix[./core/core/]addsuffix[.json-%BUILD_TIDDLYWIKI_CORE_VERSION%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki/core/]addsuffix[.json-%BUILD_TIDDLYWIKI_CORE_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ],
@@ -17,7 +17,7 @@
         "yes",
       "--render",
         "$:/core",
-        "[filenamify[]addprefix[./core/core/]addsuffix[.zlib-%BUILD_TIDDLYWIKI_CORE_VERSION%.json]]",
+        "[filenamify[]addprefix[./tiddlywiki/core/]addsuffix[.zlib-%BUILD_TIDDLYWIKI_CORE_VERSION%.json]]",
         "text/plain",
         "$:/core/templates/json-tiddler"
     ]

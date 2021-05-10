@@ -1,4 +1,4 @@
 title: $:/boot/boot.js
-tags: $:/ipfs/core $:/core $:/boot/bundle
+tags: [[$:/ipfs/core]] [[$:/core]] [[$:/boot/bundle]]
 type: application/javascript
 boot-bundle: yes

@@ -137,7 +137,7 @@ function main () {
 
     // core
     var build = null
-    var path = './build/output/core/core/$_core.json-build.json'
+    var path = './build/output/tiddlywiki/core/$_core.json-build.json'
     if (fs.existsSync(path)) {
       build = fs.readFileSync(path, 'utf8')
     }

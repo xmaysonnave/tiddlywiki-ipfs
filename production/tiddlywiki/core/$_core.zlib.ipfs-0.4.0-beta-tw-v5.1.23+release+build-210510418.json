@@ -1,0 +1,15 @@
+{
+  "title": "$:/core",
+  "name": "Core",
+  "description": "TiddlyWiki5 core",
+  "author": "JeremyRuston",
+  "core-version": ">=5.0.0",
+  "plugin-priority": "0",
+  "list": "readme",
+  "version": "0.4.0-beta-tw-v5.1.23+release+build-210510418",
+  "plugin-type": "plugin",
+  "dependents": "",
+  "type": "application/json",
+  "build": "210510418",
+  "_canonical_uri": "https://bluelight.link/ipfs/bafybeiapkwkyhcbqsp7tkbxrx63qbsu2u5aahf4mhcjegk3adsjwernsia/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210510418.json"
+}

@@ -69,6 +69,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
     }
   }
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
+  const normalizedUri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/`
   var publicGateway = process.env.IPFS_PUBLIC_GATEWAY ? `${process.env.IPFS_PUBLIC_GATEWAY}` : null
   if (publicGateway == null) {
     publicGateway = gateway
@@ -89,7 +90,7 @@ module.exports = async function main (name, extension, dir, tags, load) {
   } else {
     console.log(`*** Unable to load current:
  ${currentPath} ***`)
-    const uri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/current.json`
+    const uri = `${normalizedUri}/current.json`
     console.log(`*** Fetch current:
  ${uri} ***`)
     const ua = await loadFromIpfs(uri)
@@ -273,6 +274,8 @@ module.exports = async function main (name, extension, dir, tags, load) {
   }
   node.name = name
   node.rawHash = build.rawHash
+  node.sourceExtension = extension
+  node.sourceFilename = normalizedName
   node.sourceSize = sourceSize
   if (sourceFileName.endsWith('.html')) {
     node.sourceUri = `${publicGateway}/ipfs/${parentCid}/`
@@ -301,7 +304,10 @@ faviconUri: ipfs://${parentCid}/${faviconFileName}`
   }
   tid = `${tid}
 name: ${node.name}
-sourceSize: ${node.sourceSize}`
+version: ${build.version}
+sourceSize: ${node.sourceSize}
+sourceExtension: ${node.sourceExtension}
+sourceFilename: ${node.sourceFilename}`
   if (sourceFileName.endsWith('.html')) {
     tid = `${tid}
 sourceUri: ipfs://${parentCid}/
@@ -312,7 +318,6 @@ sourceUri: ipfs://${parentCid}/${sourceFileName}
 altSourceUri: ${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
   }
   tid = `${tid}
-version: ${build.version}
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>`
   // Save and upload tiddler

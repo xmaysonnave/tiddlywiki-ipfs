@@ -37,9 +37,9 @@ cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.json.json-build.tid ./co
 cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./core/dependency/ || exit 1
 cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./core/dependency || exit 1
 
-cp ./production/core/core/\$_core.json.json-build.tid ./core/dependency/ || exit 1
-cp ./production/core/core/\$_core.zlib.json-build.tid ./core/dependency/ || exit 1
-cp ./production/core/core/\$_core.zlib.ipfs.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki/core/\$_core.json.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki/core/\$_core.zlib.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki/core/\$_core.zlib.ipfs.json-build.tid ./core/dependency/ || exit 1
 
 # assets
 cp -R ./core/* ./build/plugins/ipfs || exit 1

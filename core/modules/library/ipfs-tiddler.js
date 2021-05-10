@@ -374,18 +374,30 @@ IPFS Tiddler
               addTags = ['$:/isAttachment', '$:/isEmbedded']
               msg = `${msg} attachment '${type}':`
               data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
-            } else if (oldTiddler.fields.text !== '') {
+            } else if (oldTiddler.fields.text && oldTiddler.fields.text !== '') {
               msg = `${msg} '${type}':`
               data = oldTiddler.fields.text
             } else {
               msg = `${msg} '${type}':`
               data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
             }
-            updatedTiddler = $tw.utils.updateTiddler({
-              tiddler: updatedTiddler,
-              addTags: addTags,
-              fields: [{ key: 'text', value: data }],
-            })
+            if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
+              const innerData = JSON.parse(data)
+              if (innerData.text !== undefined && innerData.text !== null && innerData.text !== '') {
+                updatedTiddler = $tw.utils.updateTiddler({
+                  tiddler: updatedTiddler,
+                  addTags: addTags,
+                  fields: [{ key: 'text', value: innerData.text }],
+                })
+                $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(innerData.text))
+              }
+            } else {
+              updatedTiddler = $tw.utils.updateTiddler({
+                tiddler: updatedTiddler,
+                addTags: addTags,
+                fields: [{ key: 'text', value: data }],
+              })
+            }
             $tw.ipfs.getLogger().info(
               `${msg} ${data.length}
  ${oldResolvedUrl}`

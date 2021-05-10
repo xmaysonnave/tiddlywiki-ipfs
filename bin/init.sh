@@ -16,8 +16,8 @@ rm -f -R ./build > /dev/null 2>&1
 mkdir ./download > /dev/null 2>&1
 mkdir ./sample > /dev/null 2>&1
 
-mkdir -p ./production/core > /dev/null 2>&1
 mkdir -p ./production/editions > /dev/null 2>&1
+mkdir -p ./production/tiddlywiki > /dev/null 2>&1
 mkdir -p ./production/tiddlywiki-ipfs > /dev/null 2>&1
 
 # format and lint
