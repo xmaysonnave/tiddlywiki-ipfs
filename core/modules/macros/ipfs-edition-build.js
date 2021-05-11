@@ -14,8 +14,14 @@ module-type: macro
   exports.params = []
 
   exports.run = function () {
-    if ($tw !== undefined && $tw !== null && $tw.ipfs !== undefined && $tw.ipfs !== null && $tw.ipfs.editionBuild !== undefined && $tw.ipfs.editionBuild !== null) {
-      return $tw.ipfs.editionBuild
+    if ($tw && $tw.wiki) {
+      const build = $tw.wiki.getTiddler('$:/ipfs/edition-build')
+      if (build !== undefined && build !== null) {
+        return build.fields.build
+      }
+      if ($tw.utils && $tw.utils.getIpfsEditionBuild) {
+        return $tw.utils.getIpfsEditionBuild()
+      }
     }
     return ''
   }

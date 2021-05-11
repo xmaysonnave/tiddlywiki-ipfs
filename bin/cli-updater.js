@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const Updater = require('./updater.js')
+const Updater = require('bin/updater.js')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv

@@ -9,6 +9,9 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
+# node
+export NODE_PATH=.
+
 rm -f -R ./build/output/editions/tiddlywiki > /dev/null 2>&1
 mkdir -p ./build/output/editions/tiddlywiki > /dev/null 2>&1
 

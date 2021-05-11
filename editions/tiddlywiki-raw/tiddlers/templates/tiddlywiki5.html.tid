@@ -11,8 +11,9 @@ tags: $:/ipfs/editions/tiddlywiki
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta name="application-name" content="TiddlyWiki" />
 <meta name="generator" content="TiddlyWiki" />
-<meta name="ipfs-edition-build" content="`{{$:/ipfs/edition/build}}`"/>
 <meta name="tiddlywiki-version" content="`{{$:/core/templates/version}}`" />
+<meta name="ipfs-edition-build" content="`<<ipfs-edition-build>>`"/>
+<meta name="ipfs-edition-version" content="`<<ipfs-edition-version>>`"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

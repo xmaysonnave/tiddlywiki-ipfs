@@ -100,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </style>
 
 <div class="tc-splash-text">
-  <img crossorigin="anonymous" src="<<public-gateway>>/ipfs/bafybeihf7g4g6hwl455uhuzsxqdc7ljmrfiiomdaqbluzqkxtji56mkj6u/$_ipfs_core_images_bluelight.png" loading="eager"/>
+  <img crossorigin="anonymous" src="{{$_ipfs_core_images_bluelight!!altSourceUri}}" loading="eager"/>
 </div>
 
 <div class="tc-splash-text">
@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </div>
 
 <div class="tc-splash-text">
-  <b>{{$:/ipfs/edition/build}}</b>
+  <b>{{$:/ipfs/edition-build}}</b>
 </div>
 
 <div class="tc-splash-spinner">

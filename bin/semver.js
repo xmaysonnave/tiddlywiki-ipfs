@@ -2,14 +2,14 @@
 'use strict'
 
 const beautify = require('json-beautify')
-const constants = require('./constants.js')
+const constants = require('bin/constants.js')
 const createKeccakHash = require('keccak')
 const dotenv = require('dotenv')
 const fs = require('fs')
 const { generate, validate } = require('build-number-generator')
-const { loadFromIpfs } = require('./utils.js')
+const { loadFromIpfs } = require('bin/utils.js')
 
-const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 // bluelight.link
@@ -132,13 +132,13 @@ module.exports = async function main (name, extension, dir, env, version) {
     version: version,
   }
   if (dir.includes('editions')) {
-    var tid = `title: $:/ipfs/edition/build
+    var tid = `title: $:/ipfs/edition-build
 build: ${build}
 name: ${normalizedName}
 version: ${version}
 
 ${normalizedName}-${version}`
-    fs.writeFileSync(`./build/output/${dir}/ipfs.edition.build.tid`, tid, 'utf8')
+    fs.writeFileSync(`./build/output/${dir}/$_ipfs_edition-build.tid`, tid, 'utf8')
   }
   fs.writeFileSync(`./build/output/${dir}/${normalizedName}-build.json`, beautify(newBuild, null, 2, 80), 'utf8')
   // Done

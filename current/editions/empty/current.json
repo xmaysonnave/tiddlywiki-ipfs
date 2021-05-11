@@ -1,0 +1,22 @@
+{
+  "build": "210511452",
+  "content": [
+    {
+      "title": "empty",
+      "tags": "$:/ipfs/editions",
+      "faviconSize": 4297,
+      "faviconUri": "https://bluelight.link/ipfs/bafybeibkk5ina7sjtelc7e632qfpz4ccyu5mapb5xpsdsr6z5hihf4qs6u/favicon.ico",
+      "name": "empty",
+      "rawHash": "967b15751a7344417d8659e86ddc63b068f493cdea8bf76017f2c3ed37f37ef8",
+      "sourceExtension": "html",
+      "sourceFilename": "empty",
+      "sourceSize": 36478,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeibkk5ina7sjtelc7e632qfpz4ccyu5mapb5xpsdsr6z5hihf4qs6u/",
+      "tidSize": 660,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiaa52yqy52kf2vdev4w7dp6alc4codwqmsxa7ndgrvwqaegpmpama/$_ipfs_edition-build.tid"
+    }
+  ],
+  "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210511452",
+  "buildUri": "https://bluelight.link/ipfs/bafybeichibqotmtcx34melpdhihtayjq5ef6inywtjvs3wgegstrt465vi/210511452/"
+}

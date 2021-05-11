@@ -4,7 +4,7 @@
 const beautify = require('json-beautify')
 const fs = require('fs')
 
-const IpfsBundle = require('../../../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 async function main () {

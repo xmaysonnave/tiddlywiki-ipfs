@@ -4,11 +4,11 @@
 const beautify = require('json-beautify')
 const dotenv = require('dotenv')
 const fs = require('fs')
-const IpfsHttpClient = require('ipfs-http-client')
+const { create: IpfsHttpClient } = require('ipfs-http-client')
 const path = require('path')
-const { loadFromIpfs } = require('./utils.js')
+const { loadFromIpfs } = require('bin/utils.js')
 
-const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 // bluelight.link
@@ -289,7 +289,12 @@ module.exports = async function main (name, extension, dir, tags, load) {
     current.content.push(node)
   }
   // Tiddler
-  var tid = `title: ${node.name}-build`
+  var tid = null
+  if (sourceFileName.endsWith('.html')) {
+    tid = 'title: $:/ipfs/edition-build'
+  } else {
+    tid = `title: ${node.name}-build`
+  }
   if (tags !== null) {
     tid = `${tid}
 tags: ${node.tags}
@@ -321,11 +326,17 @@ altSourceUri: ${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>`
   // Save and upload tiddler
-  fs.writeFileSync(`./production/${dir}/${normalizedName}.${extension}-build.tid`, tid, 'utf8')
-  const loaded = fs.readFileSync(`./production/${dir}/${normalizedName}.${extension}-build.tid`)
+  var tidName = null
+  if (sourceFileName.endsWith('.html')) {
+    tidName = '$_ipfs_edition'
+  } else {
+    tidName = `${normalizedName}.${extension}`
+  }
+  fs.writeFileSync(`./production/${dir}/${tidName}-build.tid`, tid, 'utf8')
+  const loaded = fs.readFileSync(`./production/${dir}/${tidName}-build.tid`)
   var added = await api.add(
     {
-      path: `/${normalizedName}.${extension}-build.tid`,
+      path: `/${tidName}-build.tid`,
       content: loaded,
     },
     {
@@ -349,15 +360,15 @@ altSourceUri: ${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
     }
   }
   console.log(`*** Added tiddler ***
- ipfs://${added.cid}/${normalizedName}.${extension}-build.tid`)
+ ipfs://${added.cid}/${tidName}-build.tid`)
   // Update node
   node.tidSize = added.size
-  node.tidUri = `${publicGateway}/ipfs/${added.cid}/${normalizedName}.${extension}-build.tid`
+  node.tidUri = `${publicGateway}/ipfs/${added.cid}/${tidName}-build.tid`
   // Save current
   fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
   // Load
   if (load) {
-    var uri = `${gateway}/ipfs/${added.cid}/${normalizedName}.${extension}-build.tid`
+    var uri = `${gateway}/ipfs/${added.cid}/${tidName}-build.tid`
     console.log(`*** Fetch tiddler ***
  ${uri}`)
     await loadFromIpfs(uri)

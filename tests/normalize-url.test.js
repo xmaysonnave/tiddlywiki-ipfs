@@ -5,7 +5,7 @@
 const log = require('loglevel')
 const chai = require('chai')
 const sinon = require('sinon')
-const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /**
  * url.href;

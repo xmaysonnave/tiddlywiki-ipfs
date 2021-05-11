@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict'
 
 /**
  * This is invoked as a shell script by NPM when the `tiddlywiki-ipfs` command is typed

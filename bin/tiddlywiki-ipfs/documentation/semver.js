@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict'
 
-const constants = require('../../constants.js')
+const constants = require('bin/constants.js')
 const fs = require('fs')
 const replace = require('replace')
-const semver = require('../../semver.js')
+const semver = require('bin/semver.js')
 
 async function main () {
   try {

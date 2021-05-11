@@ -1,0 +1,15 @@
+title: $:/ipfs/edition-build
+tags: $:/ipfs/editions
+type: text/vnd.tiddlywiki
+build: 210511453
+faviconSize: 4297
+faviconUri: ipfs://bafybeie2futkpllhz5yisggmy2vhdmdxra624oal53zk7l4zmuzfmwhf4y/favicon.ico
+name: tiddlywiki
+version: 0.4.0-beta-tw-v5.1.24+pre-release+build-210511453
+sourceSize: 2222891
+sourceExtension: html
+sourceFilename: tiddlywiki
+sourceUri: ipfs://bafybeie2futkpllhz5yisggmy2vhdmdxra624oal53zk7l4zmuzfmwhf4y/
+altSourceUri: https://bluelight.link/ipfs/bafybeie2futkpllhz5yisggmy2vhdmdxra624oal53zk7l4zmuzfmwhf4y
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

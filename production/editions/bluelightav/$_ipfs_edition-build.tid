@@ -1,0 +1,15 @@
+title: $:/ipfs/edition-build
+tags: $:/ipfs/editions
+type: text/vnd.tiddlywiki
+build: 210511452
+faviconSize: 4297
+faviconUri: ipfs://bafybeibiuc2k4l5oheebzvs2475mecnibilzss6ffq27m52hwuic6pjtqu/favicon.ico
+name: bluelightav
+version: 0.4.0-beta-tw-v5.1.23+build-210511452
+sourceSize: 236509
+sourceExtension: html
+sourceFilename: bluelightav
+sourceUri: ipfs://bafybeibiuc2k4l5oheebzvs2475mecnibilzss6ffq27m52hwuic6pjtqu/
+altSourceUri: https://bluelight.link/ipfs/bafybeibiuc2k4l5oheebzvs2475mecnibilzss6ffq27m52hwuic6pjtqu
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

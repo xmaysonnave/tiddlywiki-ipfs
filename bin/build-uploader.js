@@ -13,12 +13,12 @@ const dotenv = require('dotenv')
 const fetch = require('node-fetch')
 const timeoutSignal = require('timeout-signal')
 const fs = require('fs')
-const IpfsHttpClient = require('ipfs-http-client')
+const { create: IpfsHttpClient } = require('ipfs-http-client')
 const path = require('path')
 const { pipeline } = require('stream')
 const { promisify } = require('util')
 
-const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 const shortTimeout = 6000

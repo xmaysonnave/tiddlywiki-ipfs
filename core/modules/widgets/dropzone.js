@@ -170,16 +170,16 @@ Dropzone widget
     // Remove highlighting
     $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
     // Import any files in the drop
-    var hasFiles = dataTransfer.files && dataTransfer.files.length > 0
-    if (hasFiles) {
-      hasFiles =
+    var numFiles = 0
+    if (dataTransfer.files) {
+      numFiles =
         this.wiki.readFiles(dataTransfer.files, {
           callback: readFileCallback,
           deserializer: this.dropzoneDeserializer,
         }) > 0
     }
     // Try to import the various data types we understand
-    if (hasFiles === false) {
+    if (numFiles === 0) {
       var fallbackTitle = self.wiki.generateNewTitle('Untitled')
       //Use the deserializer specified if any
       if (this.dropzoneDeserializer) {

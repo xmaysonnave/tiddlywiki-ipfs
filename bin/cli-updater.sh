@@ -9,6 +9,9 @@ export NVM_DIR="$HOME/.nvm"
 echo 'nvm:' $(nvm -v)
 nvm use > /dev/null 2>&1
 
+# node
+export NODE_PATH=.
+
 # update builds
 node ./bin/cli-updater.js "$@" || exit 1
 

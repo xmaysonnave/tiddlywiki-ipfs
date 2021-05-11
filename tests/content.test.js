@@ -7,7 +7,7 @@ const fse = require('fs-extra')
 const IPFS = require('ipfs')
 const Repo = require('ipfs-repo')
 const chai = require('chai')
-const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /*
  * https://infura.io/docs

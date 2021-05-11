@@ -12,11 +12,11 @@ IPFS Bundle
 const CID = require('cids')
 const uint8ArrayFromString = require('uint8arrays/from-string')
 
-const EnsLibrary = require('./ipfs-bundle/ens-library.js').EnsLibrary
-const EthereumLibrary = require('./ipfs-bundle/ethereum-library.js').EthereumLibrary
-const IpfsLibrary = require('./ipfs-bundle/ipfs-library.js').IpfsLibrary
-const IpfsLoader = require('./ipfs-bundle/ipfs-loader.js').IpfsLoader
-const IpfsUrl = require('./ipfs-bundle/ipfs-url.js').IpfsUrl
+const EnsLibrary = require('core/modules/library/ipfs-bundle/ens-library.js').EnsLibrary
+const EthereumLibrary = require('core/modules/library/ipfs-bundle/ethereum-library.js').EthereumLibrary
+const IpfsLibrary = require('core/modules/library/ipfs-bundle/ipfs-library.js').IpfsLibrary
+const IpfsLoader = require('core/modules/library/ipfs-bundle/ipfs-loader.js').IpfsLoader
+const IpfsUrl = require('core/modules/library/ipfs-bundle/ipfs-url.js').IpfsUrl
 
 const cidInspector = 'https://cid.ipfs.io/#'
 const libp2pKey = 'libp2p-key'

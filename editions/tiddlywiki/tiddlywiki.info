@@ -11,7 +11,7 @@
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.zlib.ipfs-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
       "--import",
-        "./build/output/editions/tiddlywiki/ipfs.edition.build.tid",
+        "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
       "--import",
         "./download/tiddlywiki/index.html",

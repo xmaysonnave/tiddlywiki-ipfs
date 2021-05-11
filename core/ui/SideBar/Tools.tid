@@ -9,7 +9,7 @@ $:/config/PageControlButtons/Visibility/$(listItem)$
 
 <<lingo Basics/Version/Prompt>> <b><<version>></b>
 
-<<lingo Ipfs/Build/Prompt>> <b><<ipfs-edition-build>></b> <$ipfslink value=<<version-url title:"$:/ipfs/edition/build" ipath:"editions">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+<<lingo Ipfs/Build/Prompt>> <b><<ipfs-edition-build>></b> <$ipfslink value=<<version-url title:"$:/ipfs/edition-build" ipath:"editions">>>[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
 
 <$set name="tv-config-toolbar-icons" value="yes">
 

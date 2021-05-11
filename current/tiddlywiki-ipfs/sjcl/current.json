@@ -1,5 +1,5 @@
 {
-  "build": "210510418",
+  "build": "210511272",
   "content": [
     {
       "title": "sjcl",
@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_library_sjcl.js.json",
       "sourceSize": 26422,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeibeu5rnq7uics4pxnhicusdb73uw35mlkju5wiafp66ulx7eh7w6i/$_library_sjcl.js.json-1.0.8+release-210510418.json",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeices6rk76omb4ptsvfsdhmruoupbqrygkt5zgp2r4m4by7aftd3d4/$_library_sjcl.js.json-1.0.8+release-210511272.json",
       "tidSize": 716,
-      "tidUri": "https://bluelight.link/ipfs/bafybeie26v2bq3grnqig72skcznum3dgr6jcouhylr2ohmbpchi72utp3m/$_library_sjcl.js.json.json-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeihlyeod6rnmqzwwczpryyvcdncj44xlkz5uunhz2oeincq5uabosy/$_library_sjcl.js.json.json-build.tid"
     },
     {
       "title": "sjcl",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_sjcl.js",
       "sourceSize": 25607,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeicmt6yie3rf6wgispioe77aaybnk7blievtm7mxyhfhttunhpdyze/$_library_sjcl.js-1.0.8+release-210510418.js",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeib7yjgnfy43pb3oiynmu36s3u7c6hcojplluzcqukmt57qrblglki/$_library_sjcl.js-1.0.8+release-210511272.js",
       "tidSize": 678,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiab3tjpvmqmlxnbaohlgejhnhlyw5zicbhr6spfzvkfiyfbx4nn4a/$_library_sjcl.js.js-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeidsvxhpqmllzp4teywm5uu4m3uacnbrzq4kh2djbfv6mj7bw7g6gq/$_library_sjcl.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.8+release",
-  "version": "1.0.8+release-210510418",
-  "buildUri": "https://bluelight.link/ipfs/bafybeidxbxjntevuug74hdapfpbwf5qd3isux4t2bpdo7ptk226ermisti/210510418/"
+  "version": "1.0.8+release-210511272",
+  "buildUri": "https://bluelight.link/ipfs/bafybeiftpcjgm4yod3zoigdmu4j75r7dpy7lcnwanamimmb4pr73nulbw4/210511272/"
 }

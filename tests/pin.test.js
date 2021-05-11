@@ -8,7 +8,7 @@ const CID = require('cids')
 const IPFS = require('ipfs')
 const Repo = require('ipfs-repo')
 const chai = require('chai')
-const IpfsBundle = require('../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 
 /*
  * https://infura.io/docs
@@ -56,7 +56,7 @@ const file2 = [
 const parentFile2Cid = 'QmeCUpfcZvxDAQxkzn6kS1Cz2fPKuxz6pGoKc3zeDSP8rn'
 
 const parentFile2CidWithLinkToFile1 = 'QmU5eoM1Cw7ohHPz4Cxjvagmt6W9jPzLCLVKBtmErpbm6z'
-const parentFile2CidWithLinkToFile1V1 = 'bafybeicvj2bpkzptp7y5zbupaju3furnx4ygswfqyfiwtflwromed3ouvm'
+// const parentFile2CidWithLinkToFile1V1 = 'bafybeicvj2bpkzptp7y5zbupaju3furnx4ygswfqyfiwtflwromed3ouvm'
 
 const options = {
   chunker: 'rabin-262144-524288-1048576',
@@ -465,10 +465,8 @@ describe(`Wrapped and dependency`, () => {
   it(`unpin '${recursive}'...`, async () => {
     var unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, true)
     expect(unpinned.toString()).to.equal(parentFile1CidV1)
-    var { cid: fetched, parentCid, type } = await ipfsBundle.hasPin(api, contentCid)
-    expect(fetched.toString()).to.equal(contentCidV1)
-    expect(parentCid.toString()).to.equal(parentFile2CidWithLinkToFile1V1)
-    expect(type).to.equal(indirect)
+    var { cid: fetched } = await ipfsBundle.hasPin(api, contentCid)
+    expect(fetched.toString()).to.equal('')
   })
   after(async () => {
     await stop()

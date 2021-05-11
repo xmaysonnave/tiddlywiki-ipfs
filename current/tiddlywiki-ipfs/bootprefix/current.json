@@ -1,5 +1,5 @@
 {
-  "build": "210510418",
+  "build": "210511272",
   "content": [
     {
       "title": "bootprefix",
@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_boot_bootprefix.js.json",
       "sourceSize": 4111,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidke4452nk3vyx5ym65ybpjxn5kmlgst6f62huylm6jjnlftth3se/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210510418.json",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeibbjrvcwk7wq7gapucablapzozlor3i6qp2qscop2ayaduvdlabwa/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210511272.json",
       "tidSize": 814,
-      "tidUri": "https://bluelight.link/ipfs/bafybeid3j5plsn2lwvvrfmldvuqmt4eipbomt7fik7chw5iey7gwdtfpwy/$_boot_bootprefix.js.json.json-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeigmhrhplkcjzbls5hioe24ybwngnjabyqlqvchyfdisshabnixeyi/$_boot_bootprefix.js.json.json-build.tid"
     },
     {
       "title": "bootprefix",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_boot_bootprefix.js",
       "sourceSize": 3498,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeihkoyw4c5g7eqrukhhkisgvtw2hydi7lxgzlqosgvf4dhttnblzzu/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210510418.js",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeibhyrsba6ok62s7o5asydmq6qbjqsunymgeuvse6tey24iukylpni/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210511272.js",
       "tidSize": 776,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiaymdastmnsd3zchnvfk3cd5g7acibkmw6yx2acjg2lxaqcw2pz4e/$_boot_bootprefix.js.js-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeicdqs24iccarb6np57o34smovj2uj5srx7kboxvr7h2fr5prur3mm/$_boot_bootprefix.js.js-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24-pre-release+build",
-  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210510418",
-  "buildUri": "https://bluelight.link/ipfs/bafybeieplefj7ffuc43ldl4ujvi4bvroxsgm2lhi7fivtjuuemgvy5jlpm/210510418/"
+  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210511272",
+  "buildUri": "https://bluelight.link/ipfs/bafybeig4psdernik2kmvqkmg3oicut2tjt6ht6ja6kiopxg5gw5qgdnpr4/210511272/"
 }

@@ -2,11 +2,11 @@
 'use strict'
 
 const beautify = require('json-beautify')
-const constants = require('../../constants.js')
+const constants = require('bin/constants.js')
 const fs = require('fs')
-const semver = require('../../semver.js')
+const semver = require('bin/semver.js')
 
-const IpfsBundle = require('../../../core/modules/library/ipfs-bundle.js').IpfsBundle
+const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
 const ipfsBundle = new IpfsBundle()
 
 async function main () {

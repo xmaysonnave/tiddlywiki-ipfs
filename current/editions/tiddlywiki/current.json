@@ -1,0 +1,22 @@
+{
+  "build": "210511453",
+  "content": [
+    {
+      "title": "tiddlywiki",
+      "tags": "$:/ipfs/editions",
+      "faviconSize": 4297,
+      "faviconUri": "https://bluelight.link/ipfs/bafybeie2futkpllhz5yisggmy2vhdmdxra624oal53zk7l4zmuzfmwhf4y/favicon.ico",
+      "name": "tiddlywiki",
+      "rawHash": "ff3ad816c39baf0eba738dea3d91c033e92befdc6afb14daad8ce7a7fff9afa4",
+      "sourceExtension": "html",
+      "sourceFilename": "tiddlywiki",
+      "sourceSize": 2222891,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeie2futkpllhz5yisggmy2vhdmdxra624oal53zk7l4zmuzfmwhf4y/",
+      "tidSize": 684,
+      "tidUri": "https://bluelight.link/ipfs/bafybeiglsqyi53gl34v7lhwbtmlry4rc6efdrlyx2sot7lgqyquandkfum/$_ipfs_edition-build.tid"
+    }
+  ],
+  "rawSemver": "0.4.0-beta-tw-v5.1.24+pre-release+build",
+  "version": "0.4.0-beta-tw-v5.1.24+pre-release+build-210511453",
+  "buildUri": "https://bluelight.link/ipfs/bafybeihnixx2mdjxzzllgymku5oat3qijxqrqb7wcqjab4fti5sp5qtamy/210511453/"
+}

@@ -1,4 +1,0 @@
-title: $:/ipfs/build/public/gateway
-tags: $:/ipfs/core
-
-{{ $:/ipfs/saver/gateway/https/bluelight.link }}

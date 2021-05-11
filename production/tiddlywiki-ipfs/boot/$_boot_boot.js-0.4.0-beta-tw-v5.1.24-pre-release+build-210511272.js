@@ -2746,7 +2746,7 @@ var ipfsBoot = function ($tw) {
       currentState = state ? 'yes' : 'no'
       this.updateModulesStateTiddler()
     }
-    this.onModuleState = function (title, uri) {
+    this.onModuleState = function (title, build) {
       if ($tw.wiki) {
         var fields = {}
         var tiddler = $tw.wiki.getTiddler(title)
@@ -2757,7 +2757,9 @@ var ipfsBoot = function ($tw) {
             fields.tags = tags
           }
           if (tiddler.fields._canonical_uri === undefined) {
-            fields._canonical_uri = uri
+            fields._canonical_uri = build.altSourceUri
+            fields.build = build.build
+            fields.version = build.version
           }
           if (tiddler.fields.text !== undefined && tiddler.fields.text !== null && tiddler.fields.text !== '') {
             fields.text = ''
@@ -2845,26 +2847,26 @@ var ipfsBoot = function ($tw) {
           $tw.wiki.addTiddler(isModule)
         }
         if (isModule) {
-          var { altSourceUri } = this.getBuildUris('$:/boot/boot.css-build')
-          if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+          var build = this.getBuild('$:/boot/boot.css-build')
+          if (build !== null) {
             if (state === 'yes') {
-              this.onModuleState('$:/boot/boot.css', altSourceUri)
+              this.onModuleState('$:/boot/boot.css', build)
             } else {
               this.offModuleState('$:/boot/boot.css')
             }
           }
-          var { altSourceUri } = this.getBuildUris('$:/boot/bootprefix.js-build')
-          if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+          var build = this.getBuild('$:/boot/bootprefix.js-build')
+          if (build !== null) {
             if (state === 'yes') {
-              this.onModuleState('$:/boot/bootprefix.js', altSourceUri)
+              this.onModuleState('$:/boot/bootprefix.js', build)
             } else {
               this.offModuleState('$:/boot/bootprefix.js')
             }
           }
-          var { altSourceUri } = this.getBuildUris('$:/boot/boot.js-build')
-          if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+          var build = this.getBuild('$:/boot/boot.js-build')
+          if (build !== null) {
             if (state === 'yes') {
-              this.onModuleState('$:/boot/boot.js', altSourceUri)
+              this.onModuleState('$:/boot/boot.js', build)
             } else {
               this.offModuleState('$:/boot/boot.js')
             }
@@ -2881,10 +2883,10 @@ var ipfsBoot = function ($tw) {
                 build = `${innerTitle}.zlib-build`
               }
               if (build !== null) {
-                var { altSourceUri } = this.getBuildUris(build)
-                if (altSourceUri !== undefined && altSourceUri !== null && altSourceUri.trim() !== '') {
+                var build = this.getBuild(build)
+                if (build !== null) {
                   if (state === 'yes') {
-                    this.onModuleState(innerTitle, altSourceUri)
+                    this.onModuleState(innerTitle, build)
                   } else {
                     this.offModuleState(innerTitle)
                   }
@@ -2895,18 +2897,17 @@ var ipfsBoot = function ($tw) {
         }
       }
     }
-    this.getBuildUris = function (title) {
+    this.getBuild = function (title) {
       var tiddler = $tw.wiki.getTiddler(title)
-      if (tiddler !== undefined && tiddler !== null && tiddler.fields.altSourceUri !== undefined) {
+      if (tiddler !== undefined && tiddler !== null) {
         return {
-          sourceUri: tiddler.fields.sourceUri,
           altSourceUri: tiddler.fields.altSourceUri,
+          build: tiddler.fields.build,
+          sourceUri: tiddler.fields.sourceUri,
+          version: tiddler.fields.version,
         }
       }
-      return {
-        sourceUri: null,
-        altSourceUri: null,
-      }
+      return null
     }
   }
 

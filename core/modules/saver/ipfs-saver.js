@@ -22,11 +22,10 @@ module-type: saver
    * Select the appropriate saver module and set it up
    */
   var IpfsSaver = function (wiki) {
+    $tw.ipfs.getLogger().info('ipfs-saver is starting up...')
     // Controller
     $tw.ipfs = new IpfsController()
     $tw.ipfs.init()
-    // Log
-    $tw.ipfs.getLogger().info('ipfs-saver is starting up...')
     // Log url policy
     const base = $tw.ipfs.getIpfsBaseUrl()
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
