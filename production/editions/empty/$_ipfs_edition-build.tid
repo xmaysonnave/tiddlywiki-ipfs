@@ -1,13 +1,13 @@
 title: $:/ipfs/edition-build
 tags: $:/ipfs/editions
 type: text/vnd.tiddlywiki
-build: 210512463
+build: 210512479
 name: empty
-version: 0.4.0-beta-tw-v5.1.23+build-210512463
-sourceSize: 36465
+version: 0.4.0-beta-tw-v5.1.23+build-210512479
+sourceSize: 36473
 sourceExtension: html
 sourceFilename: empty
-sourceUri: ipfs://bafybeibulecwhzcbmmsknkeitwmgeb3cclh7is7qznjfxhn6jrimdabblu/
-altSourceUri: https://bluelight.link/ipfs/bafybeibulecwhzcbmmsknkeitwmgeb3cclh7is7qznjfxhn6jrimdabblu
+sourceUri: ipfs://bafybeihycx7aonao2hniee5va27zn2rqggvrf7yewj46xokz6ct5qorgu4/
+altSourceUri: https://bluelight.link/ipfs/bafybeihycx7aonao2hniee5va27zn2rqggvrf7yewj46xokz6ct5qorgu4
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>
