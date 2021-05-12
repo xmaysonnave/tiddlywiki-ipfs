@@ -2594,7 +2594,7 @@ var bootsuffix = function ($tw) {
       var params = {
         headers: fetchHeaders,
         method: 'get',
-        mode: 'no-cors',
+        mode: 'cors',
         signal: responseController.signal,
       }
       var newUrl = null

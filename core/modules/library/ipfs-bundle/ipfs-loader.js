@@ -184,7 +184,7 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
     const params = {
       headers: fetchHeaders,
       method: 'get',
-      mode: 'no-cors',
+      mode: 'cors',
       signal: responseController.signal,
     }
     var newUrl = null
