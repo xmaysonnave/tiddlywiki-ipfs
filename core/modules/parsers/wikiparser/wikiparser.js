@@ -42,13 +42,15 @@ Attributes are stored as hashmaps of the following objects:
         ipfsImport
           .import(canonicalUri, importUri, options.tiddler)
           .then(data => {
-            if (data) {
-              const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
-              if (navigator) {
-                navigator.dispatchEvent({
-                  type: 'tm-ipfs-import-tiddlers',
-                  param: data,
-                })
+            if (data !== undefined && data !== null) {
+              if (data.merged.size > 0 || data.deleted.size > 0) {
+                const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
+                if (navigator) {
+                  navigator.dispatchEvent({
+                    type: 'tm-ipfs-import-tiddlers',
+                    param: data,
+                  })
+                }
               }
             }
           })

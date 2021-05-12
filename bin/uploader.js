@@ -147,13 +147,13 @@ module.exports = async function main (name, extension, dir, tags, load) {
   // Load favicon
   var favicon = null
   var faviconFileName = 'favicon.ico'
-  var faviconPath = `./production/${dir}/${faviconFileName}`
+  var faviconPath = `./${faviconFileName}`
   if (fs.existsSync(faviconPath)) {
     favicon = fs.readFileSync(faviconPath)
   }
   if (favicon === undefined || favicon == null) {
     faviconFileName = 'favicon.png'
-    faviconPath = `./production/${dir}/${faviconFileName}`
+    faviconPath = `./${faviconFileName}`
     if (fs.existsSync(faviconPath)) {
       favicon = fs.readFileSync(faviconPath)
     }
@@ -187,7 +187,6 @@ module.exports = async function main (name, extension, dir, tags, load) {
   }
   // Upload
   var faviconCid = null
-  var faviconSize = null
   var parentCid = null
   var sourceCid = null
   var sourceSize = null
@@ -215,7 +214,6 @@ module.exports = async function main (name, extension, dir, tags, load) {
       parentCid = key
     } else if (value.path === faviconFileName) {
       faviconCid = key
-      faviconSize = value.size
     } else if (value.path === sourceFileName || value.path === 'index.html') {
       sourceCid = key
       sourceSize = value.size
@@ -268,10 +266,6 @@ module.exports = async function main (name, extension, dir, tags, load) {
   if (tags !== null) {
     node.tags = tags
   }
-  if (faviconCid !== null) {
-    node.faviconSize = faviconSize
-    node.faviconUri = `${publicGateway}/ipfs/${parentCid}/${faviconFileName}`
-  }
   node.name = name
   node.rawHash = build.rawHash
   node.sourceExtension = extension
@@ -302,11 +296,6 @@ type: text/vnd.tiddlywiki`
   }
   tid = `${tid}
 build: ${current.build}`
-  if (faviconCid !== null) {
-    tid = `${tid}
-faviconSize: ${node.faviconSize}
-faviconUri: ipfs://${parentCid}/${faviconFileName}`
-  }
   tid = `${tid}
 name: ${node.name}
 version: ${build.version}

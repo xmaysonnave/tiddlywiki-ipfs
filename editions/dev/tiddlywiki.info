@@ -193,11 +193,6 @@
         "../sample/dev-plain-and-standford.html",
         "text/plain",
       "--clearkeys"
-    ],
-		"favicon": [
-			"--savetiddler",
-        "$:/favicon.ico",
-        "../production/editions/dev/favicon.ico"
     ]
   }
 }

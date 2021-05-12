@@ -545,6 +545,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
         providers: [
           httpClient({
             // loadHttpClientModule: () => require('ipfs-http-client'),
+            loadHttpClientModule: () => globalThis.IpfsHttpClient.create,
             apiAddress: {
               protocol: protocol,
               host: apiUrl.hostname,

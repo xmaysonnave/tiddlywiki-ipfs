@@ -27,11 +27,6 @@
         "$:/core/save/all",
         "./editions/tiddlywiki/tiddlywiki-%BUILD_TIDDLYWIKI_VERSION%.html",
         "text/plain"
-    ],
-		"favicon": [
-			"--savetiddler",
-        "$:/favicon.ico",
-        "./editions/tiddlywiki/favicon.ico"
     ]
   }
 }

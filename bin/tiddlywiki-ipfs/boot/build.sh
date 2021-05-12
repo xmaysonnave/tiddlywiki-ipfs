@@ -24,16 +24,16 @@ rm -f -R ./build/plugins > /dev/null 2>&1
 mkdir -p ./current/tiddlywiki-ipfs/boot > /dev/null 2>&1
 
 # boot
-cp ./boot/boot.js ./build/tiddlers/boot.js || exit 1
-cp ./boot/ipfs-boot.js ./build/tiddlers/ipfs-boot.js || exit 1
+cp ./boot/boot.js ./build/tiddlers || exit 1
+cp ./boot/bootsuffix.js ./build/tiddlers || exit 1
 
 # meta
-cp ./core/boot/boot.js.meta ./build/tiddlers/boot.js.meta || exit 1
-cp ./core/boot/ipfs-boot.js.meta ./build/tiddlers/ipfs-boot.js.meta || exit 1
-cp ./core/boot/ipfs-boot-bundle.tid ./build/tiddlers/ipfs-boot-bundle.tid || exit 1
+cp ./core/boot/boot.js.meta ./build/tiddlers || exit 1
+cp ./core/boot/bootsuffix.js.meta ./build/tiddlers || exit 1
 
 # bundle
-cp ./editions/boot-bundle/tiddlywiki.info ./build/tiddlywiki.info || exit 1
+cp ./core/boot/boot-bundle.tid ./build/tiddlers || exit 1
+cp ./editions/boot-bundle/tiddlywiki.info ./build || exit 1
 
 # build
 echo '***'
@@ -52,7 +52,7 @@ cp ./build/output/tiddlywiki-ipfs/boot/\$_boot_boot.js ./build/tiddlers || exit 
 # meta
 cp ./core/boot/\$_boot_boot.js.meta ./build/tiddlers || exit 1
 # boot
-cp ./editions/boot/tiddlywiki.info ./build/tiddlywiki.info || exit 1
+cp ./editions/boot/tiddlywiki.info ./build || exit 1
 
 # build raw
 echo '***'

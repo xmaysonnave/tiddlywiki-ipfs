@@ -1,5 +1,5 @@
 title: $:/library/ipfs/bundle
-tags: $:/ipfs/core
+tags: $:/library/ipfs
 
 \rules only filteredtranscludeinline transcludeinline codeinline
 

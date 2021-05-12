@@ -61,12 +61,16 @@ IPFS Controller
       if (log !== undefined && log !== null) {
         return log
       }
-      log = loggers.default
+      log = loggers.ipfs
       if (log !== undefined && log !== null) {
         return log
       }
     }
     return console
+  }
+
+  IpfsController.prototype.handleImportFile = async function (info) {
+    return await this.ipfsTiddler.handleImportFile(info)
   }
 
   IpfsController.prototype.loadToBase64 = async function (url, password) {

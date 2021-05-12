@@ -1,17 +1,17 @@
 {
-  "build": "210511272",
+  "build": "210512344",
   "content": [
     {
       "title": "library",
       "tags": "$:/ipfs/core $:/core $:/library/ipfs",
       "name": "$:/library/ipfs.js.json",
-      "rawHash": "b05c73b3ab1c10cf29d9fd220493c8de9b5d2f0be31c673eef709f2d0cabcda2",
+      "rawHash": "3f03902b1799d8f2b4d6cbfa8509dd92374f317fcd45a2a267ea3ef3758c5d6b",
       "sourceExtension": "json",
       "sourceFilename": "$_library_ipfs.js.json",
-      "sourceSize": 133007,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeia6dwdgrw4hk5jk5mxcsn5hhhmcpx4zi7werswi5oythsse2gsoly/$_library_ipfs.js.json-1.0.0+release-210511272.json",
+      "sourceSize": 132986,
+      "sourceUri": "https://bluelight.link/ipfs/bafybeicnpptrffwo7s2ocht4tszvxnm2q5ewijx3fy7xuitltaasy45aom/$_library_ipfs.js.json-1.0.0+release-210512344.json",
       "tidSize": 717,
-      "tidUri": "https://bluelight.link/ipfs/bafybeide7xglbsmmxzm2e2alr64hmwr3pvsdwrzrlpmpvxn6ouen62lknm/$_library_ipfs.js.json.json-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeibo3rouhqr7rtot2gp3mtcpogvg52tvt5ab3laxrwywujfd5jt2ci/$_library_ipfs.js.json.json-build.tid"
     },
     {
       "title": "library",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_ipfs.js",
       "sourceSize": 129974,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeifp5lkl2kztpogwbtwkfnmwtcnrhorlersf4ur77p5py3mvb4d24q/$_library_ipfs.js-1.0.0+release-210511272.js",
+      "sourceUri": "https://bluelight.link/ipfs/bafybeihdjgfwyl7sh25nwyxidfnehnwpv7g7jtgdqu6crptk4rb5hf5olu/$_library_ipfs.js-1.0.0+release-210512344.js",
       "tidSize": 679,
-      "tidUri": "https://bluelight.link/ipfs/bafybeie6aoy33z4xe3ayany2shthbicnpee2hozxhhlgojjvaj4x3jyuhy/$_library_ipfs.js.js-build.tid"
+      "tidUri": "https://bluelight.link/ipfs/bafybeidiw2kquaahbo55jwvzuy5x4zryi4ne6b5qjcjkaarnc6qfsphdwi/$_library_ipfs.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+release",
-  "version": "1.0.0+release-210511272",
-  "buildUri": "https://bluelight.link/ipfs/bafybeibp7dwgo73wfr3qnmfjlw7d2bmuhrz4bwavno5j54hc2rv7vrkg6u/210511272/"
+  "version": "1.0.0+release-210512344",
+  "buildUri": "https://bluelight.link/ipfs/bafybeigtupq5gdef5r4ecbnyx5snidd3464r74e7ed7tsrzpeuvxtufotq/210512344/"
 }

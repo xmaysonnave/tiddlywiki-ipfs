@@ -1,5 +1,5 @@
 title: $:/boot/boot.css
-tags: [[$:/ipfs/core]] [[$:/core]] [[$:/boot/css]]
+tags: $:/boot/css
 type: text/css
 build: %BUILD_BOOT_CSS_BUILD%
 version: %BUILD_BOOT_CSS_VERSION%

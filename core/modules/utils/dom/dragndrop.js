@@ -20,8 +20,10 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     try {
       const ipfsImport = new IpfsImport()
       const data = await ipfsImport.import(null, url, dummy)
-      if (data.merged.size > 0 || data.deleted.size > 0) {
-        return data
+      if (data !== undefined && data !== null) {
+        if (data.merged.size > 0 || data.deleted.size > 0) {
+          return data
+        }
       }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)

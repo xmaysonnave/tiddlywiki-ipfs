@@ -125,7 +125,7 @@ Dropzone widget
     return filtered
   }
 
-  DropZoneWidget.prototype.readFileCallback = function (tiddlerFieldsArray) {
+  DropZoneWidget.prototype.readFileCallback = function (event, tiddlerFieldsArray) {
     if (this.contentTypesFilter) {
       tiddlerFieldsArray = this.filterByContentTypes(tiddlerFieldsArray)
     }
@@ -142,7 +142,7 @@ Dropzone widget
     } else if (tiddlerFieldsArray.length) {
       this.dispatchEvent({
         type: 'tm-import-tiddlers',
-        param: tiddlerFieldsArray,
+        param: JSON.stringify(tiddlerFieldsArray),
         autoOpenOnImport: this.autoOpenOnImport,
         importTitle: this.importTitle,
       })
@@ -152,10 +152,10 @@ Dropzone widget
     }
   }
 
-  DropZoneWidget.prototype.handleDropEvent = function (event) {
+  DropZoneWidget.prototype.handleDropEvent = async function (event) {
     var self = this
     var readFileCallback = function (tiddlerFieldsArray) {
-      self.readFileCallback(tiddlerFieldsArray)
+      self.readFileCallback(event, tiddlerFieldsArray)
     }
     this.leaveDrag(event)
     // Check for being over a TEXTAREA or INPUT
@@ -172,11 +172,10 @@ Dropzone widget
     // Import any files in the drop
     var numFiles = 0
     if (dataTransfer.files) {
-      numFiles =
-        this.wiki.readFiles(dataTransfer.files, {
-          callback: readFileCallback,
-          deserializer: this.dropzoneDeserializer,
-        }) > 0
+      numFiles = await this.wiki.readFiles(dataTransfer.files, {
+        callback: readFileCallback,
+        deserializer: this.dropzoneDeserializer,
+      })
     }
     // Try to import the various data types we understand
     if (numFiles === 0) {

@@ -34,8 +34,17 @@ Favicon handling
   function setFavicon () {
     var tiddler = $tw.wiki.getTiddler(FAVICON_TITLE)
     if (tiddler) {
-      var faviconLink = document.getElementById('faviconLink')
-      faviconLink.setAttribute('href', $tw.utils.makeDataUri(tiddler.fields.text, tiddler.fields.type, tiddler.fields._canonical_uri))
+      try {
+        var faviconLink = document.getElementById('faviconLink')
+        if (faviconLink) {
+          faviconLink.setAttribute(
+            'href',
+            $tw.utils.makeDataUri(tiddler.fields.text, tiddler.fields.type, tiddler.fields.altSourceUri ? tiddler.fields.altSourceUri : tiddler.fields._canonical_uri)
+          )
+        }
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
+      }
     }
   }
 })()

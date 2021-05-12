@@ -1,15 +1,8 @@
-/*\
-title: $:/boot/ipfs-boot.js
-$:/ipfs/core $:/core $:/boot/bundle
-type: application/javascript
-
-\*/
-
-var ipfsBoot = function ($tw) {
+var bootsuffix = function ($tw) {
   /*jslint node: true, browser: true */
   'use strict'
 
-  const name = '$_boot_ipfs-boot'
+  const name = '$_boot_bootsuffix'
 
   /////////////////////////// Standard node.js libraries
 
@@ -978,13 +971,13 @@ var ipfsBoot = function ($tw) {
         process: process,
       })
     } else {
-      /*
-      CommonJS optional require.main property:
-      In a browser we offer a fake main module which points back to the boot function
-      (Theoretically, this may allow TW to eventually load itself as a module in the browser)
-      */
+      /**
+       * CommonJS optional require.main property:
+       * In a browser we offer a fake main module which points back to the boot function
+       * (Theoretically, this may allow TW to eventually load itself as a module in the browser)
+       */
       Object.defineProperty(sandbox.require, 'main', {
-        value: typeof require !== 'undefined' ? require.main : { TiddlyWiki: ipfsBoot },
+        value: typeof require !== 'undefined' ? require.main : { TiddlyWiki: bootsuffix },
         writable: false,
         enumerable: true,
         configurable: false,
@@ -1417,7 +1410,7 @@ var ipfsBoot = function ($tw) {
 }
 
 if (typeof exports !== 'undefined') {
-  exports.TiddlyWiki = ipfsBoot
+  exports.TiddlyWiki = bootsuffix
 } else {
-  ipfsBoot(window.$tw)
+  bootsuffix(window.$tw)
 }

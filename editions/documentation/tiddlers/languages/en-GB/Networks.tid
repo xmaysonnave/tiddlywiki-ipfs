@@ -1,5 +1,5 @@
 title: Networks
-modified: 20210401114915385
+modified: 20210512114915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
@@ -18,25 +18,29 @@ type: text/vnd.tiddlywiki
   <li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
 </ul>
 <h3>Ethereum</h3>
+<h4>Networks</h4>œ
 <p>
   [ext[Chainlist|https://chainlist.org/]] Networks:
 </p>
 <ul>
   <li>[ext[Binance|https://bscscan.com/]]: Binance Smart Chain Network (~PoSA)</li>
   <li>[ext[Binance|https://testnet.bscscan.com/]]: Binance Smart Chain Test Network (~PoSA)</li>
-  <li>[ext[Chainlist|https://chainlist.org/]]: List of EVM Networks</li>
+  <li>[ext[Goerli|https://stats.goerli.net/]]: Ethereum Test Network (~PoA)</li>
+  <li>[ext[Kovan|https://kovan.etherscan.io]]: Ethereum Test Network (~PoA)</li>
+  <li>[ext[Polygon|https://explorer-mainnet.maticvigil.com/]]: Polygon Main Network (~PoS)</li>
+  <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (~PoA)</li>
+  <li>[ext[Ropsten|https://ropsten.etherscan.io/]]: Ethereum Test Network (~PoW)</li>
+  <li>[ext[xDai|https://blockscout.com/poa/xdai]]: xDai Main Network (~PoA)</li>
+</ul>
+<h4>Ethereum Tools</h4>
+<ul>
   <li>[ext[Etherchain Charts|https://www.etherchain.org/charts]]</li>
   <li>[ext[Ethereum Gas Station|https://ethgasstation.info/]]</li>
   <li>[ext[Ethereum Gas Tracker|http://etherscan.io/gastracker]]</li>
   <li>[ext[Etherscan|https://etherscan.io/]]</li>
   <li>[ext[Ethstats|https://ethstats.net/]]</li>
-  <li>[ext[Goerli|https://stats.goerli.net/]]: Ethereum Test Network (~PoA)</li>
-  <li>[ext[Kovan|https://kovan.etherscan.io]]: Ethereum Test Network (~PoA)</li>
-  <li>[ext[Rinkeby|https://www.rinkeby.io/#stats]]: Ethereum Test Network (~PoA)</li>
-  <li>[ext[Ropsten|https://ropsten.etherscan.io/]]: Ethereum Test Network (~PoW)</li>
-  <li>[ext[xDai|https://blockscout.com/poa/xdai]]: xDai Main Network (~PoA)</li>
 </ul>
 <h3>Mnemonic</h3>
 <ul>
-  <li>[ext[Mnemonic Code Converter v0.5.2|https://bafybeifxjfycpkureyy47g6dmtiqckijybx3gehxakwnysz5qsjiosmysi.ipfs.dweb.link/]]</li>
+  <li>[ext[Mnemonic Code Converter v0.5.3|https://bafybeienrn4svvlpnwg77mguss3i22pquzqf4y3yzvzo4urdgihgti3yee.ipfs.dweb.link/]]</li>
 </ul>

@@ -44,9 +44,6 @@ IPFS Tiddler
     $tw.hooks.addHook('th-deleting-tiddler', async function (tiddler) {
       return await self.handleDeleteTiddler(tiddler)
     })
-    $tw.hooks.addHook('th-importing-file', async function (info) {
-      return await self.handleImportFile(info)
-    })
     $tw.hooks.addHook('th-saving-tiddler', async function (tiddler) {
       return await self.handleSaveTiddler(tiddler)
     })
@@ -254,9 +251,14 @@ IPFS Tiddler
   IpfsTiddler.prototype.handleRefreshTiddler = function (event) {
     const title = event.tiddlerTitle
     const tiddler = $tw.wiki.getTiddler(title)
+    // Ignore
     if (tiddler === undefined || title === '$:/plugins/tiddlywiki/menubar/items/pagecontrols') {
       return false
     }
+    if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
+      return false
+    }
+    // Process
     var canonicalUri = tiddler.fields._canonical_uri
     canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
     var importUri = tiddler.fields._import_uri
@@ -277,12 +279,14 @@ IPFS Tiddler
         .import(canonicalUri, importUri, tiddler)
         .then(data => {
           if (data !== undefined && data !== null) {
-            const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
-            if (navigator !== undefined && navigator !== null) {
-              navigator.dispatchEvent({
-                type: 'tm-ipfs-import-tiddlers',
-                param: data,
-              })
+            if (data.merged.size > 0 || data.deleted.size > 0) {
+              const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
+              if (navigator !== undefined && navigator !== null) {
+                navigator.dispatchEvent({
+                  type: 'tm-ipfs-import-tiddlers',
+                  param: data,
+                })
+              }
             }
           }
         })
@@ -304,23 +308,37 @@ IPFS Tiddler
       title: $tw.wiki.generateNewTitle('Untitled'),
       type: info.type,
     })
+    var type = null
+    if (info !== undefined && info !== null && info.type !== undefined && info.type !== null) {
+      type = info.type
+    }
+    if (type == null) {
+      return false
+    }
+    if (type !== 'text/html' && type !== 'application/json' && type !== 'application/x-tiddler') {
+      return false
+    }
     try {
       const ipfsImport = new IpfsImport()
       const url = URL.createObjectURL(info.file)
       try {
         const data = await ipfsImport.import(null, url, dummy)
+        if (data === undefined || data == null) {
+          return false
+        }
         if (data.merged.size > 0 || data.deleted.size > 0) {
           info.callback(data)
+          return true
         }
       } catch (error) {
         $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(name, error.message)
+      } finally {
+        URL.revokeObjectURL(url)
       }
-      URL.revokeObjectURL(url)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
     }
-    return true
+    return false
   }
 
   IpfsTiddler.prototype.handleSaveTiddler = async function (tiddler) {

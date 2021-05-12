@@ -201,14 +201,8 @@ IPFS Import
       }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
     }
-    this.loaded = null
-    this.isEmpty = null
-    this.notLoaded = null
-    this.resolved = null
-    this.notResolved = null
-    this.merged = null
+    return null
   }
 
   IpfsImport.prototype.load = async function (parentUrl, parentTitle, field, url, password, load) {
@@ -217,15 +211,8 @@ IPFS Import
     var key = null
     var resolvedUrl = null
     if (url !== null && this.notResolved.indexOf(url) === -1 && this.resolved.get(url) === undefined) {
-      try {
-        var { key, resolvedUrl } = await this.getKey(url, parentUrl)
-        this.resolved.set(url, key)
-      } catch (error) {
-        const msg = 'Failed to Resolve:'
-        this.notResolved.push(url)
-        $tw.ipfs.getLogger().error(error)
-        $tw.utils.alert(name, alertFieldFailed`${msg} "${field}" from ${parentUrl}">${parentTitle}</a>`)
-      }
+      var { key, resolvedUrl } = await this.getKey(url, parentUrl)
+      this.resolved.set(url, key)
     }
     if (load && key !== null && resolvedUrl !== null && this.notLoaded.indexOf(key) === -1 && this.loaded.get(key) === undefined) {
       const { loaded: loadedAdded, removed: loadedRemoved } = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
@@ -342,7 +329,7 @@ from "${parentField}", "${parentTitle}"
               removed += loadedRemoved
             }
             if (canonicalUri !== null) {
-              const { loaded: loadedAdded, removed: loadedRemoved } = await this.load(resolvedKey, title, 'canonical_uri', canonicalUri, password, tiddlyWikiType === tiddler.type)
+              const { loaded: loadedAdded, removed: loadedRemoved } = await this.load(resolvedKey, title, '_canonical_uri', canonicalUri, password, tiddlyWikiType === tiddler.type)
               loaded += loadedAdded
               removed += loadedRemoved
             }
@@ -353,7 +340,7 @@ from "${parentField}", "${parentTitle}"
       }
       if (imported.size === 0) {
         this.isEmpty.push(key)
-        const msg = 'Empty:'
+        const msg = 'Empty Import:'
         const field = 'Resource'
         $tw.ipfs.getLogger().info(
           `${msg} "${field}"
@@ -365,7 +352,7 @@ from "${parentField}", "${parentTitle}"
       }
     } catch (error) {
       this.notLoaded.push(key)
-      const msg = 'Failed to Load:'
+      const msg = 'Failed to Import:'
       const field = 'Resource'
       $tw.ipfs.getLogger().info(
         `${msg} "${field}"

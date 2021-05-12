@@ -1,5 +1,5 @@
 title: $:/library/sjcl.js
-tags: [[$:/ipfs/core]] [[$:/core]] [[$:/library/sjcl]]
+tags: $:/library/sjcl
 type: application/javascript
 build: %BUILD_SJCL_BUILD%
 version: %BUILD_SJCL_VERSION%

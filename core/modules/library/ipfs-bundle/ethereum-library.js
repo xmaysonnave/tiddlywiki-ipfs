@@ -20,6 +20,7 @@ var EthereumLibrary = function (ipfsBundle) {
     0x5: 'Ethereum Test Network (PoA): "Goerli", chainId: "0x5": "5"',
     0x61: 'Binance Smart Chain Test Network (bsc-testnet): "0x61": "97"', // https://data-seed-prebsc-1-s1.binance.org:8545/
     0x64: 'xDai Main Network: "Mainnet", chainId: "0x64": "100"', // https://rpc.xdaichain.com/
+    0x89: 'Polygon Main Network, chainId: "0x89": "127"', // https://rpc-mainnet.maticvigil.com/
   }
   this.explorer = {
     0x1: 'https://etherscan.io',
@@ -30,6 +31,7 @@ var EthereumLibrary = function (ipfsBundle) {
     0x5: 'https://goerli.etherscan.io',
     0x61: 'https://testnet.bscscan.com/',
     0x64: 'https://blockscout.com/poa/xdai',
+    0x89: 'https://explorer.matic.network',
   }
   this.once = false
   this.provider = null

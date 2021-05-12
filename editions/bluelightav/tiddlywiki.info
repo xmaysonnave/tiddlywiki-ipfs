@@ -162,16 +162,6 @@
         "../sample/index-plain-and-standford.html",
         "text/plain",
       "--clearkeys"
-    ],
-		"prod_favicon": [
-			"--savetiddler",
-        "$:/favicon.ico",
-        "../production/editions/bluelightav/favicon.ico"
-    ],
-		"sample_favicon": [
-			"--savetiddler",
-        "$:/favicon.ico",
-        "../sample/favicon.ico"
     ]
   }
 }

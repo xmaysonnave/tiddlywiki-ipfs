@@ -5,7 +5,7 @@
 	"build": {
     "plain": [
 			"--rendertiddler",
-        "$:/ipfs/boot/bundle",
+        "$:/boot/bundle",
         "tiddlywiki-ipfs/boot/$_boot_boot.js",
         "text/plain"
     ]

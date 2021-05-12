@@ -1,5 +1,5 @@
-title: $:/ipfs/boot/bundle
-tags: [[$:/ipfs/core]] [[$:/core]] [[$:/boot/bundle]]
+title: $:/boot/bundle
+tags: $:/boot/bundle
 
 \rules only filteredtranscludeinline transcludeinline codeinline
 

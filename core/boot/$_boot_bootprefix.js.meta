@@ -1,5 +1,5 @@
 title: $:/boot/bootprefix.js
-tags: [[$:/ipfs/core]] [[$:/core]] [[$:/boot/bootprefix]]
+tags: $:/boot/bootprefix
 type: application/javascript
 build: %BUILD_BOOT_PREFIX_BUILD%
 version: %BUILD_BOOT_PREFIX_VERSION%

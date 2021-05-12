@@ -161,14 +161,17 @@ wikimethod
       console.log("Importing file '" + file.name + "', type: '" + type + "', isBinary: " + isBinary)
     }
     // Give the hook a chance to process the drag
-    if (
-      (await $tw.hooks.invokeHook('th-importing-file', {
-        file: file,
-        type: type,
-        isBinary: isBinary,
-        callback: callback,
-      })) !== true
-    ) {
+    const info = {
+      file: file,
+      type: type,
+      isBinary: isBinary,
+      callback: callback,
+    }
+    var invoked = false
+    if ($tw.ipfs && $tw.ipfs.handleImportFile) {
+      invoked = await $tw.ipfs.handleImportFile(info)
+    }
+    if ((invoked !== true && $tw.hooks.invokeHook('th-importing-file')) !== true) {
       this.readFileContent(file, type, isBinary, options.deserializer, callback)
     }
   }

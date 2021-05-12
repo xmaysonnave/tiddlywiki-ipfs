@@ -1,10 +1,3 @@
-/*\
-title: $:/boot/bootprefix.js
-tags: $:/ipfs/core $:/core $:/boot/bootprefix
-type: application/javascript
-
-\*/
-
 var _bootprefix = function ($tw) {
   'use strict'
 

@@ -1,0 +1,4 @@
+title: $:/boot/bootsuffix.js
+tags: $:/boot/bundle
+type: application/javascript
+boot-bundle: yes

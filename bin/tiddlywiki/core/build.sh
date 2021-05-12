@@ -23,7 +23,7 @@ rm -f -R ./build/plugins > /dev/null 2>&1
 
 mkdir -p ./current/tiddlywiki/core > /dev/null 2>&1
 
-cp ./editions/core/tiddlywiki.info ./build/tiddlywiki.info || exit 1
+cp ./editions/core/tiddlywiki.info ./build || exit 1
 
 # build raw
 echo '***'

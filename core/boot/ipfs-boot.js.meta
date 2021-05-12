@@ -1,4 +1,0 @@
-title: $:/boot/ipfs-boot.js
-tags: [[$:/ipfs/core]] [[$:/core]] [[$:/boot/bundle]]
-type: application/javascript
-boot-bundle: yes

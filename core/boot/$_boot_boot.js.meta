@@ -1,5 +1,5 @@
 title: $:/boot/boot.js
-tags: [[$:/ipfs/core]] [[$:/core]] [[$:/boot/bundle]]
+tags: $:/boot/bundle
 type: application/javascript
 build: %BUILD_BOOT_BUILD%
 version: %BUILD_BOOT_VERSION%

@@ -6611,10 +6611,10 @@ ipfs-block-service@^0.19.0:
     err-code "^3.0.1"
     it-map "^1.0.5"
 
-ipfs-cli@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/ipfs-cli/-/ipfs-cli-0.5.0.tgz#594d745ade5c04a53f946ccb160faf06aee537ee"
-  integrity sha512-fiBpxqXAA/MAJLBZxQuk9auJwOVCQo+PdxwX3qF0heorlQulaYLPMxEP0yZPzgTGyJabKqzZRhEaDi5NAP0L8g==
+ipfs-cli@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/ipfs-cli/-/ipfs-cli-0.5.1.tgz#bc3d77d2d0b6f2f9daa712acfad3ac5659adb2ed"
+  integrity sha512-qxhNo3CkS4fQJV0RYKnE0lvTQP68JjWRQj7ndOxcmUae/sRIMabUZlz7agb+tsNycxbVY846bAeXVURsTKwwgg==
   dependencies:
     byteman "^1.3.5"
     cid-tool "^3.0.0"
@@ -6623,10 +6623,10 @@ ipfs-cli@^0.5.0:
     err-code "^3.0.1"
     execa "^5.0.0"
     get-folder-size "^2.0.1"
-    ipfs-core "^0.6.0"
+    ipfs-core "^0.6.1"
     ipfs-core-types "^0.4.0"
     ipfs-core-utils "^0.8.0"
-    ipfs-daemon "^0.6.0"
+    ipfs-daemon "^0.6.1"
     ipfs-http-client "^50.0.0"
     ipfs-repo "^9.1.6"
     ipfs-utils "^7.0.0"
@@ -6685,10 +6685,10 @@ ipfs-core-utils@^0.8.0:
     timeout-abort-controller "^1.1.1"
     uint8arrays "^2.1.3"
 
-ipfs-core@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/ipfs-core/-/ipfs-core-0.6.0.tgz#88baa666b9a696cd889e09bbf1a3b3dd5689da81"
-  integrity sha512-9/OkLzir1iJKmQ6aB3BA5q3I9ThQYWBIquGOycOGDpkoc+qpn/E/IrLFR+f9ErWNug4VtaM/0pmim2GjIsyCwA==
+ipfs-core@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/ipfs-core/-/ipfs-core-0.6.1.tgz#8d5e0603b396ffff7b794f8f7659e65290913fc1"
+  integrity sha512-StsMUOm8ZKsTddKM2vGYReZVcgL0Nd8eR4MkNp+l+lpbv/O3/vtYRcJP3j1o4iq3wNTm1FLdWWAsZ/Au/qC6rA==
   dependencies:
     abort-controller "^3.0.0"
     array-shuffle "^2.0.0"
@@ -6755,16 +6755,16 @@ ipfs-core@^0.6.0:
     streaming-iterables "^5.0.2"
     uint8arrays "^2.1.3"
 
-ipfs-daemon@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/ipfs-daemon/-/ipfs-daemon-0.6.0.tgz#6c201415a9c4abd206695b622fa38d0b34de3f81"
-  integrity sha512-XbGEFhfWwZsLPO452nyPU92rCYdr3WxbGqOsBHQVvd9Msq/AxSmGseZgzxGYhpXKe/D/az2Ix9DXDhKMF9pjTQ==
+ipfs-daemon@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/ipfs-daemon/-/ipfs-daemon-0.6.1.tgz#d36964d4f2182c0dec9c1cb1d9e5ac63c631d88d"
+  integrity sha512-9fo5hHPzkQ5OOG4PjdTliQGZAlAkWnuQljo6XMjlzCXvkVfjEeGBYhXRuqcYFANSRGA+amfZrrsjiyqv+lcg1g==
   dependencies:
     debug "^4.1.1"
     dlv "^1.1.3"
-    ipfs-core "^0.6.0"
+    ipfs-core "^0.6.1"
     ipfs-core-types "^0.4.0"
-    ipfs-grpc-server "^0.3.0"
+    ipfs-grpc-server "^0.3.1"
     ipfs-http-client "^50.0.0"
     ipfs-http-gateway "^0.4.0"
     ipfs-http-server "^0.4.0"
@@ -6784,10 +6784,10 @@ ipfs-grpc-protocol@^0.3.0:
   resolved "https://registry.yarnpkg.com/ipfs-grpc-protocol/-/ipfs-grpc-protocol-0.3.0.tgz#9d6a5eda50fe1bca1d9c3be0b94e85a5170afad9"
   integrity sha512-1Igy9mGMAWPkLtG38id0jMlaLSNqdIAkvxo6rOdq5mjYqkWYBa00lczj6JjwhNiFpJSGhNJrYVxjLwpJza1GOQ==
 
-ipfs-grpc-server@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/ipfs-grpc-server/-/ipfs-grpc-server-0.3.0.tgz#790a999c42fdbdae8f26af4d382c4a8fed4e42a7"
-  integrity sha512-XvphaZ5rYDASqCWgnodW+JNGXENtI8Wmr7AZ950hlfdAYLJx4k5FRn/+BjFpmaXew5cLRbjOmh/HEyZADof5Yw==
+ipfs-grpc-server@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/ipfs-grpc-server/-/ipfs-grpc-server-0.3.1.tgz#4a7f513f821a21a0130b88f9bb35297f7208897d"
+  integrity sha512-Ljb0L1BSEmLJRLjY0Aes93KMKfnK52U1GEDuriI/5KkWS/AUC80h5+bxJGfr38pfj7OBRpMPjMmYqHmwgUFyIQ==
   dependencies:
     "@grpc/grpc-js" "^1.1.8"
     change-case "^4.1.1"
@@ -7039,14 +7039,14 @@ ipfs-utils@^7.0.0:
     node-fetch "^2.6.1"
     stream-to-it "^0.2.2"
 
-ipfs@^0.55.0:
-  version "0.55.0"
-  resolved "https://registry.yarnpkg.com/ipfs/-/ipfs-0.55.0.tgz#dd45b519c532f30dbaf6797c68ce318eea7a6651"
-  integrity sha512-fPJfzLTVaX7mgfvNt9/6ztpg1H7bzle+8q9GQZ90GowaEDlcQClV2e2VD991hItmnVlQswGbU/Sw5DeHp+QLBA==
+ipfs@^0.55.1:
+  version "0.55.1"
+  resolved "https://registry.yarnpkg.com/ipfs/-/ipfs-0.55.1.tgz#c4f8d8ad47113f8c48c3bde5e59157bb93e3bf3c"
+  integrity sha512-sbjHUWmUl9cVOM5Fm9mhU+w2SBvASCSsRKwj4RVNzdGZOEBet+1NNwJS6pVU4RvF5jy5R1tbBvg8ynBcC6ZLIw==
   dependencies:
     debug "^4.1.1"
-    ipfs-cli "^0.5.0"
-    ipfs-core "^0.6.0"
+    ipfs-cli "^0.5.1"
+    ipfs-core "^0.6.1"
     semver "^7.3.2"
     update-notifier "^5.0.0"
 
@@ -11954,10 +11954,10 @@ snyk-go-plugin@1.17.0:
     tmp "0.2.1"
     tslib "^1.10.0"
 
-snyk-gradle-plugin@3.14.4:
-  version "3.14.4"
-  resolved "https://registry.yarnpkg.com/snyk-gradle-plugin/-/snyk-gradle-plugin-3.14.4.tgz#daaff12ab017014e685520703abd432600e98b56"
-  integrity sha512-EwosGFPizeg03wFl2z0X8qw5+zpTZLGwgtLyFcFTBCUxfuLjEOy71XYkgpHOOsV9PPKzOIAKjOhKof4K1nyinw==
+snyk-gradle-plugin@3.14.5:
+  version "3.14.5"
+  resolved "https://registry.yarnpkg.com/snyk-gradle-plugin/-/snyk-gradle-plugin-3.14.5.tgz#f2c1c370c811515a0c2c9b75f9bb97a2c55cbdb2"
+  integrity sha512-dOT4KZUC7AIR08xMUOAMNC5um5nlqjwLJCNz7AAgZHzJfNe93nbMcTN8Y5TiItCkAqNlJ/V4eI3uzVZJvOQoLw==
   dependencies:
     "@snyk/cli-interface" "2.11.0"
     "@snyk/dep-graph" "^1.28.0"
@@ -12011,10 +12011,10 @@ snyk-nodejs-lockfile-parser@1.33.0:
     uuid "^8.3.0"
     yaml "^1.9.2"
 
-snyk-nodejs-lockfile-parser@1.34.1:
-  version "1.34.1"
-  resolved "https://registry.yarnpkg.com/snyk-nodejs-lockfile-parser/-/snyk-nodejs-lockfile-parser-1.34.1.tgz#8aaf37d50525988b45fe330a019a194893345c70"
-  integrity sha512-vu9ANnTin2T8FzacaTcErl4QQxpUpHCZQf4wQuFLknD9cSs0qc88nUhKev4eLA6Qs4amO0adPFfinn04tUvQ4A==
+snyk-nodejs-lockfile-parser@1.34.2:
+  version "1.34.2"
+  resolved "https://registry.yarnpkg.com/snyk-nodejs-lockfile-parser/-/snyk-nodejs-lockfile-parser-1.34.2.tgz#31328b10c028c57caf538d860175b106c47e5f68"
+  integrity sha512-evLJmX+ZOs5fw0LTVXFkzxfUnI1GcFSBYEXgbD3AbWBpo5Qqsxr33rKlPvbpJ98sOXHfv1vPkY1WloGVTNF84w==
   dependencies:
     "@snyk/graphlib" "2.1.9-patch.3"
     "@yarnpkg/core" "^2.4.0"
@@ -12161,10 +12161,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@^1.590.0:
-  version "1.590.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.590.0.tgz#0f21fb7e5e2c445b1dfe1aa37d18278c8bbbd17e"
-  integrity sha512-TOzVXRf44mEaCbcNyasizL2ryl+Jt681e6c76la4XYtCy/QLGjbl9VYn56txnQpAa8BmYNP0LFAdatG8++o7tA==
+snyk@^1.592.0:
+  version "1.592.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.592.0.tgz#6fd688ea0ebf7b2443891a026f348804c16002ae"
+  integrity sha512-Ho6QfOZWB5dG/QlWZqiScg3FV4Bw7U11EYL0ujGOEbtsZ/B9qYwcNy97xhfmngj6Yg+0pkYTOnLB4TxzHdj8tQ==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -12214,10 +12214,10 @@ snyk@^1.590.0:
     snyk-cpp-plugin "2.2.1"
     snyk-docker-plugin "4.20.2"
     snyk-go-plugin "1.17.0"
-    snyk-gradle-plugin "3.14.4"
+    snyk-gradle-plugin "3.14.5"
     snyk-module "3.1.0"
     snyk-mvn-plugin "2.26.0"
-    snyk-nodejs-lockfile-parser "1.34.1"
+    snyk-nodejs-lockfile-parser "1.34.2"
     snyk-nuget-plugin "1.21.1"
     snyk-php-plugin "1.9.2"
     snyk-policy "1.19.0"
