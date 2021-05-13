@@ -156,6 +156,18 @@ module-type: saver
           }
         }
       }
+      var found = false
+      var match = null
+      var re = /\r\n/g
+      while ((match = re.exec(text)) != null) {
+        found = true
+        $tw.ipfs.getLogger().info(`*** Found CRLF: ${match.index} ***`)
+      }
+      if (found) {
+        var before = text.length
+        text = text.replace(re, '\n') // replace every \r\n with \n
+        $tw.ipfs.getLogger().info(`Normalizing CRLF to LF: '${before - text.length}'...`)
+      }
       // Upload
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
       const { cid: added } = await $tw.ipfs.addContentToIpfs($tw.ipfs.StringToUint8Array(text))

@@ -19,20 +19,28 @@ Startup initialisation
 
   exports.startup = function () {
     var getLogger = function () {
-      if (globalThis.window !== undefined && globalThis.window.log !== undefined && globalThis.window.log !== null) {
-        return globalThis.window.log.getLogger('ipfs')
+      if (globalThis.log !== undefined && globalThis.log !== null) {
+        const loggers = globalThis.log.getLoggers()
+        if (loggers.ipfs !== undefined && loggers.ipfs !== null) {
+          return loggers.ipfs
+        }
       }
       return console
     }
     // Logger
-    if (globalThis.window !== undefined && globalThis.window.log !== undefined && globalThis.window.log !== null) {
-      const log = globalThis.window.log.getLogger('ipfs')
-      if ($tw.utils.getIpfsVerbose()) {
-        log.setLevel('info', false)
-      } else {
-        log.setLevel('warn', false)
+    if (globalThis.log !== undefined && globalThis.log !== null) {
+      const loggers = globalThis.log.getLoggers()
+      var ipfs = loggers.ipfs
+      if (ipfs === undefined || ipfs == null) {
+        ipfs = globalThis.log.getLogger('ipfs')
+        ipfs.info('Loglevel is starting up...')
       }
-      log.info('loglevel is set up...')
+      if ($tw.utils.getIpfsVerbose()) {
+        ipfs.setLevel('info', false)
+      } else {
+        ipfs.setLevel('warn', false)
+      }
+      ipfs.info('Loglevel is set up...')
     }
     // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')

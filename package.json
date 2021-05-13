@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210512489",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210513501",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -62,9 +62,9 @@
     "xmlhttprequest-ssl": "1.6.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/plugin-transform-runtime": "^7.13.15",
-    "@babel/preset-env": "^7.14.1",
+    "@babel/core": "^7.14.2",
+    "@babel/plugin-transform-runtime": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
     "@babel/runtime-corejs3": "^7.14.0",
     "@metamask/detect-provider": "^1.2.0",
     "abort-controller": "^3.0.0",
@@ -94,7 +94,7 @@
     "replace": "^1.2.1",
     "sinon": "^10.0.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.592.0",
+    "snyk": "^1.594.0",
     "terser": "^5.7.0",
     "tiddlywiki": "^5.1.23",
     "timeout-signal": "^1.1.0",

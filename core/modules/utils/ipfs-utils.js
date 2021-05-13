@@ -163,6 +163,18 @@ IPFS utils
     $tw.wiki.addTiddler(new $tw.Tiddler(alertFields))
   }
 
+  /**
+   * Reserved IPFS with TiddwlyWiki faviconLink keywords
+   */
+  exports.hasReservedFaviconLink = function (text) {
+    const ico = '<link id="faviconLink" rel="shortcut icon" href="favicon.ico"/>'
+    const png = '<link id="faviconLink" rel="shortcut icon" href="favicon.png"/>'
+    if (text.indexOf(ico) !== -1 || text.indexOf(png) !== -1) {
+      return true
+    }
+    return false
+  }
+
   // Edition build
   exports.getIpfsEditionBuild = function () {
     if (globalThis.document) {

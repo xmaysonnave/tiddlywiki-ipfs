@@ -4,3 +4,4 @@ _license_uri: https://raw.githubusercontent.com/ethers-io/ethers.js/master/LICEN
 _project_uri: https://github.com/ethers-io/ethers.js/
 _source_uri: https://cdn.jsdelivr.net/npm/ethers@5.1.4/dist/ethers.umd.min.js
 _source_sri: sha384-cmAXnxAhPwGDIPqAfcx7VHUxNhX15X9BrUTRmwEOHYpD7K4xjaCIQ68HJUY2+gEV
+_module: yes

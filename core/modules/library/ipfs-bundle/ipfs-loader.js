@@ -22,34 +22,35 @@ IpfsLoader.prototype.getLogger = function () {
 // https://github.com/liriliri/eruda
 IpfsLoader.prototype.loadErudaLibrary = async function () {
   if (typeof globalThis.eruda === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda')
   }
 }
 
 // https://github.com/ethers-io/ethers.js/
 IpfsLoader.prototype.loadEtherJsLibrary = async function () {
   if (typeof globalThis.ethers === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers')
   }
 }
 
 // https://github.com/xmaysonnave/eth-sig-util
 IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
   if (typeof globalThis.sigUtil === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/eth-sig-util', 'sigUtil', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/eth-sig-util', 'sigUtil')
   }
 }
 
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
   if (typeof globalThis.IpfsHttpClient === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/ipfs-http-client', 'IpfsHttpClient', true)
+    await this.loadTiddlerLibrary('$:/ipfs/library/ipfs-http-client', 'IpfsHttpClient')
   }
 }
 
-/*eslint no-new:"off",no-new-func:"off"*/
+// https://gist.github.com/ebidel/3201b36f59f26525eb606663f7b487d0
 IpfsLoader.prototype.supportDynamicImport = function () {
   try {
+    /*eslint no-new:"off",no-new-func:"off"*/
     new Function('import("")')
     return true
   } catch (error) {
@@ -58,7 +59,7 @@ IpfsLoader.prototype.supportDynamicImport = function () {
 }
 
 // https://www.srihash.org/
-IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj, isModule) {
+IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj) {
   if (globalThis[obj] !== undefined && globalThis[obj] !== null) {
     return
   }
@@ -69,6 +70,7 @@ IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj, isModule) 
   }
   const sourceUri = tiddler.fields._source_uri
   const sourceSri = tiddler.fields._source_sri
+  const isModule = tiddler.fields._module === 'yes'
   await this.mutex.runExclusive(async () => {
     if (globalThis[obj] === undefined || globalThis[obj] == null) {
       const loaded = await self.loadLibrary(title, sourceUri, sourceSri, isModule)
@@ -86,19 +88,9 @@ IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj, isModule) 
 
 // https://observablehq.com/@bryangingechen/dynamic-import-polyfill
 IpfsLoader.prototype.loadLibrary = function (id, url, sri, isModule) {
-  // Dynamic import
-  // if (this.supportDynamicImport()) {
-  //   try {
-  //     return new Function(`return import("${url}")`)();
-  //   } catch (error) {
-  //     // Ignore
-  //   }
-  // }
   const self = this
   return new Promise((resolve, reject) => {
-    // Process
     const script = globalThis.document.createElement('script')
-    // Functions
     const cleanup = () => {
       try {
         delete globalThis[id]
@@ -119,7 +111,6 @@ IpfsLoader.prototype.loadLibrary = function (id, url, sri, isModule) {
       reject(new Error(`Failed to load: ${url}`))
       cleanup()
     }
-    // Attributes
     if (isModule) {
       script.type = 'module'
     } else {
@@ -132,7 +123,6 @@ IpfsLoader.prototype.loadLibrary = function (id, url, sri, isModule) {
       script.integrity = sri
     }
     script.crossOrigin = 'anonymous'
-    // URL
     script.src = url
     // Load
     globalThis.document.head.appendChild(script)
@@ -170,9 +160,9 @@ IpfsLoader.prototype.fetchUint8Array = async function (url) {
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      $tw.boot.getLogger().error(`*** Timeout exceeded: ${$tw.utils.getLongTimeout()} ms ***`)
+      this.getLogger().error(`*** Timeout exceeded: ${$tw.utils.getLongTimeout()} ms ***`)
     } else {
-      $tw.boot.getLogger().error(`*** Options error: ${error.message} ***`)
+      this.getLogger().error(`*** Options error: ${error.message} ***`)
     }
   }
   globalThis.clearTimeout(optionsId)
@@ -284,7 +274,7 @@ IpfsLoader.prototype.checkMessage = async function (message, keccak256, signatur
   if (signature) {
     try {
       const recovered = await this.ipfsBundle.personalRecover(keccak256, signature)
-      $tw.ipfs.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
+      this.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
       $tw.utils.alert(
         this.name,
         `Signed from: <a class="tc-tiddlylink-external" rel="noopener noreferrer" target="_blank" href="https://app.ens.domains/address/${recovered}">${recovered}</a>`

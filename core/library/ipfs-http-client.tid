@@ -4,3 +4,4 @@ _license_uri: https://raw.githubusercontent.com/ipfs/js-ipfs/master/packages/ipf
 _project_uri: https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client
 _source_uri: https://cdn.jsdelivr.net/npm/ipfs-http-client@50.0.0/dist/index.min.js
 _source_sri: sha384-xDGEptsXfljiftRc042cHgj3KEdFDa0+CjSYUrlZyxaf8XBItaI002p22TP58pt7
+_module: yes

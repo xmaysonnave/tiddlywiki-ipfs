@@ -29,16 +29,20 @@ var IpfsBundle = function () {
 }
 
 IpfsBundle.prototype.getLogger = function () {
-  if (globalThis.log !== undefined && globalThis.log !== null) {
-    const loggers = globalThis.log.getLoggers()
+  var log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
+  if (log !== undefined && log !== null) {
+    const loggers = log.getLoggers()
     var eruda = loggers.eruda
-    if (eruda) {
+    if (eruda !== undefined && eruda !== null) {
       return eruda
     }
     var ipfs = loggers.ipfs
-    if (ipfs) {
-      return ipfs
+    if (ipfs === undefined || ipfs == null) {
+      ipfs = log.getLogger('ipfs')
+      ipfs.setLevel('info', false)
+      ipfs.info('Loglevel is starting up...')
     }
+    return ipfs
   }
   return console
 }

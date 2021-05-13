@@ -55,8 +55,9 @@ IPFS Controller
   }
 
   IpfsController.prototype.getLogger = function () {
-    if (window.log !== undefined && window.log !== null) {
-      const loggers = window.log.getLoggers()
+    var log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
+    if (log !== null) {
+      const loggers = log.getLoggers()
       var log = loggers.eruda
       if (log !== undefined && log !== null) {
         return log

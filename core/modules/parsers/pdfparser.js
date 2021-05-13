@@ -19,7 +19,7 @@ The PDF parser embeds a PDF viewer
     var value = 'data:application/pdf;base64,'
     var element = {
       type: 'element',
-      tag: 'embed',
+      tag: 'object',
       attributes: {},
     }
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {

@@ -34,7 +34,7 @@ var EnsLibrary = function (ipfsBundle) {
 }
 
 EnsLibrary.prototype.getLogger = function () {
-  return this.ipfsBundle.getLogger()
+  return $tw.ipfsBundle.getLogger()
 }
 
 EnsLibrary.prototype.getENSRegistry = function () {

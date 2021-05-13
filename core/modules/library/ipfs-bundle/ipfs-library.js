@@ -556,7 +556,8 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
         ],
       })
       self.ipfsClients.set(apiUrl.toString(), { ipfs, provider })
-      $tw.ipfs.getLogger().info(`New IPFS provider: "${apiUrl}"`)
+      // ??? Logger do not provide any output...
+      console.info(`New IPFS provider: "${apiUrl}"`)
       return {
         ipfs: ipfs,
         provider: provider,

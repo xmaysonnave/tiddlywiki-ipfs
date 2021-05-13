@@ -1,5 +1,5 @@
 title: Networks
-modified: 20210512114915385
+modified: 20210513114915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
@@ -18,7 +18,7 @@ type: text/vnd.tiddlywiki
   <li>[ext[Public IPFS Gateways|https://ipfs.github.io/public-gateway-checker/]]</li>
 </ul>
 <h3>Ethereum</h3>
-<h4>Networks</h4>œ
+<h4>Networks</h4>
 <p>
   [ext[Chainlist|https://chainlist.org/]] Networks:
 </p>

@@ -2459,15 +2459,14 @@ var bootsuffix = function ($tw) {
   }
 
   $tw.boot.getLogger = function () {
+    if ($tw.ipfs !== undefined) {
+      return $tw.ipfs.getLogger()
+    }
     var log = $tw.node ? globalThis.log || require('loglevel') : globalThis.log
     if (log !== undefined && log !== null) {
-      const loggers = log.getLoggers()
-      var eruda = loggers.eruda
-      if (eruda) {
-        return eruda
-      }
+      var loggers = log.getLoggers()
       var ipfs = loggers.ipfs
-      if (!ipfs) {
+      if (ipfs === undefined || ipfs == null) {
         ipfs = log.getLogger('ipfs')
         ipfs.setLevel('info', false)
         ipfs.info('Loglevel is starting up...')
@@ -2773,11 +2772,9 @@ var bootsuffix = function ($tw) {
         })
         .catch(error => {
           if (!fallback) {
+            $tw.boot.getLogger().error(error)
             if ($tw.utils.alert !== undefined) {
-              $tw.boot.getLogger().error(error)
               $tw.utils.alert(name, error.message)
-            } else {
-              $tw.utils.error(error.message)
             }
           } else {
             this.load(fallback, creationFields, removeFields, modificationFields, password)

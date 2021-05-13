@@ -96,11 +96,12 @@ IPFS Tiddler
     // Verbose preference
     const verbose = changes['$:/ipfs/saver/verbose']
     if (verbose !== undefined && verbose.modified) {
-      if (window.log !== undefined && window.log !== null) {
+      var log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
+      if (log !== null) {
         if ($tw.utils.getIpfsVerbose()) {
-          window.log.setLevel('info', false)
+          log.setLevel('info', false)
         } else {
-          window.log.setLevel('warn', false)
+          log.setLevel('warn', false)
         }
       }
     }
