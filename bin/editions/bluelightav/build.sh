@@ -79,6 +79,7 @@ yarn tiddlywiki-ipfs build \
 ./bin/cli-uploader.sh \
   --name=bluelightav \
   --extension=html \
+  --faviconFileName=favicon.png \
   --dir=editions/bluelightav \
   --tags=$:/ipfs/editions "$@" || exit 1
 

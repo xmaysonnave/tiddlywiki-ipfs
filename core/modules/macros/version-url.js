@@ -20,9 +20,9 @@ module-type: macro
       return ''
     }
     ipath = ipath !== undefined && ipath !== null && ipath.trim() !== '' ? ipath.trim() : ''
-    const rootBuild = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler('$:/ipfs/build/ipns/cid') : null
-    const tiddler = $tw !== undefined && $tw !== null ? $tw.wiki.getTiddler(title) : null
-    if (rootBuild !== undefined && rootBuild !== null && tiddler !== undefined && tiddler !== null) {
+    const rootBuild = $tw.wiki.getTiddler('$:/ipfs/build/ipns/cid')
+    const tiddler = $tw.wiki.getTiddler(title)
+    if (rootBuild && tiddler) {
       if (ipath === 'editions') {
         return `${rootBuild.fields.text}/editions/${tiddler.fields.name}/${tiddler.fields.build}/`
       } else {

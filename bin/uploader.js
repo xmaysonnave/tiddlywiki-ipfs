@@ -23,7 +23,7 @@ const longTimeout = 4 * 60 * shortTimeout
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (name, extension, dir, tags, load) {
+module.exports = async function main (name, extension, dir, tags, load, faviconFileName) {
   // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
@@ -46,6 +46,10 @@ module.exports = async function main (name, extension, dir, tags, load) {
   }
   tags = tags !== undefined && tags !== null && tags.trim() !== '' ? tags.trim() : null
   load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
+  faviconFileName = faviconFileName !== undefined && faviconFileName !== null && faviconFileName.trim() !== '' ? faviconFileName.trim() : null
+  if (faviconFileName !== 'favicon.ico' && faviconFileName !== 'favicon.png') {
+    faviconFileName = 'favicon.ico'
+  }
   // Build
   var buildPath = `./build/output/${dir}/${normalizedName}-build.json`
   if (fs.existsSync(buildPath) === false) {
@@ -146,17 +150,9 @@ module.exports = async function main (name, extension, dir, tags, load) {
   }
   // Load favicon
   var favicon = null
-  var faviconFileName = 'favicon.ico'
   var faviconPath = `./${faviconFileName}`
   if (fs.existsSync(faviconPath)) {
     favicon = fs.readFileSync(faviconPath)
-  }
-  if (favicon === undefined || favicon == null) {
-    faviconFileName = 'favicon.png'
-    faviconPath = `./${faviconFileName}`
-    if (fs.existsSync(faviconPath)) {
-      favicon = fs.readFileSync(faviconPath)
-    }
   }
   // Load content
   var source = null
@@ -304,12 +300,10 @@ sourceExtension: ${node.sourceExtension}
 sourceFilename: ${node.sourceFilename}`
   if (sourceFileName.endsWith('.html')) {
     tid = `${tid}
-sourceUri: ipfs://${parentCid}/
-altSourceUri: ${publicGateway}/ipfs/${parentCid}`
+sourceUri: ipfs://${parentCid}/`
   } else {
     tid = `${tid}
-sourceUri: ipfs://${parentCid}/${sourceFileName}
-altSourceUri: ${publicGateway}/ipfs/${parentCid}/${sourceFileName}`
+sourceUri: ipfs://${parentCid}/${sourceFileName}`
   }
   tid = `${tid}
 

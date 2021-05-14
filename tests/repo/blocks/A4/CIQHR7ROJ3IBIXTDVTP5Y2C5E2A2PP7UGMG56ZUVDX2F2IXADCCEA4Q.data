@@ -1,0 +1,14 @@
+
+–Žtitle: $:/boot/boot.css-build
+tags: $:/ipfs/core $:/core $:/boot/css
+type: text/vnd.tiddlywiki
+build: 210512344
+name: $:/boot/boot.css
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210512344
+sourceSize: 1462
+sourceExtension: css
+sourceFilename: $_boot_boot.css
+sourceUri: ipfs://bafybeiduxtzrx7euyjw3v6dbp3qaotc2iycehc4ystbin3v4zbzawmmc5i/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.css
+altSourceUri: https://bluelight.link/ipfs/bafybeiduxtzrx7euyjw3v6dbp3qaotc2iycehc4ystbin3v4zbzawmmc5i/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.css
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>Ž

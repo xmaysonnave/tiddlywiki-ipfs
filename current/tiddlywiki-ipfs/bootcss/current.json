@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_boot_boot.css.json",
       "sourceSize": 2014,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeia4nevwleqmappkfhaomcflnsahxhtfcrslpsmr5qveorrcchnkwu/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.json",
-      "tidSize": 777,
-      "tidUri": "https://bluelight.link/ipfs/bafybeigsmq5eoxd7uvr5puprvfyohv52e4hm7jsjzgqsszeurchcd7pwye/$_boot_boot.css.json.json-build.tid"
+      "sourceUri": "https://dweb.link/ipfs/bafybeia4nevwleqmappkfhaomcflnsahxhtfcrslpsmr5qveorrcchnkwu/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.json",
+      "tidSize": 599,
+      "tidUri": "https://dweb.link/ipfs/bafybeid65x73bd4whcwaqtsfamexxkqvhzg2nrkvlpsmwgggxdfvzzxbyq/$_boot_boot.css.json.json-build.tid"
     },
     {
       "title": "bootcss",
@@ -21,12 +21,12 @@
       "sourceExtension": "css",
       "sourceFilename": "$_boot_boot.css",
       "sourceSize": 1462,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeiduxtzrx7euyjw3v6dbp3qaotc2iycehc4ystbin3v4zbzawmmc5i/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.css",
-      "tidSize": 743,
-      "tidUri": "https://bluelight.link/ipfs/bafybeiaetcy5u4fi3i7y3o4p5pnffppwsnqdjf3fguhf66h2rsu7qlfbom/$_boot_boot.css.css-build.tid"
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiduxtzrx7euyjw3v6dbp3qaotc2iycehc4ystbin3v4zbzawmmc5i/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.css",
+      "tidSize": 571,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeierprayrpvejguobchcgjfvdvoo64wtzafyi3cg57pm4xdtwjsaua/$_boot_boot.css.css-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24-pre-release+build",
   "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210512344",
-  "buildUri": "https://bluelight.link/ipfs/bafybeib7okxkvdacwyxrosarbeiavdtmyievfmxsz3nq2pj5orozrqbmju/210512344/"
+  "buildUri": "https://bluelight.link/ipfs/bafybeibqj5zuale7ckrb6dgjwlr5ew33ovsqfs3ly4wgpdwseiddor5z4e/210512344/"
 }

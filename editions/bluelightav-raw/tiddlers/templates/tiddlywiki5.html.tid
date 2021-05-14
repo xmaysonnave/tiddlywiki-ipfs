@@ -21,7 +21,7 @@ tags: $:/ipfs/editions/bluelightav
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="format-detection" content="telephone=no" />
 <meta name="copyright" content="`{{$:/core/copyright.txt}}`"/>
-<link id="faviconLink" rel="shortcut icon" href="favicon.ico"/>
+<link id="faviconLink" rel="shortcut icon" href="favicon.png"/>
 <title>`{{$:/core/wiki/title}}`</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->
 <!--~~ Raw markup ~~-->

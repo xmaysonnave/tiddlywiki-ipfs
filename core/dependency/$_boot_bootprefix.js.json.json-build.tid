@@ -8,6 +8,5 @@ sourceSize: 3967
 sourceExtension: json
 sourceFilename: $_boot_bootprefix.js.json
 sourceUri: ipfs://bafybeihfpuohfodurcq2kjcsocsxr5dxyhqs5gkqusr6scec7bbxv3f54q/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.json
-altSourceUri: https://bluelight.link/ipfs/bafybeihfpuohfodurcq2kjcsocsxr5dxyhqs5gkqusr6scec7bbxv3f54q/$_boot_bootprefix.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

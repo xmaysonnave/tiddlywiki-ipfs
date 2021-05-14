@@ -55,16 +55,16 @@ IPFS Controller
   }
 
   IpfsController.prototype.getLogger = function () {
-    var log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
+    const log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
     if (log !== null) {
       const loggers = log.getLoggers()
-      var log = loggers.eruda
-      if (log !== undefined && log !== null) {
-        return log
+      const eruda = loggers.eruda
+      if (eruda !== undefined && eruda !== null) {
+        return eruda
       }
-      log = loggers.ipfs
-      if (log !== undefined && log !== null) {
-        return log
+      const ipfs = loggers.ipfs
+      if (ipfs !== undefined && ipfs !== null) {
+        return ipfs
       }
     }
     return console
@@ -96,6 +96,10 @@ IPFS Controller
 
   IpfsController.prototype.Utf8ArrayToStr = function (array) {
     return this.ipfsBundle.Utf8ArrayToStr(array)
+  }
+
+  IpfsController.prototype.fetchUint8Array = async function (url) {
+    return await this.ipfsBundle.fetchUint8Array(url)
   }
 
   IpfsController.prototype.processContent = async function (tiddler, content, encoding, type) {
@@ -269,9 +273,9 @@ ${ipfsPath}`
     return await this.ipfsWrapper.unpinFromIpfs(ipfs, ipfsPath, recursive)
   }
 
-  IpfsController.prototype.addContentToIpfs = async function (content, ipfsPath) {
+  IpfsController.prototype.addContentToIpfs = async function (upload, wrapWithDirectory) {
     const { ipfs } = await this.getIpfsClient()
-    return await this.ipfsWrapper.addContentToIpfs(ipfs, content, ipfsPath)
+    return await this.ipfsWrapper.addContentToIpfs(ipfs, upload, wrapWithDirectory)
   }
 
   IpfsController.prototype.generateIpnsCid = async function (ipnsKey) {

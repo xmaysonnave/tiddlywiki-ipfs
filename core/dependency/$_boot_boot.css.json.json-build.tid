@@ -8,6 +8,5 @@ sourceSize: 2014
 sourceExtension: json
 sourceFilename: $_boot_boot.css.json
 sourceUri: ipfs://bafybeia4nevwleqmappkfhaomcflnsahxhtfcrslpsmr5qveorrcchnkwu/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.json
-altSourceUri: https://bluelight.link/ipfs/bafybeia4nevwleqmappkfhaomcflnsahxhtfcrslpsmr5qveorrcchnkwu/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

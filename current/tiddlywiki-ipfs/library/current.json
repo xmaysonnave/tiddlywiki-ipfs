@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_library_ipfs.js.json",
       "sourceSize": 132986,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeicnpptrffwo7s2ocht4tszvxnm2q5ewijx3fy7xuitltaasy45aom/$_library_ipfs.js.json-1.0.0+release-210512344.json",
-      "tidSize": 717,
-      "tidUri": "https://bluelight.link/ipfs/bafybeibo3rouhqr7rtot2gp3mtcpogvg52tvt5ab3laxrwywujfd5jt2ci/$_library_ipfs.js.json.json-build.tid"
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeicnpptrffwo7s2ocht4tszvxnm2q5ewijx3fy7xuitltaasy45aom/$_library_ipfs.js.json-1.0.0+release-210512344.json",
+      "tidSize": 563,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeibm2b7cqyrs42rgvfvl2md7cfefeepeo25r2mcz6cfcktnbzmqovq/$_library_ipfs.js.json.json-build.tid"
     },
     {
       "title": "library",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_ipfs.js",
       "sourceSize": 129974,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeihdjgfwyl7sh25nwyxidfnehnwpv7g7jtgdqu6crptk4rb5hf5olu/$_library_ipfs.js-1.0.0+release-210512344.js",
-      "tidSize": 679,
-      "tidUri": "https://bluelight.link/ipfs/bafybeidiw2kquaahbo55jwvzuy5x4zryi4ne6b5qjcjkaarnc6qfsphdwi/$_library_ipfs.js.js-build.tid"
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeihdjgfwyl7sh25nwyxidfnehnwpv7g7jtgdqu6crptk4rb5hf5olu/$_library_ipfs.js-1.0.0+release-210512344.js",
+      "tidSize": 532,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeidh2p5c7lw57nmmlsth6mjawc7ms5tsum3oc4vuozm7wzuu5oeokq/$_library_ipfs.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+release",
   "version": "1.0.0+release-210512344",
-  "buildUri": "https://bluelight.link/ipfs/bafybeigtupq5gdef5r4ecbnyx5snidd3464r74e7ed7tsrzpeuvxtufotq/210512344/"
+  "buildUri": "https://bluelight.link/ipfs/bafybeibn73u3bl4m75e7lzqoy24bmu7od7lhs5hfq6ubdbyunh3wa4df3u/210512344/"
 }

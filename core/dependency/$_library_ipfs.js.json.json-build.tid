@@ -8,6 +8,5 @@ sourceSize: 132986
 sourceExtension: json
 sourceFilename: $_library_ipfs.js.json
 sourceUri: ipfs://bafybeicnpptrffwo7s2ocht4tszvxnm2q5ewijx3fy7xuitltaasy45aom/$_library_ipfs.js.json-1.0.0+release-210512344.json
-altSourceUri: https://bluelight.link/ipfs/bafybeicnpptrffwo7s2ocht4tszvxnm2q5ewijx3fy7xuitltaasy45aom/$_library_ipfs.js.json-1.0.0+release-210512344.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

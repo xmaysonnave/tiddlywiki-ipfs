@@ -116,6 +116,9 @@ IPFS Action
       if (filename === '/') {
         incomingName = $tw.ipfs.filenamify(event.tiddlerTitle)
         filename = `${filename}${incomingName}`
+      } else {
+        incomingName = $tw.ipfs.filenamify(filename.substring(filename.lastIndexOf('/') + 1))
+        filename = `/${incomingName}`
       }
       if (filename.endsWith(extension) === false) {
         incomingName = `${incomingName}${extension}`
@@ -169,6 +172,9 @@ IPFS Action
         if (filename === '/') {
           incomingName = $tw.ipfs.filenamify(tiddler.fields.title)
           filename = `${filename}${incomingName}`
+        } else {
+          incomingName = $tw.ipfs.filenamify(filename.substring(filename.lastIndexOf('/') + 1))
+          filename = `/${incomingName}`
         }
         if (filename.endsWith(info.extension) === false) {
           incomingName = `${incomingName}${info.extension}`

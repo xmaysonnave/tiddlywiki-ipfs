@@ -341,34 +341,30 @@ ${parsed}`
   throw new Error('Failed to resolve an IPNS key...')
 }
 
-IpfsWrapper.prototype.addContentToIpfs = async function (ipfs, content, ipfsPath) {
+IpfsWrapper.prototype.addContentToIpfs = async function (ipfs, upload, wrapWithDirectory) {
   try {
-    if (content === undefined || content == null) {
+    if (upload === undefined || upload == null) {
       throw new Error('Undefined content...')
     }
-    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '' ? ipfsPath.trim() : '/'
-    const upload = []
-    upload.push({
-      path: `${ipfsPath}`,
-      content: content,
-    })
+    wrapWithDirectory = wrapWithDirectory || $tw.utils.getWrappedDirectory()
     const options = {
       chunker: 'rabin-262144-524288-1048576',
       cidVersion: 0,
       hashAlg: 'sha2-256',
       pin: false,
       rawLeaves: false,
-      wrapWithDirectory: true,
-    }
-    if (ipfsPath === '/') {
-      options.wrapWithDirectory = false
+      wrapWithDirectory: wrapWithDirectory,
     }
     var cid = null
     var parentCid = null
     var parentSize = null
+    var ipfsPath = upload.length === 1 ? upload[0].path : ''
+    if (ipfsPath === '/') {
+      options.wrapWithDirectory = false
+    }
     const added = await this.ipfsLibrary.addAll(ipfs, upload, options)
     for (var [cid, details] of added.entries()) {
-      if (added.size === 1 || details.path === '') {
+      if (details.path === '') {
         parentCid = cid
         parentSize = details.size
       }

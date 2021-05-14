@@ -13,15 +13,21 @@ var bootsuffix = function ($tw) {
     fs = require('fs')
     path = require('path')
     vm = require('vm')
+    if ($tw.ipfs === undefined || $tw.ipfs == null) {
+      const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
+      $tw.ipfs = new IpfsBundle()
+      $tw.ipfs.init()
+    }
   }
 
   $tw.boot.getLogger = function () {
-    if ($tw.ipfs !== undefined) {
-      return $tw.ipfs.getLogger()
-    }
-    var log = $tw.node ? globalThis.log || require('loglevel') : globalThis.log
+    const log = $tw.node ? globalThis.log || require('loglevel') : globalThis.log
     if (log !== undefined && log !== null) {
-      var loggers = log.getLoggers()
+      const loggers = log.getLoggers()
+      const eruda = loggers.eruda
+      if (eruda !== undefined && eruda !== null) {
+        return eruda
+      }
       var ipfs = loggers.ipfs
       if (ipfs === undefined || ipfs == null) {
         ipfs = log.getLogger('ipfs')
@@ -299,7 +305,17 @@ var bootsuffix = function ($tw) {
             fields.tags = tags
           }
           if (tiddler.fields._canonical_uri === undefined) {
-            fields._canonical_uri = build.altSourceUri
+            var normalizedUrl = null
+            if ($tw.ipfs !== undefined && $tw.ipfs !== null) {
+              normalizedUrl = $tw.ipfs.normalizeUrl(build.sourceUri)
+              if (normalizedUrl !== null) {
+                normalizedUrl = decodeURI(normalizedUrl)
+              }
+            }
+            if (normalizedUrl == null) {
+              normalizedUrl = build.sourceUri
+            }
+            fields._canonical_uri = normalizedUrl
             fields.build = build.build
             fields.version = build.version
           }
@@ -314,7 +330,10 @@ var bootsuffix = function ($tw) {
       }
     }
     this.load = function (tiddler, creationFields, removeFields, modificationFields, password, fallback) {
-      var uri = tiddler.fields._canonical_uri ? tiddler.fields._canonical_uri : tiddler.fields.altSourceUri
+      var uri = tiddler.fields._canonical_uri ? tiddler.fields._canonical_uri : null
+      if (uri === undefined || uri == null) {
+        return
+      }
       $tw.boot
         .loadToUtf8(uri, password)
         .then(data => {
@@ -367,7 +386,10 @@ var bootsuffix = function ($tw) {
             } else if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
               build = `${tiddler.fields.title}.zlib-build`
             }
-            this.load(tiddler, creationFields, removeFields, modificationFields, password, $tw.wiki.getTiddler(build))
+            build = $tw.wiki.getTiddler(build)
+            if (build !== undefined) {
+              this.load(tiddler, creationFields, removeFields, modificationFields, password, $tw.wiki.getTiddler(build))
+            }
           } else {
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
           }
@@ -441,7 +463,6 @@ var bootsuffix = function ($tw) {
       var tiddler = $tw.wiki.getTiddler(title)
       if (tiddler !== undefined && tiddler !== null) {
         return {
-          altSourceUri: tiddler.fields.altSourceUri,
           build: tiddler.fields.build,
           sourceUri: tiddler.fields.sourceUri,
           version: tiddler.fields.version,
@@ -1264,7 +1285,9 @@ var bootsuffix = function ($tw) {
       }
       return null
     }
-  }
+  } // End of if($tw.node)
+
+  /////////////////////////// Main startup function called once tiddlers have been decrypted
 
   $tw.boot.readPluginInfo = async function (titles) {
     var results = {

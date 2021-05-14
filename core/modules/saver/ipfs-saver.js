@@ -156,6 +156,7 @@ module-type: saver
           }
         }
       }
+      var added = null
       var found = false
       var match = null
       var re = /\r\n/g
@@ -169,8 +170,54 @@ module-type: saver
         $tw.ipfs.getLogger().info(`Normalizing CRLF to LF: '${before - text.length}'...`)
       }
       // Upload
+      text = $tw.ipfs.StringToUint8Array(text)
       $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
-      const { cid: added } = await $tw.ipfs.addContentToIpfs($tw.ipfs.StringToUint8Array(text))
+      const upload = []
+      if ($tw.utils.getWrappedDirectory() === false) {
+        upload.push({
+          path: '/',
+          content: text,
+        })
+      } else {
+        var favicon = $tw.wiki.getTiddler('$:/favicon.ico')
+        if (favicon) {
+          try {
+            var faviconIpfsCid = null
+            var faviconIpnsCid = null
+            var faviconResolvedUrl = favicon.fields._canonical_uri
+            if (faviconResolvedUrl !== undefined && faviconResolvedUrl !== null && faviconResolvedUrl.trim() !== '') {
+              try {
+                var { ipfsCid: faviconIpfsCid, ipnsCid: faviconIpnsCid, resolvedUrl: faviconResolvedUrl } = await $tw.ipfs.resolveUrl(
+                  faviconResolvedUrl,
+                  $tw.utils.getIpnsResolve(),
+                  false,
+                  false
+                )
+              } catch (error) {
+                // Ignore
+              }
+              if (faviconIpfsCid !== null || faviconIpnsCid !== null) {
+                var faviconFileName = 'favicon.ico'
+                if (favicon.fields.type === 'image/png') {
+                  faviconFileName = 'favicon.png'
+                }
+                const faviconContent = await $tw.ipfs.fetchUint8Array(faviconResolvedUrl)
+                upload.push({
+                  path: `/${faviconFileName}`,
+                  content: faviconContent,
+                })
+              }
+            }
+          } catch (error) {
+            $tw.ipfs.getLogger().error(error)
+          }
+        }
+        upload.push({
+          path: '/index.html',
+          content: text,
+        })
+      }
+      var { cid: added } = await $tw.ipfs.addContentToIpfs(upload)
       $tw.ipfs.addToPin(`/${ipfsKeyword}/${added}`)
       // Publish to IPNS
       pathname = `/${ipfsKeyword}/${added}/`

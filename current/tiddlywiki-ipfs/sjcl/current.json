@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_library_sjcl.js.json",
       "sourceSize": 26401,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeihyse5zkqmiha2ujfow7rkjqvs3xc2fyindrrb4v6ex3itndttqhu/$_library_sjcl.js.json-1.0.8+release-210512344.json",
-      "tidSize": 716,
-      "tidUri": "https://bluelight.link/ipfs/bafybeia3u5ghpvxximwsiatltfp7yfx5omquw3qgjvtwefe2vondc5cvpa/$_library_sjcl.js.json.json-build.tid"
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeihyse5zkqmiha2ujfow7rkjqvs3xc2fyindrrb4v6ex3itndttqhu/$_library_sjcl.js.json-1.0.8+release-210512344.json",
+      "tidSize": 562,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeic2intno57wlybsozdbeco3ejtififdbipqs7dseg7nm3squdrcki/$_library_sjcl.js.json.json-build.tid"
     },
     {
       "title": "sjcl",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_sjcl.js",
       "sourceSize": 25607,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeiabrptlz4n6bdxnohidtqpchn5s62m4zqb76nnszkd37pybkn3dma/$_library_sjcl.js-1.0.8+release-210512344.js",
-      "tidSize": 678,
-      "tidUri": "https://bluelight.link/ipfs/bafybeifaxqns426kznqgbcoj6tu335ndoq6du5fa6j2vdexdxxypuznsf4/$_library_sjcl.js.js-build.tid"
+      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiabrptlz4n6bdxnohidtqpchn5s62m4zqb76nnszkd37pybkn3dma/$_library_sjcl.js-1.0.8+release-210512344.js",
+      "tidSize": 531,
+      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeiflreygk6z2jodcyldf5aeyf6znpasapnwhghvqfitlvy2kveiypy/$_library_sjcl.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.8+release",
   "version": "1.0.8+release-210512344",
-  "buildUri": "https://bluelight.link/ipfs/bafybeibhfnakhnir43seut4xwysz6r72spvbl4n7cgf6drq3hno4iiifxu/210512344/"
+  "buildUri": "https://bluelight.link/ipfs/bafybeig5p7ivzi2axmowz5xda6ycb6wlbpwsmuzoyufhvj434brfakdqkm/210512344/"
 }

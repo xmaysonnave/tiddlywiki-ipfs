@@ -466,7 +466,7 @@ describe(`Wrapped and dependency`, () => {
     var unpinned = await ipfsBundle.pinRm(api, parentFile1Cid, true)
     expect(unpinned.toString()).to.equal(parentFile1CidV1)
     var { cid: fetched } = await ipfsBundle.hasPin(api, contentCid)
-    expect(fetched.toString()).to.equal('')
+    expect(fetched.toString()).to.equal('bafybeiabfiu2uipule2sro2maoufk2waokktnsbqp5gvaaod3y44ouft54')
   })
   after(async () => {
     await stop()

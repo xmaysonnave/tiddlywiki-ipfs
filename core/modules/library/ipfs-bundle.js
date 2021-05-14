@@ -29,10 +29,10 @@ var IpfsBundle = function () {
 }
 
 IpfsBundle.prototype.getLogger = function () {
-  var log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
+  const log = globalThis.log !== undefined && globalThis.log !== null ? globalThis.log : null
   if (log !== undefined && log !== null) {
     const loggers = log.getLoggers()
-    var eruda = loggers.eruda
+    const eruda = loggers.eruda
     if (eruda !== undefined && eruda !== null) {
       return eruda
     }
@@ -72,10 +72,6 @@ IpfsBundle.prototype.getBase = function (base) {
 
 IpfsBundle.prototype.getIpfsBaseUrl = function () {
   return this.ipfsUrl.getIpfsBaseUrl()
-}
-
-IpfsBundle.prototype.normalizeUrl = function (value, base) {
-  return this.ipfsUrl.normalizeUrl(value, base)
 }
 
 IpfsBundle.prototype.getDocumentUrl = function () {
@@ -172,6 +168,22 @@ IpfsBundle.prototype.loadIpfsHttpLibrary = async function () {
   if (typeof globalThis.IpfsHttpClient === 'undefined') {
     throw new Error('Unavailable IPFS HTTP Client library...')
   }
+}
+
+IpfsBundle.prototype.isJson = function (content) {
+  return this.ipfsLoader.isJson(content)
+}
+
+IpfsBundle.prototype.loadToBase64 = async function (url, password) {
+  return await this.ipfsLoader.loadToBase64(url, password)
+}
+
+IpfsBundle.prototype.loadToUtf8 = async function (url, password) {
+  return await this.ipfsLoader.loadToUtf8(url, password)
+}
+
+IpfsBundle.prototype.fetchUint8Array = async function (url) {
+  return await this.ipfsLoader.fetchUint8Array(url)
 }
 
 IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {
@@ -375,19 +387,6 @@ var Base64Binary = {
     return ua
   },
 }
-
-IpfsBundle.prototype.isJson = function (content) {
-  return this.ipfsLoader.isJson(content)
-}
-
-IpfsBundle.prototype.loadToBase64 = async function (url, password) {
-  return await this.ipfsLoader.loadToBase64(url, password)
-}
-
-IpfsBundle.prototype.loadToUtf8 = async function (url, password) {
-  return await this.ipfsLoader.loadToUtf8(url, password)
-}
-
 IpfsBundle.prototype.analyzePinType = function (type) {
   return this.ipfsLibrary.analyzePinType(type)
 }
@@ -454,6 +453,10 @@ IpfsBundle.prototype.pinAdd = async function (client, ipfsPath, options) {
 
 IpfsBundle.prototype.pinRm = async function (client, ipfsPath, options) {
   return await this.ipfsLibrary.pinRm(client, ipfsPath, options)
+}
+
+IpfsBundle.prototype.normalizeUrl = function (value, base) {
+  return this.ipfsUrl.normalizeUrl(value, base)
 }
 
 IpfsBundle.prototype.resolveIpfs = async function (client, value, timeout) {

@@ -15,7 +15,6 @@ IPFS utils
   /*eslint no-unused-vars:"off"*/
   const ipfsUtilsName = 'ipfs-utils'
   const ipfsKeyword = 'ipfs'
-  const ipnsKeyword = 'ipns'
 
   /*
    * https://tiddlywiki.com/#TiddlerFields
@@ -161,18 +160,6 @@ IPFS utils
       alertFields.count = undefined
     }
     $tw.wiki.addTiddler(new $tw.Tiddler(alertFields))
-  }
-
-  /**
-   * Reserved IPFS with TiddwlyWiki faviconLink keywords
-   */
-  exports.hasReservedFaviconLink = function (text) {
-    const ico = '<link id="faviconLink" rel="shortcut icon" href="favicon.ico"/>'
-    const png = '<link id="faviconLink" rel="shortcut icon" href="favicon.png"/>'
-    if (text.indexOf(ico) !== -1 || text.indexOf(png) !== -1) {
-      return true
-    }
-    return false
   }
 
   // Edition build
@@ -499,7 +486,13 @@ IPFS utils
     $tw.ipfs.getLogger().info(`Uploading: ${content.length}
  path: ${ipfsPath}`)
     try {
-      var { cid: addedCid, path: addedPath, uri: addedUri } = await $tw.ipfs.addContentToIpfs(content, ipfsPath)
+      const upload = [
+        {
+          path: `${ipfsPath}`,
+          content: content,
+        },
+      ]
+      var { cid: addedCid, path: addedPath, uri: addedUri } = await $tw.ipfs.addContentToIpfs(upload)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(ipfsUtilsName, error.message)

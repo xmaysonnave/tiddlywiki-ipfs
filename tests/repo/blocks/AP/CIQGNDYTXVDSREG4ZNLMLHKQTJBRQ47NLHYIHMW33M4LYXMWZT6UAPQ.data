@@ -1,0 +1,14 @@
+
+óëtitle: $:/ipfs/edition-build
+tags: $:/ipfs/editions
+type: text/vnd.tiddlywiki
+build: 210514349
+name: tiddlywiki
+version: 0.4.0-beta-tw-v5.1.24+pre-release+build-210514349
+sourceSize: 2222747
+sourceExtension: html
+sourceFilename: tiddlywiki
+sourceUri: ipfs://bafybeigqjeunbjwroqrfk3ogyognhaalderuxtcxqnjbw3kprmcyi75dla/
+altSourceUri: https://bluelight.link/ipfs/bafybeigqjeunbjwroqrfk3ogyognhaalderuxtcxqnjbw3kprmcyi75dla
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>ë

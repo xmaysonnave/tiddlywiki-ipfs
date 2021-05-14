@@ -81,6 +81,7 @@ yarn tiddlywiki-ipfs build \
 ./bin/cli-uploader.sh \
   --name=dev \
   --extension=html \
+  --faviconFileName=favicon.png \
   --dir=editions/dev \
   --tags=$:/ipfs/editions "$@" || exit 1
 

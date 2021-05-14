@@ -1,0 +1,14 @@
+
+“‹title: $:/boot/boot.js-build
+tags: $:/ipfs/core $:/core $:/boot/bundle
+type: text/vnd.tiddlywiki
+build: 210514309
+name: $:/boot/boot.js
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210514309
+sourceSize: 141333
+sourceExtension: js
+sourceFilename: $_boot_boot.js
+sourceUri: ipfs://bafybeidwmayt3mscgwy7wepkcas4xpy3gotjqlr7jxc6ytlsm73g4ozahu/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210514309.js
+altSourceUri: https://bluelight.link/ipfs/bafybeidwmayt3mscgwy7wepkcas4xpy3gotjqlr7jxc6ytlsm73g4ozahu/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210514309.js
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>‹

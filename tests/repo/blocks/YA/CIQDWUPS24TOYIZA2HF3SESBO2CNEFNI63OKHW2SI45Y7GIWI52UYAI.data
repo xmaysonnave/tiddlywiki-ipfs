@@ -1,0 +1,14 @@
+
+³«title: $:/boot/bootprefix.js-build
+tags: $:/ipfs/core $:/core $:/boot/bootprefix
+type: text/vnd.tiddlywiki
+build: 210512344
+name: $:/boot/bootprefix.js
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210512344
+sourceSize: 3384
+sourceExtension: js
+sourceFilename: $_boot_bootprefix.js
+sourceUri: ipfs://bafybeib755tzfb7jabag2pmx2ujyg4ixptpnef7zx72neh7qdwuxo6q6ie/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.js
+altSourceUri: https://bluelight.link/ipfs/bafybeib755tzfb7jabag2pmx2ujyg4ixptpnef7zx72neh7qdwuxo6q6ie/$_boot_bootprefix.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.js
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>«

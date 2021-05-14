@@ -1,0 +1,14 @@
+
+£›title: $:/plugins/ipfs.zlib.ipfs-build
+tags: $:/ipfs/core $:/ipfs/documentation
+type: text/vnd.tiddlywiki
+build: 210514348
+name: $:/plugins/ipfs.zlib.ipfs
+version: 0.4.0-beta-tw-v5.1.23+build-210514348
+sourceSize: 673
+sourceExtension: json
+sourceFilename: $_plugins_ipfs.zlib.ipfs
+sourceUri: ipfs://bafybeibknubw5usfid2f76mo2sxznn3dpgovwy7fttxnnb5qgbowzmgiju/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210514348.json
+altSourceUri: https://bluelight.link/ipfs/bafybeibknubw5usfid2f76mo2sxznn3dpgovwy7fttxnnb5qgbowzmgiju/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210514348.json
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>›

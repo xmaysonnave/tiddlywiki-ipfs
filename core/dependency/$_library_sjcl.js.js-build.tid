@@ -8,6 +8,5 @@ sourceSize: 25607
 sourceExtension: js
 sourceFilename: $_library_sjcl.js
 sourceUri: ipfs://bafybeiabrptlz4n6bdxnohidtqpchn5s62m4zqb76nnszkd37pybkn3dma/$_library_sjcl.js-1.0.8+release-210512344.js
-altSourceUri: https://bluelight.link/ipfs/bafybeiabrptlz4n6bdxnohidtqpchn5s62m4zqb76nnszkd37pybkn3dma/$_library_sjcl.js-1.0.8+release-210512344.js
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

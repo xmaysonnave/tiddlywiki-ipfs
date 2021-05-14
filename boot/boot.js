@@ -2423,11 +2423,17 @@ var _boot = (function($tw) {
     // Preload any encrypted tiddlers
     $tw.boot.decryptEncryptedTiddlers(function() {
       // Startup
-      $tw.boot.startup({callback: callback});
-      if($tw.crypto) {
-        // Make sure the crypto state tiddler is up to date
-        $tw.crypto.updateCryptoStateTiddler();
-      }
+      $tw.boot.startup({
+        callback: function () {
+          if($tw.crypto) {
+            // Make sure the crypto state tiddler is up to date
+            $tw.crypto.updateCryptoStateTiddler();
+          }
+          if (typeof callback === 'function') {
+            callback()
+          }
+        },
+      })
     });
   };
 
