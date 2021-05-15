@@ -1,0 +1,12 @@
+title: $:/ipfs/documentation-build
+tags: $:/ipfs/documentation
+type: text/vnd.tiddlywiki
+build: 210515262
+name: $:/ipfs/documentation
+version: 0.4.0-beta-tw-v5.1.23+build-210515262
+sourceSize: 78784
+sourceExtension: json
+sourceFilename: $_ipfs_documentation
+sourceUri: ipfs://bafybeibrvak3ytj5qrvkavz2wh3x6upagb6wjbejg4w6xmunsgifahvwkq/$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210515262.json
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

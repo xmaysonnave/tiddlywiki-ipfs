@@ -1,20 +1,20 @@
 {
-  "build": "210514418",
+  "build": "210515269",
   "content": [
     {
       "title": "tiddlywiki",
       "tags": "$:/ipfs/editions",
       "name": "tiddlywiki",
-      "rawHash": "09e63f6ae50eb7edf3747c04fb82b096c2beddaf93966b26a813c2f763dd5b8b",
+      "rawHash": "ed57f064825b1a13286ce972e9faf82d7032ed8c7340dae955752ec12511d384",
       "sourceExtension": "html",
       "sourceFilename": "tiddlywiki",
-      "sourceSize": 2220607,
-      "sourceUri": "https://bluelight.link/ipfs/bafybeidnrvxfgxyrgt4alfxlilkui2tvdmiojhybq2daz7q4vbzxeq2ysa/",
+      "sourceSize": 2222632,
+      "sourceUri": "https://dweb.link/ipfs/bafybeie3vqc6zcnz2gjxtswhwvft7k6lbt2obi6o4i7tbnmkadjxo2w72u/",
       "tidSize": 473,
-      "tidUri": "https://bluelight.link/ipfs/bafybeieikxbyw6m4kwutyhmnhyfyjl5j2bkp5ktuuzf422wnkipte4kl6q/$_ipfs_edition-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeigaelg6qia5rgcf7inctauww6kuw5o7xmilt2nv5egfeu6tffoid4/$_ipfs_edition-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24+pre-release+build",
-  "version": "0.4.0-beta-tw-v5.1.24+pre-release+build-210514418",
-  "buildUri": "https://bluelight.link/ipfs/bafybeiawj5r6wvtgibgq2gdkfl5oy43on52ka6r6b5pcctq6k2le4gh64q/210514418/"
+  "version": "0.4.0-beta-tw-v5.1.24+pre-release+build-210515269",
+  "buildUri": "https://dweb.link/ipfs/bafybeiebe77elr4nc64reojm6mfamt2epvxuzpcafpid2kx2e23re6vs6y/210515269/"
 }

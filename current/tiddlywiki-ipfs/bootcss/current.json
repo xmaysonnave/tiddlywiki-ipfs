@@ -21,12 +21,12 @@
       "sourceExtension": "css",
       "sourceFilename": "$_boot_boot.css",
       "sourceSize": 1462,
-      "sourceUri": "http://127.0.0.1:8080/ipfs/bafybeiduxtzrx7euyjw3v6dbp3qaotc2iycehc4ystbin3v4zbzawmmc5i/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.css",
+      "sourceUri": "https://dweb.link/ipfs/bafybeiduxtzrx7euyjw3v6dbp3qaotc2iycehc4ystbin3v4zbzawmmc5i/$_boot_boot.css-0.4.0-beta-tw-v5.1.24-pre-release+build-210512344.css",
       "tidSize": 571,
-      "tidUri": "http://127.0.0.1:8080/ipfs/bafybeierprayrpvejguobchcgjfvdvoo64wtzafyi3cg57pm4xdtwjsaua/$_boot_boot.css.css-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeierprayrpvejguobchcgjfvdvoo64wtzafyi3cg57pm4xdtwjsaua/$_boot_boot.css.css-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24-pre-release+build",
   "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210512344",
-  "buildUri": "https://bluelight.link/ipfs/bafybeibqj5zuale7ckrb6dgjwlr5ew33ovsqfs3ly4wgpdwseiddor5z4e/210512344/"
+  "buildUri": "https://dweb.link/ipfs/bafybeibqj5zuale7ckrb6dgjwlr5ew33ovsqfs3ly4wgpdwseiddor5z4e/210512344/"
 }

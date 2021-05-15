@@ -39,6 +39,23 @@ var bootsuffix = function ($tw) {
     return console
   }
 
+  $tw.utils.normalizeUrl = function (url) {
+    if (url === undefined || url == null) {
+      return null
+    }
+    var normalizedUrl = null
+    if ($tw.ipfs !== undefined && $tw.ipfs !== null) {
+      normalizedUrl = $tw.ipfs.normalizeUrl(url)
+      if (normalizedUrl !== null) {
+        normalizedUrl = decodeURI(normalizedUrl)
+      }
+    }
+    if (normalizedUrl == null) {
+      normalizedUrl = url
+    }
+    return normalizedUrl
+  }
+
   /**
    * Display an info
    */
@@ -305,9 +322,9 @@ var bootsuffix = function ($tw) {
             fields.tags = tags
           }
           if (tiddler.fields._canonical_uri === undefined) {
-            var normalizedUrl = null
+            var normalizedUrl = $tw.utils.normalizeUrl(build.sourceUri)
             if ($tw.ipfs !== undefined && $tw.ipfs !== null) {
-              normalizedUrl = $tw.ipfs.normalizeUrl(build.sourceUri)
+              normalizedUrl = $tw.ipfs.normalizeUrl(normalizedUrl)
               if (normalizedUrl !== null) {
                 normalizedUrl = decodeURI(normalizedUrl)
               }
@@ -334,8 +351,12 @@ var bootsuffix = function ($tw) {
       if (uri === undefined || uri == null) {
         return
       }
+      var normalizedUrl = $tw.utils.normalizeUrl(uri)
+      if (normalizedUrl == null) {
+        normalizedUrl = uri
+      }
       $tw.boot
-        .loadToUtf8(uri, password)
+        .loadToUtf8(normalizedUrl, password)
         .then(data => {
           if (data !== null) {
             modificationFields.text = data
@@ -1312,7 +1333,11 @@ var bootsuffix = function ($tw) {
             }
           } else {
             try {
-              var content = await $tw.boot.loadToUtf8(tiddler.fields._canonical_uri)
+              var normalizedUrl = $tw.utils.normalizeUrl(tiddler.fields._canonical_uri)
+              if (normalizedUrl == null) {
+                normalizedUrl = tiddler.fields._canonical_uri
+              }
+              var content = await $tw.boot.loadToUtf8(normalizedUrl)
               if (content !== null) {
                 content = JSON.parse(content)
                 if (content.text !== undefined && content.text !== null && content.text !== '') {

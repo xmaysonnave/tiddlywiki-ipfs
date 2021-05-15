@@ -100,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </style>
 
 <div class="tc-splash-text">
-  <img crossorigin="anonymous" src='<<normalize-url title:"$_ipfs_core_images_bluelight">>' loading="eager"/>
+  <img crossorigin="anonymous" src="<<normalize-url title:'$_ipfs_core_images_bluelight'>>" loading="eager"/>
 </div>
 
 <div class="tc-splash-text">

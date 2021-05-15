@@ -1,0 +1,12 @@
+title: $:/core.json-build
+tags: $:/core $:/ipfs/documentation
+type: text/vnd.tiddlywiki
+build: 210512343
+name: $:/core.json
+version: 0.4.0-beta-tw-v5.1.23+release+build-210512343
+sourceSize: 2064875
+sourceExtension: json
+sourceFilename: $_core.json
+sourceUri: ipfs://bafybeib7usmiyt2wbish5im5kj7aakhsxh6wniwenvd2vv7izwfpvd27by/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210512343.json
+
+<$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>
