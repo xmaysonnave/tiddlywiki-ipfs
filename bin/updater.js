@@ -161,8 +161,9 @@ module.exports = class Updater {
         continue
       }
       if (ipfsBundle.isDirectory(childRawBuildNode.value.Data)) {
-        const { cid, size, version } = await this.processProductionContent(api, childRawBuildNode, `${parentPath}/${link.Name}`)
-        if (cid !== null) {
+        const result = await this.processProductionContent(api, childRawBuildNode, `${parentPath}/${link.Name}`)
+        if (result !== null && result.cid !== undefined && result.cid !== null) {
+          const { cid, size, version } = result
           links.set(link.Name, {
             Name: link.Name,
             Tsize: size,
@@ -244,7 +245,7 @@ module.exports = class Updater {
  ${ipfsUri} ***`)
         }
       } catch (error) {
-        console.log(`*** Discard build: ${parentPath}/${current.build}
+        console.log(`*** Discard build: ${parentPath}
  ${error.message} ***`)
       }
     }
@@ -267,11 +268,7 @@ ${nodeUri} ***`)
         version: current !== null ? current.version : null,
       }
     }
-    return {
-      cid: null,
-      size: null,
-      version: null,
-    }
+    return null
   }
 
   async processProductionBuildNode (api) {
@@ -321,7 +318,7 @@ ${nodeUri} ***`)
     }
     // Process
     const node = await this.processProductionContent(api, currentRawBuild)
-    if (node !== undefined && node !== null) {
+    if (node !== null) {
       // build node
       var currentBuildCid = null
       if (build.currentBuild === undefined || build.currentBuild == null) {

@@ -20,7 +20,13 @@ IPFS Controller
   const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
   const IpfsWrapper = require('$:/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
 
+  /*eslint no-unused-vars:"off"*/
+  const ipfsKeyword = 'ipfs'
   const ipnsKeyword = 'ipns'
+
+  const shortTimeout = 4000
+  /*eslint no-unused-vars:"off"*/
+  const longTimeout = 4 * 60 * shortTimeout
 
   const name = 'ipfs-controller'
 
@@ -72,6 +78,11 @@ IPFS Controller
 
   IpfsController.prototype.handleImportFile = async function (info) {
     return await this.ipfsTiddler.handleImportFile(info)
+  }
+
+  IpfsController.prototype.objectStat = async function (cid, timeout) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsBundle.objectStat(ipfs, cid, timeout)
   }
 
   IpfsController.prototype.loadToBase64 = async function (url, password) {
@@ -271,6 +282,11 @@ ${ipfsPath}`
   IpfsController.prototype.unpinFromIpfs = async function (ipfsPath, recursive) {
     const { ipfs } = await this.getIpfsClient()
     return await this.ipfsWrapper.unpinFromIpfs(ipfs, ipfsPath, recursive)
+  }
+
+  IpfsController.prototype.dagPut = async function (links, timeout) {
+    const { ipfs } = await this.getIpfsClient()
+    return await this.ipfsWrapper.dagPut(ipfs, links, timeout)
   }
 
   IpfsController.prototype.addContentToIpfs = async function (upload, wrapWithDirectory) {

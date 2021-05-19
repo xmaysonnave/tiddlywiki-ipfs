@@ -9,7 +9,7 @@ module-type: library
 
 const fromString = require('uint8arrays').fromString
 const getIpfs = require('ipfs-provider').getIpfs
-const Mutex = require('async-mutex').Mutex
+const { Mutex } = require('async-mutex')
 const providers = require('ipfs-provider').providers
 
 const { httpClient, windowIpfs } = providers
@@ -237,21 +237,23 @@ IpfsLibrary.prototype.dagPut = async function (client, dagNode, options) {
   if (client === undefined || client.dag === undefined || client.dag.put === undefined) {
     throw new Error('Undefined IPFS dag put...')
   }
+  var timeout = options !== undefined && options !== null && options.timeout !== undefined && options.timeout !== null ? options.timeout : longTimeout
   if (options === undefined || options == null) {
     options = {
       format: 'dag-pb',
       hashAlg: 'sha2-256',
       pin: false,
+      timeout: timeout,
     }
   }
-  const result = await client.dag.put(dagNode, options)
-  if (result === undefined || result == null) {
+  const cid = await client.dag.put(dagNode, options)
+  if (cid === undefined || cid == null) {
     const err = new Error('IPFS returned an unknown result...')
     err.name = 'IPFSUnknownResult'
     throw err
   }
-  const stat = await this.objectStat(client, result, options.timeout)
-  const cidV1 = this.ipfsBundle.cidToCidV1(result)
+  const stat = await this.objectStat(client, cid, shortTimeout)
+  const cidV1 = this.ipfsBundle.cidToCidV1(cid)
   return {
     cid: `${cidV1}`,
     size: stat.CumulativeSize,
@@ -275,15 +277,10 @@ IpfsLibrary.prototype.dagResolve = async function (client, ipfsPath, timeout) {
   if (client === undefined || client.dag === undefined || client.dag.resolve === undefined) {
     throw new Error('Undefined IPFS dag resolve...')
   }
-  timeout = timeout !== undefined && timeout !== null ? timeout : null
-  var result = null
-  if (timeout == null) {
-    result = await client.dag.resolve(ipfsPath)
-  } else {
-    result = await client.dag.resolve(ipfsPath, {
-      timeout: timeout,
-    })
-  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
+  var result = await client.dag.resolve(ipfsPath, {
+    timeout: timeout,
+  })
   if (result === undefined || result == null) {
     const err = new Error('IPFS returned an unknown result...')
     err.name = 'IPFSUnknownResult'
@@ -323,15 +320,10 @@ IpfsLibrary.prototype.filesStat = async function (client, ipfsPath, timeout) {
   if (client === undefined || client.files === undefined || client.files.stat === undefined) {
     throw new Error('Undefined IPFS files stat...')
   }
-  timeout = timeout !== undefined && timeout !== null ? timeout : null
-  var result = null
-  if (timeout == null) {
-    result = await client.files.stat(ipfsPath)
-  } else {
-    result = await client.files.stat(ipfsPath, {
-      timeout: timeout,
-    })
-  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
+  var result = await client.files.stat(ipfsPath, {
+    timeout: timeout,
+  })
   if (result === undefined || result == null) {
     const err = new Error('IPFS returned an unknown result...')
     err.name = 'IPFSUnknownResult'
@@ -447,29 +439,16 @@ IpfsLibrary.prototype.get = async function (client, ipfsPath, timeout) {
   if (client === undefined || client.get === undefined) {
     throw new Error('Undefined IPFS get...')
   }
-  timeout = timeout !== undefined && timeout !== null ? timeout : null
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
   const content = []
-  if (timeout == null) {
-    for await (const file of client.get(ipfsPath)) {
-      if (file.content === undefined || file.content == null) {
-        const err = new Error('IPFS returned an unknown result...')
-        err.name = 'IPFSUnknownResult'
-        throw err
-      }
-      for await (const chunk of file.content) {
-        content.push(chunk)
-      }
+  for await (const file of client.get(ipfsPath, { timeout: timeout })) {
+    if (file.content === undefined || file.content == null) {
+      const err = new Error('IPFS returned an unknown result...')
+      err.name = 'IPFSUnknownResult'
+      throw err
     }
-  } else {
-    for await (const file of client.get(ipfsPath, { timeout: timeout })) {
-      if (file.content === undefined || file.content == null) {
-        const err = new Error('IPFS returned an unknown result...')
-        err.name = 'IPFSUnknownResult'
-        throw err
-      }
-      for await (const chunk of file.content) {
-        content.push(chunk)
-      }
+    for await (const chunk of file.content) {
+      content.push(chunk)
     }
   }
   return content
@@ -550,7 +529,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
               protocol: protocol,
               host: apiUrl.hostname,
               port: port,
-              timeout: $tw.utils.getLongTimeout(),
+              timeout: longTimeout,
             },
           }),
         ],
@@ -630,8 +609,11 @@ IpfsLibrary.prototype.hasPin = async function (client, key, type, ipfsPath) {
 }
 
 IpfsLibrary.prototype.isDirectory = function (ua) {
-  if (ua.byteLength !== dagDirectory.byteLength) return false
-  return ua.every((val, i) => val === dagDirectory[i])
+  if (typeof ua === 'object' && ua.byteLength !== undefined) {
+    if (ua.byteLength !== dagDirectory.byteLength) return false
+    return ua.every((val, i) => val === dagDirectory[i])
+  }
+  return false
 }
 
 IpfsLibrary.prototype.isIpfsDirectory = async function (client, cid, timeout) {
@@ -642,21 +624,15 @@ IpfsLibrary.prototype.isIpfsDirectory = async function (client, cid, timeout) {
   if (cid == null) {
     throw new Error('Undefined IPFS cid...')
   }
-  timeout = timeout !== undefined && timeout !== null ? timeout : null
-  var stat = null
-  if (timeout == null) {
-    stat = await this.objectStat(client, cid)
-  } else {
-    stat = await this.objectStat(client, cid, timeout)
-  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
+  var stat = await this.objectStat(client, cid, timeout)
   if (stat.DataSize === 2) {
     var ua = null
-    if (timeout == null) {
-      ua = await this.objectData(client, cid)
-    } else {
-      ua = await this.objectData(client, cid, timeout)
+    var { cid } = await this.dagResolve(client, `/ipfs/${cid}`, shortTimeout)
+    ua = await this.dagGet(client, cid)
+    if (ua !== undefined && ua !== null) {
+      return this.isDirectory(ua.value.Data)
     }
-    return this.isDirectory(ua)
   }
   return false
 }
@@ -891,37 +867,6 @@ IpfsLibrary.prototype.nameResolve = async function (client, value, options) {
   return lastPath
 }
 
-IpfsLibrary.prototype.objectData = async function (client, cid, timeout) {
-  if (client === undefined || client == null) {
-    throw new Error('Undefined IPFS provider...')
-  }
-  cid = this.ipfsBundle.getCid(cid) !== null ? cid : null
-  if (cid == null) {
-    throw new Error('Undefined IPFS identifier...')
-  }
-  if (client.enable) {
-    client = await client.enable({ commands: ['object'] })
-  }
-  if (client === undefined || client.object === undefined || client.object.data === undefined) {
-    throw new Error('Undefined IPFS object data...')
-  }
-  timeout = timeout !== undefined && timeout !== null ? timeout : null
-  var ua = null
-  if (timeout == null) {
-    ua = await client.object.data(cid)
-  } else {
-    ua = await client.object.data(cid, {
-      timeout: timeout,
-    })
-  }
-  if (ua === undefined || ua == null) {
-    const err = new Error('IPFS returned an unknown result...')
-    err.name = 'IPFSUnknownResult'
-    throw err
-  }
-  return ua
-}
-
 IpfsLibrary.prototype.objectStat = async function (client, cid, timeout) {
   if (client === undefined || client == null) {
     throw new Error('Undefined IPFS provider...')
@@ -936,15 +881,10 @@ IpfsLibrary.prototype.objectStat = async function (client, cid, timeout) {
   if (client === undefined || client.object === undefined || client.object.stat === undefined) {
     throw new Error('Undefined IPFS object stat...')
   }
-  timeout = timeout !== undefined && timeout !== null ? timeout : null
-  var stat = null
-  if (timeout == null) {
-    stat = await client.object.stat(cid)
-  } else {
-    stat = await client.object.stat(cid, {
-      timeout: timeout,
-    })
-  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
+  var stat = await client.object.stat(cid, {
+    timeout: timeout,
+  })
   if (stat === undefined || stat == null) {
     const err = new Error('IPFS returned an unknown result...')
     err.name = 'IPFSUnknownResult'

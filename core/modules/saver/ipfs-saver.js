@@ -65,6 +65,7 @@ module-type: saver
       var ipnsKey = null
       var options = options || {}
       var resolvedUrl = null
+      var resolvedCid = null
       var web3 = null
       const base = $tw.ipfs.getIpfsBaseUrl()
       const wiki = $tw.ipfs.normalizeUrl($tw.ipfs.getDocumentUrl(), base)
@@ -85,7 +86,7 @@ module-type: saver
         callback(error)
       }
       if (ipfsCid !== null && ipnsCid == null) {
-        const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+        resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
         if (resolvedCid !== null) {
           $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
         }
@@ -116,7 +117,7 @@ module-type: saver
           $tw.utils.alert(ipfsSaverName, error.message)
         }
         if (ipnsIpfsCid !== null) {
-          const resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
+          resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
           if (resolvedCid !== null) {
             $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
           }
@@ -150,7 +151,7 @@ module-type: saver
           $tw.utils.alert(ipfsSaverName, error.message)
         }
         if (ensCid !== null || ensIpnsCid !== null) {
-          const resolvedCid = await $tw.ipfs.resolveIpfsContainer(ensResolvedUrl)
+          resolvedCid = await $tw.ipfs.resolveIpfsContainer(ensResolvedUrl)
           if (resolvedCid !== null) {
             $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
           }
@@ -170,71 +171,81 @@ module-type: saver
         $tw.ipfs.getLogger().info(`Normalizing CRLF to LF: '${before - text.length}'...`)
       }
       // Upload
-      text = $tw.ipfs.StringToUint8Array(text)
-      $tw.ipfs.getLogger().info(`Uploading wiki: ${text.length} bytes`)
-      const upload = []
-      if ($tw.utils.getWrappedDirectory() === false) {
-        upload.push({
-          path: '/',
-          content: text,
-        })
-      } else {
-        var favicon = $tw.wiki.getTiddler('$:/favicon.ico')
-        if (favicon) {
-          try {
-            var faviconIpfsCid = null
-            var faviconIpnsCid = null
-            var faviconResolvedUrl = favicon.fields._canonical_uri
-            if (faviconResolvedUrl !== undefined && faviconResolvedUrl !== null && faviconResolvedUrl.trim() !== '') {
-              try {
-                var { ipfsCid: faviconIpfsCid, ipnsCid: faviconIpnsCid, resolvedUrl: faviconResolvedUrl } = await $tw.ipfs.resolveUrl(
-                  faviconResolvedUrl,
-                  $tw.utils.getIpnsResolve(),
-                  false,
-                  false
-                )
-              } catch (error) {
-                // Ignore
-              }
-              if (faviconIpfsCid !== null || faviconIpnsCid !== null) {
-                var faviconFileName = 'favicon.ico'
-                if (favicon.fields.type === 'image/png') {
-                  faviconFileName = 'favicon.png'
-                }
-                const faviconContent = await $tw.ipfs.fetchUint8Array(faviconResolvedUrl)
-                upload.push({
-                  path: `/${faviconFileName}`,
-                  content: faviconContent,
-                })
-              }
+      const links = []
+      var favicon = $tw.wiki.getTiddler('$:/favicon.ico')
+      if (favicon) {
+        try {
+          var faviconIpfsCid = null
+          var faviconIpnsCid = null
+          var faviconResolvedUrl = favicon.fields._canonical_uri
+          if (faviconResolvedUrl !== undefined && faviconResolvedUrl !== null && faviconResolvedUrl.trim() !== '') {
+            try {
+              var { ipfsCid: faviconIpfsCid, ipnsCid: faviconIpnsCid, resolvedUrl: faviconResolvedUrl } = await $tw.ipfs.resolveUrl(
+                faviconResolvedUrl,
+                $tw.utils.getIpnsResolve(),
+                false,
+                false
+              )
+            } catch (error) {
+              // Ignore
             }
-          } catch (error) {
-            $tw.ipfs.getLogger().error(error)
+            if (faviconIpfsCid !== null || faviconIpnsCid !== null) {
+              var { cid } = await $tw.ipfs.resolveIpfs(faviconResolvedUrl.toString())
+              var stat = await $tw.ipfs.objectStat(cid, $tw.ipfs.shortTimeout)
+              var cidV1 = $tw.ipfs.cidToCidV1(cid)
+              var faviconFileName = 'favicon.ico'
+              if (favicon.fields.type === 'image/png') {
+                faviconFileName = 'favicon.png'
+              }
+              links.push({
+                Name: faviconFileName,
+                Tsize: stat.CumulativeSize,
+                Hash: $tw.ipfs.getCid(cidV1),
+              })
+            }
           }
+        } catch (error) {
+          $tw.ipfs.getLogger().error(error)
         }
-        upload.push({
-          path: '/index.html',
-          content: text,
+      }
+      text = $tw.ipfs.StringToUint8Array(text)
+      $tw.ipfs.getLogger().info(`Uploading wiki content: ${text.length} bytes`)
+      var { cid: added } = await $tw.ipfs.addContentToIpfs(text, false)
+      var stat = await $tw.ipfs.objectStat(added, $tw.ipfs.shortTimeout)
+      var cidV1 = $tw.ipfs.cidToCidV1(added)
+      links.push({
+        Name: 'index.html',
+        Tsize: stat.CumulativeSize,
+        Hash: cidV1,
+      })
+      if (resolvedCid !== null) {
+        var stat = await $tw.ipfs.objectStat(resolvedCid, $tw.ipfs.shortTimeout)
+        var cidV1 = $tw.ipfs.cidToCidV1(resolvedCid)
+        links.push({
+          Name: 'previous',
+          Tsize: stat.CumulativeSize,
+          Hash: cidV1,
         })
       }
-      var { cid: added } = await $tw.ipfs.addContentToIpfs(upload)
-      $tw.ipfs.addToPin(`/${ipfsKeyword}/${added}`)
+      var dir = await $tw.ipfs.dagPut(links)
+      var cidV1 = $tw.ipfs.cidToCidV1(dir.cid)
+      $tw.ipfs.addToPin(`/${ipfsKeyword}/${cidV1}`)
       // Publish to IPNS
-      pathname = `/${ipfsKeyword}/${added}/`
+      pathname = `/${ipfsKeyword}/${cidV1}/`
       if (ipnsCid !== null && ipnsKey !== null) {
-        if (await publishToIpns(added, ipnsIpfsCid, ipnsCid, ipnsKey)) {
+        if (await publishToIpns(cidV1, ipnsIpfsCid, ipnsCid, ipnsKey)) {
           pathname = `/${ipnsKeyword}/${ipnsCid}/`
         }
       }
       if (ensIpnsCid !== null && ensIpnsKey !== null) {
-        if (await publishToIpns(added, ensCid, ensIpnsCid, ensIpnsKey)) {
+        if (await publishToIpns(cidV1, ensCid, ensIpnsCid, ensIpnsKey)) {
           pathname = `/${ipnsKeyword}/${ensIpnsCid}/`
         }
       }
       // Publish to ENS
       if ($tw.utils.getIpfsProtocol() === ensKeyword && ensIpnsCid == null) {
         try {
-          await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${added}`, web3, account)
+          await $tw.ipfs.setContentHash(ensDomain, `/${ipfsKeyword}/${cidV1}`, web3, account)
           $tw.utils.alert(ipfsSaverName, `Published to ENS: ${ensDomain}`)
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)

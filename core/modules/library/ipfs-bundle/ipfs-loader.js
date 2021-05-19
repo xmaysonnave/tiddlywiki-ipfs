@@ -7,7 +7,7 @@ module-type: library
 \*/
 'use strict'
 
-const Mutex = require('async-mutex').Mutex
+const { Mutex } = require('async-mutex')
 
 var IpfsLoader = function (ipfsBundle) {
   this.ipfsBundle = ipfsBundle

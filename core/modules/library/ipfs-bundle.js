@@ -439,10 +439,6 @@ IpfsBundle.prototype.nameResolve = async function (client, value, options) {
   return await this.ipfsLibrary.nameResolve(client, value, options)
 }
 
-IpfsBundle.prototype.objectData = async function (client, cid, timeout) {
-  return await this.ipfsLibrary.objectData(client, cid, timeout)
-}
-
 IpfsBundle.prototype.objectStat = async function (client, cid, timeout) {
   return await this.ipfsLibrary.objectStat(client, cid, timeout)
 }

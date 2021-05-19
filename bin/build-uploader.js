@@ -76,7 +76,7 @@ async function dagPut (api, links, timeout) {
     format: 'dag-pb',
     hashAlg: 'sha2-256',
     pin: false,
-    timeout: longTimeout,
+    timeout: timeout,
   }
   return await ipfsBundle.dagPut(api, dagNode, options)
 }

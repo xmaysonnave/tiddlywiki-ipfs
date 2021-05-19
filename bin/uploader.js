@@ -123,11 +123,13 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
       }
     }
     current.build = build.build
+    current.buildUri = build.buildUri
     current.rawSemver = build.rawSemver
     current.version = build.version
   } else {
     current = {
       build: build.build,
+      buildUri: null,
       content: [],
       rawSemver: build.rawSemver,
       version: build.version,

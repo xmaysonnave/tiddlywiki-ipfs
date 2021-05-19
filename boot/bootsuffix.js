@@ -1315,7 +1315,7 @@ var bootsuffix = function ($tw) {
       modifiedPlugins: [],
       deletedPlugins: [],
     }
-    var deletePlugin = function (title, results) {
+    var deletePlugin = function (title) {
       $tw.wiki.setPluginInfo(title)
       results.deletedPlugins.push(title)
     }
@@ -1329,7 +1329,7 @@ var bootsuffix = function ($tw) {
               $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(tiddler.fields.text))
               results.modifiedPlugins.push(tiddler.fields.title)
             } else {
-              deletePlugin(tiddler.fields.title, results)
+              deletePlugin(tiddler.fields.title)
             }
           } else {
             try {
@@ -1344,10 +1344,10 @@ var bootsuffix = function ($tw) {
                   $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content.text))
                   results.modifiedPlugins.push(tiddler.fields.title)
                 } else {
-                  deletePlugin(tiddler.fields.title, results)
+                  deletePlugin(tiddler.fields.title)
                 }
               } else {
-                deletePlugin(tiddler.fields.title, results)
+                deletePlugin(tiddler.fields.title)
               }
             } catch (error) {
               if ($tw.utils.alert !== undefined) {
@@ -1356,12 +1356,12 @@ var bootsuffix = function ($tw) {
               } else {
                 $tw.utils.error(error.message)
               }
+              deletePlugin(tiddler.fields.title, results)
             }
           }
         }
       } else if ($tw.wiki.getPluginInfo(tiddler.fields.title) !== undefined) {
-        $tw.wiki.setPluginInfo(tiddler.fields.title)
-        results.deletedPlugins.push(tiddler.fields.title)
+        deletePlugin(tiddler.fields.title, results)
       }
     }
     return results

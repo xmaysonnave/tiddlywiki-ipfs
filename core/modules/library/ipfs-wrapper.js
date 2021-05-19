@@ -91,7 +91,8 @@ IpfsWrapper.prototype.getIpnsIdentifier = async function (ipfs, identifier, reso
   }
   var found = false
   var keys = null
-  if (resolveIpnsKey || ipnsCid == null) {
+  var resolve = resolveIpnsKey || ipnsCid == null
+  if (resolve) {
     try {
       keys = await this.getIpnsKeys(ipfs)
     } catch (error) {
@@ -159,10 +160,12 @@ ${normalizedUrl}`
     )
   } else {
     normalizedUrl = this.ipfsUrl.normalizeUrl(path, base)
-    this.getLogger().info(
-      `Unable to Fetch IPNS identifiers, default to
+    if (resolve) {
+      this.getLogger().info(
+        `Unable to Fetch IPNS identifiers, default to
 ${normalizedUrl}`
-    )
+      )
+    }
   }
   return {
     ipnsCid: ipnsCid !== null ? ipnsCid.toString() : null,
@@ -346,7 +349,7 @@ IpfsWrapper.prototype.addContentToIpfs = async function (ipfs, upload, wrapWithD
     if (upload === undefined || upload == null) {
       throw new Error('Undefined content...')
     }
-    wrapWithDirectory = wrapWithDirectory || $tw.utils.getWrappedDirectory()
+    wrapWithDirectory = wrapWithDirectory !== undefined && wrapWithDirectory !== null ? wrapWithDirectory : $tw.utils.getWrappedDirectory()
     const options = {
       chunker: 'rabin-262144-524288-1048576',
       cidVersion: 0,
@@ -364,9 +367,16 @@ IpfsWrapper.prototype.addContentToIpfs = async function (ipfs, upload, wrapWithD
     }
     const added = await this.ipfsLibrary.addAll(ipfs, upload, options)
     for (var [cid, details] of added.entries()) {
-      if (details.path === '') {
+      if (added.size !== 1) {
+        if (details.path === '') {
+          parentCid = cid
+          parentSize = details.size
+          break
+        }
+      } else {
         parentCid = cid
         parentSize = details.size
+        break
       }
     }
     const url = this.ipfsUrl.normalizeUrl(`/${ipfsKeyword}/${parentCid}${ipfsPath}`)
@@ -455,6 +465,24 @@ ${url}`
     this.getLogger().error(error)
   }
   throw new Error('Failed to unpin...')
+}
+
+IpfsWrapper.prototype.dagPut = async function (api, links, timeout) {
+  const dagNode = {
+    Data: this.ipfsBundle.StringToUint8Array('\u0008\u0001'),
+    Links: [],
+  }
+  if (links !== undefined && links !== null) {
+    dagNode.Links = links
+  }
+  timeout = timeout !== undefined && timeout !== null ? timeout : this.ipfsLibrary.longTimeout
+  const options = {
+    format: 'dag-pb',
+    hashAlg: 'sha2-256',
+    pin: false,
+    timeout: timeout,
+  }
+  return await this.ipfsBundle.dagPut(api, dagNode, options)
 }
 
 exports.IpfsWrapper = IpfsWrapper
