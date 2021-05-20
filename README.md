@@ -271,20 +271,25 @@ nvm -v
 This repository contains a [.nvmrc](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/.nvmrc) who describes the node version to use.
 
 ```text
-v15
+v16
 ```
 
 Install the recommended `node` version.
 
 ```text
-nvm install v15
+nvm install v16
 ```
 
 Check:
 
 ```text
 node -v
-v15.7.0
+v16.2.0
+```
+
+```text
+npm -v
+v7.13.0
 ```
 
 Install `yarn`.
@@ -321,7 +326,7 @@ yarn -v
 
 <a name="developer-repository-install"/>
 
-Clone this repository in a local folder:
+Clone this repository in a local folder, the following command pulls the main branch:
 
 ```text
 git clone https://github.com/xmaysonnave/tiddlywiki-ipfs --depth 1
