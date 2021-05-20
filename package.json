@@ -103,7 +103,7 @@
     "wrtc": "^0.4.7",
     "yargs": "^17.0.1"
   },
-  "engines": { "node": ">=15.5.0", "yarn": ">=1.22.5" },
+  "engines": { "node": ">=16.2.0", "yarn": ">=1.22.5" },
   "os": [ "!darwin", "linux", "!win32" ],
   "snyk": true
 }
