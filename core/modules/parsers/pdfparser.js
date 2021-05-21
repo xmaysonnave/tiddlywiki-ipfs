@@ -19,7 +19,7 @@ The PDF parser embeds a PDF viewer
     var value = 'data:application/pdf;base64,'
     var element = {
       type: 'element',
-      tag: 'object',
+      tag: 'embed',
       attributes: {},
     }
     if ($tw.browser && options.tiddler !== undefined && options.tiddler !== null) {
@@ -36,10 +36,11 @@ The PDF parser embeds a PDF viewer
               $tw.ipfs
                 .loadToBase64(resolvedUrl, password)
                 .then(data => {
-                  if (data) {
+                  if (data !== undefined && data !== null) {
+                    var { content } = data
                     element.attributes.src = {
                       type: 'string',
-                      value: `${value}${data}`,
+                      value: `${value}${content}`,
                     }
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)

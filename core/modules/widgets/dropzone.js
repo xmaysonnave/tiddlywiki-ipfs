@@ -11,7 +11,7 @@ Dropzone widget
   /*global $tw: false */
   'use strict'
 
-  var IPFS_IMPORT_TITLE = '$:/IpfsImport'
+  var IMPORT_TITLE = '$:/Import'
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
@@ -125,34 +125,26 @@ Dropzone widget
     return filtered
   }
 
-  DropZoneWidget.prototype.readFileCallback = function (event, tiddlerFieldsArray) {
+  DropZoneWidget.prototype.readFileCallback = function (event, content) {
     if (this.contentTypesFilter) {
-      tiddlerFieldsArray = this.filterByContentTypes(tiddlerFieldsArray)
+      content = this.filterByContentTypes(content)
     }
-    if (tiddlerFieldsArray.merged) {
-      this.dispatchEvent({
-        type: 'tm-ipfs-import-tiddlers',
-        param: tiddlerFieldsArray,
-        autoOpenOnImport: this.autoOpenOnImport,
-        importTitle: this.importTitle,
-      })
-      if (this.actions) {
-        this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
-      }
-    } else if (tiddlerFieldsArray.length) {
-      this.dispatchEvent({
-        type: 'tm-import-tiddlers',
-        param: JSON.stringify(tiddlerFieldsArray),
-        autoOpenOnImport: this.autoOpenOnImport,
-        importTitle: this.importTitle,
-      })
-      if (this.actions) {
-        this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
+    if (content !== undefined && content !== null) {
+      if (content.length || content.merged) {
+        this.dispatchEvent({
+          type: 'tm-import-tiddlers',
+          param: content,
+          autoOpenOnImport: this.autoOpenOnImport,
+          importTitle: this.importTitle,
+        })
+        if (this.actions) {
+          this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
+        }
       }
     }
   }
 
-  DropZoneWidget.prototype.handleDropEvent = async function (event) {
+  DropZoneWidget.prototype.handleDropEvent = function (event) {
     var self = this
     var readFileCallback = function (tiddlerFieldsArray) {
       self.readFileCallback(event, tiddlerFieldsArray)
@@ -172,7 +164,7 @@ Dropzone widget
     // Import any files in the drop
     var numFiles = 0
     if (dataTransfer.files) {
-      numFiles = await this.wiki.readFiles(dataTransfer.files, {
+      numFiles = this.wiki.readFiles(dataTransfer.files, {
         callback: readFileCallback,
         deserializer: this.dropzoneDeserializer,
       })
@@ -259,7 +251,7 @@ Dropzone widget
     this.dropzoneDeserializer = this.getAttribute('deserializer')
     this.dropzoneEnable = (this.getAttribute('enable') || 'yes') === 'yes'
     this.autoOpenOnImport = this.getAttribute('autoOpenOnImport')
-    this.importTitle = this.getAttribute('importTitle', IPFS_IMPORT_TITLE)
+    this.importTitle = this.getAttribute('importTitle', IMPORT_TITLE)
     this.actions = this.getAttribute('actions')
     this.contentTypesFilter = this.getAttribute('contentTypesFilter')
     // Make child widgets

@@ -105,7 +105,7 @@ wikimethod
   /**
    * Read an array of browser File objects, invoking callback(tiddlerFieldsArray) once they're all read
    */
-  exports.readFiles = async function (files, options) {
+  exports.readFiles = function (files, options) {
     var callback
     if (typeof options === 'function') {
       callback = options
@@ -126,7 +126,7 @@ wikimethod
       }
     }
     for (var f = 0; f < files.length; f++) {
-      await this.readFile(files[f], $tw.utils.extend({}, options, { callback: readFileCallback }))
+      this.readFile(files[f], $tw.utils.extend({}, options, { callback: readFileCallback }))
     }
     return files.length
   }
@@ -134,7 +134,7 @@ wikimethod
   /**
    * Read a browser File object, invoking callback(tiddlerFieldsArray) with an array of tiddler fields objects
    */
-  exports.readFile = async function (file, options) {
+  exports.readFile = function (file, options) {
     var callback
     if (typeof options === 'function') {
       callback = options
@@ -161,17 +161,14 @@ wikimethod
       console.log("Importing file '" + file.name + "', type: '" + type + "', isBinary: " + isBinary)
     }
     // Give the hook a chance to process the drag
-    const info = {
-      file: file,
-      type: type,
-      isBinary: isBinary,
-      callback: callback,
-    }
-    var invoked = false
-    if ($tw.ipfs && $tw.ipfs.handleImportFile) {
-      invoked = await $tw.ipfs.handleImportFile(info)
-    }
-    if ((invoked !== true && $tw.hooks.invokeHook('th-importing-file')) !== true) {
+    if (
+      $tw.hooks.invokeHook('th-importing-file', {
+        file: file,
+        type: type,
+        isBinary: isBinary,
+        callback: callback,
+      }) !== true
+    ) {
       this.readFileContent(file, type, isBinary, options.deserializer, callback)
     }
   }

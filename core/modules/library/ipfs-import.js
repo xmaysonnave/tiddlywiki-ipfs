@@ -13,7 +13,7 @@ IPFS Import
   'use strict'
 
   const name = 'ipfs-import'
-  const IPFS_IMPORT_TITLE = '$:/IpfsImport'
+  const IMPORT_TITLE = '$:/Import'
 
   const tiddlyWikiType = 'text/vnd.tiddlywiki'
 
@@ -96,7 +96,7 @@ IPFS Import
         resolvedUrl: null,
       }
     }
-    var { ipfsCid, ipnsCid, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(value, true, false, true, base)
+    var { ipfsCid, ipnsCid, normalizedUrl, resolvedUrl } = await $tw.ipfs.resolveUrl(value, $tw.utils.getIpnsResolve(), false, $tw.utils.getEthLinkResolve(), base)
     if (normalizedUrl == null && resolvedUrl == null) {
       throw new Error(`Failed to resolve value: ${value}`)
     }
@@ -142,15 +142,46 @@ IPFS Import
     this.resolved = new Map()
     this.notResolved = []
     this.merged = new Map()
+    var importUriType = null
     try {
       // Load and prepare imported tiddlers to be processed
-      const host = $tw.ipfs.getUrl(`#${encodeURI(IPFS_IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
+      const host = $tw.ipfs.getUrl(`#${encodeURI(IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
       if (canonicalUri !== null || importUri !== null) {
         if (importUri !== null) {
-          await this.load(host, IPFS_IMPORT_TITLE, '_import_uri', importUri, password, true)
+          const load = await this.load(host, IMPORT_TITLE, '_import_uri', importUri, password, true)
+          if (load == null) {
+            return null
+          }
+          var { loaded, deleted, type: importUriType } = load
+          if (loaded === 0 && deleted === 0) {
+            return {
+              merged: this.merged,
+              deleted: new Map(),
+              loaded: this.loaded,
+              isEmpty: this.isEmpty,
+              notLoaded: this.notLoaded,
+              notResolved: this.notResolved,
+              importUriType: importUriType,
+            }
+          }
         }
         if (canonicalUri !== null) {
-          await this.load(host, IPFS_IMPORT_TITLE, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
+          const load = await this.load(host, IMPORT_TITLE, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
+          if (load == null) {
+            return null
+          }
+          var { loaded, deleted } = load
+          if (loaded === 0 && deleted === 0) {
+            return {
+              merged: this.merged,
+              deleted: new Map(),
+              loaded: this.loaded,
+              isEmpty: this.isEmpty,
+              notLoaded: this.notLoaded,
+              notResolved: this.notResolved,
+              importUriType: importUriType,
+            }
+          }
         }
         // Process
         this.processImported()
@@ -158,6 +189,15 @@ IPFS Import
         var rootUri = importUri !== null ? importUri : canonicalUri
         var { key: rootUriKey } = await this.getKey(rootUri)
         this.importTiddlers(rootUri)
+        // Load plugin
+        const tiddlers = Array.from(this.merged.values())
+        for (var i = 0; i < tiddlers.length; i++) {
+          if (tiddlers[i]['plugin-type'] !== undefined && tiddlers[i]._canonical_uri !== undefined && tiddlers[i]._canonical_uri !== null) {
+            const { resolvedUrl } = await $tw.ipfs.resolveUrl(tiddlers[i]._canonical_uri, false, false, false)
+            const { content } = await $tw.ipfs.loadToUtf8(resolvedUrl, password)
+            tiddlers[i].text = content
+          }
+        }
         // Deleted
         var deleted = new Map()
         var titles = $tw.wiki.getTiddlers({ includeSystem: true })
@@ -197,6 +237,7 @@ IPFS Import
           isEmpty: this.isEmpty,
           notLoaded: this.notLoaded,
           notResolved: this.notResolved,
+          importUriType: importUriType,
         }
       }
     } catch (error) {
@@ -215,13 +256,16 @@ IPFS Import
       this.resolved.set(url, key)
     }
     if (load && key !== null && resolvedUrl !== null && this.notLoaded.indexOf(key) === -1 && this.loaded.get(key) === undefined) {
-      const { loaded: loadedAdded, removed: loadedRemoved } = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
-      loaded = loadedAdded
-      removed = loadedRemoved
+      const load = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
+      if (load == null) {
+        return null
+      }
+      var { loaded, removed, type } = load
     }
     return {
       loaded: loaded,
       removed: removed,
+      type: type,
     }
   }
 
@@ -239,14 +283,32 @@ IPFS Import
     var loaded = 0
     var removed = 0
     var content = null
+    var type = null
     var imported = new Map()
     var tiddlers = null
     const creationFields = $tw.wiki.getCreationFields()
     try {
-      // Load
-      content = await $tw.ipfs.loadToUtf8(resolvedKey, password)
+      var { content, type } = await $tw.ipfs.loadToUtf8(resolvedKey, password)
+      if (content === undefined || content == null || content === '') {
+        this.notLoaded.push(key)
+        return {
+          loaded: loaded,
+          removed: removed,
+          type: type,
+        }
+      }
+    } catch (error) {
+      this.notLoaded.push(key)
+      $tw.ipfs.getLogger().error(error)
+      return {
+        loaded: loaded,
+        removed: removed,
+        type: type,
+      }
+    }
+    try {
       // HTML
-      if (this.isHTML(content)) {
+      if (type === 'text/html' || this.isHTML(content)) {
         content = $tw.wiki.deserializeTiddlers('text/html', content, creationFields)
         if ($tw.utils.isArray(content) && content.length === 1 && content[0].text && $tw.ipfs.isJson(content[0].text)) {
           tiddlers = Object.values(JSON.parse(content[0].text))
@@ -254,7 +316,7 @@ IPFS Import
           tiddlers = content
         }
       } else {
-        if ($tw.ipfs.isJson(content)) {
+        if (type === 'application/json' || $tw.ipfs.isJson(content)) {
           tiddlers = $tw.wiki.deserializeTiddlers('application/json', content, creationFields)
         } else {
           tiddlers = $tw.wiki.deserializeTiddlers('application/x-tiddler', content, creationFields)
@@ -324,14 +386,20 @@ from "${parentField}", "${parentTitle}"
             password = tiddler._password
             password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
             if (importUri !== null) {
-              const { loaded: loadedAdded, removed: loadedRemoved } = await this.load(resolvedKey, title, '_import_uri', importUri, password, true)
-              loaded += loadedAdded
-              removed += loadedRemoved
+              const load = await this.load(resolvedKey, title, '_import_uri', importUri, password, true)
+              if (load !== null) {
+                const { loaded: loadedAdded, removed: loadedRemoved } = load
+                loaded += loadedAdded
+                removed += loadedRemoved
+              }
             }
             if (canonicalUri !== null) {
-              const { loaded: loadedAdded, removed: loadedRemoved } = await this.load(resolvedKey, title, '_canonical_uri', canonicalUri, password, tiddlyWikiType === tiddler.type)
-              loaded += loadedAdded
-              removed += loadedRemoved
+              const load = await this.load(resolvedKey, title, '_canonical_uri', canonicalUri, password, tiddlyWikiType === tiddler.type)
+              if (load !== null) {
+                const { loaded: loadedAdded, removed: loadedRemoved } = load
+                loaded += loadedAdded
+                removed += loadedRemoved
+              }
             }
           }
           imported.set(title, tiddler)
@@ -351,7 +419,6 @@ from "${parentField}", "${parentTitle}"
         $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a> from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
       }
     } catch (error) {
-      this.notLoaded.push(key)
       const msg = 'Failed to Import:'
       const field = 'Resource'
       $tw.ipfs.getLogger().info(
@@ -366,6 +433,7 @@ from "${parentField}", "${parentTitle}"
     return {
       loaded: loaded,
       removed: removed,
+      type: type,
     }
   }
 

@@ -284,7 +284,7 @@ IPFS Tiddler
               const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
               if (navigator !== undefined && navigator !== null) {
                 navigator.dispatchEvent({
-                  type: 'tm-ipfs-import-tiddlers',
+                  type: 'tm-import-tiddlers',
                   param: data,
                 })
               }
@@ -324,7 +324,7 @@ IPFS Tiddler
       const url = URL.createObjectURL(info.file)
       try {
         const data = await ipfsImport.import(null, url, dummy)
-        if (data === undefined || data == null) {
+        if (data === undefined || data == null || data.loaded.size === 0) {
           return false
         }
         if (data.merged.size > 0 || data.deleted.size > 0) {
@@ -388,17 +388,17 @@ IPFS Tiddler
             if (info.encoding === 'base64') {
               addTags = ['$:/isAttachment', '$:/isEmbedded']
               msg = `${msg} attachment '${type}':`
-              data = await $tw.ipfs.loadToBase64(oldResolvedUrl, password)
+              var { content: data } = await $tw.ipfs.loadToBase64(oldResolvedUrl, password)
             } else if (type === 'image/svg+xml') {
               addTags = ['$:/isAttachment', '$:/isEmbedded']
               msg = `${msg} attachment '${type}':`
-              data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
+              var { content: data } = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
             } else if (oldTiddler.fields.text && oldTiddler.fields.text !== '') {
               msg = `${msg} '${type}':`
               data = oldTiddler.fields.text
             } else {
               msg = `${msg} '${type}':`
-              data = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
+              var { content: data } = await $tw.ipfs.loadToUtf8(oldResolvedUrl, password)
             }
             if (tiddler.fields.type === 'application/json' && tiddler.hasField('plugin-type')) {
               const innerData = JSON.parse(data)

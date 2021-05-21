@@ -47,7 +47,7 @@ Attributes are stored as hashmaps of the following objects:
                 const navigator = $tw.utils.locateNavigatorWidget($tw.pageWidgetNode)
                 if (navigator) {
                   navigator.dispatchEvent({
-                    type: 'tm-ipfs-import-tiddlers',
+                    type: 'tm-import-tiddlers',
                     param: data,
                   })
                 }

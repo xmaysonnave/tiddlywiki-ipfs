@@ -1,5 +1,5 @@
-title: $:/core/ui/IpfsExportPreviews/TextRaw
-tags: $:/tags/IpfsExportPreview $:/ipfs/core
+title: $:/core/ui/ExportPreviews/TextRaw
+tags: $:/tags/ExportPreview $:/ipfs/core
 caption: {{$:/language/Import/Listing/Preview/TextRaw}}
 
 <pre><code><$view tiddler=<<currentTiddler>> subtiddler=<<payloadTiddler>> /></code></pre>

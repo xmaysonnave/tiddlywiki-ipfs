@@ -182,8 +182,12 @@ IpfsBundle.prototype.loadToUtf8 = async function (url, password) {
   return await this.ipfsLoader.loadToUtf8(url, password)
 }
 
-IpfsBundle.prototype.fetchUint8Array = async function (url) {
-  return await this.ipfsLoader.fetchUint8Array(url)
+IpfsBundle.prototype.fetchOptions = async function (url, timeout) {
+  return await this.ipfsLoader.fetchOptions(url, timeout)
+}
+
+IpfsBundle.prototype.fetchUint8Array = async function (url, timeout) {
+  return await this.ipfsLoader.fetchUint8Array(url, timeout)
 }
 
 IpfsBundle.prototype.getPublicEncryptionKey = async function (provider) {

@@ -1,5 +1,5 @@
 {
-  "build": "210515441",
+  "build": "210521314",
   "content": [
     {
       "title": "library",
@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_library_ipfs.js.json",
       "sourceSize": 133349,
-      "sourceUri": "https://dweb.link/ipfs/bafybeif3kl5mhjzla325ba4wleyqaqpfrliykdolthq6blxcnvnop3wqm4/$_library_ipfs.js.json-1.0.0+release-210515441.json",
+      "sourceUri": "https://dweb.link/ipfs/bafybeih7lkpz2hurq6nsl74ukgzflyi35ulrvycktbc3gll5gt2mw7eswm/$_library_ipfs.js.json-1.0.0+release-210521314.json",
       "tidSize": 563,
-      "tidUri": "https://dweb.link/ipfs/bafybeiaabem3tj4c6lz633eutc6ioglejzp6egaozpe53gjuomamhmn6ii/$_library_ipfs.js.json.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeid7d22apc56kg7hmjcvjl4bchzyr3qzjfxoby224rkz7omez5hiiq/$_library_ipfs.js.json.json-build.tid"
     },
     {
       "title": "library",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_ipfs.js",
       "sourceSize": 130329,
-      "sourceUri": "https://dweb.link/ipfs/bafybeieguzwhg5ej6ivuqmikwspqokkw4zkla4rpm24hdranl75laxk4su/$_library_ipfs.js-1.0.0+release-210515441.js",
+      "sourceUri": "https://dweb.link/ipfs/bafybeibwfyrepc5jeqnblrl2nho7su3wy3yc5ko4unxvgnbbjiuwm5m7ua/$_library_ipfs.js-1.0.0+release-210521314.js",
       "tidSize": 532,
-      "tidUri": "https://dweb.link/ipfs/bafybeidn4hzarwpnuksaoehpgpqx2ny7ymo5y2qffnvzdmdyyvpt6kuvcu/$_library_ipfs.js.js-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeif6huxig2u5blhrjhlcv7jcyrd77gyqdz545mkalqeatxhp3eltlu/$_library_ipfs.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+release",
-  "version": "1.0.0+release-210515441",
-  "buildUri": "https://dweb.link/ipfs/bafybeifdnmq52pd6s4z3lcvfuuuulhltljp35wl32qobempue5yercjczi/210515441/"
+  "version": "1.0.0+release-210521314",
+  "buildUri": "https://dweb.link/ipfs/bafybeidtkjgs7b4cqcgqiumbuv3y4upaz3zryfjvvcq4amj33n3upitkj4/210521314/"
 }

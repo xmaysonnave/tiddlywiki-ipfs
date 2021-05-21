@@ -42,7 +42,6 @@ Startup initialisation
       }
       ipfs.info('Loglevel is set up...')
     }
-    // Missing Media Types
     $tw.utils.registerFileType('application/gzip', 'base64', '.gz')
     $tw.utils.registerFileType('application/x-tiddler-dictionary', 'utf8', '.dict')
     $tw.utils.registerFileType('application/zlib', 'base64', '.zlib')

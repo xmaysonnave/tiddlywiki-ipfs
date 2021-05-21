@@ -65,10 +65,11 @@ The binary parser parses a binary tiddler into a warning message and download li
               $tw.ipfs
                 .loadToBase64(resolvedUrl, password)
                 .then(data => {
-                  if (data) {
+                  if (data !== undefined && data !== null) {
+                    var { content } = data
                     link.attributes.href = {
                       type: 'string',
-                      value: `${value}${data}`,
+                      value: `${value}${content}`,
                     }
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)

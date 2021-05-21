@@ -21,33 +21,42 @@ Utility functions related to crypto.
     if (encryptedStoreAreaStart !== -1) {
       const encryptedStoreAreaEnd = text.indexOf('</pre>', encryptedStoreAreaStart)
       if (encryptedStoreAreaEnd !== -1) {
-        return $tw.utils.htmlDecode(text.substring(encryptedStoreAreaStart + encryptedStoreAreaStartMarker.length, encryptedStoreAreaEnd - 1))
+        const extracted = text.substring(encryptedStoreAreaStart + encryptedStoreAreaStartMarker.length, encryptedStoreAreaEnd - 1)
+        const decoded = $tw.utils.htmlDecode(extracted)
+        return decoded
       }
     }
     return null
   }
 
-  exports.decrypt = function (encrypted, callback) {
-    if (encrypted) {
-      if (encrypted.match(/^{"iv":/)) {
-        $tw.utils.decryptStoreAreaInteractive(encrypted, function (decrypted) {
+  exports.decrypt = function (text, callback) {
+    var parse = function (content) {
+      var json = null
+      try {
+        json = JSON.parse(content)
+      } catch (error) {
+        // ignore
+      }
+      return json
+    }
+    if (text !== undefined && text !== null) {
+      const json = parse(text)
+      if (json !== null && json.iv !== undefined) {
+        $tw.utils.decryptStoreAreaInteractive(text, function (decrypted) {
           const tiddlers = $tw.utils.loadTiddlers(decrypted)
           if (tiddlers) {
             callback(tiddlers)
           }
         })
         return true
-      } else if (encrypted.match(/^{"encrypted":/)) {
-        const json = JSON.parse(encrypted)
-        if (json) {
-          $tw.utils.decryptFromMetamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted) {
-            const tiddlers = $tw.utils.loadTiddlers(decrypted)
-            if (tiddlers) {
-              callback(tiddlers)
-            }
-          })
-          return true
-        }
+      } else if (json !== null && json.encrypted !== undefined) {
+        $tw.utils.decryptFromMetamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted) {
+          const tiddlers = $tw.utils.loadTiddlers(decrypted)
+          if (tiddlers) {
+            callback(tiddlers)
+          }
+        })
+        return true
       }
     }
     return false

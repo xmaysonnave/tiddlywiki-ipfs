@@ -2592,10 +2592,6 @@ var bootsuffix = function ($tw) {
     timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
     const optionsController = new AbortController()
     const optionsId = setTimeout(() => optionsController.abort(), timeout)
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
-    var fetchHeaders = {
-      'Accept-Encoding': 'identity;q=0", *;q=0',
-    }
     var fetch = $tw.node ? globalThis.fetch || require('node-fetch') : globalThis.fetch
     try {
       var params = {
@@ -2612,31 +2608,36 @@ var bootsuffix = function ($tw) {
       } else {
         $tw.boot.getLogger().error(`*** Options error: ${error.message} ***`)
       }
+    } finally {
+      globalThis.clearTimeout(optionsId)
     }
-    globalThis.clearTimeout(optionsId)
+    const responseController = new AbortController()
+    const responseId = setTimeout(() => responseController.abort(), timeout)
     try {
-      const responseController = new AbortController()
-      const responseId = setTimeout(() => responseController.abort(), timeout)
-      // https://fetch.spec.whatwg.org/#cors-safelisted-method
-      // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
-      var params = {
-        headers: fetchHeaders,
-        method: 'get',
-        mode: 'cors',
-        signal: responseController.signal,
-      }
       var newUrl = null
-      if (options && options.ok && options.url) {
-        newUrl = new URL(options.url)
-      }
-      if (options && options.ok && newUrl == null && options.headers.get('Location') !== undefined) {
-        newUrl = new URL(options.headers.get('Location'))
+      if (options && options.ok) {
+        if (options.url !== undefined && options.url !== null) {
+          newUrl = new URL(options.url)
+        }
+        var location = options.headers.get('Location')
+        if (newUrl !== null && location !== undefined && location !== null) {
+          newUrl = new URL(location)
+        }
       }
       if (newUrl == null) {
         newUrl = url
       }
+      // https://fetch.spec.whatwg.org/#cors-safelisted-method
+      // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
+      var params = {
+        headers: {
+          'Accept-Encoding': 'identity;q=0, *;q=0', // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+        },
+        method: 'get',
+        mode: 'cors',
+        signal: responseController.signal,
+      }
       var response = await fetch(newUrl, params)
-      globalThis.clearTimeout(responseId)
       if (response === undefined || response == null || response.ok === false) {
         throw new Error(`Unexpected response ${response.statusText}`)
       }
@@ -2647,40 +2648,59 @@ var bootsuffix = function ($tw) {
           `[${response.status}] Loaded:
  ${response.url}`
         )
-        return ua
+        return {
+          content: ua,
+          type: response.headers.get('Content-Type'),
+        }
       }
-      return await response.buffer()
+      const buffer = await response.buffer()
+      return {
+        content: buffer,
+        type: response.headers.get('Content-Type'),
+      }
     } catch (error) {
       if (error.name === 'AbortError') {
         $tw.boot.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
       } else {
         $tw.boot.getLogger().error(`*** Fetch error: ${error.message} ***`)
       }
+    } finally {
+      globalThis.clearTimeout(responseId)
     }
     return null
   }
 
   $tw.boot.loadToUtf8 = async function (url, password) {
+    var parse = function (content) {
+      var json = null
+      try {
+        json = JSON.parse(content)
+      } catch (error) {
+        // ignore
+      }
+      return json
+    }
     url = url !== undefined && url !== null && url.toString().trim() !== '' ? url.toString().trim() : null
     if (url == null) {
       return null
     }
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-    const ua = await $tw.boot.fetch(url)
+    const { content: ua } = await $tw.boot.fetch(url)
     if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
       return null
     }
     var content = $tw.boot.Utf8ArrayToStr(ua)
-    if (content.match(/^{"compressed":/)) {
-      const json = JSON.parse(content)
-      if (json.compressed.match(/^{"iv":/)) {
+    const json = parse(content)
+    if (json !== null && json.compressed !== undefined) {
+      const encrypted = parse(json.compressed)
+      if (encrypted !== null && encrypted.iv !== undefined) {
         if (password == null && $tw.crypto.hasPassword() === false) {
           content = await $tw.boot.decryptFromPasswordPrompt(json.compressed)
         } else {
           content = $tw.crypto.decrypt(json.compressed, password)
         }
         content = $tw.compress.inflate(content)
-      } else if (json.compressed.match(/^{"version":/)) {
+      } else if (encrypted !== null && encrypted.version !== undefined) {
         if (json.signature) {
           const signature = await $tw.crypto.decrypt(json.signature)
           await this.checkMessage(json.compressed, json.keccak256, signature)
@@ -2690,14 +2710,13 @@ var bootsuffix = function ($tw) {
       } else {
         content = $tw.compress.inflate(json.compressed)
       }
-    } else if (content.match(/^{"encrypted":/)) {
-      const json = JSON.parse(content)
+    } else if (json !== null && json.encrypted !== undefined) {
       if (json.signature) {
         const signature = await $tw.crypto.decrypt(json.signature)
         await this.checkMessage(json.encrypted, json.keccak256, signature)
       }
       content = await $tw.crypto.decrypt(json.encrypted)
-    } else if (content.match(/^{"iv":/)) {
+    } else if (json !== null && json.iv !== undefined) {
       if (password == null && $tw.crypto.hasPassword() === false) {
         content = await $tw.boot.decryptFromPasswordPrompt(content)
       } else {
@@ -3604,25 +3623,36 @@ var bootsuffix = function ($tw) {
     }
 
     $tw.boot.inflateTiddlers = function (callback) {
+      var inflate = function (b64) {
+        if (b64 !== undefined && b64 !== null) {
+          $tw.boot.preloadTiddler($tw.compress.inflate(b64), callback)
+        }
+      }
+      var parse = function (content) {
+        var json = null
+        try {
+          json = JSON.parse(content)
+        } catch (error) {
+          // ignore
+        }
+        return json
+      }
       var area = document.getElementById('compressedStoreArea')
       var content = area !== undefined && area !== null && area.innerHTML !== undefined ? area.innerHTML : null
       if (content !== undefined && content !== null) {
-        var inflate = function (b64) {
-          if (b64 !== undefined && b64 !== null) {
-            $tw.boot.preloadTiddler($tw.compress.inflate(b64), callback)
-          }
-        }
-        if (content.match(/^{"compressed":/)) {
-          var json = JSON.parse(content)
-          if (json.compressed.match(/^{"iv":/)) {
+        const json = parse(content)
+        if (json !== null && json.compressed !== undefined) {
+          const encrypted = parse(json.compressed)
+          if (encrypted !== null && encrypted.iv !== undefined) {
             $tw.boot.passwordPrompt(json.compressed, function (decrypted) {
               inflate(decrypted)
             })
-          } else if (json.compressed.match(/^{"version":/)) {
+          } else if (encrypted !== null && encrypted.version !== undefined) {
             $tw.boot.metamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted, recovered) {
               if (decrypted !== null) {
                 inflate(decrypted)
                 if (recovered) {
+                  /*eslint max-len:"off"*/
                   $tw.utils.info(
                     'Decryption',
                     'Sucessfully recovered encrypted signature',
@@ -3649,15 +3679,24 @@ var bootsuffix = function ($tw) {
      * callback: function to be called the decryption is complete
      */
     $tw.boot.decryptEncryptedTiddlers = function (callback) {
+      var parse = function (content) {
+        var json = null
+        try {
+          json = JSON.parse(content)
+        } catch (error) {
+          // ignore
+        }
+        return json
+      }
       var area = document.getElementById('encryptedStoreArea')
       var content = area !== undefined && area !== null && area.innerHTML !== undefined ? area.innerHTML : null
       if (content !== undefined && content !== null) {
-        if (content.match(/^{"iv":/)) {
+        const json = parse(content)
+        if (json !== null && json.iv !== undefined) {
           $tw.boot.passwordPrompt(content, function (decrypted) {
             $tw.boot.preloadTiddler(decrypted, callback)
           })
-        } else if (content.match(/^{"encrypted":/)) {
-          const json = JSON.parse(content)
+        } else if (json !== null && json.encrypted !== undefined) {
           $tw.boot.metamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted, recovered) {
             if (decrypted !== null) {
               $tw.boot.preloadTiddler(decrypted, callback)
@@ -3851,7 +3890,6 @@ var bootsuffix = function ($tw) {
    */
   $tw.boot.startup = async function (options) {
     options = options || {}
-    // Get the URL hash and check for safe mode
     $tw.boot.initStartup(options)
     $tw.boot.loadStartup(options)
     await $tw.boot.execStartup(options)

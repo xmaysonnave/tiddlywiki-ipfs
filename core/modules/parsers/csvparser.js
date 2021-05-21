@@ -53,8 +53,9 @@ The CSV text parser processes CSV files into a table wrapped in a scrollable wid
               $tw.ipfs
                 .loadToUtf8(resolvedUrl, password)
                 .then(data => {
-                  if (data) {
-                    self.split(data)
+                  if (data !== undefined && data !== null) {
+                    var { content } = data
+                    self.split(content)
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
                   }

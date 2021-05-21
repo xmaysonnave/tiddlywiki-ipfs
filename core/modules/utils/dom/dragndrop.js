@@ -13,24 +13,6 @@ Browser data transfer utilities, used with the clipboard and drag and drop
 
   const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
 
-  exports.handleImportURL = async function (title, url) {
-    const dummy = new $tw.Tiddler({
-      title: title,
-    })
-    try {
-      const ipfsImport = new IpfsImport()
-      const data = await ipfsImport.import(null, url, dummy)
-      if (data !== undefined && data !== null) {
-        if (data.merged.size > 0 || data.deleted.size > 0) {
-          return data
-        }
-      }
-    } catch (error) {
-      $tw.ipfs.getLogger().error(error)
-    }
-    return null
-  }
-
   /**
    * Options:
    *
@@ -191,8 +173,8 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       type: 'text/vnd.tiddler',
       IECompatible: false,
       toTiddlerFieldsArray: async function (data, fallbackTitle) {
-        const imported = await $tw.utils.handleImportURL(fallbackTitle, data)
-        if (imported !== undefined && imported !== null) {
+        const imported = await handleImportURL(data, fallbackTitle)
+        if (imported !== undefined && imported !== null && imported.loaded.size > 0) {
           return imported
         }
         return parseJSONTiddlers(data, fallbackTitle)
@@ -202,53 +184,14 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       type: 'URL',
       IECompatible: true,
       toTiddlerFieldsArray: async function (data, fallbackTitle) {
-        // Check for tiddler data URI
-        var match = decodeURIComponent(data).match(/^data:text\/vnd\.tiddler,(.*)/i)
-        if (match) {
-          return parseJSONTiddlers(match[1], fallbackTitle)
-        }
-        var imported = await $tw.utils.handleImportURL(fallbackTitle, data)
-        if (imported !== undefined && imported !== null) {
-          return imported
-        }
-        // Fallback
-        return [
-          {
-            title: fallbackTitle,
-            type: 'text/html',
-            _canonical_uri: data,
-            _sandbox_tokens: '',
-            _sandbox_source_uri: 'https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe',
-          },
-        ]
+        return await handleURL(data, fallbackTitle)
       },
     },
     {
       type: 'text/x-moz-url',
       IECompatible: false,
       toTiddlerFieldsArray: async function (data, fallbackTitle) {
-        // Check for tiddler data URI
-        var match = decodeURIComponent(data).match(/^data:text\/vnd\.tiddler,(.*)/i)
-        if (match) {
-          return parseJSONTiddlers(match[1], fallbackTitle)
-        }
-        var parts = data.split('\n')
-        var url = parts[0]
-        fallbackTitle = parts[1]
-        var imported = await $tw.utils.handleImportURL(fallbackTitle, url)
-        if (imported) {
-          return imported
-        }
-        // Fallback
-        return [
-          {
-            title: fallbackTitle,
-            type: 'text/html',
-            _canonical_uri: data,
-            _sandbox_tokens: '',
-            _sandbox_source_uri: 'https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe',
-          },
-        ]
+        return await handleURL(data, fallbackTitle)
       },
     },
     {
@@ -290,5 +233,78 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       fields.title = fields.title || fallbackTitle
     })
     return data
+  }
+
+  async function handleURL (url, title) {
+    // Check for tiddler data URI
+    var match = decodeURIComponent(url).match(/^data:text\/vnd\.tiddler,(.*)/i)
+    if (match) {
+      return parseJSONTiddlers(match[1], title)
+    }
+    url = decodeURI(url)
+    var tags = []
+    var tiddlerTitle = title
+    var extension = url.split('.').pop()
+    var info = $tw.utils.getFileExtensionInfo(`.${extension}`)
+    if (info !== undefined && info !== null) {
+      var fileName = url.split('/').pop()
+      tiddlerTitle = fileName.substring(0, fileName.length - extension.length - 1)
+    }
+    var imported = await handleImportURL(url, tiddlerTitle)
+    if (imported !== undefined && imported !== null && imported.loaded.size > 0) {
+      return imported
+    }
+    try {
+      url = $tw.ipfs.normalizeUrl(url)
+      var { ipfsCid, ipnsIdentifier, ipfsPath } = $tw.ipfs.getIpfsIdentifier(url)
+      if (ipfsCid !== null || ipnsIdentifier !== null) {
+        if (tags.indexOf('$:/isIpfs') === -1) {
+          $tw.utils.pushTop(tags, '$:/isIpfs')
+        }
+        if (ipfsCid !== null) {
+          url = `ipfs://${ipfsCid}${ipfsPath}`
+        } else {
+          url = `ipns://${ipnsIdentifier}${ipfsPath}`
+        }
+      }
+    } catch (error) {
+      $tw.ipfs.getLogger().error(error)
+    }
+    if (tags.indexOf('$:/isAttachment') === -1) {
+      $tw.utils.pushTop(tags, '$:/isAttachment')
+    }
+    if ((info !== undefined && info !== null && info.type === 'text/html') || (imported !== undefined && imported !== null && imported.importUriType === 'text/html')) {
+      return [
+        {
+          title: tiddlerTitle,
+          tags: tags,
+          type: 'text/html',
+          _canonical_uri: url,
+          _sandbox_tokens: '',
+          _sandbox_source_uri: 'https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe',
+        },
+      ]
+    }
+    return [
+      {
+        title: tiddlerTitle,
+        tags: tags,
+        type: info.type,
+        _canonical_uri: url,
+      },
+    ]
+  }
+
+  async function handleImportURL (url, title) {
+    const dummy = new $tw.Tiddler({
+      title: title,
+    })
+    try {
+      const ipfsImport = new IpfsImport()
+      return await ipfsImport.import(null, url, dummy)
+    } catch (error) {
+      $tw.ipfs.getLogger().error(error)
+    }
+    return null
   }
 })()

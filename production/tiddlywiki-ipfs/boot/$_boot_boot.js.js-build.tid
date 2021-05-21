@@ -1,12 +1,12 @@
 title: $:/boot/boot.js-build
 tags: $:/ipfs/core $:/core $:/boot/bundle
 type: text/vnd.tiddlywiki
-build: 210515439
+build: 210521496
 name: $:/boot/boot.js
-version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210515439
-sourceSize: 142903
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210521496
+sourceSize: 143930
 sourceExtension: js
 sourceFilename: $_boot_boot.js
-sourceUri: ipfs://bafybeig52vzynegweb2vqfa6ja7mewbo3dbxtjptbz7c74f2ebm6pld7ri/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210515439.js
+sourceUri: ipfs://bafybeifd4bqjj4yrd5ayofxr35zksbayjbghy473czmtif36u4br5ldp7y/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210521496.js
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

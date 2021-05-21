@@ -13,9 +13,8 @@ async function loadFromIpfs (url, timeout, stream) {
   timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
   const optionsController = new AbortController()
   const optionsId = setTimeout(() => optionsController.abort(), timeout)
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
   var fetchHeaders = {
-    'Accept-Encoding': 'identity;q=0", *;q=0',
+    'Accept-Encoding': 'identity;q=0, *;q=0', // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
   }
   try {
     var params = {

@@ -109,8 +109,12 @@ IPFS Controller
     return this.ipfsBundle.Utf8ArrayToStr(array)
   }
 
-  IpfsController.prototype.fetchUint8Array = async function (url) {
-    return await this.ipfsBundle.fetchUint8Array(url)
+  IpfsController.prototype.fetchOptions = async function (url, timeout) {
+    return await this.ipfsBundle.fetchOptions(url, timeout)
+  }
+
+  IpfsController.prototype.fetchUint8Array = async function (url, timeout) {
+    return await this.ipfsBundle.fetchUint8Array(url, timeout)
   }
 
   IpfsController.prototype.processContent = async function (tiddler, content, encoding, type) {

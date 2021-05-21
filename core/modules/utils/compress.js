@@ -21,56 +21,81 @@ Utility functions related to compression.
     if (compressedStoreAreaStart !== -1) {
       const compressedStoreAreaEnd = text.indexOf('</pre>', compressedStoreAreaStart)
       if (compressedStoreAreaEnd !== -1) {
-        return $tw.utils.htmlDecode(text.substring(compressedStoreAreaStart + compressedStoreAreaStartMarker.length, compressedStoreAreaEnd - 1))
+        const extracted = text.substring(compressedStoreAreaStart + compressedStoreAreaStartMarker.length, compressedStoreAreaEnd - 1)
+        const decoded = $tw.utils.htmlDecode(extracted)
+        return decoded
       }
     }
     return null
   }
 
-  exports.inflateCompressedStoreArea = function (compressedStoreArea, callback) {
-    if (compressedStoreArea) {
-      if (compressedStoreArea.match(/^{"compressed":/)) {
-        const json = JSON.parse(compressedStoreArea)
-        if (json) {
-          if (json.compressed.match(/^{"iv":/)) {
-            $tw.utils.decryptStoreAreaInteractive(json.compressed, function (decrypted) {
-              $tw.utils.inflateTiddlers(decrypted, function (tiddlers) {
-                if (tiddlers) {
-                  callback(tiddlers)
-                }
-              })
+  exports.inflateCompressedStoreArea = function (text, callback) {
+    var parse = function (content) {
+      var json = null
+      try {
+        json = JSON.parse(content)
+      } catch (error) {
+        // ignore
+      }
+      return json
+    }
+    if (text !== undefined && text !== null) {
+      const json = parse(text)
+      if (json !== null && json.compressed !== undefined) {
+        const encrypted = parse(json.compressed)
+        if (encrypted !== null && encrypted.iv !== undefined) {
+          $tw.utils.decryptStoreAreaInteractive(json.compressed, function (decrypted) {
+            $tw.utils.inflateTiddlers(decrypted, function (tiddlers) {
+              if (tiddlers) {
+                callback(tiddlers)
+              }
             })
-            return true
-          } else if (json.compressed.match(/^{"version":/)) {
-            $tw.utils.decryptFromMetamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted) {
-              $tw.utils.inflateTiddlers(decrypted, function (tiddlers) {
-                if (tiddlers) {
-                  callback(tiddlers)
-                }
-              })
+          })
+          return true
+        } else if (encrypted !== null && encrypted.version !== undefined) {
+          $tw.utils.decryptFromMetamaskPrompt(json.compressed, json.keccak256, json.signature, function (decrypted) {
+            $tw.utils.inflateTiddlers(decrypted, function (tiddlers) {
+              if (tiddlers) {
+                callback(tiddlers)
+              }
             })
-            return true
-          }
+          })
+          return true
+        } else {
+          $tw.utils.inflateTiddlers(json.compressed, function (tiddlers) {
+            if (tiddlers) {
+              callback(tiddlers)
+            }
+          })
+          return true
         }
       }
     }
     return false
   }
 
-  exports.inflate = function (compressed, password, privateKey) {
-    if (compressed) {
-      if (compressed.match(/^{"compressed":/)) {
+  exports.inflate = function (text, password, privateKey) {
+    var parse = function (content) {
+      var json = null
+      try {
+        json = JSON.parse(content)
+      } catch (error) {
+        // ignore
+      }
+      return json
+    }
+    if (text !== undefined && text !== null) {
+      const json = parse(text)
+      if (json !== null && json.compressed !== undefined) {
         var data = null
-        const json = JSON.parse(compressed)
-        if (json && json.compressed) {
-          if (json.compressed.match(/^{"iv":/) || json.compressed.match(/^{"version":/)) {
-            const b64 = $tw.crypto.decrypt(json.compressed, password, privateKey)
-            data = $tw.compress.inflate(b64)
-          } else {
-            data = $tw.compress.inflate(json.compressed)
-          }
+        const encrypted = parse(json.compressed)
+        if (encrypted !== null && (encrypted.iv !== undefined || encrypted.version !== undefined)) {
+          const b64 = $tw.crypto.decrypt(json.compressed, password, privateKey)
+          data = $tw.compress.inflate(b64)
+        } else {
+          data = $tw.compress.inflate(json.compressed)
         }
-        if (data) {
+        if (data !== undefined && data !== null) {
           return $tw.utils.loadTiddlers(data)
         }
       }

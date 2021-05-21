@@ -761,7 +761,7 @@ IPFS utils
         if (navigator) {
           navigator.dispatchEvent({
             target: tiddler.fields.title,
-            type: 'tm-ipfs-export-tiddlers',
+            type: 'tm-export-tiddlers',
             param: content,
           })
           return {

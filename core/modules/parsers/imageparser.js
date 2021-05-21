@@ -36,10 +36,11 @@ The image parser parses an image into an embeddable HTML element
               $tw.ipfs
                 .loadToBase64(resolvedUrl, password)
                 .then(data => {
-                  if (data) {
+                  if (data !== undefined && data !== null) {
+                    var { content } = data
                     element.attributes.src = {
                       type: 'string',
-                      value: `${value}${data}`,
+                      value: `${value}${content}`,
                     }
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)

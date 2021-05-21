@@ -37,8 +37,9 @@ The plain text parser processes blocks of source text into a degenerate parse tr
               $tw.ipfs
                 .loadToUtf8(resolvedUrl, password)
                 .then(data => {
-                  if (data) {
-                    element.attributes.code.value = data
+                  if (data !== undefined && data !== null) {
+                    var { content } = data
+                    element.attributes.code.value = content
                     var parsedTiddler = $tw.utils.getChangedTiddler(options.tiddler)
                     $tw.rootWidget.refresh(parsedTiddler)
                   }

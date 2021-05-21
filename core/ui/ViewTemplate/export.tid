@@ -1,0 +1,30 @@
+title: $:/core/ui/ViewTemplate/export
+tags: $:/tags/ViewTemplate $:/ipfs/core
+
+\define lingo-base() $:/language/Export/
+
+\define buttons()
+<$button message="tm-delete-tiddler" param=<<currentTiddler>>><<lingo Listing/Cancel/Caption>></$button>
+<$button message="tm-perform-export" param=<<currentTiddler>>><<lingo Listing/Export/Caption>></$button>
+<<lingo Listing/Preview>> <$select tiddler="$:/state/ipfsexportpreviewtype" default="$:/core/ui/ExportPreviews/Text">
+<$list filter="[all[shadows+tiddlers]tag[$:/tags/ExportPreview]!has[draft.of]]">
+<option value=<<currentTiddler>>>{{!!caption}}</option>
+</$list>
+</$select>
+\end
+
+<$list filter="[all[current]field:plugin-type[export]]">
+
+<div class="tc-import">
+
+<<lingo Listing/Hint>>
+
+<<buttons>>
+
+{{||$:/core/ui/ExportListing}}
+
+<<buttons>>
+
+</div>
+
+</$list>

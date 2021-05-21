@@ -1,5 +1,5 @@
 {
-  "build": "210512344",
+  "build": "210521314",
   "content": [
     {
       "title": "sjcl",
@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_library_sjcl.js.json",
       "sourceSize": 26401,
-      "sourceUri": "https://dweb.link/ipfs/bafybeihyse5zkqmiha2ujfow7rkjqvs3xc2fyindrrb4v6ex3itndttqhu/$_library_sjcl.js.json-1.0.8+release-210512344.json",
+      "sourceUri": "https://dweb.link/ipfs/bafybeif5sy624pfpyq4zk3u2pp3sd7qyyrpmqk4hedfz5xlouwaste5mge/$_library_sjcl.js.json-1.0.8+release-210521314.json",
       "tidSize": 562,
-      "tidUri": "https://dweb.link/ipfs/bafybeic2intno57wlybsozdbeco3ejtififdbipqs7dseg7nm3squdrcki/$_library_sjcl.js.json.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeih76r3xbv2mue3nuyoyjfqzq7rwvwxurtsj22z4e3pdygsgbr4u7e/$_library_sjcl.js.json.json-build.tid"
     },
     {
       "title": "sjcl",
@@ -21,12 +21,12 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_sjcl.js",
       "sourceSize": 25607,
-      "sourceUri": "https://dweb.link/ipfs/bafybeiabrptlz4n6bdxnohidtqpchn5s62m4zqb76nnszkd37pybkn3dma/$_library_sjcl.js-1.0.8+release-210512344.js",
+      "sourceUri": "https://dweb.link/ipfs/bafybeie7ufvgf3ognegdhydnlmiwq6m34hn7szlkr2osm6gutwqyb5yzhi/$_library_sjcl.js-1.0.8+release-210521314.js",
       "tidSize": 531,
-      "tidUri": "https://dweb.link/ipfs/bafybeiflreygk6z2jodcyldf5aeyf6znpasapnwhghvqfitlvy2kveiypy/$_library_sjcl.js.js-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeielnohsogmvxfot3ul7njsbczzy3m6p46bdrmwq6vzltwgjulrl7q/$_library_sjcl.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.8+release",
-  "version": "1.0.8+release-210512344",
-  "buildUri": "https://dweb.link/ipfs/bafybeig5p7ivzi2axmowz5xda6ycb6wlbpwsmuzoyufhvj434brfakdqkm/210512344/"
+  "version": "1.0.8+release-210521314",
+  "buildUri": "https://dweb.link/ipfs/bafybeig6d34azizys6h4y5daph75to6aloaaf6uv7orskgyhn7z2gjodyq/210521314/"
 }

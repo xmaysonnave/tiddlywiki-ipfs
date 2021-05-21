@@ -100,7 +100,8 @@ Render this widget into the DOM
                       .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          domNode.setAttribute('src', `data:application/pdf;base64,${data}`)
+                          var { content } = data
+                          domNode.setAttribute('src', `data:application/pdf;base64,${content}`)
                         } else {
                           domNode.setAttribute('src', '')
                         }
@@ -116,7 +117,8 @@ Render this widget into the DOM
                       .loadToUtf8(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          domNode.setAttribute('src', `data:image/svg+xml,${encodeURIComponent(data)}`)
+                          var { content } = data
+                          domNode.setAttribute('src', `data:image/svg+xml,${encodeURIComponent(content)}`)
                         } else {
                           domNode.setAttribute('src', '')
                         }
@@ -132,7 +134,8 @@ Render this widget into the DOM
                       .loadToBase64(url, password)
                       .then(data => {
                         if (data !== undefined && data !== null) {
-                          domNode.setAttribute('src', `data:${type};base64,${data}`)
+                          var { content } = data
+                          domNode.setAttribute('src', `data:${type};base64,${content}`)
                         } else {
                           domNode.setAttribute('src', '')
                         }

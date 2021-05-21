@@ -1,4 +1,4 @@
-title: $:/core/ui/ipfs/import/listing
+title: $:/core/ui/ImportListing
 tags: $:/ipfs/core
 
 \define lingo-base() $:/language/Import/
@@ -108,8 +108,8 @@ tags: $:/ipfs/core
 <tr>
 <td colspan="4">
 <$reveal type="match" text="yes" state=<<previewPopupState>> tag="div">
-<$list filter="[{$:/state/ipfsimportpreviewtype}has[text]]" variable="listItem" emptyMessage={{$:/core/ui/ImportPreviews/Text}}>
-<$transclude tiddler={{$:/state/ipfsimportpreviewtype}}/>
+<$list filter="[{$:/state/importpreviewtype}has[text]]" variable="listItem" emptyMessage={{$:/core/ui/ImportPreviews/Text}}>
+<$transclude tiddler={{$:/state/importpreviewtype}}/>
 </$list>
 </$reveal>
 </td>
