@@ -347,12 +347,127 @@ IPFS Import
     )
   }
 
+  IpfsImport.prototype.processTiddlers = async function (parentUrl, parentTitle, parentField, url, key, resolvedKey, password, tiddlers) {
+    var loaded = 0
+    var removed = 0
+    var imported = new Map()
+    this.loaded.set(key, {
+      imported: imported,
+      resolvedKey: resolvedKey,
+      url: url,
+    })
+    try {
+      for (var i in tiddlers) {
+        const tiddler = tiddlers[i]
+        var title = tiddler.title
+        if (title === undefined || title == null || title.trim() === '') {
+          const msg = 'Ignore Unknown:'
+          const field = 'Title'
+          $tw.ipfs.getLogger().info(
+            `${msg} "${field}"
+ ${resolvedKey}
+from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
+          )
+          $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a>, from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
+          removed += 1
+          continue
+        }
+        if (imported.get(title) !== undefined) {
+          const msg = 'Ignore Duplicate:'
+          $tw.ipfs.getLogger().info(
+            `${msg} "${title}"
+ ${resolvedKey}
+from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
+          )
+          $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${title}</a>, from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
+          removed += 1
+          continue
+        }
+        var type = tiddler.type
+        if (type === undefined || type == null) {
+          type = tiddlyWikiType
+        }
+        var info = $tw.config.contentTypeInfo[type]
+        if (info === undefined || info == null) {
+          const msg = 'Unknown:'
+          const field = 'Content-Type'
+          $tw.ipfs.getLogger().info(
+            `${msg} "${field}": "${title}"
+ ${resolvedKey}`
+          )
+          $tw.utils.alert(name, alertFieldFailed`${msg} "${field}": ${resolvedKey}">${title}</a>`)
+          // Default
+          type = tiddlyWikiType
+          info = $tw.config.contentTypeInfo[type]
+        }
+        tiddler.type = type
+        // Next
+        var canonicalUri = tiddler._canonical_uri
+        canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
+        tiddler._canonical_uri = canonicalUri
+        var importUri = tiddler._import_uri
+        importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
+        tiddler._import_uri = importUri
+        if (canonicalUri !== null || importUri !== null) {
+          password = tiddler._password
+          password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+          if (importUri !== null) {
+            const load = await this.load(resolvedKey, title, '_import_uri', importUri, password, true)
+            if (load !== undefined && load !== null) {
+              const { loaded: loadedAdded, removed: loadedRemoved } = load
+              loaded += loadedAdded
+              removed += loadedRemoved
+            }
+          }
+          if (canonicalUri !== null) {
+            const load = await this.load(resolvedKey, title, '_canonical_uri', canonicalUri, password, tiddlyWikiType === tiddler.type)
+            if (load !== undefined && load !== null) {
+              const { loaded: loadedAdded, removed: loadedRemoved } = load
+              loaded += loadedAdded
+              removed += loadedRemoved
+            }
+          }
+        }
+        imported.set(title, tiddler)
+        loaded += 1
+      }
+      if (imported.size === 0) {
+        this.isEmpty.push(key)
+        const msg = 'Empty Import:'
+        const field = 'Resource'
+        $tw.ipfs.getLogger().info(
+          `${msg} "${field}"
+ ${resolvedKey}
+from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
+        )
+        $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a> from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
+      }
+    } catch (error) {
+      const msg = 'Failed to Import:'
+      const field = 'Resource'
+      $tw.ipfs.getLogger().info(
+        `${msg} "${field}"
+ ${resolvedKey}
+from "${parentField}", "${parentTitle}"
+ ${parentUrl}`
+      )
+      $tw.ipfs.getLogger().error(error)
+      $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a> from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
+    }
+    return {
+      loaded: loaded,
+      removed: removed,
+    }
+  }
+
   IpfsImport.prototype.loadResource = async function (parentUrl, parentTitle, parentField, url, key, resolvedKey, password) {
     var loaded = 0
     var removed = 0
     var content = null
     var type = null
-    var imported = new Map()
     var tiddlers = null
     const creationFields = $tw.wiki.getCreationFields()
     try {
@@ -390,101 +505,8 @@ IPFS Import
           tiddlers = $tw.wiki.deserializeTiddlers('application/x-tiddler', content, creationFields)
         }
       }
-      // Loaded
       if (tiddlers !== undefined && tiddlers !== null) {
-        this.loaded.set(key, {
-          imported: imported,
-          resolvedKey: resolvedKey,
-          url: url,
-        })
-        for (var i in tiddlers) {
-          const tiddler = tiddlers[i]
-          var title = tiddler.title
-          if (title === undefined || title == null || title.trim() === '') {
-            const msg = 'Ignore Unknown:'
-            const field = 'Title'
-            $tw.ipfs.getLogger().info(
-              `${msg} "${field}"
- ${resolvedKey}
-from "${parentField}", "${parentTitle}"
- ${parentUrl}`
-            )
-            $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a>, from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
-            removed += 1
-            continue
-          }
-          if (imported.get(title) !== undefined) {
-            const msg = 'Ignore Duplicate:'
-            $tw.ipfs.getLogger().info(
-              `${msg} "${title}"
- ${resolvedKey}
-from "${parentField}", "${parentTitle}"
- ${parentUrl}`
-            )
-            $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${title}</a>, from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
-            removed += 1
-            continue
-          }
-          var type = tiddler.type
-          if (type === undefined || type == null) {
-            type = tiddlyWikiType
-          }
-          var info = $tw.config.contentTypeInfo[type]
-          if (info === undefined || info == null) {
-            const msg = 'Unknown:'
-            const field = 'Content-Type'
-            $tw.ipfs.getLogger().info(
-              `${msg} "${field}": "${title}"
- ${resolvedKey}`
-            )
-            $tw.utils.alert(name, alertFieldFailed`${msg} "${field}": ${resolvedKey}">${title}</a>`)
-            // Default
-            type = tiddlyWikiType
-            info = $tw.config.contentTypeInfo[type]
-          }
-          tiddler.type = type
-          // Next
-          var canonicalUri = tiddler._canonical_uri
-          canonicalUri = canonicalUri !== undefined && canonicalUri !== null && canonicalUri.trim() !== '' ? canonicalUri.trim() : null
-          tiddler._canonical_uri = canonicalUri
-          var importUri = tiddler._import_uri
-          importUri = importUri !== undefined && importUri !== null && importUri.trim() !== '' ? importUri.trim() : null
-          tiddler._import_uri = importUri
-          if (canonicalUri !== null || importUri !== null) {
-            password = tiddler._password
-            password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-            if (importUri !== null) {
-              const load = await this.load(resolvedKey, title, '_import_uri', importUri, password, true)
-              if (load !== undefined && load !== null) {
-                const { loaded: loadedAdded, removed: loadedRemoved } = load
-                loaded += loadedAdded
-                removed += loadedRemoved
-              }
-            }
-            if (canonicalUri !== null) {
-              const load = await this.load(resolvedKey, title, '_canonical_uri', canonicalUri, password, tiddlyWikiType === tiddler.type)
-              if (load !== undefined && load !== null) {
-                const { loaded: loadedAdded, removed: loadedRemoved } = load
-                loaded += loadedAdded
-                removed += loadedRemoved
-              }
-            }
-          }
-          imported.set(title, tiddler)
-          loaded += 1
-        }
-      }
-      if (imported.size === 0) {
-        this.isEmpty.push(key)
-        const msg = 'Empty Import:'
-        const field = 'Resource'
-        $tw.ipfs.getLogger().info(
-          `${msg} "${field}"
- ${resolvedKey}
-from "${parentField}", "${parentTitle}"
- ${parentUrl}`
-        )
-        $tw.utils.alert(name, alertFailed`${msg} ${resolvedKey}">${field}</a> from "${parentField}", ${parentUrl}">${parentTitle}</a>`)
+        var { loaded, removed } = await this.processTiddlers(parentUrl, parentTitle, parentField, url, key, resolvedKey, password, tiddlers)
       }
     } catch (error) {
       const msg = 'Failed to Import:'

@@ -62,22 +62,13 @@ Utility functions related to crypto.
     return false
   }
 
-  /**
-   * Attempt to extract the tiddlers from an encrypted store area using the current password.
-   * If the password is not provided then the password in the password store will be used
-   */
-  exports.decryptStoreArea = function (encryptedStoreArea, password, privateKey) {
-    const json = JSON.parse(encryptedStoreArea)
-    return $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
-  }
-
-  exports.decryptFromMetamaskPrompt = function (encryptedStoreArea, keccak256, signature, callback) {
-    // Try to decrypt with the current password
-    const decrypted = $tw.utils.decryptStoreArea(encryptedStoreArea)
+  exports.decryptFromMetamaskPrompt = function (text, keccak256, signature, callback) {
+    const json = JSON.parse(text)
+    const decrypted = $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
     if (decrypted) {
       callback(decrypted)
     } else {
-      $tw.boot.metamaskPrompt(encryptedStoreArea, keccak256, signature, function (decrypted) {
+      $tw.boot.metamaskPrompt(text, keccak256, signature, function (decrypted) {
         if (decrypted) {
           callback(decrypted)
         }
@@ -89,16 +80,16 @@ Utility functions related to crypto.
    * Attempt to extract the tiddlers from an encrypted store area using the current password.
    * If that fails, the user is prompted for a password.
    *
-   * encryptedStoreArea: text of the TiddlyWiki encrypted store area
+   * text: encrypted text
    * callback: function(tiddlers) called with the array of decrypted tiddlers
    *
    * The following configuration settings are supported:
    *
    * $tw.config.usePasswordVault: causes any password entered by the user to also be put into the system password vault
    */
-  exports.decryptStoreAreaInteractive = function (encryptedStoreArea, callback, options) {
-    // Try to decrypt with the current password
-    const decrypted = $tw.utils.decryptStoreArea(encryptedStoreArea)
+  exports.decryptStoreAreaInteractive = function (text, callback, options) {
+    const json = JSON.parse(text)
+    const decrypted = $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
     if (decrypted) {
       callback(decrypted)
     } else {
@@ -114,7 +105,7 @@ Utility functions related to crypto.
             return false
           }
           // Attempt to decrypt the tiddlers
-          const text = $tw.crypto.decrypt(encryptedStoreArea, data.password)
+          const text = $tw.crypto.decrypt(text, data.password)
           if (text) {
             if ($tw.config.usePasswordVault) {
               $tw.crypto.setPassword(data.password)

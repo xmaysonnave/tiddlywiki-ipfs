@@ -29,7 +29,7 @@ Utility functions related to compression.
     return null
   }
 
-  exports.inflateCompressedStoreArea = function (text, callback) {
+  exports.inflate = function (text, callback) {
     var parse = function (content) {
       var json = null
       try {
@@ -74,38 +74,9 @@ Utility functions related to compression.
     return false
   }
 
-  exports.inflate = function (text, password, privateKey) {
-    var parse = function (content) {
-      var json = null
-      try {
-        json = JSON.parse(content)
-      } catch (error) {
-        // ignore
-      }
-      return json
-    }
-    if (text !== undefined && text !== null) {
-      const json = parse(text)
-      if (json !== null && json.compressed !== undefined) {
-        var data = null
-        const encrypted = parse(json.compressed)
-        if (encrypted !== null && (encrypted.iv !== undefined || encrypted.version !== undefined)) {
-          const b64 = $tw.crypto.decrypt(json.compressed, password, privateKey)
-          data = $tw.compress.inflate(b64)
-        } else {
-          data = $tw.compress.inflate(json.compressed)
-        }
-        if (data !== undefined && data !== null) {
-          return $tw.utils.loadTiddlers(data)
-        }
-      }
-    }
-    return null
-  }
-
   exports.inflateTiddlers = function (b64, callback) {
     if (b64) {
-      const data = $tw.compress.inflate(b64)
+      const data = $tw.ipfs.inflate(b64)
       if (data) {
         const tiddlers = $tw.utils.loadTiddlers(data)
         if (tiddlers) {

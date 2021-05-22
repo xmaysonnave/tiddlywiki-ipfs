@@ -71,36 +71,40 @@ Functions to deserialise tiddlers from a block of text
   }
 
   exports['application/json'] = function (text, fields) {
-    const inflated = $tw.utils.inflate(text)
-    if (inflated !== null) {
-      return inflated
-    }
-    var incoming
-    var results = []
-    try {
-      incoming = JSON.parse(text)
-    } catch (e) {
-      incoming = [
-        {
-          title: 'JSON error: ' + e,
-          text: '',
-        },
-      ]
-    }
-    if (!$tw.utils.isArray(incoming)) {
-      incoming = [incoming]
-    }
-    for (var t = 0; t < incoming.length; t++) {
-      var incomingFields = incoming[t]
-      var fields = {}
-      for (var f in incomingFields) {
-        if (typeof incomingFields[f] === 'string') {
-          fields[f] = incomingFields[f]
+    if (
+      !$tw.utils.inflate(text, function (inflated) {
+        if (inflated !== null) {
+          return inflated
         }
-      }
-      results.push(fields)
+        var incoming = null
+        var results = []
+        try {
+          incoming = JSON.parse(text)
+        } catch (e) {
+          incoming = [
+            {
+              title: 'JSON error: ' + e,
+              text: '',
+            },
+          ]
+        }
+        if (!$tw.utils.isArray(incoming)) {
+          incoming = [incoming]
+        }
+        for (var t = 0; t < incoming.length; t++) {
+          var incomingFields = incoming[t]
+          var fields = {}
+          for (var f in incomingFields) {
+            if (typeof incomingFields[f] === 'string') {
+              fields[f] = incomingFields[f]
+            }
+          }
+          results.push(fields)
+        }
+        return results
+      })
+    ) {
     }
-    return results
   }
 
   /**
@@ -128,13 +132,25 @@ Functions to deserialise tiddlers from a block of text
       // Check whether this is a compressed TiddlyWiki file
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
-        return $tw.utils.inflate(compressedStoreArea)
+        if (
+          !$tw.utils.inflate(compressedStoreArea, function (inflated) {
+            return inflated
+          })
+        ) {
+          return deserializeHtmlFile(text, fields)
+        }
       } else {
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
           // If so, attempt to decrypt it using the current password
-          return $tw.utils.decryptStoreArea(encryptedStoreArea)
+          if (
+            !$tw.utils.decrypt(encryptedStoreArea, function (decrypted) {
+              return decrypted
+            })
+          ) {
+            return deserializeHtmlFile(text, fields)
+          }
         } else {
           // It's not a TiddlyWiki so we'll return the entire HTML file as a tiddler
           return deserializeHtmlFile(text, fields)

@@ -3,7 +3,9 @@
   "version": "0.4.0-beta-tw-v5.1.23+build-210522320",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
-  "directories": { "test": "tests" },
+  "directories": {
+    "test": "tests"
+  },
   "type": "commonjs",
   "browserslist": [
     "> 1%",
@@ -20,7 +22,11 @@
     "not samsung > 0",
     "not and_uc > 0"
   ],
-  "browserify": { "transform": [ "babelify" ] },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
   "scripts": {
     "build": "./bin/build.sh",
     "build-bluelightav": "./bin/build-bluelightav.sh",
@@ -41,15 +47,25 @@
     "updater": "./bin/cli-updater.sh",
     "uploader": "./bin/cli-uploader.sh"
   },
-  "lint-staged": { "*": [ "prettier-standard --lint" ] },
+  "lint-staged": {
+    "*": [
+      "prettier-standard --lint"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xmaysonnave/tiddlywiki-ipfs.git"
   },
-  "keywords": [ "ens", "ipfs", "tiddlywiki" ],
+  "keywords": [
+    "ens",
+    "ipfs",
+    "tiddlywiki"
+  ],
   "author": "Xavier Maysonnave",
   "license": "GPL-3.0-or-later",
-  "bugs": { "url": "https://github.com/xmaysonnave/tiddlywiki-ipfs/issues" },
+  "bugs": {
+    "url": "https://github.com/xmaysonnave/tiddlywiki-ipfs/issues"
+  },
   "homepage": "https://github.com/xmaysonnave/tiddlywiki-ipfs",
   "dependencies": {
     "@multiformats/base-x": "^4.0.1",
@@ -103,7 +119,14 @@
     "wrtc": "^0.4.7",
     "yargs": "^17.0.1"
   },
-  "engines": { "node": ">=16.2.0", "yarn": ">=1.22.5" },
-  "os": [ "!darwin", "linux", "!win32" ],
+  "engines": {
+    "node": ">=16.2.0",
+    "yarn": ">=1.22.5"
+  },
+  "os": [
+    "!darwin",
+    "linux",
+    "!win32"
+  ],
   "snyk": true
 }
