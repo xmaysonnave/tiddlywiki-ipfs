@@ -194,9 +194,9 @@ wikimethod
       // Check whether this is a compressed TiddlyWiki file
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
-        $tw.utils.inflate(compressedStoreArea, function (tiddlers) {
+        if (!$tw.utils.inflateCompressedStoreArea(compressedStoreArea, function (tiddlers) {
           callback(tiddlers)
-        })
+        }
       } else {
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
