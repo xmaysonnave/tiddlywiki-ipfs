@@ -40,7 +40,7 @@ Attributes are stored as hashmaps of the following objects:
       if (canonicalUri !== null || importUri !== null) {
         var ipfsImport = new IpfsImport()
         ipfsImport
-          .import(canonicalUri, importUri, options.tiddler)
+          .imports(canonicalUri, importUri, options.tiddler)
           .then(data => {
             if (data !== undefined && data !== null) {
               if (data.merged.size > 0 || data.deleted.size > 0) {

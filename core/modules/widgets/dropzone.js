@@ -35,6 +35,7 @@ Dropzone widget
     this.execute()
     // Create element
     var domNode = this.document.createElement('div')
+    this.domNode = domNode
     domNode.className = this.dropzoneClass || 'tc-dropzone'
     // Add event handlers
     if (this.dropzoneEnable) {
@@ -47,7 +48,6 @@ Dropzone widget
         { name: 'dragend', handlerObject: this, handlerMethod: 'handleDragEndEvent' },
       ])
     }
-    domNode.addEventListener('click', function (event) {}, false)
     // Insert element
     parent.insertBefore(domNode, nextSibling)
     this.renderChildren(domNode, null)
@@ -56,12 +56,46 @@ Dropzone widget
     this.currentlyEntered = []
   }
 
+  // Handler for transient event listeners added when the dropzone has an active drag in progress
+  DropZoneWidget.prototype.handleEvent = function (event) {
+    if (event.type === 'click') {
+      if (this.currentlyEntered.length) {
+        this.resetState()
+      }
+    } else if (event.type === 'dragenter') {
+      if (event.target && event.target !== this.domNode && !$tw.utils.domContains(this.domNode, event.target)) {
+        this.resetState()
+      }
+    } else if (event.type === 'dragleave') {
+      // Check if drag left the window
+      if (event.relatedTarget === null || (event.relatedTarget && event.relatedTarget.nodeName === 'HTML')) {
+        this.resetState()
+      }
+    }
+  }
+
+  // Reset the state of the dropzone after a drag has ended
+  DropZoneWidget.prototype.resetState = function () {
+    $tw.utils.removeClass(this.domNode, 'tc-dragover')
+    this.currentlyEntered = []
+    this.document.body.removeEventListener('click', this, true)
+    this.document.body.removeEventListener('dragenter', this, true)
+    this.document.body.removeEventListener('dragleave', this, true)
+    this.dragInProgress = false
+  }
+
   DropZoneWidget.prototype.enterDrag = function (event) {
     if (this.currentlyEntered.indexOf(event.target) === -1) {
       this.currentlyEntered.push(event.target)
     }
-    // If we're entering for the first time we need to apply highlighting
-    $tw.utils.addClass(this.domNodes[0], 'tc-dragover')
+    if (!this.dragInProgress) {
+      this.dragInProgress = true
+      // If we're entering for the first time we need to apply highlighting
+      $tw.utils.addClass(this.domNodes[0], 'tc-dragover')
+      this.document.body.addEventListener('click', this, true)
+      this.document.body.addEventListener('dragenter', this, true)
+      this.document.body.addEventListener('dragleave', this, true)
+    }
   }
 
   DropZoneWidget.prototype.leaveDrag = function (event) {
@@ -71,13 +105,16 @@ Dropzone widget
     }
     // Remove highlighting if we're leaving externally
     if (this.currentlyEntered.length === 0) {
-      $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
+      this.resetState()
     }
   }
 
   DropZoneWidget.prototype.handleDragEnterEvent = function (event) {
     // Check for this window being the source of the drag
     if ($tw.dragInProgress) {
+      return false
+    }
+    if (this.filesOnly && !$tw.utils.dragEventContainsFiles(event)) {
       return false
     }
     this.enterDrag(event)
@@ -98,7 +135,10 @@ Dropzone widget
     }
     // Tell the browser that we're still interested in the drop
     event.preventDefault()
-    event.dataTransfer.dropEffect = 'copy' // Explicitly show this is a copy
+    // Check if this is a synthetic event, IE does not allow accessing dropEffect outside of original event handler
+    if (event.isTrusted) {
+      event.dataTransfer.dropEffect = 'copy' // Explicitly show this is a copy
+    }
   }
 
   DropZoneWidget.prototype.handleDragLeaveEvent = function (event) {
@@ -106,7 +146,7 @@ Dropzone widget
   }
 
   DropZoneWidget.prototype.handleDragEndEvent = function (event) {
-    $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
+    this.resetState()
   }
 
   DropZoneWidget.prototype.filterByContentTypes = function (tiddlerFieldsArray) {
@@ -114,7 +154,7 @@ Dropzone widget
     var filtered = []
     var types = []
     $tw.utils.each(tiddlerFieldsArray, function (tiddlerFields) {
-      types.push(tiddlerFields.type)
+      types.push(tiddlerFields.type || '')
     })
     filteredTypes = this.wiki.filterTiddlers(this.contentTypesFilter, this, this.wiki.makeTiddlerIterator(types))
     $tw.utils.each(tiddlerFieldsArray, function (tiddlerFields) {
@@ -130,7 +170,7 @@ Dropzone widget
       content = this.filterByContentTypes(content)
     }
     if (content !== undefined && content !== null) {
-      if (content.length || content.merged) {
+      if (content.length > 0 || (content.merged && content.merged.size > 0)) {
         this.dispatchEvent({
           type: 'tm-import-tiddlers',
           param: content,
@@ -160,7 +200,7 @@ Dropzone widget
     }
     var dataTransfer = event.dataTransfer
     // Remove highlighting
-    $tw.utils.removeClass(this.domNodes[0], 'tc-dragover')
+    this.resetState()
     // Import any files in the drop
     var numFiles = 0
     if (dataTransfer.files) {
@@ -254,6 +294,7 @@ Dropzone widget
     this.importTitle = this.getAttribute('importTitle', IMPORT_TITLE)
     this.actions = this.getAttribute('actions')
     this.contentTypesFilter = this.getAttribute('contentTypesFilter')
+    this.filesOnly = this.getAttribute('filesOnly', 'no') === 'yes'
     // Make child widgets
     this.makeChildWidgets()
   }

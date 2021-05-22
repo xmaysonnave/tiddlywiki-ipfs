@@ -153,15 +153,15 @@ Browser data transfer utilities, used with the clipboard and drag and drop
           if ($tw.log.IMPORT) {
             console.log("Importing data type '" + dataType.type + "', data: '" + data + "'")
           }
-          var tiddlerFields = await dataType.toTiddlerFieldsArray(data, fallbackTitle)
-          if (tiddlerFields && tiddlerFields.merged === undefined) {
-            const merged = new Map()
-            for (var i = 0; i < tiddlerFields.length; i++) {
-              merged.set(tiddlerFields[i].title, tiddlerFields[i])
-            }
-            tiddlerFields = { merged: merged, deleted: new Map() }
+          var content = await dataType.toTiddlerFieldsArray(data, fallbackTitle)
+          if (content === undefined || content == null) {
+            content = { title: fallbackTitle, type: dataType.type }
+          } else if (content.length === 0) {
+            content = { title: fallbackTitle, type: dataType.type }
+          } else if (content.merged && content.merged.size === 0) {
+            content = { title: fallbackTitle, type: dataType.type }
           }
-          callback(tiddlerFields)
+          callback(content)
           return
         }
       }
@@ -174,7 +174,10 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       IECompatible: false,
       toTiddlerFieldsArray: async function (data, fallbackTitle) {
         const imported = await handleImportURL(data, fallbackTitle)
-        if (imported !== undefined && imported !== null && imported.loaded.size > 0) {
+        if (imported !== undefined && imported !== null) {
+          return imported
+        }
+        if (imported.loaded.size > 0 || imported.deleted.size > 0) {
           return imported
         }
         return parseJSONTiddlers(data, fallbackTitle)
@@ -235,6 +238,17 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     return data
   }
 
+  exports.dragEventContainsFiles = function (event) {
+    if (event.dataTransfer.types) {
+      for (var i = 0; i < event.dataTransfer.types.length; i++) {
+        if (event.dataTransfer.types[i] === 'Files') {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   async function handleURL (url, title) {
     // Check for tiddler data URI
     var match = decodeURIComponent(url).match(/^data:text\/vnd\.tiddler,(.*)/i)
@@ -251,7 +265,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       tiddlerTitle = fileName.substring(0, fileName.length - extension.length - 1)
     }
     var imported = await handleImportURL(url, tiddlerTitle)
-    if (imported !== undefined && imported !== null && imported.loaded.size > 0) {
+    if (imported !== undefined && imported !== null && imported.merged.size > 0) {
       return imported
     }
     try {
@@ -273,7 +287,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     if (tags.indexOf('$:/isAttachment') === -1) {
       $tw.utils.pushTop(tags, '$:/isAttachment')
     }
-    if ((info !== undefined && info !== null && info.type === 'text/html') || (imported !== undefined && imported !== null && imported.importUriType === 'text/html')) {
+    if ((info !== undefined && info !== null && info.type === 'text/html') || (imported !== undefined && imported !== null && imported.type === 'text/html')) {
       return [
         {
           title: tiddlerTitle,
@@ -289,7 +303,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       {
         title: tiddlerTitle,
         tags: tags,
-        type: info.type,
+        type: imported !== null && imported.type ? imported.type : info.type,
         _canonical_uri: url,
       },
     ]
@@ -301,7 +315,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     })
     try {
       const ipfsImport = new IpfsImport()
-      return await ipfsImport.import(null, url, dummy)
+      return await ipfsImport.import(url, dummy)
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
     }

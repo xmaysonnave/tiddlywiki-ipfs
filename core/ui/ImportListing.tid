@@ -46,15 +46,11 @@ tags: $:/ipfs/core
 <table class="tc-import-table">
 <tbody>
 <tr>
-<th align="left">
-<$checkbox tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="checked" actions=<<select-all-actions>>>
+<th>
 <<lingo Listing/ImportAll/Caption>>
-</$checkbox>
 </th>
 <th>
-<$checkbox tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="unchecked" actions=<<delete-all-actions>>>
 <<lingo Listing/DeleteAll/Caption>>
-</$checkbox>
 </th>
 <th>
 <<lingo Listing/Title/Caption>>
@@ -63,14 +59,24 @@ tags: $:/ipfs/core
 <<lingo Listing/Status/Caption>>
 </th>
 </tr>
+<tr>
+<th>
+<$checkbox tiddler="$:/state/import/select-all" field="text" checked="checked" unchecked="unchecked" default="unchecked" actions=<<select-all-actions>>/>
+</th>
+<th>
+<$checkbox tiddler="$:/state/import/delete-all" field="text" checked="checked" unchecked="unchecked" default="unchecked" actions=<<delete-all-actions>>/>
+</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
 <$list filter="[all[current]plugintiddlers[]sort[title]]" variable="payloadTiddler">
 <tr class={{{[<currentTiddler>has<suppressedField>then[tc-row-disabled]] ~[subfilter<payloadTitleFilter>is[tiddler]then[tc-row-warning]] }}}>
-<td>
+<td align="center">
 <$reveal type="match" state=<<importState>> text="yes" tag="div">
 <$checkbox field=<<importSelectionField>> checked="checked" unchecked="unchecked" default="checked"/>
 </$reveal>
 </td>
-<td>
+<td align="center">
 <$reveal type="match" state=<<deleteState>> text="yes" tag="div">
 <$checkbox field=<<deleteSelectionField>> checked="checked" unchecked="unchecked" default="checked"/>
 </$reveal>

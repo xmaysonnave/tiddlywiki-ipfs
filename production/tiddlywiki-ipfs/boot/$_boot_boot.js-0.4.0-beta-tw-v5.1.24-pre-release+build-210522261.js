@@ -2685,7 +2685,9 @@ var bootsuffix = function ($tw) {
       return null
     }
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-    const { content: ua } = await $tw.boot.fetch(url)
+    var ua = null
+    var type = null
+    var { content: ua, type } = await $tw.boot.fetch(url)
     if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
       return null
     }
@@ -2723,7 +2725,10 @@ var bootsuffix = function ($tw) {
         content = $tw.crypto.decrypt(content, password)
       }
     }
-    return content
+    return {
+      content: content,
+      type: type,
+    }
   }
 
   /**
@@ -2826,8 +2831,9 @@ var bootsuffix = function ($tw) {
       $tw.boot
         .loadToUtf8(normalizedUrl, password)
         .then(data => {
-          if (data !== null) {
-            modificationFields.text = data
+          if (data !== undefined && data !== null) {
+            var { content } = data
+            modificationFields.text = content
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
             $tw.boot.getLogger().info(
               `Embed module: ${data.length}
@@ -3825,8 +3831,9 @@ var bootsuffix = function ($tw) {
               if (normalizedUrl == null) {
                 normalizedUrl = tiddler.fields._canonical_uri
               }
-              var content = await $tw.boot.loadToUtf8(normalizedUrl)
-              if (content !== null) {
+              var data = await $tw.boot.loadToUtf8(normalizedUrl)
+              if (data !== undefined && data !== null) {
+                var { content } = data
                 content = JSON.parse(content)
                 if (content.text !== undefined && content.text !== null && content.text !== '') {
                   $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content.text))

@@ -277,7 +277,7 @@ IPFS Tiddler
     if (canonicalUri !== null || importUri !== null) {
       const ipfsImport = new IpfsImport()
       ipfsImport
-        .import(canonicalUri, importUri, tiddler)
+        .imports(canonicalUri, importUri, tiddler)
         .then(data => {
           if (data !== undefined && data !== null) {
             if (data.merged.size > 0 || data.deleted.size > 0) {
@@ -323,11 +323,11 @@ IPFS Tiddler
       const ipfsImport = new IpfsImport()
       const url = URL.createObjectURL(info.file)
       try {
-        const data = await ipfsImport.import(null, url, dummy)
-        if (data === undefined || data == null || data.loaded.size === 0) {
+        const data = await ipfsImport.import(url, dummy)
+        if (data === undefined || data == null) {
           return false
         }
-        if (data.merged.size > 0 || data.deleted.size > 0) {
+        if (data.merged.size > 0) {
           info.callback(data)
           return true
         }
