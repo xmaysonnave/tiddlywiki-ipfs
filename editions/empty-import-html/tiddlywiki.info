@@ -26,7 +26,7 @@
       "--privatekey",
         "%DEV_PRIVATE_KEY%",
       "--import",
-        "./production/editions/dev/index.html",
+        "./production/editions/dev/dev-%BUILD_DEV_VERSION%.html",
         "text/html",
       "--clearkeys",
 			"--compress",

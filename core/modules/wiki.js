@@ -194,25 +194,16 @@ wikimethod
       // Check whether this is a compressed TiddlyWiki file
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
-        if (!$tw.utils.inflate(compressedStoreArea, callback)) {
-          // Otherwise, just try to deserialise any tiddlers in the file
-          callback(
-            self.deserializeTiddlers(type, compressedStoreArea, tiddlerFields, {
-              deserializer: deserializer,
-            })
-          )
-        }
+        $tw.utils.inflate(compressedStoreArea, function (tiddlers) {
+          callback(tiddlers)
+        })
       } else {
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
-          if (!$tw.utils.decrypt(encryptedStoreArea, callback)) {
-            callback(
-              self.deserializeTiddlers(type, encryptedStoreArea, tiddlerFields, {
-                deserializer: deserializer,
-              })
-            )
-          }
+          $tw.utils.decrypt(encryptedStoreArea, function (tiddlers) {
+            callback(tiddlers)
+          })
         } else {
           // Otherwise, just try to deserialise any tiddlers in the file
           callback(

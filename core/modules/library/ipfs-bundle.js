@@ -965,7 +965,8 @@ IpfsBundle.prototype.Utf8ArrayToStr = function (array) {
 
 IpfsBundle.prototype.deflate = function (str) {
   var tStart = new Date()
-  var ua = globalThis.pako.deflate(str, { raw: false })
+  var pako = globalThis.pako || require('pako')
+  var ua = pako.deflate(str, { raw: false })
   var b64 = this.Uint8ArrayToBase64(ua)
   var tStop = new Date() - tStart
   var ratio = Math.floor((b64.length * 100) / str.length)
@@ -975,8 +976,9 @@ IpfsBundle.prototype.deflate = function (str) {
 
 IpfsBundle.prototype.inflate = function (b64) {
   var tStart = new Date()
+  var pako = globalThis.pako || require('pako')
   var ua = this.decode(b64)
-  var str = globalThis.pako.inflate(ua, { to: 'string' })
+  var str = pako.inflate(ua, { to: 'string' })
   var tStop = new Date() - tStart
   var ratio = Math.floor((str.length * 100) / b64.length)
   this.getLogger().info(`Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`)

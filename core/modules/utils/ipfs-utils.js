@@ -279,15 +279,19 @@ IPFS utils
   }
 
   exports.loadTiddlers = function (text) {
-    if (text) {
-      var json = JSON.parse(text)
-      var tiddlers = []
-      for (var title in json) {
-        if (title !== '$:/isEncrypted' && title !== '$:/isCompressed') {
-          tiddlers.push(json[title])
+    if (text !== undefined && text !== null) {
+      try {
+        var json = JSON.parse(text)
+        var tiddlers = []
+        for (var title in json) {
+          if (title !== '$:/isEncrypted' && title !== '$:/isCompressed') {
+            tiddlers.push(json[title])
+          }
         }
+        return tiddlers
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
       }
-      return tiddlers
     }
     return null
   }

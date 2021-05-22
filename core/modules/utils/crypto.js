@@ -43,35 +43,23 @@ Utility functions related to crypto.
       const json = parse(text)
       if (json !== null && json.iv !== undefined) {
         $tw.utils.decryptStoreAreaInteractive(text, function (decrypted) {
-          const tiddlers = $tw.utils.loadTiddlers(decrypted)
-          if (tiddlers) {
-            callback(tiddlers)
-          }
+          callback($tw.utils.loadTiddlers(decrypted))
         })
-        return true
       } else if (json !== null && json.encrypted !== undefined) {
         $tw.utils.decryptFromMetamaskPrompt(json.encrypted, json.keccak256, json.signature, function (decrypted) {
-          const tiddlers = $tw.utils.loadTiddlers(decrypted)
-          if (tiddlers) {
-            callback(tiddlers)
-          }
+          callback($tw.utils.loadTiddlers(decrypted))
         })
-        return true
       }
     }
-    return false
   }
 
   exports.decryptFromMetamaskPrompt = function (text, keccak256, signature, callback) {
-    const json = JSON.parse(text)
-    const decrypted = $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
+    const decrypted = $tw.crypto.decrypt(text)
     if (decrypted) {
       callback(decrypted)
     } else {
       $tw.boot.metamaskPrompt(text, keccak256, signature, function (decrypted) {
-        if (decrypted) {
-          callback(decrypted)
-        }
+        callback(decrypted)
       })
     }
   }
@@ -88,8 +76,7 @@ Utility functions related to crypto.
    * $tw.config.usePasswordVault: causes any password entered by the user to also be put into the system password vault
    */
   exports.decryptStoreAreaInteractive = function (text, callback, options) {
-    const json = JSON.parse(text)
-    const decrypted = $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
+    const decrypted = $tw.crypto.decrypt(text)
     if (decrypted) {
       callback(decrypted)
     } else {
@@ -105,12 +92,12 @@ Utility functions related to crypto.
             return false
           }
           // Attempt to decrypt the tiddlers
-          const text = $tw.crypto.decrypt(text, data.password)
-          if (text) {
+          const decrypted = $tw.crypto.decrypt(text, data.password)
+          if (decrypted) {
             if ($tw.config.usePasswordVault) {
               $tw.crypto.setPassword(data.password)
             }
-            callback(text)
+            callback(decrypted)
             // Exit and remove the password prompt
             return true
           } else {

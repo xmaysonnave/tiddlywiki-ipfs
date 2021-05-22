@@ -8,6 +8,12 @@
 # build empty
 ./bin/editions/empty/build.sh "$@" || exit 1
 
+# build empty-import-html
+./bin/editions/empty-import-html/build.sh "$@" || exit 1
+
+# build empty-import-json
+./bin/editions/empty-import-json/build.sh "$@" || exit 1
+
 # build tiddlywiki
 ./bin/editions/tiddlywiki/build.sh "$@" || exit 1
 
