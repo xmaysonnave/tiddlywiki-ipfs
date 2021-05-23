@@ -15,6 +15,8 @@ Dropzone widget
 
   var Widget = require('$:/core/modules/widgets/widget.js').widget
 
+  const { IpfsImport } = require('$:/plugins/ipfs/ipfs-import.js')
+
   var DropZoneWidget = function (parseTreeNode, options) {
     this.initialise(parseTreeNode, options)
   }
@@ -166,19 +168,49 @@ Dropzone widget
   }
 
   DropZoneWidget.prototype.readFileCallback = function (event, content) {
+    var dispatch = function (event, content) {
+      this.dispatchEvent({
+        type: 'tm-import-tiddlers',
+        param: content,
+        autoOpenOnImport: this.autoOpenOnImport,
+        importTitle: this.importTitle,
+      })
+      if (this.actions) {
+        this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
+      }
+    }
+    async function handleImportTiddlerFieldsArray (tiddlerFieldsArray, title) {
+      const dummy = new $tw.Tiddler({
+        title: title,
+      })
+      try {
+        const ipfsImport = new IpfsImport()
+        return await ipfsImport.importTiddlerFieldsArray(tiddlerFieldsArray, dummy)
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
+      }
+      return null
+    }
     if (this.contentTypesFilter) {
       content = this.filterByContentTypes(content)
     }
     if (content !== undefined && content !== null) {
       if (content.length > 0 || (content.merged && content.merged.size > 0)) {
-        this.dispatchEvent({
-          type: 'tm-import-tiddlers',
-          param: content,
-          autoOpenOnImport: this.autoOpenOnImport,
-          importTitle: this.importTitle,
-        })
-        if (this.actions) {
-          this.invokeActionString(this.actions, this, event, { importTitle: this.importTitle })
+        if (content.merged && content.merged.size > 0) {
+          dispatch(event, content)
+        } else {
+          handleImportTiddlerFieldsArray(content, this.importTitle)
+            .then(data => {
+              if (data !== undefined && data !== null) {
+                if (data.merged && data.merged.size > 0) {
+                  dispatch(event, data)
+                }
+              }
+            })
+            .catch(error => {
+              $tw.ipfs.getLogger().error(error)
+              dispatch(event, content)
+            })
         }
       }
     }

@@ -12,7 +12,7 @@ IPFS Tiddler
   /*global $tw:false*/
   'use strict'
 
-  const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
+  const { IpfsImport } = require('$:/plugins/ipfs/ipfs-import.js')
 
   /*eslint no-unused-vars: "off"*/
   const name = 'ipfs-tiddler'

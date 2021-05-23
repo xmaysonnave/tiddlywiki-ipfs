@@ -11,7 +11,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
   /*global $tw: false */
   'use strict'
 
-  const IpfsImport = require('$:/plugins/ipfs/ipfs-import.js').IpfsImport
+  const { IpfsImport } = require('$:/plugins/ipfs/ipfs-import.js')
 
   /**
    * Options:

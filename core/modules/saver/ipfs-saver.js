@@ -10,7 +10,7 @@ module-type: saver
   /*global $tw:false*/
   'use strict'
 
-  const IpfsController = require('$:/plugins/ipfs/ipfs-controller.js').IpfsController
+  const { IpfsController } = require('$:/plugins/ipfs/ipfs-controller.js')
 
   const ensKeyword = 'ens'
   const ipfsKeyword = 'ipfs'

@@ -7,11 +7,11 @@ module-type: library
 \*/
 'use strict'
 
-const fromString = require('uint8arrays').fromString
-const getIpfs = require('ipfs-provider').getIpfs
+const { fromString } = require('uint8arrays')
+const { getIpfs } = require('ipfs-provider')
 const { Mutex } = require('async-mutex')
-const providers = require('ipfs-provider').providers
 
+const { providers } = require('ipfs-provider')
 const { httpClient, windowIpfs } = providers
 
 const shortTimeout = 4000

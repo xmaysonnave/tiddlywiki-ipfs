@@ -57,7 +57,7 @@ Utility functions related to crypto.
    * Attempt to extract the tiddlers from an encrypted store area using the current password.
    * If the password is not provided then the password in the password store will be used
    */
-   exports.decryptStoreArea = function (encryptedStoreArea, password, privateKey) {
+  exports.decryptStoreArea = function (encryptedStoreArea, password, privateKey) {
     const json = JSON.parse(encryptedStoreArea)
     return $tw.utils.loadTiddlers($tw.crypto.decrypt(json.encrypted, password, privateKey))
   }

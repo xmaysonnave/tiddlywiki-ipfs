@@ -149,7 +149,7 @@ IPFS Import
       if (canonicalUri !== null || importUri !== null) {
         if (importUri !== null) {
           const load = await this.load(host, IMPORT_TITLE, '_import_uri', importUri, password, true)
-          if (load !== undefined && load == null) {
+          if (load === undefined || load == null) {
             return null
           }
           const { loaded, type: typeLoaded } = load
@@ -167,7 +167,7 @@ IPFS Import
         }
         if (canonicalUri !== null) {
           const load = await this.load(host, IMPORT_TITLE, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
-          if (load == null) {
+          if (load === undefined || load == null) {
             return null
           }
           const { loaded, type: typeLoaded } = load
@@ -219,7 +219,7 @@ IPFS Import
       if (uri !== undefined && uri !== null) {
         if (uri !== null) {
           const load = await this.load(host, IMPORT_TITLE, field, uri, password, true)
-          if (load !== undefined && load == null) {
+          if (load === undefined || load == null) {
             return null
           }
           const { loaded, type: typeLoaded } = load
@@ -246,6 +246,45 @@ IPFS Import
           type: null,
         }
       }
+    } catch (error) {
+      $tw.ipfs.getLogger().error(error)
+    }
+    return null
+  }
+
+  IpfsImport.prototype.importTiddlerFieldsArray = async function (tiddlerFieldsArray, tiddler) {
+    tiddlerFieldsArray = tiddlerFieldsArray !== undefined && tiddlerFieldsArray !== null ? tiddlerFieldsArray : null
+    if (tiddlerFieldsArray === undefined || tiddlerFieldsArray == null || !$tw.utils.isArray(tiddlerFieldsArray)) {
+      return null
+    }
+    this.deleted = new Map()
+    this.loaded = new Map()
+    this.notLoaded = []
+    this.isEmpty = []
+    this.resolved = new Map()
+    this.notResolved = []
+    this.merged = new Map()
+    try {
+      // Load and prepare imported tiddlers to be processed
+      /*eslint no-unused-vars:"off"*/
+      const host = $tw.ipfs.getUrl(`#${encodeURI(IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
+      // const load = await this.load(host, IMPORT_TITLE, '_import_uri', uri, password, true)
+      // await this.processTiddlers(host, IMPORT_TITLE, '_import_uri', url, key, resolvedKey, null, tiddlerFieldsArray)
+      // if (load !== undefined && load == null) {
+      //   return null
+      // }
+      // const { loaded, type: typeLoaded } = load
+      // if (loaded === 0) {
+      //   return {
+      //     merged: this.merged,
+      //     deleted: this.deleted,
+      //     loaded: this.loaded,
+      //     isEmpty: this.isEmpty,
+      //     notLoaded: this.notLoaded,
+      //     notResolved: this.notResolved,
+      //     type: typeLoaded !== undefined && typeLoaded !== null ? typeLoaded : type,
+      //   }
+      // }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
     }
@@ -312,39 +351,6 @@ IPFS Import
       $tw.ipfs.getLogger().error(error)
     }
     return null
-  }
-
-  IpfsImport.prototype.load = async function (parentUrl, parentTitle, field, url, password, load) {
-    var loaded = 0
-    var removed = 0
-    var key = null
-    var resolvedUrl = null
-    if (url !== null && this.notResolved.indexOf(url) === -1 && this.resolved.get(url) === undefined) {
-      var { key, resolvedUrl } = await this.getKey(url, parentUrl)
-      this.resolved.set(url, key)
-    }
-    if (load && key !== null && resolvedUrl !== null && this.notLoaded.indexOf(key) === -1 && this.loaded.get(key) === undefined) {
-      const load = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
-      if (load === undefined || load == null) {
-        return null
-      }
-      var { loaded, removed, type } = load
-    }
-    return {
-      loaded: loaded,
-      removed: removed,
-      type: type,
-    }
-  }
-
-  /**
-   * https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987
-   */
-  IpfsImport.prototype.isHTML = function (text) {
-    /*eslint max-len:"off"*/
-    return /<(br|basefont|hr|input|source|frame|param|area|meta|!--|col|link|option|base|img|wbr|!DOCTYPE).*?>|<(a|abbr|acronym|address|applet|article|aside|audio|b|bdi|bdo|big|blockquote|body|button|canvas|caption|center|cite|code|colgroup|command|datalist|dd|del|details|dfn|dialog|dir|div|dl|dt|em|embed|fieldset|figcaption|figure|font|footer|form|frameset|head|header|hgroup|h1|h2|h3|h4|h5|h6|html|i|iframe|ins|kbd|keygen|label|legend|li|map|mark|menu|meter|nav|noframes|noscript|object|ol|optgroup|output|p|pre|progress|q|rp|rt|ruby|s|samp|script|section|select|small|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|track|tt|u|ul|var|video).*?<\/\2>/i.test(
-      text
-    )
   }
 
   IpfsImport.prototype.processTiddlers = async function (parentUrl, parentTitle, parentField, url, key, resolvedKey, password, tiddlers) {
@@ -461,6 +467,39 @@ from "${parentField}", "${parentTitle}"
       loaded: loaded,
       removed: removed,
     }
+  }
+
+  IpfsImport.prototype.load = async function (parentUrl, parentTitle, field, url, password, load) {
+    var loaded = 0
+    var removed = 0
+    var key = null
+    var resolvedUrl = null
+    if (url !== null && this.notResolved.indexOf(url) === -1 && this.resolved.get(url) === undefined) {
+      var { key, resolvedUrl } = await this.getKey(url, parentUrl)
+      this.resolved.set(url, key)
+    }
+    if (load && key !== null && resolvedUrl !== null && this.notLoaded.indexOf(key) === -1 && this.loaded.get(key) === undefined) {
+      const load = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
+      if (load === undefined || load == null) {
+        return null
+      }
+      var { loaded, removed, type } = load
+    }
+    return {
+      loaded: loaded,
+      removed: removed,
+      type: type,
+    }
+  }
+
+  /**
+   * https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987
+   */
+  IpfsImport.prototype.isHTML = function (text) {
+    /*eslint max-len:"off"*/
+    return /<(br|basefont|hr|input|source|frame|param|area|meta|!--|col|link|option|base|img|wbr|!DOCTYPE).*?>|<(a|abbr|acronym|address|applet|article|aside|audio|b|bdi|bdo|big|blockquote|body|button|canvas|caption|center|cite|code|colgroup|command|datalist|dd|del|details|dfn|dialog|dir|div|dl|dt|em|embed|fieldset|figcaption|figure|font|footer|form|frameset|head|header|hgroup|h1|h2|h3|h4|h5|h6|html|i|iframe|ins|kbd|keygen|label|legend|li|map|mark|menu|meter|nav|noframes|noscript|object|ol|optgroup|output|p|pre|progress|q|rp|rt|ruby|s|samp|script|section|select|small|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|track|tt|u|ul|var|video).*?<\/\2>/i.test(
+      text
+    )
   }
 
   IpfsImport.prototype.loadResource = async function (parentUrl, parentTitle, parentField, url, key, resolvedKey, password) {

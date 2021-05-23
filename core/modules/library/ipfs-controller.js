@@ -12,13 +12,13 @@ IPFS Controller
   /*global $tw:false*/
   'use strict'
 
-  const EnsAction = require('$:/plugins/ipfs/ens-action.js').EnsAction
-  const EnsWrapper = require('$:/plugins/ipfs/ens-wrapper.js').EnsWrapper
+  const { EnsAction } = require('$:/plugins/ipfs/ens-action.js')
+  const { EnsWrapper } = require('$:/plugins/ipfs/ens-wrapper.js')
 
-  const IpfsAction = require('$:/plugins/ipfs/ipfs-action.js').IpfsAction
-  const IpfsBundle = require('$:/plugins/ipfs/ipfs-bundle.js').IpfsBundle
-  const IpfsTiddler = require('$:/plugins/ipfs/ipfs-tiddler.js').IpfsTiddler
-  const IpfsWrapper = require('$:/plugins/ipfs/ipfs-wrapper.js').IpfsWrapper
+  const { IpfsAction } = require('$:/plugins/ipfs/ipfs-action.js')
+  const { IpfsBundle } = require('$:/plugins/ipfs/ipfs-bundle.js')
+  const { IpfsTiddler } = require('$:/plugins/ipfs/ipfs-tiddler.js')
+  const { IpfsWrapper } = require('$:/plugins/ipfs/ipfs-wrapper.js')
 
   /*eslint no-unused-vars:"off"*/
   const ipfsKeyword = 'ipfs'

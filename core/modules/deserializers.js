@@ -134,9 +134,7 @@ Functions to deserialise tiddlers from a block of text
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
           // If so, attempt to decrypt it using the current password
-          $tw.utils.decrypt(encryptedStoreArea, function (decrypted) {
-            return decrypted
-          })
+          return $tw.utils.decryptStoreArea(encryptedStoreArea)
         } else {
           // It's not a TiddlyWiki so we'll return the entire HTML file as a tiddler
           return deserializeHtmlFile(text, fields)

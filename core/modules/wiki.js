@@ -12,6 +12,8 @@ wikimethod
   /*global $tw:false*/
   'use strict'
 
+  const { IpfsImport } = require('$:/plugins/ipfs/ipfs-import.js')
+
   /*
    * Parse a block of text of a specified MIME type
    *  type: content type of text to be parsed
@@ -107,22 +109,57 @@ wikimethod
    */
   exports.readFiles = function (files, options) {
     var callback
+    var result = []
+    var outstanding = files.length
+    var forward = function () {
+      if (--outstanding === 0) {
+        callback(result)
+      }
+    }
+    async function handleImportTiddlerFieldsArray (tiddlerFieldsArray, title) {
+      const dummy = new $tw.Tiddler({
+        title: title,
+      })
+      try {
+        const ipfsImport = new IpfsImport()
+        return await ipfsImport.importTiddlerFieldsArray(tiddlerFieldsArray, dummy)
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
+      }
+      return null
+    }
     if (typeof options === 'function') {
       callback = options
       options = {}
     } else {
       callback = options.callback
     }
-    var result = []
-    var outstanding = files.length
-    var readFileCallback = function (content) {
-      if ($tw.utils.isArray(content)) {
-        result.push.apply(result, content)
-      } else {
-        result = content
-      }
-      if (--outstanding === 0) {
-        callback(result)
+    var readFileCallback = function (content, title) {
+      if (content !== undefined && content !== null) {
+        if (content.length > 0 || (content.merged && content.merged.size > 0)) {
+          if (content.merged && content.merged.size > 0) {
+            result.push.apply(result, content)
+            forward()
+          } else {
+            handleImportTiddlerFieldsArray(content, title)
+              .then(data => {
+                if (data !== undefined && data !== null) {
+                  if (data.merged && data.merged.size > 0) {
+                    result.push.apply(result, data)
+                  }
+                }
+                forward()
+              })
+              .catch(error => {
+                $tw.ipfs.getLogger().error(error)
+                result.push.apply(result, content)
+                forward()
+              })
+          }
+        } else {
+          result = content
+          forward()
+        }
       }
     }
     for (var f = 0; f < files.length; f++) {
@@ -194,22 +231,23 @@ wikimethod
       // Check whether this is a compressed TiddlyWiki file
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
-        if (!$tw.utils.inflateCompressedStoreArea(compressedStoreArea, function (tiddlers) {
-          callback(tiddlers)
-        }
+        $tw.utils.inflateCompressedStoreArea(compressedStoreArea, function (tiddlers) {
+          callback(tiddlers, file.name)
+        })
       } else {
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
           $tw.utils.decrypt(encryptedStoreArea, function (tiddlers) {
-            callback(tiddlers)
+            callback(tiddlers, file.name)
           })
         } else {
           // Otherwise, just try to deserialise any tiddlers in the file
           callback(
             self.deserializeTiddlers(type, text, tiddlerFields, {
               deserializer: deserializer,
-            })
+            }),
+            file.name
           )
         }
       }
