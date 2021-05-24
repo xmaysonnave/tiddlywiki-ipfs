@@ -730,15 +730,19 @@ Render this widget into the DOM
           if (tiddler.isEqual(importedTiddler, ignoredFields)) {
             newFields['import-' + title] = 'no'
             newFields['delete-' + title] = 'yes'
-            if (tiddler['plugin-type'] === undefined && tiddler.library === undefined) {
+            if (tiddler.fields['plugin-type'] === undefined && tiddler.fields.library === undefined) {
               newFields['deleteSelection-' + title] = 'unchecked'
             } else {
               newFields['deleteSelection-' + title] = 'checked'
             }
           } else {
             newFields['import-' + title] = 'yes'
-            newFields['importSelection-' + title] = 'checked'
             newFields['delete-' + title] = 'no'
+            if (tiddler.fields['plugin-type'] === undefined && tiddler.fields.library === undefined) {
+              newFields['importSelection-' + title] = 'checked'
+            } else {
+              newFields['importSelection-' + title] = 'unchecked'
+            }
           }
         }
       }
