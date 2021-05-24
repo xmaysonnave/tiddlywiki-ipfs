@@ -3,8 +3,8 @@
   "name": "IPFS with TiddlyWiki",
   "description": "IPFS with TiddlyWiki",
   "author": "Xavier Maysonnave",
-  "build": "210524410",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210524410",
+  "build": "210524449",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210524449",
   "license": "GPL-3.0-or-later",
   "tags": "$:/ipfs/core",
   "core-version": ">=5.1.2",
@@ -13,5 +13,5 @@
   "plugin-type": "plugin",
   "list": "readme changelog",
   "type": "application/json",
-  "_canonical_uri": "https://dweb.link/ipfs/bafybeiculkhpblt3tdoygrqyjpymhub5pr467serfw7a4bu5ltdukfsgjy/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210524410.json"
+  "_canonical_uri": "https://dweb.link/ipfs/bafybeiayykxvrcj67j4nvadof5sjszkwlqntuw3eewelsqffy7nsyn3vke/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210524449.json"
 }
