@@ -194,6 +194,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       type: 'text/x-moz-url',
       IECompatible: false,
       toTiddlerFieldsArray: async function (data, fallbackTitle) {
+        data = data.lastIndexOf('\n') !== -1 ? data.substring(0, data.lastIndexOf('\n') - 1) : data
         return await handleURL(data, fallbackTitle)
       },
     },
