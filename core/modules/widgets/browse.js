@@ -79,8 +79,8 @@ Browse widget for browsing for files to import
   }
 
   /**
-  * Compute the internal state of the widget
-  */
+   * Compute the internal state of the widget
+   */
   BrowseWidget.prototype.execute = function () {
     this.browseMultiple = this.getAttribute('multiple')
     this.deserializer = this.getAttribute('deserializer')

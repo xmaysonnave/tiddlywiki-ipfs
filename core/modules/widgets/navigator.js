@@ -730,7 +730,11 @@ Render this widget into the DOM
           if (tiddler.isEqual(importedTiddler, ignoredFields)) {
             newFields['import-' + title] = 'no'
             newFields['delete-' + title] = 'yes'
-            newFields['deleteSelection-' + title] = 'unchecked'
+            if (tiddler['plugin-type'] === undefined && tiddler.library === undefined) {
+              newFields['deleteSelection-' + title] = 'unchecked'
+            } else {
+              newFields['deleteSelection-' + title] = 'checked'
+            }
           } else {
             newFields['import-' + title] = 'yes'
             newFields['importSelection-' + title] = 'checked'

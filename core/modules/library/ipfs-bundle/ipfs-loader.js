@@ -267,7 +267,10 @@ IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
             `[${xhr.status}] Loaded:
  ${xhr.responseURL}`
           )
-          resolve(result)
+          resolve({
+            content: result,
+            type: xhr.getResponseHeader('Content-Type'),
+          })
         } catch (error) {
           reject(error)
         }
@@ -382,7 +385,13 @@ IpfsLoader.prototype.loadToBase64 = async function (url, password) {
     throw new Error('Undefined URL...')
   }
   password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-  var { content, type } = await this.fetchUint8Array(url)
+  var content = null
+  var type = null
+  if (url.toString().startsWith('file:') || url.toString().startsWith('blob:')) {
+    var { content, type } = await this.xhrToUint8Array(url)
+  } else {
+    var { content, type } = await this.fetchUint8Array(url)
+  }
   if (content === undefined || content == null || content.length === undefined || content.length === 0) {
     return {
       content: '',
@@ -464,7 +473,13 @@ IpfsLoader.prototype.loadToUtf8 = async function (url, password) {
     throw new Error('Undefined URL...')
   }
   password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-  var { content, type } = await this.fetchUint8Array(url)
+  var content = null
+  var type = null
+  if (url.toString().startsWith('file:') || url.toString().startsWith('blob:')) {
+    var { content, type } = await this.xhrToUint8Array(url)
+  } else {
+    var { content, type } = await this.fetchUint8Array(url)
+  }
   if (content === undefined || content == null || content.length === undefined || content.length === 0) {
     return {
       content: '',

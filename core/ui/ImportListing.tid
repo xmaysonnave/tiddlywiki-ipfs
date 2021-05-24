@@ -78,7 +78,7 @@ tags: $:/ipfs/core
 </td>
 <td align="center">
 <$reveal type="match" state=<<deleteState>> text="yes" tag="div">
-<$checkbox field=<<deleteSelectionField>> checked="checked" unchecked="unchecked" default="checked"/>
+<$checkbox field=<<deleteSelectionField>> checked="checked" unchecked="unchecked" default="unchecked"/>
 </$reveal>
 </td>
 <td>

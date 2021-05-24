@@ -111,59 +111,58 @@ wikimethod
     var callback
     var result = []
     var outstanding = files.length
-    var forward = function () {
-      if (--outstanding === 0) {
-        callback(result)
-      }
-    }
-    async function handleImportTiddlerFieldsArray (tiddlerFieldsArray, title) {
-      const dummy = new $tw.Tiddler({
-        title: title,
-      })
-      try {
-        const ipfsImport = new IpfsImport()
-        return await ipfsImport.importTiddlerFieldsArray(tiddlerFieldsArray, dummy)
-      } catch (error) {
-        $tw.ipfs.getLogger().error(error)
-      }
-      return null
-    }
+    var ipfsImport = new IpfsImport()
     if (typeof options === 'function') {
       callback = options
       options = {}
     } else {
       callback = options.callback
     }
-    var readFileCallback = function (content, title) {
+    async function handleImportTiddlers (tiddlers, title) {
+      const dummy = new $tw.Tiddler({
+        title: title,
+      })
+      try {
+        return await ipfsImport.importTiddlers(tiddlers, dummy)
+      } catch (error) {
+        $tw.ipfs.getLogger().error(error)
+      }
+      return null
+    }
+    var importTiddlers = async function (content, name, type) {
       if (content !== undefined && content !== null) {
         if (content.length > 0 || (content.merged && content.merged.size > 0)) {
-          if (content.merged && content.merged.size > 0) {
-            result.push.apply(result, content)
-            forward()
+          var processImport = (type === 'text/html' && type === 'application.json') || type === 'application/x-tiddler'
+          var values = content.merged ? Array.from(content.merged.values()) : content
+          if (!processImport || (content.merged && content.merged.size > 0)) {
+            result.push.apply(result, values)
+            if (--outstanding === 0) {
+              callback(result)
+            }
           } else {
-            handleImportTiddlerFieldsArray(content, title)
-              .then(data => {
-                if (data !== undefined && data !== null) {
-                  if (data.merged && data.merged.size > 0) {
-                    result.push.apply(result, data)
-                  }
+            try {
+              var data = await handleImportTiddlers(content, name)
+              if (data !== undefined && data !== null) {
+                if (data.merged && data.merged.size > 0) {
+                  result.push.apply(result, values)
                 }
-                forward()
-              })
-              .catch(error => {
-                $tw.ipfs.getLogger().error(error)
-                result.push.apply(result, content)
-                forward()
-              })
+              }
+              if (--outstanding === 0) {
+                callback(result)
+              }
+            } catch (error) {
+              $tw.ipfs.getLogger().error(error)
+              result.push.apply(result, content)
+              if (--outstanding === 0) {
+                callback(result)
+              }
+            }
           }
-        } else {
-          result = content
-          forward()
         }
       }
     }
     for (var f = 0; f < files.length; f++) {
-      this.readFile(files[f], $tw.utils.extend({}, options, { callback: readFileCallback }))
+      this.readFile(files[f], $tw.utils.extend({}, options, { callback: importTiddlers }))
     }
     return files.length
   }
@@ -221,7 +220,7 @@ wikimethod
     // Onload
     reader.onload = function (event) {
       var text = event.target.result
-      var tiddlerFields = { title: file.name || 'Untitled', type: type }
+      var tiddlerFields = { title: file.name || 'Untitled' }
       if (isBinary) {
         var commaPos = text.indexOf(',')
         if (commaPos !== -1) {
@@ -232,23 +231,21 @@ wikimethod
       var compressedStoreArea = $tw.utils.extractCompressedStoreArea(text)
       if (compressedStoreArea) {
         $tw.utils.inflateCompressedStoreArea(compressedStoreArea, function (tiddlers) {
-          callback(tiddlers, file.name)
+          callback(tiddlers, file.name, type)
         })
       } else {
         // Check whether this is an encrypted TiddlyWiki file
         var encryptedStoreArea = $tw.utils.extractEncryptedStoreArea(text)
         if (encryptedStoreArea) {
           $tw.utils.decrypt(encryptedStoreArea, function (tiddlers) {
-            callback(tiddlers, file.name)
+            callback(tiddlers, file.name, type)
           })
         } else {
           // Otherwise, just try to deserialise any tiddlers in the file
-          callback(
-            self.deserializeTiddlers(type, text, tiddlerFields, {
-              deserializer: deserializer,
-            }),
-            file.name
-          )
+          var tiddlers = self.deserializeTiddlers(type, text, tiddlerFields, {
+            deserializer: deserializer,
+          })
+          callback(tiddlers, file.name, type)
         }
       }
     }

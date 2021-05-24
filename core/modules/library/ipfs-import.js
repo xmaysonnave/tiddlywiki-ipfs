@@ -60,7 +60,15 @@ IPFS Import
     }
   }
 
-  var IpfsImport = function () {}
+  var IpfsImport = function () {
+    this.deleted = new Map()
+    this.isEmpty = []
+    this.loaded = new Map()
+    this.merged = new Map()
+    this.notLoaded = []
+    this.notResolved = []
+    this.resolved = new Map()
+  }
 
   IpfsImport.prototype.removeTiddlers = function (keys, title) {
     var removed = 0
@@ -136,23 +144,12 @@ IPFS Import
     var password = tiddler.fields._password
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     const { type } = $tw.utils.getContentType(tiddler)
-    this.deleted = new Map()
-    this.loaded = new Map()
-    this.notLoaded = []
-    this.isEmpty = []
-    this.resolved = new Map()
-    this.notResolved = []
-    this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
       const host = $tw.ipfs.getUrl(`#${encodeURI(IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
       if (canonicalUri !== null || importUri !== null) {
         if (importUri !== null) {
-          const load = await this.load(host, IMPORT_TITLE, '_import_uri', importUri, password, true)
-          if (load === undefined || load == null) {
-            return null
-          }
-          const { loaded, type: typeLoaded } = load
+          const { loaded, type: typeLoaded } = await this.load(host, IMPORT_TITLE, '_import_uri', importUri, password, true)
           if (loaded === 0) {
             return {
               merged: this.merged,
@@ -166,11 +163,7 @@ IPFS Import
           }
         }
         if (canonicalUri !== null) {
-          const load = await this.load(host, IMPORT_TITLE, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
-          if (load === undefined || load == null) {
-            return null
-          }
-          const { loaded, type: typeLoaded } = load
+          const { loaded, type: typeLoaded } = await this.load(host, IMPORT_TITLE, '_canonical_uri', canonicalUri, password, tiddlyWikiType === type)
           if (loaded === 0) {
             return {
               merged: this.merged,
@@ -206,23 +199,12 @@ IPFS Import
     var password = tiddler.fields._password
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     const { type } = $tw.utils.getContentType(tiddler)
-    this.deleted = new Map()
-    this.loaded = new Map()
-    this.notLoaded = []
-    this.isEmpty = []
-    this.resolved = new Map()
-    this.notResolved = []
-    this.merged = new Map()
     try {
       // Load and prepare imported tiddlers to be processed
       const host = $tw.ipfs.getUrl(`#${encodeURI(IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
       if (uri !== undefined && uri !== null) {
         if (uri !== null) {
-          const load = await this.load(host, IMPORT_TITLE, field, uri, password, true)
-          if (load === undefined || load == null) {
-            return null
-          }
-          const { loaded, type: typeLoaded } = load
+          const { loaded, type: typeLoaded } = await this.load(host, IMPORT_TITLE, field, uri, password, true)
           if (loaded === 0) {
             return {
               merged: this.merged,
@@ -252,39 +234,42 @@ IPFS Import
     return null
   }
 
-  IpfsImport.prototype.importTiddlerFieldsArray = async function (tiddlerFieldsArray, tiddler) {
-    tiddlerFieldsArray = tiddlerFieldsArray !== undefined && tiddlerFieldsArray !== null ? tiddlerFieldsArray : null
-    if (tiddlerFieldsArray === undefined || tiddlerFieldsArray == null || !$tw.utils.isArray(tiddlerFieldsArray)) {
+  IpfsImport.prototype.importTiddlers = async function (tiddlers, tiddler) {
+    tiddlers = tiddlers !== undefined && tiddlers !== null ? tiddlers : null
+    if (tiddlers === undefined || tiddlers == null || !$tw.utils.isArray(tiddlers)) {
       return null
     }
-    this.deleted = new Map()
-    this.loaded = new Map()
-    this.notLoaded = []
-    this.isEmpty = []
-    this.resolved = new Map()
-    this.notResolved = []
-    this.merged = new Map()
+    var password = tiddler.fields._password
+    password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     try {
       // Load and prepare imported tiddlers to be processed
       /*eslint no-unused-vars:"off"*/
       const host = $tw.ipfs.getUrl(`#${encodeURI(IMPORT_TITLE)}`, $tw.ipfs.getDocumentUrl())
-      // const load = await this.load(host, IMPORT_TITLE, '_import_uri', uri, password, true)
-      // await this.processTiddlers(host, IMPORT_TITLE, '_import_uri', url, key, resolvedKey, null, tiddlerFieldsArray)
-      // if (load !== undefined && load == null) {
-      //   return null
-      // }
-      // const { loaded, type: typeLoaded } = load
-      // if (loaded === 0) {
-      //   return {
-      //     merged: this.merged,
-      //     deleted: this.deleted,
-      //     loaded: this.loaded,
-      //     isEmpty: this.isEmpty,
-      //     notLoaded: this.notLoaded,
-      //     notResolved: this.notResolved,
-      //     type: typeLoaded !== undefined && typeLoaded !== null ? typeLoaded : type,
-      //   }
-      // }
+      const url = $tw.ipfs.getUrl(tiddler.fields.title, host)
+      const { key, resolvedUrl } = await this.getKey(url, host)
+      this.resolved.set(url, key)
+      const { loaded } = await this.processTiddlers(host, IMPORT_TITLE, '_import_uri', url, key, resolvedUrl, null, tiddlers)
+      if (loaded === 0) {
+        return {
+          merged: this.merged,
+          deleted: this.deleted,
+          loaded: this.loaded,
+          isEmpty: this.isEmpty,
+          notLoaded: this.notLoaded,
+          notResolved: this.notResolved,
+          type: null,
+        }
+      }
+      await this.process(null, url, password)
+      return {
+        merged: this.merged,
+        deleted: this.deleted,
+        loaded: this.loaded,
+        isEmpty: this.isEmpty,
+        notLoaded: this.notLoaded,
+        notResolved: this.notResolved,
+        type: null,
+      }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
     }
@@ -298,7 +283,7 @@ IPFS Import
       // Import
       var rootUri = importUri !== null ? importUri : canonicalUri
       var { key: rootUriKey } = await this.getKey(rootUri)
-      this.importTiddlers(rootUri)
+      this.importURI(rootUri)
       // Load plugin
       const tiddlers = Array.from(this.merged.values())
       for (var i = 0; i < tiddlers.length; i++) {
@@ -479,11 +464,7 @@ from "${parentField}", "${parentTitle}"
       this.resolved.set(url, key)
     }
     if (load && key !== null && resolvedUrl !== null && this.notLoaded.indexOf(key) === -1 && this.loaded.get(key) === undefined) {
-      const load = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
-      if (load === undefined || load == null) {
-        return null
-      }
-      var { loaded, removed, type } = load
+      var { loaded, removed, type } = await this.loadResource(parentUrl, parentTitle, field, url, key, resolvedUrl, password)
     }
     return {
       loaded: loaded,
@@ -728,7 +709,7 @@ and ${parentResolvedKey}`
       return
     }
     var targetCanonicalUri = tiddler._canonical_uri
-    targetCanonicalUri = targetCanonicalUri !== undefined && targetCanonicalUri !== null && targetCanonicalUri.trim() === '' ? targetCanonicalUri.trim() : null
+    targetCanonicalUri = targetCanonicalUri !== undefined && targetCanonicalUri !== null && targetCanonicalUri.trim() !== '' ? targetCanonicalUri.trim() : null
     var targetCanonicalKey = null
     if (targetCanonicalUri !== null && this.notResolved.indexOf(targetCanonicalUri) === -1) {
       targetCanonicalKey = this.resolved.get(targetCanonicalUri)
@@ -788,7 +769,7 @@ and ${parentResolvedKey}`
     }
   }
 
-  IpfsImport.prototype.importTiddlers = function (rootUri) {
+  IpfsImport.prototype.importURI = function (rootUri) {
     var processedTitles = []
     for (var key of this.loaded.keys()) {
       const { imported, url } = this.loaded.get(key)
@@ -813,26 +794,26 @@ and ${parentResolvedKey}`
           const merged = this.merged.get(title)
           var type = merged.type
           if (tiddlyWikiType !== type) {
-            if (rootUri.startsWith('blob:') === false) {
-              merged._import_uri = rootUri
+            if (rootUri.toString().startsWith('blob:') === false) {
+              merged._import_uri = rootUri.toString()
             }
           } else {
             var canonicalUri = merged._canonical_uri
             if (canonicalUri === undefined || canonicalUri == null) {
               if (url !== rootUri) {
                 merged._canonical_uri = this.resolved.get(url)
-                if (rootUri.startsWith('blob:') === false) {
-                  merged._import_uri = rootUri
+                if (rootUri.toString().startsWith('blob:') === false) {
+                  merged._import_uri = rootUri.toString()
                 }
               } else {
-                if (rootUri.startsWith('blob:') === false) {
-                  merged._canonical_uri = rootUri
+                if (rootUri.toString().startsWith('blob:') === false) {
+                  merged._canonical_uri = rootUri.toString()
                 }
               }
             } else {
               merged._canonical_uri = this.resolved.get(canonicalUri)
-              if (canonicalUri !== rootUri && rootUri.startsWith('blob:') === false) {
-                merged._import_uri = rootUri
+              if (canonicalUri !== rootUri && rootUri.toString().startsWith('blob:') === false) {
+                merged._import_uri = rootUri.toString()
               }
             }
           }

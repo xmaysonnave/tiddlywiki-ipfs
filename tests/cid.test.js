@@ -157,4 +157,14 @@ describe('CID', () => {
     var { ipfsCid, ipnsIdentifier } = ipfsBundle.getIpfsIdentifier('ipns://bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy')
     expect(ipfsCid == null && ipnsIdentifier === 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy').to.be.true
   })
+  it('ipfsPath', async () => {
+    const ipfsBundle = new IpfsBundle()
+    ipfsBundle.init()
+    var { ipfsCid, ipnsIdentifier, ipfsPath } = ipfsBundle.getIpfsIdentifier('https://dweb.link/ipfs/bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy/test/test.pdf')
+    expect(ipfsCid === 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' && ipnsIdentifier == null).to.be.true
+    expect(ipfsPath === '/test/test.pdf').to.be.true
+    var { ipfsCid, ipnsIdentifier, ipfsPath } = ipfsBundle.getIpfsIdentifier('https://bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy.ipfs.dweb.link/test/test.pdf')
+    expect(ipfsCid === 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3ryy' && ipnsIdentifier == null).to.be.true
+    expect(ipfsPath === '/test/test.pdf').to.be.true
+  })
 })

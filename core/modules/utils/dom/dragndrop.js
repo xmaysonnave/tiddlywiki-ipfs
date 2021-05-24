@@ -257,16 +257,25 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     }
     url = decodeURI(url)
     var tags = []
-    var tiddlerTitle = title
-    var extension = url.split('.').pop()
-    var info = $tw.utils.getFileExtensionInfo(`.${extension}`)
-    if (info !== undefined && info !== null) {
-      var fileName = url.split('/').pop()
-      tiddlerTitle = fileName.substring(0, fileName.length - extension.length - 1)
+    var tiddlerTitle = title || 'Untitled'
+    var type = 'text/html'
+    var fileName = url.split('/').pop()
+    if (fileName !== undefined && fileName !== null && fileName !== '') {
+      var extension = fileName.split('.').pop()
+      if (extension !== undefined && extension !== null && extension !== '') {
+        var info = $tw.utils.getFileExtensionInfo(`.${extension}`)
+        if (info !== undefined && info !== null) {
+          type = info.type
+          tiddlerTitle = fileName.substring(0, fileName.length - extension.length - 1)
+        }
+      }
     }
-    var imported = await handleImportURL(url, tiddlerTitle)
-    if (imported !== undefined && imported !== null && imported.merged.size > 0) {
-      return imported
+    var imported = await handleImportURL(url, tiddlerTitle, type)
+    if (imported !== undefined && imported !== null) {
+      if (imported.merged.size > 0) {
+        return imported
+      }
+      type = imported.type !== undefined && imported.type !== null ? imported.type : type
     }
     try {
       url = $tw.ipfs.normalizeUrl(url)
@@ -287,7 +296,7 @@ Browser data transfer utilities, used with the clipboard and drag and drop
     if (tags.indexOf('$:/isAttachment') === -1) {
       $tw.utils.pushTop(tags, '$:/isAttachment')
     }
-    if ((info !== undefined && info !== null && info.type === 'text/html') || (imported !== undefined && imported !== null && imported.type === 'text/html')) {
+    if (type === 'text/html') {
       return [
         {
           title: tiddlerTitle,
@@ -303,15 +312,16 @@ Browser data transfer utilities, used with the clipboard and drag and drop
       {
         title: tiddlerTitle,
         tags: tags,
-        type: imported !== null && imported.type ? imported.type : info.type,
+        type: type,
         _canonical_uri: url,
       },
     ]
   }
 
-  async function handleImportURL (url, title) {
+  async function handleImportURL (url, title, type) {
     const dummy = new $tw.Tiddler({
       title: title,
+      type: type,
     })
     try {
       const ipfsImport = new IpfsImport()

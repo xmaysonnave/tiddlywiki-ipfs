@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210523264",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210524410",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -94,7 +94,7 @@
     "replace": "^1.2.1",
     "sinon": "^10.0.1",
     "sjcl": "^1.0.8",
-    "snyk": "^1.605.0",
+    "snyk": "^1.606.0",
     "terser": "^5.7.0",
     "tiddlywiki": "^5.1.23",
     "timeout-signal": "^1.1.0",

@@ -1,5 +1,5 @@
 title: Resources
-modified: 20210512114915385
+modified: 20210524114915385
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
@@ -7,7 +7,9 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>[ext[Docs for plugins by tobibeer|https://tobibeer.github.io/tw5-plugins]]</li>
   <li>[ext[Documenting my TW solutions|https://giffmex.org/gifts/documenting.tw.html]]</li>
+  <li>[[Grok TiddlyWiki]]</li>
   <li>[ext[Stroll|https://giffmex.org/stroll/stroll.html]]</li>
   <li>[ext[The TiddlyWiki toolmap|https://dynalist.io/d/zUP-nIWu2FFoXH-oM7L7d9DM]]</li>
-  <li>[ext[TiddlyWikiLinks|https://links.tiddlywiki.com/]]</li>
+  <li>[ext[TiddlyWiki Links|https://links.tiddlywiki.com/]]</li>
+  <li>[ext[TiddlyWiki Upgrade|https://tiddlywiki.com/upgrade.html]]</li>
 </ul>

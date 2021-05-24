@@ -1,0 +1,38 @@
+title: Browser Security
+modified: 20200524094915385
+tags: $:/ipfs/documentation Settings
+type: text/vnd.tiddlywiki
+
+<h2>Browser Security</h2>
+<p>
+  If you have resources locally, you will need to disable some security mechanisms at your own risks.
+</p>
+<h3>Chromium Family</h3>
+<p>
+  The Chromium browsers family allow you to disable security features that prevent you loading local resources as startup flags.
+</p>
+<ul>
+  <li><b>allow-file-access-from-files</b></li>
+  <li><b>disable-web-security</b></li>
+</ul>
+<p>
+  <a rel="noopener noreferrer" target="_blank" href="http://www.chromium.org/developers/how-tos/run-chromium-with-flags/">Run Chromium with flags</a>
+</p>
+<p>
+  In the location bar, input <b>&#x63;&#x68;&#x72;&#x6F;&#x6D;&#x65;&#x3A;&#x2F;&#x2F;&#x76;&#x65;&#x72;&#x73;&#x69;&#x6F;&#x6E;</b>
+  to check the enabled startup parameter flags.
+</p>
+<h3>Firefox</h3>
+<p>
+  In the location bar, input <b>about:config</b> to access Firefox <b>Advanced Preferences</b>.
+</p>
+<table>
+  <tr>
+    <td><a rel="noopener noreferrer" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSRequestNotHttp">privacy.file_unique_origin</a></td>
+    <td><b>false</b></td>
+  </tr>
+  <tr>
+    <td><b>security.fileuri.strict_origin_policy</b></td>
+    <td><b>false</b></td>
+  </tr>
+</table>
