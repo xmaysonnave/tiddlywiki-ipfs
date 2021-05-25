@@ -38,7 +38,7 @@ cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.json.json-build.tid ./core/
 cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./core/dependency || exit 1
 cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.json.json-build.tid ./core/dependency || exit 1
 cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./core/dependenc || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./core/dependency || exit 1
 
 cp ./production/tiddlywiki/core/\$_core.json.json-build.tid ./core/dependency || exit 1
 cp ./production/tiddlywiki/core/\$_core.zlib.json-build.tid ./core/dependency || exit 1
