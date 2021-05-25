@@ -1,12 +1,12 @@
 title: $:/ipfs/edition-build
 tags: $:/ipfs/editions
 type: text/vnd.tiddlywiki
-build: 210525380
+build: 210525410
 name: bluelightav
-version: 0.4.0-beta-tw-v5.1.23+build-210525380
-sourceSize: 238119
+version: 0.4.0-beta-tw-v5.1.23+build-210525410
+sourceSize: 238095
 sourceExtension: html
 sourceFilename: bluelightav
-sourceUri: ipfs://bafybeig7ubdxxaw4yuekzcebxu446spuyiclokoxqfkerqgbs52z3qfbm4/
+sourceUri: ipfs://bafybeihyejigdraxirtrjiqlstd2vu4mgexiflkvivh5bpprmhb6eaemea/
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>
