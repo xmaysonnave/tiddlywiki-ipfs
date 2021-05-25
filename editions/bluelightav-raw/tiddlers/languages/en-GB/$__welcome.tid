@@ -1,15 +1,47 @@
 title: Welcome
-modified: 20210401094915385
+modified: 20210525094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
 <h2>Welcome</h2>
+<p style="text-align:center;">
+  Welcome to <b>IPFS with ~TiddlyWiki</b>, the Unstoppable Wiki
+</p>
+<h3>Context</h3>
+<h4>Web 2.0</h4>
+> The [[https://en.wikipedia.org/wiki/Web_2.0|Web 2.0]] (also known as **Participative** (or **Participatory**) and **Social Web**)
+> refers to websites that emphasize user-generated content, ease of use, participatory culture and interoperability (i.e.,
+> compatible with other products, systems, and devices) for end users.
 <p>
-  Welcome to <b>IPFS with ~TiddlyWiki</b>, the Unstoppable Wiki.
+  The **Web 2.0** offers little control to what those tools and websites are able to analyze and monetize.
+  According to [ext[Statista|https://www.statista.com/statistics/266249/advertising-revenue-of-google/]],
+  Google's ad revenue amounted to 150 billion US dollars in 2020.
 </p>
 <p>
-  [ext[Blue Light|https://wiki.bluelightav.org]] is thrilled to provide this [ext[Open Source|https://spdx.org/licenses/GPL-3.0-or-later.html]] <b>~TiddlyWiki</b> plugin.
+  The 2016 European [[https://en.wikipedia.org/wiki/General_Data_Protection_Regulation|General Data Protection Regulation (GPDR)]]
+  highlights a law who give European citizens more control over their personal data.
 </p>
+<h4>Web 3.0</h4>
+<p>
+  [[ext[https://en.wikipedia.org/wiki/Tim_Berners-Lee|Tim Berners Lee] the father of the web described the
+  [[ext[https://en.wikipedia.org/wiki/Semantic_Web|Semantic Web]] as a component of **Web 3.0** in 2006.
+  **Web 3.0** [[ext[https://www.geeksforgeeks.org/web-1-0-web-2-0-and-web-3-0-with-their-difference/|Web 3.0]]
+  was aimed at being a more autonomous, intelligent, and open internet.
+</p>
+<p>
+  However technologies like [[ext[https://en.wikipedia.org/wiki/Blockchain|blockchains]], [[ext[https://en.wikipedia.org/wiki/Peer-to-peer|peer to peer]] and [[ext[https://101blockchains.com/blockchain-cryptography/|cryptography]] gives to [[ext[https://www.freecodecamp.org/news/what-is-web3/|Web 3.0]]
+  a broader set of technologies.
+</p>
+<p>Web 3.0 characteristics</p>
+<ul>
+  <li>[[ext[https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274|Decentralized]]</li>
+  <li>Permissionless blockchain (no central authority)</li>
+  <li>Privacy and Confidentiality (users control their data)</li>
+  <li>Semantic Web</li>
+  <li>Security</li>
+  <li>Trustless</li>
+  <li>Verifiable</li>
+</ul>
 <p>
   <b>IPFS with ~TiddlyWiki</b>
 </p>

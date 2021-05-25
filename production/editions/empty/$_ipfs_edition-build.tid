@@ -1,12 +1,12 @@
 title: $:/ipfs/edition-build
 tags: $:/ipfs/editions
 type: text/vnd.tiddlywiki
-build: 210524487
+build: 210525297
 name: empty
-version: 0.4.0-beta-tw-v5.1.23+build-210524487
-sourceSize: 36534
+version: 0.4.0-beta-tw-v5.1.23+build-210525297
+sourceSize: 36550
 sourceExtension: html
 sourceFilename: empty
-sourceUri: ipfs://bafybeiau6uihn6763r3rc6hytcgikrqle236ltvb4clldad3q3rel3e4b4/
+sourceUri: ipfs://bafybeigqpzoqrnjzogbfrgascp7cnhpkcqnphppzxs5dsq4or4uow2at6a/
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

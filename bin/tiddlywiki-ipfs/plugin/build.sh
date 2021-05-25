@@ -29,20 +29,20 @@ mkdir -p ./build/plugins/ipfs > /dev/null 2>&1
 rm -R ./core/dependency > /dev/null 2>&1
 mkdir -p ./core/dependency > /dev/null 2>&1
 
-cp ./production/tiddlywiki-ipfs/bootcss/\$_boot_boot.css.css-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/bootcss/\$_boot_boot.css.json.json-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/bootprefix/\$_boot_bootprefix.js.js-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/bootprefix/\$_boot_bootprefix.js.json.json-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.json.json-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.json.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki-ipfs/bootcss/\$_boot_boot.css.css-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/bootcss/\$_boot_boot.css.json.json-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/bootprefix/\$_boot_bootprefix.js.js-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/bootprefix/\$_boot_bootprefix.js.json.json-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.js-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/boot/\$_boot_boot.js.json.json-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.js-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/sjcl/\$_library_sjcl.js.json.json-build.tid ./core/dependency || exit 1
 cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.js-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki-ipfs/library/\$_library_ipfs.js.json.json-build.tid ./core/dependenc || exit 1
 
-cp ./production/tiddlywiki/core/\$_core.json.json-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki/core/\$_core.zlib.json-build.tid ./core/dependency/ || exit 1
-cp ./production/tiddlywiki/core/\$_core.zlib.ipfs.json-build.tid ./core/dependency/ || exit 1
+cp ./production/tiddlywiki/core/\$_core.json.json-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki/core/\$_core.zlib.json-build.tid ./core/dependency || exit 1
+cp ./production/tiddlywiki/core/\$_core.zlib.ipfs.json-build.tid ./core/dependency || exit 1
 
 # assets
 cp -R ./core/* ./build/plugins/ipfs || exit 1

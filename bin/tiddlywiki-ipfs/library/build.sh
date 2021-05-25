@@ -24,17 +24,18 @@ rm -f -R ./build/plugins > /dev/null 2>&1
 mkdir -p ./current/tiddlywiki-ipfs/library > /dev/null 2>&1
 
 # libraries
-cp ./download/detect-provider/detect-provider.min.js ./build/tiddlers/detect-provider.min.js || exit 1
-cp ./download/keccak/keccak.umd.min.js ./build/tiddlers/keccak.umd.min.js || exit 1
-cp ./download/loglevel/loglevel.min.js ./build/tiddlers/loglevel.min.js || exit 1
-cp ./download/pako/pako.min.js ./build/tiddlers/pako.min.js || exit 1
+cp ./download/detect-provider/detect-provider.min.js ./build/tiddlers/\$_detect-provider.min.js || exit 1
+cp ./download/keccak/keccak.umd.min.js ./build/tiddlers/\$_keccak.umd.min.js || exit 1
+cp ./download/loglevel/loglevel.min.js ./build/tiddlers/\$_loglevel.min.js || exit 1
+cp ./download/pako/pako.min.js ./build/tiddlers/\$_pako.min.js || exit 1
 
 # meta
-cp ./core/library/library-ipfs-bundle.js.tid ./build/tiddlers/library-ipfs-bundle.js.tid || exit 1
-cp ./core/library/detect-provider.min.js.meta ./build/tiddlers/detect-provider.min.js.meta || exit 1
-cp ./core/library/keccak.umd.min.js.meta ./build/tiddlers/keccak.umd.min.js.meta || exit 1
-cp ./core/library/loglevel.min.js.meta ./build/tiddlers/loglevel.min.js.meta || exit 1
-cp ./core/library/pako.min.js.meta ./build/tiddlers/pako.min.js.meta || exit 1
+cp ./core/library/\$_library_ipfs_bundle.js.tid ./build/tiddlers || exit 1
+
+cp ./core/library/\$_detect-provider.min.js.meta ./build/tiddlers || exit 1
+cp ./core/library/\$_keccak.umd.min.js.meta ./build/tiddlers || exit 1
+cp ./core/library/\$_loglevel.min.js.meta ./build/tiddlers || exit 1
+cp ./core/library/\$_pako.min.js.meta ./build/tiddlers || exit 1
 
 # bundle
 cp ./editions/library-bundle/tiddlywiki.info ./build/tiddlywiki.info || exit 1
