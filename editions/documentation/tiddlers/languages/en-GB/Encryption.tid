@@ -1,0 +1,17 @@
+title: Encryption
+modified: 20210525094915385
+tags: $:/ipfs/documentation [[Saving General]]
+type: text/vnd.tiddlywiki
+
+<h2>Encryption Setting</h2>
+[img class="tc-image-documentation" [/ipfs/image/settings/preferred/saver]]
+<p>
+  Ethereum uses [ext[accounts|https://ethereum.org/en/developers/docs/accounts/#externally-owned-accounts-and-key-pairs]] made
+  of two parts, a Public key and a Private key.
+</p>
+<ul>
+  <li>Public keys are public identifiers</li>
+  <li>Public keys are used as encryption keys</li>
+  <li>Private keys are used to sign and identify transactions and encrypted contents</li>
+  <li>Private keys are used as decryption keys</li>
+</ul>

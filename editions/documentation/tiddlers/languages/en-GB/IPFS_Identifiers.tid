@@ -1,0 +1,26 @@
+title: IPFS Identifiers
+modified: 20210526094915385
+tags: $:/ipfs/documentation [[IPFS Technical]]
+type: text/vnd.tiddlywiki
+
+<h2>IPFS Identifiers</h2>
+<p>
+  IPFS Content is addressed through [ext[identifiers|https://docs.ipfs.io/concepts/content-addressing/]], they can have different forms:
+</p>
+
+<h3>IPFS Identifiers</h3>
+<code>[ext[Qmbo8QtR4mKpX7zCN8WqTLcbRpifvz83C1ogVV2s1H2uzH|https://cid.ipfs.io/#Qmbo8QtR4mKpX7zCN8WqTLcbRpifvz83C1ogVV2s1H2uzH]]</code>
+<code>[ext[12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP|https://cid.ipfs.io/#12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP]]</code>
+<code>[ext[bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy|https://cid.ipfs.io/#bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy]]</code>
+
+<h3>IPNS Identifiers</h3>
+<code>[ext[bafzaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy|https://cid.ipfs.io/#bafzaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy]]</code>
+<code>[ext[k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0|https://cid.ipfs.io/#k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0]]</code>
+
+<h2>Ethereum Identifiers</h2>
+
+<p>An Ethereum Public key is a 42 character hexadecimal address:</p>
+<code>0x06012c8cf97bead5deae237070f9587f8e7a266d</code>
+
+<p>While a Private key has 64 hexadecimal characters:</p>
+<code>fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036415f</code>.

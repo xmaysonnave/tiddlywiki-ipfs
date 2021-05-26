@@ -1,51 +1,108 @@
 title: Welcome
-modified: 20210525094915385
+modified: 20210526094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
 <h2 style="text-align:center;">Welcome to <b>IPFS with ~TiddlyWiki</b><br/>The Unstoppable Wiki</h2>
-<h3>Context</h3>
+
+<h3>Motivation</h3>
+
 <h4>Web 2.0</h4>
 
-> The [ext[Web 2.0|https://en.wikipedia.org/wiki/Web_2.0]] (also known as <b>Participative</b> (or <b>Participatory</b>) and <b>Social Web</b>) refers to websites that emphasize user-generated content, ease of use, participatory culture and interoperability (i.e., compatible with other products, systems, and devices) for end users.
+> The <b>Web 2.0</b> (also known as <b>Participative</b> (or <b>Participatory</b>) and <b>Social Web</b>) refers to websites that emphasize user-generated content, ease of use, participatory culture and interoperability (i.e., compatible with other products, systems, and devices) for end users.
+>> <cite>[ext[wikipedia.org|https://en.wikipedia.org/wiki/Web_2.0]]</cite>
 
 <p>
-  The <b>Web 2.0</b> offers little control to what those tools and websites are able to analyze and monetize.
-  According to [ext[Statista|https://www.statista.com/statistics/266249/advertising-revenue-of-google/]],
-  Google's ad revenue amounted to 150 billion US dollars in 2020.
+  The <b>Web 2.0</b> offers little control to what those tools and websites are able to analyze and monetize:
 </p>
-<p>
-  The 2016 European [ext[General Data Protection Regulation (GPDR)|https://en.wikipedia.org/wiki/General_Data_Protection_Regulation]]
-  highlights a law who give European citizens more control over their personal data.
-</p>
+
+> According to [ext[Statista|https://www.statista.com/statistics/266249/advertising-revenue-of-google/]], Google's ad revenue amounted to 150 billion US dollars in 2020.
+
+> In 2016 the European Union passed a law, the [ext[General Data Protection Regulation (GPDR)|https://en.wikipedia.org/wiki/General_Data_Protection_Regulation]] who aims to give European citizens more control over their personal data.
+
 <h4>Web 3.0</h4>
 <p>
-  [ext[Tim Berners Lee|https://en.wikipedia.org/wiki/Tim_Berners-Lee]] the father of the web described the
-  [ext[Semantic Web|https://en.wikipedia.org/wiki/Semantic_Web]] as a component of <b>Web 3.0</b> in 2006.
-  <b>Web 3.0</b> [ext[Web 3.0|https://www.geeksforgeeks.org/web-1-0-web-2-0-and-web-3-0-with-their-difference/]]
-  was aimed at being a more autonomous, intelligent, and open internet.
+  In 2006 [ext[Tim Berners Lee|https://en.wikipedia.org/wiki/Tim_Berners-Lee]] the father of the web described the
+  [ext[Semantic Web|https://en.wikipedia.org/wiki/Semantic_Web]] as a component of <b>Web 3.0</b>.
 </p>
 <p>
-  However technologies like [ext[blockchains|https://en.wikipedia.org/wiki/Blockchain]], [ext[peer to peer|https://en.wikipedia.org/wiki/Peer-to-peer]] and [ext[cryptography|https://101blockchains.com/blockchain-cryptography/]] gives to [ext[Web 3.0|https://www.freecodecamp.org/news/what-is-web3/]]
-  a broader set of technologies.
+  [ext[Web 3.0|https://www.geeksforgeeks.org/web-1-0-web-2-0-and-web-3-0-with-their-difference/]]
+  aimed at being a more autonomous, intelligent, and open Internet.
+</p>
+<p>
+  However technologies like [ext[blockchains|https://en.wikipedia.org/wiki/Blockchain]], [ext[peer to peer|https://en.wikipedia.org/wiki/Peer-to-peer]]
+  and [ext[cryptography|https://101blockchains.com/blockchain-cryptography/]] opened up, refined and renewed a broader
+  [ext[Web 3.0|https://www.freecodecamp.org/news/what-is-web3/]] vision.
 </p>
 <p>Web 3.0 characteristics</p>
 <ul>
   <li>[ext[Decentralized|https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274]]</li>
-  <li>Permissionless blockchain (no central authority)</li>
-  <li>Privacy and Confidentiality (users control their data)</li>
-  <li>Semantic Web</li>
-  <li>Security</li>
-  <li>Trustless</li>
+  <li>Permissionless (No central authority, Censorship resistant)</li>
+  <li>Programmable Crypto-Assets (Individuals are in control of their private key)</li>
+  <li>Privacy and Confidentialty (Individuals are in control of their data)</li>
+  <li>Semantic Web (Analytics)</li>
+  <li>Security (Identification, Immutability, Tamper-proof)</li>
+  <li>[ext[Trustless|https://preethikasireddy.medium.com/eli5-what-do-we-mean-by-blockchains-are-trustless-aa420635d5f6]]</li>
   <li>Verifiable</li>
 </ul>
+
+<h3>Landscape</h3>
+
+<h4>[ext[IPFS|https://ipfs.io]]</h4>
 <p>
-  <b>IPFS with ~TiddlyWiki</b>
+  <b>IPFS with ~TiddlyWiki</b> stores its data over [ext[IPFS|https://ipfs.io#why]].
 </p>
+<p>
+  [ext[IPFS|https://en.wikipedia.org/wiki/Juan_Benet_(computer_scientist)]] or [ext[Inter-Planetary File System|https://ipfs.io]]
+  is a permissionless open-source peer-to-peer decentralized [ext[network|https://ipfs.github.io/public-gateway-checker/]]
+  who provides content distribution for storing and accessing immutable data. This [ext[infrastructure|https://blog.vastdreams.com/2021/03/08/why-do-we-need-ipfs-for-better-internet-in-the-future/]]
+  let individuals store content with Security and Verifiabilty.
+</p>
+<p>
+  The [ext[Pinning|https://docs.ipfs.io/concepts/persistence/#pinning-in-context]] mechanism introduces a data life cycle who
+  could be seen as a [ext[Right to be forgotten|https://gdpr.eu/right-to-be-forgotten/]] implementation.
+</p>
+<ul>
+   <li>A pinned content is kept and protected</li>
+   <li>An unpinned content could be garbage collected and removed</li>
+</ul>
+<p>
+  Once the content is spreaded and pinned over multiple IPFS nodes, data turns out to be more censorship resistant, resilient
+  and available.
+</p>
+
+> In 2021 a democratic elected representative has been moderated and [ext[banned|https://blog.twitter.com/en_us/topics/company/2020/suspension.html]] from a global social network.
+
+<h4>[ext[Ethereum|https://ethereum.org]]</h4>
+
+> Ethereum is a decentralized, open source, and distributed computing platform that enables the creation of smart contracts and decentralized applications, also known as [ext[Ðapp|https://en.wikipedia.org/wiki/Decentralized_application]].
+>> <cite>[ext[consensys.net|https://consensys.net/knowledge-base/about-ethereum-eth/]]</cite>
+
+<p>
+  <b>IPFS with ~TiddlyWiki</b> uses the [ext[Ethereum blockchain|https://ethereum.org/en/developers/docs/intro-to-ethereum/]]
+  as its identification, cryptographic and naming system layer.
+</p>
+
+<h4>[ext[ENS|https://ens.domains]]</h4>
+
+> The [ext[Ethereum Name Service (ENS)|https://ens.domains]] is a distributed, open, and extensible naming system based on the Ethereum blockchain. ENS’s job is to map human-readable names like ‘alice.eth’ to machine-readable identifiers such as Ethereum addresses, other cryptocurrency addresses, content hashes, and metadata. ENS also supports ‘reverse resolution’, making it possible to associate metadata such as canonical names or interface descriptions with Ethereum addresses.
+>> <cite>[ext[ens.domains|https://docs.ens.domains]]</cite>
+
+<p>
+  <b>IPFS with ~TiddlyWiki</b> uses [ext[ENS|https://app.ens.domains]] as its human readable naming system.
+</p>
+
+<h4>[ext[TiddlyWiki|https://tiddywiki.com]]</h4>
+
+> ~TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, ~JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.
+>> <cite>[ext[wikipedia.org|https://en.wikipedia.org/wiki/TiddlyWiki]]</cite>
+
+<h3>IPFS with ~TiddlyWiki</h3>
+
 <h3>Features</h3>
 <ul>
-  <li>Store ~TiddlyWiki's and attachments on [ext[IPFS|https://ipfs.io/]]</li>
-  <li>Access ~TiddlyWiki's and attachments from [ext[IPFS|https://ipfs.io/]]</li>
+  <li>Store ~TiddlyWiki's and attachments on [ext[IPFS|https://ipfs.io]]</li>
+  <li>Access ~TiddlyWiki's and attachments from [ext[IPFS|https://ipfs.io]]</li>
   <li>Compress ~TiddlyWiki's and attachments</li>
   <li>Encrypt, Decrypt and Sign ~TiddlyWiki's and attachments
     <ul>
@@ -58,7 +115,7 @@ type: text/vnd.tiddlywiki
   <li>Publish and Manage IPNS Keys and IPNS cids</li>
   <li>Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets</li>
   <li>Publish to [ext[ENS|https://ens.domains]]</li>
-  <li>Share over [ext[IPFS|https://ipfs.io/]] ~TiddlyWiki's [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments</li>
+  <li>Share over [ext[IPFS|https://ipfs.io]] ~TiddlyWiki's [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments</li>
 </ul>
 <h3>Project</h3>
 <h4>IPFS</h4>
@@ -86,7 +143,7 @@ type: text/vnd.tiddlywiki
     <ul>
       <li><b>Forum</b>:
         <ul>
-          <li>[ext[Discourse|https://discuss.ens.domains/]]</li>
+          <li>[ext[Discourse|https://discuss.ens.domains]]</li>
         </ul>
       </li>
     </ul>
@@ -95,7 +152,7 @@ type: text/vnd.tiddlywiki
     <ul>
       <li><b>Forum</b>:
         <ul>
-          <li>[ext[Community|https://forum.ethereum.org/]]</li>
+          <li>[ext[Community|https://forum.ethereum.org]]</li>
         </ul>
       </li>
     </ul>
@@ -104,14 +161,14 @@ type: text/vnd.tiddlywiki
     <ul>
       <li><b>Forum</b>:
         <ul>
-          <li>[ext[Discussion and Support Forum|https://discuss.ipfs.io/]]</li>
+          <li>[ext[Discussion and Support Forum|https://discuss.ipfs.io]]</li>
         </ul>
       </li>
     </ul>
   </li>
   <li><b>~TiddlyWiki</b>:
     <ul>
-      <li><b>[ext[Discord|https://discordapp.com/]]</b>:
+      <li><b>[ext[Discord|https://discordapp.com]]</b>:
         <ul>
           <li>[ext[TiddlyWiki 5|https://discord.gg/7TEuTvk]]</li>
         </ul>

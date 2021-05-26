@@ -1,12 +1,12 @@
 title: $:/plugins/ipfs.zlib.ipfs-build
 tags: $:/ipfs/core $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210525380
+build: 210526492
 name: $:/plugins/ipfs.zlib.ipfs
-version: 0.4.0-beta-tw-v5.1.23+build-210525380
+version: 0.4.0-beta-tw-v5.1.23+build-210526492
 sourceSize: 668
 sourceExtension: json
 sourceFilename: $_plugins_ipfs.zlib.ipfs
-sourceUri: ipfs://bafybeidgjpftwccggjjoxlda62h5a3hwgtmfqr7s4xtzhblusbnnw2kc6u/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210525380.json
+sourceUri: ipfs://bafybeieoworm4r2fzyvftumdxwox4rjqqvgsqe7t3z2dgrdlxgc3icm6q4/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210526492.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

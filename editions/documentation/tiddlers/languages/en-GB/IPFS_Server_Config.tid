@@ -1,6 +1,6 @@
 title: IPFS Server Config
-modified: 20201217054439773
-tags: $:/ipfs/documentation Settings
+modified: 20210525054439773
+tags: $:/ipfs/documentation [[IPFS Settings]]
 type: application/json
 documentation: https://github.com/ipfs/go-ipfs/blob/master/docs/config.md
 

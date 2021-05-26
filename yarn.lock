@@ -1989,10 +1989,10 @@
     tslib "^1.9.3"
     xml-js "^1.6.11"
 
-"@snyk/java-call-graph-builder@1.22.0":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@snyk/java-call-graph-builder/-/java-call-graph-builder-1.22.0.tgz#f06703ea14977d4956b73ea4740560a6731921c7"
-  integrity sha512-AYQhkU/vdRH4X3dxot7fMNfnsArZp2kRrBaSYPGuXwlWLpxnHiDc1gRFPCGLoH2kxqo5tr3OD3HPvR9dVO/oFw==
+"@snyk/java-call-graph-builder@1.23.0":
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/@snyk/java-call-graph-builder/-/java-call-graph-builder-1.23.0.tgz#a310778d20ba56bc32fdce211c93d1a48d163e74"
+  integrity sha512-Go/UV33/R0SW10nvshrs/s8GjY2mnbJaRV4Xkj4zGrwpK80lL30th6LDpXDKEdXPZ66EbYGS1Q9gGlL7GzOdeA==
   dependencies:
     "@snyk/graphlib" "2.1.9-patch.3"
     ci-info "^2.0.0"
@@ -3910,7 +3910,12 @@ core-js-pure@^3.0.0:
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.12.1.tgz#934da8b9b7221e2a2443dc71dfa5bd77a7ea00b8"
   integrity sha512-1cch+qads4JnDSWsvc7d6nzlKAippwjUlf6vykkTLW53VSV+NkE6muGBToAjEA8pG90cSfcud3JgVmW2ds5TaQ==
 
-core-js@^3.12.1, core-js@^3.6.5:
+core-js@^3.13.0:
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.13.0.tgz#58ca436bf01d6903aee3d364089868d0d89fe58d"
+  integrity sha512-iWDbiyha1M5vFwPFmQnvRv+tJzGbFAm6XimJUT0NgHYW3xZEs1SkCAcasWSVFxpI2Xb/V1DDJckq3v90+bQnog==
+
+core-js@^3.6.5:
   version "3.12.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.12.1.tgz#6b5af4ff55616c08a44d386f1f510917ff204112"
   integrity sha512-Ne9DKPHTObRuB09Dru5AjwKjY4cJHVGu+y5f7coGn1E9Grkc3p2iBwE9AI/nJzsE29mQF7oq+mhYYRqOMFN1Bw==
@@ -9535,10 +9540,10 @@ nise@^4.1.0:
     just-extend "^4.0.2"
     path-to-regexp "^1.7.0"
 
-nise@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/nise/-/nise-5.0.4.tgz#aafddeec51d8bcb9842a51be8d82d0b9f289b002"
-  integrity sha512-ZcFPFu5a7xiaoR/ieYXMx6B/QLJej9upgxcpD9uB2Oz4JbZUtAc9+Z000W6910tZuVvaHozEoxq0KvVE9Bj2TQ==
+nise@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/nise/-/nise-5.1.0.tgz#713ef3ed138252daef20ec035ab62b7a28be645c"
+  integrity sha512-W5WlHu+wvo3PaKLsJJkgPup2LrsXCcm7AWwyNZkUnn5rwPkuPBi3Iwk5SQtN0mv+K65k7nKKjwNQ30wg3wLAQQ==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
     "@sinonjs/fake-timers" "^7.0.4"
@@ -11475,16 +11480,16 @@ sinon@^10.0.0:
     nise "^4.1.0"
     supports-color "^7.1.0"
 
-sinon@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-11.0.0.tgz#e45bae910425d3e52f7eebcb34b47ad42cc7eb57"
-  integrity sha512-iLdNOhEDVHf1GJwWIqiFQe7QqYsqKDSYUUmmb180WCu3l0Cz+CKBxsiSa8P5fTJvTp1lwE77uK/aHzUuJKr1cA==
+sinon@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-11.1.0.tgz#e8aa528ffb964d98a588b5f3b81a27720b6e3ed3"
+  integrity sha512-wCbMjy6pepGX3CE/IBz3QDqOmdYP96tWrrqTMVnbREgJG989725EbMZD9vp+Cd+A6MNXDjb7weWLi/bPPpcH/g==
   dependencies:
     "@sinonjs/commons" "^1.8.3"
     "@sinonjs/fake-timers" "^7.1.0"
     "@sinonjs/samsam" "^6.0.2"
     diff "^5.0.0"
-    nise "^5.0.4"
+    nise "^5.1.0"
     supports-color "^8.1.1"
 
 sjcl@^1.0.8:
@@ -11601,14 +11606,14 @@ snyk-go-plugin@1.17.0:
     tmp "0.2.1"
     tslib "^1.10.0"
 
-snyk-gradle-plugin@3.15.0:
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/snyk-gradle-plugin/-/snyk-gradle-plugin-3.15.0.tgz#09f3dda2fe6b2694cfd9513f95c4fee785bbf0d0"
-  integrity sha512-KhKOE3iTG207RAoQ/sH22+HkFke4k+lEPbybFC8pnKyGBkMheNsbUBolIwrXSw9nmV5wvR6ZG6/6cnBW/P60WA==
+snyk-gradle-plugin@3.16.0:
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/snyk-gradle-plugin/-/snyk-gradle-plugin-3.16.0.tgz#67faeb82d9e381e3c19b44f953b3d1f3a4750c71"
+  integrity sha512-PQegG8GOweJvUDSroysO1E0RK3MxphSUvNG5siRqGHJQ8s+dw9DddYN8kMn5+pTrfzo6zddgDPJxjqsfNR+NIw==
   dependencies:
     "@snyk/cli-interface" "2.11.0"
     "@snyk/dep-graph" "^1.28.0"
-    "@snyk/java-call-graph-builder" "1.22.0"
+    "@snyk/java-call-graph-builder" "1.23.0"
     "@types/debug" "^4.1.4"
     chalk "^3.0.0"
     debug "^4.1.1"
@@ -11816,10 +11821,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@^1.606.0:
-  version "1.606.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.606.0.tgz#3115f491a2be772cb4273c26c0213cdc1be57f8b"
-  integrity sha512-xvJCdL5tGPnc1U1E1C7FjIQ80ZGm8MWQXY9Vvox/J+a69CgSgmFEP2UVTZZ9ndr3jGBAgr0/IKw+O+s1Jn4aYA==
+snyk@^1.608.0:
+  version "1.608.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.608.0.tgz#7df4f2c0b8fc8f1ba9f2e804e35bf8dbdbe26293"
+  integrity sha512-DGj2Z4XjIxUusQPjzd+rlLstYnetY94kA48bGjde7ZnJ894DCJGCO0vIEpaQ92Fj3mlgK/AADx5DR5JXNiLDnw==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -11871,7 +11876,7 @@ snyk@^1.606.0:
     snyk-cpp-plugin "2.2.1"
     snyk-docker-plugin "4.20.2"
     snyk-go-plugin "1.17.0"
-    snyk-gradle-plugin "3.15.0"
+    snyk-gradle-plugin "3.16.0"
     snyk-module "3.1.0"
     snyk-mvn-plugin "2.26.0"
     snyk-nodejs-lockfile-parser "1.34.2"
@@ -11882,7 +11887,6 @@ snyk@^1.606.0:
     snyk-resolve "1.1.0"
     snyk-resolve-deps "4.7.2"
     snyk-sbt-plugin "2.11.0"
-    snyk-tree "^1.0.0"
     snyk-try-require "1.3.1"
     source-map-support "^0.5.11"
     strip-ansi "^5.2.0"
@@ -11891,6 +11895,7 @@ snyk@^1.606.0:
     update-notifier "^5.1.0"
     uuid "^3.3.2"
     wrap-ansi "^5.1.0"
+    yaml "^1.10.2"
 
 socket.io-adapter@~1.1.0:
   version "1.1.2"
@@ -13538,7 +13543,7 @@ yaml@1.8.3:
   dependencies:
     "@babel/runtime" "^7.8.7"
 
-yaml@^1.10.0, yaml@^1.7.1, yaml@^1.9.2:
+yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.1, yaml@^1.9.2:
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==

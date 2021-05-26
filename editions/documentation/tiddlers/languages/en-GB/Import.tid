@@ -14,7 +14,7 @@ type: text/vnd.tiddlywiki
   Tiddlers giving the flexibility to exchange Tiddlers between users.
 </p>
 <p>
-  The <b>import</b> is not limited to <b>IPFS</b> as [[URL]] lets you import <b>JSON</b> Tiddlers from wherever you want.
+  The <b>import</b> is not limited to <b>IPFS</b> as [[IPFS URL]] lets you import <b>JSON</b> Tiddlers from wherever you want.
 </p>
 <p>
   Create a Tiddler and defines a <b>_canonical_uri</b> field. Fill up the <b>canonical_uri</b> field
@@ -27,14 +27,14 @@ type: text/vnd.tiddlywiki
 <p>
 [img class="tc-image-documentation" [/ipfs/image/import/console]]
 <p>
-  Edit the imported Tiddlers and browse the [[URL]] associated with fields <b>_canonical_uri</b> or <b>_import_uri</b>.
+  Edit the imported Tiddlers and browse the [[IPFS URL]] associated with fields <b>_canonical_uri</b> or <b>_import_uri</b>.
 <p/>
 <p>
   The [[Refresh Tiddler]] command forces an import refresh. Deleted Tiddlers could occur.
 <p>
 [img class="tc-image-documentation" [/ipfs/image/import/deleted]]
 <p>
-  This imported sample references multiple files with relative [[URL]].
+  This imported sample references multiple files with relative [[IPFS URL]].
 </p>
 <ul>
   <li>[ext[Root|https://raw.githubusercontent.com/xmaysonnave/tiddlywiki-ipfs/main/test/import/sample/root.json]]</li>

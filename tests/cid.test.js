@@ -19,6 +19,7 @@ const sha256Base32V1 = 'bafybeigrhoshyutoif6pfy5ion35asrd2ojt5fgip5btenwfsriujw3
 const rsa2048Base58V0 = 'Qmbo8QtR4mKpX7zCN8WqTLcbRpifvz83C1ogVV2s1H2uzH'
 const ed25519Base58V0 = '12D3KooWSXMEzThypkZHkMt7XnbKHRvMb9gVwGH7UCZyHtoSgJQP'
 const ed25519DagPbBase32V1 = 'bafyaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
+
 const ed25519Libp2pKeyBase32V1 = 'bafzaajaiaejcb6b2yghnz3fhjxpvopeer4jf5tx4cdyrddke2fl3vh6twkgrblgy'
 const ed25519Base36V1 = 'k51qzi5uqu5dmdbdlz9ccv1ze114psij95j5kzqszhy952g6qllvm3x52oava0'
 
