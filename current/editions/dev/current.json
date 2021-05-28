@@ -1,0 +1,20 @@
+{
+  "build": "210528438",
+  "content": [
+    {
+      "title": "dev",
+      "tags": "$:/ipfs/editions",
+      "name": "dev",
+      "rawHash": "3d9d56fb4b70d2c8bd141ab43a017baedfc78c03a73a965ff5b4e6fee54694cf",
+      "sourceExtension": "html",
+      "sourceFilename": "dev",
+      "sourceSize": 320476,
+      "sourceUri": "https://dweb.link/ipfs/bafybeigjnccahzhvnqckckrlrikvtsh4hebdda52cgyznacb3fp3pbsc3i/",
+      "tidSize": 446,
+      "tidUri": "https://dweb.link/ipfs/bafybeihnojzwe4all6om3gondm4xlluripxlickueh5w5gzgikuaf5vqbi/$_ipfs_edition-build.tid"
+    }
+  ],
+  "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210528438",
+  "buildUri": "https://dweb.link/ipfs/bafybeidmhwckt77vlrxzi6daeg53ujay35gscib2juztth6swtppd674za/210528438/"
+}

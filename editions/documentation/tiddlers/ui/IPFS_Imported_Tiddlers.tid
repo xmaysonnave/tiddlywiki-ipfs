@@ -2,4 +2,13 @@ title: IPFS Imported Tiddlers
 tags: $:/ipfs/documentation [[IPFS Explorers]]
 type: text/vnd.tiddlywiki
 
+<$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
 <<locator-view baseTitle:"$:/isImported">>
+
+</$reveal>
+<$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
+<$list filter="[tag[$:/isImported]sort[title]]"/>
+
+</$reveal>

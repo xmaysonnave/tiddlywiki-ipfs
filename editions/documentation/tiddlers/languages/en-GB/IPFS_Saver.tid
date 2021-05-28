@@ -3,13 +3,18 @@ modified: 20210525094915385
 tags: $:/ipfs/documentation [[IPFS Settings]]
 type: text/vnd.tiddlywiki
 
-<h2>Requirement</h2>
-<ul>
-  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
-</ul>
 <h2>Settings</h2>
 <p>
   Control the plugin behaviour with the [[IPFS Saver Settings|$:/core/ui/ControlPanel/Ipfs/Saver]].
 </p>
 [img class="tc-image-documentation" [/ipfs/image/settings]]
+<$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
 <<locator-view baseTitle:"IPFS Saver">>
+
+</$reveal>
+<$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
+<$list filter="[tag[IPFS Saver]sort[title]]"/>
+
+</$reveal>

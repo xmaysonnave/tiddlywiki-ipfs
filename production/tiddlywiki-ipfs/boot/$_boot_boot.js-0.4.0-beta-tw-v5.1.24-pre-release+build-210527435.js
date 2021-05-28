@@ -2494,7 +2494,7 @@ var bootsuffix = function ($tw) {
     }
     var normalizedUrl = null
     if ($tw.ipfs !== undefined && $tw.ipfs !== null) {
-      normalizedUrl = $tw.ipfs.normalizeUrl(url)
+      normalizedUrl = $tw.ipfs.normalizeUrl(url, $tw.ipfs.getPublicGatewayUrl())
       if (normalizedUrl !== null) {
         normalizedUrl = decodeURI(normalizedUrl)
       }
@@ -2796,12 +2796,6 @@ var bootsuffix = function ($tw) {
           }
           if (tiddler.fields._canonical_uri === undefined) {
             var normalizedUrl = $tw.utils.normalizeUrl(build.sourceUri)
-            if ($tw.ipfs !== undefined && $tw.ipfs !== null) {
-              normalizedUrl = $tw.ipfs.normalizeUrl(normalizedUrl)
-              if (normalizedUrl !== null) {
-                normalizedUrl = decodeURI(normalizedUrl)
-              }
-            }
             if (normalizedUrl == null) {
               normalizedUrl = build.sourceUri
             }

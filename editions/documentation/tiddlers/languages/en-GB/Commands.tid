@@ -1,11 +1,16 @@
 title: Commands
 modified: 20200527094915385
-tags: $:/ipfs/documentation [[IPFS Documentation]]
+tags: $:/ipfs/documentation [[@ipfs@ Documentation]]
 type: text/vnd.tiddlywiki
 
-<h2>Requirement</h2>
-<ul>
-  <li>[ext[Locator plugin for TiddlyWiki|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
-</ul>
 <h2>Commands</h2>
+<$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
 <<locator-view baseTitle:"Commands">>
+
+</$reveal>
+<$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
+<$list filter="[tag[Commands]sort[title]]"/>
+
+</$reveal>

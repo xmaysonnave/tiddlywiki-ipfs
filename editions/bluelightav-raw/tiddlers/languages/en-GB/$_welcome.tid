@@ -34,7 +34,7 @@ type: text/vnd.tiddlywiki
   and [ext[cryptography|https://101blockchains.com/blockchain-cryptography/]] opened up, refined and renewed a broader
   [ext[Web 3.0|https://www.freecodecamp.org/news/what-is-web3/]] vision.
 </p>
-<p>Web 3.0 characteristics</p>
+<p><b>Web 3.0</b> characteristics</p>
 <ul>
   <li>[ext[Decentralized|https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274]]</li>
   <li>Permissionless (No central authority, Censorship resistant)</li>
@@ -45,13 +45,19 @@ type: text/vnd.tiddlywiki
   <li>[ext[Trustless|https://preethikasireddy.medium.com/eli5-what-do-we-mean-by-blockchains-are-trustless-aa420635d5f6]]</li>
   <li>Verifiable</li>
 </ul>
+<p><b>IPFS with ~TiddlyWiki</b> characteristics:</p>
+<ul>
+  <li>Open Source</li>
+  <li>Backed by cryptography</li>
+  <li>Decentralized (IPFS, Ethereum)</li>
+  <li>Free from censorship</li>
+  <li>No [ext[Cookies|https://www.privacypolicies.com/blog/cookies/]] and no [ext[Local Storage|https://en.wikipedia.org/wiki/Web_storage]]</li>
+  <li>No downtime</li>
+</ul>
 
 <h3>Landscape</h3>
 
 <h4>[ext[IPFS|https://ipfs.io]]</h4>
-<p>
-  <b>IPFS with ~TiddlyWiki</b> stores its data over [ext[IPFS|https://ipfs.io#why]].
-</p>
 <p>
   [ext[IPFS|https://en.wikipedia.org/wiki/Juan_Benet_(computer_scientist)]] or [ext[Inter-Planetary File System|https://ipfs.io]]
   is a permissionless open-source peer-to-peer decentralized [ext[network|https://ipfs.github.io/public-gateway-checker/]]
@@ -64,14 +70,18 @@ type: text/vnd.tiddlywiki
 </p>
 <ul>
    <li>A pinned content is kept and protected</li>
-   <li>An unpinned content could be garbage collected and removed</li>
+   <li>An unpinned content could be erased</li>
 </ul>
 <p>
-  Once the content is spreaded and pinned over multiple IPFS nodes, data turns out to be more censorship resistant, resilient
+  Once a content is pinned, loaded from multiple servers and pinned again over multiple IPFS nodes, data turns out to be more censorship resistant, resilient
   and available.
 </p>
 
 > In 2021 a democratic elected representative has been moderated and [ext[banned|https://blog.twitter.com/en_us/topics/company/2020/suspension.html]] from a global social network.
+
+<p>
+  <b>IPFS with ~TiddlyWiki</b> stores its data over [ext[IPFS|https://ipfs.io#why]].
+</p>
 
 <h4>[ext[Ethereum|https://ethereum.org]]</h4>
 
@@ -92,105 +102,123 @@ type: text/vnd.tiddlywiki
   <b>IPFS with ~TiddlyWiki</b> uses [ext[ENS|https://app.ens.domains]] as its human readable naming system.
 </p>
 
-<h4>[ext[TiddlyWiki|https://tiddywiki.com]]</h4>
+<h4>[ext[TiddlyWiki|https://tiddlywiki.com]]</h4>
 
 > ~TiddlyWiki is a personal wiki and a non-linear notebook for organising and sharing complex information. It is an open-source single page application wiki in the form of a single HTML file that includes CSS, ~JavaScript, and the content. It is designed to be easy to customize and re-shape depending on application. It facilitates re-use of content by dividing it into small pieces called Tiddlers.
 >> <cite>[ext[wikipedia.org|https://en.wikipedia.org/wiki/TiddlyWiki]]</cite>
 
-<h3>IPFS with ~TiddlyWiki</h3>
+<p>
+  As a personal information organizer ~TiddlyWiki started in 2004 as a standalone local <b>html</b> file. An instance of ~TiddlyWiki is self-contained (application and data) and do not rely on any centralized server to run, a simple browser is required. Users are free to read and modify every pieces of informations of ~TiddlyWiki (application, data and [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]]). The ~TiddlyWiki [ext[community|https://tiddlywiki.com/#Other%20Resources]] is diverse, dynamic and passionate.
+</p>
+
+<h4>IPFS with ~TiddlyWiki</h4>
+
+<p>
+  At Blue Light we wanted a privacy component to let users store their content publicly or privately over
+  a decentralized public infrastructure. This tool should give individuals more control over their data.
+</p>
+<p>
+  We want to use this privacy component as a decentralized collaborative foundation.
+  Small groups should be able to share, build and exchange in an open, resilient and secure way.
+</p>
 
 <h3>Features</h3>
 <ul>
-  <li>Store ~TiddlyWiki's and attachments on [ext[IPFS|https://ipfs.io]]</li>
-  <li>Access ~TiddlyWiki's and attachments from [ext[IPFS|https://ipfs.io]]</li>
-  <li>Compress ~TiddlyWiki's and attachments</li>
-  <li>Encrypt, Decrypt and Sign ~TiddlyWiki's and attachments
+  <li>Access from [ext[IPFS Gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]
     <ul>
-      <li>Standford</li>
-      <li>Ethereum</li>
-      <li>[ext[SHA-3|https://en.wikipedia.org/wiki/SHA-3]]</li>
+      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>~TiddlyWiki's instances</li>
+      <li>~TiddlyWiki's plugins</li>
+      <li>Content (text/html, application/json, application/x-tiddler...)</li>
     </ul>
   </li>
-  <li>Import and Export</li>
-  <li>Publish and Manage IPNS Keys and IPNS cids</li>
-  <li>Interact with [ext[Metamask|https://metamask.io]] Ethereum wallets</li>
-  <li>Publish to [ext[ENS|https://ens.domains]]</li>
-  <li>Share over [ext[IPFS|https://ipfs.io]] ~TiddlyWiki's [ext[Tiddlers|https://tiddlywiki.com/#Tiddlers]] and attachments</li>
-</ul>
-<h3>Project</h3>
-<h4>IPFS</h4>
-<ul>
-  <li>[ext[IPFS|https://github.com/ipfs/ipfs]]</li>
-  <li>[ext[IPFS Distributions|https://dist.ipfs.io/]]</li>
-  <li>[ext[IPFS Shipyard|https://github.com/ipfs-shipyard]]</li>
-</ul>
-<h4>IPFS with ~TiddlyWiki</h4>
-<ul>
-  <li><$ipfslink value="bluelightav.eth">IPFS with ~TiddlyWiki</$ipfslink></li>
-  <li>[ext[IPFS with TiddlyWiki GitHub|https://github.com/xmaysonnave/tiddlywiki-ipfs/]]</li>
-</ul>
-<h4>~TiddlyWiki</h4>
-<ul>
-  <li>[ext[TiddlyWiki|https://tiddlywiki.com]]</li>
-  <li>[ext[TiddlyWiki5 GitHub|https://github.com/Jermolene/TiddlyWiki5/]]</li>
-</ul>
-<p>
-  See the <b>IPFS with ~TiddlyWiki</b> [[README.md |https://github.com/xmaysonnave/tiddlywiki-ipfs/blob/main/README.md]] for additional details.
-</p>
-<h3>Community</h3>
-<ul>
-  <li><b>ENS</b>:
+  <li>Compress
     <ul>
-      <li><b>Forum</b>:
-        <ul>
-          <li>[ext[Discourse|https://discuss.ens.domains]]</li>
-        </ul>
-      </li>
+      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>~TiddlyWiki's instances</li>
+      <li>~TiddlyWiki's plugins</li>
+      <li>Content (text/html, application/json, application/x-tiddler...)</li>
     </ul>
   </li>
-  <li><b>Ethereum</b>:
+  <li>Embed or Cache ~TiddlyWiki's immutable content:
     <ul>
-      <li><b>Forum</b>:
-        <ul>
-          <li>[ext[Community|https://forum.ethereum.org]]</li>
-        </ul>
-      </li>
+      <li>Pre boot assets</li>
+      <li>Plugins</li>
     </ul>
   </li>
-  <li><b>IPFS</b>:
+  <li>Encrypt, Decrypt and Sign
     <ul>
-      <li><b>Forum</b>:
-        <ul>
-          <li>[ext[Discussion and Support Forum|https://discuss.ipfs.io]]</li>
-        </ul>
-      </li>
+      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>~TiddlyWiki's instances</li>
+      <li>~TiddlyWiki's plugins</li>
+      <li>Content (text/html, application/json, application/x-tiddler...)</li>
     </ul>
   </li>
-  <li><b>~TiddlyWiki</b>:
+  <li>[ext[Metamask|https://metamask.io]] keyring and encryption support</li>
+  <li>Multi level Export and Import</li>
+  <li>Node.js CLI commands</li>
+  <li>Prohibits cookies and local data modifications with [ext[Subdomain gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li>
+  <li>Publish to IPNS
     <ul>
-      <li><b>[ext[Discord|https://discordapp.com]]</b>:
-        <ul>
-          <li>[ext[TiddlyWiki 5|https://discord.gg/7TEuTvk]]</li>
-        </ul>
-      </li>
-      <li><b>[ext[Gitter|https://gitter.im]]</b>:
-        <ul>
-          <li>[ext[TiddlyWiki Public|https://gitter.im/TiddlyWiki/public]]</li>
-          <li>[ext[TiddlyWiki Developer and Geeks|https://gitter.im/TiddlyWiki/developers-and-geeks]]</li>
-          <li>[ext[TiddlyWiki Servers and Savers|https://gitter.im/TiddlyWiki/servers-and-savers]]</li>
-        </ul>
-      </li>
-      <li><b>[ext[Google Groups|https://groups.google.com]]</b>:
-        <ul>
-          <li>[ext[TiddlyWiki|https://groups.google.com/forum/#!forum/tiddlywiki]]</li>
-          <li>[ext[TiddlyWikiDev|https://groups.google.com/forum/#!forum/tiddlywikidev]]</li>
-        </ul>
-      </li>
+      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>~TiddlyWiki's instances</li>
+      <li>~TiddlyWiki's plugins</li>
+      <li>Content (text/html, application/json, application/x-tiddler...)</li>
     </ul>
   </li>
+  <li>Publish to [ext[ENS|https://ens.domains]]
+    <ul>
+      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>~TiddlyWiki's instances</li>
+      <li>~TiddlyWiki's plugins</li>
+      <li>Content (text/html, application/json, application/x-tiddler...)</li>
+    </ul>
+  </li>
+  <li>URL Resolver
+    <ul>
+      <li><b>ipfs:</b> and <b>ipns:</b> protocol</li>
+      <li><b>Ethereum Name Service</b> (ENS) and <b>.eth.link</b> domain</li>
+    </ul>
+  </li>
+  <li>Store on [ext[IPFS API|https://docs.ipfs.io/concepts/ipfs-gateway/]]
+    <ul>
+      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>~TiddlyWiki's instances</li>
+      <li>~TiddlyWiki's plugins</li>
+      <li>Content (text/html, application/json, application/x-tiddler...)</li>
+    </ul>
+  </li>
+  <li>[[And more...|@ipfs@ Documentation]]</li>
 </ul>
-<h3>Settings</h3>
-<ul>
-  <li>[[Saving General|$:/core/ui/ControlPanel/Saving/General]]</li>
-  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Ipfs/Saver]]</li>
-</ul>
+
+<h3>IPFS with ~TiddlyWiki Metrics</h3>
+<table style="margin-left:auto;margin-right:auto;">
+  <tr style="text-align:center;">
+    <td></td>
+    <th>Embedded Plain</th>
+    <th>Embedded Encrypted Plain</th>
+    <th>Cached Compressed</th>
+    <th>Cached Compressed Encrypted</th>
+  </tr>
+  <tr style="text-align:center;">
+    <th scope="row">bluelightav.eth</th>
+    <td>4.7 MB</td>
+    <td>5.8 MB</td>
+    <td>242.8 kB</td>
+    <td>320.5 kB</td>
+  </tr>
+  <tr style="text-align:center;">
+    <th scope="row">empty</th>
+    <td>2.6 MB</td>
+    <td>4.9 MB</td>
+    <td><b>36.5 kB</b></td>
+    <td>501.5 kB</td>
+  </tr>
+  <tr style="text-align:center;">
+    <th scope="row">tiddlywiki.com</th>
+    <td>6.3 MB</td>
+    <td><b>N/A</b></td>
+    <td>1.9 MB</td>
+    <td><b>N/A</b></td>
+  </tr>
+</table>

@@ -23,6 +23,14 @@ function main () {
         recursive: false,
         silent: true,
       })
+      // Public Gateway
+      replace({
+        regex: '%IPFS_PUBLIC_GATEWAY%',
+        replacement: process.env.IPFS_PUBLIC_GATEWAY,
+        paths: ['./build/tiddlywiki.info'],
+        recursive: false,
+        silent: true,
+      })
     }
 
     // bootcss

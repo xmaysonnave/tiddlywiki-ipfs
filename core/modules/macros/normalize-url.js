@@ -19,7 +19,7 @@ module-type: macro
     var tiddler = !!title && this.wiki.getTiddler(title)
     field = field !== undefined && field !== null && field.trim() !== '' ? field.trim() : '_canonical_uri'
     if (tiddler && tiddler.fields[field] !== undefined) {
-      const url = $tw.ipfs.normalizeUrl(tiddler.fields[field])
+      const url = $tw.ipfs.normalizeUrl(tiddler.fields[field], $tw.ipfs.getPublicGatewayUrl())
       if (url !== undefined && url !== null) {
         return url.toString()
       }

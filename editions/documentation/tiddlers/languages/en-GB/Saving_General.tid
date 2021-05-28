@@ -5,4 +5,13 @@ type: text/vnd.tiddlywiki
 
 <h2>Saving General</h2>
 [img class="tc-image-documentation" [/ipfs/image/settings]]
+<$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
 <<locator-view baseTitle:"Saving General">>
+
+</$reveal>
+<$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
+<$list filter="[tag[Saving General]sort[title]]"/>
+
+</$reveal>

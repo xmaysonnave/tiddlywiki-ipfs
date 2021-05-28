@@ -1,17 +1,17 @@
 /*\
-title: $:/core/modules/commands/ipfsmodules.js
+title: $:/core/modules/commands/ipfs-modules.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: command
 
 \*/
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true*/
+  /*global $tw:false*/
   'use strict'
 
   exports.info = {
-    name: 'ipfsmodules',
+    name: 'ipfs-modules',
     synchronous: true,
   }
 

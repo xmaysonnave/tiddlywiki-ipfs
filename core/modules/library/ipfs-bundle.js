@@ -78,6 +78,14 @@ IpfsBundle.prototype.getDocumentUrl = function () {
   return this.ipfsUrl.getDocumentUrl()
 }
 
+IpfsBundle.prototype.setPublicGateway = function (url) {
+  return this.ipfsUrl.setPublicGateway(url)
+}
+
+IpfsBundle.prototype.getPublicGatewayUrl = function () {
+  return this.ipfsUrl.getPublicGatewayUrl()
+}
+
 IpfsBundle.prototype.getIpfsDefaultApiUrl = function () {
   return this.ipfsUrl.getIpfsDefaultApiUrl()
 }

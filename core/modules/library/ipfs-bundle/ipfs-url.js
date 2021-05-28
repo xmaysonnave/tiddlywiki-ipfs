@@ -30,6 +30,28 @@ IpfsUrl.prototype.filenamify = function (filename, options) {
   return filenamify(filename, options)
 }
 
+IpfsUrl.prototype.setPublicGateway = function (url) {
+  var publicGateway = null
+  try {
+    publicGateway = new URL(url)
+  } catch (error) {
+    return false
+  }
+  this.publicGateway = publicGateway
+  return true
+}
+
+IpfsUrl.prototype.getPublicGatewayUrl = function () {
+  try {
+    if (this.publicGateway !== undefined && this.publicGateway !== null) {
+      return this.publicGateway
+    }
+    return this.getUrl($tw.utils.getIpfsSaverGatewayUrl())
+  } catch (error) {
+    return this.getIpfsDefaultGatewayUrl()
+  }
+}
+
 IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {
   return new URL(this.getIpfsDefaultApi())
 }
@@ -104,7 +126,7 @@ IpfsUrl.prototype.getUrl = function (url, base) {
 }
 
 IpfsUrl.prototype.getIpfsBaseUrl = function () {
-  var base = this.getIpfsGatewayUrl()
+  var base = this.getPublicGatewayUrl()
   try {
     if ($tw.utils.getIpfsUrlPolicy() === 'origin') {
       base = this.getDocumentUrl()

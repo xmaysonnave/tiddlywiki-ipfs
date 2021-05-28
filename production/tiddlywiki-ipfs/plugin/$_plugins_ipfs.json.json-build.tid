@@ -1,12 +1,12 @@
 title: $:/plugins/ipfs.json-build
 tags: $:/ipfs/core $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210526492
+build: 210527460
 name: $:/plugins/ipfs.json
-version: 0.4.0-beta-tw-v5.1.23+build-210526492
-sourceSize: 1313578
+version: 0.4.0-beta-tw-v5.1.23+build-210527460
+sourceSize: 1315742
 sourceExtension: json
 sourceFilename: $_plugins_ipfs.json
-sourceUri: ipfs://bafybeiectnbsncfnuh2v4c47cmw5fnb5sqyxjdvodzdulcsins4k5iid3e/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210526492.json
+sourceUri: ipfs://bafybeiajevvk6wexcdpkeqib3mfiwca5eawodbcn6kyaofdovuxxi3cira/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210527460.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

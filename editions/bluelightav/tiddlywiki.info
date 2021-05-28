@@ -33,7 +33,9 @@
       "--import",
         "./build/output/editions/bluelightav/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+      "--public-gateway",
+        "%IPFS_PUBLIC_GATEWAY%",
+			"--ipfs-modules",
         "yes",
 			"--compress",
         "yes",
@@ -42,7 +44,7 @@
         "./editions/bluelightav/bluelightav-%BUILD_BLUELIGHTAV_VERSION%.html",
         "text/plain"
     ],
-		"index-standford": [
+		"index-embedded-standford": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -61,7 +63,7 @@
       "--import",
         "./build/output/editions/bluelightav/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "yes",
@@ -69,11 +71,11 @@
         "blue",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/index-standford.html",
+        "../sample/index-embedded-standford.html",
         "text/plain",
       "--clearkeys"
     ],
-    "index-plain": [
+    "index-embedded-plain": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -92,16 +94,16 @@
       "--import",
         "./build/output/editions/bluelightav/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "no",
       "--rendertiddler",
         "$:/core/save/all",
-        "../sample/index-plain.html",
+        "../sample/index-embedded-plain.html",
         "text/plain"
     ],
-		"index-plain-and-ethereum": [
+		"index-embedded-plain-ethereum": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -120,7 +122,7 @@
       "--import",
         "./build/output/editions/bluelightav/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "no",
@@ -128,11 +130,11 @@
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/index-plain-and-ethereum.html",
+        "../sample/index-plain-ethereum.html",
         "text/plain",
       "--clearkeys"
     ],
-		"index-plain-and-standford": [
+		"index-embedded-plain-standford": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -151,7 +153,7 @@
       "--import",
         "./build/output/editions/bluelightav/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "no",
@@ -159,7 +161,7 @@
         "blue",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/index-plain-and-standford.html",
+        "../sample/index-embedded-plain-standford.html",
         "text/plain",
       "--clearkeys"
     ]

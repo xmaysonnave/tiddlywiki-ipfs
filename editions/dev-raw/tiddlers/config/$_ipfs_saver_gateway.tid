@@ -1,4 +1,4 @@
 title: $:/ipfs/saver/gateway
 tags: $:/ipfs/editions/dev
 
-$:/ipfs/saver/api/http/10.45.0.1/8080
+$:/ipfs/saver/gateway/http/10.45.0.1/8080

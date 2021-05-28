@@ -1,0 +1,58 @@
+title: @ipfs@ Community
+modified: 20210528094915385
+tags: $:/ipfs/documentation TableOfContents
+type: text/vnd.tiddlywiki
+
+<h2>Community</h2>
+
+<ul>
+  <li><b>ENS</b>:
+    <ul>
+      <li><b>Forum</b>:
+        <ul>
+          <li>[ext[Discourse|https://discuss.ens.domains]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><b>Ethereum</b>:
+    <ul>
+      <li><b>Forum</b>:
+        <ul>
+          <li>[ext[Community|https://forum.ethereum.org]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><b>IPFS</b>:
+    <ul>
+      <li><b>Forum</b>:
+        <ul>
+          <li>[ext[Discussion and Support Forum|https://discuss.ipfs.io]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><b>~TiddlyWiki</b>:
+    <ul>
+      <li><b>[ext[Discord|https://discordapp.com]]</b>:
+        <ul>
+          <li>[ext[TiddlyWiki 5|https://discord.gg/7TEuTvk]]</li>
+        </ul>
+      </li>
+      <li><b>[ext[Gitter|https://gitter.im]]</b>:
+        <ul>
+          <li>[ext[TiddlyWiki Public|https://gitter.im/TiddlyWiki/public]]</li>
+          <li>[ext[TiddlyWiki Developer and Geeks|https://gitter.im/TiddlyWiki/developers-and-geeks]]</li>
+          <li>[ext[TiddlyWiki Servers and Savers|https://gitter.im/TiddlyWiki/servers-and-savers]]</li>
+        </ul>
+      </li>
+      <li><b>[ext[Google Groups|https://groups.google.com]]</b>:
+        <ul>
+          <li>[ext[TiddlyWiki|https://groups.google.com/forum/#!forum/tiddlywiki]]</li>
+          <li>[ext[TiddlyWikiDev|https://groups.google.com/forum/#!forum/tiddlywikidev]]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>

@@ -351,6 +351,14 @@ ${ipfsPath}`
     return this.ipfsBundle.filenamify(name, options)
   }
 
+  IpfsController.prototype.setPublicGateway = function (url) {
+    return this.ipfsBundle.setPublicGateway(url)
+  }
+
+  IpfsController.prototype.getPublicGatewayUrl = function () {
+    return this.ipfsBundle.getPublicGatewayUrl()
+  }
+
   IpfsController.prototype.getBase = function (base) {
     return this.ipfsBundle.getBase(base)
   }

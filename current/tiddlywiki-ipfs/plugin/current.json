@@ -1,44 +1,44 @@
 {
-  "build": "210526492",
+  "build": "210527460",
   "content": [
     {
       "title": "plugin",
       "tags": "$:/ipfs/core $:/ipfs/documentation",
       "name": "$:/plugins/ipfs.json",
-      "rawHash": "c58d26400fbeb8f151e55211a56d32784ba572abdff3e606448588022dea44c2",
+      "rawHash": "3a8883886252ad49f7ed80a6fe89eb1b21a9138c21bbe3fc1b794c3b6f89cb31",
       "sourceExtension": "json",
       "sourceFilename": "$_plugins_ipfs.json",
-      "sourceSize": 1313578,
-      "sourceUri": "https://dweb.link/ipfs/bafybeiectnbsncfnuh2v4c47cmw5fnb5sqyxjdvodzdulcsins4k5iid3e/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210526492.json",
+      "sourceSize": 1315742,
+      "sourceUri": "https://dweb.link/ipfs/bafybeiajevvk6wexcdpkeqib3mfiwca5eawodbcn6kyaofdovuxxi3cira/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210527460.json",
       "tidSize": 575,
-      "tidUri": "https://dweb.link/ipfs/bafybeih2ifxm7n35hw2af22kqoyhmiuvfyjurpzqq3rmrrol6mqzt7g5wq/$_plugins_ipfs.json.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeiclvfuppfskfecspf62akksav7t32tondsgis7mzag47vcsnz5xmi/$_plugins_ipfs.json.json-build.tid"
     },
     {
       "title": "plugin",
       "tags": "$:/ipfs/core $:/ipfs/documentation",
       "name": "$:/plugins/ipfs.zlib",
-      "rawHash": "89ca5d053050243b85c81e25d4e24050a3b3ac94be479985c38841bc3c5dc764",
+      "rawHash": "3ff5deb9f5bbefc3f57476cc5cd54d76bce0e77acc774726a37698ab2e7e6bcf",
       "sourceExtension": "json",
       "sourceFilename": "$_plugins_ipfs.zlib",
-      "sourceSize": 342395,
-      "sourceUri": "https://dweb.link/ipfs/bafybeidcc72hdsw7pzuozaji3de6pidut3eve2br7gopt4ql2yg5nge2ge/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210526492.json",
+      "sourceSize": 342675,
+      "sourceUri": "https://dweb.link/ipfs/bafybeicgacqyoepwgpsilrh32wfm5ljulbhm5aox4pft3m77sguo7xliz4/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210527460.json",
       "tidSize": 574,
-      "tidUri": "https://dweb.link/ipfs/bafybeiflh3j6ccsvz4qfscza6fizpjy6zohca6mo5ypmumdtji6ly4uu74/$_plugins_ipfs.zlib.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeigukqfwguryevg5wvu2627mqq6nnxw7kwfie4y3g5nagq5to5zmlm/$_plugins_ipfs.zlib.json-build.tid"
     },
     {
       "title": "plugin",
       "tags": "$:/ipfs/core $:/ipfs/documentation",
       "name": "$:/plugins/ipfs.zlib.ipfs",
-      "rawHash": "083becf0319a7937caf3489b7d4344fe2a44e5a1e9e22976087671f85c7a7086",
+      "rawHash": "2b0a64a0070e6967c41d8b0225d63e8bc17d836e5eba0b71172ce925afee2962",
       "sourceExtension": "json",
       "sourceFilename": "$_plugins_ipfs.zlib.ipfs",
       "sourceSize": 668,
-      "sourceUri": "https://dweb.link/ipfs/bafybeieoworm4r2fzyvftumdxwox4rjqqvgsqe7t3z2dgrdlxgc3icm6q4/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210526492.json",
+      "sourceUri": "https://dweb.link/ipfs/bafybeifgdywgiszsfli2eeubshgwjm325b76nmfwi3ezu2e55guemprxie/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210527460.json",
       "tidSize": 596,
-      "tidUri": "https://dweb.link/ipfs/bafybeihoknbbdzlbaqp2bfyue2p23xeje7rjxmjqpyratzlo3z5qv3sfbu/$_plugins_ipfs.zlib.ipfs.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeih6iam65dyrzbo3ttscp6glanh3qjjdnwvdayixv22hlgilhvu3vu/$_plugins_ipfs.zlib.ipfs.json-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210526492",
-  "buildUri": "https://dweb.link/ipfs/bafybeieo732c7f3e66brle2xjvd4sof4xr23bv3ezlv6nk4fm3skbogpb4/210526492/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210527460",
+  "buildUri": "https://dweb.link/ipfs/bafybeicwddr3wvskuen7wvttx3ichr6u7hc6mauyu3kpfe7ytfb2syvb6a/210527460/"
 }

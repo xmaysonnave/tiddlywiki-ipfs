@@ -8,8 +8,8 @@ Functions to deserialise tiddlers from a block of text
 
 \*/
 ;(function () {
-  /*jslint node: true, browser: true */
-  /*global $tw: false */
+  /*jslint node:true,browser:true */
+  /*global $tw:false */
   'use strict'
 
   /**

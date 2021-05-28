@@ -17,7 +17,9 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+      "--public-gateway",
+        "%IPFS_PUBLIC_GATEWAY%",
+			"--ipfs-modules",
         "yes",
 			"--compress",
         "yes",
@@ -26,7 +28,7 @@
         "./editions/empty/empty-%BUILD_EMPTY_VERSION%.html",
         "text/plain"
 		],
-		"empty-plain": [
+		"empty-cached-plain": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -36,16 +38,18 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+      "--public-gateway",
+        "%IPFS_PUBLIC_GATEWAY%",
+			"--ipfs-modules",
         "yes",
 			"--compress",
         "no",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-plain.html",
+        "../sample/empty-cached-plain.html",
         "text/plain"
 		],
-		"empty-plain-embedded": [
+		"empty-embedded-plain": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -55,16 +59,16 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "no",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-plain-embedded.html",
+        "../sample/empty-embedded.html",
         "text/plain"
 		],
-		"empty-ethereum": [
+		"empty-cached-ethereum": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -74,19 +78,19 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
-        "no",
+			"--ipfs-modules",
+        "yes",
 			"--compress",
         "yes",
       "--encryptionpublickey",
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-ethereum.html",
+        "../sample/empty-cached-ethereum.html",
         "text/plain",
       "--clearkeys"
     ],
-		"empty-standford": [
+		"empty-embedded-standford": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -96,7 +100,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "yes",
@@ -104,11 +108,11 @@
         "blue",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-standford.html",
+        "../sample/empty-embedded-standford.html",
         "text/plain",
       "--clearkeys"
     ],
-		"empty-plain-and-ethereum": [
+		"empty-embedded-plain-ethereum": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -118,7 +122,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "no",
@@ -126,11 +130,11 @@
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-plain-and-ethereum.html",
+        "../sample/empty-embedded-plain-ethereum.html",
         "text/plain",
       "--clearkeys"
     ],
-		"empty-plain-and-standford": [
+		"empty-embedded-plain-standford": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -140,7 +144,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--ipfsmodules",
+			"--ipfs-modules",
         "no",
 			"--compress",
         "no",
@@ -148,7 +152,7 @@
         "blue",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-plain-and-standford.html",
+        "../sample/empty-embedded-plain-standford.html",
         "text/plain",
       "--clearkeys"
     ]

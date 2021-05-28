@@ -1,11 +1,16 @@
 title: IPFS Technical
 modified: 20210525094915385
-tags: $:/ipfs/documentation [[IPFS Documentation]]
+tags: $:/ipfs/documentation [[@ipfs@ Documentation]]
 type: text/vnd.tiddlywiki
 
-<h2>Requirements</h2>
-<ul>
-  <li>[[IPFS Quick Start]]</li>
-</ul>
 <h2>Technical</h2>
+<$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
 <<locator-view baseTitle:"IPFS Technical">>
+
+</$reveal>
+<$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
+
+<$list filter="[tag[IPFS Technical]sort[title]]"/>
+
+</$reveal>
