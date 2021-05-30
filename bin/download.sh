@@ -34,6 +34,13 @@ then
   wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/dist/detect-provider.min.js -O ./detect-provider/detect-provider.min.js || exit 1
 fi
 
+# ipfs-http-client
+if [ ! -e ./ipfs-http-client ]
+then
+  mkdir ipfs-http-client > /dev/null 2>&1
+  wget https://cdn.jsdelivr.net/npm/ipfs-http-client@50.1.0/dist/index.min.js -O ./ipfs-http-client/ipfs-http-client.min.js || exit 1
+fi
+
 # loglevel
 if [ ! -e ./loglevel ]
 then

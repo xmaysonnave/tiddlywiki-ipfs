@@ -39,7 +39,6 @@ type: text/vnd.tiddlywiki
   <li>[ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]]</li>
   <li>[ext[IPFS HTTP Client|https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client]]</li>
   <li>[ext[IPFS Infra|https://github.com/ipfs/infra]]</li>
-  <li>[ext[IPFS Provider|https://github.com/ipfs-shipyard/ipfs-provider]]</li>
   <li>[ext[JavaScript|https://www.w3schools.com/js/]]</li>
   <li>[ext[JavaScript Standard Style|https://github.com/standard/standard]]</li>
   <li>[ext[Let's Encrypt|https://letsencrypt.org/]]</li>

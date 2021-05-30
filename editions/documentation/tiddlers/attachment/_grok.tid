@@ -1,6 +1,6 @@
 _canonical_uri: https://groktiddlywiki.com/read/
 _sandbox_source_uri: https://developer.mozilla.org/fr/docs/Web/HTML/Element/iframe
-_sandbox_tokens: allow-scripts
+_sandbox_tokens: allow-scripts allow-same-origin allow-forms allow-modals
 modified: 20210524081408097
 tags:  $:/ipfs/documentation $:/isImported
 title: Grok TiddlyWiki

@@ -19,15 +19,15 @@ Compression handling
   exports.synchronous = true
 
   exports.startup = function () {
-    // Ensure that $:/isCompressed and $:/isModule are maintained properly
+    // Ensure that $:/isCompressed and $:/isTreeLayout are maintained properly
     $tw.wiki.addEventListener('change', function (changes) {
       if ($tw.utils.hop(changes, '$:/isCompressed')) {
         const tiddler = $tw.wiki.getTiddler('$:/isCompressed')
         $tw.compress.setCompressState(tiddler.fields.text === 'yes')
       }
-      if ($tw.utils.hop(changes, '$:/isModule')) {
-        const tiddler = $tw.wiki.getTiddler('$:/isModule')
-        $tw.modulesState.setModulesState(tiddler.fields.text === 'yes')
+      if ($tw.utils.hop(changes, '$:/isTreeLayout')) {
+        const tiddler = $tw.wiki.getTiddler('$:/isTreeLayout')
+        $tw.layoutState.setLayoutState(tiddler.fields.text === 'yes')
       }
     })
   }

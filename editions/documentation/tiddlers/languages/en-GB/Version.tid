@@ -1,6 +1,6 @@
 title: Version
 modified: 20200527094915385
-tags: $:/ipfs/documentation [[@ipfs@ Documentation]]
+tags: $:/ipfs/documentation [[@doc@ Documentation]]
 type: text/vnd.tiddlywiki
 
 [img class="tc-image-documentation" [/ipfs/image/version]]

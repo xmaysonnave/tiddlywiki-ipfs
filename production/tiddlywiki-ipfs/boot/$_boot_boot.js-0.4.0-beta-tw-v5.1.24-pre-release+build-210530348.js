@@ -2775,16 +2775,16 @@ var bootsuffix = function ($tw) {
     return title
   }
 
-  $tw.utils.ModulesState = function () {
+  $tw.utils.LayoutState = function () {
     var currentState = null
     var isSystemTiddler = function (title) {
       return title && title.indexOf('$:/') === 0
     }
-    this.setModulesState = function (state) {
+    this.setLayoutState = function (state) {
       currentState = state ? 'yes' : 'no'
-      this.updateModulesStateTiddler()
+      this.updateLayoutStateTiddler()
     }
-    this.onModuleState = function (title, build) {
+    this.onLayoutState = function (title, build) {
       if ($tw.wiki) {
         var fields = {}
         var tiddler = $tw.wiki.getTiddler(title)
@@ -2846,7 +2846,7 @@ var bootsuffix = function ($tw) {
           }
         })
     }
-    this.offModuleState = function (title) {
+    this.offLayoutState = function (title) {
       if ($tw.wiki) {
         const tiddler = $tw.wiki.getTiddler(title)
         if (tiddler && tiddler.fields._canonical_uri) {
@@ -2885,41 +2885,41 @@ var bootsuffix = function ($tw) {
         }
       }
     }
-    this.updateModulesStateTiddler = function () {
-      var isModule = null
+    this.updateLayoutStateTiddler = function () {
+      var isTreeLayout = null
       if ($tw.wiki) {
         var state = currentState === 'yes' ? 'yes' : 'no'
-        isModule = $tw.wiki.getTiddler('$:/isModule')
-        if (!isModule || isModule.fields.text !== state) {
-          isModule = new $tw.Tiddler({
-            title: '$:/isModule',
+        isTreeLayout = $tw.wiki.getTiddler('$:/isTreeLayout')
+        if (!isTreeLayout || isTreeLayout.fields.text !== state) {
+          isTreeLayout = new $tw.Tiddler({
+            title: '$:/isTreeLayout',
             text: state,
           })
-          $tw.wiki.addTiddler(isModule)
+          $tw.wiki.addTiddler(isTreeLayout)
         }
-        if (isModule) {
+        if (isTreeLayout) {
           var build = this.getBuild('$:/boot/boot.css-build')
           if (build !== null) {
             if (state === 'yes') {
-              this.onModuleState('$:/boot/boot.css', build)
+              this.onLayoutState('$:/boot/boot.css', build)
             } else {
-              this.offModuleState('$:/boot/boot.css')
+              this.offLayoutState('$:/boot/boot.css')
             }
           }
           var build = this.getBuild('$:/boot/bootprefix.js-build')
           if (build !== null) {
             if (state === 'yes') {
-              this.onModuleState('$:/boot/bootprefix.js', build)
+              this.onLayoutState('$:/boot/bootprefix.js', build)
             } else {
-              this.offModuleState('$:/boot/bootprefix.js')
+              this.offLayoutState('$:/boot/bootprefix.js')
             }
           }
           var build = this.getBuild('$:/boot/boot.js-build')
           if (build !== null) {
             if (state === 'yes') {
-              this.onModuleState('$:/boot/boot.js', build)
+              this.onLayoutState('$:/boot/boot.js', build)
             } else {
-              this.offModuleState('$:/boot/boot.js')
+              this.offLayoutState('$:/boot/boot.js')
             }
           }
           var titles = titles || $tw.wiki.allTitles()
@@ -2937,9 +2937,9 @@ var bootsuffix = function ($tw) {
                 var build = this.getBuild(build)
                 if (build !== null) {
                   if (state === 'yes') {
-                    this.onModuleState(innerTitle, build)
+                    this.onLayoutState(innerTitle, build)
                   } else {
-                    this.offModuleState(innerTitle)
+                    this.offLayoutState(innerTitle)
                   }
                 }
               }
@@ -3904,7 +3904,7 @@ var bootsuffix = function ($tw) {
       $tw.passwordPrompt = new $tw.utils.PasswordPrompt()
     }
     $tw.compress = new $tw.utils.Compress()
-    $tw.modulesState = new $tw.utils.ModulesState()
+    $tw.layoutState = new $tw.utils.LayoutState()
     $tw.boot.inflateTiddlers(function () {
       $tw.boot.startup({
         callback: function () {
@@ -3921,11 +3921,11 @@ var bootsuffix = function ($tw) {
           } else {
             $tw.compress.updateCompressStateTiddler()
           }
-          var tiddler = $tw.wiki.getTiddler('$:/isModule')
+          var tiddler = $tw.wiki.getTiddler('$:/isTreeLayout')
           if (tiddler) {
-            $tw.modulesState.setModulesState(tiddler.fields.text === 'yes')
+            $tw.layoutState.setLayoutState(tiddler.fields.text === 'yes')
           } else {
-            $tw.modulesState.updateModulesStateTiddler()
+            $tw.layoutState.updateLayoutStateTiddler()
           }
           if (typeof callback === 'function') {
             callback()

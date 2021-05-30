@@ -1,4 +1,4 @@
-title: @ipfs@ Quick Start
+title: @doc@ Quick Start
 modified: 20210402094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
@@ -25,7 +25,7 @@ type: text/vnd.tiddlywiki
 </ul>
 <h4>Release</h4>
 <ul>
-  <li>[[$:/ipfs/documentation|@ipfs@ Documentation]] <$ipfslink value="https://bluelightav.eth/#IPFS%20Documentation">[img[Resolve with ENS|$:/ipfs/core/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link/#IPFS%20Documentation">[img[Resolve with DNS Link|$:/ipfs/core/icons/dns]]</a></li>
+  <li>[[$:/ipfs/documentation|@doc@ Documentation]] <$ipfslink value="https://bluelightav.eth/#IPFS%20Documentation">[img[Resolve with ENS|$:/ipfs/core/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link/#IPFS%20Documentation">[img[Resolve with DNS Link|$:/ipfs/core/icons/dns]]</a></li>
   <li>[[$:/plugins/ipfs]] <$ipfslink value="https://bluelightav.eth/#%24%3A%2Fplugins%2Fipfs">[img[Resolve with ENS|$:/ipfs/core/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link/#%24%3A%2Fplugins%2Fipfs">[img[Resolve with DNS Link|$:/ipfs/core/icons/dns]]</a></li>
   <li><b>bluelightav.eth</b> <$ipfslink value="https://bluelightav.eth">[img[Resolve with ENS|$:/ipfs/core/icons/ens]]</$ipfslink> <a rel="noopener noreferrer" target="_blank" href="https://bluelightav.eth.link">[img[Resolve with DNS Link|$:/ipfs/core/icons/dns]]</a></li>
 </ul>

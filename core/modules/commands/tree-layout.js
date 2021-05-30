@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/commands/ipfs-modules.js
+title: $:/core/modules/commands/tree-layout.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: command
@@ -11,7 +11,7 @@ module-type: command
   'use strict'
 
   exports.info = {
-    name: 'ipfs-modules',
+    name: 'tree-layout',
     synchronous: true,
   }
 
@@ -22,11 +22,11 @@ module-type: command
   }
 
   Command.prototype.execute = function () {
-    var ipfsmodules = false
+    var treeLayout = false
     if (this.params.length > 0) {
-      ipfsmodules = this.params[0] === 'yes'
+      treeLayout = this.params[0] === 'yes'
     }
-    $tw.modulesState.setModulesState(ipfsmodules)
+    $tw.layoutState.setLayoutState(treeLayout)
     return null
   }
 

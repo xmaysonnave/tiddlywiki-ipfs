@@ -26,6 +26,7 @@ mkdir -p ./current/tiddlywiki-ipfs/library > /dev/null 2>&1
 # libraries
 cp ./download/detect-provider/detect-provider.min.js ./build/tiddlers/\$_detect-provider.min.js || exit 1
 cp ./download/keccak/keccak.umd.min.js ./build/tiddlers/\$_keccak.umd.min.js || exit 1
+cp ./download/ipfs-http-client/ipfs-http-client.min.js ./build/tiddlers/\$_ipfs-http-client.min.js || exit 1
 cp ./download/loglevel/loglevel.min.js ./build/tiddlers/\$_loglevel.min.js || exit 1
 cp ./download/pako/pako.min.js ./build/tiddlers/\$_pako.min.js || exit 1
 
@@ -34,6 +35,7 @@ cp ./core/library/\$_library_ipfs_bundle.js.tid ./build/tiddlers || exit 1
 
 cp ./core/library/\$_detect-provider.min.js.meta ./build/tiddlers || exit 1
 cp ./core/library/\$_keccak.umd.min.js.meta ./build/tiddlers || exit 1
+cp ./core/library/\$_ipfs-http-client.min.js.meta ./build/tiddlers || exit 1
 cp ./core/library/\$_loglevel.min.js.meta ./build/tiddlers || exit 1
 cp ./core/library/\$_pako.min.js.meta ./build/tiddlers || exit 1
 

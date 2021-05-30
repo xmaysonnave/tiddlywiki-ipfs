@@ -16,7 +16,7 @@
         "application/json",
       "--public-gateway",
         "%IPFS_PUBLIC_GATEWAY%",
-			"--ipfs-modules",
+			"--tree-layout",
         "yes",
 			"--compress",
         "yes",

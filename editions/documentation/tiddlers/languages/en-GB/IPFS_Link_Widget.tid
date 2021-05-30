@@ -1,6 +1,6 @@
 title: IPFS Link Widget
 modified: 20200527094915385
-tags: $:/ipfs/documentation [[@ipfs@ Documentation]]
+tags: $:/ipfs/documentation [[@doc@ Documentation]]
 type: text/vnd.tiddlywiki
 
 The `ipfslink` widget generates links to tiddlers and external resources. It resolves <b>IPNS</b> and <b>ENS</b> domain if applicable.
@@ -14,7 +14,7 @@ The content of the ipfslink widget is rendered within the `<a>` tag representing
 
 `<$ipfslink value="blueligtav.eth"/>` is equivalent to `<$ipfslink value="bluelightav.eth">bluelightav.eth</$ipfslink>`.
 
-Example: [[Welcome]]
+Example: [[@blueligtav@ Welcome]]
 
 `<$ipfslink field="_canonical_uri" tiddler=<<currentTiddler>>/>`.
 

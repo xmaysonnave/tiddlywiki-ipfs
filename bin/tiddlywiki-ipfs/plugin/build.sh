@@ -59,6 +59,7 @@ echo '*** browserify ipfs-bundle ***'
 echo '***'
 yarn browserify \
   core/modules/library/ipfs-bundle.js \
+  -i ipfs-http-client \
   -s IpfsBundle \
   -o build/plugins/ipfs/modules/library/ipfs-bundle.js "$@" || exit 1
 

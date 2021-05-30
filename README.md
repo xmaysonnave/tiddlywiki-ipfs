@@ -176,7 +176,6 @@ Setup a nodejs environment to build tiddlywiki instances bundled with `IPFS with
 - [Babelify](https://www.npmjs.com/package/babelify)
 - [Eruda](https://github.com/liriliri/eruda)
 - [Ethers](https://github.com/ethers-io/ethers.js/)
-- [IPFS Provider](https://github.com/ipfs-shipyard/ipfs-provider)
 - [IPFS HTTP Client](https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client)
 - [Mocha](https://mochajs.org/)
 - [Node.js](https://nodejs.org/)

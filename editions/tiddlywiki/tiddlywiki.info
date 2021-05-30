@@ -21,7 +21,7 @@
         "application/x-tiddler",
       "--public-gateway",
         "%IPFS_PUBLIC_GATEWAY%",
-			"--ipfs-modules",
+			"--tree-layout",
         "yes",
 			"--compress",
         "yes",
