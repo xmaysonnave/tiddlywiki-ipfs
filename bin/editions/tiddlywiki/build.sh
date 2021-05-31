@@ -13,13 +13,12 @@ nvm use > /dev/null 2>&1
 export NODE_PATH=.
 
 rm -f -R ./build/output/editions/tiddlywiki > /dev/null 2>&1
-mkdir -p ./build/output/editions/tiddlywiki > /dev/null 2>&1
-
-rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers/config > /dev/null 2>&1
-
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./build/themes > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
 
+mkdir -p ./build/output/editions/tiddlywiki > /dev/null 2>&1
+mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 mkdir -p ./current/editions/tiddlywiki > /dev/null 2>&1
 
 # assets

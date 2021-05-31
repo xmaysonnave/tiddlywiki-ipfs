@@ -14,13 +14,12 @@ export NODE_PATH=.
 
 # init
 rm -f -R ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
-mkdir -p ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
-
-rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers/dependency > /dev/null 2>&1
-
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./build/themes > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
 
+mkdir -p ./build/output/tiddlywiki-ipfs/documentation > /dev/null 2>&1
+mkdir -p ./build/tiddlers/dependency > /dev/null 2>&1
 mkdir -p ./current/tiddlywiki-ipfs/documentation > /dev/null 2>&1
 
 # assets

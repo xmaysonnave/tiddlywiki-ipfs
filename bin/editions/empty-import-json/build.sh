@@ -15,10 +15,11 @@ export NODE_PATH=.
 # cleanup
 find ./sample -name "empty-import-json*.*" -delete > /dev/null 2>&1
 
-rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers > /dev/null 2>&1
-
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./build/themes > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
+
+mkdir -p ./build/tiddlers > /dev/null 2>&1
 
 # assets
 cp ./editions/empty-import-json/tiddlywiki.info ./build/tiddlywiki.info || exit 1

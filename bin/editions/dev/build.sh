@@ -16,13 +16,13 @@ export NODE_PATH=.
 find ./sample -name "dev*.*" -delete > /dev/null 2>&1
 
 rm -f -R ./build/output/editions/dev > /dev/null 2>&1
-mkdir -p ./build/output/editions/dev > /dev/null 2>&1
-
-rm -f -R ./build/tiddlers > /dev/null 2>&1
-mkdir -p ./build/tiddlers/config > /dev/null 2>&1
-
 rm -f -R ./build/plugins > /dev/null 2>&1
+rm -f -R ./build/themes > /dev/null 2>&1
+rm -f -R ./build/tiddlers > /dev/null 2>&1
 
+mkdir -p ./build/output/editions/dev > /dev/null 2>&1
+mkdir -p ./build/themes > /dev/null 2>&1
+mkdir -p ./build/tiddlers/config > /dev/null 2>&1
 mkdir -p ./current/editions/dev > /dev/null 2>&1
 
 # assets
