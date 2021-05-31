@@ -1,4 +1,4 @@
-title: @doc@ Documentation
+title: #ipfs# Documentation
 modified: 20201117094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
@@ -6,11 +6,11 @@ type: text/vnd.tiddlywiki
 <h2>Documentation</h2>
 <$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
 
-<<locator-view baseTitle:"@doc@ Documentation">>
+<<locator-view baseTitle:"#ipfs# Documentation">>
 
 </$reveal>
 <$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
 
-<$list filter="[tag[@doc@ Documentation]sort[title]]"/>
+<$list filter="[tag[#ipfs# Documentation]sort[title]]"/>
 
 </$reveal>

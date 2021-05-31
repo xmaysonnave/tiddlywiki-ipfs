@@ -1,0 +1,16 @@
+title: #ipfs# Server Settings
+modified: 20210601054439773
+tags: $:/ipfs/documentation [[#ipfs# Settings]]
+type: text/vnd.tiddlywiki
+
+<h2>Server Settings</h2>
+
+<p>
+  Here is a [[Node Configuration|#ipfs# Server Config]] suitable for [ext[IPFS Desktop|https://github.com/ipfs-shipyard/ipfs-desktop]] and [ext[Go IPFS|https://github.com/ipfs/go-ipfs]].
+</p>
+<p>
+  This configuration is based on the [ext[v0.8.0|https://github.com/ipfs/go-ipfs/releases/tag/v0.8.0]] version.
+</p>
+<p>
+  More informations about the configuration parameters are available [ext[here|https://github.com/ipfs/go-ipfs/blob/master/docs/config.md]]
+</p>

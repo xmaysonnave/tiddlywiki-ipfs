@@ -58,6 +58,6 @@ Built dependencies:
 
 Latest:
 
-* `$:/boot/boot.js` <$ipfslink value="tiddly.bluelightav.eth/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
-* `$:/library/ipfs.js`  <$ipfslink value="tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
-* `$:/plugins/ipfs` <$ipfslink value="tiddly.bluelightav.eth/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+* `$:/boot/boot.js` <$ipfslink value="https://tiddly.bluelightav.eth.link/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+* `$:/library/ipfs.js`  <$ipfslink value="https://tiddly.bluelightav.eth.link/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>
+* `$:/plugins/ipfs` <$ipfslink value="https://tiddly.bluelightav.eth.link/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink>

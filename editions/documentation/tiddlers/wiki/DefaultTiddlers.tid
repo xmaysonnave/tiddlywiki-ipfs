@@ -1,6 +1,6 @@
 title: $:/DefaultTiddlers
 tags: $:/ipfs/documentation
 
-[[@blueligtav@ Welcome]]
-[[@doc@ Quick Start]]
-[[@doc@ Documentation]]
+[[#bluelightav# Welcome]]
+[[#ipfs# Quick Start]]
+[[#ipfs# Documentation]]

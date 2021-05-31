@@ -1,0 +1,81 @@
+title: #ipfs# Quick Start
+modified: 20210402094915385
+tags: $:/ipfs/documentation TableOfContents
+type: text/vnd.tiddlywiki
+
+<h2>Quick Start</h2>
+
+<h3>Requirement</h3>
+<ul>
+  <li>Browser
+    <ul>
+      <li>Chrome family (Chrome, Chromium, Brave, Edge, Vivaldi)</li>
+      <li>Firefox</li>
+    </ul>
+  </li>
+  <li>Browser Extensions
+    <ul>
+      <li>[ext[IPFS Companion|https://ipfs.io/#install]]</li>
+      <li>[ext[Metamask|https://metamask.io/]]</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>New to ~TiddlyWiki, IPFS and Ethereum</h3>
+<ul>
+  <li>Load IPFS with ~TiddlyWiki editions:
+    <ul>
+      <li>[ext[bluelightav|https://tiddly.bluelightav.eth.link/editions/bluelightav/latest-build/]]</li>
+      <li>[ext[empty|https://tiddly.bluelightav.eth.link/editions/empty/latest-build/]]</li>
+      <li>[ext[tiddlywiki.com|https://tiddly.bluelightav.eth.link/editions/tiddlywiki/latest-build/]]</li>
+    </ul>
+  </li>
+  <li>Modify the content and save it over IPFS.</li>
+  <li>Read the IPFS with ~TiddlyWiki documentation</li>
+  <li>Read the ~TiddlyWiki documentation</li>
+  <li>Read the IPFS documentation</li>
+  <li>Read the Ethereum documentation</li>
+</ul>
+
+<h3>Familiar with ~TiddlyWiki</h3>
+<ul>
+  <li>Drag and Drop the required components:
+    <ul>
+      <li>`$:/boot/boot.js` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+            <li>`$:/library/ipfs.js`  <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+      <li>`$:/plugins/ipfs` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>    </ul>
+  </li>
+  <li>Save ~TiddlyWiki to the filesystem</li>
+  <li>Run ~TiddlyWiki</li>
+  <li>Save ~TiddlyWiki over IPFS</li>
+</ul>
+
+<h3>Advanced</h3>
+<ul>
+  <li>Install and Run a decentralized IPFS node:
+    <ul>
+      <li>[ext[IPFS Desktop|https://ipfs.io/#install]]</li>
+      <li>[ext[Command-line install|https://ipfs.io/#install]]</li>
+      <li>[ext[Go IPFS|https://ipfs.io/#install]]</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Developer</h3>
+<ul>
+  <li>Read the ~GitHub [ext[Readme.md|https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop#readme]]</li>
+  <li>Fork the [ext[IPFS with ~TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop]] project</li>
+  <li>Use the command-line to build with Node.js</li>
+</ul>
+
+<h3>Settings</h3>
+<ul>
+  <li>[[Saving General|$:/core/ui/ControlPanel/Saving/General]]</li>
+  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Ipfs/Saver]]</li>
+</ul>
+
+<h3>~TiddlyWiki Third parties plugin</h3>
+<ul>
+  <li>[ext[Locator Plugin|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
+  <li>[ext[Relink Plugin|https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink]]</li>
+</ul>

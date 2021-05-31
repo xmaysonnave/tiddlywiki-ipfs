@@ -1,0 +1,55 @@
+title: #ipfs# Browsers
+modified: 20210525094915385
+tags: $:/ipfs/documentation [[#ipfs# Settings]]
+type: text/vnd.tiddlywiki
+
+<h2>[ext[Supported Browsers|https://github.com/browserslist/browserslist]]</h2>
+<ul>
+  <li>and_chr: => 90</li>
+  <li>chrome: => 83</li>
+  <li>edge: => 83</li>
+  <li>firefox: => 77</li>
+  <li>ios_saf: => 13.3</li>
+  <li>safari: => 13.1</li>
+</ul>
+
+<h2>Browser Security</h2>
+<p>
+  If you have work locally or use local resources, you could need to disable some security mechanism:
+</p>
+
+<h3>Chromium Family</h3>
+<p>
+  The Chromium browsers family allow you to disable security features that prevent you loading local resources as startup flags.
+</p>
+<ul>
+  <li>[ext[disable-web-security|https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome]]</li>
+  <li>[ext[allow-file-access-from-files|https://dev.to/dengel29/loading-local-files-in-firefox-and-chrome-m9f]]</li>
+</ul>
+<p>
+  <b>How-To</b> [ext[Run Chromium with flags|http://www.chromium.org/developers/how-tos/run-chromium-with-flags/]], in the location bar:</p>
+<ul>
+  <li>Input <b>&#x63;&#x68;&#x72;&#x6F;&#x6D;&#x65;&#x3A;&#x2F;&#x2F;&#x76;&#x65;&#x72;&#x73;&#x69;&#x6F;&#x6E;</b></li>
+  <li>Check the enabled startup parameter flags.</li>
+</ul>
+
+<h3>Firefox</h3>
+<p>
+  In the location bar, input <b>about:config</b> to access Firefox <b>Advanced Preferences</b>.
+</p>
+<table>
+  <tr>
+    <td>[ext[privacy.file_unique_origin|https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSRequestNotHttp]]</td>
+    <td><b>false</b></td>
+  </tr>
+  <tr>
+    <td>[ext[security.fileuri.strict_origin_policy|https://stackoverflow.com/questions/17711924/disable-cross-domain-web-security-in-firefox]]</td>
+    <td><b>false</b></td>
+  </tr>
+</table>
+
+<h2>CORS</h2>
+<ul>
+  <li>[ext[Chrome Cross-Origin XMLHttpRequest|https://developer.chrome.com/extensions/xhr]]</li>
+  <li>[ext[Firefox Cross-Origin Resource Sharing|https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]]</li>
+</ul>

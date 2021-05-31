@@ -1,17 +1,17 @@
-title: IPFS Settings
+title: #ipfs# Settings
 modified: 20200526094915385
-tags: $:/ipfs/documentation [[@doc@ Documentation]]
+tags: $:/ipfs/documentation [[#ipfs# Documentation]]
 type: text/vnd.tiddlywiki
 
 <h2>Settings</h2>
 [img class="tc-image-documentation" [/ipfs/image/settings]]
 <$reveal type="match" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
 
-<<locator-view baseTitle:"IPFS Settings">>
+<<locator-view baseTitle:"#ipfs# Settings">>
 
 </$reveal>
 <$reveal type="nomatch" state="$:/plugins/bimlas/locator!!plugin-type" text="plugin">
 
-<$list filter="[tag[IPFS Settings]sort[title]]"/>
+<$list filter="[tag[#ipfs# Settings]sort[title]]"/>
 
 </$reveal>
