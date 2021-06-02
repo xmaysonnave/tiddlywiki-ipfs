@@ -1,4 +1,4 @@
-title: IPFS Documentation Assets
+title: #ipfs# Documentation Assets
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 build: %BUILD_DOCUMENTATION_BUILD%

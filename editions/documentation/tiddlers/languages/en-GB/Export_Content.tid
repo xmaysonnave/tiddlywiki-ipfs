@@ -35,7 +35,7 @@ type: text/vnd.tiddlywiki
 </ul>
 <h3>Example</h3>
 <p>
-  Edit [[IPFS Documentation Assets]].
+  Edit [[#ipfs# Documentation Assets]].
 </p>
 [img class="tc-image-documentation" [/ipfs/image/documentation/asset/content]]
 <p>
@@ -48,7 +48,7 @@ type: text/vnd.tiddlywiki
 </p>
 [img class="tc-image-documentation" [/ipfs/image/export/console]]
 <p>
-  Edit [[IPFS Documentation Assets]] and notice the new <b>_export_uri</b> field.
+  Edit [[#ipfs# Documentation Assets]] and notice the new <b>_export_uri</b> field.
 </p>
 [img class="tc-image-documentation" [/ipfs/image/export/uri]]
 <p>

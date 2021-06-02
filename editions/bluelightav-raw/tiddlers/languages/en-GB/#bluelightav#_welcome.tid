@@ -1,13 +1,13 @@
 title: #bluelightav# Welcome
-modified: 20210526094915385
+modified: 20210601094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
-<h2 style="text-align:center;">Welcome to <b>IPFS with ~TiddlyWiki</b><br/>The Unstoppable Wiki</h2>
+<h2 style="text-align:center;">Welcome to <b>IPFS with ~TiddlyWiki</b><br/>Own your Internet</h2>
 
 <h3>Motivation</h3>
 
-<h4>Web 2.0</h4>
+<h4 style="font-weight:bold;">Web 2.0</h4>
 
 > The <b>Web 2.0</b> (also known as <b>Participative</b> (or <b>Participatory</b>) and <b>Social Web</b>) refers to websites that emphasize user-generated content, ease of use, participatory culture and interoperability (i.e., compatible with other products, systems, and devices) for end users.
 >> <cite>[ext[wikipedia.org|https://en.wikipedia.org/wiki/Web_2.0]]</cite>
@@ -20,9 +20,9 @@ type: text/vnd.tiddlywiki
 
 > According to [ext[Statista|https://www.statista.com/statistics/266249/advertising-revenue-of-google/]], Google's ad revenue amounted to 150 billion US dollars in 2020.
 
-<h4>Web 3.0</h4>
+<h4 style="font-weight:bold;">Web 3.0</h4>
 <p>
-  In 2006 [ext[Tim Berners Lee|https://en.wikipedia.org/wiki/Tim_Berners-Lee]] the father of the web described the
+  In 2006 [ext[Tim Berners Lee|https://en.wikipedia.org/wiki/Tim_Berners-Lee]], the father of the web described the
   [ext[Semantic Web|https://en.wikipedia.org/wiki/Semantic_Web]] as a component of <b>Web 3.0</b>.
 </p>
 <p>
@@ -37,11 +37,35 @@ type: text/vnd.tiddlywiki
 <p><b>Web 3.0</b> characteristics</p>
 <ul>
   <li>[ext[Decentralized|https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274]]</li>
-  <li>Permissionless (No central authority, Censorship resistant)</li>
-  <li>Programmable Crypto-Assets (Individuals are in control of their private key)</li>
-  <li>Privacy and Confidentialty (Individuals are in control of their data)</li>
-  <li>Semantic Web (Analytics)</li>
-  <li>Security (Identification, Immutability, Tamper-proof)</li>
+  <li>Permissionless
+    <ul>
+      <li>No Central Authority</li>
+      <li>Censorship Resistant</li>
+      <li>Fork and Modify</li>
+    </ul>
+  </li>
+  <li>Programmable Crypto-Assets
+    <ul>
+      <li>Individuals are in control of their private key</li>
+    </ul>
+  </li>
+  <li>Privacy and Confidentialty
+    <ul>
+      <li>Individuals are in control of their data</li>
+    </ul>
+  </li>
+  <li>Semantic Web
+    <ul>
+      <li>(Analytics</li>
+    </ul>
+  </li>
+  <li>Security
+    <ul>
+      <li>Identification</li>
+      <li>Immutability</li>
+      <li>Tamper-proof)</li>
+    </ul>
+  </li>
   <li>[ext[Trustless|https://preethikasireddy.medium.com/eli5-what-do-we-mean-by-blockchains-are-trustless-aa420635d5f6]]</li>
   <li>Verifiable</li>
 </ul>
@@ -51,8 +75,10 @@ type: text/vnd.tiddlywiki
   <li>Backed by cryptography</li>
   <li>Decentralized (IPFS, Ethereum)</li>
   <li>Free from censorship</li>
+  <li>[ext[GPL-3.0-or-later|https://spdx.org/licenses/GPL-3.0-or-later.html]] Public License</li>
   <li>No [ext[Cookies|https://www.privacypolicies.com/blog/cookies/]] and no [ext[Local Storage|https://en.wikipedia.org/wiki/Web_storage]]</li>
   <li>No downtime</li>
+  <li>Permissionless</li>
 </ul>
 
 <h3>Landscape</h3>
@@ -122,27 +148,30 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>Access from [ext[IPFS Gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]
     <ul>
-      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>Attachments</li>
+      <li>Libraries</li>
       <li>Pre-boot assets</li>
       <li>Plugins</li>
-      <li>Content (text/css, text/html, application/json, application/x-tiddler...)</li>
+      <li>Content</li>
     </ul>
   </li>
   <li>Compress
     <ul>
-      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>Attachments</li>
+      <li>Libraries</li>
       <li>Pre-boot assets</li>
       <li>Plugins</li>
-      <li>Content (text/css, text/html, application/json, application/x-tiddler...)</li>
+      <li>Content</li>
     </ul>
   </li>
   <li>Embedded or Tree model layout</li>
   <li>Encrypt, Decrypt and Sign
     <ul>
-      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>Attachments</li>
+      <li>Libraries</li>
       <li>Pre-boot assets</li>
       <li>Plugins</li>
-      <li>Content (text/css, text/html, application/json, application/x-tiddler...)</li>
+      <li>Content</li>
     </ul>
   </li>
   <li>[ext[Metamask|https://metamask.io]] keyring and encryption support</li>
@@ -151,18 +180,20 @@ type: text/vnd.tiddlywiki
   <li>Prohibits cookies and local data modifications with [ext[Subdomain gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li>
   <li>Publish to IPNS
     <ul>
-      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>Attachments</li>
+      <li>Libraries</li>
       <li>Pre-boot assets</li>
       <li>Plugins</li>
-      <li>Content (text/css, text/html, application/json, application/x-tiddler...)</li>
+      <li>Content</li>
     </ul>
   </li>
   <li>Publish to [ext[ENS|https://ens.domains]]
     <ul>
-      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>Attachments</li>
+      <li>Libraries</li>
       <li>Pre-boot assets</li>
       <li>Plugins</li>
-      <li>Content (text/css, text/html, application/json, application/x-tiddler...)</li>
+      <li>Content</li>
     </ul>
   </li>
   <li>URL Resolver
@@ -173,10 +204,11 @@ type: text/vnd.tiddlywiki
   </li>
   <li>Store on [ext[IPFS API|https://docs.ipfs.io/concepts/ipfs-gateway/]]
     <ul>
-      <li>Attachments (jpg, mp3, pdf, png...)</li>
+      <li>Attachments</li>
+      <li>Libraries</li>
       <li>Pre-boot assets</li>
       <li>Plugins</li>
-      <li>Content (text/css, text/html, application/json, application/x-tiddler...)</li>
+      <li>Content</li>
     </ul>
   </li>
   <li>[[And more...|#ipfs# Documentation]]</li>

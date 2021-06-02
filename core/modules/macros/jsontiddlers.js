@@ -16,14 +16,36 @@ Macro to output tiddlers matching a filter to JSON
   exports.params = [{ name: 'filter' }, { name: 'spaces' }]
 
   exports.run = function (filter, spaces) {
-    var content = this.wiki.getTiddlersAsJson(filter, $tw.utils.parseInt(spaces))
+    var content = null
+    var info = null
+    var type = null
+    var tiddler = null
+    var tiddlers = $tw.wiki.filterTiddlers(filter)
+    if (tiddlers.length > 1) {
+      content = $tw.wiki.getTiddlersAsJson(filter, $tw.utils.parseInt(spaces))
+    } else {
+      var fields = {}
+      tiddler = $tw.wiki.getTiddler(tiddlers[0])
+      var { type, info } = $tw.utils.getContentType(tiddler)
+      for (var field in tiddler.fields) {
+        fields[field] = tiddler.getFieldString(field)
+      }
+      content = JSON.stringify(fields, null, spaces)
+    }
     var compress = $tw.wiki.getTiddler('$:/isCompressed')
-    compress = compress !== undefined ? compress.fields.text === 'yes' : false
+    compress = compress !== undefined && compress !== null ? compress.fields.text === 'yes' : false
+    if ((info !== null && info.encoding === 'base64') || (type !== null && type === 'image/svg+xml')) {
+      compress = false
+    }
+    compress =
+      tiddler !== undefined && tiddler !== null && tiddler.fields._compress !== undefined && tiddler.fields._compress !== null
+        ? tiddler.fields._compress.trim() === 'yes'
+        : compress
     if (compress) {
       content = { compressed: $tw.compress.deflate(content) }
     }
     var encrypt = $tw.wiki.getTiddler('$:/isEncrypted')
-    encrypt = encrypt !== undefined ? encrypt.fields.text === 'yes' : false
+    encrypt = encrypt !== undefined && encrypt !== null ? encrypt.fields.text === 'yes' : false
     if (encrypt) {
       content.compressed = $tw.crypto.encrypt(compress ? content.compressed : content)
       if ($tw.crypto.hasEncryptionPublicKey()) {

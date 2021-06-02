@@ -130,11 +130,14 @@ IPFS Controller
       throw new Error('Unknown type...')
     }
     var compress = $tw.wiki.getTiddler('$:/isCompressed')
-    compress = compress !== undefined ? compress.fields.text === 'yes' : false
+    compress = compress !== undefined && compress !== null ? compress.fields.text === 'yes' : false
     if (encoding === 'base64' || type === 'image/svg+xml') {
       compress = false
     }
-    compress = tiddler !== undefined && tiddler.fields._compress !== undefined && tiddler.fields._compress.trim() !== '' ? tiddler.fields._compress.trim() === 'yes' : compress
+    compress =
+      tiddler !== undefined && tiddler !== null && tiddler.fields._compress !== undefined && tiddler.fields._compress !== null
+        ? tiddler.fields._compress.trim() === 'yes'
+        : compress
     var encrypted = $tw.wiki.getTiddler('$:/isEncrypted')
     encrypted = encrypted !== undefined ? encrypted.fields.text === 'yes' : false
     var password = tiddler !== undefined && tiddler.fields._password !== undefined && tiddler.fields._password.trim() !== '' ? tiddler.fields._password.trim() : null

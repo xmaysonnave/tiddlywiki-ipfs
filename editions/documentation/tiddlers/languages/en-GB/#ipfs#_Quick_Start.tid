@@ -1,5 +1,5 @@
 title: #ipfs# Quick Start
-modified: 20210402094915385
+modified: 20210601094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -9,7 +9,14 @@ type: text/vnd.tiddlywiki
 <ul>
   <li>Browser
     <ul>
-      <li>Chrome family (Chrome, Chromium, Brave, Edge, Vivaldi)</li>
+      <li>Chrome family
+        <ul>
+          <li>Chrome</li>
+          <li>Chromium</li>
+          <li>Brave</li>
+          <li>Edge</li>
+          <li>Vivaldi</li>
+      </ul>
       <li>Firefox</li>
     </ul>
   </li>
@@ -68,14 +75,14 @@ type: text/vnd.tiddlywiki
   <li>Use the command-line to build with Node.js</li>
 </ul>
 
-<h3>Settings</h3>
-<ul>
-  <li>[[Saving General|$:/core/ui/ControlPanel/Saving/General]]</li>
-  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Ipfs/Saver]]</li>
-</ul>
-
 <h3>~TiddlyWiki Third parties plugin</h3>
 <ul>
   <li>[ext[Locator Plugin|https://bimlas.gitlab.io/tw5-locator/#%24%3A%2Fplugins%2Fbimlas%2Flocator]]</li>
   <li>[ext[Relink Plugin|https://flibbles.github.io/tw5-relink/#%24%3A%2Fplugins%2Fflibbles%2Frelink]]</li>
+</ul>
+
+<h3>Settings</h3>
+<ul>
+  <li>[[Saving General|$:/core/ui/ControlPanel/Saving/General]]</li>
+  <li>[[Saving IPFS Saver|$:/core/ui/ControlPanel/Ipfs/Saver]]</li>
 </ul>
