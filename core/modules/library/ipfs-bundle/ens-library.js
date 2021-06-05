@@ -177,8 +177,9 @@ EnsLibrary.prototype.getResolver = async function (web3, registry, node) {
   if (registry == null) {
     throw new Error('Undefined ENS registry address...')
   }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   const abi = ['function resolver(bytes32 node) external view returns (address)']
-  const iface = new globalThis.ethers.utils.Interface(abi)
+  const iface = new ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('resolver', [node])
   const result = await web3.call({ to: registry, data: data })
   if (result === undefined || result == null || result === '0x') {
@@ -205,8 +206,9 @@ EnsLibrary.prototype.checkEip165 = async function (web3, address) {
   if (address == null) {
     throw new Error('Undefined Ethereum address...')
   }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   var abi = ['function supportsInterface(bytes4 interfaceID) public pure returns(bool)']
-  var iface = new globalThis.ethers.utils.Interface(abi)
+  var iface = new ethers.utils.Interface(abi)
   var data = iface.encodeFunctionData('supportsInterface', ['0x01ffc9a7'])
   var result = await web3.call({ to: address, data: data })
   if (result === undefined || result == null || result === '0x') {
@@ -252,9 +254,10 @@ EnsLibrary.prototype.checkEip1577 = async function (web3, address) {
   if (address == null) {
     throw new Error('Undefined Ethereum address...')
   }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   // contenthash, true when interfaceID is 0xbc1c58d1
   var abi = ['function supportsInterface(bytes4 interfaceID) public pure returns(bool)']
-  var iface = new globalThis.ethers.utils.Interface(abi)
+  var iface = new ethers.utils.Interface(abi)
   var data = iface.encodeFunctionData('supportsInterface', ['0xbc1c58d1'])
   var result = await web3.call({ to: address, data: data })
   if (result === undefined || result == null || result === '0x') {
@@ -279,9 +282,10 @@ EnsLibrary.prototype.getContentHash = async function (domain, web3) {
   if (web3 === undefined) {
     var { web3 } = await this.ipfsBundle.getWeb3Provider()
   }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
-  const domainHash = globalThis.ethers.utils.namehash(domain)
+  const domainHash = ethers.utils.namehash(domain)
   // Fetch ens registry address
   const { chainId, registry } = await this.getRegistry(web3)
   this.getLogger().info(
@@ -312,7 +316,7 @@ ${explorer[chainId]}/address/${resolver}`
   // Retrieve content hash
   this.getLogger().info('Retrieving ENS domain content...')
   const abi = ['function contenthash(bytes32 node) external view returns (bytes memory)']
-  const iface = new globalThis.ethers.utils.Interface(abi)
+  const iface = new ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('contenthash', [domainHash])
   const result = await web3.call({ to: resolver, data: data })
   if (result === undefined || result == null || result === '0x') {
@@ -343,9 +347,10 @@ EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
   if (account === undefined || account == null || web3 === undefined || web3 == null) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
-  const domainHash = globalThis.ethers.utils.namehash(domain)
+  const domainHash = ethers.utils.namehash(domain)
   // Fetch ens registry address
   const { chainId, registry } = await this.getRegistry(web3)
   this.getLogger().info(
@@ -353,7 +358,7 @@ EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
 ${explorer[chainId]}/address/${registry}`
   )
   const abi = ['function owner(bytes32 node) public view returns(address)']
-  const iface = new globalThis.ethers.utils.Interface(abi)
+  const iface = new ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('owner', [domainHash])
   const result = await web3.call({ to: registry, data: data })
   if (result === undefined || result == null || result === '0x') {
@@ -383,9 +388,10 @@ EnsLibrary.prototype.setContentHash = async function (domain, identifier, web3, 
   if (account === undefined || web3 === undefined) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
-  const domainHash = globalThis.ethers.utils.namehash(domain)
+  const domainHash = ethers.utils.namehash(domain)
   // Fetch ens registry address
   const { chainId, registry } = await this.getRegistry(web3)
   this.getLogger().info(
@@ -415,7 +421,7 @@ ${explorer[chainId]}/address/${resolver}`
   // Set Contenthash
   this.getLogger().info('Processing ENS domain content...')
   const abi = ['function setContenthash(bytes32 node, bytes calldata hash)']
-  const iface = new globalThis.ethers.utils.Interface(abi)
+  const iface = new ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('setContenthash', [domainHash, encoded])
   try {
     const signer = web3.getSigner(account)

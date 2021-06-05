@@ -16,7 +16,7 @@
         "application/json",
       "--public-gateway",
         "%IPFS_PUBLIC_GATEWAY%",
-			"--tree-layout",
+			"--remote-layout",
         "yes",
 			"--compress",
         "yes",

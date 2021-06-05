@@ -7,6 +7,9 @@ library: yes
 _detect-provider_license_uri: https://raw.githubusercontent.com/MetaMask/detect-provider/main/LICENSE
 _detect-provider_project_uri: https://github.com/MetaMask/detect-provider
 _detect-provider_source_uri: https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/index.min.js
+_eth-sig-util_license_uri: https://raw.githubusercontent.com/xmaysonnave/eth-sig-util/master/LICENSE
+_eth-sig-util_project_uri: https://github.com/xmaysonnave/eth-sig-util
+_eth-sig-util_source_uri: https://cdn.jsdelivr.net/npm/ipfs-http-client@50.0.0/dist/index.min.js
 _keccak_license_uri: https://raw.githubusercontent.com/cryptocoinjs/keccak/master/LICENSE
 _keccak_project_uri: https://github.com/cryptocoinjs/keccak
 _keccak_source_uri: https://cdn.jsdelivr.net/npm/keccak@3.0.1/js.js

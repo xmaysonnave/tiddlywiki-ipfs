@@ -16,7 +16,8 @@ type: text/vnd.tiddlywiki
           <li>Brave</li>
           <li>Edge</li>
           <li>Vivaldi</li>
-      </ul>
+        </ul>
+      </li>
       <li>Firefox</li>
     </ul>
   </li>

@@ -7,7 +7,6 @@ module-type: library
 \*/
 'use strict'
 
-const { create } = globalThis.IpfsHttpClient || require('ipfs-http-client')
 const { fromString } = require('uint8arrays')
 const { getIpfs } = require('ipfs-provider')
 const { Mutex } = require('async-mutex')
@@ -495,9 +494,6 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
   }
   const self = this
   try {
-    if (typeof globalThis.IpfsHttpClient === 'undefined') {
-      await this.ipfsBundle.loadIpfsHttpLibrary()
-    }
     const client = this.ipfsClients.get(apiUrl.toString())
     if (client !== undefined) {
       return {
@@ -521,6 +517,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
           provider: client.provider,
         }
       }
+      const { create } = await this.ipfsBundle.getIpfsHttpLibrary()
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({

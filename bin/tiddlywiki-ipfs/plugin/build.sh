@@ -57,7 +57,15 @@ echo '*** browserify ipfs-bundle ***'
 echo '***'
 yarn browserify \
   core/modules/library/ipfs-bundle.js \
+  -i eruda \
+  -i $:/library/eruda.min.js \
+  -i eth-sig-util \
+  -i $:/library/eth-sig-util.min.js \
+  -i ethers \
+  -i $:/library/ethers.umd.min.js \
   -i ipfs-http-client \
+  -i $:/library/ipfs-http-client.min.js \
+  -i pako \
   -s IpfsBundle \
   -o build/plugins/ipfs/modules/library/ipfs-bundle.js "$@" || exit 1
 

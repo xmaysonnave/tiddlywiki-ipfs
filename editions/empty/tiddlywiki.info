@@ -19,7 +19,7 @@
         "application/x-tiddler",
       "--public-gateway",
         "%IPFS_PUBLIC_GATEWAY%",
-			"--tree-layout",
+			"--remote-layout",
         "yes",
 			"--compress",
         "yes",
@@ -28,7 +28,7 @@
         "./editions/empty/empty-%BUILD_EMPTY_VERSION%.html",
         "text/plain"
 		],
-		"empty-tree-plain": [
+		"empty-remote-plain": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -40,13 +40,13 @@
         "application/x-tiddler",
       "--public-gateway",
         "%IPFS_PUBLIC_GATEWAY%",
-			"--tree-layout",
+			"--remote-layout",
         "yes",
 			"--compress",
         "no",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-tree-plain.html",
+        "../sample/empty-remote-plain.html",
         "text/plain"
 		],
 		"empty-embedded-plain": [
@@ -59,7 +59,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--tree-layout",
+			"--remote-layout",
         "no",
 			"--compress",
         "no",
@@ -68,7 +68,7 @@
         "../sample/empty-embedded-plain.html",
         "text/plain"
 		],
-		"empty-tree-ethereum": [
+		"empty-remote-ethereum": [
       "--import",
         "./production/tiddlywiki-ipfs/library/$_library_ipfs.js.json-%BUILD_LIBRARY_VERSION%.json",
         "application/json",
@@ -78,7 +78,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--tree-layout",
+			"--remote-layout",
         "yes",
 			"--compress",
         "yes",
@@ -86,7 +86,7 @@
         "%DEV_DERIVED_PUBLIC_KEY%",
 			"--rendertiddler",
         "$:/core/save/all",
-        "../sample/empty-tree-ethereum.html",
+        "../sample/empty-remote-ethereum.html",
         "text/plain",
       "--clearkeys"
     ],
@@ -100,7 +100,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--tree-layout",
+			"--remote-layout",
         "no",
 			"--compress",
         "yes",
@@ -122,7 +122,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--tree-layout",
+			"--remote-layout",
         "no",
 			"--compress",
         "no",
@@ -144,7 +144,7 @@
       "--import",
         "./build/output/editions/empty/$_ipfs_edition-build.tid",
         "application/x-tiddler",
-			"--tree-layout",
+			"--remote-layout",
         "no",
 			"--compress",
         "no",

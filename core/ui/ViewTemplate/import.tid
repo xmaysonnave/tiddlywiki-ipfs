@@ -5,7 +5,7 @@ tags: $:/tags/ViewTemplate $:/ipfs/core
 
 \define buttons()
 <$button message="tm-delete-tiddler" param=<<currentTiddler>>><<lingo Listing/Cancel/Caption>></$button>
-<$button message="tm-perform-import" param=<<currentTiddler>>><<lingo Listing/Import/Caption>></$button>
+<$button message="tm-perform-import" param=<<currentTiddler>>><<lingo Listing/Perform/Caption>></$button>
 <<lingo Listing/Preview>> <$select tiddler="$:/state/ipfsimportpreviewtype" default="$:/core/ui/ImportPreviews/Text">
 <$list filter="[all[shadows+tiddlers]tag[$:/tags/ImportPreview]!has[draft.of]]">
 <option value=<<currentTiddler>>>{{!!caption}}</option>

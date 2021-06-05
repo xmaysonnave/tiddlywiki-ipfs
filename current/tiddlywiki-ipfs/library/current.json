@@ -1,32 +1,32 @@
 {
-  "build": "210530354",
+  "build": "210605285",
   "content": [
     {
       "title": "library",
       "tags": "$:/ipfs/core $:/core $:/library/ipfs",
       "name": "$:/library/ipfs.js.json",
-      "rawHash": "81e7567002cb65797169380fdb7c1d445bb4b79869f06756913e4e01055fb6de",
+      "rawHash": "ac421e73853bc04990f18077c11196bc4c808525af6330ae3720e7ecaedfbff4",
       "sourceExtension": "json",
       "sourceFilename": "$_library_ipfs.js.json",
-      "sourceSize": 425879,
-      "sourceUri": "https://dweb.link/ipfs/bafybeigdcz72uunnaj52cytttzwxcz3c7emnv6f3yx342lbowqjparym4y/$_library_ipfs.js.json-1.0.0+release-210530354.json",
+      "sourceSize": 435255,
+      "sourceUri": "https://dweb.link/ipfs/bafybeidl2yamdhk4g6duxmlnggmdn5mjhjoocengvzfxtgse5evbwm47wu/$_library_ipfs.js.json-1.0.0+release-210605285.json",
       "tidSize": 563,
-      "tidUri": "https://dweb.link/ipfs/bafybeihqn6p4bpydlnjsbxscoovi64ji6erouw7crszel3o3del7djx4qq/$_library_ipfs.js.json.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeibhwdksipiklnvbcr3kukqh6l7nrnuzjxccbfkwekoffii5ai7gw4/$_library_ipfs.js.json.json-build.tid"
     },
     {
       "title": "library",
       "tags": "$:/ipfs/core $:/core $:/library/ipfs",
       "name": "$:/library/ipfs.js",
-      "rawHash": "438266b6c8b12b236c0405392c04531e9b46e501e2201a1ff6eeb0d5453f06b6",
+      "rawHash": "603aae1eee47278b9a2c0a81277dbdd9fca34cc207f786e73e65865112f770ef",
       "sourceExtension": "js",
       "sourceFilename": "$_library_ipfs.js",
-      "sourceSize": 416764,
-      "sourceUri": "https://dweb.link/ipfs/bafybeid3veqedw56z3vrhf2ipkybnjjctfvawwgqycm4poznekj6tt4bz4/$_library_ipfs.js-1.0.0+release-210530354.js",
+      "sourceSize": 425730,
+      "sourceUri": "https://dweb.link/ipfs/bafybeihz7czh4ptkniu65kp2rc4kebd5pu6rrli622yrtqacvbecod5ihu/$_library_ipfs.js-1.0.0+release-210605285.js",
       "tidSize": 532,
-      "tidUri": "https://dweb.link/ipfs/bafybeidc7hplnxst6kyczwm7ok4lbmjzlqod2sr6gk7fqqgxzbh4mzvxcy/$_library_ipfs.js.js-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeihvmhmyj5sbtefsoqt6mprta46b5cv7bmideuijdequ2sjfvfr4z4/$_library_ipfs.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.0+release",
-  "version": "1.0.0+release-210530354",
-  "buildUri": "https://dweb.link/ipfs/bafybeigua6a7447eqplg373ankkuc3ohb5wh6i753k76ssgq5jcoz54piu/210530354/"
+  "version": "1.0.0+release-210605285",
+  "buildUri": "https://dweb.link/ipfs/bafybeicc3lqhwguqx3gwsdzd5eoopvlyn5zmept5explzaablb5nqej5o4/210605285/"
 }

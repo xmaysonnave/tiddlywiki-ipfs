@@ -22,29 +22,25 @@ IpfsLoader.prototype.getLogger = function () {
 // https://github.com/liriliri/eruda
 IpfsLoader.prototype.loadErudaLibrary = async function () {
   if (typeof globalThis.eruda === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/eruda', 'eruda')
+    return await this.loadTiddlerLibrary('$:/library/eruda.min.js', 'eruda')
   }
+  return globalThis.eruda
 }
 
 // https://github.com/ethers-io/ethers.js/
-IpfsLoader.prototype.loadEtherJsLibrary = async function () {
+IpfsLoader.prototype.loadEthersLibrary = async function () {
   if (typeof globalThis.ethers === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/ethers', 'ethers')
+    return await this.loadTiddlerLibrary('$:/library/ethers.umd.min.js', 'ethers')
   }
-}
-
-// https://github.com/xmaysonnave/eth-sig-util
-IpfsLoader.prototype.loadEthSigUtilLibrary = async function () {
-  if (typeof globalThis.sigUtil === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/eth-sig-util', 'sigUtil')
-  }
+  return globalThis.ethers
 }
 
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
   if (typeof globalThis.IpfsHttpClient === 'undefined') {
-    await this.loadTiddlerLibrary('$:/ipfs/library/ipfs-http-client', 'IpfsHttpClient')
+    return await this.loadTiddlerLibrary('$:/library/ipfs-http-client.min.js', 'IpfsHttpClient')
   }
+  return globalThis.IpfsHttpClient
 }
 
 // https://gist.github.com/ebidel/3201b36f59f26525eb606663f7b487d0
@@ -60,26 +56,26 @@ IpfsLoader.prototype.supportDynamicImport = function () {
 
 // https://www.srihash.org/
 IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj) {
-  if (globalThis[obj] !== undefined && globalThis[obj] !== null) {
-    return
+  if (globalThis[obj] !== undefined && globalThis[obj] !== null && Object.keys(globalThis[obj]).length !== 0) {
+    return globalThis[obj]
   }
   const self = this
   const tiddler = $tw.wiki.getTiddler(title)
   if (tiddler === undefined || tiddler == null) {
     throw new Error(`Undefined Library: ${title}`)
   }
-  const sourceUri = tiddler.fields._source_uri
-  const sourceSri = tiddler.fields._source_sri
+  const sourceUri = tiddler.fields._source_uri || tiddler.fields._canonical_uri
+  const sourceSri = tiddler.fields._source_sri || tiddler.fields._canonical_sri
   const isModule = tiddler.fields._module === 'yes'
   await this.mutex.runExclusive(async () => {
-    if (globalThis[obj] === undefined || globalThis[obj] == null) {
+    if (globalThis[obj] === undefined || globalThis[obj] == null || Object.keys(globalThis[obj]).length === 0) {
       const loaded = await self.loadLibrary(title, sourceUri, sourceSri, isModule)
-      if (loaded !== undefined && loaded !== null && globalThis[obj] !== undefined && globalThis[obj] !== null) {
+      if (loaded !== undefined && loaded !== null && globalThis[obj] !== undefined && globalThis[obj] !== null && Object.keys(globalThis[obj]).length !== 0) {
         self.getLogger().info(
           `Loaded ${title}:
  ${sourceUri}`
         )
-        return
+        return globalThis[obj]
       }
       throw new Error(`Unable to load Library: ${title}`)
     }

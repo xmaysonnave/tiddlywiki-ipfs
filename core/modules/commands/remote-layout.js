@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/commands/tree-layout.js
+title: $:/core/modules/commands/remote-layout.js
 type: application/javascript
 tags: $:/ipfs/core
 module-type: command
@@ -11,7 +11,7 @@ module-type: command
   'use strict'
 
   exports.info = {
-    name: 'tree-layout',
+    name: 'remote-layout',
     synchronous: true,
   }
 
@@ -22,11 +22,11 @@ module-type: command
   }
 
   Command.prototype.execute = function () {
-    var treeLayout = false
+    var remoteLayout = false
     if (this.params.length > 0) {
-      treeLayout = this.params[0] === 'yes'
+      remoteLayout = this.params[0] === 'yes'
     }
-    $tw.layoutState.setLayoutState(treeLayout)
+    $tw.layoutState.setLayoutState(remoteLayout)
     return null
   }
 

@@ -52,12 +52,16 @@ IPFS Controller
     this.ensAction.init()
     this.ipfsAction.init()
     this.ipfsTiddler.init()
-    // Load sigUtil early if needed
-    if ($tw.crypto.hasEncryptionPublicKey() && globalThis.sigUtil === 'undefined') {
-      this.loadEthSigUtilLibrary()
-    }
     // Init once
     this.once = true
+  }
+
+  IpfsController.prototype.getErudaLibrary = async function () {
+    return await this.ipfsBundle.getErudaLibrary()
+  }
+
+  IpfsController.prototype.getEruda = function () {
+    return require('$:/library/eruda.min.js')
   }
 
   IpfsController.prototype.getLogger = function () {
@@ -151,9 +155,6 @@ IPFS Controller
     var hasPublicKey = publicKey || $tw.crypto.hasEncryptionPublicKey()
     if (encrypted || password || hasPublicKey) {
       try {
-        if (hasPublicKey && globalThis.sigUtil === 'undefined') {
-          await this.loadEthSigUtilLibrary()
-        }
         if (compress) {
           content = { compressed: this.deflate(content) }
           content.compressed = $tw.crypto.encrypt(content.compressed, password, publicKey)
@@ -640,14 +641,6 @@ ${url}`
 
   IpfsController.prototype.getENSRegistry = function () {
     return this.ipfsBundle.getENSRegistry()
-  }
-
-  IpfsController.prototype.loadErudaLibrary = async function () {
-    await this.ipfsBundle.loadErudaLibrary()
-  }
-
-  IpfsController.prototype.loadEthSigUtilLibrary = async function () {
-    await this.ipfsBundle.loadEthSigUtilLibrary()
   }
 
   IpfsController.prototype.deflate = function (str) {

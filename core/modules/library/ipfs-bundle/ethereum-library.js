@@ -168,11 +168,9 @@ EthereumLibrary.prototype.personalRecover = async function (message, signature) 
   if (signature == null) {
     throw new Error('Undefined Signature....')
   }
-  if (typeof globalThis.sigUtil === 'undefined') {
-    await this.ipfsBundle.loadEthSigUtilLibrary()
-  }
+  const sigUtil = globalThis.sigUtil || require('eth-sig-util')
   const msgParams = { data: message, sig: signature }
-  const recovered = globalThis.sigUtil.recoverPersonalSignature(msgParams)
+  const recovered = sigUtil.recoverPersonalSignature(msgParams)
   if (recovered === undefined || recovered == null) {
     const err = new Error('Unrecoverable signature...')
     err.name = 'UnrecoverableSignature'
@@ -363,14 +361,12 @@ EthereumLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
   if (provider === undefined || provider == null) {
     provider = await this.getEthereumProvider()
   }
-  if (typeof globalThis.ethers === 'undefined') {
-    await this.ipfsBundle.loadEthersJsLibrary()
-  }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   // Enable provider
   // https://github.com/ethers-io/ethers.js/issues/433
   const account = await this.getAccount(provider)
   // Instantiate a Web3Provider
-  const web3 = new globalThis.ethers.providers.Web3Provider(provider, 'any')
+  const web3 = new ethers.providers.Web3Provider(provider, 'any')
   // Retrieve current network
   const network = await web3.getNetwork()
   const chainId = parseInt(network.chainId, 16)
@@ -385,11 +381,9 @@ EthereumLibrary.prototype.getWeb3Provider = async function (provider) {
   if (provider === undefined || provider == null) {
     provider = await this.getEthereumProvider()
   }
-  if (typeof globalThis.ethers === 'undefined') {
-    await this.ipfsBundle.loadEthersJsLibrary()
-  }
+  const ethers = await this.ipfsBundle.getEthersLibrary()
   // Instantiate an ethers Web3Provider
-  const web3 = new globalThis.ethers.providers.Web3Provider(provider, 'any')
+  const web3 = new ethers.providers.Web3Provider(provider, 'any')
   // Retrieve current network
   const network = await web3.getNetwork()
   const chainId = parseInt(network.chainId, 16)

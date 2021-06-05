@@ -2,6 +2,7 @@ title: $:/language/Import/
 tags: $:/ipfs/core
 
 Deleted/Hint: The following tiddlers were deleted:
-Listing/Hint: These tiddlers are ready to be imported:
+Listing/Hint: These tiddlers are ready to be imported or deleted:
 Listing/ImportAll/Caption: Import
 Listing/DeleteAll/Caption: Delete
+Listing/Perform/Caption: Perform

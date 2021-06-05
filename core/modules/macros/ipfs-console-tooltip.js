@@ -16,7 +16,7 @@ module-type: macro
 
   exports.run = function () {
     var tiddler = $tw.wiki.getTiddler('$:/language/Buttons/Console/Mobile/Hint')
-    if (typeof window.eruda === 'undefined') {
+    if (typeof globalThis.eruda === 'undefined') {
       tiddler = $tw.wiki.getTiddler('$:/language/Buttons/Console/Mobile/Load')
     } else if ($tw.ipfs.ipfsAction !== undefined) {
       if ($tw.ipfs.ipfsAction.console) {

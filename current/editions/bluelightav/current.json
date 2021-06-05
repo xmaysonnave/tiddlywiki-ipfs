@@ -1,20 +1,20 @@
 {
-  "build": "210602402",
+  "build": "210605393",
   "content": [
     {
       "title": "bluelightav",
       "tags": "$:/ipfs/editions",
       "name": "bluelightav",
-      "rawHash": "f5715c34b7debcc4556a4b8129e7a344946070e9a908c2a6ac9ea673b4f15b37",
+      "rawHash": "358163b5cc0a405bb0276a187ab727f80968f9666a8994dbdc3c0b0f5403741d",
       "sourceExtension": "html",
       "sourceFilename": "bluelightav",
-      "sourceSize": 244983,
-      "sourceUri": "https://dweb.link/ipfs/bafybeig75e6emg6brvq2iyiictcs2f54dciawxleoquyf4ngpwhstze344/",
+      "sourceSize": 245694,
+      "sourceUri": "https://dweb.link/ipfs/bafybeic2zm4al7ynpqteonhwdpx236jzu7ryzulzubw56fhtetpq6yvdxu/",
       "tidSize": 462,
-      "tidUri": "https://dweb.link/ipfs/bafybeic5iotv72bzviglxogd4znbdzsmzxncrwju3cc6tzcbctlbk4bxnm/$_ipfs_edition-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeicrg6ezc73fg2zh423np2bl7serfgpk5geh2y53rz7f7liv4xplg4/$_ipfs_edition-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210602402",
-  "buildUri": "https://dweb.link/ipfs/bafybeieqa56c2db4glry4k5xusnl4666gxcixh4vzjubisejwhlc4uiwhy/210602402/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210605393",
+  "buildUri": "https://dweb.link/ipfs/bafybeifjrqpsi43hs4bnvzctry46ytvw5znv7hk5wlkpevws3c3lgnsudq/210605393/"
 }

@@ -32,7 +32,7 @@ var bootsuffix = function ($tw) {
       if (ipfs === undefined || ipfs == null) {
         ipfs = log.getLogger('ipfs')
         ipfs.setLevel('info', false)
-        ipfs.info('Loglevel is starting up...')
+        ipfs.info('#kernel# Loglevel is starting up...')
       }
       return ipfs
     }
@@ -155,9 +155,9 @@ var bootsuffix = function ($tw) {
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        $tw.boot.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
+        $tw.boot.getLogger().error(new Error(`Timeout exceeded: ${timeout} ms`))
       } else {
-        $tw.boot.getLogger().error(`*** Options error: ${error.message} ***`)
+        $tw.boot.getLogger().error(new Error(`Options error: ${error.message}`))
       }
     } finally {
       globalThis.clearTimeout(optionsId)
@@ -196,7 +196,7 @@ var bootsuffix = function ($tw) {
         const ab = await response.arrayBuffer()
         const ua = new Uint8Array(ab)
         $tw.boot.getLogger().info(
-          `[${response.status}] Loaded:
+          `#kernel# [${response.status}] Loaded:
  ${response.url}`
         )
         return {
@@ -211,9 +211,9 @@ var bootsuffix = function ($tw) {
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        $tw.boot.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
+        $tw.boot.getLogger().error(new Error(`Timeout exceeded: ${timeout} ms`))
       } else {
-        $tw.boot.getLogger().error(`*** Fetch error: ${error.message} ***`)
+        $tw.boot.getLogger().error(new Error(`Fetch error: ${error.message}`))
       }
     } finally {
       globalThis.clearTimeout(responseId)
@@ -238,7 +238,11 @@ var bootsuffix = function ($tw) {
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     var ua = null
     var type = null
-    var { content: ua, type } = await $tw.boot.fetch(url)
+    var fetched = await $tw.boot.fetch(url)
+    if (fetched === undefined || fetched == null) {
+      return null
+    }
+    var { content: ua, type } = fetched
     if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
       return null
     }
@@ -365,7 +369,7 @@ var bootsuffix = function ($tw) {
       }
     }
     this.load = function (tiddler, creationFields, removeFields, modificationFields, password, fallback) {
-      var uri = tiddler.fields._canonical_uri ? tiddler.fields._canonical_uri : null
+      var uri = tiddler.fields._canonical_uri !== undefined ? tiddler.fields._canonical_uri : null
       if (uri === undefined || uri == null) {
         return
       }
@@ -381,7 +385,7 @@ var bootsuffix = function ($tw) {
             modificationFields.text = content
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
             $tw.boot.getLogger().info(
-              `Embed module: ${data.length}
+              `#kernel# Embed module: ${content.length}
  ${uri}`
             )
           }
@@ -437,18 +441,18 @@ var bootsuffix = function ($tw) {
       }
     }
     this.updateLayoutStateTiddler = function () {
-      var isTreeLayout = null
+      var isRemote = null
       if ($tw.wiki) {
         var state = currentState === 'yes' ? 'yes' : 'no'
-        isTreeLayout = $tw.wiki.getTiddler('$:/isTreeLayout')
-        if (!isTreeLayout || isTreeLayout.fields.text !== state) {
-          isTreeLayout = new $tw.Tiddler({
-            title: '$:/isTreeLayout',
+        isRemote = $tw.wiki.getTiddler('$:/isRemote')
+        if (!isRemote || isRemote.fields.text !== state) {
+          isRemote = new $tw.Tiddler({
+            title: '$:/isRemote',
             text: state,
           })
-          $tw.wiki.addTiddler(isTreeLayout)
+          $tw.wiki.addTiddler(isRemote)
         }
-        if (isTreeLayout) {
+        if (isRemote) {
           var build = this.getBuild('$:/boot/boot.css-build')
           if (build !== null) {
             if (state === 'yes') {
@@ -532,18 +536,18 @@ var bootsuffix = function ($tw) {
           var tStop = new Date() - tStart
           var ratio = Math.floor((output.length * 100) / text.length)
           var uMethod = method.charAt(0).toUpperCase() + method.slice(1) + 'ion'
-          $tw.boot.getLogger().info(`Standford ${uMethod}: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
+          $tw.boot.getLogger().info(`#kernel# Standford ${uMethod}: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
         }
       } catch (error) {
-        $tw.boot.getLogger().error('Standford Crypto: ' + error)
+        $tw.boot.getLogger().error(new Error(`Standford Crypto: ${error.message}`))
         output = null
       }
       return output
     }
     var callSigUtil = function (method, text, key) {
       var output = null
-      var sigUtil = $tw.node ? globalThis.sigUtil || require('eth-sig-util') : globalThis.sigUtil
       try {
+        var sigUtil = globalThis.sigUtil || require('eth-sig-util')
         if (method === 'encrypt') {
           key = key || currentPublicKey
           if (key) {
@@ -552,7 +556,7 @@ var bootsuffix = function ($tw) {
             output = JSON.stringify(output)
             var tStop = new Date() - tStart
             var ratio = Math.floor((output.length * 100) / text.length)
-            $tw.boot.getLogger().info(`Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
+            $tw.boot.getLogger().info(`#kernel# Ethereum Encryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
           }
         } else if (method === 'decrypt') {
           key = key || currentPrivateKey
@@ -561,11 +565,11 @@ var bootsuffix = function ($tw) {
             output = sigUtil.decrypt(JSON.parse(text), key)
             var tStop = new Date() - tStart
             var ratio = Math.floor((output.length * 100) / text.length)
-            $tw.boot.getLogger().info(`Ethereum Decryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
+            $tw.boot.getLogger().info(`#kernel# Ethereum Decryption: ${tStop}ms, In: ${text.length} bytes, Out: ${output.length} bytes, Ratio: ${ratio}%`)
           }
         }
       } catch (error) {
-        $tw.boot.getLogger().error('Ethereum Crypto: ' + error)
+        $tw.boot.getLogger().error(new Error(`Ethereum Crypto: ${error.message}`))
         output = null
       }
       return output
@@ -708,7 +712,7 @@ var bootsuffix = function ($tw) {
       var b64 = this.btoa(ua)
       var tStop = new Date() - tStart
       var ratio = Math.floor((b64.length * 100) / str.length)
-      $tw.boot.getLogger().info(`Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`)
+      $tw.boot.getLogger().info(`#kernel# Deflate: ${tStop}ms, In: ${str.length} bytes, Out: ${b64.length} bytes, Ratio: ${ratio}%`)
       return b64
     }
     this.inflate = function (b64) {
@@ -717,7 +721,7 @@ var bootsuffix = function ($tw) {
       var str = pako.inflate(ua, { to: 'string' })
       var tStop = new Date() - tStart
       var ratio = Math.floor((str.length * 100) / b64.length)
-      $tw.boot.getLogger().info(`Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`)
+      $tw.boot.getLogger().info(`#kernel# Inflate: ${tStop}ms, In: ${b64.length} bytes, Out: ${str.length} bytes, Ratio: ${ratio}%`)
       return str
     }
     this.decode = function (b64) {
@@ -928,9 +932,9 @@ var bootsuffix = function ($tw) {
         throw new Error('Unable to retrieve any Ethereum accounts...')
       }
       if (provider.chainId !== undefined) {
-        $tw.boot.getLogger().log(`Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
+        $tw.boot.getLogger().log(`#kernel# Chain: ${provider.chainId}, Ethereum Account: ${accounts[0]}`)
       } else {
-        $tw.boot.getLogger().log(`Ethereum Account: ${accounts[0]}`)
+        $tw.boot.getLogger().log(`#kernel# Ethereum Account: ${accounts[0]}`)
       }
       try {
         if (signature) {
@@ -941,10 +945,10 @@ var bootsuffix = function ($tw) {
           })
           if (signature !== undefined || signature !== null) {
             var tStop = new Date() - tStart
-            $tw.boot.getLogger().info(`Ethereum Signature Decrypt: ${tStop}ms`)
+            $tw.boot.getLogger().info(`#kernel# Ethereum Signature Decrypt: ${tStop}ms`)
           }
           recovered = await personalRecover(provider, keccak256, signature)
-          $tw.boot.getLogger().info(`Signed from: https://app.ens.domains/address/${recovered}`)
+          $tw.boot.getLogger().info(`#kernel# Signed from: https://app.ens.domains/address/${recovered}`)
         }
         var tStart = new Date()
         decrypted = await provider.request({
@@ -954,7 +958,7 @@ var bootsuffix = function ($tw) {
         if (decrypted !== undefined || decrypted !== null) {
           var tStop = new Date() - tStart
           var ratio = Math.floor((decrypted.length * 100) / encrypted.length)
-          $tw.boot.getLogger().info(`Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`)
+          $tw.boot.getLogger().info(`#kernel# Ethereum Decrypt: ${tStop}ms, In: ${encrypted.length}, Out: ${decrypted.length}, Ratio: ${ratio}%`)
         }
       } catch (error) {
         if (error.code === 4001) {
@@ -968,9 +972,9 @@ var bootsuffix = function ($tw) {
       }
     } catch (error) {
       if (error.code === 4001) {
-        $tw.utils.error('Rejected User Request...')
+        $tw.utils.error(new Error('Rejected User Request...'))
       } else {
-        $tw.utils.error(error.message)
+        $tw.utils.error(new Error(error.message))
       }
     }
     callback(decrypted, recovered)
@@ -1098,6 +1102,133 @@ var bootsuffix = function ($tw) {
     }
     // Return the exports of the module
     return moduleInfo.exports
+  }
+
+  $tw.Wiki.prototype.loadRemoteModule = async function (uri, password) {
+    var content = null
+    var normalizedUrl = null
+    try {
+      normalizedUrl = $tw.utils.normalizeUrl(uri)
+    } catch (error) {
+      $tw.boot.getLogger().error(error)
+      if ($tw.utils.alert !== undefined) {
+        $tw.utils.alert(name, error.message)
+      }
+    }
+    if (normalizedUrl !== null) {
+      try {
+        var data = await $tw.boot.loadToUtf8(normalizedUrl, password)
+        if (data !== undefined && data !== null) {
+          var { content } = data
+        }
+      } catch (error) {
+        $tw.boot.getLogger().error(error)
+        if ($tw.utils.alert !== undefined) {
+          $tw.utils.alert(name, error.message)
+        }
+      }
+    }
+    return content
+  }
+
+  /**
+   * Define all modules stored in ordinary tiddlers
+   */
+  $tw.Wiki.prototype.defineTiddlerModules = async function () {
+    var titles = this.allTitles()
+    for (var index = 0; index < titles.length; index++) {
+      var title = titles[index]
+      var tiddler = this.getTiddler(title)
+      if (tiddler.hasField('module-type')) {
+        var password = tiddler.fields._password
+        password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+        switch (tiddler.fields.type) {
+          case 'application/javascript':
+            // We only define modules that haven't already been defined, because in the browser modules in system tiddlers are defined in inline script
+            if (!$tw.utils.hop($tw.modules.titles, tiddler.fields.title)) {
+              var load = function (content) {
+                if (content !== undefined && content !== null && content !== '') {
+                  if (tiddler.fields['module-type'] === 'library' && tiddler.fields['module-wrapper'] === 'yes') {
+                    content = `(function(){
+${content}
+}).call(exports);`
+                  }
+                  $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], content)
+                }
+              }
+              var content = tiddler.fields.text
+              if (tiddler.fields._canonical_uri !== undefined) {
+                if ($tw.browser) {
+                  content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
+                } else if (tiddler.fields['module-browser'] !== 'yes') {
+                  content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
+                }
+              }
+              load(content)
+            }
+            break
+          case 'application/json':
+            var load = function (content) {
+              if (content !== undefined && content !== null && content !== '') {
+                $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], JSON.parse(content))
+              }
+            }
+            var content = tiddler.fields.text
+            if (tiddler.fields._canonical_uri !== undefined) {
+              content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
+            }
+            load(content)
+            break
+          case 'application/x-tiddler-dictionary':
+            var load = function (content) {
+              if (content !== undefined && content !== null && content !== '') {
+                $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], $tw.utils.parseFields(content))
+              }
+            }
+            var content = tiddler.fields.text
+            if (tiddler.fields._canonical_uri !== undefined) {
+              content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
+            }
+            load(content)
+            break
+        }
+      }
+    }
+  }
+
+  /**
+   * Register all the module tiddlers that have a module type
+   */
+  $tw.Wiki.prototype.defineShadowModules = async function () {
+    var titles = this.allShadowTitles()
+    for (var index = 0; index < titles.length; index++) {
+      var title = titles[index]
+      var tiddler = this.getTiddler(title)
+      // Don't define the module if it is overidden by an ordinary tiddler
+      if (!this.tiddlerExists(title) && tiddler.hasField('module-type')) {
+        var password = tiddler.fields._password
+        password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+        var loadCallback = function (content) {
+          if (content !== undefined && content !== null && content !== '') {
+            if (tiddler.fields.type === 'application/javascript' && tiddler.fields['module-type'] === 'library' && tiddler.fields['module-wrapper'] === 'yes') {
+              content = `(function(){
+${content}
+}).call(exports);`
+            }
+            $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], content)
+          }
+        }
+        var content = tiddler.fields.text
+        if (tiddler.fields._canonical_uri !== undefined) {
+          if ($tw.browser) {
+            content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
+          } else if (tiddler.fields['module-browser'] !== 'yes') {
+            content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
+          }
+        }
+        loadCallback(content)
+      }
+    }
   }
 
   /////////////////////////// Browser definitions
@@ -1302,7 +1433,7 @@ var bootsuffix = function ($tw) {
       if (fs.existsSync(filepath) && fs.statSync(filepath).isDirectory()) {
         // Read the plugin information
         if (!fs.existsSync(infoPath) || !fs.statSync(infoPath).isFile()) {
-          $tw.boot.getLogger().error('Warning: missing plugin.info file in ' + filepath)
+          $tw.boot.getLogger().error(new Error(`Warning: missing plugin.info file in ${filepath}`))
           return null
         }
         var pluginInfo = JSON.parse(fs.readFileSync(infoPath, 'utf8'))
@@ -1420,9 +1551,9 @@ var bootsuffix = function ($tw) {
       $tw.wiki.processSafeMode()
     }
     // Register typed modules from the tiddlers we've just loaded
-    $tw.wiki.defineTiddlerModules()
+    await $tw.wiki.defineTiddlerModules()
     // And any modules within plugins
-    $tw.wiki.defineShadowModules()
+    await $tw.wiki.defineShadowModules()
     // Gather up any startup modules
     $tw.boot.remainingStartupModules = [] // Array of startup modules
     $tw.modules.forEachModuleOfType('startup', function (title, module) {
@@ -1472,7 +1603,7 @@ var bootsuffix = function ($tw) {
           } else {
             $tw.compress.updateCompressStateTiddler()
           }
-          var tiddler = $tw.wiki.getTiddler('$:/isTreeLayout')
+          var tiddler = $tw.wiki.getTiddler('$:/isRemote')
           if (tiddler) {
             $tw.layoutState.setLayoutState(tiddler.fields.text === 'yes')
           } else {

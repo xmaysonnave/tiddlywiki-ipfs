@@ -18,7 +18,6 @@ IPFS Action
 
   var IpfsAction = function () {
     this.once = false
-    this.console = false
     this.ipnsKey = $tw.utils.getIpnsKey()
     this.ipnsCid = $tw.utils.getIpnsCid()
   }
@@ -372,32 +371,31 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleMobileConsole = async function (event) {
-    // Show or Hide
-    if (typeof globalThis.eruda !== 'undefined') {
-      if (this.console === false) {
-        globalThis.eruda.show()
-        globalThis.eruda.show('console')
-        this.console = true
-      } else {
-        globalThis.eruda.hide()
-        this.console = false
-      }
-      $tw.rootWidget.refresh($tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile'))
-      return true
-    }
-    // Load library
+    // Load
+    var eruda = null
     try {
-      if (typeof globalThis.eruda === 'undefined') {
-        await $tw.ipfs.loadErudaLibrary()
-      }
+      eruda = await $tw.ipfs.getErudaLibrary()
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
       $tw.utils.alert(name, error.message)
       return false
     }
-    const erudaContainer = window.document.createElement('div')
-    window.document.body.appendChild(erudaContainer)
-    globalThis.eruda.init({
+    // Show or Hide
+    if (this.console !== undefined && this.console !== null) {
+      if (this.console === false) {
+        eruda.show()
+        eruda.show('console')
+        this.console = true
+      } else {
+        eruda.hide()
+        this.console = false
+      }
+      $tw.rootWidget.refresh($tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile'))
+      return true
+    }
+    const erudaContainer = globalThis.document.createElement('div')
+    globalThis.document.body.appendChild(erudaContainer)
+    eruda.init({
       container: erudaContainer,
       tool: ['console'],
       useShadowDom: true,
@@ -406,22 +404,22 @@ IPFS Action
     // Inherit font
     erudaContainer.style.fontFamily = 'inherit'
     // Preserve user preference if any, default is 80
-    if (globalThis.eruda.get().config.get('displaySize') === 80) {
-      globalThis.eruda.get().config.set('displaySize', 40)
+    if (eruda.get().config.get('displaySize') === 80) {
+      eruda.get().config.set('displaySize', 40)
     }
     // Preserve user preference if any, default is 0.95
-    if (globalThis.eruda.get().config.get('transparency') === 0.95) {
-      globalThis.eruda.get().config.set('transparency', 1)
+    if (eruda.get().config.get('transparency') === 0.95) {
+      eruda.get().config.set('transparency', 1)
     }
     // Hide Eruda button
-    if (globalThis.eruda._shadowRoot !== undefined) {
-      const btn = globalThis.eruda._shadowRoot.querySelector('.eruda-entry-btn')
+    if (eruda._shadowRoot !== undefined) {
+      const btn = eruda._shadowRoot.querySelector('.eruda-entry-btn')
       if (btn !== undefined) {
         btn.style.display = 'none'
       }
     }
     // Init Logger
-    const log = window.log.getLogger('eruda')
+    const log = globalThis.log.getLogger('eruda')
     if ($tw.utils.getIpfsVerbose()) {
       log.setLevel('info', false)
     } else {
@@ -430,8 +428,8 @@ IPFS Action
     // Log
     log.info('Mobile console has been loaded...')
     // Show
-    globalThis.eruda.show()
-    globalThis.eruda.show('console')
+    eruda.show()
+    eruda.show('console')
     this.console = true
     $tw.rootWidget.refresh($tw.utils.getChangedTiddler('$:/core/ui/Buttons/ipfs/console/mobile'))
     return true

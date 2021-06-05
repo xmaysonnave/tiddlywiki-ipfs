@@ -27,18 +27,18 @@ fi
 # down
 cd download
 
+# eth-sig-util
+if [ ! -e ./eth-sig-util ]
+then
+  mkdir eth-sig-util > /dev/null 2>&1
+  wget https://cdn.jsdelivr.net/npm/ipfs-http-client@50.0.0/dist/index.min.js -O ./eth-sig-util/eth-sig-util.min.js || exit 1
+fi
+
 # @metamask/detect-provider
 if [ ! -e ./detect-provider ]
 then
   mkdir detect-provider > /dev/null 2>&1
   wget https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/dist/detect-provider.min.js -O ./detect-provider/detect-provider.min.js || exit 1
-fi
-
-# ipfs-http-client
-if [ ! -e ./ipfs-http-client ]
-then
-  mkdir ipfs-http-client > /dev/null 2>&1
-  wget https://cdn.jsdelivr.net/npm/ipfs-http-client@50.1.0/dist/index.min.js -O ./ipfs-http-client/ipfs-http-client.min.js || exit 1
 fi
 
 # loglevel

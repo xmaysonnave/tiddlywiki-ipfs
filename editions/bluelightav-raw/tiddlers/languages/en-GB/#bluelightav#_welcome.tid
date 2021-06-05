@@ -1,5 +1,5 @@
 title: #bluelightav# Welcome
-modified: 20210601094915385
+modified: 20210603094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -56,14 +56,14 @@ type: text/vnd.tiddlywiki
   </li>
   <li>Semantic Web
     <ul>
-      <li>(Analytics</li>
+      <li>Analytics</li>
     </ul>
   </li>
   <li>Security
     <ul>
       <li>Identification</li>
       <li>Immutability</li>
-      <li>Tamper-proof)</li>
+      <li>Tamper-proof</li>
     </ul>
   </li>
   <li>[ext[Trustless|https://preethikasireddy.medium.com/eli5-what-do-we-mean-by-blockchains-are-trustless-aa420635d5f6]]</li>
@@ -164,7 +164,7 @@ type: text/vnd.tiddlywiki
       <li>Content</li>
     </ul>
   </li>
-  <li>Embedded or Tree model layout</li>
+  <li>Embedded or Remote Layout</li>
   <li>Encrypt, Decrypt and Sign
     <ul>
       <li>Attachments</li>
@@ -214,7 +214,7 @@ type: text/vnd.tiddlywiki
   <li>[[And more...|#ipfs# Documentation]]</li>
 </ul>
 
-<h3>IPFS with ~TiddlyWiki layout Metrics</h3>
+<h3>IPFS with ~TiddlyWiki Layout Metrics</h3>
 <table style="margin-left:auto;margin-right:auto;">
   <tr style="text-align:center;">
     <td></td>
@@ -241,8 +241,8 @@ type: text/vnd.tiddlywiki
 <table style="margin-left:auto;margin-right:auto;">
   <tr style="text-align:center;">
     <td></td>
-    <th>Tree Compressed</th>
-    <th>Tree Compressed Encrypted</th>
+    <th>Remote Compressed</th>
+    <th>Remote Compressed Encrypted</th>
   </tr>
   <tr style="text-align:center;">
     <th scope="row">bluelightav.eth</th>
@@ -274,8 +274,8 @@ type: text/vnd.tiddlywiki
   </tr>
   <tr style="text-align:center;">
     <th scope="row">[[$:/plugins/ipfs]]</th>
-    <td>342.6.7 kB</td>
-    <td>1.3 MB</td>
+    <td>274.2 kB</td>
+    <td>1.1 MB</td>
   </tr>
 </table>
 <p>&nbsp;</p>
