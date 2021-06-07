@@ -1,20 +1,20 @@
 {
-  "build": "210607295",
+  "build": "210607316",
   "content": [
     {
       "title": "empty",
       "tags": "$:/ipfs/editions",
       "name": "empty",
-      "rawHash": "111ec28f7e007cb62bbda80b1e31a2e6ed33ff1eba5b60eb18b0dadd0fe292af",
+      "rawHash": "1a502da4a4c454f1dd0192e1afe7151352508797239158ce5d33983a6c2350dd",
       "sourceExtension": "html",
       "sourceFilename": "empty",
       "sourceSize": 37089,
-      "sourceUri": "https://dweb.link/ipfs/bafybeif7o5smup65fvwxupusnq6j73rzdob7io4liueo6fxo3ahia6eyd4/",
+      "sourceUri": "https://dweb.link/ipfs/bafybeia6fwysaoybj7sxq6kjjnlqtlobjlud2q735ghwsfp64juycnfdam/",
       "tidSize": 449,
-      "tidUri": "https://dweb.link/ipfs/bafybeihc5wrbjugt5do7ebr5wqajr7wans5roq4airvpyekooreasxookm/$_ipfs_edition-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeig355ltyof5q2camwpslxqqdfgukbmvswpm4ujtusbfqz3bya6tvm/$_ipfs_edition-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210607295",
-  "buildUri": "https://dweb.link/ipfs/bafybeiatnpltcz7gk6hxaz43juvxy4fodsqm7wwbnkxywag6qlrcxv3buq/210607295/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210607316",
+  "buildUri": "https://dweb.link/ipfs/bafybeiarvt6ixfhtjm33dyflbtma24dver3rnrw46s75u757uhrtl7vv5e/210607316/"
 }

@@ -92,9 +92,10 @@ module.exports = async function main (name, extension, dir, env, version) {
       const uri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/current.json`
       console.log(`*** Fetch current:
  ${uri} ***`)
-      const ua = await loadFromIpfs(uri)
-      if (ua !== null) {
-        current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
+      const data = await loadFromIpfs(uri)
+      if (data !== undefined && data !== null) {
+        var { content } = data
+        current = JSON.parse(ipfsBundle.Utf8ArrayToStr(content))
       }
     }
     if (current !== null) {

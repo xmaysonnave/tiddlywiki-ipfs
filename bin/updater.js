@@ -214,8 +214,9 @@ module.exports = class Updater {
         const nodeUri = `${this.publicGateway}/ipfs/${rawBuildNodeLinks[i].Hash}`
         console.log(`*** Fetch current:
  ${nodeUri} ***`)
-        current = await loadFromIpfs(nodeUri, this.shortTimeout)
-        if (current !== null) {
+        const data = await loadFromIpfs(nodeUri, this.shortTimeout)
+        if (data !== undefined && data !== null) {
+          var { content: current } = data
           current = JSON.parse(ipfsBundle.Utf8ArrayToStr(current))
         }
         break
@@ -260,7 +261,7 @@ module.exports = class Updater {
         const nodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`*** Fetch Production node:
 ${nodeUri} ***`)
-        await loadFromIpfs(nodeUri)
+        loadFromIpfs(nodeUri)
       }
       return {
         cid: ipfsBundle.cidToCidV1(node.cid),
@@ -351,7 +352,7 @@ ${nodeUri} ***`)
         const nodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`${msg} Production:
  ${nodeUri} ***`)
-        await loadFromIpfs(nodeUri)
+        loadFromIpfs(nodeUri)
       }
     }
     return node
@@ -411,7 +412,7 @@ ${nodeUri} ***`)
               const rawNodeUri = `${this.gateway}/ipfs/${childNode.cid}`
               console.log(`*** Fetch Raw node:
  ${rawNodeUri} ***`)
-              await loadFromIpfs(rawNodeUri)
+              loadFromIpfs(rawNodeUri)
             }
           }
         }
@@ -587,7 +588,7 @@ ${nodeUri} ***`)
           const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
           console.log(`*** Fetch Raw node:
  ${rawNodeUri} ***`)
-          await loadFromIpfs(rawNodeUri)
+          loadFromIpfs(rawNodeUri)
         }
         node = await this.dagPut(api, links)
         build.currentRawBuild = `${this.publicGateway}/ipfs/${node.cid}`
@@ -604,7 +605,7 @@ ${nodeUri} ***`)
         const rawNodeUri = `${this.gateway}/ipfs/${node.cid}`
         console.log(`${msg} Raw:
  ${rawNodeUri} ***`)
-        await loadFromIpfs(rawNodeUri)
+        loadFromIpfs(rawNodeUri)
       }
     }
     return node

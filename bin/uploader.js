@@ -97,9 +97,10 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
     const uri = `${normalizedUri}/current.json`
     console.log(`*** Fetch current:
  ${uri} ***`)
-    const ua = await loadFromIpfs(uri)
-    if (ua !== null) {
-      current = JSON.parse(ipfsBundle.Utf8ArrayToStr(ua))
+    const data = await loadFromIpfs(uri)
+    if (data !== undefined && data !== null) {
+      var { content: current } = data
+      current = JSON.parse(ipfsBundle.Utf8ArrayToStr(current))
     }
   }
   // Member lookup

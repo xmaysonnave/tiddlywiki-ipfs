@@ -64,7 +64,19 @@ async function loadFromIpfs (url, timeout, stream) {
       await streamPipeline(response.body, stream)
       return
     }
-    return await response.buffer()
+    const buffer = await response.buffer()
+    var type = response.headers.get('Content-Type')
+    if (type) {
+      const types = type.split(';')
+      if (types.length > 0) {
+        type = types[0].trim()
+      }
+    }
+    return {
+      content: buffer,
+      status: response.status,
+      type: type,
+    }
   } catch (error) {
     if (error.name === 'AbortError') {
       console.error(`*** Timeout exceeded: ${timeout} ms ***`)

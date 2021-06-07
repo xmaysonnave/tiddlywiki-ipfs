@@ -3978,7 +3978,7 @@ var bootsuffix = function ($tw) {
               if (data !== undefined && data !== null) {
                 var { content, status, type } = data
                 $tw.boot.getLogger().info(
-                  `#kernel# Loaded Plugin Info, status: [${status}], type: ${type}, size: ${content.length}:
+                  `#kernel# Loaded Plugin, status: [${status}], type: ${type}, size: ${content.length}:
  ${normalizedUrl}`
                 )
                 content = JSON.parse(content)
