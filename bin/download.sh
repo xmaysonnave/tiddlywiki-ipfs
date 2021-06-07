@@ -31,7 +31,7 @@ cd download
 if [ ! -e ./eth-sig-util ]
 then
   mkdir eth-sig-util > /dev/null 2>&1
-  wget https://cdn.jsdelivr.net/npm/ipfs-http-client@50.0.0/dist/index.min.js -O ./eth-sig-util/eth-sig-util.min.js || exit 1
+  wget https://cdn.jsdelivr.net/gh/xmaysonnave/eth-sig-util@3.0.2/eth-sig-util.umd.min.js -O ./eth-sig-util/eth-sig-util.min.js || exit 1
 fi
 
 # @metamask/detect-provider

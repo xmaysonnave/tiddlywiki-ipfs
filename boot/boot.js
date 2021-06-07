@@ -699,8 +699,8 @@ var _boot = (function($tw) {
    */
   $tw.modules.forEachModuleOfType = function(moduleType,callback) {
     var modules = $tw.modules.types[moduleType];
-    $tw.utils.each(modules,function(element,title) {
-      callback(title,$tw.modules.execute(title));
+    $tw.utils.each(modules, function(element,title) {
+      callback(title, $tw.modules.execute(title));
     });
   };
 

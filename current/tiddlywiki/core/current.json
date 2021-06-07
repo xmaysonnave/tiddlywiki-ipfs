@@ -1,5 +1,5 @@
 {
-  "build": "210521313",
+  "build": "210606480",
   "content": [
     {
       "title": "core",
@@ -9,9 +9,9 @@
       "sourceExtension": "json",
       "sourceFilename": "$_core.json",
       "sourceSize": 2064875,
-      "sourceUri": "https://dweb.link/ipfs/bafybeigvo6vzc3okrnrcknygq65t577f3kr4vbd2rygv6avxvyiehflnme/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210521313.json",
+      "sourceUri": "https://dweb.link/ipfs/bafybeigvhannpxw35l3vewc3epkpurdc6w72cttahvjviu3tsegyn6cnf4/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210606480.json",
       "tidSize": 546,
-      "tidUri": "https://dweb.link/ipfs/bafybeihu7xhelwfhehaje7md6jzsz35u3cziec5ldlfhtq3a2qua3xatdm/$_core.json.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeibritxdyxvbnpuy6i5ttmn27hofovhscujstcpol6zaojewr7zfne/$_core.json.json-build.tid"
     },
     {
       "title": "core",
@@ -21,24 +21,24 @@
       "sourceExtension": "json",
       "sourceFilename": "$_core.zlib",
       "sourceSize": 452679,
-      "sourceUri": "https://dweb.link/ipfs/bafybeiezehnwifgrkr3s7qzg6cyesnjpjua4dxoix577btocpukyfm4uve/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210521313.json",
+      "sourceUri": "https://dweb.link/ipfs/bafybeia6cspj6lrhwajzhim27efnlff2by4ega5v5u3gql4yvemcgsnx7m/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210606480.json",
       "tidSize": 545,
-      "tidUri": "https://dweb.link/ipfs/bafybeid3frbl2bxd4sdqfltlwmnnhafpxpbv4ygyjntkvzw7sciij6bjxa/$_core.zlib.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeia7jdcagbg2vrbkkel23lbvmoqlsmxuuoi7pk5z3xaupxmydutsum/$_core.zlib.json-build.tid"
     },
     {
       "title": "core",
       "tags": "$:/core $:/ipfs/documentation",
       "name": "$:/core.zlib.ipfs",
-      "rawHash": "b3c83ba873451d0a31db96ae8ef640e851337c80f8b1ab361830b736a11df6fa",
+      "rawHash": "fcf68a766042a5eceabd5ab10a35197e4ce50b70ef01628c1132f22ab0ce6595",
       "sourceExtension": "json",
       "sourceFilename": "$_core.zlib.ipfs",
       "sourceSize": 525,
-      "sourceUri": "https://dweb.link/ipfs/bafybeic4zvgzozn7vd62hlo6hp4qwn2et4caqhnsfiehlx2dgpkm5ogp2m/$_core.zlib.ipfs-0.4.0-beta-tw-v5.1.23+release+build-210521313.json",
+      "sourceUri": "https://dweb.link/ipfs/bafybeidirlfzeed2h3dzzv54fdahxgjf6cw3rf6xwd4btc64ss6guhlvdy/$_core.zlib.ipfs-0.4.0-beta-tw-v5.1.23+release+build-210606480.json",
       "tidSize": 567,
-      "tidUri": "https://dweb.link/ipfs/bafybeiblzwdkcc25ffjhcnxaqv35mfivmu3egeylfegxxshohld357vz54/$_core.zlib.ipfs.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeiexdmvrlagm6shnhdfuwwxeubrwlramhhau2qsqzzayunrfqpjtem/$_core.zlib.ipfs.json-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+release+build",
-  "version": "0.4.0-beta-tw-v5.1.23+release+build-210521313",
-  "buildUri": "https://dweb.link/ipfs/bafybeieiy4app6qmhti3gxl2nvg3u5xzg5t2wag6skspn7q6bavvnmlkpa/210521313/"
+  "version": "0.4.0-beta-tw-v5.1.23+release+build-210606480",
+  "buildUri": "https://dweb.link/ipfs/bafybeiebgdvvxsz6am6ksowzcgbb6c4si6erbwzyhw32mqnigyiihbgrvq/210606480/"
 }

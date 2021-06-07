@@ -1,12 +1,12 @@
 title: $:/library/ipfs.js-build
 tags: $:/ipfs/core $:/core $:/library/ipfs
 type: text/vnd.tiddlywiki
-build: 210605285
+build: 210606481
 name: $:/library/ipfs.js
-version: 1.0.0+release-210605285
-sourceSize: 425730
+version: 1.0.0+release-210606481
+sourceSize: 489535
 sourceExtension: js
 sourceFilename: $_library_ipfs.js
-sourceUri: ipfs://bafybeihz7czh4ptkniu65kp2rc4kebd5pu6rrli622yrtqacvbecod5ihu/$_library_ipfs.js-1.0.0+release-210605285.js
+sourceUri: ipfs://bafybeieay6u3ckavfnznvoy3ldmgcdet3cdrnnwt455mmq3eqlwckqoyni/$_library_ipfs.js-1.0.0+release-210606481.js
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

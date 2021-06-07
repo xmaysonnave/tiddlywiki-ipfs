@@ -56,12 +56,28 @@ IPFS Controller
     this.once = true
   }
 
-  IpfsController.prototype.getErudaLibrary = async function () {
-    return await this.ipfsBundle.getErudaLibrary()
+  IpfsController.prototype.getEruda = async function () {
+    return await this.ipfsBundle.getEruda()
   }
 
-  IpfsController.prototype.getEruda = function () {
+  IpfsController.prototype.getEthers = async function () {
+    return await this.ipfsBundle.getEthers()
+  }
+
+  IpfsController.prototype.getIpfsHttpClient = async function () {
+    return await this.ipfsBundle.getIpfsHttpClient()
+  }
+
+  IpfsController.prototype.requireEruda = function () {
     return require('$:/library/eruda.min.js')
+  }
+
+  IpfsController.prototype.requireEthers = function () {
+    return require('$:/library/ethers.umd.min.js')
+  }
+
+  IpfsController.prototype.requireIpfsHttpClient = function () {
+    return require('$:/library/ipfs-http-client.min.js')
   }
 
   IpfsController.prototype.getLogger = function () {

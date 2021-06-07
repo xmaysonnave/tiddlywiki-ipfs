@@ -1,32 +1,31 @@
 {
-  "build": "210605388",
+  "build": "210607294",
   "content": [
     {
       "title": "boot",
       "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js.json",
-      "rawHash": "bf8e7c899f5c4ee4f8fe93367b4d3ab0949862828ea9076a57f9067ba0d87f6d",
+      "rawHash": "a08816f17a547877ec082361cd52b90f7dff08b3763f67f8de2a0aba33cf74a6",
       "sourceExtension": "json",
       "sourceFilename": "$_boot_boot.js.json",
-      "sourceSize": 155190,
-      "sourceUri": "https://dweb.link/ipfs/bafybeidm5ww4dyvhcrgpg4nidmmo224v4jrosroml5mn4jn5t7lll2pfye/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210605388.json",
+      "sourceSize": 156098,
+      "sourceUri": "https://dweb.link/ipfs/bafybeiejijs245vqagb5sdadrd7mlnedrl4chfkdq3w5ogi63s45q6fe3u/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210607294.json",
       "tidSize": 599,
-      "tidUri": "https://dweb.link/ipfs/bafybeif4d5yfoy3aqarvx6jyctcy3an7octce2vsefocu4ryucmmm26raq/$_boot_boot.js.json.json-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeia5bnwt4sstqq764z5hljdykbxuv4dq76wltidtuothxcheutkqc4/$_boot_boot.js.json.json-build.tid"
     },
     {
       "title": "boot",
       "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js",
-      "rawHash": "8c0da606c94b091855f5b2b0dca685550f5100fc0620ed8846686518e6e0b470",
+      "rawHash": "8dc66aa2efecd2179f242eba468db7cc7ac51983b2e26384ce0ce64f3933d524",
       "sourceExtension": "js",
       "sourceFilename": "$_boot_boot.js",
-      "sourceSize": 149475,
-      "sourceUri": "https://dweb.link/ipfs/bafybeih3xc5wfgq6vtctfeskwims7q4p5jkaz32lf6n4zsxjx562wi44y4/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210605388.js",
+      "sourceSize": 150361,
+      "sourceUri": "https://dweb.link/ipfs/bafybeiftxgqruzs3hcgytv6kp2n7bkhf4ec72jcfbtpcjxd55xw74jqysu/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210607294.js",
       "tidSize": 568,
-      "tidUri": "https://dweb.link/ipfs/bafybeifak7gkathyd4ymwbbilzv3gewfpt2qdcmev3ivzaxhtc5cr2is5m/$_boot_boot.js.js-build.tid"
+      "tidUri": "https://dweb.link/ipfs/bafybeihcxmpy3iolrwbkxcpqq6vrylgncuoxivezyxr33h6od55cmiuwda/$_boot_boot.js.js-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24-pre-release+build",
-  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210605388",
-  "buildUri": "https://dweb.link/ipfs/bafybeibfxcnhmq6pi5yzjibtaoio3qatfuin73emtggh52haq3yi5mq7sq/210605388/"
+  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210607294"
 }

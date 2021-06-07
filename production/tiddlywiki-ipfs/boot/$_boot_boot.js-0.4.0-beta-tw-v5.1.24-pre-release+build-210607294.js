@@ -700,8 +700,8 @@ var _boot = (function($tw) {
    */
   $tw.modules.forEachModuleOfType = function(moduleType,callback) {
     var modules = $tw.modules.types[moduleType];
-    $tw.utils.each(modules,function(element,title) {
-      callback(title,$tw.modules.execute(title));
+    $tw.utils.each(modules, function(element,title) {
+      callback(title, $tw.modules.execute(title));
     });
   };
 
@@ -2584,6 +2584,38 @@ var bootsuffix = function ($tw) {
     return out
   }
 
+  // Deprecated...
+  $tw.boot.importText = function (url) {
+    const xhr = new XMLHttpRequest()
+    try {
+      xhr.onerror = function (event) {
+        globalThis.onerror(`[${event.target.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
+      }
+      xhr.open('GET', url, false)
+      xhr.send(null)
+      if (xhr.status >= 300) {
+        throw new Error(`[${xhr.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
+      }
+      var content = xhr.responseText
+      var type = xhr.headers.get('Content-Type')
+      if (type) {
+        const types = type.split(';')
+        if (types.length > 0) {
+          type = types[0].trim()
+        }
+      }
+      return {
+        content: content,
+        status: xhr.status,
+        type: type,
+      }
+    } catch (error) {
+      $tw.boot.getLogger().error(error)
+      globalThis.onerror(error.message)
+    }
+    return null
+  }
+
   $tw.boot.fetch = async function (url, timeout) {
     if (url instanceof URL === false) {
       url = new URL(url)
@@ -2644,25 +2676,41 @@ var bootsuffix = function ($tw) {
       if ($tw.browser && !$tw.node) {
         const ab = await response.arrayBuffer()
         const ua = new Uint8Array(ab)
-        $tw.boot.getLogger().info(
-          `#kernel# [${response.status}] Loaded:
- ${response.url}`
-        )
+        var type = response.headers.get('Content-Type')
+        if (type) {
+          const types = type.split(';')
+          if (types.length > 0) {
+            type = types[0].trim()
+          }
+        }
         return {
           content: ua,
-          type: response.headers.get('Content-Type'),
+          status: response.status,
+          type: type,
         }
       }
       const buffer = await response.buffer()
+      var type = response.headers.get('Content-Type')
+      if (type) {
+        const types = type.split(';')
+        if (types.length > 0) {
+          type = types[0].trim()
+        }
+      }
+      $tw.boot.getLogger().info(
+        `#kernel# Fetched, status: [${response.status}], type: ${type}, size: ${buffer.length}:
+ ${response.url}`
+      )
       return {
         content: buffer,
-        type: response.headers.get('Content-Type'),
+        status: response.status,
+        type: type,
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        $tw.boot.getLogger().error(new Error(`Timeout exceeded: ${timeout} ms`))
+        $tw.boot.getLogger().error(new Error(`Fetch, timeout exceeded: ${timeout} ms`))
       } else {
-        $tw.boot.getLogger().error(new Error(`Fetch error: ${error.message}`))
+        $tw.boot.getLogger().error(new Error(`Fetch, error: ${error.message}`))
       }
     } finally {
       globalThis.clearTimeout(responseId)
@@ -2687,11 +2735,11 @@ var bootsuffix = function ($tw) {
     password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
     var ua = null
     var type = null
-    var fetched = await $tw.boot.fetch(url)
+    var fetched = await $tw.boot.fetch(url, password)
     if (fetched === undefined || fetched == null) {
       return null
     }
-    var { content: ua, type } = fetched
+    var { content: ua, status, type } = fetched
     if (ua === undefined || ua == null || ua.length === undefined || ua.length === 0) {
       return null
     }
@@ -2731,6 +2779,7 @@ var bootsuffix = function ($tw) {
     }
     return {
       content: content,
+      status: status,
       type: type,
     }
   }
@@ -2830,12 +2879,12 @@ var bootsuffix = function ($tw) {
         .loadToUtf8(normalizedUrl, password)
         .then(data => {
           if (data !== undefined && data !== null) {
-            var { content } = data
+            var { content, status, type } = data
             modificationFields.text = content
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
             $tw.boot.getLogger().info(
-              `#kernel# Embed module: ${content.length}
- ${uri}`
+              `#kernel# Embedded, status: [${status}], type: ${type}, size: ${content.length}:
+ ${normalizedUrl}`
             )
           }
         })
@@ -3494,6 +3543,7 @@ var bootsuffix = function ($tw) {
         configurable: false,
       })
     }
+
     if (!moduleInfo) {
       // We could not find the module on this path
       // Try to defer to browserify etc, or node
@@ -3553,131 +3603,97 @@ var bootsuffix = function ($tw) {
     return moduleInfo.exports
   }
 
-  $tw.Wiki.prototype.loadRemoteModule = async function (uri, password) {
-    var content = null
-    var normalizedUrl = null
-    try {
-      normalizedUrl = $tw.utils.normalizeUrl(uri)
-    } catch (error) {
-      $tw.boot.getLogger().error(error)
-      if ($tw.utils.alert !== undefined) {
-        $tw.utils.alert(name, error.message)
-      }
-    }
-    if (normalizedUrl !== null) {
-      try {
-        var data = await $tw.boot.loadToUtf8(normalizedUrl, password)
+  $tw.Wiki.prototype.loadModule = function (url, password, type, moduleType, callback) {
+    $tw.boot
+      .loadToUtf8(url, password)
+      .then(data => {
         if (data !== undefined && data !== null) {
-          var { content } = data
+          var { content, status, type: loadedType } = data
+          $tw.boot.getLogger().info(
+            `#kernel# Loaded Module, status: [${status}], type: ${loadedType}, module-type: ${moduleType}, size: ${content.length}
+ ${url}`
+          )
+          callback(content)
         }
-      } catch (error) {
-        $tw.boot.getLogger().error(error)
-        if ($tw.utils.alert !== undefined) {
-          $tw.utils.alert(name, error.message)
-        }
-      }
-    }
-    return content
+      })
+      .catch(error => {
+        globalThis.onerror(error)
+      })
   }
 
   /**
    * Define all modules stored in ordinary tiddlers
    */
-  $tw.Wiki.prototype.defineTiddlerModules = async function () {
-    var titles = this.allTitles()
-    for (var index = 0; index < titles.length; index++) {
-      var title = titles[index]
-      var tiddler = this.getTiddler(title)
+  $tw.Wiki.prototype.defineTiddlerModules = function () {
+    var self = this
+    this.each(function (tiddler, title) {
       if (tiddler.hasField('module-type')) {
+        var url = null
+        if (tiddler.fields._canonical_uri !== undefined && tiddler.fields._canonical_uri !== null && tiddler.fields._canonical_uri.trim() !== '') {
+          url = $tw.utils.normalizeUrl(tiddler.fields._canonical_uri)
+        }
         var password = tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
         switch (tiddler.fields.type) {
           case 'application/javascript':
             // We only define modules that haven't already been defined, because in the browser modules in system tiddlers are defined in inline script
             if (!$tw.utils.hop($tw.modules.titles, tiddler.fields.title)) {
-              var load = function (content) {
-                if (content !== undefined && content !== null && content !== '') {
-                  if (tiddler.fields['module-type'] === 'library' && tiddler.fields['module-wrapper'] === 'yes') {
-                    content = `(function(){
-${content}
-}).call(exports);`
-                  }
+              if (url === undefined || url == null) {
+                $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], tiddler.fields.text)
+              } else if ($tw.browser && !$tw.node) {
+                self.loadModule(url, password, tiddler.fields.type, tiddler.fields['module-type'], function (content) {
                   $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], content)
-                }
+                })
               }
-              var content = tiddler.fields.text
-              if (tiddler.fields._canonical_uri !== undefined) {
-                if ($tw.browser) {
-                  content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
-                } else if (tiddler.fields['module-browser'] !== 'yes') {
-                  content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
-                }
-              }
-              load(content)
             }
             break
           case 'application/json':
-            var load = function (content) {
-              if (content !== undefined && content !== null && content !== '') {
+            if (url === undefined || url == null) {
+              $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], JSON.parse(tiddler.fields.text))
+            } else {
+              self.loadModule(url, password, tiddler.fields.type, tiddler.fields['module-type'], function (content) {
                 $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], JSON.parse(content))
-              }
+              })
             }
-            var content = tiddler.fields.text
-            if (tiddler.fields._canonical_uri !== undefined) {
-              content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
-            }
-            load(content)
             break
           case 'application/x-tiddler-dictionary':
-            var load = function (content) {
-              if (content !== undefined && content !== null && content !== '') {
+            if (url === undefined || url == null) {
+              $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], $tw.utils.parseFields(tiddler.fields.text))
+            } else {
+              self.loadModule(url, password, tiddler.fields.type, tiddler.fields['module-type'], function (content) {
                 $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], $tw.utils.parseFields(content))
-              }
+              })
             }
-            var content = tiddler.fields.text
-            if (tiddler.fields._canonical_uri !== undefined) {
-              content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
-            }
-            load(content)
             break
         }
       }
-    }
+    })
   }
 
   /**
    * Register all the module tiddlers that have a module type
    */
-  $tw.Wiki.prototype.defineShadowModules = async function () {
-    var titles = this.allShadowTitles()
-    for (var index = 0; index < titles.length; index++) {
-      var title = titles[index]
-      var tiddler = this.getTiddler(title)
+  $tw.Wiki.prototype.defineShadowModules = function () {
+    var self = this
+    this.eachShadow(function (tiddler, title) {
       // Don't define the module if it is overidden by an ordinary tiddler
-      if (!this.tiddlerExists(title) && tiddler.hasField('module-type')) {
+      if (!self.tiddlerExists(title) && tiddler.hasField('module-type')) {
+        var url = null
+        if (tiddler.fields._canonical_uri !== undefined && tiddler.fields._canonical_uri !== null && tiddler.fields._canonical_uri.trim() !== '') {
+          url = $tw.utils.normalizeUrl(tiddler.fields._canonical_uri)
+        }
         var password = tiddler.fields._password
         password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
-        var loadCallback = function (content) {
-          if (content !== undefined && content !== null && content !== '') {
-            if (tiddler.fields.type === 'application/javascript' && tiddler.fields['module-type'] === 'library' && tiddler.fields['module-wrapper'] === 'yes') {
-              content = `(function(){
-${content}
-}).call(exports);`
-            }
-            $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], content)
-          }
-        }
         var content = tiddler.fields.text
-        if (tiddler.fields._canonical_uri !== undefined) {
-          if ($tw.browser) {
-            content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
-          } else if (tiddler.fields['module-browser'] !== 'yes') {
-            content = await this.loadRemoteModule(tiddler.fields._canonical_uri, password)
-          }
+        if (url === undefined || url == null) {
+          $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], content)
+        } else if ($tw.browser && !$tw.node) {
+          self.loadModule(url, password, tiddler.fields.type, tiddler.fields['module-type'], function (content) {
+            $tw.modules.define(tiddler.fields.title, tiddler.fields['module-type'], content)
+          })
         }
-        loadCallback(content)
       }
-    }
+    })
   }
 
   /////////////////////////// Browser definitions
@@ -3956,9 +3972,15 @@ ${content}
               if (normalizedUrl == null) {
                 normalizedUrl = tiddler.fields._canonical_uri
               }
-              var data = await $tw.boot.loadToUtf8(normalizedUrl)
+              var password = tiddler.fields._password
+              password = password !== undefined && password !== null && password.trim() !== '' ? password.trim() : null
+              var data = await $tw.boot.loadToUtf8(normalizedUrl, password)
               if (data !== undefined && data !== null) {
-                var { content } = data
+                var { content, status, type } = data
+                $tw.boot.getLogger().info(
+                  `#kernel# Loaded Plugin Info, status: [${status}], type: ${type}, size: ${content.length}:
+ ${normalizedUrl}`
+                )
                 content = JSON.parse(content)
                 if (content.text !== undefined && content.text !== null && content.text !== '') {
                   $tw.wiki.setPluginInfo(tiddler.fields.title, JSON.parse(content.text))
@@ -4000,9 +4022,9 @@ ${content}
       $tw.wiki.processSafeMode()
     }
     // Register typed modules from the tiddlers we've just loaded
-    await $tw.wiki.defineTiddlerModules()
+    $tw.wiki.defineTiddlerModules()
     // And any modules within plugins
-    await $tw.wiki.defineShadowModules()
+    $tw.wiki.defineShadowModules()
     // Gather up any startup modules
     $tw.boot.remainingStartupModules = [] // Array of startup modules
     $tw.modules.forEachModuleOfType('startup', function (title, module) {

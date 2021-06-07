@@ -371,13 +371,8 @@ IPFS Action
   }
 
   IpfsAction.prototype.handleMobileConsole = async function (event) {
-    // Load
-    var eruda = null
-    try {
-      eruda = await $tw.ipfs.getErudaLibrary()
-    } catch (error) {
-      $tw.ipfs.getLogger().error(error)
-      $tw.utils.alert(name, error.message)
+    var eruda = await $tw.ipfs.getEruda()
+    if (eruda === undefined || eruda == null) {
       return false
     }
     // Show or Hide

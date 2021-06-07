@@ -19,7 +19,6 @@ const { IpfsLoader } = require('core/modules/library/ipfs-bundle/ipfs-loader.js'
 const { IpfsUrl } = require('core/modules/library/ipfs-bundle/ipfs-url.js')
 
 const cidInspector = 'https://cid.ipfs.io/#'
-const isBrowser = () => typeof window !== `undefined`
 const libp2pKey = 'libp2p-key'
 const dagPb = 'dag-pb'
 
@@ -59,20 +58,6 @@ IpfsBundle.prototype.init = function () {
   this.ensLibrary = new EnsLibrary(this)
   this.ipfsLibrary = new IpfsLibrary(this)
   this.ipfsUrl = new IpfsUrl(this)
-  if (isBrowser()) {
-    this.eruda = window.eruda || null
-    this.eruda = this.eruda !== undefined && this.eruda !== null && Object.keys(this.eruda).length !== 0 ? this.eruda : $tw.ipfs.getEruda()
-  }
-  this.ethers = globalThis.ethers || null
-  this.ethers = this.ethers !== undefined && this.ethers !== null && Object.keys(this.ethers).length !== 0 ? this.ethers : require('ethers')
-  this.ethers = this.ethers !== undefined && this.ethers !== null && Object.keys(this.ethers).length !== 0 ? this.ethers : require('$:/library/ethers.umd.min.js')
-  this.ipfsHttpClient = globalThis.IpfsHttpClient || null
-  this.ipfsHttpClient =
-    this.ipfsHttpClient !== undefined && this.ipfsHttpClient !== null && Object.keys(this.ipfsHttpClient).length !== 0 ? this.ipfsHttpClient : require('ipfs-http-client')
-  this.ipfsHttpClient =
-    this.ipfsHttpClient !== undefined && this.ipfsHttpClient !== null && Object.keys(this.ipfsHttpClient).length !== 0
-      ? this.ipfsHttpClient
-      : require('$:/library/ipfs-http-client.min.js')
   // Init once
   this.once = true
 }
@@ -141,48 +126,58 @@ IpfsBundle.prototype.getNetworkRegistry = function () {
   return this.ethereumLibrary.getNetworkRegistry()
 }
 
-IpfsBundle.prototype.getIpfsHttpLibrary = async function () {
+IpfsBundle.prototype.getIpfsHttpClient = async function () {
+  if (globalThis.IpfsHttpClient) {
+    return globalThis.IpfsHttpClient
+  }
   try {
-    if (this.ipfsHttpClient === undefined || this.ipfsHttpClient == null || Object.keys(this.ipfsHttpClient).length === 0) {
-      this.ipfsHttpClient = await this.ipfsLoader.loadIpfsHttpLibrary()
+    globalThis.IpfsHttpClient = $tw.ipfs.requireIpfsHttpClient()
+    if (globalThis.IpfsHttpClient === undefined || globalThis.IpfsHttpClient == null || Object.keys(globalThis.IpfsHttpClient).length === 0) {
+      globalThis.IpfsHttpClient = await this.ipfsLoader.loadIpfsHttpLibrary()
     }
   } catch (error) {
     this.getLogger().error(error)
   }
-  if (this.ipfsHttpClient === undefined || this.ipfsHttpClient == null || Object.keys(this.ipfsHttpClient).length === 0) {
+  if (globalThis.IpfsHttpClient === undefined || globalThis.IpfsHttpClient == null || Object.keys(globalThis.IpfsHttpClient).length === 0) {
     throw new Error('Unavailable IPFS HTTP Client library...')
   }
-  return this.ipfsHttpClient
+  return globalThis.IpfsHttpClient
 }
 
-IpfsBundle.prototype.getErudaLibrary = async function () {
-  if (isBrowser()) {
-    try {
-      if (this.eruda === undefined || this.eruda == null || Object.keys(this.eruda).length === 0) {
-        this.eruda = await this.ipfsLoader.loadErudaLibrary()
-      }
-    } catch (error) {
-      this.getLogger().error(error)
-    }
-    if (this.eruda === undefined || this.eruda == null || Object.keys(this.eruda).length === 0) {
-      throw new Error('Unavailable Eruda library...')
-    }
+IpfsBundle.prototype.getEruda = async function () {
+  if (globalThis.eruda) {
+    return globalThis.eruda
   }
-  return this.eruda
-}
-
-IpfsBundle.prototype.getEthersLibrary = async function () {
   try {
-    if (this.ethers === undefined || this.ethers == null || Object.keys(this.ethers).length === 0) {
-      this.ethers = await this.ipfsLoader.loadEthersLibrary()
+    globalThis.eruda = $tw.ipfs.requireEruda()
+    if (globalThis.eruda === undefined || globalThis.eruda == null || Object.keys(globalThis.eruda).length === 0) {
+      globalThis.eruda = await this.ipfsLoader.loadErudaLibrary()
     }
   } catch (error) {
     this.getLogger().error(error)
   }
-  if (this.ethers === undefined || this.ethers == null || Object.keys(this.ethers).length === 0) {
+  if (globalThis.eruda === undefined || globalThis.eruda == null || Object.keys(globalThis.eruda).length === 0) {
+    throw new Error('Unavailable Eruda library...')
+  }
+  return globalThis.eruda
+}
+
+IpfsBundle.prototype.getEthers = async function () {
+  if (globalThis.ethers) {
+    return globalThis.ethers
+  }
+  try {
+    globalThis.ethers = $tw.ipfs.requireEthers()
+    if (globalThis.ethers === undefined || globalThis.ethers == null || Object.keys(globalThis.ethers).length === 0) {
+      globalThis.ethers = await this.ipfsLoader.loadEthersLibrary()
+    }
+  } catch (error) {
+    this.getLogger().error(error)
+  }
+  if (globalThis.ethers === undefined || globalThis.ethers == null || Object.keys(globalThis.ethers).length === 0) {
     throw new Error('Unavailable Ethereum library...')
   }
-  return this.ethers
+  return globalThis.ethers
 }
 
 IpfsBundle.prototype.isJson = function (content) {

@@ -517,7 +517,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
           provider: client.provider,
         }
       }
-      const { create } = await this.ipfsBundle.getIpfsHttpLibrary()
+      const { create } = await this.ipfsBundle.getIpfsHttpClient()
       const { ipfs, provider } = await getIpfs({
         providers: [
           httpClient({

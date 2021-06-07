@@ -22,7 +22,7 @@ IpfsLoader.prototype.getLogger = function () {
 // https://github.com/liriliri/eruda
 IpfsLoader.prototype.loadErudaLibrary = async function () {
   if (typeof globalThis.eruda === 'undefined') {
-    return await this.loadTiddlerLibrary('$:/library/eruda.min.js', 'eruda')
+    return await this.loadTiddlerLibrary('$:/library/eruda.min.js', 'eruda', true)
   }
   return globalThis.eruda
 }
@@ -30,7 +30,7 @@ IpfsLoader.prototype.loadErudaLibrary = async function () {
 // https://github.com/ethers-io/ethers.js/
 IpfsLoader.prototype.loadEthersLibrary = async function () {
   if (typeof globalThis.ethers === 'undefined') {
-    return await this.loadTiddlerLibrary('$:/library/ethers.umd.min.js', 'ethers')
+    return await this.loadTiddlerLibrary('$:/library/ethers.umd.min.js', 'ethers', true)
   }
   return globalThis.ethers
 }
@@ -38,7 +38,7 @@ IpfsLoader.prototype.loadEthersLibrary = async function () {
 // https://github.com/ipfs/js-ipfs-http-client
 IpfsLoader.prototype.loadIpfsHttpLibrary = async function () {
   if (typeof globalThis.IpfsHttpClient === 'undefined') {
-    return await this.loadTiddlerLibrary('$:/library/ipfs-http-client.min.js', 'IpfsHttpClient')
+    return await this.loadTiddlerLibrary('$:/library/ipfs-http-client.min.js', 'IpfsHttpClient', true)
   }
   return globalThis.IpfsHttpClient
 }
@@ -55,7 +55,7 @@ IpfsLoader.prototype.supportDynamicImport = function () {
 }
 
 // https://www.srihash.org/
-IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj) {
+IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj, isModule) {
   if (globalThis[obj] !== undefined && globalThis[obj] !== null && Object.keys(globalThis[obj]).length !== 0) {
     return globalThis[obj]
   }
@@ -66,7 +66,6 @@ IpfsLoader.prototype.loadTiddlerLibrary = async function (title, obj) {
   }
   const sourceUri = tiddler.fields._source_uri || tiddler.fields._canonical_uri
   const sourceSri = tiddler.fields._source_sri || tiddler.fields._canonical_sri
-  const isModule = tiddler.fields._module === 'yes'
   await this.mutex.runExclusive(async () => {
     if (globalThis[obj] === undefined || globalThis[obj] == null || Object.keys(globalThis[obj]).length === 0) {
       const loaded = await self.loadLibrary(title, sourceUri, sourceSri, isModule)
@@ -103,8 +102,8 @@ IpfsLoader.prototype.loadLibrary = function (id, url, sri, isModule) {
       resolve(globalThis[id])
       cleanup()
     }
-    script.onerror = () => {
-      reject(new Error(`Failed to load: ${url}`))
+    script.onerror = event => {
+      reject(new Error(`[${event.target.status}] Failed to load: ${url}`))
       cleanup()
     }
     if (isModule) {
@@ -114,7 +113,6 @@ IpfsLoader.prototype.loadLibrary = function (id, url, sri, isModule) {
     }
     script.id = id
     script.async = false
-    script.defer = 'defer'
     if (sri) {
       script.integrity = sri
     }
@@ -207,25 +205,43 @@ IpfsLoader.prototype.fetchUint8Array = async function (url, timeout) {
     if ($tw.browser && !$tw.node) {
       const ab = await response.arrayBuffer()
       const ua = new Uint8Array(ab)
+      var type = response.headers.get('Content-Type')
+      if (type) {
+        const types = type.split(';')
+        if (types.length > 0) {
+          type = types[0].trim()
+        }
+      }
       this.getLogger().info(
-        `[${response.status}] Loaded:
+        `#ipfs-loader# Fetched, status: [${response.status}], type: ${type}, size: ${ua.length}:
  ${response.url}`
       )
       return {
         content: ua,
-        type: response.headers.get('Content-Type'),
+        type: type,
       }
     }
     const buffer = await response.buffer()
+    var type = response.headers.get('Content-Type')
+    if (type) {
+      const types = type.split(';')
+      if (types.length > 0) {
+        type = types[0].trim()
+      }
+    }
+    $tw.boot.getLogger().info(
+      `#ipfs-loader# Fetched, status: [${response.status}], type: ${type}, size: ${buffer.length}:
+ ${response.url}`
+    )
     return {
       content: buffer,
-      type: response.headers.get('Content-Type'),
+      type: type,
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      this.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
+      this.getLogger().error(`*** Fetch, timeout exceeded: ${timeout} ms ***`)
     } else {
-      this.getLogger().error(`*** [${error.message}] ${$tw.language.getString('NetworkError/Fetch')} ***`)
+      this.getLogger().error(`*** Fetch, error: [${error.message}] ${$tw.language.getString('NetworkError/Fetch')} ***`)
     }
   } finally {
     globalThis.clearTimeout(responseId)
@@ -234,11 +250,11 @@ IpfsLoader.prototype.fetchUint8Array = async function (url, timeout) {
 }
 
 IpfsLoader.prototype.xhrToJson = async function (url) {
-  return await this.httpRequest(url, 'post', 'json')
+  return await this.httpRequest(url, 'POST', 'json')
 }
 
 IpfsLoader.prototype.xhrToUint8Array = async function (url) {
-  return await this.httpRequest(url, 'get', 'arraybuffer')
+  return await this.httpRequest(url, 'GET', 'arraybuffer')
 }
 
 IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
@@ -249,8 +265,7 @@ IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status !== 0) {
         if (xhr.status >= 300) {
-          reject(new Error($tw.language.getString('NetworkError/Fetch')))
-          return
+          throw new Error(`[${xhr.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
         }
         try {
           var result = null
@@ -263,10 +278,11 @@ IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
             `[${xhr.status}] Loaded:
  ${xhr.responseURL}`
           )
-          resolve({
+          const data = {
             content: result,
             type: xhr.getResponseHeader('Content-Type'),
-          })
+          }
+          resolve(data)
         } catch (error) {
           reject(error)
         }
@@ -277,7 +293,7 @@ IpfsLoader.prototype.httpRequest = function (url, method, responseType) {
     }
     try {
       xhr.open(method, url, true)
-      xhr.send()
+      xhr.send(null)
     } catch (error) {
       reject(error)
     }

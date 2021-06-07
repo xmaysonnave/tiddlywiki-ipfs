@@ -34,7 +34,7 @@ var EnsLibrary = function (ipfsBundle) {
 }
 
 EnsLibrary.prototype.getLogger = function () {
-  return $tw.ipfsBundle.getLogger()
+  return this.ipfsBundle.getLogger()
 }
 
 EnsLibrary.prototype.getENSRegistry = function () {
@@ -177,7 +177,7 @@ EnsLibrary.prototype.getResolver = async function (web3, registry, node) {
   if (registry == null) {
     throw new Error('Undefined ENS registry address...')
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   const abi = ['function resolver(bytes32 node) external view returns (address)']
   const iface = new ethers.utils.Interface(abi)
   const data = iface.encodeFunctionData('resolver', [node])
@@ -206,7 +206,7 @@ EnsLibrary.prototype.checkEip165 = async function (web3, address) {
   if (address == null) {
     throw new Error('Undefined Ethereum address...')
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   var abi = ['function supportsInterface(bytes4 interfaceID) public pure returns(bool)']
   var iface = new ethers.utils.Interface(abi)
   var data = iface.encodeFunctionData('supportsInterface', ['0x01ffc9a7'])
@@ -254,7 +254,7 @@ EnsLibrary.prototype.checkEip1577 = async function (web3, address) {
   if (address == null) {
     throw new Error('Undefined Ethereum address...')
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   // contenthash, true when interfaceID is 0xbc1c58d1
   var abi = ['function supportsInterface(bytes4 interfaceID) public pure returns(bool)']
   var iface = new ethers.utils.Interface(abi)
@@ -282,7 +282,7 @@ EnsLibrary.prototype.getContentHash = async function (domain, web3) {
   if (web3 === undefined) {
     var { web3 } = await this.ipfsBundle.getWeb3Provider()
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
   const domainHash = ethers.utils.namehash(domain)
@@ -347,7 +347,7 @@ EnsLibrary.prototype.isOwner = async function (domain, web3, account) {
   if (account === undefined || account == null || web3 === undefined || web3 == null) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
   const domainHash = ethers.utils.namehash(domain)
@@ -388,7 +388,7 @@ EnsLibrary.prototype.setContentHash = async function (domain, identifier, web3, 
   if (account === undefined || web3 === undefined) {
     var { account, web3 } = await this.ipfsBundle.getEnabledWeb3Provider()
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   const explorer = this.ipfsBundle.getBlockExplorerRegistry()
   // Resolve domain as namehash
   const domainHash = ethers.utils.namehash(domain)

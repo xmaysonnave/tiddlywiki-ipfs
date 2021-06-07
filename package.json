@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-ipfs",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210605393",
+  "version": "0.4.0-beta-tw-v5.1.23+build-210607294",
   "description": "IPFS with TiddlyWiki",
   "main": "./cli-tiddlywiki-ipfs.js",
   "directories": { "test": "tests" },
@@ -73,7 +73,7 @@
     "browserslist": "^4.16.6",
     "build-number-generator": "^1.0.0",
     "chai": "^4.3.4",
-    "core-js": "^3.13.1",
+    "core-js": "^3.14.0",
     "dotenv": "^10.0.0",
     "electron-webrtc": "^0.3.0",
     "eruda": "^2.4.1",

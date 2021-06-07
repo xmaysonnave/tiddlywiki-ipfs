@@ -361,7 +361,7 @@ EthereumLibrary.prototype.getEnabledWeb3Provider = async function (provider) {
   if (provider === undefined || provider == null) {
     provider = await this.getEthereumProvider()
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   // Enable provider
   // https://github.com/ethers-io/ethers.js/issues/433
   const account = await this.getAccount(provider)
@@ -381,7 +381,7 @@ EthereumLibrary.prototype.getWeb3Provider = async function (provider) {
   if (provider === undefined || provider == null) {
     provider = await this.getEthereumProvider()
   }
-  const ethers = await this.ipfsBundle.getEthersLibrary()
+  const ethers = await this.ipfsBundle.getEthers()
   // Instantiate an ethers Web3Provider
   const web3 = new ethers.providers.Web3Provider(provider, 'any')
   // Retrieve current network
