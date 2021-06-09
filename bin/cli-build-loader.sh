@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 echo '***'
-echo '*** cli-build-uploader ***'
+echo '*** cli-build-loader ***'
 echo '***'
 
 # nvm
@@ -12,8 +12,8 @@ nvm use > /dev/null 2>&1
 # node
 export NODE_PATH=.
 
-# upload
-node ./bin/cli-build-uploader.js "$@" || exit 1
+# load
+node ./bin/cli-build-loader.js "$@" || exit 1
 
 # done
 exit 0

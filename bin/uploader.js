@@ -6,10 +6,9 @@ const dotenv = require('dotenv')
 const fs = require('fs')
 const { create: IpfsHttpClient } = require('ipfs-http-client')
 const path = require('path')
-const { loadFromIpfs } = require('bin/utils.js')
-
-const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
-const ipfsBundle = new IpfsBundle()
+const IpfsUtils = require('bin/ipfs-utils.js')
+const ipfsUtils = new IpfsUtils()
+const ipfsBundle = ipfsUtils.ipfsBundle
 
 // bluelight.link
 const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
@@ -23,13 +22,12 @@ const longTimeout = 4 * 60 * shortTimeout
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-module.exports = async function main (name, extension, dir, tags, load, faviconFileName) {
+module.exports = async function main (name, extension, dir, tags, faviconFileName) {
   // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  ipfsBundle.init()
   // Params
   name = name !== undefined && name !== null && name.trim() !== '' ? name.trim() : null
   if (name == null) {
@@ -45,7 +43,6 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
     throw new Error('Unknown directory...')
   }
   tags = tags !== undefined && tags !== null && tags.trim() !== '' ? tags.trim() : null
-  load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
   faviconFileName = faviconFileName !== undefined && faviconFileName !== null && faviconFileName.trim() !== '' ? faviconFileName.trim() : null
   if (faviconFileName !== 'favicon.ico' && faviconFileName !== 'favicon.png') {
     faviconFileName = 'favicon.ico'
@@ -72,17 +69,17 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
       port = 80
     }
   }
-  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
+  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://ipfs.infura.io'
   const normalizedUri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/`
   var publicGateway = process.env.IPFS_PUBLIC_GATEWAY ? `${process.env.IPFS_PUBLIC_GATEWAY}` : null
   if (publicGateway == null) {
-    publicGateway = gateway
+    publicGateway = 'https://dweb.link'
   }
   console.log('***')
   console.log(`*** Upload build: ${dir}
  api: ${apiUrl}
- gateway: ${new URL(gateway)}
- public gateway: ${new URL(publicGateway)} ***`)
+ gateway: ${gateway}
+ public gateway: ${publicGateway} ***`)
   var current = null
   var member = null
   var memberPosition = null
@@ -97,7 +94,7 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
     const uri = `${normalizedUri}/current.json`
     console.log(`*** Fetch current:
  ${uri} ***`)
-    const data = await loadFromIpfs(uri)
+    const data = await ipfsUtils.loadFromIpfs(uri)
     if (data !== undefined && data !== null) {
       var { content: current } = data
       current = JSON.parse(ipfsBundle.Utf8ArrayToStr(current))
@@ -201,6 +198,7 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
       path: '/index.html',
       content: ipfsBundle.StringToUint8Array(source),
     })
+    sourceFileName = 'index.html'
   } else {
     upload.push({
       path: `/${sourceFileName}`,
@@ -213,7 +211,7 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
       parentCid = key
     } else if (value.path === faviconFileName) {
       faviconCid = key
-    } else if (value.path === sourceFileName || value.path === 'index.html') {
+    } else if (value.path === sourceFileName) {
       sourceCid = key
       sourceSize = value.size
     }
@@ -245,19 +243,6 @@ module.exports = async function main (name, extension, dir, tags, load, faviconF
         throw new Error('Matching version but not favicon cid...')
       }
     }
-  }
-  // Log
-  console.log('***')
-  if (faviconCid) {
-    console.log(`*** Added 'favicon' ***
- ipfs://${parentCid}/${faviconFileName}`)
-  }
-  if (sourceFileName.endsWith('.html')) {
-    console.log(`*** Added content ***
- ipfs://${parentCid}/index.html`)
-  } else {
-    console.log(`*** Added content ***
- ipfs://${parentCid}/${sourceFileName}`)
   }
   // Json
   const node = {}
@@ -345,39 +330,19 @@ sourceUri: ipfs://${parentCid}/${sourceFileName}`
       throw new Error('Matching version but not tiddler cid...')
     }
   }
-  console.log(`*** Added tiddler ***
- ipfs://${added.cid}/${tidName}-build.tid`)
   // Update node
   node.tidSize = added.size
   node.tidUri = `${publicGateway}/ipfs/${added.cid}/${tidName}-build.tid`
   // Save current
   fs.writeFileSync(`./current/${dir}/current.json`, beautify(current, null, 2, 80), 'utf8')
-  // Load
-  if (load) {
-    var uri = `${gateway}/ipfs/${added.cid}/${tidName}-build.tid`
-    console.log(`*** Fetch tiddler ***
- ${uri}`)
-    await loadFromIpfs(uri)
-    var uri = `${gateway}/ipfs/${parentCid}/`
-    console.log(`*** Fetch parent ***
- ${uri}`)
-    await loadFromIpfs(uri)
-    if (sourceFileName.endsWith('.html')) {
-      var uri = `${gateway}/ipfs/${parentCid}/index.html`
-      console.log(`*** Fetch content ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    } else {
-      var uri = `${gateway}/ipfs/${parentCid}/${sourceFileName}`
-      console.log(`*** Fetch content ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
-    if (faviconCid !== null) {
-      var uri = `${gateway}/ipfs/${parentCid}/${faviconFileName}`
-      console.log(`*** Fetch 'favicon' ***
- ${uri}`)
-      await loadFromIpfs(uri)
-    }
+  // Log
+  console.log('***')
+  if (faviconCid) {
+    console.log(`*** Added 'favicon' ***
+ ${gateway}/ipfs/${parentCid}/${faviconFileName}`)
   }
+  console.log(`*** Added build ***
+ ${gateway}/ipfs/${parentCid}/${sourceFileName}`)
+  console.log(`*** Added build tiddler ***
+ ${gateway}/ipfs/${added.cid}/${tidName}-build.tid`)
 }

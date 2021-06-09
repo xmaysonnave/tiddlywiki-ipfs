@@ -484,17 +484,17 @@ IpfsLibrary.prototype.getDefaultIpfs = async function (apiUrl) {
 }
 
 // ipfs-http-client
-IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
-  apiUrl = apiUrl !== undefined && apiUrl !== null && apiUrl.toString().trim() !== '' ? apiUrl : null
-  if (apiUrl == null) {
-    throw new Error('Undefined IPFS API URL...')
+IpfsLibrary.prototype.getHttpIpfs = async function (url) {
+  url = url !== undefined && url !== null && url.toString().trim() !== '' ? url : null
+  if (url == null) {
+    throw new Error('Undefined IPFS Client URL...')
   }
-  if (apiUrl instanceof URL === false) {
-    apiUrl = this.ipfsBundle.getUrl(apiUrl)
+  if (url instanceof URL === false) {
+    url = this.ipfsBundle.getUrl(url)
   }
   const self = this
   try {
-    const client = this.ipfsClients.get(apiUrl.toString())
+    const client = this.ipfsClients.get(url.toString())
     if (client !== undefined) {
       return {
         ipfs: client.ipfs,
@@ -502,15 +502,15 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
       }
     }
     const { ipfs, provider } = await this.mutex.runExclusive(async () => {
-      const protocol = apiUrl.protocol.slice(0, -1)
-      var port = apiUrl.port
+      const protocol = url.protocol.slice(0, -1)
+      var port = url.port
       if (port === undefined || port == null || port.trim() === '') {
         port = 443
         if (protocol === 'http') {
           port = 80
         }
       }
-      const client = self.ipfsClients.get(apiUrl.toString())
+      const client = self.ipfsClients.get(url.toString())
       if (client !== undefined) {
         return {
           ipfs: client.ipfs,
@@ -524,16 +524,16 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
             loadHttpClientModule: () => create,
             apiAddress: {
               protocol: protocol,
-              host: apiUrl.hostname,
+              host: url.hostname,
               port: port,
               timeout: longTimeout,
             },
           }),
         ],
       })
-      self.ipfsClients.set(apiUrl.toString(), { ipfs, provider })
+      self.ipfsClients.set(url.toString(), { ipfs, provider })
       // ??? Logger do not provide any output...
-      console.info(`New IPFS provider: "${apiUrl}"`)
+      console.info(`New IPFS client: "${url}"`)
       return {
         ipfs: ipfs,
         provider: provider,
@@ -541,7 +541,7 @@ IpfsLibrary.prototype.getHttpIpfs = async function (apiUrl) {
     })
     return {
       ipfs: ipfs,
-      provider: `${provider}, ${apiUrl}`,
+      provider: `${provider}, ${url}`,
     }
   } catch (error) {
     this.getLogger().error(error)

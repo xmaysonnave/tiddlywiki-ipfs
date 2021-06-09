@@ -7,10 +7,9 @@ const createKeccakHash = require('keccak')
 const dotenv = require('dotenv')
 const fs = require('fs')
 const { generate, validate } = require('build-number-generator')
-const { loadFromIpfs } = require('bin/utils.js')
-
-const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
-const ipfsBundle = new IpfsBundle()
+const IpfsUtils = require('bin/ipfs-utils.js')
+const ipfsUtils = new IpfsUtils()
+const ipfsBundle = ipfsUtils.ipfsBundle
 
 // bluelight.link
 const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
@@ -21,7 +20,6 @@ module.exports = async function main (name, extension, dir, env, version) {
   if (dotEnv.error) {
     throw dotEnv.error
   }
-  ipfsBundle.init()
   // Params
   name = name !== undefined && name !== null && name.trim() !== '' ? name.trim() : null
   if (name == null) {
@@ -92,7 +90,7 @@ module.exports = async function main (name, extension, dir, env, version) {
       const uri = `${gateway}/ipns/${rawBuildCid}/${dir}/latest-build/current.json`
       console.log(`*** Fetch current:
  ${uri} ***`)
-      const data = await loadFromIpfs(uri)
+      const data = await ipfsUtils.loadFromIpfs(uri)
       if (data !== undefined && data !== null) {
         var { content } = data
         current = JSON.parse(ipfsBundle.Utf8ArrayToStr(content))

@@ -353,6 +353,8 @@ The [package.json](https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/main/pack
 
 - build
 - build-bluelightav
+- build-loader
+- build-uploader
 - build-tiddlywiki-ipfs
 - download
 - precommit

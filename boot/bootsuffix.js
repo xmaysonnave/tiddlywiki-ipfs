@@ -135,38 +135,6 @@ var bootsuffix = function ($tw) {
     return out
   }
 
-  // Deprecated...
-  $tw.boot.importText = function (url) {
-    const xhr = new XMLHttpRequest()
-    try {
-      xhr.onerror = function (event) {
-        globalThis.onerror(`[${event.target.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
-      }
-      xhr.open('GET', url, false)
-      xhr.send(null)
-      if (xhr.status >= 300) {
-        throw new Error(`[${xhr.status}] ${$tw.language.getString('NetworkError/Fetch')}`)
-      }
-      var content = xhr.responseText
-      var type = xhr.headers.get('Content-Type')
-      if (type) {
-        const types = type.split(';')
-        if (types.length > 0) {
-          type = types[0].trim()
-        }
-      }
-      return {
-        content: content,
-        status: xhr.status,
-        type: type,
-      }
-    } catch (error) {
-      $tw.boot.getLogger().error(error)
-      globalThis.onerror(error.message)
-    }
-    return null
-  }
-
   $tw.boot.fetch = async function (url, timeout) {
     if (url instanceof URL === false) {
       url = new URL(url)

@@ -58,7 +58,7 @@ IpfsWrapper.prototype.getHttpIpfsClient = async function (url) {
   throw new Error('Failed to retrieve an IPFS HTTP provider...')
 }
 
-IpfsWrapper.prototype.getIpfsClient = async function (url) {
+IpfsWrapper.prototype.getIpfsProvider = async function (url) {
   try {
     var policy = null
     const ipfsProvider = $tw.utils.getIpfsProvider()

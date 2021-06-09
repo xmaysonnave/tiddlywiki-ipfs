@@ -11,11 +11,14 @@
 # build bluelightav
 ./bin/editions/bluelightav/build.sh "$@" || exit 1
 
-# build upload
+# upload
 ./bin/cli-build-uploader.sh "$@" || exit 1
 
+# load
+./bin/cli-build-loader.sh "$@" || exit 1
+
 # update
-# ./bin/cli-update.sh "$@" || exit 1
+# ./bin/cli-updater.sh "$@" || exit 1
 
 # done
 exit 0

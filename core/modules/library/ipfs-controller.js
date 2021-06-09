@@ -571,9 +571,6 @@ ${url}`
       }
     }
     const url = this.getIpfsApiUrl()
-    if (url === undefined || url == null || url.toString().trim() === '') {
-      throw new Error('Undefined IPFS API URL...')
-    }
     const { ipfs, provider } = await this.ipfsWrapper.getHttpIpfsClient(url)
     return {
       ipfs: ipfs,

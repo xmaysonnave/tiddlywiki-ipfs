@@ -69,6 +69,8 @@ yarn browserify \
   -s IpfsBundle \
   -o build/plugins/ipfs/modules/library/ipfs-bundle.js "$@" || exit 1
 
+cp ./build/plugins/ipfs/modules/library/ipfs-bundle.js /work/temp
+
 # build raw
 echo '***'
 echo '*** raw plugin ***'

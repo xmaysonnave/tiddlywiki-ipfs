@@ -21,11 +21,10 @@ async function main () {
     if (name == null) {
       throw new Error('Unknown name...')
     }
-    const load = argv.load !== undefined && argv.load !== null ? argv.load === 'true' || argv.load === true : null
     const faviconFileName = argv.faviconFileName !== undefined && argv.faviconFileName !== null ? argv.faviconFileName : null
     const tags = argv.tags !== undefined && argv.tags !== null ? argv.tags : null
     // Upload
-    await upload(name, extension, dir, tags, load, faviconFileName)
+    await upload(name, extension, dir, tags, faviconFileName)
   } catch (error) {
     console.error(error)
     process.exit(1)

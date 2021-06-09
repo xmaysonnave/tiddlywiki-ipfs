@@ -1,5 +1,5 @@
 title: #bluelightav# Welcome
-modified: 20210603094915385
+modified: 20210608094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -91,8 +91,7 @@ type: text/vnd.tiddlywiki
   let individuals store content with Security and Verifiabilty.
 </p>
 <p>
-  [ext[Pinning|https://docs.ipfs.io/concepts/persistence/#pinning-in-context]] is an Information lifecycle management mechanism who
-  could be seen as a [ext[Right to be forgotten|https://gdpr.eu/right-to-be-forgotten/]] feature.
+  The IPFS [ext[Pinning|https://docs.ipfs.io/concepts/persistence/#pinning-in-context]] feature is an information lifecycle management mechanism.
 </p>
 <ul>
    <li>A pinned content is kept and protected</li>
@@ -146,72 +145,34 @@ type: text/vnd.tiddlywiki
 
 <h3>Features</h3>
 <ul>
-  <li>Access from [ext[IPFS Gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]
+  <li>Compress</li>
+  <li>Content management
     <ul>
-      <li>Attachments</li>
+      <li>Attachments/li>
       <li>Libraries</li>
-      <li>Pre-boot assets</li>
+      <li>Pre-boot Assets</li>
       <li>Plugins</li>
-      <li>Content</li>
-    </ul>
-  </li>
-  <li>Compress
-    <ul>
-      <li>Attachments</li>
-      <li>Libraries</li>
-      <li>Pre-boot assets</li>
-      <li>Plugins</li>
-      <li>Content</li>
+      <li>Tiddlers</li>
     </ul>
   </li>
   <li>Embedded or Remote Layout</li>
-  <li>Encrypt, Decrypt and Sign
-    <ul>
-      <li>Attachments</li>
-      <li>Libraries</li>
-      <li>Pre-boot assets</li>
-      <li>Plugins</li>
-      <li>Content</li>
-    </ul>
-  </li>
-  <li>[ext[Metamask|https://metamask.io]] keyring and encryption support</li>
+  <li>Encrypt, Decrypt and Sign</li>
+  <li>[ext[Metamask|https://metamask.io]] keyring and Ethereum transaction support</li>
   <li>Multi level Export and Import</li>
   <li>Node.js CLI commands</li>
   <li>Prohibits cookies and local data modifications with [ext[Subdomain gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li>
-  <li>Publish to IPNS
-    <ul>
-      <li>Attachments</li>
-      <li>Libraries</li>
-      <li>Pre-boot assets</li>
-      <li>Plugins</li>
-      <li>Content</li>
-    </ul>
-  </li>
-  <li>Publish to [ext[ENS|https://ens.domains]]
-    <ul>
-      <li>Attachments</li>
-      <li>Libraries</li>
-      <li>Pre-boot assets</li>
-      <li>Plugins</li>
-      <li>Content</li>
-    </ul>
-  </li>
+  <li>Publish to IPNS</li>
+  <li>Publish to [ext[ENS|https://ens.domains]]</li>
+  <li>Read with [ext[IPFS Gateway|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li> servers
+  <li>Store on [ext[IPFS API|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li>
   <li>URL Resolver
     <ul>
       <li><b>ipfs:</b> and <b>ipns:</b> protocol</li>
-      <li><b>Ethereum Name Service</b> (ENS) and <b>.eth.link</b> domain</li>
+      <li><b>Ethereum Name Service</b> (ENS)</li>
+      <li>[ext[EthLink|https://eth.link/#what-is-ethlink]]</b></li>
     </ul>
   </li>
-  <li>Store on [ext[IPFS API|https://docs.ipfs.io/concepts/ipfs-gateway/]]
-    <ul>
-      <li>Attachments</li>
-      <li>Libraries</li>
-      <li>Pre-boot assets</li>
-      <li>Plugins</li>
-      <li>Content</li>
-    </ul>
-  </li>
-  <li>[[And more...|#ipfs# Documentation]]</li>
+  <li>Write with [ext[IPFS API|https://docs.ipfs.io/reference/http/api/]]</li>
 </ul>
 
 <h3>IPFS with ~TiddlyWiki Layout Metrics</h3>
