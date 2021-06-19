@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 'use strict'
 
-const beautify = require('json-beautify')
 const constants = require('bin/constants.js')
 const fs = require('fs')
 const semver = require('bin/semver.js')
 
-const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
-const ipfsBundle = new IpfsBundle()
+const IpfsUtils = require('bin/ipfs-utils.js')
+const ipfsUtils = new IpfsUtils()
+const ipfsBundle = ipfsUtils.ipfsBundle
 
 async function main () {
   try {
-    ipfsBundle.init()
     const name = '$:/core'
     const normalizedName = ipfsBundle.filenamify(name)
     const dir = 'tiddlywiki/core'
@@ -24,7 +23,7 @@ async function main () {
     infoPlugin.build = build
     infoPlugin.version = version
     delete infoPlugin.text
-    fs.writeFileSync(ipfsTargetMetadata, beautify(infoPlugin, null, 2, 80), 'utf8')
+    fs.writeFileSync(ipfsTargetMetadata, ipfsUtils.getJson(infoPlugin), 'utf8')
     await semver(`${name}.zlib.ipfs`, 'json', dir, env, version)
     const exists = fs.existsSync(`./production/${dir}`)
     if (exists && kind === constants.UNCHANGED) {

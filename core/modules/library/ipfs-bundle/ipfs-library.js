@@ -23,6 +23,7 @@ const dagDirectory = fromString('\u0008\u0001')
  * https://infura.io/docs
  * https://cid.ipfs.io
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
+ * https://github.com/ipld/specs/blob/master/block-layer/codecs/dag-pb.md
  **/
 var IpfsLibrary = function (ipfsBundle) {
   this.ipfsBundle = ipfsBundle
@@ -157,41 +158,6 @@ IpfsLibrary.prototype.addAll = async function (client, content, options) {
     })
   }
   return added
-}
-
-IpfsLibrary.prototype.analyzePinType = function (type) {
-  type = type !== undefined && type !== null && type.trim() !== '' ? type.trim() : null
-  if (type == null) {
-    return {
-      parentCid: null,
-      type: null,
-    }
-  }
-  var res = type.split(' ')
-  if (res.length === 1) {
-    return {
-      parentCid: null,
-      type: res[0],
-    }
-  }
-  if (res.length !== 3 && res.length !== 4) {
-    throw new Error(`Unknown pin type: ${type}`)
-  }
-  const index = res.length % 3
-  if (res[index] !== 'indirect') {
-    throw new Error(`Unknown pin type: ${type}`)
-  }
-  if (res[index + 1] !== 'through') {
-    throw new Error(`Unknown pin type: ${type}`)
-  }
-  const parentCid = this.ipfsBundle.getCid(res[index + 2])
-  if (parentCid == null) {
-    throw new Error(`Unknown pin type: ${type}`)
-  }
-  return {
-    parentCid: parentCid,
-    type: res[0],
-  }
 }
 
 IpfsLibrary.prototype.dagGet = async function (client, cid, options) {
@@ -565,44 +531,82 @@ IpfsLibrary.prototype.getWindowIpfs = async function () {
   throw new Error('Unreachable IPFS Companion...')
 }
 
-IpfsLibrary.prototype.hasPin = async function (client, key, type, ipfsPath) {
-  try {
-    if (ipfsPath) {
-      ipfsPath = `${key}${ipfsPath}`
-    } else {
-      ipfsPath = key
+IpfsLibrary.prototype.analyzePinType = function (type) {
+  type = type !== undefined && type !== null && type.trim() !== '' ? type.trim() : null
+  if (type == null) {
+    return null
+  }
+  var res = type.split(' ')
+  if (res.length === 1) {
+    return {
+      parentCid: null,
+      type: res[0],
     }
-    for await (var { cid, type: fetchedType } of client.pin.ls({
-      paths: [ipfsPath],
-    })) {
+  }
+  if (res.length !== 3 && res.length !== 4) {
+    throw new Error(`Unknown pin type: ${type}`)
+  }
+  const index = res.length % 3
+  if (res[index] !== 'indirect') {
+    throw new Error(`Unknown pin type: ${type}`)
+  }
+  if (res[index + 1] !== 'through') {
+    throw new Error(`Unknown pin type: ${type}`)
+  }
+  const parentCid = this.ipfsBundle.getCid(res[index + 2])
+  if (parentCid == null) {
+    throw new Error(`Unknown pin type: ${type}`)
+  }
+  return {
+    parentCid: parentCid,
+    type: res[0],
+  }
+}
+
+IpfsLibrary.prototype.getPin = async function (client, key, type, ipfsPath, timeout) {
+  const pinSet = []
+  timeout = timeout !== undefined && timeout !== null ? timeout : longTimeout
+  type = type !== undefined && type !== null ? type : null
+  if (ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '') {
+    ipfsPath = `${key}${ipfsPath.trim()}`
+  } else {
+    ipfsPath = key
+  }
+  const options = {
+    paths: [ipfsPath],
+    timeout: timeout,
+  }
+  try {
+    for await (var { cid, type: fetchedType } of client.pin.ls(options)) {
       if (cid !== undefined && cid !== null) {
-        var { type: fetchedType, parentCid } = this.analyzePinType(fetchedType)
+        const data = this.analyzePinType(fetchedType)
+        if (data == null) {
+          continue
+        }
+        var { type: fetchedType, parentCid } = data
         const cidV1 = this.ipfsBundle.cidToCidV1(cid)
         const parentCidV1 = parentCid !== null ? this.ipfsBundle.cidToCidV1(parentCid) : null
-        if (type) {
+        if (type !== null) {
           if (type === fetchedType) {
-            return {
+            pinSet.push({
               cid: cidV1,
               parentCid: parentCidV1,
               type: type,
-            }
+            })
           }
-        }
-        return {
-          cid: cidV1,
-          parentCid: parentCidV1,
-          type: fetchedType,
+        } else {
+          pinSet.push({
+            cid: cidV1,
+            parentCid: parentCidV1,
+            type: fetchedType,
+          })
         }
       }
     }
   } catch (error) {
     // Ignore
   }
-  return {
-    cid: '',
-    parentCid: null,
-    type: '',
-  }
+  return pinSet
 }
 
 IpfsLibrary.prototype.isDirectory = function (ua) {

@@ -1,12 +1,13 @@
 title: $:/core.zlib-build
 tags: $:/core $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210609390
 name: $:/core.zlib
-version: 0.4.0-beta-tw-v5.1.23+release+build-210609390
+build: 210613359
+version: 0.4.0-beta-tw-v5.1.23+release+build-210613359
 sourceSize: 452679
 sourceExtension: json
 sourceFilename: $_core.zlib
-sourceUri: ipfs://bafybeicw67zjd32qh7guuhnu6zikumgrnrb2tc5652imqztcbqfxforaqi/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210609390.json
+sourceUri: ipfs://bafybeiefqrur56dxjrnm3c6z3mdq3ykmauhyr7uu23qxlvkcfgjwiacvoi/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210613359.json
+latestUri: https://ipfs.infura.io/ipfs/bafybeiefqrur56dxjrnm3c6z3mdq3ykmauhyr7uu23qxlvkcfgjwiacvoi/$_core.zlib.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 'use strict'
 
-const beautify = require('json-beautify')
 const constants = require('bin/constants.js')
 const fs = require('fs')
 const semver = require('bin/semver.js')
 
-const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
-const ipfsBundle = new IpfsBundle()
+const IpfsUtils = require('bin/ipfs-utils.js')
+const ipfsUtils = new IpfsUtils()
+const ipfsBundle = ipfsUtils.ipfsBundle
 
 async function main () {
   try {
-    ipfsBundle.init()
     const name = '$:/plugins/ipfs'
     const normalizedName = ipfsBundle.filenamify(name)
     const dir = 'tiddlywiki-ipfs/plugin'
@@ -26,13 +25,13 @@ async function main () {
     const infoPlugin = JSON.parse(fs.readFileSync(sourceMetadata, 'utf8'))
     infoPlugin.build = build
     infoPlugin.version = version
-    fs.writeFileSync(targetMetadata, beautify(infoPlugin, null, 2, 80), 'utf8')
-    fs.writeFileSync(ipfsTargetMetadata, beautify(infoPlugin, null, 2, 80), 'utf8')
+    fs.writeFileSync(targetMetadata, ipfsUtils.getJson(infoPlugin), 'utf8')
+    fs.writeFileSync(ipfsTargetMetadata, ipfsUtils.getJson(infoPlugin), 'utf8')
     await semver(`${name}.zlib.ipfs`, 'json', dir, env, version)
     // retrieve current version from package.json
     const infoProject = JSON.parse(fs.readFileSync(sourcePackage, 'utf8'))
     infoProject.version = version
-    fs.writeFileSync(sourcePackage, beautify(infoProject, null, 2, 80), 'utf8')
+    fs.writeFileSync(sourcePackage, ipfsUtils.getJson(infoProject), 'utf8')
     const exists = fs.existsSync(`./production/${dir}`)
     if (exists && kind === constants.UNCHANGED) {
       console.log('***')

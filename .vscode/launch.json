@@ -1,17 +1,25 @@
 {
-  "version": "0.2.0",
+  "version": "0.4.0",
   "configurations": [
     {
       "type": "node",
+      "name": "build",
       "request": "launch",
-      "name": "Launch build empty-dev",
-      "skipFiles": ["<node_internals>/**"],
-      "cwd": "${workspaceFolder}",
+      "runtimeArgs": ["build"],
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["empty-dev"],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "outFiles": ["${workspaceFolder}/bin/**/*.js", "${workspaceFolder}/core/**/*.js"]
+      "runtimeVersion": "16.2.0",
+      "skipFiles": ["internal/async_hooks", "<node_internals>/**"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "name": "updater",
+      "request": "launch",
+      "runtimeArgs": ["updater"],
+      "runtimeExecutable": "yarn",
+      "runtimeVersion": "16.2.0",
+      "skipFiles": ["internal/async_hooks", "<node_internals>/**"],
+      "console": "integratedTerminal"
     }
   ]
 }

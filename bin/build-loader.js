@@ -8,87 +8,128 @@
  **/
 
 const dotenv = require('dotenv')
-const fs = require('fs')
-const { create: IpfsHttpClient } = require('ipfs-http-client')
 const IpfsUtils = require('bin/ipfs-utils.js')
-const ipfsUtils = new IpfsUtils()
-const ipfsBundle = ipfsUtils.ipfsBundle
 
-async function processContent (gatewayUrl, fetchUrl, parameters, parentCid, cid, parentDir) {
-  if (cid === undefined || cid == null || cid.toString().trim() === '') {
-    cid = parentCid !== undefined && parentCid !== null && parentCid.toString().trim() !== '' ? parentCid.toString().trim() : null
+module.exports = class BuildLoader {
+  constructor () {
+    this.dotEnv = dotenv.config()
+    if (this.dotEnv.error) {
+      throw this.dotEnv.error
+    }
+    require('events').EventEmitter.defaultMaxListeners = Infinity
+    this.rawBuildKey = process.env.IPNS_PRODUCTION_RAW_KEY ? process.env.IPNS_PRODUCTION_RAW_KEY : null
+    if (this.rawBuildKey == null) {
+      throw Error('Undefined IPNS production raw key')
+    }
+    this.buildKey = process.env.IPNS_PRODUCTION_KEY ? process.env.IPNS_PRODUCTION_KEY : null
+    if (this.buildKey == null) {
+      throw Error('Undefined IPNS production key')
+    }
+    this.ipfsUtils = new IpfsUtils()
+    this.ipfsBundle = this.ipfsUtils.ipfsBundle
+    console.log(`*** Loader: ${this.ipfsUtils.apiUrl} ***`)
+    this.once = false
   }
-  parentDir = parentDir !== undefined && parentDir !== null && parentDir.trim() !== '' ? parentDir.trim() : ''
-  const server = IpfsHttpClient(parameters)
-  const dagNode = await ipfsBundle.dagGet(server, cid, {
-    localResolve: false,
-    timeout: ipfsBundle.shortTimeout,
-  })
-  const node = dagNode.value
-  if (ipfsBundle.isDirectory(node.Data)) {
-    if (node.Links !== undefined && node.Links !== null) {
-      for (var i = 0; i < node.Links.length; i++) {
-        const childNode = node.Links[i]
-        await processContent(gatewayUrl, fetchUrl, parameters, parentCid, childNode.Hash, `${parentDir}/${childNode.Name}`)
+
+  async init () {
+    // Init once
+    if (this.once) {
+      return
+    }
+    const { build, production, productionRaw, currentRaw, currentRawCid } = await this.ipfsUtils.loadBuild(this.ipfsUtils.getApiClient())
+    this.build = build
+    this.production = production
+    this.productionRaw = productionRaw
+    this.currentRaw = currentRaw
+    this.currentRawCid = currentRawCid
+    // Init once
+    this.once = true
+  }
+
+  async processContent (apiUrl, gatewayUrl, fetchUrl, parentCid, cid, parentDir) {
+    if (cid === undefined || cid == null || cid.toString().trim() === '') {
+      cid = parentCid !== undefined && parentCid !== null && parentCid.toString().trim() !== '' ? parentCid.toString().trim() : null
+    }
+    parentDir = parentDir !== undefined && parentDir !== null && parentDir.trim() !== '' ? parentDir.trim() : ''
+    const api = this.ipfsUtils.getApiClient(this.ipfsUtils.shortTimeout, apiUrl)
+    const dagNode = await this.ipfsBundle.dagGet(api, cid, {
+      localResolve: false,
+      timeout: this.ipfsUtils.shortTimeout,
+    })
+    const node = dagNode.value
+    if (this.ipfsBundle.isDirectory(node.Data)) {
+      if (node.Links !== undefined && node.Links !== null) {
+        for (var i = 0; i < node.Links.length; i++) {
+          const childNode = node.Links[i]
+          if (childNode.Name === '') {
+            continue
+          }
+          await this.processContent(apiUrl, gatewayUrl, fetchUrl, parentCid, childNode.Hash, `${parentDir}/${childNode.Name}`)
+        }
       }
     }
-  }
-  if (fetchUrl !== undefined && fetchUrl !== null) {
-    const url = `${fetchUrl}/ipfs/${parentCid}${parentDir}`
-    await ipfsUtils.loadFromIpfs(url, ipfsBundle.longTimeout)
-    console.log(` ${url}`)
-  } else {
-    console.log(` ${gatewayUrl}/ipfs/${parentCid}${parentDir}`)
-  }
-}
-
-async function processGateway (apiUrl, gatewayUrl, fetchUrl, sourceUri) {
-  const protocol = apiUrl.protocol.slice(0, -1)
-  var port = apiUrl.port
-  if (port === undefined || port == null || port.trim() === '') {
-    port = 443
-    if (protocol === 'http') {
-      port = 80
+    if (fetchUrl !== undefined && fetchUrl !== null) {
+      const url = `${fetchUrl}/ipfs/${parentCid}${parentDir}`
+      await this.ipfsUtils.loadFromIpfs(url, this.ipfsUtils.longTimeout)
+      console.log(` ${url}`)
+    } else {
+      console.log(` ${gatewayUrl}/ipfs/${parentCid}${parentDir}`)
     }
   }
-  const parameters = {
-    protocol: protocol,
-    host: apiUrl.hostname,
-    port: port,
-    timeout: ipfsBundle.shortTimeout,
-  }
-  const server = IpfsHttpClient(parameters)
-  const ipfsCid = await ipfsBundle.resolveIpfsContainer(server, sourceUri)
-  if (ipfsCid === undefined || ipfsCid == null) {
-    throw new Error(`Unknown IPFS cid:
- ${sourceUri}`)
-  }
-  console.log('***')
-  console.log(`*** Load from ${fetchUrl || gatewayUrl} ***`)
-  await processContent(gatewayUrl, fetchUrl, parameters, ipfsCid)
-  console.log(`*** Loaded ***`)
-}
 
-module.exports = async function main (load) {
-  // Init
-  const dotEnv = dotenv.config()
-  if (dotEnv.error) {
-    throw dotEnv.error
+  async processGateway (apiUrl, gatewayUrl, fetchUrl, sourceUri) {
+    console.log(`*** Load: ${apiUrl} ***`)
+    const api = this.ipfsUtils.getApiClient(this.ipfsUtils.shortTimeout, apiUrl)
+    const ipfsCid = await this.ipfsBundle.resolveIpfsContainer(api, sourceUri)
+    if (ipfsCid === undefined || ipfsCid == null) {
+      throw new Error(`Unknown IPFS cid:
+  ${sourceUri}`)
+    }
+    await this.processContent(apiUrl, gatewayUrl, fetchUrl, ipfsCid)
   }
-  // build
-  const buildPath = `./current/build.json`
-  if (fs.existsSync(buildPath === false)) {
-    throw new Error(`Unknown build: ${buildPath}`)
+
+  async processBuild (load) {
+    load = load !== undefined && load !== null ? load === 'true' || load === true : false
+    if (!load) {
+      console.log('*** Do not load... ***')
+      return
+    }
+    await this.processGateways(this.build.sourceUri)
   }
-  var build = JSON.parse(fs.readFileSync(buildPath))
-  if (build.sourceUri === undefined || build.sourceUri == null) {
-    throw new Error(`Unknown build uri`)
+
+  async processProductionRaw (load) {
+    load = load !== undefined && load !== null ? load === 'true' || load === true : false
+    if (!load) {
+      console.log('*** Do not load... ***')
+      return
+    }
+    await this.processGateways(`/ipfs/${this.productionRaw}`)
   }
-  // Params
-  load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
-  if (load === false) {
-    return
+
+  async processProduction (load) {
+    load = load !== undefined && load !== null ? load === 'true' || load === true : false
+    if (!load) {
+      console.log('*** Do not load... ***')
+      return
+    }
+    await this.processGateways(`/ipfs/${this.production}`)
   }
-  await processGateway(new URL('http://10.45.0.1:8080'), null, 'https://dweb.link', build.sourceUri)
-  await processGateway(new URL('https://ipfs.infura.io:5001'), 'https://ipfs.infura.io', null, build.sourceUri)
+
+  async process (load, ipfsPath) {
+    load = load !== undefined && load !== null ? load === 'true' || load === true : false
+    ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.trim() !== '' ? ipfsPath.trim() : null
+    if (!load || !ipfsPath) {
+      console.log('*** Do not load... ***')
+      return
+    }
+    await this.processGateways(ipfsPath)
+  }
+
+  async processGateways (ipfsPath) {
+    //await this.processGateway(new URL('http://127.0.0.1:5001'), 'http://127.0.0.1:8080', null, ipfsPath)
+    //await this.processGateway(new URL('http://10.45.0.1:5001'), 'http://10.45.0.1:8080', null, ipfsPath)
+    await this.processGateway(new URL('http://10.45.0.1:5001'), 'https://ipfs.infura.io', null, ipfsPath)
+    await this.processGateway(new URL('https://ipfs.infura.io:5001'), 'https://dweb.link', null, ipfsPath)
+    //await this.processGateway(new URL('http://10.45.0.1:8080'), null, 'https://ipfs.io', ipfsPath)
+  }
 }

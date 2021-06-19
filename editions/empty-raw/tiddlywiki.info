@@ -14,8 +14,6 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.zlib.ipfs-%BUILD_PLUGIN_VERSION%.json",
         "application/json",
-      "--public-gateway",
-        "%IPFS_PUBLIC_GATEWAY%",
 			"--remote-layout",
         "yes",
 			"--compress",

@@ -344,8 +344,14 @@ IPFS utils
           $tw.ipfs.getLogger().error(error)
           $tw.utils.alert(ipfsUtilsName, error.message)
         }
-        $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
-        $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
+        $tw.ipfs.addToPin({
+          ipfsPath: resolvedUrl !== null ? resolvedUrl.pathname : null,
+          recursive: false,
+        })
+        $tw.ipfs.addToUnpin({
+          ipfsPath: oldResolvedUrl !== null ? oldResolvedUrl.pathname : null,
+          recursive: false,
+        })
       }
     }
     // Tag management
@@ -538,7 +544,10 @@ IPFS utils
               .catch(error => {
                 $tw.ipfs.getLogger().error(error)
                 $tw.utils.alert(ipfsUtilsName, error.message)
-                $tw.ipfs.addToUnpin(addedPath)
+                $tw.ipfs.addToUnpin({
+                  ipfsPath: addedPath,
+                  recursive: false,
+                })
                 // Update tiddler
                 fields.push({ key: field, value: incomingName })
                 fields.push({ key: `${field}_ipfs`, value: addedUri })
@@ -601,7 +610,10 @@ IPFS utils
                 $tw.ipfs.getLogger().error(error)
               }
               $tw.utils.alert(ipfsUtilsName, error.message)
-              $tw.ipfs.addToUnpin(addedPath)
+              $tw.ipfs.addToUnpin({
+                ipfsPath: addedPath,
+                recursive: false,
+              })
               // Update tiddler
               fields.push({ key: field, value: incomingName })
               fields.push({ key: `${field}_ipfs`, value: addedUri })

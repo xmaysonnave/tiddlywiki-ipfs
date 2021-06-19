@@ -30,8 +30,6 @@
       "--import",
         "./production/tiddlywiki-ipfs/documentation/$_ipfs_documentation.zlib.json-build.tid",
         "application/x-tiddler",
-      "--public-gateway",
-        "%IPFS_PUBLIC_GATEWAY%",
 			"--remote-layout",
         "yes",
 			"--compress",

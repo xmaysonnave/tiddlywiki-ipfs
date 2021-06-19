@@ -1,19 +1,350 @@
 {
-  "child": [
-    "/ipfs/bafybeiexf6f7ewrjclppumylrtz6z5ipehtqlnfvrhec36udikkqiomaiu/210609391",
-    "/ipfs/bafybeigklkmbryneozhfydvsyiae7amqlqn3khvt66nr6yfifo62ni6eri/210609391",
-    "/ipfs/bafybeihbzvlp7adfjhwarn2foca7utd7egqahp7hnvkl4dnb2x5etnzb4e/210609391",
-    "/ipfs/bafybeib6ghcu6rq4yjaej75xwe4oewus7ryybu4f6uylowexswlwl75pmq/210609392",
-    "/ipfs/bafybeiatjaoblg4vnc2gkqjrurhputyytqwecypehusyucv4ghefsqhsrm/210609390",
-    "/ipfs/bafybeihyzx4fin7rso4ui2u7axjquxk7paeac5trbbovb47h47gvdk5vaa/core",
-    "/ipfs/bafybeibstrdmhuku3husvvmbzzyzlro4qmbvzlez3chswtuvxfilfelesm/210609391",
-    "/ipfs/bafybeidtuvnqfuqr34wbjcc7khhotftrdvwcdcezjjfcyojdgxt7b77elm/210609390",
-    "/ipfs/bafybeiehbbpy4ax3mhr7qg2gwo2axoiubssdj45uzws7zphhwojy45hj2y/210609391",
-    "/ipfs/bafybeib4xllfybzqdh7lcxb4msqgzruc3kqm4sw5jejdkvzcrp3zngwc6y/210609391",
-    "/ipfs/bafybeidtcfwpezkcri63h6yfqzbaebwg2k5drrodmjucfj7jq7p64u7rjm/210609390",
-    "/ipfs/bafybeictlu3o6go44tcj3k4k7cffaej5l4f2tjoaarra6clleunrw6vf5y/210609391",
-    "/ipfs/bafybeihp6yud7w6znsvzivdb3jc5xa6flw6u6hfbyluuzkuyitjyxfu474/210609390"
+  "buildChild": [
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeih2jkmlmdklmpdyu3evqgls2g4qpdtc7pheonfmou7rhr3w4glyrm/210619388"
+    },
+    {
+      "name": "./editions/dev",
+      "path": "/ipfs/bafybeifyhslrhbrokc5awbepaysjxxjjmwzkzvghppmuerd5vbur65re3q/210619389"
+    },
+    {
+      "name": "./editions/empty",
+      "path": "/ipfs/bafybeichgh4drkh3rzfynoanflrukug6yhr3elmc6bqtgxxnjjzrhqlisi/210619389"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeifnfau4zjqtlojepr4k3hxjhkkak5zrkgxe6677veskl4knzgjthq/210619389"
+    },
+    {
+      "name": "./tiddlywiki/core",
+      "path": "/ipfs/bafybeicdpr5uiq6a7fxknjzyykmtl3fiuouscssvivdgvk66o6glqdsnca/210613359"
+    },
+    {
+      "name": "./tiddlywiki",
+      "path": "/ipfs/bafybeih4npcbckn55ki72s7tflj2hkqlbkbj6f54pra526tqsqwf4h4pwm/core"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/boot",
+      "path": "/ipfs/bafybeiavx43ypigr5axvrxbksk5f5vszfv5jltoof7wqm5nvpjhh22ntoy/210618257"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootcss",
+      "path": "/ipfs/bafybeig2djwofg277ibqhdf6idtlrkpgqjypfgkeczdp3lu3svnc6jyff4/210613359"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootprefix",
+      "path": "/ipfs/bafybeibmv5el4kc3lyncymeanht5aolmrerx3hsjzpa3dcp5r5kxqqet24/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/documentation",
+      "path": "/ipfs/bafybeieyzfngiuihze75umiv26idpj5h7zkluwlniaj7gpd6bwsnf4barq/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/library",
+      "path": "/ipfs/bafybeice25kjyx3icdlaha67nhwyx5cw2g2cvqgk3k4pjrjt4pmpjbekmy/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/plugin",
+      "path": "/ipfs/bafybeigmjxn5ns6mljehccpe32alqu22fcr3lssj3gwhssqx7ooh5cxvly/210619388"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/sjcl",
+      "path": "/ipfs/bafybeic6gbuocaovtkiascjas7iyxk6ia3lssfssgo6n3mc3qxvssagpmq/210613360"
+    }
   ],
-  "sourceSize": 7900267,
-  "sourceUri": "https://dweb.link/ipfs/bafybeigkyv74dluvzafivw62hpc62blmqqixpdhkozhmbz3p77cpie6mz4/"
+  "sourceSize": 15780284,
+  "sourceUri": "https://ipfs.infura.io/ipfs/bafybeia54c34smum6mgugy7ckb2u4ijmktjqvbw7uitt7qitmoovy55miq/",
+  "productionRawChild": [
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeicgsyzeqpuelt7ueiijkyt5afczxyxtf7giz2wetprlcsppfvcryu/210618297"
+    },
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeicgsyzeqpuelt7ueiijkyt5afczxyxtf7giz2wetprlcsppfvcryu/210619300"
+    },
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeicgsyzeqpuelt7ueiijkyt5afczxyxtf7giz2wetprlcsppfvcryu/210619388"
+    },
+    {
+      "name": "./editions/dev",
+      "path": "/ipfs/bafybeigqll7nkrwqbbumevspbqapd2rmim5ixom4dodfn52ox3v7krysbm/210618335"
+    },
+    {
+      "name": "./editions/dev",
+      "path": "/ipfs/bafybeigqll7nkrwqbbumevspbqapd2rmim5ixom4dodfn52ox3v7krysbm/210619300"
+    },
+    {
+      "name": "./editions/dev",
+      "path": "/ipfs/bafybeigqll7nkrwqbbumevspbqapd2rmim5ixom4dodfn52ox3v7krysbm/210619389"
+    },
+    {
+      "name": "./editions/empty",
+      "path": "/ipfs/bafybeicnnhfmo3fmph34nwhuzafegfpfpdeswic7c3a7uhj5fi57pyl6pe/210618297"
+    },
+    {
+      "name": "./editions/empty",
+      "path": "/ipfs/bafybeicnnhfmo3fmph34nwhuzafegfpfpdeswic7c3a7uhj5fi57pyl6pe/210619300"
+    },
+    {
+      "name": "./editions/empty",
+      "path": "/ipfs/bafybeicnnhfmo3fmph34nwhuzafegfpfpdeswic7c3a7uhj5fi57pyl6pe/210619389"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeien56eeu75rqzpgcygjmg27ejb6jc7bm2lqxfupjx6pn3zmbkkfra/210618297"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeien56eeu75rqzpgcygjmg27ejb6jc7bm2lqxfupjx6pn3zmbkkfra/210619300"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeien56eeu75rqzpgcygjmg27ejb6jc7bm2lqxfupjx6pn3zmbkkfra/210619389"
+    },
+    {
+      "name": "./editions",
+      "path": "/ipfs/bafybeicraiczehj7rojdbb5mrcajnuilhmng6ruvf2pu64no5c3utuylqy/bluelightav"
+    },
+    {
+      "name": "./editions",
+      "path": "/ipfs/bafybeicraiczehj7rojdbb5mrcajnuilhmng6ruvf2pu64no5c3utuylqy/dev"
+    },
+    {
+      "name": "./editions",
+      "path": "/ipfs/bafybeicraiczehj7rojdbb5mrcajnuilhmng6ruvf2pu64no5c3utuylqy/empty"
+    },
+    {
+      "name": "./editions",
+      "path": "/ipfs/bafybeicraiczehj7rojdbb5mrcajnuilhmng6ruvf2pu64no5c3utuylqy/previous.json"
+    },
+    {
+      "name": "./editions",
+      "path": "/ipfs/bafybeicraiczehj7rojdbb5mrcajnuilhmng6ruvf2pu64no5c3utuylqy/tiddlywiki"
+    },
+    {
+      "name": "./tiddlywiki/core",
+      "path": "/ipfs/bafybeidxjlsgrumipud4hgacijwrxgss6n24udhdq5w5tbb5atdrusuwl4/210613359"
+    },
+    {
+      "name": "./tiddlywiki/core",
+      "path": "/ipfs/bafybeidxjlsgrumipud4hgacijwrxgss6n24udhdq5w5tbb5atdrusuwl4/previous.json"
+    },
+    {
+      "name": "./tiddlywiki",
+      "path": "/ipfs/bafybeiapadlpdtpsvxeeo3if7gk3w54jmunhd7jrbc6dzosquubfzynaaa/core"
+    },
+    {
+      "name": "./tiddlywiki",
+      "path": "/ipfs/bafybeiapadlpdtpsvxeeo3if7gk3w54jmunhd7jrbc6dzosquubfzynaaa/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/boot",
+      "path": "/ipfs/bafybeibfsq2dxi67rmqswpldh6fdaytm7m32vmbvv2zs2j7o5h3hxyuek4/210618257"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/boot",
+      "path": "/ipfs/bafybeibfsq2dxi67rmqswpldh6fdaytm7m32vmbvv2zs2j7o5h3hxyuek4/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootcss",
+      "path": "/ipfs/bafybeih5oblpop4af3sl2frypig6tbcdgiwotv4vewcf2ynlxn2x63fk2i/210613359"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootcss",
+      "path": "/ipfs/bafybeih5oblpop4af3sl2frypig6tbcdgiwotv4vewcf2ynlxn2x63fk2i/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootprefix",
+      "path": "/ipfs/bafybeidymvpeezmbnffxfftkty6wpxveidsjegrmcsbc7ludgwprs3ygem/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootprefix",
+      "path": "/ipfs/bafybeidymvpeezmbnffxfftkty6wpxveidsjegrmcsbc7ludgwprs3ygem/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/documentation",
+      "path": "/ipfs/bafybeiewx3ku2woea524szvffookzuuh4tnxpcaiqkzq5e4oqlsaimfeui/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/documentation",
+      "path": "/ipfs/bafybeiewx3ku2woea524szvffookzuuh4tnxpcaiqkzq5e4oqlsaimfeui/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/library",
+      "path": "/ipfs/bafybeidatkcqh4kmlm3qkarbztuni5vftkrfphkrnz3pqxfkl23xtkw6iq/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/library",
+      "path": "/ipfs/bafybeidatkcqh4kmlm3qkarbztuni5vftkrfphkrnz3pqxfkl23xtkw6iq/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/plugin",
+      "path": "/ipfs/bafybeibxmlbw4uhxh3ymygraqll764yvw3ru6mouhnkqrfgdmxa5r5tsuu/210618297"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/plugin",
+      "path": "/ipfs/bafybeibxmlbw4uhxh3ymygraqll764yvw3ru6mouhnkqrfgdmxa5r5tsuu/210619299"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/plugin",
+      "path": "/ipfs/bafybeibxmlbw4uhxh3ymygraqll764yvw3ru6mouhnkqrfgdmxa5r5tsuu/210619388"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/sjcl",
+      "path": "/ipfs/bafybeieeothr6y7tc757kpttrwvbzf7rmll5ugbn3l2kvkxd6lvs3bldoa/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/sjcl",
+      "path": "/ipfs/bafybeieeothr6y7tc757kpttrwvbzf7rmll5ugbn3l2kvkxd6lvs3bldoa/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/boot"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/bootcss"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/bootprefix"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/documentation"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/library"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/plugin"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/previous.json"
+    },
+    {
+      "name": "./tiddlywiki-ipfs",
+      "path": "/ipfs/bafybeickdrvcdwy7jnngd6jevdyolv2wsbur34kwgefzasi7faegu742oi/sjcl"
+    }
+  ],
+  "productionChild": [
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeibxlrj7errumekisnlajxm6mmj54t6hujlsojb72rg3gaonl7m2rm/210619300"
+    },
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeibxlrj7errumekisnlajxm6mmj54t6hujlsojb72rg3gaonl7m2rm/210619388"
+    },
+    {
+      "name": "./editions/bluelightav",
+      "path": "/ipfs/bafybeibxlrj7errumekisnlajxm6mmj54t6hujlsojb72rg3gaonl7m2rm/latest-build"
+    },
+    {
+      "name": "./editions/dev",
+      "path": "/ipfs/bafybeih227xudx53n2kfl56jaqd6ktphxjjvfuhgxjmf2wyceormbixvfq/210619300"
+    },
+    {
+      "name": "./editions/dev",
+      "path": "/ipfs/bafybeih227xudx53n2kfl56jaqd6ktphxjjvfuhgxjmf2wyceormbixvfq/latest-build"
+    },
+    {
+      "name": "./editions/empty",
+      "path": "/ipfs/bafybeibemegkmjgkgd4muk5j3awmkycnxubzz3hwtxbasunkm3ogvwkn7m/210619300"
+    },
+    {
+      "name": "./editions/empty",
+      "path": "/ipfs/bafybeibemegkmjgkgd4muk5j3awmkycnxubzz3hwtxbasunkm3ogvwkn7m/latest-build"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeichenqmm7eqo6dgtygq4urgnfgquvavee4wzts2qa6hf3w6crug4i/210619300"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeichenqmm7eqo6dgtygq4urgnfgquvavee4wzts2qa6hf3w6crug4i/210619389"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeichenqmm7eqo6dgtygq4urgnfgquvavee4wzts2qa6hf3w6crug4i/latest-build"
+    },
+    {
+      "name": "./editions/tiddlywiki",
+      "path": "/ipfs/bafybeichenqmm7eqo6dgtygq4urgnfgquvavee4wzts2qa6hf3w6crug4i/latest-pre-release"
+    },
+    {
+      "name": "./tiddlywiki/core",
+      "path": "/ipfs/bafybeicet42d4wftepvpkwd5y5ra6c3jumrouhx2v3onyhcic3u5fnlrle/210613359"
+    },
+    {
+      "name": "./tiddlywiki/core",
+      "path": "/ipfs/bafybeicet42d4wftepvpkwd5y5ra6c3jumrouhx2v3onyhcic3u5fnlrle/latest-build"
+    },
+    {
+      "name": "./tiddlywiki/core",
+      "path": "/ipfs/bafybeicet42d4wftepvpkwd5y5ra6c3jumrouhx2v3onyhcic3u5fnlrle/latest-release"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/boot",
+      "path": "/ipfs/bafybeid2l5erw23gha4znc32xiyyytdmcgn7wj6a4gniutdhma5wsichqe/210618257"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/boot",
+      "path": "/ipfs/bafybeid2l5erw23gha4znc32xiyyytdmcgn7wj6a4gniutdhma5wsichqe/latest-build"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/boot",
+      "path": "/ipfs/bafybeid2l5erw23gha4znc32xiyyytdmcgn7wj6a4gniutdhma5wsichqe/latest-pre-release"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootcss",
+      "path": "/ipfs/bafybeiasnp4zxg22l4fiwvclp2mp63dk2gjldrs5qn6rd4ubfsjsikwyda/210613359"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootcss",
+      "path": "/ipfs/bafybeiasnp4zxg22l4fiwvclp2mp63dk2gjldrs5qn6rd4ubfsjsikwyda/latest-build"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootcss",
+      "path": "/ipfs/bafybeiasnp4zxg22l4fiwvclp2mp63dk2gjldrs5qn6rd4ubfsjsikwyda/latest-pre-release"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootprefix",
+      "path": "/ipfs/bafybeigjicnemorjdbdkvihe6qbgkbdyubdt5lzzbi4oremk2y7hjualwe/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootprefix",
+      "path": "/ipfs/bafybeigjicnemorjdbdkvihe6qbgkbdyubdt5lzzbi4oremk2y7hjualwe/latest-build"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/bootprefix",
+      "path": "/ipfs/bafybeigjicnemorjdbdkvihe6qbgkbdyubdt5lzzbi4oremk2y7hjualwe/latest-pre-release"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/plugin",
+      "path": "/ipfs/bafybeiexm4rbmweo3pfildetd3sk3ofedtmwwsqkycfx5lh7wrmdmjeszm/210619299"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/plugin",
+      "path": "/ipfs/bafybeiexm4rbmweo3pfildetd3sk3ofedtmwwsqkycfx5lh7wrmdmjeszm/latest-build"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/sjcl",
+      "path": "/ipfs/bafybeif6y6gw2tfsxinogtibd6iqauairsjqwefh7fzrfv2ivm6kjnce7m/210613360"
+    },
+    {
+      "name": "./tiddlywiki-ipfs/sjcl",
+      "path": "/ipfs/bafybeif6y6gw2tfsxinogtibd6iqauairsjqwefh7fzrfv2ivm6kjnce7m/latest-release"
+    }
+  ],
+  "previousProduction": "https://ipfs.infura.io/ipfs/bafybeidhveovm7ojg3czluxuafi44s6vqxqbi3spxkddzdmxknsu3h6tkm",
+  "previousProductionRaw": "https://ipfs.infura.io/ipfs/bafybeifkuvlt3mhxghd6t6tyclq4w4dehf54uv3tsps6a4ncxl6vi6zp7i",
+  "production": "https://ipfs.infura.io/ipfs/bafybeidofkfugree5bzoxyeplvl2fibphf74rdtku7eg4b4xzte26435t4",
+  "productionRaw": "https://ipfs.infura.io/ipfs/bafybeibwj3xtb3zuy4ro4ei76bkpxqomguy2vsnx2horpoxya2453sw6zq"
 }

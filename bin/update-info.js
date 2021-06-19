@@ -9,16 +9,8 @@ function main () {
     if (fs.existsSync('./build/tiddlywiki.info')) {
       // Derived Public Key
       replace({
-        regex: '%DEV_DERIVED_PUBLIC_KEY%',
-        replacement: process.env.DEV_DERIVED_PUBLIC_KEY,
-        paths: ['./build/tiddlywiki.info'],
-        recursive: false,
-        silent: true,
-      })
-      // Private Key
-      replace({
-        regex: '%DEV_PRIVATE_KEY%',
-        replacement: process.env.DEV_PRIVATE_KEY,
+        regex: '%ETHEREUM_DERIVED_PUBLIC_KEY%',
+        replacement: process.env.ETHEREUM_DERIVED_PUBLIC_KEY,
         paths: ['./build/tiddlywiki.info'],
         recursive: false,
         silent: true,

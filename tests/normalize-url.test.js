@@ -39,20 +39,20 @@ describe('API URL', () => {
   it('Valid Default', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const parsed = ipfsBundle.getIpfsDefaultApiUrl()
+    const parsed = ipfsBundle.getDefaultApiUrl()
     expect(parsed.toString() === 'https://ipfs.infura.io:5001/').to.be.true
   })
   it('Valid Safe', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const parsed = ipfsBundle.getIpfsApiUrl()
+    const parsed = ipfsBundle.getApiUrl()
     expect(parsed.toString() === 'https://ipfs.infura.io:5001/').to.be.true
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     try {
-      ipfsBundle.getIpfsApiUrl()
+      ipfsBundle.getApiUrl()
     } catch (error) {
       expect(error.message).to.equal('Invalid IPFS API URL...')
     }
@@ -82,20 +82,20 @@ describe('Gateway URL', () => {
   it('Valid Default', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const parsed = ipfsBundle.getIpfsDefaultGatewayUrl()
+    const parsed = ipfsBundle.getDefaultGatewayUrl()
     expect(parsed.toString() === 'https://dweb.link/').to.be.true
   })
   it('Valid Safe', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
-    const parsed = ipfsBundle.getIpfsGatewayUrl()
+    const parsed = ipfsBundle.getGatewayUrl()
     expect(parsed.toString() === 'https://dweb.link/').to.be.true
   })
   it('Invalid', () => {
     const ipfsBundle = new IpfsBundle()
     ipfsBundle.init()
     try {
-      ipfsBundle.getIpfsGatewayUrl()
+      ipfsBundle.getGatewayUrl()
     } catch (error) {
       expect(error.message).to.equal('Invalid IPFS Gateway URL...')
     }

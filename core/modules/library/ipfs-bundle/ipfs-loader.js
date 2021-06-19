@@ -150,14 +150,14 @@ IpfsLoader.prototype.fetchOptions = async function (url, timeout) {
       signal: optionsController.signal,
     }
     options = await fetch(url, params)
-    if (options === undefined || options == null || options.ok === false) {
-      throw new Error(`Unexpected response ${options.statusText}`)
+    if (options.ok === false) {
+      throw new Error(`Unexpected response: [${options.status}], [${options.statusText}], ${url}`)
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      this.getLogger().error(`*** Timeout exceeded: ${timeout} ms ***`)
+      this.getLogger().error(`*** Options Timeout: ${url} ***`)
     } else {
-      this.getLogger().error(`*** Options error: ${error.message} ***`)
+      this.getLogger().error(`*** Options Error: ${error.message} ***`)
     }
   } finally {
     globalThis.clearTimeout(optionsId)
@@ -171,37 +171,21 @@ IpfsLoader.prototype.fetchUint8Array = async function (url, timeout) {
     throw new Error('Undefined URL...')
   }
   timeout = timeout !== undefined && timeout !== null ? timeout : $tw.utils.getLongTimeout()
-  const options = await this.fetchOptions(url, timeout)
   const responseController = new AbortController()
   const responseId = globalThis.setTimeout(() => responseController.abort(), timeout)
   try {
-    var newUrl = null
-    if (options !== null && options.ok) {
-      if (options.url !== undefined && options.url !== null) {
-        newUrl = new URL(options.url)
-      }
-      var location = options.headers.get('Location')
-      if (newUrl !== null && location !== undefined && location !== null) {
-        newUrl = new URL(location)
-      }
-    }
-    if (newUrl == null) {
-      newUrl = url
-    }
     // https://fetch.spec.whatwg.org/#cors-safelisted-method
     // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
     const params = {
-      headers: {
-        'Accept-Encoding': 'identity;q=0, *;q=0', // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
-      },
       method: 'get',
       mode: 'cors',
       signal: responseController.signal,
     }
-    const response = await fetch(newUrl, params)
-    if (response === undefined || response == null || response.ok === false) {
-      throw new Error(`Unexpected response ${response.statusText}`)
+    const response = await fetch(url, params)
+    if (response.ok === false) {
+      throw new Error(`Unexpected response: [${response.status}], [${response.statusText}], ${url}`)
     }
+    const location = response.headers.get('Location') || null
     if ($tw.browser && !$tw.node) {
       const ab = await response.arrayBuffer()
       const ua = new Uint8Array(ab)
@@ -218,6 +202,7 @@ IpfsLoader.prototype.fetchUint8Array = async function (url, timeout) {
       )
       return {
         content: ua,
+        location: location,
         type: type,
       }
     }
@@ -235,13 +220,14 @@ IpfsLoader.prototype.fetchUint8Array = async function (url, timeout) {
     )
     return {
       content: buffer,
+      location: location,
       type: type,
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      this.getLogger().error(`*** Fetch, timeout exceeded: ${timeout} ms ***`)
+      this.getLogger().error(`*** Fetch Timeout: ${url} ***`)
     } else {
-      this.getLogger().error(`*** Fetch, error: [${error.message}] ${$tw.language.getString('NetworkError/Fetch')} ***`)
+      this.getLogger().error(`*** Fetch Error: ${error.message} ***`)
     }
   } finally {
     globalThis.clearTimeout(responseId)

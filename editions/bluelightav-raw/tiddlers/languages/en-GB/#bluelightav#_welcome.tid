@@ -1,5 +1,5 @@
 title: #bluelightav# Welcome
-modified: 20210608094915385
+modified: 20210610094915385
 tags: $:/ipfs/editions/bluelightav TableOfContents
 type: text/vnd.tiddlywiki
 
@@ -148,7 +148,7 @@ type: text/vnd.tiddlywiki
   <li>Compress</li>
   <li>Content management
     <ul>
-      <li>Attachments/li>
+      <li>Attachments</li>
       <li>Libraries</li>
       <li>Pre-boot Assets</li>
       <li>Plugins</li>
@@ -163,13 +163,13 @@ type: text/vnd.tiddlywiki
   <li>Prohibits cookies and local data modifications with [ext[Subdomain gateways|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li>
   <li>Publish to IPNS</li>
   <li>Publish to [ext[ENS|https://ens.domains]]</li>
-  <li>Read with [ext[IPFS Gateway|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li> servers
+  <li>Read with [ext[IPFS Gateway|https://docs.ipfs.io/concepts/ipfs-gateway/]] servers</li>
   <li>Store on [ext[IPFS API|https://docs.ipfs.io/concepts/ipfs-gateway/]]</li>
   <li>URL Resolver
     <ul>
       <li><b>ipfs:</b> and <b>ipns:</b> protocol</li>
       <li><b>Ethereum Name Service</b> (ENS)</li>
-      <li>[ext[EthLink|https://eth.link/#what-is-ethlink]]</b></li>
+      <li>[ext[EthLink|https://eth.link/#what-is-ethlink]]</li>
     </ul>
   </li>
   <li>Write with [ext[IPFS API|https://docs.ipfs.io/reference/http/api/]]</li>

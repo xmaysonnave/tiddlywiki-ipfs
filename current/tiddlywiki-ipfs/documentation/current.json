@@ -1,32 +1,34 @@
 {
-  "build": "210609391",
+  "build": "210613360",
   "content": [
     {
       "title": "documentation",
       "tags": "$:/ipfs/documentation",
       "name": "$:/ipfs/documentation",
-      "rawHash": "c567e1562f48c912a95fe96ff48004512eec37cf9ef19d9dcc0d1184b482c5ac",
+      "rawHash": "80ddfe1272725608212ded31fd04e86c25ac54bb44e4694314abf12f03606795",
       "sourceExtension": "json",
       "sourceFilename": "$_ipfs_documentation",
-      "sourceSize": 100920,
-      "sourceUri": "https://dweb.link/ipfs/bafybeieosfcig32b7ou2hbhqvfmfhaedpjw7cmtjihbwetab4qhsuwbpla/$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210609391.json",
-      "tidSize": 566,
-      "tidUri": "https://dweb.link/ipfs/bafybeicbiyimeup7krymwsbwhpqzqeykktcpija663e6zcfyuswkz2rhem/$_ipfs_documentation.json-build.tid"
+      "sourceSize": 97403,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeihvzcmuvdylqw26nf2skkddlrz5yjejchdxgjsxa4rxt3wactwyem/$_ipfs_documentation-0.4.0-beta-tw-v5.1.23+build-210613360.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeihvzcmuvdylqw26nf2skkddlrz5yjejchdxgjsxa4rxt3wactwyem/$_ipfs_documentation.json",
+      "tidSize": 690,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeigxj2qqnfeylvvbwrv5z7vms2zkw7u6qx573o5f3xlmxzuxksinna/$_ipfs_documentation.json-build.tid"
     },
     {
       "title": "documentation",
       "tags": "$:/ipfs/documentation",
       "name": "$:/ipfs/documentation.zlib",
-      "rawHash": "15faba91f8f54ed62c1d859eefd5a6d2b9cb51b2a8404eafcd7953cb566ee9e9",
+      "rawHash": "47512870c3f40e0e0cc4d2d90bbd44e892cddb537be2dc3d7b155d8c82a14938",
       "sourceExtension": "json",
       "sourceFilename": "$_ipfs_documentation.zlib",
-      "sourceSize": 29447,
-      "sourceUri": "https://dweb.link/ipfs/bafybeia5fcfpinocdfjxnosfc3sreg5rv33zqaudj4qm42vupgi3pqobju/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210609391.json",
-      "tidSize": 590,
-      "tidUri": "https://dweb.link/ipfs/bafybeieaxulw67gkflouacwuksa2bbbvjuroxkxifufpilxpvcw2z5rnoq/$_ipfs_documentation.zlib.json-build.tid"
+      "sourceSize": 29343,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeiaoucmds7lm2rjbsgnquv6clqsmwrjaqd5ps35oavsbxu752onyse/$_ipfs_documentation.zlib-0.4.0-beta-tw-v5.1.23+build-210613360.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeiaoucmds7lm2rjbsgnquv6clqsmwrjaqd5ps35oavsbxu752onyse/$_ipfs_documentation.zlib.json",
+      "tidSize": 720,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeickuj5rl6aeujgwvtmx3b6h7ny4qgawtxxstsi26jfsxoryk2d4h4/$_ipfs_documentation.zlib.json-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210609391",
-  "buildUri": "https://dweb.link/ipfs/bafybeib4xllfybzqdh7lcxb4msqgzruc3kqm4sw5jejdkvzcrp3zngwc6y/210609391/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210613360",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeieyzfngiuihze75umiv26idpj5h7zkluwlniaj7gpd6bwsnf4barq/210613360/"
 }

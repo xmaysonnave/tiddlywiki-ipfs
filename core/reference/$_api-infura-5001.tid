@@ -1,4 +1,6 @@
 title: $:/ipfs/saver/api/https/ipfs.infura.io/5001
 tags: $:/ipfs/core $:/ipfs/saver/api
+PROJECT_ID:
+PROJECT_SECRET:
 
 https://ipfs.infura.io:5001

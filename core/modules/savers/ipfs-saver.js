@@ -47,7 +47,10 @@ module-type: saver
         $tw.ipfs.getLogger().warn(error)
         $tw.utils.alert(ipfsSaverName, error.message)
         if (ipnsIpfsCid !== null) {
-          $tw.ipfs.addToPin(`/ipfs/${ipnsIpfsCid}`)
+          $tw.ipfs.addToPin({
+            ipfsPath: `/ipfs/${ipnsIpfsCid}`,
+            recursive: false,
+          })
         }
         return false
       }
@@ -88,7 +91,10 @@ module-type: saver
       if (ipfsCid !== null && ipnsCid == null) {
         resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
         if (resolvedCid !== null) {
-          $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
+          $tw.ipfs.addToUnpin({
+            ipfsPath: `/ipfs/${resolvedCid}`,
+            recursive: false,
+          })
         }
       }
       // IPNS
@@ -119,7 +125,10 @@ module-type: saver
         if (ipnsIpfsCid !== null) {
           resolvedCid = await $tw.ipfs.resolveIpfsContainer(resolvedUrl)
           if (resolvedCid !== null) {
-            $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
+            $tw.ipfs.addToUnpin({
+              ipfsPath: `/ipfs/${resolvedCid}`,
+              recursive: false,
+            })
           }
         }
       }
@@ -153,7 +162,10 @@ module-type: saver
         if (ensCid !== null || ensIpnsCid !== null) {
           resolvedCid = await $tw.ipfs.resolveIpfsContainer(ensResolvedUrl)
           if (resolvedCid !== null) {
-            $tw.ipfs.addToUnpin(`/ipfs/${resolvedCid}`)
+            $tw.ipfs.addToUnpin({
+              ipfsPath: `/ipfs/${resolvedCid}`,
+              recursive: false,
+            })
           }
         }
       }
@@ -229,7 +241,10 @@ module-type: saver
       }
       var dir = await $tw.ipfs.dagPut(links)
       var cidV1 = $tw.ipfs.cidToCidV1(dir.cid)
-      $tw.ipfs.addToPin(`/${ipfsKeyword}/${cidV1}`)
+      $tw.ipfs.addToPin({
+        ipfsPath: `/${ipfsKeyword}/${cidV1}`,
+        recursive: false,
+      })
       // Publish to IPNS
       pathname = `/${ipfsKeyword}/${cidV1}/`
       if (ipnsCid !== null && ipnsKey !== null) {
@@ -250,35 +265,36 @@ module-type: saver
         } catch (error) {
           $tw.ipfs.getLogger().warn(error)
           $tw.utils.alert(ipfsSaverName, error.message)
-          $tw.ipfs.addToPin(ensResolvedUrl !== null ? ensResolvedUrl.pathname : null)
+          $tw.ipfs.addToPin({
+            ipfsPath: ensResolvedUrl !== null ? ensResolvedUrl.pathname : null,
+            recursive: false,
+          })
         }
       }
       // Unpin
       if ($tw.utils.getIpfsUnpin()) {
-        for (var i in $tw.ipfs.unpin) {
+        for (var [ipfsPath, type] of $tw.ipfs.unpin.entries()) {
           try {
-            const unpin = $tw.ipfs.unpin[i]
-            await $tw.ipfs.unpinFromIpfs(unpin)
+            await $tw.ipfs.unpinFromIpfs(ipfsPath, type.recursive)
           } catch (error) {
             $tw.ipfs.getLogger().warn(error)
             $tw.utils.alert(ipfsSaverName, error.message)
           }
         }
       }
-      $tw.ipfs.unpin = []
+      $tw.ipfs.unpin.clear()
       // Pin
       if ($tw.utils.getIpfsPin()) {
-        for (var i in $tw.ipfs.pin) {
+        for (var [ipfsPath, type] of $tw.ipfs.unpin.entries()) {
           try {
-            const pin = $tw.ipfs.pin[i]
-            await $tw.ipfs.pinToIpfs(pin)
+            await $tw.ipfs.pinToIpfs(ipfsPath, type.recursive)
           } catch (error) {
             $tw.ipfs.getLogger().warn(error)
             $tw.utils.alert(ipfsSaverName, error.message)
           }
         }
       }
-      $tw.ipfs.pin = []
+      $tw.ipfs.pin.clear()
       // Callback
       callback(null)
       // Next

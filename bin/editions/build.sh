@@ -3,7 +3,7 @@
 ./bin/editions/bluelightav/build.sh "$@" || exit 1
 
 # build dev
-# ./bin/editions/dev/build.sh "$@" || exit 1
+./bin/editions/dev/build.sh "$@" || exit 1
 
 # build empty
 ./bin/editions/empty/build.sh "$@" || exit 1

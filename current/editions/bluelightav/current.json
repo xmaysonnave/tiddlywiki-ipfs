@@ -1,20 +1,24 @@
 {
-  "build": "210609391",
-  "buildUri": "https://dweb.link/ipfs/bafybeiexf6f7ewrjclppumylrtz6z5ipehtqlnfvrhec36udikkqiomaiu/210609391/",
+  "build": "210619388",
   "content": [
     {
       "title": "bluelightav",
       "tags": "$:/ipfs/editions",
       "name": "bluelightav",
-      "rawHash": "258f7f8338bd6ad753945a630a0b864966461a846b304d7818762a0cd842ebcb",
+      "faviconFilename": "favicon.png",
+      "faviconSize": 6723,
+      "faviconUri": "https://ipfs.infura.io/ipfs/bafybeid27h7b75fzjn3lbgkclgfhmj3rmf4g3t2d4i5owekxy22te3qwr4/favicon.png",
+      "rawHash": "8a9f53d8f465b35c6cbe710f664e1c419d3842dda389d1bbf29a8b50c8711c17",
       "sourceExtension": "html",
       "sourceFilename": "bluelightav",
-      "sourceSize": 246554,
-      "sourceUri": "https://dweb.link/ipfs/bafybeidii4on54ibe5dbfdgw2jkmadwovez5ggfrwuxasdw6jpajm7g55y/",
-      "tidSize": 462,
-      "tidUri": "https://dweb.link/ipfs/bafybeiesxadqmf3r6hxkrhwca3mziseqvnkgyyog6xj2nrxynjaakuagqy/$_ipfs_edition-build.tid"
+      "sourceSize": 246517,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeid27h7b75fzjn3lbgkclgfhmj3rmf4g3t2d4i5owekxy22te3qwr4/",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeid27h7b75fzjn3lbgkclgfhmj3rmf4g3t2d4i5owekxy22te3qwr4/",
+      "tidSize": 719,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeibr26jo73k2qexjwjmqwjjbcgh3p4xwcnxsyv5aigam5broigzhz4/$_ipfs_edition-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210609391"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210619388",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeih2jkmlmdklmpdyu3evqgls2g4qpdtc7pheonfmou7rhr3w4glyrm/210619388/"
 }

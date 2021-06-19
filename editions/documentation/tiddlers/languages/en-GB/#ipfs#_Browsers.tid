@@ -3,7 +3,9 @@ modified: 20210525094915385
 tags: $:/ipfs/documentation [[#ipfs# Settings]]
 type: text/vnd.tiddlywiki
 
-<h2>[ext[Supported Browsers|https://github.com/browserslist/browserslist]]</h2>
+<h2>Browsers</h2>
+
+<h3>[ext[Supported Browsers|https://github.com/browserslist/browserslist]]</h3>
 <ul>
   <li>and_chr: => 90</li>
   <li>chrome: => 83</li>

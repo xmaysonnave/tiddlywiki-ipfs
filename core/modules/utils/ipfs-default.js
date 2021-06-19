@@ -114,7 +114,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver api url with default value if applicable
    */
-  exports.getIpfsSaverApiUrl = function () {
+  exports.getTiddlerApiUrl = function () {
     var api = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/api')
     if (tiddler !== undefined && tiddler !== null) {
@@ -135,7 +135,7 @@ IPFS Default
       }
     }
     if (api == null) {
-      api = $tw.ipfs.getIpfsDefaultApi()
+      api = $tw.ipfs.getDefaultApi()
     }
     return api
   }
@@ -143,7 +143,7 @@ IPFS Default
   /*
    * Retrieve ipfs saver gateway url with default value if applicable
    */
-  exports.getIpfsSaverGatewayUrl = function () {
+  exports.getTiddlerGatewayUrl = function () {
     var gateway = null
     var tiddler = $tw.wiki.getTiddler('$:/ipfs/saver/gateway')
     if (tiddler !== undefined && tiddler !== null) {
@@ -164,7 +164,7 @@ IPFS Default
       }
     }
     if (gateway == null) {
-      gateway = $tw.ipfs.getIpfsDefaultGateway()
+      gateway = $tw.ipfs.getDefaultGateway()
     }
     return gateway
   }

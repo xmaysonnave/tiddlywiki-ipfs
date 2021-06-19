@@ -23,8 +23,6 @@
       "--import",
         "./production/tiddlywiki-ipfs/plugin/$_plugins_ipfs.zlib.json-build.tid",
         "application/x-tiddler",
-      "--privatekey",
-        "%DEV_PRIVATE_KEY%",
       "--import",
         "./production/editions/dev/dev-%BUILD_DEV_VERSION%.html",
         "text/html",

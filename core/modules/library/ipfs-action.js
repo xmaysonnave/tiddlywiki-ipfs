@@ -274,7 +274,10 @@ IPFS Action
     }
     // Async
     $tw.ipfs
-      .addToUnpin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+      .addToUnpin({
+        ipfsPath: resolvedUrl !== null ? resolvedUrl.pathname : null,
+        recursive: false,
+      })
       .then(unpin => {
         $tw.ipfs
           .removeIpnsKey(ipnsKey)
@@ -432,7 +435,7 @@ IPFS Action
 
   IpfsAction.prototype.handlePublishToIpns = async function (event) {
     var ipnsCid = null
-    var resolvedurl = null
+    var resolvedUrl = null
     var wikiCid = null
     var wikiIpnsCid = null
     const wiki = $tw.ipfs.getDocumentUrl()
@@ -461,7 +464,10 @@ IPFS Action
       .publishIpnsKey(wikiCid, ipnsCid, ipnsKey)
       .then(data => {
         $tw.utils.alert(name, 'Published IPNS key: ' + ipnsKey)
-        $tw.ipfs.addToUnpin(resolvedurl !== null ? resolvedUrl.pathname : null)
+        $tw.ipfs.addToUnpin({
+          ipfsPath: resolvedUrl !== null ? resolvedUrl.pathname : null,
+          recursive: false,
+        })
       })
       .catch(error => {
         $tw.ipfs.getLogger().error(error)

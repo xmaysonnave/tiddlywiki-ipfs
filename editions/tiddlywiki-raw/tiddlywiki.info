@@ -16,8 +16,6 @@
       "--import",
         "./build/tiddlers/systems/$_SplashScreen.tid",
         "application/x-tiddler",
-      "--public-gateway",
-        "%IPFS_PUBLIC_GATEWAY%",
 			"--remote-layout",
         "yes",
 			"--compress",

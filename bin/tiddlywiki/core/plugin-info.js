@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-const beautify = require('json-beautify')
 const fs = require('fs')
 
-const { IpfsBundle } = require('core/modules/library/ipfs-bundle.js')
+const IpfsUtils = require('bin/ipfs-utils.js')
+const ipfsUtils = new IpfsUtils()
+const ipfsBundle = ipfsUtils.ipfsBundle
 
 async function main () {
   try {
-    const ipfsBundle = new IpfsBundle()
-    ipfsBundle.init()
     var member = null
     const name = '$:/core'
     const normalizedName = ipfsBundle.filenamify(name)
@@ -23,7 +22,7 @@ async function main () {
     const infoPlugin = JSON.parse(fs.readFileSync(`./build/output/tiddlywiki/core/${normalizedName}.zlib.ipfs-%BUILD_TIDDLYWIKI_CORE_VERSION%.json`, 'utf8'))
     infoPlugin.type = 'application/json'
     infoPlugin._canonical_uri = member.sourceUri
-    fs.writeFileSync(`./production/tiddlywiki/core/${normalizedName}.zlib.ipfs-${current.version}.json`, beautify(infoPlugin, null, 2, 80), 'utf8')
+    fs.writeFileSync(`./production/tiddlywiki/core/${normalizedName}.zlib.ipfs-${current.version}.json`, ipfsUtils.getJson(infoPlugin), 'utf8')
   } catch (error) {
     console.error(error)
     console.log('***')

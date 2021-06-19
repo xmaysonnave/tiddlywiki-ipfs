@@ -1,12 +1,13 @@
 title: $:/boot/boot.css.json-build
 tags: $:/ipfs/core $:/core $:/boot/css
 type: text/vnd.tiddlywiki
-build: 210609390
 name: $:/boot/boot.css.json
-version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210609390
+build: 210613359
+version: 0.4.0-beta-tw-v5.1.24-pre-release+build-210613359
 sourceSize: 2014
 sourceExtension: json
 sourceFilename: $_boot_boot.css.json
-sourceUri: ipfs://bafybeiezn7gvvcnxugyu2lb7pgvrinvgqnjvq3bb5pwdwz53ntpnmtedei/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210609390.json
+sourceUri: ipfs://bafybeie5gtsradfvckghof26xg63ji5mjuwhgx75u7mlg7o46sn3wzyrtu/$_boot_boot.css.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210613359.json
+latestUri: https://ipfs.infura.io/ipfs/bafybeie5gtsradfvckghof26xg63ji5mjuwhgx75u7mlg7o46sn3wzyrtu/$_boot_boot.css.json.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

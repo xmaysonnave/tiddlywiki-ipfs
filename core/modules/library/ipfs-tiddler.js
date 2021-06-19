@@ -55,7 +55,7 @@ IPFS Tiddler
     // Gateway preference
     const api = changes['$:/ipfs/saver/api']
     if (api !== undefined && api.modified) {
-      $tw.ipfs.getLogger().info(`IPFS API: ${$tw.ipfs.getIpfsApiUrl()}`)
+      $tw.ipfs.getLogger().info(`IPFS API: ${$tw.ipfs.getApiUrl()}`)
     }
     // Gateway preference
     const gateway = changes['$:/ipfs/saver/gateway']
@@ -240,7 +240,10 @@ IPFS Tiddler
         if (ipfsCid == null && ipnsCid == null) {
           continue
         }
-        $tw.ipfs.addToUnpin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+        $tw.ipfs.addToUnpin({
+          ipfsPath: resolvedUrl !== null ? resolvedUrl.pathname : null,
+          recursive: false,
+        })
       }
     } catch (error) {
       $tw.ipfs.getLogger().error(error)
@@ -428,7 +431,10 @@ IPFS Tiddler
             return updatedTiddler
           }
         }
-        $tw.ipfs.addToUnpin(oldResolvedUrl !== null ? oldResolvedUrl.pathname : null)
+        $tw.ipfs.addToUnpin({
+          ipfsPath: oldResolvedUrl !== null ? oldResolvedUrl.pathname : null,
+          recursive: false,
+        })
       }
     }
     // Process exports

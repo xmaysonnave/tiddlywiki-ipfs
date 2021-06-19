@@ -31,8 +31,8 @@ IPFS Controller
   const name = 'ipfs-controller'
 
   var IpfsController = function () {
-    this.pin = []
-    this.unpin = []
+    this.pin = new Map()
+    this.unpin = new Map()
   }
 
   IpfsController.prototype.init = function () {
@@ -226,20 +226,21 @@ IPFS Controller
     return content
   }
 
-  IpfsController.prototype.addToPin = function (ipfsPath) {
+  IpfsController.prototype.addToPin = function (ipfsObject) {
+    var { ipfsPath, recursive } = ipfsObject
     ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? decodeURI(ipfsPath.toString().trim()) : null
     if (ipfsPath !== null) {
-      var index = this.unpin.indexOf(ipfsPath)
-      if (index !== -1) {
-        this.unpin.splice(index, 1)
+      var value = this.unpin.get(ipfsPath)
+      if (value !== undefined) {
+        this.unpin.delete(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Cancel request to Unpin:
 ${ipfsPath}`
         )
         return false
       }
-      if (this.pin.indexOf(ipfsPath) === -1) {
-        this.pin.push(ipfsPath)
+      if (this.pin.get(ipfsPath) === undefined) {
+        this.pin.set(ipfsPath, { recursive: recursive })
         $tw.ipfs.getLogger().info(
           `Request to Pin:
 ${ipfsPath}`
@@ -250,13 +251,14 @@ ${ipfsPath}`
     return false
   }
 
-  IpfsController.prototype.addToUnpin = function (ipfsPath) {
+  IpfsController.prototype.addToUnpin = function (ipfsObject) {
+    var { ipfsPath, recursive } = ipfsObject
     ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? decodeURI(ipfsPath.toString().trim()) : null
     if (ipfsPath !== null) {
       // Discard
-      var index = this.pin.indexOf(ipfsPath)
-      if (index !== -1) {
-        this.pin.splice(index, 1)
+      var value = this.pin.get(ipfsPath)
+      if (value !== undefined) {
+        this.pin.delete(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Cancel request to Pin:
 ${ipfsPath}`
@@ -264,8 +266,8 @@ ${ipfsPath}`
         return false
       }
       // Add to unpin
-      if (this.unpin.indexOf(ipfsPath) === -1) {
-        this.unpin.push(ipfsPath)
+      if (this.unpin.get(ipfsPath) === undefined) {
+        this.unpin.set(ipfsPath, { recursive: recursive })
         $tw.ipfs.getLogger().info(
           `Request to unpin:
 ${ipfsPath}`
@@ -279,17 +281,17 @@ ${ipfsPath}`
   IpfsController.prototype.removeFromPinUnpin = function (ipfsPath) {
     ipfsPath = ipfsPath !== undefined && ipfsPath !== null && ipfsPath.toString().trim() !== '' ? decodeURI(ipfsPath.toString().trim()) : null
     if (ipfsPath !== null) {
-      var index = this.pin.indexOf(ipfsPath)
-      if (index !== -1) {
-        this.pin.splice(index, 1)
+      var value = this.pin.get(ipfsPath)
+      if (value !== undefined) {
+        this.pin.delete(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Cancel request to Pin:
  ${ipfsPath}`
         )
       }
-      index = this.unpin.indexOf(ipfsPath)
-      if (index !== -1) {
-        this.unpin.splice(index, 1)
+      value = this.unpin.get(ipfsPath)
+      if (value !== undefined) {
+        this.unpin.delete(ipfsPath)
         $tw.ipfs.getLogger().info(
           `Cancel request to Unpin:
  ${ipfsPath}`
@@ -371,10 +373,6 @@ ${ipfsPath}`
     return this.ipfsBundle.filenamify(name, options)
   }
 
-  IpfsController.prototype.setPublicGateway = function (url) {
-    return this.ipfsBundle.setPublicGateway(url)
-  }
-
   IpfsController.prototype.getPublicGatewayUrl = function () {
     return this.ipfsBundle.getPublicGatewayUrl()
   }
@@ -395,20 +393,20 @@ ${ipfsPath}`
     return this.ipfsBundle.getDocumentUrl()
   }
 
-  IpfsController.prototype.getIpfsDefaultApi = function () {
-    return this.ipfsBundle.getIpfsDefaultApi()
+  IpfsController.prototype.getDefaultApi = function () {
+    return this.ipfsBundle.getDefaultApi()
   }
 
-  IpfsController.prototype.getIpfsDefaultGateway = function () {
-    return this.ipfsBundle.getIpfsDefaultGateway()
+  IpfsController.prototype.getDefaultGateway = function () {
+    return this.ipfsBundle.getDefaultGateway()
   }
 
-  IpfsController.prototype.getIpfsApiUrl = function () {
-    return this.ipfsBundle.getIpfsApiUrl()
+  IpfsController.prototype.getApiUrl = function () {
+    return this.ipfsBundle.getApiUrl()
   }
 
-  IpfsController.prototype.getIpfsGatewayUrl = function () {
-    return this.ipfsBundle.getIpfsGatewayUrl()
+  IpfsController.prototype.getGatewayUrl = function () {
+    return this.ipfsBundle.getGatewayUrl()
   }
 
   IpfsController.prototype.getUrl = function (url, base) {
@@ -570,7 +568,7 @@ ${url}`
         // Ignore, fallback to HTTP
       }
     }
-    const url = this.getIpfsApiUrl()
+    const url = this.getApiUrl()
     const { ipfs, provider } = await this.ipfsWrapper.getHttpIpfsClient(url)
     return {
       ipfs: ipfs,

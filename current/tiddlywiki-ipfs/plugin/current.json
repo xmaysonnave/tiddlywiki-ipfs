@@ -1,44 +1,47 @@
 {
-  "build": "210609391",
+  "build": "210619388",
   "content": [
     {
       "title": "plugin",
       "tags": "$:/ipfs/core $:/ipfs/documentation",
       "name": "$:/plugins/ipfs.json",
-      "rawHash": "1d85ca21e52780fa83ec5afe8da3e69b0335bbf46d3f1c1b9a5ad16eac84e3ec",
+      "rawHash": "725e3613fc14a340ca83091bddbc78765c49c6c4b07c3634d7e5ad9815d12e51",
       "sourceExtension": "json",
       "sourceFilename": "$_plugins_ipfs.json",
-      "sourceSize": 1089894,
-      "sourceUri": "https://dweb.link/ipfs/bafybeifq6uikgsavlju2adyncd7dr2vkwz3gdouvgkqqfkediqobr63i7u/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210609391.json",
-      "tidSize": 575,
-      "tidUri": "https://dweb.link/ipfs/bafybeigcgekgop6ayunw3pgiib2folw2xfejmybv3qgrzvvxx2ms3w5spy/$_plugins_ipfs.json.json-build.tid"
+      "sourceSize": 1090540,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeihumloun7d7seww7lukqavrfa5ne3vms4gvar3blfed3vk5w2nl44/$_plugins_ipfs.json-0.4.0-beta-tw-v5.1.23+build-210619388.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeihumloun7d7seww7lukqavrfa5ne3vms4gvar3blfed3vk5w2nl44/$_plugins_ipfs.json.json",
+      "tidSize": 699,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeihtm3dmbyefrbvqjcwduka2nbe5mvocbzscypiwb5bgczmq3nj6l4/$_plugins_ipfs.json.json-build.tid"
     },
     {
       "title": "plugin",
       "tags": "$:/ipfs/core $:/ipfs/documentation",
       "name": "$:/plugins/ipfs.zlib",
-      "rawHash": "4defb4a7e84b01d78852d4fb120b2be37f29405c2f0f2735ec5df669fc8d64c2",
+      "rawHash": "8a3c5005ea5d0f0d08356cfe6fa856d77cf67439e2b80a75dd2751f1f1d3b5f6",
       "sourceExtension": "json",
       "sourceFilename": "$_plugins_ipfs.zlib",
-      "sourceSize": 273671,
-      "sourceUri": "https://dweb.link/ipfs/bafybeif7upesvyrnwouq3pkbunpzcdkg3tz57huzwed2ing4gawr4fxzxy/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210609391.json",
-      "tidSize": 574,
-      "tidUri": "https://dweb.link/ipfs/bafybeifrhmb6esjqco4zcrtyxaayg55it7vlklnqon5u3dsoplcdtpoyuu/$_plugins_ipfs.zlib.json-build.tid"
+      "sourceSize": 273751,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeie6ua5isku6thde2bbnykp6z2wnql77aab2yaw42mpk6hkpiggh5y/$_plugins_ipfs.zlib-0.4.0-beta-tw-v5.1.23+build-210619388.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeie6ua5isku6thde2bbnykp6z2wnql77aab2yaw42mpk6hkpiggh5y/$_plugins_ipfs.zlib.json",
+      "tidSize": 698,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeiausng7uqudbtv3h4ez3mfu2duehqwqxufs2sqbeazdgfuoehvqbu/$_plugins_ipfs.zlib.json-build.tid"
     },
     {
       "title": "plugin",
       "tags": "$:/ipfs/core $:/ipfs/documentation",
       "name": "$:/plugins/ipfs.zlib.ipfs",
-      "rawHash": "8dc015bc513d7879d492d6f90533c6eede57d561a2a2f71f00c2c79174ff555c",
+      "rawHash": "b376e6f7cceea5098a1184c97aff2530bdfe851a3544a95bddc4271cf2b9dacf",
       "sourceExtension": "json",
       "sourceFilename": "$_plugins_ipfs.zlib.ipfs",
-      "sourceSize": 668,
-      "sourceUri": "https://dweb.link/ipfs/bafybeibfcc2upiassuawzcin5e6d5zvciwoiph5qptxjbydtpbzgjluz3e/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210609391.json",
-      "tidSize": 596,
-      "tidUri": "https://dweb.link/ipfs/bafybeiesvm3r3gdtt5lstifb5kpl63yky2emkb7forpwg53ebeykn7xt5a/$_plugins_ipfs.zlib.ipfs.json-build.tid"
+      "sourceSize": 673,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeihnoqc5mzswtzppdwszmmuw4o3w7wqx3obdqlxks4ivsava4eqnn4/$_plugins_ipfs.zlib.ipfs-0.4.0-beta-tw-v5.1.23+build-210619388.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeihnoqc5mzswtzppdwszmmuw4o3w7wqx3obdqlxks4ivsava4eqnn4/$_plugins_ipfs.zlib.ipfs.json",
+      "tidSize": 725,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeicczkczzqxojclu5c34rib7m4f6csyhopkv4pxdv5dakpzrhdz7i4/$_plugins_ipfs.zlib.ipfs.json-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210609391",
-  "buildUri": "https://dweb.link/ipfs/bafybeictlu3o6go44tcj3k4k7cffaej5l4f2tjoaarra6clleunrw6vf5y/210609391/"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210619388",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeigmjxn5ns6mljehccpe32alqu22fcr3lssj3gwhssqx7ooh5cxvly/210619388/"
 }

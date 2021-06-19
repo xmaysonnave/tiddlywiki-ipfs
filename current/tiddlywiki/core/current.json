@@ -1,5 +1,5 @@
 {
-  "build": "210609390",
+  "build": "210613359",
   "content": [
     {
       "title": "core",
@@ -9,9 +9,10 @@
       "sourceExtension": "json",
       "sourceFilename": "$_core.json",
       "sourceSize": 2064875,
-      "sourceUri": "https://dweb.link/ipfs/bafybeie7q334nscijyp3chxgagmqq36jr5zldqqyzozkw5bigupue5pply/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210609390.json",
-      "tidSize": 546,
-      "tidUri": "https://dweb.link/ipfs/bafybeicwmf7awfrf6bg54igzkvmwoqmk6gz7f6ger7k2c7nxncscqn3vci/$_core.json.json-build.tid"
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeifqjuykahlwrcfuxnsecrlzql6lysevklwj6gqaswhp4e3a2scg3m/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210613359.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeifqjuykahlwrcfuxnsecrlzql6lysevklwj6gqaswhp4e3a2scg3m/$_core.json.json",
+      "tidSize": 662,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeifygoupzdwexnrrws4xwhel5iif4fvbkqrbn77rfgywozggpibr7m/$_core.json.json-build.tid"
     },
     {
       "title": "core",
@@ -21,24 +22,26 @@
       "sourceExtension": "json",
       "sourceFilename": "$_core.zlib",
       "sourceSize": 452679,
-      "sourceUri": "https://dweb.link/ipfs/bafybeicw67zjd32qh7guuhnu6zikumgrnrb2tc5652imqztcbqfxforaqi/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210609390.json",
-      "tidSize": 545,
-      "tidUri": "https://dweb.link/ipfs/bafybeidgjjk5xm45wrnedfdcchqfnyuvnvhgxmhnwtjsdlzlsfx7xnkr7y/$_core.zlib.json-build.tid"
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeiefqrur56dxjrnm3c6z3mdq3ykmauhyr7uu23qxlvkcfgjwiacvoi/$_core.zlib-0.4.0-beta-tw-v5.1.23+release+build-210613359.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeiefqrur56dxjrnm3c6z3mdq3ykmauhyr7uu23qxlvkcfgjwiacvoi/$_core.zlib.json",
+      "tidSize": 661,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeid7es7onicroftkchkw6eofq5ppei5p3hrhzaahm7kuowhizvhu7a/$_core.zlib.json-build.tid"
     },
     {
       "title": "core",
       "tags": "$:/core $:/ipfs/documentation",
       "name": "$:/core.zlib.ipfs",
-      "rawHash": "b23160f70b356ead53060314d84d0147ec84c5e9098b71e84cb1c885ce748312",
+      "rawHash": "32f67a66bf4efdd59b2c25e2cc31f62c2006dc3a3cb49f7265a5b85b75bbfbd9",
       "sourceExtension": "json",
       "sourceFilename": "$_core.zlib.ipfs",
-      "sourceSize": 525,
-      "sourceUri": "https://dweb.link/ipfs/bafybeid7r6rj7klmb5w7ipzvenio6azr3kvot22p3qyknap643s7rtobgm/$_core.zlib.ipfs-0.4.0-beta-tw-v5.1.23+release+build-210609390.json",
-      "tidSize": 567,
-      "tidUri": "https://dweb.link/ipfs/bafybeib65yqofdstum235p2zrfv6a7jzdrnhufwvvsaiyjuwkzou6t6ace/$_core.zlib.ipfs.json-build.tid"
+      "sourceSize": 530,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeihgtpmxiu7le6knncomy5x3czvsz2rb6hz4a6oz57i5lltjiabmpq/$_core.zlib.ipfs-0.4.0-beta-tw-v5.1.23+release+build-210613359.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeihgtpmxiu7le6knncomy5x3czvsz2rb6hz4a6oz57i5lltjiabmpq/$_core.zlib.ipfs.json",
+      "tidSize": 688,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeicl36fosij5m6bmj24fjjbna7l4me7ivk5s5chmgplz5tt5pe2uuy/$_core.zlib.ipfs.json-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+release+build",
-  "version": "0.4.0-beta-tw-v5.1.23+release+build-210609390",
-  "buildUri": "https://dweb.link/ipfs/bafybeiatjaoblg4vnc2gkqjrurhputyytqwecypehusyucv4ghefsqhsrm/210609390/"
+  "version": "0.4.0-beta-tw-v5.1.23+release+build-210613359",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeicdpr5uiq6a7fxknjzyykmtl3fiuouscssvivdgvk66o6glqdsnca/210613359/"
 }

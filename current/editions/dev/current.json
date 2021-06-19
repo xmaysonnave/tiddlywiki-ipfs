@@ -1,20 +1,24 @@
 {
-  "build": "210609391",
-  "buildUri": "https://dweb.link/ipfs/bafybeigklkmbryneozhfydvsyiae7amqlqn3khvt66nr6yfifo62ni6eri/210609391/",
+  "build": "210619389",
   "content": [
     {
       "title": "dev",
       "tags": "$:/ipfs/editions",
       "name": "dev",
-      "rawHash": "0847e9704665b7e35d0b0d1b4d6fce804821e09a692c66920cd2fef5d693044c",
+      "faviconFilename": "favicon.ico",
+      "faviconSize": 4297,
+      "faviconUri": "https://ipfs.infura.io/ipfs/bafybeibrdxpobxvt7523yug73nu6nnnoozgycftbf3zbibpochkrl7adwe/favicon.ico",
+      "rawHash": "8a4401a152683e88b2f83f093e5efbe64ec7fdc818be40ee0b6655d147610b47",
       "sourceExtension": "html",
       "sourceFilename": "dev",
-      "sourceSize": 325219,
-      "sourceUri": "https://dweb.link/ipfs/bafybeiguuevumodlnlcd2e5fz466uv4mgr4s4afngiwettnu7yykhzc5fy/",
-      "tidSize": 446,
-      "tidUri": "https://dweb.link/ipfs/bafybeicojkvjer25a6oj7lxnrhd5xje2hqpkg7kneozayqtekvpl74va7y/$_ipfs_edition-build.tid"
+      "sourceSize": 325202,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeibrdxpobxvt7523yug73nu6nnnoozgycftbf3zbibpochkrl7adwe/",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeibrdxpobxvt7523yug73nu6nnnoozgycftbf3zbibpochkrl7adwe/",
+      "tidSize": 703,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeigb2watieqvf4o2oj6lvpw5boeevbwtxrnz5qfelcobkuvudtygzq/$_ipfs_edition-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.23+build",
-  "version": "0.4.0-beta-tw-v5.1.23+build-210609391"
+  "version": "0.4.0-beta-tw-v5.1.23+build-210619389",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeifyhslrhbrokc5awbepaysjxxjjmwzkzvghppmuerd5vbur65re3q/210619389/"
 }

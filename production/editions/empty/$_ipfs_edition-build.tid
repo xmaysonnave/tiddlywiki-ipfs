@@ -1,12 +1,16 @@
 title: $:/ipfs/edition-build
 tags: $:/ipfs/editions
 type: text/vnd.tiddlywiki
-build: 210609391
 name: empty
-version: 0.4.0-beta-tw-v5.1.23+build-210609391
-sourceSize: 37085
+build: 210619389
+version: 0.4.0-beta-tw-v5.1.23+build-210619389
+faviconFilename: undefined
+faviconSize: 4297
+faviconUri: https://ipfs.infura.io/ipfs/bafybeid3sekbvtgcshzprghxqk4zg2rhegfbmtvdfaqoxrnyfwi5tolqdy/favicon.ico
+sourceSize: 37152
 sourceExtension: html
 sourceFilename: empty
-sourceUri: ipfs://bafybeibi2epglsa4gaz56wdtlwa6ct4zngxdekgitnul5bbtw4vb6jatnq/
+sourceUri: ipfs://bafybeid3sekbvtgcshzprghxqk4zg2rhegfbmtvdfaqoxrnyfwi5tolqdy/
+latestUri: https://ipfs.infura.io/ipfs/bafybeid3sekbvtgcshzprghxqk4zg2rhegfbmtvdfaqoxrnyfwi5tolqdy/
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

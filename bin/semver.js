@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 'use strict'
 
-const beautify = require('json-beautify')
 const constants = require('bin/constants.js')
 const createKeccakHash = require('keccak')
 const dotenv = require('dotenv')
@@ -12,7 +11,7 @@ const ipfsUtils = new IpfsUtils()
 const ipfsBundle = ipfsUtils.ipfsBundle
 
 // bluelight.link
-const IPNS_CID_RAW_BUILD = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
+const IPNS_PRODUCTION_RAW = 'k51qzi5uqu5dh9giahc358e235iqoncw9lpyc6vrn1aqguruj2nncupmbv9355'
 
 module.exports = async function main (name, extension, dir, env, version) {
   // Init
@@ -65,7 +64,7 @@ module.exports = async function main (name, extension, dir, env, version) {
   if (raw == null) {
     throw new Error(`Unknown build output: ${normalizedName}`)
   }
-  const rawBuildCid = process.env.IPNS_CID_RAW_BUILD ? `${process.env.IPNS_CID_RAW_BUILD}` : IPNS_CID_RAW_BUILD
+  const rawBuildCid = process.env.IPNS_PRODUCTION_RAW ? `${process.env.IPNS_PRODUCTION_RAW}` : IPNS_PRODUCTION_RAW
   const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}` : 'https://dweb.link'
   // Keccak
   const keccak = createKeccakHash('keccak256')
@@ -139,7 +138,7 @@ version: ${version}
 ${normalizedName}-${version}`
     fs.writeFileSync(`./build/output/${dir}/$_ipfs_edition-build.tid`, tid, 'utf8')
   }
-  fs.writeFileSync(`./build/output/${dir}/${normalizedName}-build.json`, beautify(newBuild, null, 2, 80), 'utf8')
+  fs.writeFileSync(`./build/output/${dir}/${normalizedName}-build.json`, ipfsUtils.getJson(newBuild), 'utf8')
   // Done
   return newBuild
 }

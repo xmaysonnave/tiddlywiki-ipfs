@@ -1,22 +1,19 @@
 title: #ipfs# Quick Start
-modified: 20210608094915385
+modified: 20210610094915385
 tags: $:/ipfs/documentation TableOfContents
 type: text/vnd.tiddlywiki
 
 <h2>Quick Start</h2>
 
-<h3>Documentaton</h3>
-<p>[[#ipfs# Documentation]]</p>
-
 <h3>Requirement</h3>
 <ul>
   <li>Browsers
     <ul>
-      <li>Chrome family
+      <li>Chromium family
         <ul>
+          <li>Brave</li>
           <li>Chrome</li>
           <li>Chromium</li>
-          <li>Brave</li>
           <li>Edge</li>
           <li>Vivaldi</li>
         </ul>
@@ -30,12 +27,13 @@ type: text/vnd.tiddlywiki
       <li>[ext[Metamask|https://metamask.io/]]</li>
     </ul>
   </li>
-  <li>Primary Platforms
+  <li>Development Platforms
     <ul>
       <li>[ext[Android|https://www.android.com/]]</li>
       <li>[ext[Debian|https://debian.org/]]</li>
     </ul>
   </li>
+  <li>[[Target Platforms|#ipfs# Browsers]]</li>
 </ul>
 
 <h3>New to ~TiddlyWiki, IPFS and Ethereum</h3>
@@ -59,8 +57,9 @@ type: text/vnd.tiddlywiki
   <li>Drag and Drop the required components:
     <ul>
       <li>`$:/boot/boot.js` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/boot/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-            <li>`$:/library/ipfs.js`  <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
-      <li>`$:/plugins/ipfs` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>    </ul>
+      <li>`$:/library/ipfs.js`  <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/library/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+      <li>`$:/plugins/ipfs` <$ipfslink value="https://tiddly.bluelightav.eth/tiddlywiki-ipfs/plugin/latest-build/">[img[Available on IPFS|$:/ipfs/core/icons/ipfs]]</$ipfslink></li>
+    </ul>
   </li>
   <li>Save ~TiddlyWiki to the filesystem</li>
   <li>Run ~TiddlyWiki</li>
@@ -69,7 +68,7 @@ type: text/vnd.tiddlywiki
 
 <h3>Advanced</h3>
 <ul>
-  <li>Install and Run a decentralized IPFS node:
+  <li>Install and run a decentralized IPFS node:
     <ul>
       <li>[ext[IPFS Desktop|https://ipfs.io/#install]]</li>
       <li>[ext[Command-line install|https://ipfs.io/#install]]</li>
@@ -84,6 +83,8 @@ type: text/vnd.tiddlywiki
   <li>Fork the [ext[IPFS with TiddlyWiki|https://github.com/xmaysonnave/tiddlywiki-ipfs/tree/develop]] project</li>
   <li>Use the command-line to build with Node.js</li>
 </ul>
+
+<h3>[[Documentation|#ipfs# Documentation]]</h3>
 
 <h3>~TiddlyWiki Third parties plugin</h3>
 <ul>

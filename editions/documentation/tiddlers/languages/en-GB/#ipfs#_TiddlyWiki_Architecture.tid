@@ -1,5 +1,5 @@
-title: #ipfs# ~TiddlyWiki Architecture
-modified: 20210601094915385
+title: #ipfs# TiddlyWiki Architecture
+modified: 20210610094915385
 tags: $:/ipfs/documentation [[#ipfs# Architecture]]
 type: text/vnd.tiddlywiki
 
@@ -18,7 +18,7 @@ type: text/vnd.tiddlywiki
 
 <h3>Structure</h3>
 <p>
-  ~TiddlyWiki follows a standard <b>html</b> page [[model|$:/core/templates/tiddlywiki5.html]].
+  ~TiddlyWiki follows a standard <b>html</b> page [ext[model|https://www.w3.org/standards/webdesign/htmlcss]].
 </p>
 <ul>
   <li>A <b>&lt;!DOCTYPE&gt;</b> declaration</li>
@@ -27,17 +27,17 @@ type: text/vnd.tiddlywiki
   <li>A body <b>&lt;body&gt;</b> section</li>
 </ul>
 <p>
-  ~TiddlyWiki introduces several high level sections:
+  ~TiddlyWiki defines and uses as storage placeholders several <b>&lt;div&gt;</b> elements in the <b>&lt;body&gt;</b> section:
 </p>
 <ul>
-  <li>An [[encryptedStoreArea|$:/core/templates/store.area.template.html]]</li>
-  <li>A [[storeArea|$:/core/templates/store.area.template.html]]</li>
+  <li>[[encryptedStoreArea|$:/core/templates/store.area.template.html]]</li>
+  <li>[[storeArea|$:/core/templates/store.area.template.html]]</li>
 </ul>
 <p>
   IPFS with ~TiddlyWiki introduces a new section:
 </p>
 <ul>
-  <li>A [[compressedStoreArea|$:/core/templates/store.area.template.html]]</li>
+  <li>[[compressedStoreArea|$:/core/templates/store.area.template.html]]</li>
 </ul>
 
 <h3>Kernel Architecture</h3>
@@ -56,70 +56,7 @@ type: text/vnd.tiddlywiki
 
 </p>
 
-<h3>Components</h3>
-<p>
-  The browser loads the <b>html</b> content and process the application before ~TiddlyWiki is able to run. The template [[$:/core/templates/tiddlywiki5.html]] describes what the browser loads.
-</p>
-
-<h4>Preboot assets</h4>
-<ul>
-  <li>[[$:/favicon.ico]]</li>
-  <li>[[$:/boot/boot.css]]</li>
-  <li>[[$:/boot/bootprefix.js]]</li>
-  <li>[[$:/boot/boot.js]]</li>
-  <li>`libraryModules`
-    <ul>
-      <li>[[$:/library/ipfs.js]]</li>
-      <li>[[$:/library/sjcl.js]]</li>
-    </ul>
-  </li>
-</ul>
-<p>
-  Those assets are loaded by the browser and built as Tiddlers.
-</p>
-
-<h4>Plugin and Library Tiddlers</h4>
-<p>
-  ~TiddlyWiki loads ~JavaScript Tiddlers (Libraries, Plugins) and run them as [ext[strings|https://humanwhocodes.com/blog/2013/06/25/eval-isnt-evil-just-misunderstood/]].
-</p>
-
-> [[$:/boot/boot.js]]
-```
-  /**
-   * Run code globally with specified context variables in scope
-   */
-  $tw.utils.evalGlobal = function (code, context, filename) {
-    ...
-    // Compile the code into a function
-    var fn
-    if ($tw.browser) {
-      /*eslint no-eval:"off"*/
-      fn = window.eval(code + '\n\n//# sourceURL=' + filename)
-    } else {
-      fn = vm.runInThisContext(code, $tw.wiki.getFileName(filename))
-    }
-    ...
-  }
-```
-
-<p>
-  ~TiddlyWiki Plugins:
-</p>
-<ul>
-  <li>[[$:/core]]</li>
-</ul>
-<p>Or Libraries:</p>
-<ul>
-  <li>[[$:/core/modules/utils/base64-utf8/base64-utf8.module.js]]</li>
-</ul>
-<p>
-  are loaded and processed by ~TiddlyWiki.
-</p>
-<p>
-  Plugins store their child Tiddlers while Libraries store their ~JavaScript programs in their respective <b>text</b> field. They are not processed by the browsers as inline or remote resources with standard <b>html</b> <b>&lt;script&gt;</b> tags.
-</p>
-
-<h4>Tiddlers</h4>
+<h3>Tiddlers</h3>
 <p>
   Tiddlers are the smallest ~TiddlyWiki components and require at least a <b>title</b> field.
 </p>
@@ -140,17 +77,188 @@ type: text/vnd.tiddlywiki
 
 [img[#img# Hello Tiddly World]]
 
-<h4>Shadow Tiddler</h4>
+<h3>Components</h3>
 <p>
-  A Shadow Tiddler is an immutable Plugin child Tiddler.
-  A Shadow Tiddler is editable and saved as an independent copy in the [[StoreArea|$:/core/templates/store.area.template.html]]
-  shadowing the Plugin source Tiddler.
+  The browser loads the <b>html</b> content and process it before starting ~TiddlyWiki.
+  The template [[$:/core/templates/tiddlywiki5.html]] defines the ~TiddlyWiki <b>&lt;html&gt;</b> document.
 </p>
 
-<h4>System Tiddler</h4>
+<h4>Preboot assets</h4>
+<ul>
+  <li><b>favicon.ico</b> or <b>favicon.png</b></li>
+  <li>[[$:/boot/boot.css]]</li>
+  <li>[[$:/boot/bootprefix.js]]</li>
+  <li>[[$:/boot/boot.js]]</li>
+  <li>[[$:/library/ipfs.js]]</li>
+  <li>[[$:/library/sjcl.js]]</li>
+</ul>
 <p>
- A System Tiddler is a Tiddler who has a title who starts with:
+  Those assets are loaded, processed and rendered by the browser and then built as tiddlers once ~TiddlyWiki has started.
+</p>
+<p>
+  The <b>favicon</b> is processed differently, if available in the current document directory, it will be loaded by the browser.
+  ~TiddlyWiki loads the [[$:/favicon.ico]] and override the <b>faviconLink</b> when starting up.
+</p>
+
+> [[tiddlywiki.html|$:/core/templates/tiddlywiki5.html]]
+```
+...
+<head>
+...
+<link id="faviconLink" rel="shortcut icon" href="favicon.png"/>
+...
+</head>
+...
+```
+
+<p>
+  Preboot assets are described as standard HTML elements:
+</p>
+
+> [[tiddlywiki.html|$:/core/templates/tiddlywiki5.html]]
+```
+...
+<body>
+...
+<link data-tiddler-_canonical_uri="$_boot_boot.css"
+  data-tiddler-build="210606481"
+  data-tiddler-tags="$:/isIpfs"
+  data-tiddler-title="$:/boot/boot.css"
+  data-tiddler-type="text/css"
+  data-tiddler-version="0.4.0-beta-tw-v5.1.24+build-210606481"
+  crossorigin="anonymous"
+  rel="stylesheet"
+  href="$_boot_boot.css"
+/>
+...
+<script data-tiddler-_canonical_uri="$_library_sjcl.js"
+  data-tiddler-build="210606482"
+  data-tiddler-library="yes"
+  data-tiddler-tags="$:/isIpfs"
+  data-tiddler-title="$:/library/sjcl.js"
+  data-tiddler-type="application/javascript"
+  data-tiddler-version="1.0.8+release-210606482"
+  crossorigin="anonymous"
+  type="text/javascript"
+  src="$_library_sjcl.js"
+/>
+...
+</body>
+...
+```
+
+<p>
+  Preboot assets libraries are stored in the <b>&lt;body&gt;</b> section as a <b>&lt;div&gt;</b> element:
+</p>
+
+> [[tiddlywiki.html|$:/core/templates/tiddlywiki5.html]]
+```
+...
+<body>
+...
+<div id="libraryModules" style="display:none;">
+...
+</div>
+...
+</body>
+...
+```
+
+<p>
+  Preboot assets libraries have the following fields:
+</p>
+
+> [[$:/library/ipfs.js]]
+```
+{
+  ...
+  "type": "application/javascript",
+  "library": "yes"
+  ...
+}
+```
+
+<h4>~JavaScript tiddlers</h4>
+<p>
+  ~TiddlyWiki loads ~JavaScript content from different types.
 </p>
 <ul>
-  <li>`$:/`</li>
+  <li><b>application/javascript</b></li>
+  <li><b>application/json</b>
+    <ul><li>JSON tiddlers are parsed as ~JavaScript objects</li></ul>
+  </li>
+  <li><b>application/x-tiddler-dictionary</b>
+    <ul><li>Tiddlers are parsed as sequence of name:value pairs</li></ul>
+  </li>
 </ul>
+<p>
+  ~JavaScript content is [ext[interpreted|https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!]] as [ext[strings|https://humanwhocodes.com/blog/2013/06/25/eval-isnt-evil-just-misunderstood/]].
+</p>
+
+> [[$:/boot/boot.js]]
+```
+  ...
+  /**
+   * Run code globally with specified context variables in scope
+   */
+  $tw.utils.evalGlobal = function (code, context, filename) {
+    // Compile the code into a function
+    var fn
+    if ($tw.browser) {
+      /*eslint no-eval:"off"*/
+      fn = window.eval(code + '\n\n//# sourceURL=' + filename)
+    } else {
+      fn = vm.runInThisContext(code, $tw.wiki.getFileName(filename))
+    }
+  }
+  ...
+```
+
+<p>
+  ~TiddlyWiki Plugins:
+</p>
+<ul>
+  <li>[[$:/plugins/ipfs]]</li>
+</ul>
+<p>Or ~JavaScript tiddler libraries:</p>
+<ul>
+  <li>[[$:/library/ipfs-http-client.min.js]]</li>
+</ul>
+<p>
+  are loaded and processed by ~TiddlyWiki.
+</p>
+<p>
+  Plugins store their child tiddlers while tiddler libraries store their ~JavaScript content in their respective <b>text</b> field.
+</p>
+
+> [[$:/plugins/ipfs]]
+```
+{
+  ...
+  "plugin-type": "plugin",
+  "text": "{\n    \"tiddlers\": ...}\n    }\n}"
+  ...
+}
+```
+
+> [[$:/library/ipfs-http-client.min.js]]
+```
+{
+  ...
+  "module-type": "library",
+  "text": "!function(e){if(\"object\"...}));\n"
+  ...
+}
+```
+
+<h4>Shadow tiddler</h4>
+<p>
+  A Shadow tiddler is an immutable Plugin child tiddler.
+  A Shadow tiddler is editable and saved as an independent copy in the [[StoreArea|$:/core/templates/store.area.template.html]]
+  shadowing the Plugin source tiddler.
+</p>
+
+<h4>System tiddler</h4>
+<p>
+  A System tiddler is a tiddler who has a title who starts with the string `$:/`.
+</p>

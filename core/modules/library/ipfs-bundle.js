@@ -78,36 +78,32 @@ IpfsBundle.prototype.getDocumentUrl = function () {
   return this.ipfsUrl.getDocumentUrl()
 }
 
-IpfsBundle.prototype.setPublicGateway = function (url) {
-  return this.ipfsUrl.setPublicGateway(url)
-}
-
 IpfsBundle.prototype.getPublicGatewayUrl = function () {
   return this.ipfsUrl.getPublicGatewayUrl()
 }
 
-IpfsBundle.prototype.getIpfsDefaultApiUrl = function () {
-  return this.ipfsUrl.getIpfsDefaultApiUrl()
+IpfsBundle.prototype.getDefaultApiUrl = function () {
+  return this.ipfsUrl.getDefaultApiUrl()
 }
 
-IpfsBundle.prototype.getIpfsDefaultGatewayUrl = function () {
-  return this.ipfsUrl.getIpfsDefaultGatewayUrl()
+IpfsBundle.prototype.getDefaultGatewayUrl = function () {
+  return this.ipfsUrl.getDefaultGatewayUrl()
 }
 
-IpfsBundle.prototype.getIpfsDefaultApi = function () {
-  return this.ipfsUrl.getIpfsDefaultApi()
+IpfsBundle.prototype.getDefaultApi = function () {
+  return this.ipfsUrl.getDefaultApi()
 }
 
-IpfsBundle.prototype.getIpfsDefaultGateway = function () {
-  return this.ipfsUrl.getIpfsDefaultGateway()
+IpfsBundle.prototype.getDefaultGateway = function () {
+  return this.ipfsUrl.getDefaultGateway()
 }
 
-IpfsBundle.prototype.getIpfsApiUrl = function () {
-  return this.ipfsUrl.getIpfsApiUrl()
+IpfsBundle.prototype.getApiUrl = function () {
+  return this.ipfsUrl.getApiUrl()
 }
 
-IpfsBundle.prototype.getIpfsGatewayUrl = function () {
-  return this.ipfsUrl.getIpfsGatewayUrl()
+IpfsBundle.prototype.getGatewayUrl = function () {
+  return this.ipfsUrl.getGatewayUrl()
 }
 
 IpfsBundle.prototype.getUrl = function (url, base) {
@@ -409,8 +405,8 @@ IpfsBundle.prototype.addAll = async function (client, source, options) {
   return await this.ipfsLibrary.addAll(client, source, options)
 }
 
-IpfsBundle.prototype.hasPin = async function (client, key, type, ipfsPath) {
-  return await this.ipfsLibrary.hasPin(client, key, type, ipfsPath)
+IpfsBundle.prototype.getPin = async function (client, key, type, ipfsPath, timeout) {
+  return await this.ipfsLibrary.getPin(client, key, type, ipfsPath, timeout)
 }
 
 IpfsBundle.prototype.dagGet = async function (client, cid, options) {

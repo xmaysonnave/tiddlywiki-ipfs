@@ -1,12 +1,13 @@
 title: $:/core.json-build
 tags: $:/core $:/ipfs/documentation
 type: text/vnd.tiddlywiki
-build: 210609390
 name: $:/core.json
-version: 0.4.0-beta-tw-v5.1.23+release+build-210609390
+build: 210613359
+version: 0.4.0-beta-tw-v5.1.23+release+build-210613359
 sourceSize: 2064875
 sourceExtension: json
 sourceFilename: $_core.json
-sourceUri: ipfs://bafybeie7q334nscijyp3chxgagmqq36jr5zldqqyzozkw5bigupue5pply/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210609390.json
+sourceUri: ipfs://bafybeifqjuykahlwrcfuxnsecrlzql6lysevklwj6gqaswhp4e3a2scg3m/$_core.json-0.4.0-beta-tw-v5.1.23+release+build-210613359.json
+latestUri: https://ipfs.infura.io/ipfs/bafybeifqjuykahlwrcfuxnsecrlzql6lysevklwj6gqaswhp4e3a2scg3m/$_core.json.json
 
 <$ipfslink value={{!!sourceUri}}>{{!!name}}-{{!!version}}</$ipfslink>

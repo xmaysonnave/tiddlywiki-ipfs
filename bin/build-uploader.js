@@ -7,22 +7,17 @@
  * https://github.com/ipfs/js-ipfs/tree/master/docs/core-api
  **/
 
-const beautify = require('json-beautify')
 const dotenv = require('dotenv')
 const fs = require('fs')
-const { create: IpfsHttpClient } = require('ipfs-http-client')
 const path = require('path')
 const IpfsUtils = require('bin/ipfs-utils.js')
 const ipfsUtils = new IpfsUtils()
 const ipfsBundle = ipfsUtils.ipfsBundle
-var child = []
+const child = []
 
-const shortTimeout = 6000
-const longTimeout = 4 * 60 * shortTimeout
-
-async function processContent (apiParameters, publicGateway, parentDir) {
-  parentDir = parentDir !== undefined && parentDir !== null ? parentDir : ''
-  const currentDirPathname = path.resolve(`./current/${parentDir}`)
+async function processContent (apiUrl, gateway, publicGateway, parentPath) {
+  parentPath = parentPath !== undefined && parentPath !== null && parentPath.trim() !== '' ? parentPath.trim() : '.'
+  const currentDirPathname = path.resolve(`./current/${parentPath}`)
   if (fs.existsSync(currentDirPathname) === false) {
     return null
   }
@@ -34,13 +29,13 @@ async function processContent (apiParameters, publicGateway, parentDir) {
   var currentPathname = null
   const links = []
   // Client
-  const api = IpfsHttpClient(apiParameters)
+  const api = ipfsUtils.getApiClient(ipfsUtils.longTimeout, apiUrl)
   // Process
   for (var i = 0; i < content.length; i++) {
-    const contentPathname = parentDir !== undefined && parentDir !== null && parentDir.trim() !== '' ? `${parentDir}/${content[i]}` : `${content[i]}`
+    const contentPathname = parentPath.trim() !== '' ? `${parentPath}/${content[i]}` : `${content[i]}`
     const pathname = path.resolve(`./current/${contentPathname}`)
     if (fs.statSync(pathname).isDirectory()) {
-      const childNode = await processContent(apiParameters, publicGateway, contentPathname)
+      const childNode = await processContent(apiUrl, gateway, publicGateway, contentPathname)
       if (childNode !== undefined && childNode !== null) {
         const cidV1 = ipfsBundle.cidToCidV1(childNode.cid)
         links.push({
@@ -50,11 +45,17 @@ async function processContent (apiParameters, publicGateway, parentDir) {
         })
         const dagNode = await ipfsBundle.dagGet(api, cidV1, {
           localResolve: false,
-          timeout: shortTimeout,
+          timeout: ipfsUtils.shortTimeout,
         })
         if (dagNode !== undefined && dagNode !== null && dagNode.value !== undefined && dagNode.value !== null) {
           if (dagNode.value.Links !== undefined && dagNode.value.Links !== null && dagNode.value.Links.length === 1) {
-            child.push(`/ipfs/${cidV1}/${dagNode.value.Links[0].Name}`)
+            const path = `/ipfs/${cidV1}/${dagNode.value.Links[0].Name}`
+            child.push({
+              name: `${parentPath}/${content[i]}`,
+              path: path,
+            })
+            console.log(`*** ${content[i]}:
+ ${gateway}${path} ***`)
           }
         }
       }
@@ -68,7 +69,7 @@ async function processContent (apiParameters, publicGateway, parentDir) {
         const currentFile = current.content[j].sourceUri.split('/').pop()
         if (currentFile.endsWith('.html')) {
           var cid = await ipfsBundle.resolveIpfsContainer(api, current.content[j].sourceUri)
-          var stat = await ipfsBundle.objectStat(api, cid, shortTimeout)
+          var stat = await ipfsBundle.objectStat(api, cid, ipfsUtils.shortTimeout)
           var cidV1 = ipfsBundle.cidToCidV1(cid)
           var name = currentFile.slice(0, currentFile.length - '.html'.length)
           links.push({
@@ -77,12 +78,13 @@ async function processContent (apiParameters, publicGateway, parentDir) {
             Hash: cidV1,
           })
         } else {
+          // Source
           var { cid } = await ipfsBundle.resolveIpfs(api, current.content[j].sourceUri)
-          var stat = await ipfsBundle.objectStat(api, cid, shortTimeout)
+          var stat = await ipfsBundle.objectStat(api, cid, ipfsUtils.shortTimeout)
           var cidV1 = ipfsBundle.cidToCidV1(cid)
-          const dagNode = await ipfsBundle.dagGet(api, cidV1, {
+          var dagNode = await ipfsBundle.dagGet(api, cidV1, {
             localResolve: false,
-            timeout: shortTimeout,
+            timeout: ipfsUtils.shortTimeout,
           })
           var name = null
           if (ipfsBundle.isDirectory(dagNode.value.Data)) {
@@ -95,9 +97,26 @@ async function processContent (apiParameters, publicGateway, parentDir) {
             Tsize: stat.CumulativeSize,
             Hash: cidV1,
           })
+          // Latest
+          if (current.content[j].latestUri) {
+            var { cid } = await ipfsBundle.resolveIpfs(api, current.content[j].latestUri)
+            var stat = await ipfsBundle.objectStat(api, cid, ipfsUtils.shortTimeout)
+            var cidV1 = ipfsBundle.cidToCidV1(cid)
+            var dagNode = await ipfsBundle.dagGet(api, cidV1, {
+              localResolve: false,
+              timeout: ipfsUtils.shortTimeout,
+            })
+            var name = current.content[j].latestUri.split('/').pop()
+            links.push({
+              Name: name,
+              Tsize: stat.CumulativeSize,
+              Hash: cidV1,
+            })
+          }
         }
+        // Tid
         var { cid } = await ipfsBundle.resolveIpfs(api, current.content[j].tidUri)
-        var stat = await ipfsBundle.objectStat(api, cid, shortTimeout)
+        var stat = await ipfsBundle.objectStat(api, cid, ipfsUtils.shortTimeout)
         var cidV1 = ipfsBundle.cidToCidV1(cid)
         var name = current.content[j].tidUri.split('/').pop()
         links.push({
@@ -119,55 +138,28 @@ async function processContent (apiParameters, publicGateway, parentDir) {
       },
     ])
     var buildNodeCid = ipfsBundle.cidToCidV1(node.cid)
-    current.buildUri = `${publicGateway}${buildNodeCid}/${current.build}/`
-    fs.writeFileSync(currentPathname, beautify(current, null, 2, 80), 'utf8')
+    current.buildUri = `${publicGateway}/ipfs/${buildNodeCid}/${current.build}/`
+    fs.writeFileSync(currentPathname, ipfsUtils.getJson(current), 'utf8')
   }
   return node
 }
 
-module.exports = async function main (load) {
+module.exports = async function main () {
   // Init
   const dotEnv = dotenv.config()
   if (dotEnv.error) {
     throw dotEnv.error
   }
+  require('events').EventEmitter.defaultMaxListeners = Infinity
   child.length = 0
-  // build
-  var build = {}
-  const buildPath = `./current/build.json`
-  if (fs.existsSync(buildPath)) {
-    build = JSON.parse(fs.readFileSync(buildPath))
-  }
-  // Params
-  load = load !== undefined && load !== null ? load : process.env.LOAD ? process.env.LOAD === 'true' || process.env.LOAD === true : true
-  const apiUrl = new URL(process.env.IPFS_API ? process.env.IPFS_API : 'https://ipfs.infura.io:5001')
-  const protocol = apiUrl.protocol.slice(0, -1)
-  var port = apiUrl.port
-  if (port === undefined || port == null || port.trim() === '') {
-    port = 443
-    if (protocol === 'http') {
-      port = 80
-    }
-  }
-  const apiParameters = {
-    protocol: protocol,
-    host: apiUrl.hostname,
-    port: port,
-    timeout: longTimeout,
-  }
-  const gateway = process.env.IPFS_GATEWAY ? `${process.env.IPFS_GATEWAY}/ipfs/` : 'https://ipfs.infura.io/ipfs/'
-  var publicGateway = process.env.IPFS_PUBLIC_GATEWAY ? `${process.env.IPFS_PUBLIC_GATEWAY}/ipfs/` : null
-  if (publicGateway == null) {
-    publicGateway = 'https://dweb.link/ipfs/'
-  }
-  console.log('***')
-  console.log(`*** Upload build:
- api: ${apiUrl} ***`)
-  const node = await processContent(apiParameters, publicGateway)
-  build.child = child
+  var api = ipfsUtils.getApiClient()
+  const { build } = await ipfsUtils.loadBuild(api)
+  var api = ipfsUtils.getApiClient(ipfsUtils.longTimeout)
+  console.log(`*** Uploader: ${ipfsUtils.apiUrl} ***`)
+  const node = await processContent(ipfsUtils.apiUrl, ipfsUtils.gateway, ipfsUtils.publicGateway)
+  build.buildChild = child
   build.sourceSize = node.size
-  build.sourceUri = `${publicGateway}${node.cid}/`
-  fs.writeFileSync(`./current/build.json`, beautify(build, null, 2, 80), 'utf8')
-  console.log(`*** Uploaded build:
- ${gateway}${node.cid} ***`)
+  build.sourceUri = `${ipfsUtils.publicGateway}/ipfs/${node.cid}/`
+  fs.writeFileSync(`./current/build.json`, ipfsUtils.getJson(build), 'utf8')
+  console.log(`*** Uploader: ${ipfsUtils.gateway}/ipfs/${node.cid}/ ***`)
 }

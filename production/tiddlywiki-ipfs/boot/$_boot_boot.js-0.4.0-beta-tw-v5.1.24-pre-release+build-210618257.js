@@ -2463,6 +2463,7 @@ var bootsuffix = function ($tw) {
     path = require('path')
     vm = require('vm')
     if ($tw.ipfs === undefined || $tw.ipfs == null) {
+      globalThis.$tw = $tw
       const IpfsBundle = require('core/modules/library/ipfs-bundle.js').IpfsBundle
       $tw.ipfs = new IpfsBundle()
       $tw.ipfs.init()
@@ -2588,56 +2589,19 @@ var bootsuffix = function ($tw) {
     if (url instanceof URL === false) {
       url = new URL(url)
     }
-    var options = null
     timeout = timeout !== undefined && timeout !== null ? timeout : 4 * 60 * 4000
-    const optionsController = new AbortController()
-    const optionsId = setTimeout(() => optionsController.abort(), timeout)
-    var fetch = $tw.node ? globalThis.fetch || require('node-fetch') : globalThis.fetch
-    try {
-      var params = {
-        method: 'options',
-        signal: optionsController.signal,
-      }
-      options = await fetch(url, params)
-      if (options === undefined || options == null || options.ok === false) {
-        throw new Error(`Unexpected response ${options.statusText}`)
-      }
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        $tw.boot.getLogger().error(new Error(`Timeout exceeded: ${timeout} ms`))
-      } else {
-        $tw.boot.getLogger().error(new Error(`Options error: ${error.message}`))
-      }
-    } finally {
-      globalThis.clearTimeout(optionsId)
-    }
+    const fetch = $tw.node ? globalThis.fetch || require('node-fetch') : globalThis.fetch
     const responseController = new AbortController()
     const responseId = setTimeout(() => responseController.abort(), timeout)
     try {
-      var newUrl = null
-      if (options && options.ok) {
-        if (options.url !== undefined && options.url !== null) {
-          newUrl = new URL(options.url)
-        }
-        var location = options.headers.get('Location')
-        if (newUrl !== null && location !== undefined && location !== null) {
-          newUrl = new URL(location)
-        }
-      }
-      if (newUrl == null) {
-        newUrl = url
-      }
       // https://fetch.spec.whatwg.org/#cors-safelisted-method
       // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
       var params = {
-        headers: {
-          'Accept-Encoding': 'identity;q=0, *;q=0', // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
-        },
         method: 'get',
         mode: 'cors',
         signal: responseController.signal,
       }
-      var response = await fetch(newUrl, params)
+      var response = await fetch(url, params)
       if (response === undefined || response == null || response.ok === false) {
         throw new Error(`Unexpected response ${response.statusText}`)
       }
@@ -2676,9 +2640,11 @@ var bootsuffix = function ($tw) {
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        $tw.boot.getLogger().error(new Error(`Fetch, timeout exceeded: ${timeout} ms`))
+        $tw.boot.getLogger().info(`*** Fetch, ${url}`)
+        $tw.boot.getLogger().info(` timeout exceeded: ${timeout} ms ***`)
       } else {
-        $tw.boot.getLogger().error(new Error(`Fetch, error: ${error.message}`))
+        $tw.boot.getLogger().info(`*** Fetch, ${url}`)
+        $tw.boot.getLogger().info(` error: ${error.message} ***`)
       }
     } finally {
       globalThis.clearTimeout(responseId)
@@ -2847,13 +2813,9 @@ var bootsuffix = function ($tw) {
         .loadToUtf8(normalizedUrl, password)
         .then(data => {
           if (data !== undefined && data !== null) {
-            var { content, status, type } = data
+            var { content } = data
             modificationFields.text = content
             $tw.wiki.addTiddler(new $tw.Tiddler(creationFields, tiddler, removeFields, modificationFields))
-            $tw.boot.getLogger().info(
-              `#kernel# Embedded, status: [${status}], type: ${type}, size: ${content.length}:
- ${normalizedUrl}`
-            )
           }
         })
         .catch(error => {
@@ -3026,6 +2988,11 @@ var bootsuffix = function ($tw) {
           }
         } else if (method === 'decrypt') {
           key = key || currentPrivateKey
+          if (!key) {
+            if (process && process.env[$tw.config.ethereumPrivateKey]) {
+              key = process.env[$tw.config.ethereumPrivateKey]
+            }
+          }
           if (key) {
             var tStart = new Date()
             output = sigUtil.decrypt(JSON.parse(text), key)
@@ -4013,6 +3980,13 @@ var bootsuffix = function ($tw) {
   $tw.boot.startup = async function (options) {
     options = options || {}
     $tw.boot.initStartup(options)
+    $tw.config.api = 'IPFS_API'
+    $tw.config.ethereumPrivateKey = 'ETHEREUM_PRIVATE_KEY'
+    $tw.config.gateway = 'IPFS_GATEWAY'
+    $tw.config.infuraProjectId = 'INFURA_PROJECT_ID'
+    $tw.config.infuraProjectSecret = 'INFURA_PROJECT_SECRET'
+    $tw.config.infuraEndpoint = 'INFURA_ENDPOINT'
+    $tw.config.publicGateway = 'IPFS_PUBLIC_GATEWAY'
     $tw.boot.loadStartup(options)
     await $tw.boot.execStartup(options)
   }

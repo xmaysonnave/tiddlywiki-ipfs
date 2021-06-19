@@ -30,57 +30,52 @@ IpfsUrl.prototype.filenamify = function (filename, options) {
   return filenamify(filename, options)
 }
 
-IpfsUrl.prototype.setPublicGateway = function (url) {
-  var publicGateway = null
-  try {
-    publicGateway = new URL(url)
-  } catch (error) {
-    return false
-  }
-  this.publicGateway = publicGateway
-  return true
-}
-
 IpfsUrl.prototype.getPublicGatewayUrl = function () {
   try {
-    if (this.publicGateway !== undefined && this.publicGateway !== null) {
-      return this.publicGateway
+    if (process && process.env[$tw.config.publicGateway]) {
+      return process.env[$tw.config.publicGateway]
     }
-    return this.getUrl($tw.utils.getIpfsSaverGatewayUrl())
+    return this.getUrl($tw.utils.getTiddlerGatewayUrl())
   } catch (error) {
-    return this.getIpfsDefaultGatewayUrl()
+    return this.getDefaultGatewayUrl()
   }
 }
 
-IpfsUrl.prototype.getIpfsDefaultApiUrl = function () {
-  return new URL(this.getIpfsDefaultApi())
+IpfsUrl.prototype.getDefaultApiUrl = function () {
+  return new URL(this.getDefaultApi())
 }
 
-IpfsUrl.prototype.getIpfsDefaultGatewayUrl = function () {
-  return new URL(this.getIpfsDefaultGateway())
+IpfsUrl.prototype.getDefaultGatewayUrl = function () {
+  return new URL(this.getDefaultGateway())
 }
 
-IpfsUrl.prototype.getIpfsApiUrl = function () {
+IpfsUrl.prototype.getApiUrl = function () {
   try {
-    return this.getUrl($tw.utils.getIpfsSaverApiUrl())
+    if (process && process.env[$tw.config.api]) {
+      return process.env[$tw.config.api]
+    }
+    return this.getUrl($tw.utils.getTiddlerApiUrl())
   } catch (error) {
-    return this.getIpfsDefaultApiUrl()
+    return this.getDefaultApiUrl()
   }
 }
 
-IpfsUrl.prototype.getIpfsGatewayUrl = function () {
+IpfsUrl.prototype.getGatewayUrl = function () {
   try {
-    return this.getUrl($tw.utils.getIpfsSaverGatewayUrl())
+    if (process && process.env[$tw.config.gateway]) {
+      return process.env[$tw.config.gateway]
+    }
+    return this.getUrl($tw.utils.getTiddlerGatewayUrl())
   } catch (error) {
-    return this.getIpfsDefaultGatewayUrl()
+    return this.getDefaultGatewayUrl()
   }
 }
 
-IpfsUrl.prototype.getIpfsDefaultApi = function () {
+IpfsUrl.prototype.getDefaultApi = function () {
   return 'https://ipfs.infura.io:5001'
 }
 
-IpfsUrl.prototype.getIpfsDefaultGateway = function () {
+IpfsUrl.prototype.getDefaultGateway = function () {
   return 'https://dweb.link'
 }
 
@@ -132,7 +127,7 @@ IpfsUrl.prototype.getIpfsBaseUrl = function () {
       base = this.getDocumentUrl()
     }
   } catch (error) {
-    base = this.getIpfsGatewayUrl()
+    base = this.getGatewayUrl()
   }
   return this.getUrl(base)
 }

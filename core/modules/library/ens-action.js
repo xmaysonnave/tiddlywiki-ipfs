@@ -155,7 +155,10 @@ ENS Action
       return false
     }
     $tw.ipfs
-      .addToUnpin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+      .addToUnpin({
+        ipfsPath: resolvedUrl !== null ? resolvedUrl.pathname : null,
+        recursive: false,
+      })
       .then(unpin => {
         if (unpin) {
           $tw.ipfs.removeFromPinUnpin(resolvedUrl.pathname)
@@ -170,7 +173,10 @@ ENS Action
               $tw.ipfs.getLogger().error(error)
             }
             $tw.utils.alert(name, error.message)
-            $tw.ipfs.addToPin(resolvedUrl !== null ? resolvedUrl.pathname : null)
+            $tw.ipfs.addToPin({
+              ipfsPath: resolvedUrl !== null ? resolvedUrl.pathname : null,
+              recursive: false,
+            })
           })
       })
       .catch(error => {

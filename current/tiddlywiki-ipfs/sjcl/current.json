@@ -1,5 +1,5 @@
 {
-  "build": "210609390",
+  "build": "210613360",
   "content": [
     {
       "title": "sjcl",
@@ -9,9 +9,10 @@
       "sourceExtension": "json",
       "sourceFilename": "$_library_sjcl.js.json",
       "sourceSize": 26401,
-      "sourceUri": "https://dweb.link/ipfs/bafybeidnns2f5w5hnhnmwlswlt25gulpkbgl4mps5hkiljm2p766dz37ky/$_library_sjcl.js.json-1.0.8+release-210609390.json",
-      "tidSize": 562,
-      "tidUri": "https://dweb.link/ipfs/bafybeiewfp5ud42u4jlgld2cqipzu7vwubczkexkyittukc5ggahhhcmca/$_library_sjcl.js.json.json-build.tid"
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeighm6325mdzvufc3lvb44nqaagc73pjp55frr6ai5dbnjf7zngn4y/$_library_sjcl.js.json-1.0.8+release-210613360.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeighm6325mdzvufc3lvb44nqaagc73pjp55frr6ai5dbnjf7zngn4y/$_library_sjcl.js.json.json",
+      "tidSize": 689,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeibobpops3a5hmij2vulz3rdyxcguwhbxrxyfyznntyrkqcjtko2za/$_library_sjcl.js.json.json-build.tid"
     },
     {
       "title": "sjcl",
@@ -21,12 +22,13 @@
       "sourceExtension": "js",
       "sourceFilename": "$_library_sjcl.js",
       "sourceSize": 25607,
-      "sourceUri": "https://dweb.link/ipfs/bafybeiezekji2b6qfvawttaeccnc3tifdzpm4m6ponsnd3ooejuthbrl24/$_library_sjcl.js-1.0.8+release-210609390.js",
-      "tidSize": 531,
-      "tidUri": "https://dweb.link/ipfs/bafybeie7c4itfdjbsvwh3g23p245vzm2gxb4hx25733h5zstg4ezelqqme/$_library_sjcl.js.js-build.tid"
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeidon6ehrtycaw5cuwfscw4t6esivhaangonduxuekbgkw4uh3vm6e/$_library_sjcl.js-1.0.8+release-210613360.js",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeidon6ehrtycaw5cuwfscw4t6esivhaangonduxuekbgkw4uh3vm6e/$_library_sjcl.js.js",
+      "tidSize": 651,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeibzli4sbuesdh5x2wvpgrw4aew2yyytzfkptw3fu7c7eceh3snncm/$_library_sjcl.js.js-build.tid"
     }
   ],
   "rawSemver": "1.0.8+release",
-  "version": "1.0.8+release-210609390",
-  "buildUri": "https://dweb.link/ipfs/bafybeihp6yud7w6znsvzivdb3jc5xa6flw6u6hfbyluuzkuyitjyxfu474/210609390/"
+  "version": "1.0.8+release-210613360",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeic6gbuocaovtkiascjas7iyxk6ia3lssfssgo6n3mc3qxvssagpmq/210613360/"
 }

@@ -1,32 +1,34 @@
 {
-  "build": "210609391",
+  "build": "210618257",
   "content": [
     {
       "title": "boot",
       "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js.json",
-      "rawHash": "aeee7a6aae60a6b9fce2af5980b6c1a2308031a3fc028e0a1493c4167b0492a6",
+      "rawHash": "762a47922a0f38a53609eed4085a52dd53a345454bc3969352646f0a6609503f",
       "sourceExtension": "json",
       "sourceFilename": "$_boot_boot.js.json",
-      "sourceSize": 155168,
-      "sourceUri": "https://dweb.link/ipfs/bafybeicxs3zvpp3gfekhxftw4y65z6azjngbc7zfl2qwh5dxnhumxj4kkq/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210609391.json",
-      "tidSize": 599,
-      "tidUri": "https://dweb.link/ipfs/bafybeibtlmw5wa5fuqitemhmcmcnj27rxdw6jflcukxsqgj7ae54zzihqa/$_boot_boot.js.json.json-build.tid"
+      "sourceSize": 154258,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeid5kaxeajnf4bs2hfjtfqojdovzj7mavzxpchnkduruwkjaudovzi/$_boot_boot.js.json-0.4.0-beta-tw-v5.1.24-pre-release+build-210618257.json",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeid5kaxeajnf4bs2hfjtfqojdovzj7mavzxpchnkduruwkjaudovzi/$_boot_boot.js.json.json",
+      "tidSize": 723,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeic64ghv4o5uo5e6pb6iks7hhctlt275jbszc2z65kv5nun7acpks4/$_boot_boot.js.json.json-build.tid"
     },
     {
       "title": "boot",
       "tags": "$:/ipfs/core $:/core $:/boot/bundle",
       "name": "$:/boot/boot.js",
-      "rawHash": "92139d3e04769669b80270e259633fa73b58ad6cf2c254fbdf5fd957e67be293",
+      "rawHash": "32e8d611897573c1a3bc4dcaa68a4a7975dd4583816751612591d015dec52b65",
       "sourceExtension": "js",
       "sourceFilename": "$_boot_boot.js",
-      "sourceSize": 149463,
-      "sourceUri": "https://dweb.link/ipfs/bafybeihn4ssas7ckv6vleorhlq4z7347vxzjf773lzd26wp7cymhhrfowa/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210609391.js",
-      "tidSize": 568,
-      "tidUri": "https://dweb.link/ipfs/bafybeid24jr4o6fijdiuzfdh23mocfofpvike43vkltm67jrwxbxrkyefm/$_boot_boot.js.js-build.tid"
+      "sourceSize": 148579,
+      "sourceUri": "https://ipfs.infura.io/ipfs/bafybeibusnnl6qqfpfuu6ev2bjr4v3fmpivxethxbv2ujxhahxqahrivfa/$_boot_boot.js-0.4.0-beta-tw-v5.1.24-pre-release+build-210618257.js",
+      "latestUri": "https://ipfs.infura.io/ipfs/bafybeibusnnl6qqfpfuu6ev2bjr4v3fmpivxethxbv2ujxhahxqahrivfa/$_boot_boot.js.js",
+      "tidSize": 685,
+      "tidUri": "https://ipfs.infura.io/ipfs/bafybeiao3vmdqk7pfzm76aijnmpliggnwjsx5bijrwdtas7vg6vdotmicu/$_boot_boot.js.js-build.tid"
     }
   ],
   "rawSemver": "0.4.0-beta-tw-v5.1.24-pre-release+build",
-  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210609391",
-  "buildUri": "https://dweb.link/ipfs/bafybeibstrdmhuku3husvvmbzzyzlro4qmbvzlez3chswtuvxfilfelesm/210609391/"
+  "version": "0.4.0-beta-tw-v5.1.24-pre-release+build-210618257",
+  "buildUri": "https://ipfs.infura.io/ipfs/bafybeiavx43ypigr5axvrxbksk5f5vszfv5jltoof7wqm5nvpjhh22ntoy/210618257/"
 }
